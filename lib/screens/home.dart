@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:sellship/models/Items.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,40 +11,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
-
-class Item {
-  final String itemid;
-  final String name;
-  final Uint8List image;
-  final String price;
-  final String category;
-  final String subcategory;
-  final String subsubcategory;
-  final double distance;
-
-  Item(
-      {this.itemid,
-      this.name,
-      this.image,
-      this.price,
-      this.category,
-      this.subsubcategory,
-      this.subcategory,
-      this.distance});
-
-  factory Item.fromJson(Map<String, dynamic> json) {
-    return Item(
-      itemid: json['_id']['\$oid'],
-      name: json['name'],
-      image: json['image']['\$binary'],
-      price: json['price'],
-      category: json['category'],
-      subcategory: json['subcategory'],
-      subsubcategory: json['subsubcategory'],
-      distance: json['distance'],
-    );
-  }
-}
+import 'package:sellship/screens/details.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -73,9 +40,6 @@ class _HomeScreenState extends State<HomeScreen> {
         image: base64Decode(jsondata['picture']['\$binary']),
         price: jsondata['price'],
         category: jsondata['category'],
-        subcategory: jsondata['subcategory'],
-        subsubcategory: jsondata['subsubcategory'],
-        distance: jsondata['distance'],
       );
       itemsgrid.add(item);
     }
@@ -167,62 +131,67 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        body: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Card(
-                child: ListTile(
-                  leading: Icon(Icons.search),
-                  title: TextField(
-                    controller: searchcontroller,
-                    onChanged: onSearch,
-                    decoration: InputDecoration(
-                        hintText: 'Search', border: InputBorder.none),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () {
-                      searchcontroller.clear();
-                      onSearch('');
-                    },
-                    icon: Icon(Icons.cancel),
-                  ),
-                ),
+        body: SafeArea(
+            child: Column(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10),
+          child: Card(
+            child: ListTile(
+              leading: Icon(Icons.search),
+              title: TextField(
+                controller: searchcontroller,
+                onChanged: onSearch,
+                decoration: InputDecoration(
+                    hintText: 'Search', border: InputBorder.none),
+              ),
+              trailing: IconButton(
+                onPressed: () {
+                  searchcontroller.clear();
+                  onSearch('');
+                },
+                icon: Icon(Icons.cancel),
               ),
             ),
-            Expanded(
-              child: FutureBuilder<List<Item>>(
-                future: fetchItems(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.data != null) {
-                    return new GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                      ),
-                      itemCount:
-                          _search.isEmpty ? itemsgrid.length : _search.length,
-                      itemBuilder: (context, index) {
-                        if (index != 0 && index % 6 == 0) {
-                          return Column(
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.only(bottom: 20.0),
-                                child: AdmobBanner(
-                                  adUnitId: getBannerAdUnitId(),
-                                  adSize: AdmobBannerSize.LARGE_BANNER,
-                                  listener: (AdmobAdEvent event,
-                                      Map<String, dynamic> args) {
-                                    handleEvent(event, args, 'Banner');
-                                  },
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return _search.isEmpty
-                            ? Padding(
-                                padding: EdgeInsets.all(5),
+          ),
+        ),
+        Expanded(
+          child: FutureBuilder<List<Item>>(
+            future: fetchItems(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.data != null) {
+                return new GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemCount:
+                      _search.isEmpty ? itemsgrid.length : _search.length,
+                  itemBuilder: (context, index) {
+                    if (index != 0 && index % 6 == 0) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 20.0),
+                        child: AdmobBanner(
+                          adUnitId: getBannerAdUnitId(),
+                          adSize: AdmobBannerSize.LARGE_BANNER,
+                          listener:
+                              (AdmobAdEvent event, Map<String, dynamic> args) {
+                            handleEvent(event, args, 'Banner');
+                          },
+                        ),
+                      );
+                    }
+                    return _search.isEmpty
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Details(item: itemsgrid[index])),
+                              );
+                            },
+                            child: Padding(
+                                padding: EdgeInsets.all(1),
                                 child: Container(
                                   height: MediaQuery.of(context).size.height,
                                   width: MediaQuery.of(context).size.width,
@@ -237,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height /
-                                              5.2,
+                                              6.6,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: ClipRRect(
@@ -252,15 +221,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         SizedBox(height: 2.0),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 15.0),
+                                        Expanded(
                                           child: Text(
                                             itemsgrid[index].name,
+                                            overflow: TextOverflow.fade,
                                             style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w600,
                                             ),
-                                            textAlign: TextAlign.left,
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                         SizedBox(height: 3.0),
@@ -268,23 +237,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 15.0),
-                                              child: Container(
-                                                width: 100,
-                                                child: Text(
-                                                  itemsgrid[index].category,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w300,
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 15.0),
+                                                child: Container(
+                                                  width: 100,
+                                                  child: Text(
+                                                    itemsgrid[index].category,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            Padding(
+                                            Expanded(
+                                                child: Padding(
                                               padding:
-                                                  EdgeInsets.only(right: 10.0),
+                                                  EdgeInsets.only(right: 7.0),
                                               child: Text(
                                                 itemsgrid[index].price + ' AED',
                                                 style: TextStyle(
@@ -293,15 +266,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 textAlign: TextAlign.left,
                                               ),
-                                            )
+                                            )),
                                           ],
                                         ),
                                       ],
                                     ),
                                   ),
-                                ))
-                            : Padding(
-                                padding: EdgeInsets.all(5),
+                                )))
+                        : InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Details(item: _search[index])),
+                              );
+                            },
+                            child: Padding(
+                                padding: EdgeInsets.all(1),
                                 child: Container(
                                   height: MediaQuery.of(context).size.height,
                                   width: MediaQuery.of(context).size.width,
@@ -316,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height /
-                                              5.2,
+                                              6.8,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: ClipRRect(
@@ -331,15 +313,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         SizedBox(height: 2.0),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 15.0),
+                                        Expanded(
                                           child: Text(
                                             _search[index].name,
+                                            overflow: TextOverflow.visible,
                                             style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w600,
                                             ),
-                                            textAlign: TextAlign.left,
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                         SizedBox(height: 3.0),
@@ -347,23 +329,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 15.0),
-                                              child: Container(
-                                                width: 100,
-                                                child: Text(
-                                                  _search[index].category,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w300,
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 15.0),
+                                                child: Container(
+                                                  width: 100,
+                                                  child: Text(
+                                                    _search[index].category,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            Padding(
+                                            Expanded(
+                                                child: Padding(
                                               padding:
-                                                  EdgeInsets.only(right: 10.0),
+                                                  EdgeInsets.only(right: 7.0),
                                               child: Text(
                                                 _search[index].price + ' AED',
                                                 style: TextStyle(
@@ -372,27 +358,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 textAlign: TextAlign.left,
                                               ),
-                                            )
+                                            )),
                                           ],
                                         ),
                                       ],
                                     ),
                                   ),
-                                ));
-                      },
-                    );
-                  } else {
-                    return Container(
-                      child: Center(
-                        child: Text("Loading"),
-                      ),
-                    );
-                  }
-                },
-              ),
-            )
-          ],
-        ));
+                                )));
+                  },
+                );
+              } else {
+                return Container(height: 50, child: LinearProgressIndicator());
+              }
+            },
+          ),
+        )
+      ],
+    )));
   }
 
   String getBannerAdUnitId() {

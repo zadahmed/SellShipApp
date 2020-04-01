@@ -32,7 +32,6 @@ class _AddItemState extends State<AddItem> {
     'Baby & Child',
     'Sport & Leisure',
     'Movies, Books & Music',
-    'Pets & Accessories',
     'Motors',
     'Property',
     'Services',
@@ -69,7 +68,8 @@ class _AddItemState extends State<AddItem> {
   List<String> _subsubcategory;
 
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
 
     setState(() {
       _image = image;
@@ -181,10 +181,6 @@ class _AddItemState extends State<AddItem> {
                             'Girls',
                             'Boys',
                           ];
-                        });
-                      } else if (_selectedCategory == 'Pets & Accessories') {
-                        setState(() {
-                          _subcategories = ['Pets', 'Pet Accessories'];
                         });
                       } else if (_selectedCategory == 'Motors') {
                         setState(() {

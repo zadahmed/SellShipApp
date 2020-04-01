@@ -1,43 +1,49 @@
+import 'dart:typed_data';
+
 class Item {
+  final String itemid;
   final String name;
+  final Uint8List image;
   final String description;
-  final int price;
+  final String price;
+  final String userid;
+  final String username;
+  final String useremail;
+  final String latitude;
+  final String longitude;
+  final String usernumber;
   final String category;
   final String subcategory;
   final String subsubcategory;
-  final String userid;
-  final String username;
-  final double latitude;
-  final double longitude;
-  final String phonenumber;
-  final String city;
+  final double distance;
 
   Item(
+      {this.itemid,
       this.name,
+      this.image,
       this.description,
-      this.phonenumber,
+      this.username,
+      this.useremail,
+      this.usernumber,
+      this.userid,
+      this.latitude,
+      this.longitude,
       this.price,
       this.category,
-      this.subcategory,
       this.subsubcategory,
-      this.userid,
-      this.username,
-      this.latitude,
-      this.city,
-      this.longitude);
+      this.subcategory,
+      this.distance});
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'description': description,
-        'price': price,
-        'category': category,
-        'subcategory': subcategory,
-        'subsubcategory': subsubcategory,
-        'userid': userid,
-        'username': username,
-        'latitude': latitude,
-        'longitude': longitude,
-        'phonenumber': phonenumber,
-        'city': city
-      };
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return Item(
+      itemid: json['_id']['\$oid'],
+      name: json['name'],
+      image: json['image']['\$binary'],
+      price: json['price'],
+      category: json['category'],
+      subcategory: json['subcategory'],
+      subsubcategory: json['subsubcategory'],
+      distance: json['distance'],
+    );
+  }
 }

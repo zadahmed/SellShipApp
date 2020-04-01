@@ -1,8 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sellship/global.dart';
-import 'package:provider/provider.dart';
-import 'package:sellship/models/cart.dart';
 
 class FavouriteScreen extends StatelessWidget {
   @override
@@ -13,7 +10,7 @@ class FavouriteScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "FavouriteScreen",
+            "Favourite Screen",
             style: Theme.of(context)
                 .textTheme
                 .display1
