@@ -101,8 +101,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        Details(item: itemsgrid[index])),
+                                    builder: (context) => Details(
+                                        itemid: itemsgrid[index].itemid)),
                               );
                             },
                             child: Padding(

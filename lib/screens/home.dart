@@ -198,8 +198,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(item: itemsgrid[index])),
+                                      builder: (context) => Details(
+                                          itemid: itemsgrid[index].itemid)),
                                 );
                               },
                               child: Padding(
@@ -292,8 +292,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(item: _search[index])),
+                                      builder: (context) => Details(
+                                          itemid: _search[index].itemid)),
                                 );
                               },
                               child: Padding(

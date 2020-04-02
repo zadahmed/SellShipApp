@@ -13,14 +13,14 @@ import 'package:sellship/screens/login.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatefulWidget {
-  final Item item;
-  Details({Key key, this.item}) : super(key: key);
+  final String itemid;
+  Details({Key key, this.itemid}) : super(key: key);
   @override
   _DetailsState createState() => _DetailsState();
 }
 
 class _DetailsState extends State<Details> {
-  Item item;
+  String itemid;
   LatLng position;
   Item newItem;
 
@@ -31,7 +31,7 @@ class _DetailsState extends State<Details> {
 
     setState(() {
       loading = true;
-      item = widget.item;
+      itemid = widget.itemid;
     });
     fetchItem();
   }
@@ -47,13 +47,15 @@ class _DetailsState extends State<Details> {
   }
 
   fetchItem() async {
-    var url = 'https://sellship.co/api/getitem/' + item.itemid;
+    var url = 'https://sellship.co/api/getitem/' + itemid;
     final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
     print(jsonbody);
     newItem = Item(
         name: jsonbody[0]['name'],
+        image: jsonbody[0]['image'],
+        price: jsonbody[0]['price'],
         description: jsonbody[0]['description'],
         category: jsonbody[0]['category'],
         username: jsonbody[0]['username'],
@@ -89,7 +91,7 @@ class _DetailsState extends State<Details> {
       var url = 'https://sellship.co/api/favourite/' + userid;
 
       Map<String, String> body = {
-        'itemid': item.itemid,
+        'itemid': itemid,
       };
 
       final response = await http.post(url, body: body);
@@ -165,7 +167,7 @@ class _DetailsState extends State<Details> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Image.network(
-                              item.image,
+                              newItem.image,
                               height: 240,
                               width: MediaQuery.of(context).size.width,
                               fit: BoxFit.cover,
@@ -196,7 +198,7 @@ class _DetailsState extends State<Details> {
                     ),
                     SizedBox(height: 20),
                     Text(
-                      item.name,
+                      newItem.name,
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w900,
@@ -207,13 +209,13 @@ class _DetailsState extends State<Details> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          item.category,
+                          newItem.category,
                           style: TextStyle(
                             fontSize: 20,
                           ),
                         ),
                         Text(
-                          item.price + ' AED',
+                          newItem.price + ' AED',
                           style: TextStyle(
                             fontSize: 27,
                             fontWeight: FontWeight.w600,

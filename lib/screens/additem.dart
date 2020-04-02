@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -88,6 +89,7 @@ class _AddItemState extends State<AddItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -461,41 +463,116 @@ class _AddItemState extends State<AddItem> {
       ),
       bottomNavigationBar: InkWell(
         onTap: () async {
-          String fileName = _image.path.split('/').last;
-          var url = 'https://sellship.co/api/additem';
+          userid = await storage.read(key: 'userid');
+          print(userid);
+          if (userid != null) {
+            var userurl = 'https://sellship.co/api/user/' + userid;
+            final userresponse = await http.get(userurl);
+            if (userresponse.statusCode == 200) {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(20.0)), //this right here
+                      child: Container(
+                        height: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('Loading'),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              CircularProgressIndicator()
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  });
 
-          Dio dio = new Dio();
-
-          if (businessnameController.text.isNotEmpty) {
-            FormData formData = FormData.fromMap({
-              'name': businessnameController.text,
-              'price': businesspricecontroller.text,
-              'category': _selectedCategory,
-              'subcategory':
-                  _selectedsubCategory == null ? '' : _selectedsubCategory,
-              'subsubcategory': _selectedsubsubCategory == null
-                  ? ''
-                  : _selectedsubsubCategory,
-              'latitude': position.latitude,
-              'longitude': position.longitude,
-              'description': businessdescriptionController.text,
-              'city': city,
-              'userid': 'sdcsdcs32323',
-              'username': 'zadahmed',
-              'useremail': 'zadahmedoultook.com',
-              'usernumber': '23423423423',
-              'date_uploaded': DateTime.now().toString(),
-              'image':
-                  await MultipartFile.fromFile(_image.path, filename: fileName)
-            });
-
-            var response = await dio.post(url, data: formData);
-            if (response.statusCode == 200) {
-              var jsondata = response.data;
-              print(jsondata);
-            } else {
-              print(response.statusCode);
+              var userrespons = json.decode(userresponse.body);
+              var profilemap = userrespons;
+              print(profilemap);
+              if (mounted) {
+                setState(() {
+                  firstname = profilemap['first_name'];
+                  phonenumber = profilemap['phonenumber'];
+                  email = profilemap['email'];
+                });
+              }
             }
+
+            if (phonenumber == null || email == null) {
+              showInSnackBar('Please update your Phone Number and Email');
+            } else {
+              String fileName = _image.path.split('/').last;
+              var url = 'https://sellship.co/api/additem';
+
+              Dio dio = new Dio();
+
+              if (businessnameController.text.isNotEmpty) {
+                FormData formData = FormData.fromMap({
+                  'name': businessnameController.text,
+                  'price': businesspricecontroller.text,
+                  'category': _selectedCategory,
+                  'subcategory':
+                      _selectedsubCategory == null ? '' : _selectedsubCategory,
+                  'subsubcategory': _selectedsubsubCategory == null
+                      ? ''
+                      : _selectedsubsubCategory,
+                  'latitude': position.latitude,
+                  'longitude': position.longitude,
+                  'description': businessdescriptionController.text,
+                  'city': city,
+                  'userid': userid,
+                  'username': firstname,
+                  'useremail': email,
+                  'usernumber': phonenumber,
+                  'date_uploaded': DateTime.now().toString(),
+                  'image': await MultipartFile.fromFile(_image.path,
+                      filename: fileName)
+                });
+
+                var response = await dio.post(url, data: formData);
+                if (response.statusCode == 200) {
+                  Navigator.pop(context);
+
+                  showDialog(
+                      context: context,
+                      builder: (_) => AssetGiffyDialog(
+                            image: Image.asset(
+                              'assets/yay.gif',
+                              fit: BoxFit.cover,
+                            ),
+                            title: Text(
+                              'Hooray!',
+                              style: TextStyle(
+                                  fontSize: 22.0, fontWeight: FontWeight.w600),
+                            ),
+                            description: Text(
+                              'Your Item\'s Uploaded',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(),
+                            ),
+                            onlyOkButton: true,
+                            entryAnimation: EntryAnimation.DEFAULT,
+                            onOkButtonPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ));
+                } else {
+                  print(response.statusCode);
+                }
+              }
+            }
+          } else {
+            showInSnackBar('Please Login to use Favourites');
           }
         },
         child: Container(
@@ -559,6 +636,31 @@ class _AddItemState extends State<AddItem> {
       });
     }
   }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+            fontFamily: "WorkSansSemiBold"),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
+  String userid;
+
+  var firstname;
+  var email;
+  var phonenumber;
 
   void mapCreated(GoogleMapController controlle) {
     setState(() {

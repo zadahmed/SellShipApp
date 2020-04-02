@@ -7,6 +7,8 @@ import 'package:sellship/bubble_indication_painter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:sellship/models/Items.dart';
+import 'package:sellship/screens/details.dart';
 import 'package:sellship/screens/editprofile.dart';
 
 class LoginPage extends StatefulWidget {
@@ -588,9 +590,24 @@ class _LoginPageState extends State<LoginPage>
           ),
           Expanded(
               child: new ListView.builder(
-                  itemCount: 50,
+                  itemCount: Itemname.length,
                   itemBuilder: (BuildContext ctxt, int Index) {
-                    return new Text(Index.toString());
+                    return new InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Details(itemid: Itemid[Index])),
+                          );
+                        },
+                        child: Card(
+                            child: ListTile(
+                          title: Text(Itemname[Index]),
+                          trailing: Text(Itemprice[Index]),
+                          leading: Image.network(Itemimage[Index]),
+                          subtitle: Text(Itemcategory[Index]),
+                        )));
                   }))
         ],
       ),
@@ -865,16 +882,43 @@ class _LoginPageState extends State<LoginPage>
   var phonenumber;
   String userid;
 
+  List<String> Itemid = List<String>();
+  List<String> Itemname = List<String>();
+  List<String> Itemimage = List<String>();
+  List<String> Itemcategory = List<String>();
+  List<String> Itemprice = List<String>();
+
   void getProfileData() async {
     userid = await storage.read(key: 'userid');
-    print(userid);
     if (userid != null) {
       var url = 'https://sellship.co/api/user/' + userid;
+      print(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
-        Map<String, dynamic> profilemap = respons[0];
+        Map<String, dynamic> profilemap = respons;
         print(profilemap);
+
+        var itemurl = 'https://sellship.co/api/useritems/' + userid;
+        print(itemurl);
+        final itemresponse = await http.get(itemurl);
+        if (itemresponse.statusCode == 200) {
+          var itemrespons = json.decode(itemresponse.body);
+          Map<String, dynamic> itemmap = itemrespons;
+          print(itemmap);
+
+          var productmap = itemmap['products'];
+
+          for (var i = 0; i < productmap.length; i++) {
+            Itemid.add(productmap[i]['_id']['\$oid']);
+            Itemname.add(productmap[i]['name']);
+            Itemimage.add(productmap[i]['image']);
+            Itemprice.add(productmap[i]['price']);
+            Itemcategory.add(productmap[i]['category']);
+          }
+        } else {
+          print('No Items');
+        }
 
         if (mounted) {
           setState(() {

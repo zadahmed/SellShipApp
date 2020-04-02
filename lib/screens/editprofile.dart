@@ -38,7 +38,7 @@ class EditProfileState extends State<EditProfile>
       final response = await http.get(url);
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
-        Map<String, dynamic> profilemap = respons[0];
+        var profilemap = respons;
         print(profilemap);
 
         if (mounted) {
