@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sellship/bubble_indication_painter.dart';
 import 'dart:convert';
@@ -21,8 +23,10 @@ class _LoginPageState extends State<LoginPage>
   final FocusNode myFocusNodePasswordLogin = FocusNode();
 
   final FocusNode myFocusNodePassword = FocusNode();
+  final FocusNode myFocusNodePhone = FocusNode();
   final FocusNode myFocusNodeEmail = FocusNode();
   final FocusNode myFocusNodeName = FocusNode();
+  final FocusNode myFocusNodeLastName = FocusNode();
 
   TextEditingController loginEmailController = new TextEditingController();
   TextEditingController loginPasswordController = new TextEditingController();
@@ -33,6 +37,8 @@ class _LoginPageState extends State<LoginPage>
 
   TextEditingController signupEmailController = new TextEditingController();
   TextEditingController signupNameController = new TextEditingController();
+  TextEditingController signupLastnameController = new TextEditingController();
+  TextEditingController signupphonecontroller = new TextEditingController();
   TextEditingController signupPasswordController = new TextEditingController();
   TextEditingController signupConfirmPasswordController =
       new TextEditingController();
@@ -55,7 +61,65 @@ class _LoginPageState extends State<LoginPage>
         final graphResponse = await http.get(
             'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
         final profile = json.decode(graphResponse.body);
-        print(profile);
+
+        var url = 'https://sellship.co/api/signup';
+
+        var name = profile['name'].split(" ");
+
+        Map<String, String> body = {
+          'first_name': name[0],
+          'last_name': name[1],
+          'email': profile['email'],
+          'phonenumber': '00',
+          'password': 'password',
+        };
+
+        final response = await http.post(url, body: body);
+
+        if (response.statusCode == 200) {
+          var jsondata = json.decode(response.body);
+          print(jsondata);
+          if (jsondata['id'] != null) {
+            await storage.write(key: 'userid', value: jsondata['id']);
+
+            print('signned up ');
+            setState(() {
+              userid = jsondata['id'];
+              getProfileData();
+            });
+          } else {
+            var url = 'https://sellship.co/api/login';
+
+            Map<String, String> body = {
+              'email': profile['email'],
+              'password': 'password',
+            };
+
+            final response = await http.post(url, body: body);
+
+            if (response.statusCode == 200) {
+              var jsondata = json.decode(response.body);
+              print(jsondata);
+              if (jsondata['id'] != null) {
+                await storage.write(key: 'userid', value: jsondata['id']);
+
+                print('Loggd in ');
+                setState(() {
+                  userid = jsondata['id'];
+                  getProfileData();
+                });
+              } else if (jsondata['status']['message'].toString().trim() ==
+                  'User does not exist, please sign up') {
+              } else if (jsondata['status']['message'].toString().trim() ==
+                  'Invalid password, try again') {}
+            } else {
+              print(response.statusCode);
+            }
+          }
+        } else {
+          print(response.statusCode);
+        }
+
         setState(() {
           userProfile = profile;
           loggedin = true;
@@ -73,6 +137,12 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: userid == null ? LoginSignup(context) : profile(context),
+    );
+  }
+
+  Widget LoginSignup(BuildContext context) {
     return new Scaffold(
       key: _scaffoldKey,
       body: NotificationListener<OverscrollIndicatorNotification>(
@@ -82,9 +152,9 @@ class _LoginPageState extends State<LoginPage>
         child: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height >= 775.0
+            height: MediaQuery.of(context).size.height >= 825.0
                 ? MediaQuery.of(context).size.height
-                : 775.0,
+                : 825.0,
             decoration: new BoxDecoration(
               gradient: new LinearGradient(
                   colors: [Colors.amberAccent, Colors.amber],
@@ -158,6 +228,8 @@ class _LoginPageState extends State<LoginPage>
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+    getProfileData();
 
     _pageController = PageController();
   }
@@ -352,7 +424,9 @@ class _LoginPageState extends State<LoginPage>
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
-                    onPressed: () => showInSnackBar("Login button pressed")),
+                    onPressed: () {
+                      Login();
+                    }),
               ),
             ],
           ),
@@ -417,43 +491,25 @@ class _LoginPageState extends State<LoginPage>
               ],
             ),
           ),
+          SizedBox(
+            height: 10,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 10.0, right: 40.0),
-                child: GestureDetector(
-                  onTap: () {
-                    showInSnackBar("Facebook button pressed");
-                    _loginWithFB();
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: new Icon(
-                      FontAwesomeIcons.facebookF,
-                      color: Color(0xFF0084ff),
-                    ),
+              GestureDetector(
+                onTap: () {
+                  _loginWithFB();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: new BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: GestureDetector(
-                  onTap: () => showInSnackBar("Google button pressed"),
-                  child: Container(
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: new Icon(
-                      FontAwesomeIcons.google,
-                      color: Color(0xFF0084ff),
-                    ),
+                  child: new Icon(
+                    FontAwesomeIcons.facebookF,
+                    color: Color(0xFF0084ff),
                   ),
                 ),
               ),
@@ -462,6 +518,42 @@ class _LoginPageState extends State<LoginPage>
         ],
       ),
     );
+  }
+
+  Widget profile(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('ds'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Feather.log_out),
+              onPressed: () async {
+                await storage.delete(key: 'userid');
+                print(storage.read(key: 'userid'));
+                setState(() {
+                  userid = null;
+                });
+              },
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            children: <Widget>[
+              Text(
+                'Profile',
+                style: Theme.of(context)
+                    .textTheme
+                    .display1
+                    .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+            ],
+          ),
+        ));
   }
 
   Widget _buildSignUp(BuildContext context) {
@@ -481,7 +573,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
                 child: Container(
                   width: 300.0,
-                  height: 360.0,
+                  height: 540.0,
                   child: Column(
                     children: <Widget>[
                       Padding(
@@ -502,7 +594,64 @@ class _LoginPageState extends State<LoginPage>
                               FontAwesomeIcons.user,
                               color: Colors.black,
                             ),
-                            hintText: "Name",
+                            hintText: "First Name",
+                            hintStyle: TextStyle(
+                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 250.0,
+                        height: 1.0,
+                        color: Colors.grey[400],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                        child: TextField(
+                          focusNode: myFocusNodeLastName,
+                          controller: signupLastnameController,
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.words,
+                          style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            icon: Icon(
+                              FontAwesome5.user,
+                              color: Colors.black,
+                            ),
+                            hintText: "Last Name",
+                            hintStyle: TextStyle(
+                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 250.0,
+                        height: 1.0,
+                        color: Colors.grey[400],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                        child: TextField(
+                          focusNode: myFocusNodePhone,
+                          controller: signupphonecontroller,
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            icon: Icon(
+                              FontAwesomeIcons.phone,
+                              color: Colors.black,
+                            ),
+                            hintText: "Phone Number",
                             hintStyle: TextStyle(
                                 fontFamily: "WorkSansSemiBold", fontSize: 16.0),
                           ),
@@ -592,7 +741,7 @@ class _LoginPageState extends State<LoginPage>
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
-                              FontAwesomeIcons.lock,
+                              FontAwesomeIcons.userLock,
                               color: Colors.black,
                             ),
                             hintText: "Confirmation",
@@ -616,7 +765,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 340.0),
+                margin: EdgeInsets.only(top: 530.0),
                 decoration: new BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   boxShadow: <BoxShadow>[
@@ -656,13 +805,112 @@ class _LoginPageState extends State<LoginPage>
                             fontFamily: "WorkSansBold"),
                       ),
                     ),
-                    onPressed: () => showInSnackBar("SignUp button pressed")),
+                    onPressed: () {
+                      Signup();
+                    }),
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  final storage = new FlutterSecureStorage();
+
+  var firstname;
+  var lastname;
+  var email;
+  var phonenumber;
+  String userid;
+
+  void getProfileData() async {
+    userid = await storage.read(key: 'userid');
+    print(userid);
+    if (userid != null) {
+      var url = 'https://sellship.co/api/user/' + userid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var respons = json.decode(response.body);
+        Map<String, dynamic> profilemap = respons[0];
+        print(profilemap);
+
+        if (mounted) {
+          setState(() {
+            firstname = profilemap['first_name'];
+            lastname = profilemap['last_name'];
+            phonenumber = profilemap['phonenumber'];
+            email = profilemap['email'];
+          });
+        }
+      } else {
+        print('Error');
+      }
+    }
+  }
+
+  void Login() async {
+    var url = 'https://sellship.co/api/login';
+
+    Map<String, String> body = {
+      'email': loginEmailController.text,
+      'password': loginPasswordController.text,
+    };
+
+    final response = await http.post(url, body: body);
+
+    if (response.statusCode == 200) {
+      var jsondata = json.decode(response.body);
+      print(jsondata);
+      if (jsondata['id'] != null) {
+        await storage.write(key: 'userid', value: jsondata['id']);
+        if (jsondata['businessid'] != null) {
+          await storage.write(key: 'businessid', value: jsondata['businessid']);
+        }
+        print('Loggd in ');
+        setState(() {
+          userid = jsondata['id'];
+          getProfileData();
+        });
+      } else if (jsondata['status']['message'].toString().trim() ==
+          'User does not exist, please sign up') {
+      } else if (jsondata['status']['message'].toString().trim() ==
+          'Invalid password, try again') {}
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  void Signup() async {
+    var url = 'https://sellship.co/api/signup';
+
+    Map<String, String> body = {
+      'first_name': signupNameController.text,
+      'last_name': signupLastnameController.text,
+      'email': signupEmailController.text,
+      'phonenumber': signupphonecontroller.text,
+      'password': signupPasswordController.text,
+    };
+
+    final response = await http.post(url, body: body);
+
+    if (response.statusCode == 200) {
+      var jsondata = json.decode(response.body);
+      print(jsondata);
+      if (jsondata['id'] != null) {
+        await storage.write(key: 'userid', value: jsondata['id']);
+
+        print('signned up ');
+        setState(() {
+          userid = jsondata['id'];
+          getProfileData();
+        });
+      } else {
+        print('User Already Exists');
+      }
+    } else {
+      print(response.statusCode);
+    }
   }
 
   void _onSignInButtonPress() {

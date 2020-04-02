@@ -12,7 +12,6 @@ import 'package:sellship/screens/categories.dart';
 import 'package:sellship/screens/favourites.dart';
 import 'package:sellship/screens/home.dart';
 import 'package:sellship/screens/login.dart';
-import 'package:sellship/screens/profile.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

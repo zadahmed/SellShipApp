@@ -30,48 +30,55 @@ class _CategoryScreenState extends State<CategoryScreen> {
               height: 15,
             ),
             Expanded(
-              child: Row(
+              child: Column(
                 children: <Widget>[
                   Container(
-                    width: 50,
+                    width: MediaQuery.of(context).size.width,
+                    height: 100,
                     margin: const EdgeInsets.only(right: 15.0),
                     child: ListView.builder(
-                      scrollDirection: Axis.vertical,
+                      scrollDirection: Axis.horizontal,
                       itemCount: categories.length,
                       itemBuilder: (ctx, i) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedCat = i;
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 25.0),
-                            width: 50.0,
-                            constraints: BoxConstraints(minHeight: 101),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              border:
-                                  _selectedCat == i ? Border.all() : Border(),
-                              color: _selectedCat == i
-                                  ? Colors.transparent
-                                  : Colors.black,
-                              borderRadius: BorderRadius.circular(9.0),
-                            ),
-                            child: RotatedBox(
-                              quarterTurns: -1,
-                              child: Text(
-                                "${categories[i].title}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .button
-                                    .copyWith(
-                                        color: _selectedCat == i
-                                            ? Colors.black
-                                            : Colors.white),
+                        return Row(
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedCat = i;
+                                });
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 25.0),
+                                width: 110.0,
+                                constraints: BoxConstraints(minHeight: 101),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  border: _selectedCat == i
+                                      ? Border.all(color: Colors.amber)
+                                      : Border(),
+                                  color: _selectedCat == i
+                                      ? Colors.transparent
+                                      : Colors.amber,
+                                  borderRadius: BorderRadius.circular(9.0),
+                                ),
+                                child: Text(
+                                  "${categories[i].title}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .button
+                                      .copyWith(
+                                          color: _selectedCat == i
+                                              ? Colors.amber
+                                              : Colors.white),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
-                          ),
+                            SizedBox(
+                              width: 10,
+                            )
+                          ],
                         );
                       },
                     ),
