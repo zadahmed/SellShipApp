@@ -35,7 +35,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
-          image: base64Decode(jsondata['picture']['\$binary']),
+          image: jsondata['image'],
           price: jsondata['price'],
           category: jsondata['category'],
         );
@@ -129,7 +129,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                               topLeft: Radius.circular(10),
                                               topRight: Radius.circular(10),
                                             ),
-                                            child: Image.memory(
+                                            child: Image.network(
                                               itemsgrid[index].image,
                                               fit: BoxFit.cover,
                                             ),

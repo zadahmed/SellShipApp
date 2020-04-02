@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:http/http.dart' as http;
 import 'package:sellship/screens/home.dart';
+import 'package:sellship/screens/login.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatefulWidget {
@@ -77,6 +79,51 @@ class _DetailsState extends State<Details> {
     return newItem;
   }
 
+  final storage = new FlutterSecureStorage();
+  var userid;
+
+  void FavouriteItem() async {
+    userid = await storage.read(key: 'userid');
+    print(userid);
+    if (userid != null) {
+      var url = 'https://sellship.co/api/favourite/' + userid;
+
+      Map<String, String> body = {
+        'itemid': item.itemid,
+      };
+
+      final response = await http.post(url, body: body);
+
+      if (response.statusCode == 200) {
+        var jsondata = json.decode(response.body);
+        print(jsondata);
+      } else {
+        print(response.statusCode);
+      }
+    } else {
+      showInSnackBar('Please Login to use Favourites');
+    }
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+            fontFamily: "WorkSansSemiBold"),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
   String getBannerAdUnitId() {
     if (Platform.isIOS) {
       return 'ca-app-pub-9959700192389744/1339524606';
@@ -90,6 +137,7 @@ class _DetailsState extends State<Details> {
   Widget build(BuildContext context) {
     return loading == false
         ? Scaffold(
+            key: _scaffoldKey,
             appBar: AppBar(
               elevation: 0,
               backgroundColor: Colors.white,
@@ -116,7 +164,7 @@ class _DetailsState extends State<Details> {
                         children: <Widget>[
                           ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            child: Image.memory(
+                            child: Image.network(
                               item.image,
                               height: 240,
                               width: MediaQuery.of(context).size.width,
@@ -127,7 +175,9 @@ class _DetailsState extends State<Details> {
                             right: -10.0,
                             bottom: 3.0,
                             child: RawMaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                FavouriteItem();
+                              },
                               fillColor: Colors.white,
                               shape: CircleBorder(),
                               elevation: 4.0,

@@ -42,7 +42,7 @@ class _MyAppState extends State<MyApp> {
     HomeScreen(),
     CategoryScreen(),
     AddItem(),
-    FavouriteScreen(),
+    FavouritesScreen(),
     LoginPage(),
   ];
 

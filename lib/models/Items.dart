@@ -3,7 +3,7 @@ import 'dart:typed_data';
 class Item {
   final String itemid;
   final String name;
-  final Uint8List image;
+  final String image;
   final String description;
   final String price;
   final String userid;

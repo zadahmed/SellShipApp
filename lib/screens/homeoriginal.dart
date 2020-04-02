@@ -19,14 +19,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool xtraDataAvailable = false;
   List<Item> itemsgrid = [];
   List<Item> _search = [];
 
-  var skip = 0;
-  var limit = 10;
+  var skip;
+  var limit;
 
-  Future<List<Item>> fetchItems(int skip, int limit) async {
+  Future<List<Item>> fetchItems() async {
     var url = 'https://sellship.co/api/getitems/' +
         city +
         '/' +
@@ -40,7 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     var jsonbody = json.decode(response.body);
-    // itemsgrid.clear();
+    itemsgrid.clear();
+
+    print(jsonbody);
 
     for (var jsondata in jsonbody) {
       Item item = Item(
@@ -65,6 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     readstorage();
+    setState(() {
+      skip = 0;
+      limit = 10;
+    });
   }
 
   _getLocation() async {
@@ -166,137 +171,132 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         Expanded(
           child: FutureBuilder<List<Item>>(
-            future: xtraDataAvailable == false
-                ? fetchItems(0, 10)
-                : fetchItems(skip, limit),
+            future: fetchItems(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.data != null) {
-                return NotificationListener(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    itemCount:
-                        _search.isEmpty ? itemsgrid.length : _search.length,
-                    itemBuilder: (context, index) {
-                      if (index != 0 && index % 6 == 0) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: AdmobBanner(
-                            adUnitId: getBannerAdUnitId(),
-                            adSize: AdmobBannerSize.LARGE_BANNER,
-                            listener: (AdmobAdEvent event,
-                                Map<String, dynamic> args) {
-                              handleEvent(event, args, 'Banner');
+                return new GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemCount:
+                      _search.isEmpty ? itemsgrid.length : _search.length,
+                  itemBuilder: (context, index) {
+                    if (index != 0 && index % 6 == 0) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 20.0),
+                        child: AdmobBanner(
+                          adUnitId: getBannerAdUnitId(),
+                          adSize: AdmobBannerSize.LARGE_BANNER,
+                          listener:
+                              (AdmobAdEvent event, Map<String, dynamic> args) {
+                            handleEvent(event, args, 'Banner');
+                          },
+                        ),
+                      );
+                    }
+                    return _search.isEmpty
+                        ? InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Details(item: itemsgrid[index])),
+                              );
                             },
-                          ),
-                        );
-                      }
-                      return _search.isEmpty
-                          ? InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(item: itemsgrid[index])),
-                                );
-                              },
-                              child: Padding(
-                                  padding: EdgeInsets.all(1),
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)),
-                                      elevation: 3.0,
-                                      child: Column(
-                                        children: <Widget>[
-                                          Container(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                6.6,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                topRight: Radius.circular(10),
-                                              ),
-                                              child: Image.network(
-                                                itemsgrid[index].image,
-                                                fit: BoxFit.cover,
-                                              ),
+                            child: Padding(
+                                padding: EdgeInsets.all(1),
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    elevation: 3.0,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              6.6,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
+                                            ),
+                                            child: Image.network(
+                                              itemsgrid[index].image,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
-                                          SizedBox(height: 2.0),
-                                          Expanded(
-                                            child: Text(
-                                              itemsgrid[index].name,
-                                              overflow: TextOverflow.fade,
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: 2.0),
+                                        Expanded(
+                                          child: Text(
+                                            itemsgrid[index].name,
+                                            overflow: TextOverflow.fade,
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
                                             ),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          SizedBox(height: 3.0),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 15.0),
-                                                  child: Container(
-                                                    width: 100,
-                                                    child: Text(
-                                                      itemsgrid[index].category,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
+                                        ),
+                                        SizedBox(height: 3.0),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    EdgeInsets.only(left: 15.0),
+                                                child: Container(
+                                                  width: 100,
+                                                  child: Text(
+                                                    itemsgrid[index].category,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w300,
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              Expanded(
-                                                  child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 7.0),
-                                                child: Text(
-                                                  itemsgrid[index].price +
-                                                      ' AED',
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                  textAlign: TextAlign.left,
+                                            ),
+                                            Expanded(
+                                                child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 7.0),
+                                              child: Text(
+                                                itemsgrid[index].price + ' AED',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
                                                 ),
-                                              )),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                                textAlign: TextAlign.left,
+                                              ),
+                                            )),
+                                          ],
+                                        ),
+                                      ],
                                     ),
-                                  )))
-                          : InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(item: _search[index])),
-                                );
-                              },
-                              child: Padding(
+                                  ),
+                                )))
+                        : InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Details(item: _search[index])),
+                              );
+                            },
+                            child: Padding(
                                 padding: EdgeInsets.all(1),
                                 child: Container(
                                   height: MediaQuery.of(context).size.height,
@@ -378,22 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ],
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                    },
-                  ),
-                  onNotification: (t) {
-                    if (t is ScrollEndNotification) {
-                      setState(() {
-                        print('get more data');
-                        print('xtradata: $xtraDataAvailable');
-                        print('offset: $skip');
-                        xtraDataAvailable = true;
-                        skip = skip + 10;
-                      });
-                    }
-                    // return true;
+                                )));
                   },
                 );
               } else {

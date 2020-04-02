@@ -1,7 +1,41 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
-class FavouriteScreen extends StatelessWidget {
+class FavouritesScreen extends StatefulWidget {
+  @override
+  FavouritesScreenState createState() => FavouritesScreenState();
+}
+
+class FavouritesScreenState extends State<FavouritesScreen> {
+  var userid;
+  final storage = new FlutterSecureStorage();
+
+  getfavourites() async {
+    userid = await storage.read(key: 'userid');
+    print(userid);
+    if (userid != null) {
+      var url = 'https://sellship.co/api/user/' + userid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var respons = json.decode(response.body);
+        Map<String, dynamic> profilemap = respons[0];
+        print(profilemap);
+      } else {
+        print('Error');
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getfavourites();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -10,7 +44,7 @@ class FavouriteScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Favourite Screen",
+            "Favourites ❤️",
             style: Theme.of(context)
                 .textTheme
                 .display1

@@ -7,6 +7,7 @@ import 'package:sellship/bubble_indication_painter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:sellship/screens/editprofile.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -522,38 +523,78 @@ class _LoginPageState extends State<LoginPage>
 
   Widget profile(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('ds'),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Feather.log_out),
-              onPressed: () async {
-                await storage.delete(key: 'userid');
-                print(storage.read(key: 'userid'));
-                setState(() {
-                  userid = null;
-                });
-              },
-            ),
-          ],
-        ),
         body: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                'Profile',
+                'Welcome to SellShip',
                 style: Theme.of(context)
                     .textTheme
                     .display1
                     .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
               ),
-              SizedBox(
-                height: 10.0,
+              IconButton(
+                onPressed: () {
+                  storage.delete(key: 'userid');
+                  setState(() {
+                    userid = null;
+                  });
+                },
+                icon: Icon(Feather.log_out),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                'Hi ' + firstname + '!',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+              FlatButton(
+                color: Colors.amber,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditProfile()),
+                  );
+                },
+                child: Text(
+                  'Edit Profile',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
-        ));
+          SizedBox(
+            height: 10.0,
+          ),
+          Divider(),
+          Center(
+            child: Text(
+              'Items',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Expanded(
+              child: new ListView.builder(
+                  itemCount: 50,
+                  itemBuilder: (BuildContext ctxt, int Index) {
+                    return new Text(Index.toString());
+                  }))
+        ],
+      ),
+    ));
   }
 
   Widget _buildSignUp(BuildContext context) {
