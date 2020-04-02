@@ -11,6 +11,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sellship/screens/categories.dart';
 import 'package:sellship/screens/favourites.dart';
 import 'package:sellship/screens/home.dart';
+import 'package:sellship/screens/login.dart';
 import 'package:sellship/screens/profile.dart';
 
 void main() {
@@ -43,7 +44,7 @@ class _MyAppState extends State<MyApp> {
     CategoryScreen(),
     AddItem(),
     FavouriteScreen(),
-    ProfileScreen(),
+    LoginPage(),
   ];
 
   var latitude;
@@ -98,7 +99,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'UI shop',
+        title: 'SellShip',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

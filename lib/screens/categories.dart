@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:sellship/global.dart';
+import 'package:sellship/screens/categorydetail.dart';
 
 class CategoryScreen extends StatefulWidget {
   @override
@@ -82,25 +83,36 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     child: ListView.builder(
                       itemCount: categories[_selectedCat].subCat.length,
                       itemBuilder: (ctx, i) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 15),
-                          padding: const EdgeInsets.all(9.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  "${categories[_selectedCat].subCat[i].title}",
-                                ),
+                        return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CategoryDetail(
+                                        category:
+                                            categories[_selectedCat].title)),
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(bottom: 15),
+                              padding: const EdgeInsets.all(9.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
-                              Icon(Icons.chevron_right)
-                            ],
-                          ),
-                        );
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      "${categories[_selectedCat].subCat[i].title}",
+                                    ),
+                                  ),
+                                  Icon(Icons.chevron_right)
+                                ],
+                              ),
+                            ));
                       },
                     ),
                   )

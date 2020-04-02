@@ -22,8 +22,16 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Item> itemsgrid = [];
   List<Item> _search = [];
 
+  var skip;
+  var limit;
+
   Future<List<Item>> fetchItems() async {
-    var url = 'https://sellship.co/api/getitems/' + city;
+    var url = 'https://sellship.co/api/getitems/' +
+        city +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
     print(url);
     final response = await http.post(url, body: {
       'latitude': position.latitude.toString(),
@@ -56,6 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     readstorage();
+    setState(() {
+      skip = 0;
+      limit = 10;
+    });
   }
 
   _getLocation() async {
