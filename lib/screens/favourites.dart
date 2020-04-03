@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -28,38 +30,52 @@ class FavouritesScreenState extends State<FavouritesScreen> {
       var url = 'https://sellship.co/api/favourites/' + userid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        var respons = json.decode(response.body);
-        var profilemap = respons;
-        print(profilemap);
-        for (var i = 0; i < profilemap.length; i++) {
-          Itemid.add(profilemap[i]['_id']['\$oid']);
-          Itemname.add(profilemap[i]['name']);
-          Itemimage.add(profilemap[i]['image']);
-          Itemprice.add(profilemap[i]['price']);
-          Itemcategory.add(profilemap[i]['category']);
-        }
+        if (response.body != 'Empty') {
+          var respons = json.decode(response.body);
+          var profilemap = respons;
+          print(profilemap);
+          for (var i = 0; i < profilemap.length; i++) {
+            Itemid.add(profilemap[i]['_id']['\$oid']);
+            Itemname.add(profilemap[i]['name']);
+            Itemimage.add(profilemap[i]['image']);
+            Itemprice.add(profilemap[i]['price']);
+            Itemcategory.add(profilemap[i]['category']);
+          }
 
-        setState(() {
-          Itemid = Itemid;
-          Itemname = Itemname;
-          Itemimage = Itemimage;
-          Itemprice = Itemprice;
-          Itemcategory = Itemcategory;
-          loading = false;
-        });
+          setState(() {
+            Itemid = Itemid;
+            Itemname = Itemname;
+            Itemimage = Itemimage;
+            Itemprice = Itemprice;
+            Itemcategory = Itemcategory;
+            loading = false;
+          });
+        } else {
+          setState(() {
+            loading = false;
+            Itemname = List<String>();
+          });
+        }
       } else {
         print(response.statusCode);
       }
+    } else {
+      setState(() {
+        empty = true;
+        loading = false;
+      });
     }
   }
 
   var loading;
+  var empty;
 
   @override
   void initState() {
     super.initState();
     setState(() {
       loading = true;
+      empty = false;
     });
     getfavourites();
   }
@@ -69,12 +85,128 @@ class FavouritesScreenState extends State<FavouritesScreen> {
     super.didChangeDependencies();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget favourites(BuildContext context) {
     return loading == false
-        ? Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "Favourites ❤️",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              backgroundColor: Colors.amber,
+            ),
+            bottomNavigationBar: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Container(
+                // rounded corners ad.
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: AdmobBanner(
+                  adUnitId: getBannerAdUnitId(),
+                  adSize: AdmobBannerSize.LEADERBOARD,
+                ),
+              ),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Itemname.isNotEmpty
+                      ? Expanded(
+                          child: new ListView.builder(
+                              itemCount: Itemname.length,
+                              itemBuilder: (BuildContext ctxt, int Index) {
+                                return new InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Details(itemid: Itemid[Index])),
+                                      );
+                                    },
+                                    child: Card(
+                                        child: ListTile(
+                                      title: Text(Itemname[Index]),
+                                      trailing: Text(Itemprice[Index] + ' AED'),
+                                      leading: Container(
+                                        height: 60,
+                                        width: 60,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Image.network(
+                                          Itemimage[Index],
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      subtitle: Text(Itemcategory[Index]),
+                                    )));
+                              }))
+                      : Expanded(
+                          child: Column(
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                'View your favourites here!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                            Expanded(
+                                child: Image.asset(
+                              'assets/sss.jpg',
+                              fit: BoxFit.cover,
+                            ))
+                          ],
+                        )),
+                ],
+              ),
+            ))
+        : Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 100,
+              width: 100,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Loading'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CircularProgressIndicator()
+                  ],
+                ),
+              ),
+            ),
+          );
+  }
+
+  String getBannerAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-9959700192389744/1339524606';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9959700192389744/3087720541';
+    }
+    return null;
+  }
+
+  Widget emptyfavourites(BuildContext context) {
+    return loading == false
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
@@ -85,39 +217,32 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                 SizedBox(
                   height: 15,
                 ),
-
-//          Bag list
+                Center(
+                  child: Text(
+                    'Login to see your favourite\'s here ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
                 Expanded(
-                    child: new ListView.builder(
-                        itemCount: Itemname.length,
-                        itemBuilder: (BuildContext ctxt, int Index) {
-                          return new InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(itemid: Itemid[Index])),
-                                );
-                              },
-                              child: Card(
-                                  child: ListTile(
-                                title: Text(Itemname[Index]),
-                                trailing: Text(Itemprice[Index]),
-                                leading: Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Image.network(
-                                    Itemimage[Index],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                subtitle: Text(Itemcategory[Index]),
-                              )));
-                        }))
+                    child: Image.asset(
+                  'assets/sss.jpg',
+                  fit: BoxFit.cover,
+                ))
               ],
+            ),
+            bottomNavigationBar: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Container(
+                // rounded corners ad.
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: AdmobBanner(
+                  adUnitId: getBannerAdUnitId(),
+                  adSize: AdmobBannerSize.LEADERBOARD,
+                ),
+              ),
             ),
           )
         : Dialog(
@@ -142,5 +267,10 @@ class FavouritesScreenState extends State<FavouritesScreen> {
               ),
             ),
           );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return empty == false ? favourites(context) : emptyfavourites(context);
   }
 }

@@ -116,25 +116,53 @@ class _MyAppState extends State<MyApp> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                title: Text("Home"),
+                icon: Icon(
+                  FontAwesome.home,
+                  color: Colors.amberAccent,
+                ),
+                title: Text(
+                  "Home",
+                  style: TextStyle(color: Colors.amber),
+                ),
               ),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.list), title: Text("Categories")),
+                  icon: Icon(
+                    FontAwesome5.list_alt,
+                    color: Colors.amberAccent,
+                  ),
+                  title: Text(
+                    "Categories",
+                    style: TextStyle(color: Colors.amber),
+                  )),
               BottomNavigationBarItem(
                   icon: Icon(
-                    Icons.add_box,
+                    FontAwesome.plus_square_o,
                     size: 40,
                     color: Colors.amberAccent,
                   ),
-                  title: Text("Add an Item")),
+                  title: Text(
+                    "Add an Item",
+                    style: TextStyle(color: Colors.amber),
+                  )),
               BottomNavigationBarItem(
-                icon: Icon(Feather.heart),
-                title: Text("Favourites"),
+                icon: Icon(
+                  FontAwesome.heart,
+                  color: Colors.amberAccent,
+                ),
+                title: Text(
+                  "Favourites",
+                  style: TextStyle(color: Colors.amber),
+                ),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline),
-                title: Text("Profile"),
+                icon: Icon(
+                  FontAwesome.user_circle_o,
+                  color: Colors.amberAccent,
+                ),
+                title: Text(
+                  "Profile",
+                  style: TextStyle(color: Colors.amber),
+                ),
               ),
             ],
           ),

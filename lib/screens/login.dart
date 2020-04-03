@@ -560,6 +560,32 @@ class _LoginPageState extends State<LoginPage>
 
   Widget profile(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Profile️",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          backgroundColor: Colors.amber,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                storage.delete(key: 'userid');
+                setState(() {
+                  userid = null;
+                });
+              },
+              icon: Icon(Feather.log_out),
+            )
+          ],
+        ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+          margin: EdgeInsets.only(bottom: 20.0),
+          child: AdmobBanner(
+            adUnitId: getBannerAdUnitId(),
+            adSize: AdmobBannerSize.LEADERBOARD,
+          ),
+        ),
         body: loading == false
             ? Padding(
                 padding: const EdgeInsets.all(15.0),
@@ -575,15 +601,6 @@ class _LoginPageState extends State<LoginPage>
                               fontWeight: FontWeight.bold,
                               color: Colors.black),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            storage.delete(key: 'userid');
-                            setState(() {
-                              userid = null;
-                            });
-                          },
-                          icon: Icon(Feather.log_out),
-                        )
                       ],
                     ),
                     SizedBox(
@@ -625,58 +642,82 @@ class _LoginPageState extends State<LoginPage>
                     SizedBox(
                       height: 10.0,
                     ),
-                    Expanded(
-                        child: new ListView.builder(
-                            itemCount: Itemname.length,
-                            itemBuilder: (BuildContext ctxt, int Index) {
-                              if (Index % 4 == 0) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  margin: EdgeInsets.only(bottom: 20.0),
-                                  child: AdmobBanner(
-                                    adUnitId: getBannerAdUnitId(),
-                                    adSize: AdmobBannerSize.LARGE_BANNER,
-                                  ),
-                                );
-                              }
-                              return new InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Details(itemid: Itemid[Index])),
-                                    );
-                                  },
-                                  child: Card(
-                                      child: ListTile(
-                                    title: Text(Itemname[Index]),
-                                    trailing: FlatButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => EditItem(
-                                                  itemid: Itemid[Index])),
-                                        );
-                                      },
-                                      child: Text('Edit Item'),
-                                    ),
-                                    leading: Container(
-                                      height: 60,
-                                      width: 60,
+                    Itemname.isNotEmpty
+                        ? Expanded(
+                            child: new ListView.builder(
+                                itemCount: Itemname.length,
+                                itemBuilder: (BuildContext ctxt, int Index) {
+                                  if (Index == 4 ||
+                                      Index == 8 ||
+                                      Index == 12 ||
+                                      Index == 16) {
+                                    return Container(
                                       decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10)),
-                                      child: Image.network(
-                                        Itemimage[Index],
-                                        fit: BoxFit.cover,
+                                      margin: EdgeInsets.only(bottom: 20.0),
+                                      child: AdmobBanner(
+                                        adUnitId: getBannerAdUnitId(),
+                                        adSize: AdmobBannerSize.LARGE_BANNER,
                                       ),
-                                    ),
-                                    subtitle: Text(Itemcategory[Index]),
-                                  )));
-                            }))
+                                    );
+                                  }
+                                  return new InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Details(
+                                                  itemid: Itemid[Index])),
+                                        );
+                                      },
+                                      child: Card(
+                                          child: ListTile(
+                                        title: Text(Itemname[Index]),
+                                        trailing: FlatButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditItem(
+                                                          itemid:
+                                                              Itemid[Index])),
+                                            );
+                                          },
+                                          child: Text('Edit Item'),
+                                        ),
+                                        leading: Container(
+                                          height: 60,
+                                          width: 60,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Image.network(
+                                            Itemimage[Index],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        subtitle: Text(Itemcategory[Index]),
+                                      )));
+                                }))
+                        : Expanded(
+                            child: Column(
+                            children: <Widget>[
+                              Center(
+                                child: Text(
+                                  'Go ahead Add an Item \n and start selling!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              Expanded(
+                                  child: Image.asset(
+                                'assets/little_theologians_4x.jpg',
+                                fit: BoxFit.cover,
+                              ))
+                            ],
+                          )),
                   ],
                 ),
               )

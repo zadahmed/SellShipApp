@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:http/http.dart' as http;
 import 'package:sellship/screens/useritems.dart';
@@ -31,6 +32,8 @@ class _DetailsState extends State<Details> {
     setState(() {
       loading = true;
       itemid = widget.itemid;
+      heartColor = Colors.grey;
+      heartIcon = FontAwesome5.heart;
     });
     fetchItem();
   }
@@ -135,6 +138,9 @@ class _DetailsState extends State<Details> {
     return null;
   }
 
+  Color heartColor;
+  IconData heartIcon;
+
   @override
   Widget build(BuildContext context) {
     return loading == false
@@ -164,13 +170,21 @@ class _DetailsState extends State<Details> {
                       width: MediaQuery.of(context).size.width,
                       child: Stack(
                         children: <Widget>[
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: Image.network(
-                              newItem.image,
-                              height: 240,
-                              width: MediaQuery.of(context).size.width,
-                              fit: BoxFit.cover,
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(PageRouteBuilder(
+                                  opaque: false,
+                                  pageBuilder: (BuildContext context, _, __) =>
+                                      ImageDisplay(image: newItem.image)));
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.network(
+                                newItem.image,
+                                height: 240,
+                                width: MediaQuery.of(context).size.width,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                           Positioned(
@@ -178,6 +192,10 @@ class _DetailsState extends State<Details> {
                             bottom: 3.0,
                             child: RawMaterialButton(
                               onPressed: () {
+                                setState(() {
+                                  heartColor = Colors.amber;
+                                  heartIcon = FontAwesome.heart;
+                                });
                                 FavouriteItem();
                               },
                               fillColor: Colors.white,
@@ -186,8 +204,8 @@ class _DetailsState extends State<Details> {
                               child: Padding(
                                 padding: EdgeInsets.all(5),
                                 child: Icon(
-                                  Feather.heart,
-                                  color: Theme.of(context).accentColor,
+                                  heartIcon,
+                                  color: heartColor,
                                   size: 17,
                                 ),
                               ),
@@ -388,5 +406,34 @@ class _DetailsState extends State<Details> {
               ],
             ))
         : Scaffold(body: Center(child: CircularProgressIndicator()));
+  }
+}
+
+class ImageDisplay extends StatefulWidget {
+  final String image;
+  ImageDisplay({Key key, this.image}) : super(key: key);
+  @override
+  ImageDisplayState createState() => ImageDisplayState();
+}
+
+class ImageDisplayState extends State<ImageDisplay> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('sd'),
+        backgroundColor: Colors.transparent,
+      ),
+      backgroundColor: Colors.black.withOpacity(0.85),
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: PhotoView.customChild(
+            child: Image.network(
+              widget.image,
+              fit: BoxFit.contain,
+            ),
+          )),
+    );
   }
 }
