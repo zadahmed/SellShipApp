@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:http/http.dart' as http;
+import 'package:sellship/screens/useritems.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatefulWidget {
@@ -59,6 +60,7 @@ class _DetailsState extends State<Details> {
         username: jsonbody[0]['username'],
         useremail: jsonbody[0]['useremail'],
         usernumber: jsonbody[0]['usernumber'],
+        userid: jsonbody[0]['userid'],
         latitude: jsonbody[0]['latitude'],
         longitude: jsonbody[0]['longitude'],
         subsubcategory: jsonbody[0]['subsubcategory'],
@@ -252,6 +254,48 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     SizedBox(height: 10),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  UserItems(userid: newItem.userid)),
+                        );
+                      },
+                      child: Card(
+                        color: Colors.amber,
+                        child: ListTile(
+                          title: Text(
+                            newItem.username,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          leading: Icon(
+                            Feather.user,
+                            color: Colors.white,
+                          ),
+                          trailing: Text(
+                            'View ${newItem.username}\'s items',
+                            style: TextStyle(fontSize: 11, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: Container(
+                        // rounded corners ad.
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        child: AdmobBanner(
+                          adUnitId: getBannerAdUnitId(),
+                          adSize: AdmobBannerSize.LARGE_BANNER,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
                     Container(
                       height: 200,
                       width: MediaQuery.of(context).size.width,
@@ -270,7 +314,9 @@ class _DetailsState extends State<Details> {
                         tiltGesturesEnabled: false,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
                       child: Container(
@@ -302,7 +348,7 @@ class _DetailsState extends State<Details> {
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2,
-                    height: 60,
+                    height: 80,
                     color: Colors.amber,
                     child: Center(
                       child: Text(
@@ -326,7 +372,7 @@ class _DetailsState extends State<Details> {
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width / 2,
-                    height: 60,
+                    height: 80,
                     color: Colors.amber,
                     child: Center(
                       child: Text(
