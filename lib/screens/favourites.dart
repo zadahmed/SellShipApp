@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:sellship/screens/details.dart';
 
 class FavouritesScreen extends StatefulWidget {
   @override
@@ -14,18 +15,39 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   var userid;
   final storage = new FlutterSecureStorage();
 
+  List<String> Itemid = List<String>();
+  List<String> Itemname = List<String>();
+  List<String> Itemimage = List<String>();
+  List<String> Itemcategory = List<String>();
+  List<String> Itemprice = List<String>();
+
   getfavourites() async {
     userid = await storage.read(key: 'userid');
     print(userid);
     if (userid != null) {
-      var url = 'https://sellship.co/api/user/' + userid;
+      var url = 'https://sellship.co/api/favourites/' + userid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
-        Map<String, dynamic> profilemap = respons[0];
+        var profilemap = respons;
         print(profilemap);
+        for (var i = 0; i < profilemap.length; i++) {
+          Itemid.add(profilemap[i]['_id']['\$oid']);
+          Itemname.add(profilemap[i]['name']);
+          Itemimage.add(profilemap[i]['image']);
+          Itemprice.add(profilemap[i]['price']);
+          Itemcategory.add(profilemap[i]['category']);
+        }
+
+        setState(() {
+          Itemid = Itemid;
+          Itemname = Itemname;
+          Itemimage = Itemimage;
+          Itemprice = Itemprice;
+          Itemcategory = Itemcategory;
+        });
       } else {
-        print('Error');
+        print(response.statusCode);
       }
     }
   }
@@ -56,46 +78,26 @@ class FavouritesScreenState extends State<FavouritesScreen> {
 
 //          Bag list
           Expanded(
-            child: ListView.builder(
-              itemCount: 300,
-              itemBuilder: (ctx, i) {
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 25),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.red),
-//                          child: Image.network(
-//                            "wefwef",
-//                            fit: BoxFit.cover,
-//                          ),
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              '$i',
-                              style: Theme.of(context).textTheme.title,
-                            ),
-                            Text('$i'),
-                            SizedBox(
-                              height: 15,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
+              child: new ListView.builder(
+                  itemCount: Itemname.length,
+                  itemBuilder: (BuildContext ctxt, int Index) {
+                    return new InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Details(itemid: Itemid[Index])),
+                          );
+                        },
+                        child: Card(
+                            child: ListTile(
+                          title: Text(Itemname[Index]),
+                          trailing: Text(Itemprice[Index]),
+                          leading: Image.network(Itemimage[Index]),
+                          subtitle: Text(Itemcategory[Index]),
+                        )));
+                  }))
         ],
       ),
     );

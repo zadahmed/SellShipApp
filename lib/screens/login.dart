@@ -534,10 +534,10 @@ class _LoginPageState extends State<LoginPage>
             children: <Widget>[
               Text(
                 'Welcome to SellShip',
-                style: Theme.of(context)
-                    .textTheme
-                    .display1
-                    .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
               IconButton(
                 onPressed: () {
@@ -581,7 +581,7 @@ class _LoginPageState extends State<LoginPage>
           Divider(),
           Center(
             child: Text(
-              'Items',
+              'My Items',
               style: TextStyle(color: Colors.black, fontSize: 20),
             ),
           ),
@@ -916,6 +916,13 @@ class _LoginPageState extends State<LoginPage>
             Itemprice.add(productmap[i]['price']);
             Itemcategory.add(productmap[i]['category']);
           }
+          setState(() {
+            Itemid = Itemid;
+            Itemname = Itemname;
+            Itemimage = Itemimage;
+            Itemprice = Itemprice;
+            Itemcategory = Itemcategory;
+          });
         } else {
           print('No Items');
         }
