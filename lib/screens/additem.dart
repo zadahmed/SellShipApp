@@ -420,7 +420,18 @@ class _AddItemState extends State<AddItem> {
                 SizedBox(
                   height: 10.0,
                 ),
-                Text('Item Location'),
+                Text(
+                  'Choose Item\'s Location',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text(
+                  'Press on the map to choose the Item\'s location',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16),
+                ),
                 SizedBox(
                   height: 10.0,
                 ),
@@ -469,6 +480,25 @@ class _AddItemState extends State<AddItem> {
             var userurl = 'https://sellship.co/api/user/' + userid;
             final userresponse = await http.get(userurl);
             if (userresponse.statusCode == 200) {
+              var userrespons = json.decode(userresponse.body);
+              var profilemap = userrespons;
+              print(profilemap);
+              if (mounted) {
+                setState(() {
+                  firstname = profilemap['first_name'];
+                  phonenumber = profilemap['phonenumber'];
+                  email = profilemap['email'];
+                });
+              }
+            }
+
+            if (phonenumber == null || email == null) {
+              showInSnackBar('Please update your Phone Number and Email');
+            } else if (businessnameController.text.isNotEmpty &&
+                _image != null &&
+                businesspricecontroller.text.isNotEmpty &&
+                businessdescriptionController.text.isNotEmpty &&
+                position != null) {
               showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -495,84 +525,73 @@ class _AddItemState extends State<AddItem> {
                       ),
                     );
                   });
-
-              var userrespons = json.decode(userresponse.body);
-              var profilemap = userrespons;
-              print(profilemap);
-              if (mounted) {
-                setState(() {
-                  firstname = profilemap['first_name'];
-                  phonenumber = profilemap['phonenumber'];
-                  email = profilemap['email'];
-                });
-              }
-            }
-
-            if (phonenumber == null || email == null) {
-              showInSnackBar('Please update your Phone Number and Email');
-            } else {
               String fileName = _image.path.split('/').last;
               var url = 'https://sellship.co/api/additem';
 
               Dio dio = new Dio();
 
-              if (businessnameController.text.isNotEmpty) {
-                FormData formData = FormData.fromMap({
-                  'name': businessnameController.text,
-                  'price': businesspricecontroller.text,
-                  'category': _selectedCategory,
-                  'subcategory':
-                      _selectedsubCategory == null ? '' : _selectedsubCategory,
-                  'subsubcategory': _selectedsubsubCategory == null
-                      ? ''
-                      : _selectedsubsubCategory,
-                  'latitude': position.latitude,
-                  'longitude': position.longitude,
-                  'description': businessdescriptionController.text,
-                  'city': city,
-                  'userid': userid,
-                  'username': firstname,
-                  'useremail': email,
-                  'usernumber': phonenumber,
-                  'date_uploaded': DateTime.now().toString(),
-                  'image': await MultipartFile.fromFile(_image.path,
-                      filename: fileName)
-                });
+              FormData formData = FormData.fromMap({
+                'name': businessnameController.text,
+                'price': businesspricecontroller.text,
+                'category': _selectedCategory,
+                'subcategory':
+                    _selectedsubCategory == null ? '' : _selectedsubCategory,
+                'subsubcategory': _selectedsubsubCategory == null
+                    ? ''
+                    : _selectedsubsubCategory,
+                'latitude': position.latitude,
+                'longitude': position.longitude,
+                'description': businessdescriptionController.text,
+                'city': city,
+                'userid': userid,
+                'username': firstname,
+                'useremail': email,
+                'usernumber': phonenumber,
+                'date_uploaded': DateTime.now().toString(),
+                'image': await MultipartFile.fromFile(_image.path,
+                    filename: fileName)
+              });
 
-                var response = await dio.post(url, data: formData);
-                if (response.statusCode == 200) {
-                  Navigator.pop(context);
+              var response = await dio.post(url, data: formData);
+              if (response.statusCode == 200) {
+                Navigator.pop(context);
 
-                  showDialog(
-                      context: context,
-                      builder: (_) => AssetGiffyDialog(
-                            image: Image.asset(
-                              'assets/yay.gif',
-                              fit: BoxFit.cover,
-                            ),
-                            title: Text(
-                              'Hooray!',
-                              style: TextStyle(
-                                  fontSize: 22.0, fontWeight: FontWeight.w600),
-                            ),
-                            description: Text(
-                              'Your Item\'s Uploaded',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(),
-                            ),
-                            onlyOkButton: true,
-                            entryAnimation: EntryAnimation.DEFAULT,
-                            onOkButtonPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ));
-                } else {
-                  print(response.statusCode);
-                }
+                showDialog(
+                    context: context,
+                    builder: (_) => AssetGiffyDialog(
+                          image: Image.asset(
+                            'assets/yay.gif',
+                            fit: BoxFit.cover,
+                          ),
+                          title: Text(
+                            'Hooray!',
+                            style: TextStyle(
+                                fontSize: 22.0, fontWeight: FontWeight.w600),
+                          ),
+                          description: Text(
+                            'Your Item\'s Uploaded',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(),
+                          ),
+                          onlyOkButton: true,
+                          entryAnimation: EntryAnimation.DEFAULT,
+                          onOkButtonPressed: () {
+                            Navigator.pop(context);
+                            businesspricecontroller.clear();
+                            businessnameController.clear();
+                            businessdescriptionController.clear();
+                            _image.writeAsStringSync('');
+                            FocusScope.of(context).unfocus();
+                          },
+                        ));
+              } else {
+                print(response.statusCode);
               }
+            } else {
+              showInSnackBar('Oops looks like your missing something!');
             }
           } else {
-            showInSnackBar('Please Login to use Favourites');
+            showInSnackBar('Please Login to Add an Item');
           }
         },
         child: Container(

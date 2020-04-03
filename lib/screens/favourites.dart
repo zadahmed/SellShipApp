@@ -45,6 +45,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
           Itemimage = Itemimage;
           Itemprice = Itemprice;
           Itemcategory = Itemcategory;
+          loading = false;
         });
       } else {
         print(response.statusCode);
@@ -52,54 +53,94 @@ class FavouritesScreenState extends State<FavouritesScreen> {
     }
   }
 
+  var loading;
+
   @override
   void initState() {
     super.initState();
+    setState(() {
+      loading = true;
+    });
     getfavourites();
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            "Favourites ❤️",
-            style: Theme.of(context)
-                .textTheme
-                .display1
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-          SizedBox(
-            height: 15,
-          ),
+    return loading == false
+        ? Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "Favourites ❤️",
+                  style: Theme.of(context).textTheme.display1.copyWith(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
 
 //          Bag list
-          Expanded(
-              child: new ListView.builder(
-                  itemCount: Itemname.length,
-                  itemBuilder: (BuildContext ctxt, int Index) {
-                    return new InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    Details(itemid: Itemid[Index])),
-                          );
-                        },
-                        child: Card(
-                            child: ListTile(
-                          title: Text(Itemname[Index]),
-                          trailing: Text(Itemprice[Index]),
-                          leading: Image.network(Itemimage[Index]),
-                          subtitle: Text(Itemcategory[Index]),
-                        )));
-                  }))
-        ],
-      ),
-    );
+                Expanded(
+                    child: new ListView.builder(
+                        itemCount: Itemname.length,
+                        itemBuilder: (BuildContext ctxt, int Index) {
+                          return new InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          Details(itemid: Itemid[Index])),
+                                );
+                              },
+                              child: Card(
+                                  child: ListTile(
+                                title: Text(Itemname[Index]),
+                                trailing: Text(Itemprice[Index]),
+                                leading: Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Image.network(
+                                    Itemimage[Index],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                subtitle: Text(Itemcategory[Index]),
+                              )));
+                        }))
+              ],
+            ),
+          )
+        : Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 100,
+              width: 100,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Loading'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CircularProgressIndicator()
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 }

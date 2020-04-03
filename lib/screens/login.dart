@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:admob_flutter/admob_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -9,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:sellship/screens/details.dart';
+import 'package:sellship/screens/edititem.dart';
 import 'package:sellship/screens/editprofile.dart';
 
 class LoginPage extends StatefulWidget {
@@ -145,73 +150,98 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
+  Widget RootProfile(BuildContext context) {}
+
   Widget LoginSignup(BuildContext context) {
-    return new Scaffold(
-      key: _scaffoldKey,
-      body: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (overscroll) {
-          overscroll.disallowGlow();
-        },
-        child: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height >= 825.0
-                ? MediaQuery.of(context).size.height
-                : 825.0,
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                  colors: [Colors.amberAccent, Colors.amber],
-                  begin: const FractionalOffset(0.0, 0.0),
-                  end: const FractionalOffset(1.0, 1.0),
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 75.0),
-                  child: new Text('Welcome to SellShip!'),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: _buildMenuBar(context),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (i) {
-                      if (i == 0) {
-                        setState(() {
-                          right = Colors.white;
-                          left = Colors.black;
-                        });
-                      } else if (i == 1) {
-                        setState(() {
-                          right = Colors.black;
-                          left = Colors.white;
-                        });
-                      }
-                    },
+    return loading == false
+        ? new Scaffold(
+            key: _scaffoldKey,
+            body: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowGlow();
+              },
+              child: SingleChildScrollView(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height >= 825.0
+                      ? MediaQuery.of(context).size.height
+                      : 825.0,
+                  decoration: new BoxDecoration(
+                    gradient: new LinearGradient(
+                        colors: [Colors.amberAccent, Colors.amber],
+                        begin: const FractionalOffset(0.0, 0.0),
+                        end: const FractionalOffset(1.0, 1.0),
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.clamp),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      new ConstrainedBox(
-                        constraints: const BoxConstraints.expand(),
-                        child: _buildSignIn(context),
+                      Padding(
+                        padding: EdgeInsets.only(top: 75.0),
+                        child: new Text('Welcome to SellShip!'),
                       ),
-                      new ConstrainedBox(
-                        constraints: const BoxConstraints.expand(),
-                        child: _buildSignUp(context),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: _buildMenuBar(context),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: PageView(
+                          controller: _pageController,
+                          onPageChanged: (i) {
+                            if (i == 0) {
+                              setState(() {
+                                right = Colors.white;
+                                left = Colors.black;
+                              });
+                            } else if (i == 1) {
+                              setState(() {
+                                right = Colors.black;
+                                left = Colors.white;
+                              });
+                            }
+                          },
+                          children: <Widget>[
+                            new ConstrainedBox(
+                              constraints: const BoxConstraints.expand(),
+                              child: _buildSignIn(context),
+                            ),
+                            new ConstrainedBox(
+                              constraints: const BoxConstraints.expand(),
+                              child: _buildSignUp(context),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 100,
+              width: 100,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Loading'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CircularProgressIndicator()
+                  ],
+                ),
+              ),
+            ),
+          );
   }
 
   @override
@@ -227,6 +257,9 @@ class _LoginPageState extends State<LoginPage>
   void initState() {
     super.initState();
 
+    setState(() {
+      loading = true;
+    });
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -523,95 +556,153 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
+  var loading;
+
   Widget profile(BuildContext context) {
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(15.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Welcome to SellShip',
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-              IconButton(
-                onPressed: () {
-                  storage.delete(key: 'userid');
-                  setState(() {
-                    userid = null;
-                  });
-                },
-                icon: Icon(Feather.log_out),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                'Hi ' + firstname + '!',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-              FlatButton(
-                color: Colors.amber,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => EditProfile()),
-                  );
-                },
-                child: Text(
-                  'Edit Profile',
-                  style: TextStyle(color: Colors.white),
+        body: loading == false
+            ? Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Welcome to SellShip',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            storage.delete(key: 'userid');
+                            setState(() {
+                              userid = null;
+                            });
+                          },
+                          icon: Icon(Feather.log_out),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Hi ' + firstname + '!',
+                          style: TextStyle(color: Colors.black, fontSize: 20),
+                        ),
+                        FlatButton(
+                          color: Colors.amber,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfile()),
+                            );
+                          },
+                          child: Text(
+                            'Edit Profile',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Divider(),
+                    Center(
+                      child: Text(
+                        'My Items',
+                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Expanded(
+                        child: new ListView.builder(
+                            itemCount: Itemname.length,
+                            itemBuilder: (BuildContext ctxt, int Index) {
+                              if (Index % 4 == 0) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  margin: EdgeInsets.only(bottom: 20.0),
+                                  child: AdmobBanner(
+                                    adUnitId: getBannerAdUnitId(),
+                                    adSize: AdmobBannerSize.LARGE_BANNER,
+                                  ),
+                                );
+                              }
+                              return new InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Details(itemid: Itemid[Index])),
+                                    );
+                                  },
+                                  child: Card(
+                                      child: ListTile(
+                                    title: Text(Itemname[Index]),
+                                    trailing: FlatButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => EditItem(
+                                                  itemid: Itemid[Index])),
+                                        );
+                                      },
+                                      child: Text('Edit Item'),
+                                    ),
+                                    leading: Container(
+                                      height: 60,
+                                      width: 60,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Image.network(
+                                        Itemimage[Index],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    subtitle: Text(Itemcategory[Index]),
+                                  )));
+                            }))
+                  ],
                 ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Divider(),
-          Center(
-            child: Text(
-              'My Items',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Expanded(
-              child: new ListView.builder(
-                  itemCount: Itemname.length,
-                  itemBuilder: (BuildContext ctxt, int Index) {
-                    return new InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    Details(itemid: Itemid[Index])),
-                          );
-                        },
-                        child: Card(
-                            child: ListTile(
-                          title: Text(Itemname[Index]),
-                          trailing: Text(Itemprice[Index]),
-                          leading: Image.network(Itemimage[Index]),
-                          subtitle: Text(Itemcategory[Index]),
-                        )));
-                  }))
-        ],
-      ),
-    ));
+              )
+            : Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(20.0)), //this right here
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Loading'),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        CircularProgressIndicator()
+                      ],
+                    ),
+                  ),
+                ),
+              ));
   }
 
   Widget _buildSignUp(BuildContext context) {
@@ -933,12 +1024,26 @@ class _LoginPageState extends State<LoginPage>
             lastname = profilemap['last_name'];
             phonenumber = profilemap['phonenumber'];
             email = profilemap['email'];
+            loading = false;
           });
         }
       } else {
         print('Error');
       }
+    } else {
+      setState(() {
+        loading = false;
+      });
     }
+  }
+
+  String getBannerAdUnitId() {
+    if (Platform.isIOS) {
+      return 'ca-app-pub-9959700192389744/1339524606';
+    } else if (Platform.isAndroid) {
+      return 'ca-app-pub-9959700192389744/3087720541';
+    }
+    return null;
   }
 
   void Login() async {

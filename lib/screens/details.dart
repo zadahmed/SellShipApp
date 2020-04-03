@@ -8,8 +8,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:http/http.dart' as http;
-import 'package:sellship/screens/home.dart';
-import 'package:sellship/screens/login.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatefulWidget {

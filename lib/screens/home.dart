@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,7 @@ import 'package:location/location.dart';
 import 'package:sellship/screens/details.dart';
 
 class HomeScreen extends StatefulWidget {
+  HomeScreen({Key key}) : super(key: key);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -24,7 +26,11 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Item> _search = [];
 
   var skip = 0;
-  var limit = 10;
+  var limit = 20;
+
+  bool gettingNewData;
+
+  var _scrollController;
 
   Future<List<Item>> fetchItems(int skip, int limit) async {
     var url = 'https://sellship.co/api/getitems/' +
@@ -51,6 +57,13 @@ class _HomeScreenState extends State<HomeScreen> {
         category: jsondata['category'],
       );
       itemsgrid.add(item);
+      setState(() {
+        gettingNewData = false;
+      });
+    }
+
+    if (itemsgrid.length % 10 == 1) {
+      imageCache.clear();
     }
 
     return itemsgrid;
@@ -165,30 +178,33 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         Expanded(
-          child: FutureBuilder<List<Item>>(
-            future: xtraDataAvailable == false
-                ? fetchItems(0, 10)
-                : fetchItems(skip, limit),
+          child: StreamBuilder<List<Item>>(
+            stream: xtraDataAvailable == false
+                ? fetchItems(0, 10).asStream()
+                : fetchItems(skip, limit).asStream(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.data != null) {
                 return NotificationListener(
-                  child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
+                  child: StaggeredGridView.countBuilder(
+                    controller: _scrollController,
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                    // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //   crossAxisCount: 2,
+                    // ),
                     itemCount:
                         _search.isEmpty ? itemsgrid.length : _search.length,
                     itemBuilder: (context, index) {
-                      if (index != 0 && index % 6 == 0) {
+                      if (index == 7 ||
+                          index == 14 ||
+                          index == 21 ||
+                          index == 29) {
                         return Container(
                           margin: EdgeInsets.only(bottom: 20.0),
                           child: AdmobBanner(
                             adUnitId: getBannerAdUnitId(),
                             adSize: AdmobBannerSize.LARGE_BANNER,
-                            listener: (AdmobAdEvent event,
-                                Map<String, dynamic> args) {
-                              handleEvent(event, args, 'Banner');
-                            },
                           ),
                         );
                       }
@@ -382,15 +398,25 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                     },
+                    staggeredTileBuilder: (int index) {
+                      if (index != 0 && index % 7 == 0) {
+                        return StaggeredTile.count(2, 1);
+                      } else {
+                        return StaggeredTile.count(1, 1);
+                      }
+                    },
                   ),
                   onNotification: (t) {
-                    if (t is ScrollEndNotification) {
+                    // IF SCROLL BOTTOM IS REACHED
+                    if (t is ScrollEndNotification ||
+                        t is ScrollStartNotification) {
                       setState(() {
                         print('get more data');
                         print('xtradata: $xtraDataAvailable');
                         print('offset: $skip');
+                        gettingNewData = true;
                         xtraDataAvailable = true;
-                        skip = skip + 10;
+                        skip = skip + 20;
                       });
                     }
                     // return true;
@@ -401,7 +427,11 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
           ),
-        )
+        ),
+        // SHOW LOADER ANIMATION WHEN GETTING NEW DATA
+        // gettingNewData == true
+        //     ? Container(height: 50, child: LinearProgressIndicator())
+        //     : SizedBox(),
       ],
     )));
   }

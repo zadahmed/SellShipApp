@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:sellship/screens/additem.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
@@ -128,8 +129,8 @@ class _MyAppState extends State<MyApp> {
                   ),
                   title: Text("Add an Item")),
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_basket),
-                title: Text("Cart"),
+                icon: Icon(Feather.heart),
+                title: Text("Favourites"),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person_outline),
