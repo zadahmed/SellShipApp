@@ -100,11 +100,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'SellShip',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
         home: Scaffold(
-          backgroundColor: bgColor,
           bottomNavigationBar: BottomNavigationBar(
             selectedItemColor: Colors.black87,
             unselectedItemColor: Colors.grey[500],
@@ -118,50 +114,42 @@ class _MyAppState extends State<MyApp> {
               BottomNavigationBarItem(
                 icon: Icon(
                   FontAwesome.home,
-                  color: Colors.amberAccent,
                 ),
                 title: Text(
                   "Home",
-                  style: TextStyle(color: Colors.amber),
                 ),
               ),
               BottomNavigationBarItem(
                   icon: Icon(
                     FontAwesome5.list_alt,
-                    color: Colors.amberAccent,
                   ),
                   title: Text(
                     "Categories",
-                    style: TextStyle(color: Colors.amber),
                   )),
               BottomNavigationBarItem(
                   icon: Icon(
-                    FontAwesome.plus_square_o,
+                    FontAwesome.plus_square,
                     size: 40,
-                    color: Colors.amberAccent,
+                    color: Colors.amber,
                   ),
                   title: Text(
                     "Add an Item",
-                    style: TextStyle(color: Colors.amber),
+                    style: TextStyle(color: Colors.white),
                   )),
               BottomNavigationBarItem(
                 icon: Icon(
                   FontAwesome.heart,
-                  color: Colors.amberAccent,
                 ),
                 title: Text(
                   "Favourites",
-                  style: TextStyle(color: Colors.amber),
                 ),
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   FontAwesome.user_circle_o,
-                  color: Colors.amberAccent,
                 ),
                 title: Text(
                   "Profile",
-                  style: TextStyle(color: Colors.amber),
                 ),
               ),
             ],

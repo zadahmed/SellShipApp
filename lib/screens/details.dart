@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:share/share.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -158,6 +158,18 @@ class _DetailsState extends State<Details> {
                   color: Colors.black,
                 ),
               ),
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () {
+                    Share.share(
+                        'Hey! look what i found on SellShip! This awesome ${newItem.name}!');
+                  },
+                  icon: Icon(
+                    Feather.share,
+                    color: Colors.black,
+                  ),
+                )
+              ],
             ),
             body: Stack(
               children: <Widget>[
@@ -314,22 +326,35 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    Container(
-                      height: 200,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                            target: position, zoom: 18.0, bearing: 70),
-                        onMapCreated: mapCreated,
-                        markers: _markers,
-                        zoomGesturesEnabled: true,
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: true,
-                        compassEnabled: true,
-                        tiltGesturesEnabled: false,
+                    InkWell(
+                      onTap: () async {
+                        final String googleMapsUrl =
+                            "comgooglemaps://?center=${position.latitude},${position.longitude}";
+                        final String appleMapsUrl =
+                            "https://maps.apple.com/?q=${position.latitude},${position.longitude}";
+
+                        if (await canLaunch(googleMapsUrl)) {
+                          await launch(googleMapsUrl,
+                              forceSafariVC: true, forceWebView: true);
+                        }
+                        if (await canLaunch(appleMapsUrl)) {
+                          await launch(appleMapsUrl, forceSafariVC: false);
+                        } else {
+                          throw "Couldn't launch URL";
+                        }
+                      },
+                      child: Container(
+                        height: 200,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                              target: position, zoom: 18.0, bearing: 70),
+                          onMapCreated: mapCreated,
+                          markers: _markers,
+                        ),
                       ),
                     ),
                     SizedBox(

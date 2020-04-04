@@ -25,46 +25,48 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Item> itemsgrid = [];
   List<Item> _search = [];
 
-  var skip = 0;
-  var limit = 20;
+  var skip;
+  var limit;
 
   bool gettingNewData;
 
   var _scrollController;
 
+  int totalItemsAtDb;
+
   Future<List<Item>> fetchItems(int skip, int limit) async {
+    if (city == null) {
+      _getLocation();
+    }
+
     var url = 'https://sellship.co/api/getitems/' +
         city +
         '/' +
         skip.toString() +
         '/' +
         limit.toString();
-    print(url);
+
     final response = await http.post(url, body: {
       'latitude': position.latitude.toString(),
       'longitude': position.longitude.toString()
     });
 
     var jsonbody = json.decode(response.body);
-    // itemsgrid.clear();
 
-    for (var jsondata in jsonbody) {
+    for (var i = 0; i < jsonbody.length; i++) {
       Item item = Item(
-        itemid: jsondata['_id']['\$oid'],
-        name: jsondata['name'],
-        image: jsondata['image'],
-        price: jsondata['price'],
-        category: jsondata['category'],
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'],
+        category: jsonbody[i]['category'],
       );
       itemsgrid.add(item);
-      setState(() {
-        gettingNewData = false;
-      });
     }
 
-    if (itemsgrid.length % 10 == 1) {
-      imageCache.clear();
-    }
+    setState(() {
+      gettingNewData = false;
+    });
 
     return itemsgrid;
   }
@@ -77,6 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    skip = 0;
+    limit = 20;
     readstorage();
   }
 
@@ -177,261 +181,300 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-        Expanded(
-          child: StreamBuilder<List<Item>>(
-            stream: xtraDataAvailable == false
-                ? fetchItems(0, 10).asStream()
-                : fetchItems(skip, limit).asStream(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.data != null) {
-                return NotificationListener(
-                  child: StaggeredGridView.countBuilder(
-                    controller: _scrollController,
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                    // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    //   crossAxisCount: 2,
-                    // ),
-                    itemCount:
-                        _search.isEmpty ? itemsgrid.length : _search.length,
-                    itemBuilder: (context, index) {
-                      if (index == 7 ||
-                          index == 14 ||
-                          index == 21 ||
-                          index == 29) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: AdmobBanner(
-                            adUnitId: getBannerAdUnitId(),
-                            adSize: AdmobBannerSize.LARGE_BANNER,
-                          ),
-                        );
-                      }
-                      return _search.isEmpty
-                          ? InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Details(
-                                          itemid: itemsgrid[index].itemid)),
-                                );
-                              },
-                              child: Padding(
-                                  padding: EdgeInsets.all(1),
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0)),
-                                      elevation: 3.0,
-                                      child: Column(
-                                        children: <Widget>[
-                                          Container(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                6.6,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                topRight: Radius.circular(10),
-                                              ),
-                                              child: Image.network(
-                                                itemsgrid[index].image,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 2.0),
-                                          Expanded(
-                                            child: Text(
-                                              itemsgrid[index].name,
-                                              overflow: TextOverflow.fade,
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
-                                          SizedBox(height: 3.0),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+        itemsgrid.isNotEmpty
+            ? Expanded(
+                child: StreamBuilder<List<Item>>(
+                  stream: fetchItems(skip, limit).asStream(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.data != null) {
+                      return NotificationListener(
+                        child: StaggeredGridView.countBuilder(
+                          controller: _scrollController,
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 5,
+                          crossAxisSpacing: 5,
+                          // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          //   crossAxisCount: 2,
+                          // ),
+                          itemCount: _search.isEmpty
+                              ? itemsgrid.length
+                              : _search.length,
+                          itemBuilder: (context, index) {
+                            if (index == 7 ||
+                                index == 14 ||
+                                index == 21 ||
+                                index == 29) {
+                              return Container(
+                                margin: EdgeInsets.only(bottom: 20.0),
+                                child: AdmobBanner(
+                                  adUnitId: getBannerAdUnitId(),
+                                  adSize: AdmobBannerSize.LARGE_BANNER,
+                                ),
+                              );
+                            }
+                            return _search.isEmpty
+                                ? InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                itemid:
+                                                    itemsgrid[index].itemid)),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(1),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          elevation: 3.0,
+                                          child: Column(
                                             children: <Widget>[
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    6.0,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10),
+                                                  ),
+                                                  child: Image.network(
+                                                    itemsgrid[index].image,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 2.0),
                                               Expanded(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 15.0),
-                                                  child: Container(
-                                                    width: 100,
-                                                    child: Text(
-                                                      itemsgrid[index].category,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w300,
+                                                child: Text(
+                                                  itemsgrid[index].name,
+                                                  overflow: TextOverflow.fade,
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                              SizedBox(height: 3.0),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 15.0),
+                                                      child: Container(
+                                                        width: 100,
+                                                        child: Text(
+                                                          itemsgrid[index]
+                                                              .category,
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w300,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
+                                                  Expanded(
+                                                      child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 7.0),
+                                                    child: Text(
+                                                      itemsgrid[index].price +
+                                                          ' AED',
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                  )),
+                                                ],
                                               ),
-                                              Expanded(
-                                                  child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(right: 7.0),
-                                                child: Text(
-                                                  itemsgrid[index].price +
-                                                      ' AED',
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                ),
-                                              )),
                                             ],
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ),
-                                  )))
-                          : InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Details(
-                                          itemid: _search[index].itemid)),
-                                );
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(1),
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    elevation: 3.0,
-                                    child: Column(
-                                      children: <Widget>[
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              6.8,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10),
-                                            ),
-                                            child: Image.network(
-                                              _search[index].image,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 2.0),
-                                        Expanded(
-                                          child: Text(
-                                            _search[index].name,
-                                            overflow: TextOverflow.visible,
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                        SizedBox(height: 3.0),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 15.0),
-                                                child: Container(
-                                                  width: 100,
-                                                  child: Text(
-                                                    _search[index].category,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                    ),
+                                  )
+                                : InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                itemid: _search[index].itemid)),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(1),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          elevation: 3.0,
+                                          child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    6.8,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10),
+                                                  ),
+                                                  child: Image.network(
+                                                    _search[index].image,
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Expanded(
-                                                child: Padding(
-                                              padding:
-                                                  EdgeInsets.only(right: 7.0),
-                                              child: Text(
-                                                _search[index].price + ' AED',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
+                                              SizedBox(height: 2.0),
+                                              Expanded(
+                                                child: Text(
+                                                  _search[index].name,
+                                                  overflow:
+                                                      TextOverflow.visible,
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                textAlign: TextAlign.left,
                                               ),
-                                            )),
-                                          ],
+                                              SizedBox(height: 3.0),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 15.0),
+                                                      child: Container(
+                                                        width: 100,
+                                                        child: Text(
+                                                          _search[index]
+                                                              .category,
+                                                          style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.w300,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                      child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: 7.0),
+                                                    child: Text(
+                                                      _search[index].price +
+                                                          ' AED',
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                  )),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                            );
-                    },
-                    staggeredTileBuilder: (int index) {
-                      if (index != 0 && index % 7 == 0) {
-                        return StaggeredTile.count(2, 1);
-                      } else {
-                        return StaggeredTile.count(1, 1);
-                      }
-                    },
-                  ),
-                  onNotification: (t) {
-                    // IF SCROLL BOTTOM IS REACHED
-                    if (t is ScrollEndNotification ||
-                        t is ScrollStartNotification) {
-                      setState(() {
-                        print('get more data');
-                        print('xtradata: $xtraDataAvailable');
-                        print('offset: $skip');
-                        gettingNewData = true;
-                        xtraDataAvailable = true;
-                        skip = skip + 20;
-                      });
+                                  );
+                          },
+                          staggeredTileBuilder: (int index) {
+                            if (index == 7 ||
+                                index == 14 ||
+                                index == 21 ||
+                                index == 29) {
+                              return StaggeredTile.count(2, 1);
+                            } else {
+                              return StaggeredTile.count(1, 1);
+                            }
+                          },
+                        ),
+                        onNotification: (t) {
+                          // IF SCROLL BOTTOM IS REACHED
+                          if (t is ScrollEndNotification) {
+                            setState(() {
+                              itemsgrid = Set.of(itemsgrid).toList();
+                              print('get more data');
+                              print('xtradata: $xtraDataAvailable');
+                              print('offset: $skip');
+                              gettingNewData = true;
+                              xtraDataAvailable = true;
+                              skip = skip + 20;
+                            });
+                          }
+                          // return true;
+                        },
+                      );
+                    } else {
+                      return Container(
+                          height: 50, child: LinearProgressIndicator());
                     }
-                    // return true;
                   },
-                );
-              } else {
-                return Container(height: 50, child: LinearProgressIndicator());
-              }
-            },
-          ),
-        ),
-        // SHOW LOADER ANIMATION WHEN GETTING NEW DATA
-        // gettingNewData == true
-        //     ? Container(height: 50, child: LinearProgressIndicator())
-        //     : SizedBox(),
+                ),
+              )
+            : Expanded(
+                child: Column(
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      'Looks like you\'re the first here! \n Don\'t be shy add an Item!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  Expanded(
+                      child: Image.asset(
+                    'assets/sss.jpg',
+                    fit: BoxFit.cover,
+                  ))
+                ],
+              )),
       ],
     )));
   }

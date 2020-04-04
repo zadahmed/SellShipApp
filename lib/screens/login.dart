@@ -68,6 +68,10 @@ class _LoginPageState extends State<LoginPage>
         final token = result.accessToken.token;
         final graphResponse = await http.get(
             'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
+
+        setState(() {
+          loading = true;
+        });
         final profile = json.decode(graphResponse.body);
 
         var url = 'https://sellship.co/api/signup';
@@ -177,12 +181,19 @@ class _LoginPageState extends State<LoginPage>
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 75.0),
-                        child: new Text('Welcome to SellShip!'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height: 100,
+                        width: 200,
+                        child: Image.asset(
+                          'assets/logo.png',
+                          fit: BoxFit.fitWidth,
+                        ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 20.0),
+                        padding: EdgeInsets.only(top: 10.0),
                         child: _buildMenuBar(context),
                       ),
                       Expanded(
@@ -647,21 +658,6 @@ class _LoginPageState extends State<LoginPage>
                             child: new ListView.builder(
                                 itemCount: Itemname.length,
                                 itemBuilder: (BuildContext ctxt, int Index) {
-                                  if (Index == 4 ||
-                                      Index == 8 ||
-                                      Index == 12 ||
-                                      Index == 16) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      margin: EdgeInsets.only(bottom: 20.0),
-                                      child: AdmobBanner(
-                                        adUnitId: getBannerAdUnitId(),
-                                        adSize: AdmobBannerSize.LARGE_BANNER,
-                                      ),
-                                    );
-                                  }
                                   return new InkWell(
                                       onTap: () {
                                         Navigator.push(

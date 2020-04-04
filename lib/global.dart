@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Color bgColor = Color(0xfff5f5f5);
+Color bgColor = Colors.amber;
 
 class Categories {
   final String title;
