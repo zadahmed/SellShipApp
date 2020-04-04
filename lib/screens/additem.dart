@@ -106,368 +106,374 @@ class _AddItemState extends State<AddItem> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Color(0xFFC5CCD6)),
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width - 40,
-        margin: EdgeInsets.symmetric(horizontal: 20.0),
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        getImage();
-                      },
-                      child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(10)),
-                          height: 120,
-                          width: 120,
-                          child: _image == null
-                              ? Icon(Icons.add)
-                              : Image.file(
-                                  _image,
-                                  fit: BoxFit.cover,
-                                )),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: DropdownButton(
-                    hint: Text(
-                        'Please choose a category'), // Not necessary for Option 1
-                    value: _selectedCategory,
-                    onChanged: (newValue) {
-                      setState(() {
-                        _selectedCategory = newValue;
-                        _selectedsubCategory = null;
-                        _subcategories = [''];
-                      });
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width - 40,
+          margin: EdgeInsets.symmetric(horizontal: 20.0),
+          child: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () {
+                          getImage();
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(10)),
+                            height: 120,
+                            width: 120,
+                            child: _image == null
+                                ? Icon(Icons.add)
+                                : Image.file(
+                                    _image,
+                                    fit: BoxFit.cover,
+                                  )),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: DropdownButton(
+                      hint: Text(
+                          'Please choose a category'), // Not necessary for Option 1
+                      value: _selectedCategory,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedCategory = newValue;
+                          _selectedsubCategory = null;
+                          _subcategories = [''];
+                        });
 
-                      if (_selectedCategory == 'Electronics') {
-                        setState(() {
-                          _subcategories = [
-                            'Phones & Accessories',
-                            'Gaming',
-                            'Cameras & Photography',
-                            'Car Technology',
-                            'Computers,PCs & Laptops',
-                            'Drones',
-                            'Home Appliances',
-                            'Smart Home & Security',
-                            'Sound & Audio',
-                            'Tablets & eReaders',
-                            'TV & Video',
-                            'Wearables',
-                            'Virtual Reality',
-                          ];
-                        });
-                      } else if (_selectedCategory == 'Fashion & Accessories') {
-                        setState(() {
-                          _subcategories = [
-                            'Women',
-                            'Men',
-                            'Girls',
-                            'Boys',
-                          ];
-                        });
-                      } else if (_selectedCategory == 'Motors') {
-                        setState(() {
-                          _subcategories = ['Cars', 'Motorcycles & Scooters'];
-                        });
-                      } else if (_selectedCategory == 'Property') {
-                        setState(() {
-                          _subcategories = [
-                            'Property for Sale',
-                            'Property for Rent',
-                          ];
-                        });
-                      }
-                    },
-                    items: categories.map((location) {
-                      return DropdownMenuItem(
-                        child: new Text(location),
-                        value: location,
-                      );
-                    }).toList(),
+                        if (_selectedCategory == 'Electronics') {
+                          setState(() {
+                            _subcategories = [
+                              'Phones & Accessories',
+                              'Gaming',
+                              'Cameras & Photography',
+                              'Car Technology',
+                              'Computers,PCs & Laptops',
+                              'Drones',
+                              'Home Appliances',
+                              'Smart Home & Security',
+                              'Sound & Audio',
+                              'Tablets & eReaders',
+                              'TV & Video',
+                              'Wearables',
+                              'Virtual Reality',
+                            ];
+                          });
+                        } else if (_selectedCategory ==
+                            'Fashion & Accessories') {
+                          setState(() {
+                            _subcategories = [
+                              'Women',
+                              'Men',
+                              'Girls',
+                              'Boys',
+                            ];
+                          });
+                        } else if (_selectedCategory == 'Motors') {
+                          setState(() {
+                            _subcategories = ['Cars', 'Motorcycles & Scooters'];
+                          });
+                        } else if (_selectedCategory == 'Property') {
+                          setState(() {
+                            _subcategories = [
+                              'Property for Sale',
+                              'Property for Rent',
+                            ];
+                          });
+                        }
+                      },
+                      items: categories.map((location) {
+                        return DropdownMenuItem(
+                          child: new Text(location),
+                          value: location,
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 2.0,
-                ),
-                _selectedCategory == null
-                    ? Container()
-                    : Align(
-                        alignment: Alignment.centerLeft,
-                        child: DropdownButton(
-                          hint: Text(
-                              'Please choose a sub category'), // Not necessary for Option 1
-                          value: _selectedsubCategory,
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedsubCategory = newValue;
-                            });
-                            if (_selectedsubCategory == 'Women') {
-                              setState(() {
-                                _subsubcategory = [
-                                  'Shoes & Boots',
-                                  'Activewear & Sportswear',
-                                  'Dresses',
-                                  'Tops',
-                                  'Coats & Jackets',
-                                  'Jumpers & Cardigans',
-                                  'Bags & Accessories',
-                                  'Leggings',
-                                  'Jumpsuits & Playsuits',
-                                  'Lingerie',
-                                  'Nightwear',
-                                  'Loungewear',
-                                  'Hoodies & Sweatshirts',
-                                  'Jeans',
-                                  'Suits & Blazers',
-                                  'Swimwear & Beachwear',
-                                  'Shorts',
-                                  'Skirts',
-                                  'Other',
-                                ];
-                              });
-                            } else if (_selectedsubCategory == 'Men') {
-                              setState(() {
-                                _subsubcategory = [
-                                  'Shoes & Boots',
-                                  'Activewear & Sportswear',
-                                  'Polo Shirts',
-                                  'Shirts',
-                                  'T- Shirts & Vests',
-                                  'Coats & Jackets',
-                                  'Jumpers & Cardigans',
-                                  'Bags & Accessories',
-                                  'Trousers',
-                                  'Chinos',
-                                  'Jumpsuits & Playsuits',
-                                  'Nightwear',
-                                  'Loungewear',
-                                  'Hoodies & Sweatshirts',
-                                  'Jeans',
-                                  'Suits & Blazers',
-                                  'Swimwear & Beachwear',
-                                  'Shorts',
-                                  'Other',
-                                ];
-                              });
-                            } else if (_selectedsubCategory == 'Girls') {
-                              setState(() {
-                                _subsubcategory = [
-                                  'Shoes & Boots',
-                                  'Activewear & Sportswear',
-                                  'Dresses',
-                                  'Tops',
-                                  'Coats & Jackets',
-                                  'Jumpers & Cardigans',
-                                  'Bags & Accessories',
-                                  'Leggings',
-                                  'Jumpsuits & Playsuits',
-                                  'Lingerie',
-                                  'Nightwear',
-                                  'Loungewear',
-                                  'Hoodies & Sweatshirts',
-                                  'Jeans',
-                                  'Suits & Blazers',
-                                  'Swimwear & Beachwear',
-                                  'Skirts',
-                                  'Other',
-                                ];
-                              });
-                            } else if (_selectedsubCategory == 'Boys') {
-                              setState(() {
-                                _subsubcategory = [
-                                  'Shoes & Boots',
-                                  'Activewear & Sportswear',
-                                  'Polo Shirts',
-                                  'Shirts',
-                                  'T- Shirts & Vests',
-                                  'Coats & Jackets',
-                                  'Jumpers & Cardigans',
-                                  'Bags & Accessories',
-                                  'Trousers',
-                                  'Chinos',
-                                  'Jumpsuits & Playsuits',
-                                  'Nightwear',
-                                  'Loungewear',
-                                  'Hoodies & Sweatshirts',
-                                  'Jeans',
-                                  'Suits & Blazers',
-                                  'Swimwear & Beachwear',
-                                  'Shorts',
-                                  'Other',
-                                ];
-                              });
-                            }
-                          },
-                          items: _subcategories.map((location) {
-                            return DropdownMenuItem(
-                              child: new Text(location),
-                              value: location,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                _subsubcategory == null
-                    ? Container()
-                    : Align(
-                        alignment: Alignment.centerLeft,
-                        child: DropdownButton(
-                          hint: Text(
-                              'Please choose a sub category'), // Not necessary for Option 1
-                          value: _selectedsubsubCategory,
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedsubsubCategory = newValue;
-                            });
-                          },
-                          items: _subsubcategory.map((location) {
-                            return DropdownMenuItem(
-                              child: new Text(location),
-                              value: location,
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                TextField(
-                  cursorColor: Color(0xFF979797),
-                  controller: businessnameController,
-                  decoration: InputDecoration(
-                      labelText: "Name",
-                      labelStyle: TextStyle(color: Colors.blueGrey),
-                      focusColor: Colors.black,
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797)))),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                TextField(
-                  cursorColor: Color(0xFF979797),
-                  controller: businessdescriptionController,
-                  maxLines: 5,
-                  maxLength: 1000,
-                  decoration: InputDecoration(
-                      labelText: "Description",
-                      alignLabelWithHint: true,
-                      labelStyle: TextStyle(color: Colors.blueGrey),
-                      focusColor: Colors.black,
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797)))),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                TextField(
-                  cursorColor: Color(0xFF979797),
-                  controller: businesspricecontroller,
-                  keyboardType: TextInputType.numberWithOptions(),
-                  decoration: InputDecoration(
-                      labelText: "Price AED",
-                      alignLabelWithHint: true,
-                      labelStyle: TextStyle(color: Colors.blueGrey),
-                      focusColor: Colors.black,
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797))),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color(0xFF979797)))),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  'Choose Item\'s Location',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                Text(
-                  'Press on the map to choose the Item\'s location',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                position != null
-                    ? Container(
-                        height: 300,
-                        width: MediaQuery.of(context).size.width,
-                        child: GoogleMap(
-                          initialCameraPosition: CameraPosition(
-                              target: position, zoom: 18.0, bearing: 70),
-                          onMapCreated: mapCreated,
-                          onCameraMove: _onCameraMove,
-                          onTap: _handleTap,
-                          markers: _markers,
-                          zoomGesturesEnabled: true,
-                          myLocationEnabled: true,
-                          myLocationButtonEnabled: true,
-                          compassEnabled: true,
-                          tiltGesturesEnabled: false,
-                        ),
-                      )
-                    : Text('Oops! Something went wrong. \n Please try again'),
-                SizedBox(
-                  height: 20.0,
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Text(
-                  "Thank you for helping us grow!",
-                  style: TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 12.0,
+                  SizedBox(
+                    height: 2.0,
                   ),
-                )
-              ],
+                  _selectedCategory == null
+                      ? Container()
+                      : Align(
+                          alignment: Alignment.centerLeft,
+                          child: DropdownButton(
+                            hint: Text(
+                                'Please choose a sub category'), // Not necessary for Option 1
+                            value: _selectedsubCategory,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _selectedsubCategory = newValue;
+                              });
+                              if (_selectedsubCategory == 'Women') {
+                                setState(() {
+                                  _subsubcategory = [
+                                    'Shoes & Boots',
+                                    'Activewear & Sportswear',
+                                    'Dresses',
+                                    'Tops',
+                                    'Coats & Jackets',
+                                    'Jumpers & Cardigans',
+                                    'Bags & Accessories',
+                                    'Leggings',
+                                    'Jumpsuits & Playsuits',
+                                    'Lingerie',
+                                    'Nightwear',
+                                    'Loungewear',
+                                    'Hoodies & Sweatshirts',
+                                    'Jeans',
+                                    'Suits & Blazers',
+                                    'Swimwear & Beachwear',
+                                    'Shorts',
+                                    'Skirts',
+                                    'Other',
+                                  ];
+                                });
+                              } else if (_selectedsubCategory == 'Men') {
+                                setState(() {
+                                  _subsubcategory = [
+                                    'Shoes & Boots',
+                                    'Activewear & Sportswear',
+                                    'Polo Shirts',
+                                    'Shirts',
+                                    'T- Shirts & Vests',
+                                    'Coats & Jackets',
+                                    'Jumpers & Cardigans',
+                                    'Bags & Accessories',
+                                    'Trousers',
+                                    'Chinos',
+                                    'Jumpsuits & Playsuits',
+                                    'Nightwear',
+                                    'Loungewear',
+                                    'Hoodies & Sweatshirts',
+                                    'Jeans',
+                                    'Suits & Blazers',
+                                    'Swimwear & Beachwear',
+                                    'Shorts',
+                                    'Other',
+                                  ];
+                                });
+                              } else if (_selectedsubCategory == 'Girls') {
+                                setState(() {
+                                  _subsubcategory = [
+                                    'Shoes & Boots',
+                                    'Activewear & Sportswear',
+                                    'Dresses',
+                                    'Tops',
+                                    'Coats & Jackets',
+                                    'Jumpers & Cardigans',
+                                    'Bags & Accessories',
+                                    'Leggings',
+                                    'Jumpsuits & Playsuits',
+                                    'Lingerie',
+                                    'Nightwear',
+                                    'Loungewear',
+                                    'Hoodies & Sweatshirts',
+                                    'Jeans',
+                                    'Suits & Blazers',
+                                    'Swimwear & Beachwear',
+                                    'Skirts',
+                                    'Other',
+                                  ];
+                                });
+                              } else if (_selectedsubCategory == 'Boys') {
+                                setState(() {
+                                  _subsubcategory = [
+                                    'Shoes & Boots',
+                                    'Activewear & Sportswear',
+                                    'Polo Shirts',
+                                    'Shirts',
+                                    'T- Shirts & Vests',
+                                    'Coats & Jackets',
+                                    'Jumpers & Cardigans',
+                                    'Bags & Accessories',
+                                    'Trousers',
+                                    'Chinos',
+                                    'Jumpsuits & Playsuits',
+                                    'Nightwear',
+                                    'Loungewear',
+                                    'Hoodies & Sweatshirts',
+                                    'Jeans',
+                                    'Suits & Blazers',
+                                    'Swimwear & Beachwear',
+                                    'Shorts',
+                                    'Other',
+                                  ];
+                                });
+                              }
+                            },
+                            items: _subcategories.map((location) {
+                              return DropdownMenuItem(
+                                child: new Text(location),
+                                value: location,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                  _subsubcategory == null
+                      ? Container()
+                      : Align(
+                          alignment: Alignment.centerLeft,
+                          child: DropdownButton(
+                            hint: Text(
+                                'Please choose a sub category'), // Not necessary for Option 1
+                            value: _selectedsubsubCategory,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _selectedsubsubCategory = newValue;
+                              });
+                            },
+                            items: _subsubcategory.map((location) {
+                              return DropdownMenuItem(
+                                child: new Text(location),
+                                value: location,
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                  TextField(
+                    cursorColor: Color(0xFF979797),
+                    controller: businessnameController,
+                    decoration: InputDecoration(
+                        labelText: "Name",
+                        labelStyle: TextStyle(color: Colors.blueGrey),
+                        focusColor: Colors.black,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797)))),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  TextField(
+                    cursorColor: Color(0xFF979797),
+                    controller: businessdescriptionController,
+                    maxLines: 5,
+                    maxLength: 1000,
+                    decoration: InputDecoration(
+                        labelText: "Description",
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(color: Colors.blueGrey),
+                        focusColor: Colors.black,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797)))),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  TextField(
+                    cursorColor: Color(0xFF979797),
+                    controller: businesspricecontroller,
+                    keyboardType: TextInputType.numberWithOptions(),
+                    decoration: InputDecoration(
+                        labelText: "Price AED",
+                        alignLabelWithHint: true,
+                        labelStyle: TextStyle(color: Colors.blueGrey),
+                        focusColor: Colors.black,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFF979797)))),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Text(
+                    'Choose Item\'s Location',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    'Press on the map to choose the Item\'s location',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  position != null
+                      ? Container(
+                          height: 300,
+                          width: MediaQuery.of(context).size.width,
+                          child: GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                                target: position, zoom: 18.0, bearing: 70),
+                            onMapCreated: mapCreated,
+                            onCameraMove: _onCameraMove,
+                            onTap: _handleTap,
+                            markers: _markers,
+                            zoomGesturesEnabled: true,
+                            myLocationEnabled: true,
+                            myLocationButtonEnabled: true,
+                            compassEnabled: true,
+                            tiltGesturesEnabled: false,
+                          ),
+                        )
+                      : Text('Oops! Something went wrong. \n Please try again'),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                    "Thank you for helping us grow!",
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 12.0,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -495,7 +501,7 @@ class _AddItemState extends State<AddItem> {
             if (phonenumber == null || email == null) {
               showInSnackBar('Please update your Phone Number and Email');
             } else if (businessnameController.text.isNotEmpty &&
-                _image != null &&
+                _image.path.isNotEmpty &&
                 businesspricecontroller.text.isNotEmpty &&
                 businessdescriptionController.text.isNotEmpty &&
                 position != null) {

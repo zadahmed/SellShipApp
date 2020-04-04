@@ -472,6 +472,9 @@ class _LoginPageState extends State<LoginPage>
                       ),
                     ),
                     onPressed: () {
+                      setState(() {
+                        loading = true;
+                      });
                       Login();
                     }),
               ),
@@ -992,6 +995,9 @@ class _LoginPageState extends State<LoginPage>
                       ),
                     ),
                     onPressed: () {
+                      setState(() {
+                        loading = true;
+                      });
                       Signup();
                     }),
               ),
@@ -1027,45 +1033,50 @@ class _LoginPageState extends State<LoginPage>
         Map<String, dynamic> profilemap = respons;
         print(profilemap);
 
-        var itemurl = 'https://sellship.co/api/useritems/' + userid;
-        print(itemurl);
-        final itemresponse = await http.get(itemurl);
-        if (itemresponse.statusCode == 200) {
-          var itemrespons = json.decode(itemresponse.body);
-          Map<String, dynamic> itemmap = itemrespons;
-          print(itemmap);
-
-          var productmap = itemmap['products'];
-
-          for (var i = 0; i < productmap.length; i++) {
-            Itemid.add(productmap[i]['_id']['\$oid']);
-            Itemname.add(productmap[i]['name']);
-            Itemimage.add(productmap[i]['image']);
-            Itemprice.add(productmap[i]['price']);
-            Itemcategory.add(productmap[i]['category']);
+        if (profilemap != null) {
+          if (mounted) {
+            setState(() {
+              firstname = profilemap['first_name'];
+              lastname = profilemap['last_name'];
+              phonenumber = profilemap['phonenumber'];
+              email = profilemap['email'];
+              loading = false;
+            });
           }
-          setState(() {
-            Itemid = Itemid;
-            Itemname = Itemname;
-            Itemimage = Itemimage;
-            Itemprice = Itemprice;
-            Itemcategory = Itemcategory;
-          });
-        } else {
-          print('No Items');
-        }
 
-        if (mounted) {
+          var itemurl = 'https://sellship.co/api/useritems/' + userid;
+          print(itemurl);
+          final itemresponse = await http.get(itemurl);
+          if (itemresponse.statusCode == 200) {
+            var itemrespons = json.decode(itemresponse.body);
+            Map<String, dynamic> itemmap = itemrespons;
+            print(itemmap);
+
+            var productmap = itemmap['products'];
+
+            for (var i = 0; i < productmap.length; i++) {
+              Itemid.add(productmap[i]['_id']['\$oid']);
+              Itemname.add(productmap[i]['name']);
+              Itemimage.add(productmap[i]['image']);
+              Itemprice.add(productmap[i]['price']);
+              Itemcategory.add(productmap[i]['category']);
+            }
+            setState(() {
+              Itemid = Itemid;
+              Itemname = Itemname;
+              Itemimage = Itemimage;
+              Itemprice = Itemprice;
+              Itemcategory = Itemcategory;
+            });
+          } else {
+            print('No Items');
+          }
+        } else {
           setState(() {
-            firstname = profilemap['first_name'];
-            lastname = profilemap['last_name'];
-            phonenumber = profilemap['phonenumber'];
-            email = profilemap['email'];
             loading = false;
+            userid = null;
           });
         }
-      } else {
-        print('Error');
       }
     } else {
       setState(() {

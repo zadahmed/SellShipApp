@@ -209,10 +209,13 @@ class FavouritesScreenState extends State<FavouritesScreen> {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  "Favourites ❤️",
-                  style: Theme.of(context).textTheme.display1.copyWith(
-                      fontWeight: FontWeight.bold, color: Colors.black),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    "Favourites ❤️",
+                    style: Theme.of(context).textTheme.display1.copyWith(
+                        fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
                 ),
                 SizedBox(
                   height: 15,
