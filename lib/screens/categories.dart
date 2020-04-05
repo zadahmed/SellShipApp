@@ -97,7 +97,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 MaterialPageRoute(
                                     builder: (context) => CategoryDetail(
                                         category:
-                                            categories[_selectedCat].title)),
+                                            categories[_selectedCat].title,
+                                        subcategory: categories[_selectedCat]
+                                            .subCat[i]
+                                            .title)),
                               );
                             },
                             child: Container(

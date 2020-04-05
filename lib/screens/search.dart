@@ -15,22 +15,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:sellship/screens/details.dart';
-import 'package:sellship/screens/search.dart';
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
+class Search extends StatefulWidget {
+  final String text;
+  Search({Key key, this.text}) : super(key: key);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _SearchState createState() => _SearchState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SearchState extends State<Search> {
   List<Item> itemsgrid = [];
 
   var skip;
   var limit;
-
-
-  bool loading;
+  var text;
 
   @override
   void dispose() {
@@ -39,43 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   ScrollController _scrollController = ScrollController();
-
-  Future<List<Item>> fetchItems(int skip, int limit) async {
-    if (city == null) {
-      _getLocation();
-    } else {
-      var url = 'https://sellship.co/api/getitems/' +
-          city +
-          '/' +
-          skip.toString() +
-          '/' +
-          limit.toString();
-
-      final response = await http.post(url, body: {
-        'latitude': position.latitude.toString(),
-        'longitude': position.longitude.toString()
-      });
-
-      var jsonbody = json.decode(response.body);
-
-      for (var i = 0; i < jsonbody.length; i++) {
-        Item item = Item(
-          itemid: jsonbody[i]['_id']['\$oid'],
-          name: jsonbody[i]['name'],
-          image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'],
-          category: jsonbody[i]['category'],
-        );
-        itemsgrid.add(item);
-      }
-      setState(() {
-        loading = false;
-        itemsgrid = itemsgrid;
-      });
-
-      return itemsgrid;
-    }
-  }
 
   LatLng position;
   String city;
@@ -89,10 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       skip = 0;
       limit = 10;
-      loading = true;
+      text = widget.text;
+      searchcontroller.text = text;
     });
     readstorage();
-    fetchItems(skip, limit);
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
@@ -106,8 +68,59 @@ class _HomeScreenState extends State<HomeScreen> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var url = 'https://sellship.co/api/getitems/' +
+    var url = 'https://sellship.co/api/searchitems/' +
         city +
+        '/' +
+        text +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'],
+        category: jsonbody[i]['category'],
+      );
+      itemsgrid.add(item);
+    }
+    if (itemsgrid == null) {
+      print('Empty');
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+  }
+
+  void readstorage() async {
+    var latitude = await storage.read(key: 'latitude');
+    var longitude = await storage.read(key: 'longitude');
+    var cit = await storage.read(key: 'city');
+
+    setState(() {
+      position = LatLng(double.parse(latitude), double.parse(longitude));
+      city = cit;
+      onSearch();
+    });
+  }
+
+  TextEditingController searchcontroller = new TextEditingController();
+
+  onSearch() async {
+    var url = 'https://sellship.co/api/searchitems/' +
+        city +
+        '/' +
+        text +
         '/' +
         skip.toString() +
         '/' +
@@ -135,74 +148,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  _getLocation() async {
-    Location _location = new Location();
-    var location;
-
-    try {
-      location = await _location.getLocation();
-      await storage.write(key: 'latitude', value: location.latitude.toString());
-      await storage.write(
-          key: 'longitude', value: location.longitude.toString());
-      setState(() {
-        position =
-            LatLng(location.latitude.toDouble(), location.longitude.toDouble());
-
-        getcity();
-      });
-    } on Exception catch (e) {
-      print(e);
-      location = null;
-    }
-  }
-
-  final Geolocator geolocator = Geolocator();
-
-  void getcity() async {
-    List<Placemark> p = await geolocator.placemarkFromCoordinates(
-        position.latitude, position.longitude);
-
-    Placemark place = p[0];
-    var cit = place.administrativeArea;
-    await storage.write(key: 'city', value: cit);
-    setState(() {
-      city = cit;
-      fetchItems(skip, limit);
-      //secure storage save it
-    });
-  }
-
-  void readstorage() async {
-    var latitude = await storage.read(key: 'latitude');
-    var longitude = await storage.read(key: 'longitude');
-    var cit = await storage.read(key: 'city');
-
-    if (latitude == null || longitude == null) {
-      _getLocation();
-    } else {
-      setState(() {
-        position = LatLng(double.parse(latitude), double.parse(longitude));
-        city = cit;
-      });
-    }
-  }
-
-  TextEditingController searchcontroller = new TextEditingController();
-
-  onSearch(String texte) async {
-    if (texte.isEmpty) {
-      setState(() {
-        skip = 0;
-        limit = 10;
-        fetchItems(skip, limit);
-      });
-    } else {
-      searchcontroller.clear();
-      Navigator.push(
+  onSearche(String texte) async {
+    itemsgrid.clear();
+    Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Search(text: texte)),
-      );
-    }
+        MaterialPageRoute(
+            builder: (BuildContext context) => Search(
+                  text: texte,
+                )));
   }
 
   Widget _buildProgressIndicator() {
@@ -217,6 +170,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text(
+            text,
+            style: TextStyle(color: Colors.black),
+          ),
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
         body: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -231,14 +193,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       leading: Icon(Icons.search),
                       title: TextField(
                         controller: searchcontroller,
-                        onSubmitted: onSearch,
+                        onSubmitted: onSearche,
                         decoration: InputDecoration(
                             hintText: 'Search', border: InputBorder.none),
                       ),
                       trailing: IconButton(
                         onPressed: () {
                           searchcontroller.clear();
-                          onSearch('');
                         },
                         icon: Icon(Icons.cancel),
                       ),

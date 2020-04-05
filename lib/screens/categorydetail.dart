@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 
@@ -13,8 +15,9 @@ import 'package:sellship/screens/details.dart';
 
 class CategoryDetail extends StatefulWidget {
   final String category;
+  final String subcategory;
 
-  CategoryDetail({Key key, this.category}) : super(key: key);
+  CategoryDetail({Key key, this.category, this.subcategory}) : super(key: key);
 
   @override
   _CategoryDetailState createState() => _CategoryDetailState();
@@ -23,9 +26,64 @@ class CategoryDetail extends StatefulWidget {
 class _CategoryDetailState extends State<CategoryDetail> {
   List<Item> itemsgrid = [];
 
-  Future<List<Item>> fetchItems() async {
-    var url = 'https://sellship.co/api/getcategoryitem/' + category;
+  var skip;
+  var limit;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  _getmoreData() async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+
+    var url = 'https://sellship.co/api/categories/' +
+        category +
+        '/' +
+        subcategory +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
     print(url);
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+
+      for (var jsondata in jsonbody) {
+        Item item = Item(
+          itemid: jsondata['_id']['\$oid'],
+          name: jsondata['name'],
+          image: jsondata['image'],
+          price: jsondata['price'],
+          category: jsondata['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        itemsgrid = itemsgrid;
+      });
+    } else {
+      print(response.statusCode);
+    }
+
+    return itemsgrid;
+  }
+
+  Future<List<Item>> fetchItems() async {
+    var url = 'https://sellship.co/api/categories/' +
+        category +
+        '/' +
+        subcategory +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
@@ -41,6 +99,12 @@ class _CategoryDetailState extends State<CategoryDetail> {
         );
         itemsgrid.add(item);
       }
+
+      print(itemsgrid);
+
+      setState(() {
+        itemsgrid = itemsgrid;
+      });
     } else {
       print(response.statusCode);
     }
@@ -49,14 +113,37 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   String category;
+  String subcategory;
+
   @override
   void initState() {
     setState(() {
+      skip = 0;
+      limit = 10;
       category = widget.category;
+      subcategory = widget.subcategory;
     });
-    print(category);
+
+    fetchItems();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        _getmoreData();
+      }
+    });
     super.initState();
   }
+
+  Widget _buildProgressIndicator() {
+    return new Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: new Center(
+        child: CupertinoActivityIndicator(),
+      ),
+    );
+  }
+
+  ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -69,34 +156,35 @@ class _CategoryDetailState extends State<CategoryDetail> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        body: SafeArea(
-            child: Column(
-          children: <Widget>[
-            Expanded(
-              child: FutureBuilder<List<Item>>(
-                future: fetchItems(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.data != null) {
-                    return new GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: SafeArea(
+                child: Column(
+              children: <Widget>[
+                itemsgrid.isNotEmpty
+                    ? Expanded(
+                        child: StaggeredGridView.countBuilder(
+                        controller: _scrollController,
                         crossAxisCount: 2,
-                      ),
-                      itemCount: itemsgrid.length,
-                      itemBuilder: (context, index) {
-                        if (index != 0 && index % 6 == 0) {
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 20.0),
-                            child: AdmobBanner(
-                              adUnitId: getBannerAdUnitId(),
-                              adSize: AdmobBannerSize.LARGE_BANNER,
-                              listener: (AdmobAdEvent event,
-                                  Map<String, dynamic> args) {
-                                handleEvent(event, args, 'Banner');
-                              },
-                            ),
-                          );
-                        }
-                        return InkWell(
+                        mainAxisSpacing: 5,
+                        crossAxisSpacing: 5,
+                        itemCount: itemsgrid.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == itemsgrid.length) {
+                            return _buildProgressIndicator();
+                          }
+                          if (index != 0 && index % 7 == 0) {
+                            return Container(
+                              margin: EdgeInsets.only(bottom: 10.0),
+                              child: AdmobBanner(
+                                adUnitId: getBannerAdUnitId(),
+                                adSize: AdmobBannerSize.LARGE_BANNER,
+                              ),
+                            );
+                          }
+                          return InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -106,99 +194,118 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               );
                             },
                             child: Padding(
-                                padding: EdgeInsets.all(1),
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    elevation: 3.0,
-                                    child: Column(
-                                      children: <Widget>[
-                                        Container(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height /
-                                              6.6,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              topRight: Radius.circular(10),
-                                            ),
-                                            child: Image.network(
-                                              itemsgrid[index].image,
-                                              fit: BoxFit.cover,
-                                            ),
+                              padding: EdgeInsets.all(1),
+                              child: Container(
+                                height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                  elevation: 3.0,
+                                  child: Column(
+                                    children: <Widget>[
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                6.0,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10),
+                                          ),
+                                          child: Image.network(
+                                            itemsgrid[index].image,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                        SizedBox(height: 2.0),
-                                        Expanded(
-                                          child: Text(
-                                            itemsgrid[index].name,
-                                            overflow: TextOverflow.fade,
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 2.0),
+                                      Expanded(
+                                        child: Text(
+                                          itemsgrid[index].name,
+                                          overflow: TextOverflow.fade,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w600,
                                           ),
+                                          textAlign: TextAlign.center,
                                         ),
-                                        SizedBox(height: 3.0),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Padding(
-                                                padding:
-                                                    EdgeInsets.only(left: 15.0),
-                                                child: Container(
-                                                  width: 100,
-                                                  child: Text(
-                                                    itemsgrid[index].category,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                    ),
+                                      ),
+                                      SizedBox(height: 3.0),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(left: 15.0),
+                                              child: Container(
+                                                width: 100,
+                                                child: Text(
+                                                  itemsgrid[index].category,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w300,
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                            Expanded(
-                                                child: Padding(
-                                              padding:
-                                                  EdgeInsets.only(right: 7.0),
-                                              child: Text(
-                                                itemsgrid[index].price + ' AED',
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                textAlign: TextAlign.left,
+                                          ),
+                                          Expanded(
+                                              child: Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 7.0),
+                                            child: Text(
+                                              itemsgrid[index].price + ' AED',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
                                               ),
-                                            )),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                              textAlign: TextAlign.left,
+                                            ),
+                                          )),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                )));
-                      },
-                    );
-                  } else {
-                    return Container(
-                        height: 50, child: LinearProgressIndicator());
-                  }
-                },
-              ),
-            )
-          ],
-        )));
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        staggeredTileBuilder: (int index) {
+                          if (index != 0 && index % 7 == 0) {
+                            return StaggeredTile.count(2, 1);
+                          } else if (index != 0 && index == itemsgrid.length) {
+                            return StaggeredTile.count(2, 1);
+                          } else {
+                            return StaggeredTile.count(1, 1);
+                          }
+                        },
+                      ))
+                    : Expanded(
+                        child: Column(
+                        children: <Widget>[
+                          Center(
+                            child: Text(
+                              'Looks like you\'re the first here! \n Don\'t be shy add an Item!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Expanded(
+                              child: Image.asset(
+                            'assets/sss.jpg',
+                            fit: BoxFit.cover,
+                          ))
+                        ],
+                      )),
+              ],
+            ))));
   }
 
   String getBannerAdUnitId() {
