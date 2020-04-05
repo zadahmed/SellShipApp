@@ -53,11 +53,14 @@ class FavouritesScreenState extends State<FavouritesScreen> {
         } else {
           setState(() {
             loading = false;
-            Itemname = List<String>();
+            empty = true;
           });
         }
       } else {
-        print(response.statusCode);
+        setState(() {
+          empty = true;
+          loading = false;
+        });
       }
     } else {
       setState(() {

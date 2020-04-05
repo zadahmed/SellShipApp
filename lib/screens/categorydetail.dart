@@ -104,6 +104,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
       setState(() {
         itemsgrid = itemsgrid;
+        loading = false;
       });
     } else {
       print(response.statusCode);
@@ -122,6 +123,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       limit = 10;
       category = widget.category;
       subcategory = widget.subcategory;
+      loading = true;
     });
 
     fetchItems();
@@ -133,6 +135,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
     });
     super.initState();
   }
+
+  bool loading;
 
   Widget _buildProgressIndicator() {
     return new Padding(
@@ -152,7 +156,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Colors.amber,
           title: Text(
-            category,
+            subcategory,
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -160,152 +164,154 @@ class _CategoryDetailState extends State<CategoryDetail> {
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
-            child: SafeArea(
-                child: Column(
-              children: <Widget>[
-                itemsgrid.isNotEmpty
-                    ? Expanded(
-                        child: StaggeredGridView.countBuilder(
-                        controller: _scrollController,
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                        itemCount: itemsgrid.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == itemsgrid.length) {
-                            return _buildProgressIndicator();
-                          }
-                          if (index != 0 && index % 7 == 0) {
-                            return Container(
-                              margin: EdgeInsets.only(bottom: 10.0),
-                              child: AdmobBanner(
-                                adUnitId: getBannerAdUnitId(),
-                                adSize: AdmobBannerSize.LARGE_BANNER,
-                              ),
-                            );
-                          }
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Details(
-                                        itemid: itemsgrid[index].itemid)),
-                              );
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(1),
-                              child: Container(
-                                height: MediaQuery.of(context).size.height,
-                                width: MediaQuery.of(context).size.width,
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                  elevation: 3.0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                6.0,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10),
-                                          ),
-                                          child: Image.network(
-                                            itemsgrid[index].image,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(height: 2.0),
-                                      Expanded(
-                                        child: Text(
-                                          itemsgrid[index].name,
-                                          overflow: TextOverflow.fade,
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      SizedBox(height: 3.0),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+            child: loading == false
+                ? SafeArea(
+                    child: Column(
+                    children: <Widget>[
+                      itemsgrid.isNotEmpty
+                          ? Expanded(
+                              child: StaggeredGridView.countBuilder(
+                              controller: _scrollController,
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 4,
+                              crossAxisSpacing: 4,
+                              itemCount: itemsgrid.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index == itemsgrid.length) {
+                                  return _buildProgressIndicator();
+                                }
+                                if (index != 0 && index % 7 == 0) {
+                                  return Container(
+                                    margin: EdgeInsets.only(bottom: 10.0),
+                                    child: AdmobBanner(
+                                      adUnitId: getBannerAdUnitId(),
+                                      adSize: AdmobBannerSize.LARGE_BANNER,
+                                    ),
+                                  );
+                                }
+                                return InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                itemid:
+                                                    itemsgrid[index].itemid)),
+                                      );
+                                    },
+                                    child: Card(
+                                      child: new Column(
                                         children: <Widget>[
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  EdgeInsets.only(left: 15.0),
-                                              child: Container(
-                                                width: 100,
-                                                child: Text(
-                                                  itemsgrid[index].category,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
+                                          new Stack(
+                                            children: <Widget>[
+                                              //new Center(child: new CircularProgressIndicator()),
+                                              new Center(
+                                                child: new Image.network(
+                                                  itemsgrid[index].image,
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                          Expanded(
-                                              child: Padding(
-                                            padding:
-                                                EdgeInsets.only(right: 7.0),
-                                            child: Text(
-                                              itemsgrid[index].price + ' AED',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              textAlign: TextAlign.left,
+                                          new Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: new Column(
+                                              children: <Widget>[
+                                                Text(
+                                                  itemsgrid[index].name,
+                                                  overflow: TextOverflow.fade,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                SizedBox(height: 3.0),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      itemsgrid[index].category,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      itemsgrid[index].price +
+                                                          ' AED',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                          )),
+                                          )
                                         ],
                                       ),
-                                    ],
+                                    ));
+                              },
+                              staggeredTileBuilder: (int index) {
+                                if (index != 0 && index % 7 == 0) {
+                                  return StaggeredTile.count(2, 1);
+                                } else if (index != 0 &&
+                                    index == itemsgrid.length) {
+                                  return StaggeredTile.count(2, 1);
+                                } else {
+                                  return StaggeredTile.fit(1);
+                                }
+                              },
+                            ))
+                          : Expanded(
+                              child: Column(
+                              children: <Widget>[
+                                Center(
+                                  child: Text(
+                                    'Looks like you\'re the first here! \n Don\'t be shy add an Item!',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 20),
                                   ),
                                 ),
-                              ),
-                            ),
-                          );
-                        },
-                        staggeredTileBuilder: (int index) {
-                          if (index != 0 && index % 7 == 0) {
-                            return StaggeredTile.count(2, 1);
-                          } else if (index != 0 && index == itemsgrid.length) {
-                            return StaggeredTile.count(2, 1);
-                          } else {
-                            return StaggeredTile.count(1, 1);
-                          }
-                        },
-                      ))
-                    : Expanded(
+                                Expanded(
+                                    child: Image.asset(
+                                  'assets/little_theologians_4x.jpg',
+                                  fit: BoxFit.cover,
+                                ))
+                              ],
+                            )),
+                    ],
+                  ))
+                : Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(20.0)), //this right here
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
                         child: Column(
-                        children: <Widget>[
-                          Center(
-                            child: Text(
-                              'Looks like you\'re the first here! \n Don\'t be shy add an Item!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 20),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text('Loading'),
+                            SizedBox(
+                              height: 10,
                             ),
-                          ),
-                          Expanded(
-                              child: Image.asset(
-                            'assets/sss.jpg',
-                            fit: BoxFit.cover,
-                          ))
-                        ],
-                      )),
-              ],
-            ))));
+                            CircularProgressIndicator()
+                          ],
+                        ),
+                      ),
+                    ),
+                  )));
   }
 
   String getBannerAdUnitId() {
