@@ -9,10 +9,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:sellship/screens/categories.dart';
-import 'package:sellship/screens/favourites.dart';
-import 'package:sellship/screens/home.dart';
-import 'package:sellship/screens/login.dart';
+
+import 'package:sellship/screens/onboarding.dart';
+import 'package:sellship/screens/rootscreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,23 +34,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-// Create storage
   final storage = new FlutterSecureStorage();
-
-  int _currentPage = 0;
-  final List<Widget> _pages = [
-    HomeScreen(),
-    CategoryScreen(),
-    AddItem(),
-    FavouritesScreen(),
-    LoginPage(),
-  ];
 
   var latitude;
   var longitude;
   static LatLng position;
 
+  var firsttime;
+
   _getLocation() async {
+    firsttime = await storage.read(key: 'firsttime');
+    setState(() {
+      firsttime = firsttime;
+    });
     Location _location = new Location();
     var location;
 
@@ -92,6 +87,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     _getLocation();
+
     super.initState();
   }
 
@@ -100,63 +96,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'SellShip',
-        home: Scaffold(
-          bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Colors.black87,
-            unselectedItemColor: Colors.grey[500],
-            currentIndex: _currentPage,
-            onTap: (i) {
-              setState(() {
-                _currentPage = i;
-              });
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesome.home,
-                ),
-                title: Text(
-                  "Home",
-                ),
-              ),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    FontAwesome5.list_alt,
-                  ),
-                  title: Text(
-                    "Categories",
-                  )),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    FontAwesome.plus_square,
-                    size: 40,
-                    color: Colors.amber,
-                  ),
-                  title: Text(
-                    "Add an Item",
-                    style: TextStyle(color: Colors.white),
-                  )),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesome.heart,
-                ),
-                title: Text(
-                  "Favourites",
-                ),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesome.user_circle_o,
-                ),
-                title: Text(
-                  "Profile",
-                ),
-              ),
-            ],
-          ),
-          body: SafeArea(
-            child: _pages[_currentPage],
-          ),
-        ));
+        home: firsttime == null ? OnboardingScreen() : RootScreen());
   }
 }

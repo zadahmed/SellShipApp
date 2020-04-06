@@ -90,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
       limit = 10;
       loading = true;
     });
+
     readstorage();
     fetchItems(skip, limit);
     _scrollController.addListener(() {
@@ -152,6 +153,10 @@ class _HomeScreenState extends State<HomeScreen> {
     } on Exception catch (e) {
       print(e);
       location = null;
+      setState(() {
+        loading = false;
+        itemsgrid = null;
+      });
     }
   }
 
