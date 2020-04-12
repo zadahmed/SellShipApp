@@ -33,7 +33,7 @@
     <key>io.flutter.embedded_views_preview</key>
     <true/>
     <key>NSCameraUsageDescription</key>
-    <string>Capture a photo of the document to wisdom it</string>
+    <string>Capture a photo of the item</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Access location of user to determine places nearby</string>
     <key>NSLocationAlwaysUsageDescription</key>

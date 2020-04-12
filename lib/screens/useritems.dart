@@ -8,10 +8,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:sellship/screens/details.dart';
+import 'package:shimmer/shimmer.dart';
 
 class UserItems extends StatefulWidget {
   final String userid;
-  UserItems({Key key, this.userid}) : super(key: key);
+  final String username;
+  UserItems({Key key, this.userid, this.username}) : super(key: key);
 
   @override
   _UserItemsState createState() => new _UserItemsState();
@@ -20,6 +22,7 @@ class UserItems extends StatefulWidget {
 class _UserItemsState extends State<UserItems> {
   var loading;
   String userid;
+  String username;
 
   @override
   void initState() {
@@ -27,6 +30,7 @@ class _UserItemsState extends State<UserItems> {
     setState(() {
       loading = true;
       userid = widget.userid;
+      username = widget.username;
     });
     getProfileData();
   }
@@ -116,94 +120,135 @@ class _UserItemsState extends State<UserItems> {
 
   Widget profile(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.amber,
-          title: Center(
-            child: Text(
-              '$firstname\'s Items',
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.0),
+        child: Container(
+          // rounded corners ad.
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: AdmobBanner(
+            adUnitId: getBannerAdUnitId(),
+            adSize: AdmobBannerSize.LEADERBOARD,
           ),
         ),
-        body: loading == false
-            ? SafeArea(
-                child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Divider(),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Expanded(
-                        child: new ListView.builder(
-                            itemCount: Itemname.length,
-                            itemBuilder: (BuildContext ctxt, int Index) {
-                              if (Index % 4 == 0) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  margin: EdgeInsets.only(bottom: 20.0),
-                                  child: AdmobBanner(
-                                    adUnitId: getBannerAdUnitId(),
-                                    adSize: AdmobBannerSize.LARGE_BANNER,
-                                  ),
-                                );
-                              }
-                              return new InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Details(itemid: Itemid[Index])),
-                                    );
-                                  },
-                                  child: Card(
-                                      child: ListTile(
-                                    title: Text(Itemname[Index]),
-                                    trailing: Text(Itemprice[Index] + ' AED'),
-                                    leading: Container(
-                                      height: 60,
-                                      width: 60,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Image.network(
-                                        Itemimage[Index],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    subtitle: Text(Itemcategory[Index]),
-                                  )));
-                            }))
-                  ],
-                ),
-              ))
-            : Dialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(20.0)), //this right here
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('Loading'),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CircularProgressIndicator()
-                      ],
-                    ),
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.amber,
+        title: Center(
+          child: Text(
+            '$username\'s Items',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+      ),
+      body: loading == false
+          ? SafeArea(
+              child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Divider(),
+                  SizedBox(
+                    height: 10.0,
                   ),
+                  Expanded(
+                      child: new ListView.builder(
+                          itemCount: Itemname.length,
+                          itemBuilder: (BuildContext ctxt, int Index) {
+                            return new InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            Details(itemid: Itemid[Index])),
+                                  );
+                                },
+                                child: Card(
+                                    child: ListTile(
+                                  title: Text(Itemname[Index]),
+                                  trailing: Text(Itemprice[Index] + ' AED'),
+                                  leading: Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Image.network(
+                                      Itemimage[Index],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  subtitle: Text(Itemcategory[Index]),
+                                )));
+                          }))
+                ],
+              ),
+            ))
+          : Container(
+              width: double.infinity,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.grey[100],
+                child: Column(
+                  children: [0, 1, 2, 3, 4, 5, 6]
+                      .map((_) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 48.0,
+                                  height: 48.0,
+                                  color: Colors.white,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 2.0),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 2.0),
+                                      ),
+                                      Container(
+                                        width: 40.0,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ))
+                      .toList(),
                 ),
-              ));
+              ),
+            ),
+    );
   }
 }

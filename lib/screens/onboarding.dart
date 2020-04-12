@@ -3,15 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sellship/screens/rootscreen.dart';
 import 'package:sellship/screens/styles.dart';
-import 'package:permission_handler/permission_handler.dart' as Perm;
 
 class OnboardingScreen extends StatefulWidget {
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen>
-    with WidgetsBindingObserver {
+class _OnboardingScreenState extends State<OnboardingScreen> {
   final int _numPages = 3;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
@@ -39,53 +37,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   final storage = new FlutterSecureStorage();
 
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Perm.PermissionHandler()
-          .checkPermissionStatus(Perm.PermissionGroup.locationWhenInUse)
-          .then(_updateStatus);
-    }
-  }
-
-  void _updateStatus(Perm.PermissionStatus status) {
-    if (status != _status) {
-      // check status has changed
-      setState(() {
-        _status = status; // update
-      });
-    } else {
-      if (status != Perm.PermissionStatus.granted) {
-        Perm.PermissionHandler().requestPermissions(
-            [Perm.PermissionGroup.locationWhenInUse]).then(_onStatusRequested);
-      }
-    }
-  }
-
-  Perm.PermissionStatus _status;
-
-  void _askPermission() {
-    Perm.PermissionHandler().requestPermissions(
-        [Perm.PermissionGroup.locationWhenInUse]).then(_onStatusRequested);
-  }
-
-  void _onStatusRequested(
-      Map<Perm.PermissionGroup, Perm.PermissionStatus> statuses) {
-    final status = statuses[Perm.PermissionGroup.locationWhenInUse];
-    if (status != Perm.PermissionStatus.granted) {
-      // On iOS if "deny" is pressed, open App Settings
-      Perm.PermissionHandler().openAppSettings();
-    } else {
-      _updateStatus(status);
-    }
-  }
-
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
-    Perm.PermissionHandler() // Check location permission has been granted
-        .checkPermissionStatus(Perm.PermissionGroup
-            .locationWhenInUse) //check permission returns a Future
-        .then(_updateStatus); // ha
     super.initState();
   }
 
@@ -101,19 +54,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: FlatButton(
-                    onPressed: () => print('Skip'),
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ),
-                ),
                 Container(
                   height: 540.0,
                   child: PageView(
@@ -211,7 +151,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 Text(
                                   'Next',
@@ -239,7 +179,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       ),
       bottomSheet: _currentPage == _numPages - 1
           ? Container(
-              height: 90.0,
+              height: 80.0,
               width: double.infinity,
               color: Colors.white,
               child: GestureDetector(

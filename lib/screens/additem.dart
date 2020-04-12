@@ -582,7 +582,6 @@ class _AddItemState extends State<AddItem> {
                           onlyOkButton: true,
                           entryAnimation: EntryAnimation.DEFAULT,
                           onOkButtonPressed: () {
-                            Navigator.pop(context);
                             businesspricecontroller.clear();
                             businessnameController.clear();
                             businessdescriptionController.clear();

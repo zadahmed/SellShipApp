@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:sellship/screens/details.dart';
 import 'package:sellship/screens/search.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -213,7 +214,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return new Padding(
       padding: const EdgeInsets.all(8.0),
       child: new Center(
-        child: CupertinoActivityIndicator(),
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: new AlwaysStoppedAnimation<Color>(Colors.amber),
+        ),
       ),
     );
   }
@@ -222,178 +226,217 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).requestFocus(new FocusNode());
-            },
-            child: loading == false
-                ? SafeArea(
-                    child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        child: Card(
-                          child: ListTile(
-                            leading: Icon(Icons.search),
-                            title: TextField(
-                              controller: searchcontroller,
-                              onSubmitted: onSearch,
-                              decoration: InputDecoration(
-                                  hintText: 'Search', border: InputBorder.none),
-                            ),
-                            trailing: IconButton(
-                              onPressed: () {
-                                searchcontroller.clear();
-                                onSearch('');
-                              },
-                              icon: Icon(Icons.cancel),
-                            ),
-                          ),
-                        ),
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: loading == false
+          ? SafeArea(
+              child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: Card(
+                    child: ListTile(
+                      leading: Icon(Icons.search),
+                      title: TextField(
+                        controller: searchcontroller,
+                        onSubmitted: onSearch,
+                        decoration: InputDecoration(
+                            hintText: 'Search', border: InputBorder.none),
                       ),
-                      itemsgrid.isNotEmpty
-                          ? Expanded(
-                              child: StaggeredGridView.countBuilder(
-                              controller: _scrollController,
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 4,
-                              crossAxisSpacing: 4,
-                              itemCount: itemsgrid.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index == itemsgrid.length) {
-                                  return _buildProgressIndicator();
-                                }
-                                if (index != 0 && index % 7 == 0) {
-                                  return Container(
-                                    margin: EdgeInsets.only(bottom: 10.0),
-                                    child: AdmobBanner(
-                                      adUnitId: getBannerAdUnitId(),
-                                      adSize: AdmobBannerSize.LARGE_BANNER,
+                      trailing: IconButton(
+                        onPressed: () {
+                          searchcontroller.clear();
+                          onSearch('');
+                        },
+                        icon: Icon(Icons.cancel),
+                      ),
+                    ),
+                  ),
+                ),
+                itemsgrid.isNotEmpty
+                    ? Expanded(
+                        child: StaggeredGridView.countBuilder(
+                        controller: _scrollController,
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                        itemCount: itemsgrid.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index == itemsgrid.length) {
+                            return _buildProgressIndicator();
+                          }
+                          if (index != 0 && index % 7 == 0) {
+                            return Container(
+                              // rounded corners ad.
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: AdmobBanner(
+                                adUnitId: getBannerAdUnitId(),
+                                adSize: AdmobBannerSize.LARGE_BANNER,
+                              ),
+                            );
+                          }
+                          return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Details(
+                                          itemid: itemsgrid[index].itemid)),
+                                );
+                              },
+                              child: Card(
+                                child: new Column(
+                                  children: <Widget>[
+                                    new Stack(
+                                      children: <Widget>[
+                                        //new Center(child: new CircularProgressIndicator()),
+                                        new Center(
+                                          child: new Image.network(
+                                            itemsgrid[index].image,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  );
-                                }
-                                return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Details(
-                                                itemid:
-                                                    itemsgrid[index].itemid)),
-                                      );
-                                    },
-                                    child: Card(
+                                    new Padding(
+                                      padding: const EdgeInsets.all(4.0),
                                       child: new Column(
                                         children: <Widget>[
-                                          new Stack(
+                                          Text(
+                                            itemsgrid[index].name,
+                                            overflow: TextOverflow.fade,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          SizedBox(height: 3.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              //new Center(child: new CircularProgressIndicator()),
-                                              new Center(
-                                                child: new Image.network(
-                                                  itemsgrid[index].image,
-                                                  fit: BoxFit.cover,
+                                              Container(
+                                                width: 80,
+                                                child: Text(
+                                                  itemsgrid[index].category,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
                                                 ),
+                                              ),
+                                              Text(
+                                                itemsgrid[index].price + ' AED',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                textAlign: TextAlign.left,
                                               ),
                                             ],
                                           ),
-                                          new Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: new Column(
-                                              children: <Widget>[
-                                                Text(
-                                                  itemsgrid[index].name,
-                                                  overflow: TextOverflow.fade,
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                SizedBox(height: 3.0),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      itemsgrid[index].category,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      itemsgrid[index].price +
-                                                          ' AED',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                      ),
-                                                      textAlign: TextAlign.left,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          )
                                         ],
                                       ),
-                                    ));
-                              },
-                              staggeredTileBuilder: (int index) {
-                                if (index != 0 && index % 7 == 0) {
-                                  return StaggeredTile.count(2, 1);
-                                } else if (index != 0 &&
-                                    index == itemsgrid.length) {
-                                  return StaggeredTile.count(2, 1);
-                                } else {
-                                  return StaggeredTile.fit(1);
-                                }
-                              },
-                            ))
-                          : Expanded(
-                              child: Column(
-                              children: <Widget>[
-                                Center(
-                                  child: Text(
-                                    'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 20),
-                                  ),
+                                    )
+                                  ],
+                                ),
+                              ));
+                        },
+                        staggeredTileBuilder: (int index) {
+                          if (index != 0 && index % 7 == 0) {
+                            return StaggeredTile.count(2, 1);
+                          } else if (index != 0 && index == itemsgrid.length) {
+                            return StaggeredTile.count(2, 1);
+                          } else {
+                            return StaggeredTile.fit(1);
+                          }
+                        },
+                      ))
+                    : Expanded(
+                        child: Column(
+                        children: <Widget>[
+                          Center(
+                            child: Text(
+                              'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontSize: 20),
+                            ),
+                          ),
+                          Expanded(
+                              child: Image.asset(
+                            'assets/little_theologians_4x.jpg',
+                            fit: BoxFit.cover,
+                          ))
+                        ],
+                      )),
+              ],
+            ))
+          : Container(
+              width: double.infinity,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.grey[100],
+                child: Column(
+                  children: [0, 1, 2, 3, 4, 5, 6]
+                      .map((_) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 48.0,
+                                  height: 48.0,
+                                  color: Colors.white,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
                                 ),
                                 Expanded(
-                                    child: Image.asset(
-                                  'assets/little_theologians_4x.jpg',
-                                  fit: BoxFit.cover,
-                                ))
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 2.0),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 2.0),
+                                      ),
+                                      Container(
+                                        width: 40.0,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                )
                               ],
-                            )),
-                    ],
-                  ))
-                : Dialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(20.0)), //this right here
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('Loading'),
-                            SizedBox(
-                              height: 10,
                             ),
-                            CircularProgressIndicator()
-                          ],
-                        ),
-                      ),
-                    ),
-                  )));
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
+    ));
   }
 
   String getBannerAdUnitId() {

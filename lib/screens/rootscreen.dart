@@ -13,14 +13,13 @@ import 'package:sellship/screens/categories.dart';
 import 'package:sellship/screens/favourites.dart';
 import 'package:sellship/screens/home.dart';
 import 'package:sellship/screens/login.dart';
-import 'package:permission_handler/permission_handler.dart' as Perm;
 
 class RootScreen extends StatefulWidget {
   @override
   _RootScreenState createState() => _RootScreenState();
 }
 
-class _RootScreenState extends State<RootScreen> with WidgetsBindingObserver {
+class _RootScreenState extends State<RootScreen> {
 // Create storage
   final storage = new FlutterSecureStorage();
 
@@ -36,46 +35,6 @@ class _RootScreenState extends State<RootScreen> with WidgetsBindingObserver {
   var latitude;
   var longitude;
   static LatLng position;
-
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Perm.PermissionHandler()
-          .checkPermissionStatus(Perm.PermissionGroup.locationWhenInUse)
-          .then(_updateStatus);
-    }
-  }
-
-  void _updateStatus(Perm.PermissionStatus status) {
-    if (status != _status) {
-      // check status has changed
-      setState(() {
-        _status = status; // update
-      });
-    } else {
-      if (status != Perm.PermissionStatus.granted) {
-        Perm.PermissionHandler().requestPermissions(
-            [Perm.PermissionGroup.locationWhenInUse]).then(_onStatusRequested);
-      }
-    }
-  }
-
-  Perm.PermissionStatus _status;
-
-  void _askPermission() {
-    Perm.PermissionHandler().requestPermissions(
-        [Perm.PermissionGroup.locationWhenInUse]).then(_onStatusRequested);
-  }
-
-  void _onStatusRequested(
-      Map<Perm.PermissionGroup, Perm.PermissionStatus> statuses) {
-    final status = statuses[Perm.PermissionGroup.locationWhenInUse];
-    if (status != Perm.PermissionStatus.granted) {
-      // On iOS if "deny" is pressed, open App Settings
-      Perm.PermissionHandler().openAppSettings();
-    } else {
-      _updateStatus(status);
-    }
-  }
 
   _getLocation() async {
     Location _location = new Location();
@@ -118,11 +77,7 @@ class _RootScreenState extends State<RootScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     _getLocation();
-    WidgetsBinding.instance.addObserver(this);
-    Perm.PermissionHandler() // Check location permission has been granted
-        .checkPermissionStatus(Perm.PermissionGroup
-            .locationWhenInUse) //check permission returns a Future
-        .then(_updateStatus); // ha
+
     super.initState();
   }
 

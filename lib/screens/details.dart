@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:share/share.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -158,18 +157,6 @@ class _DetailsState extends State<Details> {
                   color: Colors.black,
                 ),
               ),
-              actions: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    Share.share(
-                        'Hey! look what i found on SellShip! This awesome ${newItem.name}!');
-                  },
-                  icon: Icon(
-                    Feather.share,
-                    color: Colors.black,
-                  ),
-                )
-              ],
             ),
             body: Stack(
               children: <Widget>[
@@ -289,8 +276,9 @@ class _DetailsState extends State<Details> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  UserItems(userid: newItem.userid)),
+                              builder: (context) => UserItems(
+                                  userid: newItem.userid,
+                                  username: newItem.username)),
                         );
                       },
                       child: Card(
@@ -358,22 +346,8 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Container(
-                        // rounded corners ad.
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: AdmobBanner(
-                          adUnitId: getBannerAdUnitId(),
-                          adSize: AdmobBannerSize.FULL_BANNER,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
                   ],
                 )
               ],

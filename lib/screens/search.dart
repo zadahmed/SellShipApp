@@ -154,18 +154,29 @@ class _SearchState extends State<Search> {
   onSearche(String texte) async {
     itemsgrid.clear();
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => Search(
-                  text: texte,
-                )));
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) => Search(
+          text: texte,
+        ),
+      ),
+    );
+//    Navigator.push(
+//        context,
+//        MaterialPageRoute(
+//            builder: (BuildContext context) => Search(
+//                  text: texte,
+//                )));
   }
 
   Widget _buildProgressIndicator() {
     return new Padding(
       padding: const EdgeInsets.all(8.0),
       child: new Center(
-        child: CupertinoActivityIndicator(),
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          valueColor: new AlwaysStoppedAnimation<Color>(Colors.amber),
+        ),
       ),
     );
   }
@@ -274,12 +285,16 @@ class _SearchState extends State<Search> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: <Widget>[
-                                                    Text(
-                                                      itemsgrid[index].category,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w300,
+                                                    Container(
+                                                      width: 60,
+                                                      child: Text(
+                                                        itemsgrid[index]
+                                                            .category,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w300,
+                                                        ),
                                                       ),
                                                     ),
                                                     Text(
