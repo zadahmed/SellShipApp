@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:sellship/screens/login.dart';
+import 'package:sellship/screens/rootscreen.dart';
 
 class EditItem extends StatefulWidget {
   final String itemid;
@@ -452,7 +453,7 @@ class EditItemState extends State<EditItem>
                       FocusScope.of(context).requestFocus(new FocusNode());
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
+                        MaterialPageRoute(builder: (context) => RootScreen()),
                       );
                     });
                   } else {
