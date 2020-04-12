@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:sellship/models/Items.dart';
 import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/foundation.dart';
@@ -294,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: <Widget>[
                                         //new Center(child: new CircularProgressIndicator()),
                                         new Center(
-                                          child: new Image.network(
+                                          child: Image.network(
                                             itemsgrid[index].image,
                                             fit: BoxFit.cover,
                                           ),
@@ -329,13 +327,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                 ),
                                               ),
-                                              Text(
-                                                itemsgrid[index].price + ' AED',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
+                                              Expanded(
+                                                child: Text(
+                                                  itemsgrid[index].price +
+                                                      ' AED',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  textAlign: TextAlign.left,
                                                 ),
-                                                textAlign: TextAlign.left,
                                               ),
                                             ],
                                           ),

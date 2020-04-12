@@ -122,7 +122,7 @@ class _SearchState extends State<Search> {
     var url = 'https://sellship.co/api/searchitems/' +
         city +
         '/' +
-        text +
+        text.toString().toLowerCase() +
         '/' +
         skip.toString() +
         '/' +
@@ -259,7 +259,7 @@ class _SearchState extends State<Search> {
                                             children: <Widget>[
                                               //new Center(child: new CircularProgressIndicator()),
                                               new Center(
-                                                child: new Image.network(
+                                                child: Image.network(
                                                   itemsgrid[index].image,
                                                   fit: BoxFit.cover,
                                                 ),
@@ -297,15 +297,18 @@ class _SearchState extends State<Search> {
                                                         ),
                                                       ),
                                                     ),
-                                                    Text(
-                                                      itemsgrid[index].price +
-                                                          ' AED',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
+                                                    Expanded(
+                                                      child: Text(
+                                                        itemsgrid[index].price +
+                                                            ' AED',
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.left,
                                                       ),
-                                                      textAlign: TextAlign.left,
                                                     ),
                                                   ],
                                                 ),

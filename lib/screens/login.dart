@@ -614,6 +614,7 @@ class _LoginPageState extends State<LoginPage>
   Widget profile(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: true,
           title: Text(
             "Profile️",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),

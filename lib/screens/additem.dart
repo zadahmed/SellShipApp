@@ -42,7 +42,7 @@ class _AddItemState extends State<AddItem> {
 
   String _selectedsubCategory;
   String _selectedsubsubCategory;
-  List<String> _subcategories = [];
+  List<String> _subcategories;
 
   LatLng position;
   String city;
@@ -58,6 +58,8 @@ class _AddItemState extends State<AddItem> {
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
     var cit = await storage.read(key: 'city');
+    userid = await storage.read(key: 'userid');
+    print(userid);
 
     setState(() {
       position = LatLng(double.parse(latitude), double.parse(longitude));
@@ -89,543 +91,589 @@ class _AddItemState extends State<AddItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Center(
-          child: Text(
-            "Add an Item",
-            style: TextStyle(
-                color: Color(0xFF323643),
-                fontSize: 20.0,
-                fontWeight: FontWeight.w700),
-          ),
-        ),
-        elevation: 0.0,
+        key: _scaffoldKey,
+        resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Color(0xFFC5CCD6)),
-      ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width - 40,
-          margin: EdgeInsets.symmetric(horizontal: 20.0),
-          child: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          getImage();
-                        },
-                        child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(10)),
-                            height: 120,
-                            width: 120,
-                            child: _image == null
-                                ? Icon(Icons.add)
-                                : Image.file(
-                                    _image,
-                                    fit: BoxFit.cover,
-                                  )),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: DropdownButton(
-                      hint: Text(
-                          'Please choose a category'), // Not necessary for Option 1
-                      value: _selectedCategory,
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedCategory = newValue;
-                          _selectedsubCategory = null;
-                          _subcategories = [''];
-                        });
-
-                        if (_selectedCategory == 'Electronics') {
-                          setState(() {
-                            _subcategories = [
-                              'Phones & Accessories',
-                              'Gaming',
-                              'Cameras & Photography',
-                              'Car Technology',
-                              'Computers,PCs & Laptops',
-                              'Drones',
-                              'Home Appliances',
-                              'Smart Home & Security',
-                              'Sound & Audio',
-                              'Tablets & eReaders',
-                              'TV & Video',
-                              'Wearables',
-                              'Virtual Reality',
-                            ];
-                          });
-                        } else if (_selectedCategory ==
-                            'Fashion & Accessories') {
-                          setState(() {
-                            _subcategories = [
-                              'Women',
-                              'Men',
-                              'Girls',
-                              'Boys',
-                            ];
-                          });
-                        } else if (_selectedCategory == 'Motors') {
-                          setState(() {
-                            _subcategories = ['Cars', 'Motorcycles & Scooters'];
-                          });
-                        } else if (_selectedCategory == 'Property') {
-                          setState(() {
-                            _subcategories = [
-                              'Property for Sale',
-                              'Property for Rent',
-                            ];
-                          });
-                        }
-                      },
-                      items: categories.map((location) {
-                        return DropdownMenuItem(
-                          child: new Text(location),
-                          value: location,
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 2.0,
-                  ),
-                  _selectedCategory == null
-                      ? Container()
-                      : Align(
-                          alignment: Alignment.centerLeft,
-                          child: DropdownButton(
-                            hint: Text(
-                                'Please choose a sub category'), // Not necessary for Option 1
-                            value: _selectedsubCategory,
-                            onChanged: (newValue) {
-                              setState(() {
-                                _selectedsubCategory = newValue;
-                              });
-                              if (_selectedsubCategory == 'Women') {
-                                setState(() {
-                                  _subsubcategory = [
-                                    'Shoes & Boots',
-                                    'Activewear & Sportswear',
-                                    'Dresses',
-                                    'Tops',
-                                    'Coats & Jackets',
-                                    'Jumpers & Cardigans',
-                                    'Bags & Accessories',
-                                    'Leggings',
-                                    'Jumpsuits & Playsuits',
-                                    'Lingerie',
-                                    'Nightwear',
-                                    'Loungewear',
-                                    'Hoodies & Sweatshirts',
-                                    'Jeans',
-                                    'Suits & Blazers',
-                                    'Swimwear & Beachwear',
-                                    'Shorts',
-                                    'Skirts',
-                                    'Other',
-                                  ];
-                                });
-                              } else if (_selectedsubCategory == 'Men') {
-                                setState(() {
-                                  _subsubcategory = [
-                                    'Shoes & Boots',
-                                    'Activewear & Sportswear',
-                                    'Polo Shirts',
-                                    'Shirts',
-                                    'T- Shirts & Vests',
-                                    'Coats & Jackets',
-                                    'Jumpers & Cardigans',
-                                    'Bags & Accessories',
-                                    'Trousers',
-                                    'Chinos',
-                                    'Jumpsuits & Playsuits',
-                                    'Nightwear',
-                                    'Loungewear',
-                                    'Hoodies & Sweatshirts',
-                                    'Jeans',
-                                    'Suits & Blazers',
-                                    'Swimwear & Beachwear',
-                                    'Shorts',
-                                    'Other',
-                                  ];
-                                });
-                              } else if (_selectedsubCategory == 'Girls') {
-                                setState(() {
-                                  _subsubcategory = [
-                                    'Shoes & Boots',
-                                    'Activewear & Sportswear',
-                                    'Dresses',
-                                    'Tops',
-                                    'Coats & Jackets',
-                                    'Jumpers & Cardigans',
-                                    'Bags & Accessories',
-                                    'Leggings',
-                                    'Jumpsuits & Playsuits',
-                                    'Lingerie',
-                                    'Nightwear',
-                                    'Loungewear',
-                                    'Hoodies & Sweatshirts',
-                                    'Jeans',
-                                    'Suits & Blazers',
-                                    'Swimwear & Beachwear',
-                                    'Skirts',
-                                    'Other',
-                                  ];
-                                });
-                              } else if (_selectedsubCategory == 'Boys') {
-                                setState(() {
-                                  _subsubcategory = [
-                                    'Shoes & Boots',
-                                    'Activewear & Sportswear',
-                                    'Polo Shirts',
-                                    'Shirts',
-                                    'T- Shirts & Vests',
-                                    'Coats & Jackets',
-                                    'Jumpers & Cardigans',
-                                    'Bags & Accessories',
-                                    'Trousers',
-                                    'Chinos',
-                                    'Jumpsuits & Playsuits',
-                                    'Nightwear',
-                                    'Loungewear',
-                                    'Hoodies & Sweatshirts',
-                                    'Jeans',
-                                    'Suits & Blazers',
-                                    'Swimwear & Beachwear',
-                                    'Shorts',
-                                    'Other',
-                                  ];
-                                });
-                              }
-                            },
-                            items: _subcategories.map((location) {
-                              return DropdownMenuItem(
-                                child: new Text(location),
-                                value: location,
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                  _subsubcategory == null
-                      ? Container()
-                      : Align(
-                          alignment: Alignment.centerLeft,
-                          child: DropdownButton(
-                            hint: Text(
-                                'Please choose a sub category'), // Not necessary for Option 1
-                            value: _selectedsubsubCategory,
-                            onChanged: (newValue) {
-                              setState(() {
-                                _selectedsubsubCategory = newValue;
-                              });
-                            },
-                            items: _subsubcategory.map((location) {
-                              return DropdownMenuItem(
-                                child: new Text(location),
-                                value: location,
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                  TextField(
-                    cursorColor: Color(0xFF979797),
-                    controller: businessnameController,
-                    decoration: InputDecoration(
-                        labelText: "Name",
-                        labelStyle: TextStyle(color: Colors.blueGrey),
-                        focusColor: Colors.black,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797)))),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  TextField(
-                    cursorColor: Color(0xFF979797),
-                    controller: businessdescriptionController,
-                    maxLines: 5,
-                    maxLength: 1000,
-                    decoration: InputDecoration(
-                        labelText: "Description",
-                        alignLabelWithHint: true,
-                        labelStyle: TextStyle(color: Colors.blueGrey),
-                        focusColor: Colors.black,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797)))),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  TextField(
-                    cursorColor: Color(0xFF979797),
-                    controller: businesspricecontroller,
-                    keyboardType: TextInputType.numberWithOptions(),
-                    decoration: InputDecoration(
-                        labelText: "Price AED",
-                        alignLabelWithHint: true,
-                        labelStyle: TextStyle(color: Colors.blueGrey),
-                        focusColor: Colors.black,
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        focusedErrorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797))),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFF979797)))),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                    'Choose Item\'s Location',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text(
-                    'Press on the map to choose the Item\'s location',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  position != null
-                      ? Container(
-                          height: 300,
-                          width: MediaQuery.of(context).size.width,
-                          child: GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                                target: position, zoom: 18.0, bearing: 70),
-                            onMapCreated: mapCreated,
-                            onCameraMove: _onCameraMove,
-                            onTap: _handleTap,
-                            markers: _markers,
-                            zoomGesturesEnabled: true,
-                            myLocationEnabled: true,
-                            myLocationButtonEnabled: true,
-                            compassEnabled: true,
-                            tiltGesturesEnabled: false,
-                          ),
-                        )
-                      : Text('Oops! Something went wrong. \n Please try again'),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                    "Thank you for helping us grow!",
-                    style: TextStyle(
-                      color: Colors.blueGrey,
-                      fontSize: 12.0,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: InkWell(
-        onTap: () async {
-          userid = await storage.read(key: 'userid');
-          print(userid);
-          if (userid != null) {
-            var userurl = 'https://sellship.co/api/user/' + userid;
-            final userresponse = await http.get(userurl);
-            if (userresponse.statusCode == 200) {
-              var userrespons = json.decode(userresponse.body);
-              var profilemap = userrespons;
-              print(profilemap);
-              if (mounted) {
-                setState(() {
-                  firstname = profilemap['first_name'];
-                  phonenumber = profilemap['phonenumber'];
-                  email = profilemap['email'];
-                });
-              }
-            }
-
-            if (phonenumber == null || email == null) {
-              showInSnackBar('Please update your Phone Number and Email');
-            } else if (businessnameController.text.isNotEmpty &&
-                _image.path.isNotEmpty &&
-                businesspricecontroller.text.isNotEmpty &&
-                businessdescriptionController.text.isNotEmpty &&
-                position != null) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(20.0)), //this right here
-                      child: Container(
-                        height: 100,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('Loading'),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              CircularProgressIndicator()
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  });
-              String fileName = _image.path.split('/').last;
-              var url = 'https://sellship.co/api/additem';
-
-              Dio dio = new Dio();
-
-              FormData formData = FormData.fromMap({
-                'name': businessnameController.text,
-                'price': businesspricecontroller.text,
-                'category': _selectedCategory,
-                'subcategory':
-                    _selectedsubCategory == null ? '' : _selectedsubCategory,
-                'subsubcategory': _selectedsubsubCategory == null
-                    ? ''
-                    : _selectedsubsubCategory,
-                'latitude': position.latitude,
-                'longitude': position.longitude,
-                'description': businessdescriptionController.text,
-                'city': city,
-                'userid': userid,
-                'username': firstname,
-                'useremail': email,
-                'usernumber': phonenumber,
-                'date_uploaded': DateTime.now().toString(),
-                'image': await MultipartFile.fromFile(_image.path,
-                    filename: fileName)
-              });
-
-              var response = await dio.post(url, data: formData);
-              if (response.statusCode == 200) {
-                Navigator.pop(context);
-
-                showDialog(
-                    context: context,
-                    builder: (_) => AssetGiffyDialog(
-                          image: Image.asset(
-                            'assets/yay.gif',
-                            fit: BoxFit.cover,
-                          ),
-                          title: Text(
-                            'Hooray!',
-                            style: TextStyle(
-                                fontSize: 22.0, fontWeight: FontWeight.w600),
-                          ),
-                          description: Text(
-                            'Your Item\'s Uploaded',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(),
-                          ),
-                          onlyOkButton: true,
-                          entryAnimation: EntryAnimation.DEFAULT,
-                          onOkButtonPressed: () {
-                            businesspricecontroller.clear();
-                            businessnameController.clear();
-                            businessdescriptionController.clear();
-                            _image.writeAsStringSync('');
-                            FocusScope.of(context).unfocus();
-                          },
-                        ));
-              } else {
-                print(response.statusCode);
-              }
-            } else {
-              showInSnackBar('Oops looks like your missing something!');
-            }
-          } else {
-            showInSnackBar('Please Login to Add an Item');
-          }
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 48,
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.amberAccent, Colors.amber],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight),
-              borderRadius: BorderRadius.circular(6.0),
-              boxShadow: [
-                BoxShadow(
-                    color: Color(0xFF9DA3B4).withOpacity(0.1),
-                    blurRadius: 65.0,
-                    offset: Offset(0.0, 15.0))
-              ]),
-          child: Center(
+        appBar: AppBar(
+          title: Center(
             child: Text(
               "Add an Item",
               style: TextStyle(
-                  color: Color(0xFFFBFBFB),
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w500),
+                  color: Color(0xFF323643),
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w700),
             ),
           ),
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Color(0xFFC5CCD6)),
         ),
-      ),
-    );
+        body: userid != null
+            ? GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width - 40,
+                  margin: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: SingleChildScrollView(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              InkWell(
+                                onTap: () {
+                                  getImage();
+                                },
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.shade100,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    height: 120,
+                                    width: 120,
+                                    child: _image == null
+                                        ? Icon(Icons.add)
+                                        : Image.file(
+                                            _image,
+                                            fit: BoxFit.cover,
+                                          )),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: DropdownButton(
+                              hint: Text(
+                                  'Please choose a category'), // Not necessary for Option 1
+                              value: _selectedCategory,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _selectedCategory = newValue;
+                                });
+                                if (_selectedCategory == 'Electronics') {
+                                  setState(() {
+                                    _subcategories = [
+                                      'Phones & Accessories',
+                                      'Gaming',
+                                      'Cameras & Photography',
+                                      'Car Technology',
+                                      'Computers,PCs & Laptops',
+                                      'Drones',
+                                      'Home Appliances',
+                                      'Smart Home & Security',
+                                      'Sound & Audio',
+                                      'Tablets & eReaders',
+                                      'TV & Video',
+                                      'Wearables',
+                                      'Virtual Reality',
+                                    ];
+                                  });
+                                } else if (_selectedCategory ==
+                                    'Fashion & Accessories') {
+                                  setState(() {
+                                    _subcategories = [
+                                      'Women',
+                                      'Men',
+                                      'Girls',
+                                      'Boys',
+                                    ];
+                                  });
+                                } else if (_selectedCategory == 'Motors') {
+                                  setState(() {
+                                    _subcategories = [
+                                      'Cars',
+                                      'Motorcycles & Scooters'
+                                    ];
+                                  });
+                                } else if (_selectedCategory == 'Property') {
+                                  setState(() {
+                                    _subcategories = [
+                                      'Property for Sale',
+                                      'Property for Rent',
+                                    ];
+                                  });
+                                } else {
+                                  _subcategories = null;
+                                }
+                              },
+                              items: categories.map((location) {
+                                return DropdownMenuItem(
+                                  child: new Text(location),
+                                  value: location,
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 2.0,
+                          ),
+                          _subcategories == null
+                              ? Container()
+                              : Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: DropdownButton(
+                                    hint: Text(
+                                        'Please choose a sub category'), // Not necessary for Option 1
+                                    value: _selectedsubCategory,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _selectedsubCategory = newValue;
+                                      });
+                                      if (_selectedsubCategory == 'Women') {
+                                        setState(() {
+                                          _subsubcategory = [
+                                            'Shoes & Boots',
+                                            'Activewear & Sportswear',
+                                            'Dresses',
+                                            'Tops',
+                                            'Coats & Jackets',
+                                            'Jumpers & Cardigans',
+                                            'Bags & Accessories',
+                                            'Leggings',
+                                            'Jumpsuits & Playsuits',
+                                            'Lingerie',
+                                            'Nightwear',
+                                            'Loungewear',
+                                            'Hoodies & Sweatshirts',
+                                            'Jeans',
+                                            'Suits & Blazers',
+                                            'Swimwear & Beachwear',
+                                            'Shorts',
+                                            'Skirts',
+                                            'Other',
+                                          ];
+                                        });
+                                      } else if (_selectedsubCategory ==
+                                          'Men') {
+                                        setState(() {
+                                          _subsubcategory = [
+                                            'Shoes & Boots',
+                                            'Activewear & Sportswear',
+                                            'Polo Shirts',
+                                            'Shirts',
+                                            'T- Shirts & Vests',
+                                            'Coats & Jackets',
+                                            'Jumpers & Cardigans',
+                                            'Bags & Accessories',
+                                            'Trousers',
+                                            'Chinos',
+                                            'Jumpsuits & Playsuits',
+                                            'Nightwear',
+                                            'Loungewear',
+                                            'Hoodies & Sweatshirts',
+                                            'Jeans',
+                                            'Suits & Blazers',
+                                            'Swimwear & Beachwear',
+                                            'Shorts',
+                                            'Other',
+                                          ];
+                                        });
+                                      } else if (_selectedsubCategory ==
+                                          'Girls') {
+                                        setState(() {
+                                          _subsubcategory = [
+                                            'Shoes & Boots',
+                                            'Activewear & Sportswear',
+                                            'Dresses',
+                                            'Tops',
+                                            'Coats & Jackets',
+                                            'Jumpers & Cardigans',
+                                            'Bags & Accessories',
+                                            'Leggings',
+                                            'Jumpsuits & Playsuits',
+                                            'Lingerie',
+                                            'Nightwear',
+                                            'Loungewear',
+                                            'Hoodies & Sweatshirts',
+                                            'Jeans',
+                                            'Suits & Blazers',
+                                            'Swimwear & Beachwear',
+                                            'Skirts',
+                                            'Other',
+                                          ];
+                                        });
+                                      } else if (_selectedsubCategory ==
+                                          'Boys') {
+                                        setState(() {
+                                          _subsubcategory = [
+                                            'Shoes & Boots',
+                                            'Activewear & Sportswear',
+                                            'Polo Shirts',
+                                            'Shirts',
+                                            'T- Shirts & Vests',
+                                            'Coats & Jackets',
+                                            'Jumpers & Cardigans',
+                                            'Bags & Accessories',
+                                            'Trousers',
+                                            'Chinos',
+                                            'Jumpsuits & Playsuits',
+                                            'Nightwear',
+                                            'Loungewear',
+                                            'Hoodies & Sweatshirts',
+                                            'Jeans',
+                                            'Suits & Blazers',
+                                            'Swimwear & Beachwear',
+                                            'Shorts',
+                                            'Other',
+                                          ];
+                                        });
+                                      }
+                                    },
+                                    items: _subcategories.map((location) {
+                                      return DropdownMenuItem(
+                                        child: new Text(location),
+                                        value: location,
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                          _subsubcategory == null
+                              ? Container()
+                              : Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: DropdownButton(
+                                    hint: Text(
+                                        'Please choose a sub category'), // Not necessary for Option 1
+                                    value: _selectedsubsubCategory,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        _selectedsubsubCategory = newValue;
+                                      });
+                                    },
+                                    items: _subsubcategory.map((location) {
+                                      return DropdownMenuItem(
+                                        child: new Text(location),
+                                        value: location,
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                          TextField(
+                            cursorColor: Color(0xFF979797),
+                            controller: businessnameController,
+                            decoration: InputDecoration(
+                                labelText: "Name",
+                                labelStyle: TextStyle(color: Colors.blueGrey),
+                                focusColor: Colors.black,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797)))),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          TextField(
+                            cursorColor: Color(0xFF979797),
+                            controller: businessdescriptionController,
+                            maxLines: 5,
+                            maxLength: 1000,
+                            decoration: InputDecoration(
+                                labelText: "Description",
+                                alignLabelWithHint: true,
+                                labelStyle: TextStyle(color: Colors.blueGrey),
+                                focusColor: Colors.black,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797)))),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          TextField(
+                            cursorColor: Color(0xFF979797),
+                            controller: businesspricecontroller,
+                            keyboardType: TextInputType.numberWithOptions(),
+                            decoration: InputDecoration(
+                                labelText: "Price AED",
+                                alignLabelWithHint: true,
+                                labelStyle: TextStyle(color: Colors.blueGrey),
+                                focusColor: Colors.black,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797))),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xFF979797)))),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Text(
+                            'Choose Item\'s Location',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(
+                            'Press on the map to choose the Item\'s location',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          position != null
+                              ? Container(
+                                  height: 300,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: GoogleMap(
+                                    initialCameraPosition: CameraPosition(
+                                        target: position,
+                                        zoom: 18.0,
+                                        bearing: 70),
+                                    onMapCreated: mapCreated,
+                                    onCameraMove: _onCameraMove,
+                                    onTap: _handleTap,
+                                    markers: _markers,
+                                    zoomGesturesEnabled: true,
+                                    myLocationEnabled: true,
+                                    myLocationButtonEnabled: true,
+                                    compassEnabled: true,
+                                    tiltGesturesEnabled: false,
+                                  ),
+                                )
+                              : Text(
+                                  'Oops! Something went wrong. \n Please try again'),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Text(
+                            "Thank you for helping us grow!",
+                            style: TextStyle(
+                              color: Colors.blueGrey,
+                              fontSize: 12.0,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Scaffold(
+                backgroundColor: Colors.white,
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Center(
+                      child: Text(
+                        'Look\'s like you need to \n login to Add an Item️',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    Expanded(
+                        child: Image.asset(
+                      'assets/little_theologians_4x.jpg',
+                      fit: BoxFit.cover,
+                    ))
+                  ],
+                ),
+              ),
+        bottomNavigationBar: userid != null
+            ? InkWell(
+                onTap: () async {
+                  var userurl = 'https://sellship.co/api/user/' + userid;
+                  final userresponse = await http.get(userurl);
+                  if (userresponse.statusCode == 200) {
+                    var userrespons = json.decode(userresponse.body);
+                    var profilemap = userrespons;
+                    print(profilemap);
+                    if (mounted) {
+                      setState(() {
+                        firstname = profilemap['first_name'];
+                        phonenumber = profilemap['phonenumber'];
+                        email = profilemap['email'];
+                      });
+                    }
+                  }
+
+                  if (phonenumber == null || email == null) {
+                    showInSnackBar('Please update your Phone Number and Email');
+                  } else if (businessnameController.text.isNotEmpty &&
+                      _image.path.isNotEmpty &&
+                      businesspricecontroller.text.isNotEmpty &&
+                      businessdescriptionController.text.isNotEmpty &&
+                      position != null) {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    20.0)), //this right here
+                            child: Container(
+                              height: 100,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text('Loading'),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    CircularProgressIndicator()
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                    String fileName = _image.path.split('/').last;
+                    var url = 'https://sellship.co/api/additem';
+
+                    Dio dio = new Dio();
+
+                    FormData formData = FormData.fromMap({
+                      'name': businessnameController.text,
+                      'price': businesspricecontroller.text,
+                      'category': _selectedCategory,
+                      'subcategory': _selectedsubCategory == null
+                          ? ''
+                          : _selectedsubCategory,
+                      'subsubcategory': _selectedsubsubCategory == null
+                          ? ''
+                          : _selectedsubsubCategory,
+                      'latitude': position.latitude,
+                      'longitude': position.longitude,
+                      'description': businessdescriptionController.text,
+                      'city': city,
+                      'userid': userid,
+                      'username': firstname,
+                      'useremail': email,
+                      'usernumber': phonenumber,
+                      'date_uploaded': DateTime.now().toString(),
+                      'image': await MultipartFile.fromFile(_image.path,
+                          filename: fileName)
+                    });
+
+                    var response = await dio.post(url, data: formData);
+                    if (response.statusCode == 200) {
+                      showDialog(
+                          context: context,
+                          builder: (_) => AssetGiffyDialog(
+                                image: Image.asset(
+                                  'assets/yay.gif',
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(
+                                  'Hooray!',
+                                  style: TextStyle(
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                description: Text(
+                                  'Your Item\'s Uploaded',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(),
+                                ),
+                                onlyOkButton: true,
+                                entryAnimation: EntryAnimation.DEFAULT,
+                                onOkButtonPressed: () {
+                                  businesspricecontroller.clear();
+                                  businessnameController.clear();
+                                  businessdescriptionController.clear();
+                                  _image.writeAsStringSync('');
+                                  FocusScope.of(context).unfocus();
+                                },
+                              ));
+                    } else {
+                      print(response.statusCode);
+                    }
+                  } else {
+                    showInSnackBar('Oops looks like your missing something!');
+                  }
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 48,
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [Colors.amberAccent, Colors.amber],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight),
+                      borderRadius: BorderRadius.circular(6.0),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0xFF9DA3B4).withOpacity(0.1),
+                            blurRadius: 65.0,
+                            offset: Offset(0.0, 15.0))
+                      ]),
+                  child: Center(
+                    child: Text(
+                      "Add an Item",
+                      style: TextStyle(
+                          color: Color(0xFFFBFBFB),
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ),
+              )
+            : Text(''));
   }
 
   _handleTap(LatLng point) {

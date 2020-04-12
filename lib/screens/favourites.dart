@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:admob_flutter/admob_flutter.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -264,7 +265,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                 ),
                 Center(
                   child: Text(
-                    'Login to see your favourite\'s here ',
+                    'View your favourite\'s here ',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20),
                   ),

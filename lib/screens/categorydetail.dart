@@ -209,7 +209,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                           children: <Widget>[
                                             //new Center(child: new CircularProgressIndicator()),
                                             new Center(
-                                              child: new Image.network(
+                                              child: Image.network(
                                                 itemsgrid[index].image,
                                                 fit: BoxFit.cover,
                                               ),
@@ -246,15 +246,17 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Text(
-                                                    itemsgrid[index].price +
-                                                        ' AED',
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w400,
+                                                  Expanded(
+                                                    child: Text(
+                                                      itemsgrid[index].price +
+                                                          ' AED',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                      textAlign: TextAlign.left,
                                                     ),
-                                                    textAlign: TextAlign.left,
                                                   ),
                                                 ],
                                               ),

@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:sellship/models/Items.dart';
+import 'package:sellship/screens/login.dart';
 
 class EditItem extends StatefulWidget {
   final String itemid;
@@ -75,6 +76,10 @@ class EditItemState extends State<EditItem>
           lastnamecontr.text = itemdescription;
           emailnamecontr.text = itemprice;
           loading = false;
+        });
+        userid = await storage.read(key: 'userid');
+        setState(() {
+          userid = userid;
         });
       }
     } else {
@@ -432,11 +437,27 @@ class EditItemState extends State<EditItem>
                 child: new Text("Delete"),
                 textColor: Colors.white,
                 color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  });
+                onPressed: () async {
+                  var url = 'https://sellship.co/api/deleteitem/' +
+                      itemid +
+                      "/" +
+                      userid;
+
+                  var response = await http.get(url);
+
+                  if (response.statusCode == 200) {
+                    print(response.body);
+                    setState(() {
+                      _status = true;
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    });
+                  } else {
+                    print(response.statusCode);
+                  }
                 },
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(20.0)),
