@@ -1,20 +1,21 @@
 import 'dart:io';
 
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_native_admob/flutter_native_admob.dart';
+import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:sellship/bubble_indication_painter.dart';
+import 'package:SellShip/bubble_indication_painter.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:sellship/models/Items.dart';
-import 'package:sellship/screens/details.dart';
-import 'package:sellship/screens/edititem.dart';
-import 'package:sellship/screens/editprofile.dart';
+import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/edititem.dart';
+import 'package:SellShip/screens/editprofile.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoginPage extends StatefulWidget {
@@ -147,6 +148,12 @@ class _LoginPageState extends State<LoginPage>
         break;
     }
   }
+
+  static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
+
+  static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
+
+  final _controller = NativeAdmobController();
 
   @override
   Widget build(BuildContext context) {
@@ -524,12 +531,9 @@ class _LoginPageState extends State<LoginPage>
             child: FlatButton(
                 onPressed: () {},
                 child: Text(
-                  "Forgot Password?",
-                  style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontFamily: "WorkSansMedium"),
+                  'By logging In \n you agree to the Terms and Conditions',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
                 )),
           ),
           Padding(
@@ -632,14 +636,6 @@ class _LoginPageState extends State<LoginPage>
             )
           ],
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-          margin: EdgeInsets.only(bottom: 20.0),
-          child: AdmobBanner(
-            adUnitId: getBannerAdUnitId(),
-            adSize: AdmobBannerSize.LEADERBOARD,
-          ),
-        ),
         body: loading == false
             ? Padding(
                 padding: const EdgeInsets.all(15.0),
@@ -701,6 +697,29 @@ class _LoginPageState extends State<LoginPage>
                             child: new ListView.builder(
                                 itemCount: Itemname.length,
                                 itemBuilder: (BuildContext ctxt, int Index) {
+                                  if (Index != 0 && Index % 4 == 0) {
+                                    return Platform.isIOS == true
+                                        ? Container(
+                                            height: 200,
+                                            padding: EdgeInsets.all(10),
+                                            margin:
+                                                EdgeInsets.only(bottom: 20.0),
+                                            child: NativeAdmob(
+                                              adUnitID: _iosadUnitID,
+                                              controller: _controller,
+                                            ),
+                                          )
+                                        : Container(
+                                            height: 200,
+                                            padding: EdgeInsets.all(10),
+                                            margin:
+                                                EdgeInsets.only(bottom: 20.0),
+                                            child: NativeAdmob(
+                                              adUnitID: _androidadUnitID,
+                                              controller: _controller,
+                                            ),
+                                          );
+                                  }
                                   return new InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -1081,6 +1100,15 @@ class _LoginPageState extends State<LoginPage>
               ),
             ],
           ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+              child: Text(
+            'By Signing Up \n you agree to the Terms and Conditions',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white),
+          )),
         ],
       ),
     );

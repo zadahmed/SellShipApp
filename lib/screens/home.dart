@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/global.dart';
+import 'package:SellShip/screens/categories.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_native_admob/flutter_native_admob.dart';
+import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:sellship/models/Items.dart';
-import 'package:admob_flutter/admob_flutter.dart';
+import 'package:SellShip/models/Items.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,8 +16,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
-import 'package:sellship/screens/details.dart';
-import 'package:sellship/screens/search.dart';
+import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/search.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,6 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollController.dispose();
     super.dispose();
   }
+
+  static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
+
+  static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
+
+  final _controller = NativeAdmobController();
 
   ScrollController _scrollController = ScrollController();
 
@@ -159,6 +169,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  int _selectedCat;
+
   final Geolocator geolocator = Geolocator();
 
   void getcity() async {
@@ -232,10 +244,15 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
               children: <Widget>[
                 Container(
+                  color: Colors.amberAccent,
                   padding: EdgeInsets.all(10),
                   child: Card(
+                    elevation: 0,
                     child: ListTile(
-                      leading: Icon(Icons.search),
+                      leading: Icon(
+                        FontAwesome.search,
+                        color: Colors.amber,
+                      ),
                       title: TextField(
                         controller: searchcontroller,
                         onSubmitted: onSearch,
@@ -252,6 +269,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
                 itemsgrid.isNotEmpty
                     ? Expanded(
                         child: StaggeredGridView.countBuilder(
@@ -264,17 +284,110 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (index == itemsgrid.length) {
                             return _buildProgressIndicator();
                           }
-                          if (index != 0 && index % 7 == 0) {
+                          if (index == 0) {
                             return Container(
-                              // rounded corners ad.
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: AdmobBanner(
-                                adUnitId: getBannerAdUnitId(),
-                                adSize: AdmobBannerSize.LARGE_BANNER,
+                              width: MediaQuery.of(context).size.width,
+                              height: 100,
+                              margin: const EdgeInsets.only(right: 15.0),
+                              child: Scrollbar(
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: categories.length,
+                                  itemBuilder: (ctx, i) {
+                                    return Row(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedCat = i;
+                                            });
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CategoryScreen(
+                                                          selectedcategory:
+                                                              _selectedCat)),
+                                            );
+                                          },
+                                          child: Container(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 25.0),
+                                              width: 110.0,
+                                              constraints: BoxConstraints(
+                                                  minHeight: 101),
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: _selectedCat == i
+                                                    ? Colors.transparent
+                                                    : Colors.amberAccent,
+                                                borderRadius:
+                                                    BorderRadius.circular(11.0),
+                                              ),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Icon(
+                                                    categories[i].icon,
+                                                    color: _selectedCat == i
+                                                        ? Colors.amberAccent
+                                                        : Colors.white,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    "${categories[i].title}",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .button
+                                                        .copyWith(
+                                                            color: _selectedCat ==
+                                                                    i
+                                                                ? Colors
+                                                                    .amberAccent
+                                                                : Colors.white),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                              )),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        )
+                                      ],
+                                    );
+                                  },
+                                ),
                               ),
                             );
+                          }
+                          if (index != 0 && index % 7 == 0) {
+                            return Platform.isIOS == true
+                                ? Container(
+                                    height: 330,
+                                    padding: EdgeInsets.all(10),
+                                    margin: EdgeInsets.only(bottom: 20.0),
+                                    child: NativeAdmob(
+                                      adUnitID: _iosadUnitID,
+                                      controller: _controller,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 330,
+                                    padding: EdgeInsets.all(10),
+                                    margin: EdgeInsets.only(bottom: 20.0),
+                                    child: NativeAdmob(
+                                      adUnitID: _androidadUnitID,
+                                      controller: _controller,
+                                    ),
+                                  );
                           }
                           return InkWell(
                               onTap: () {
@@ -286,6 +399,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               },
                               child: Card(
+                                elevation: 0,
                                 child: new Column(
                                   children: <Widget>[
                                     new Stack(
@@ -308,37 +422,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                             overflow: TextOverflow.fade,
                                             style: TextStyle(
                                               fontSize: 18,
-                                              fontWeight: FontWeight.w400,
+                                              fontWeight: FontWeight.w600,
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
                                           SizedBox(height: 3.0),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Container(
-                                                width: 80,
-                                                child: Text(
-                                                  itemsgrid[index].category,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
+                                          Container(
+                                            child: Text(
+                                              itemsgrid[index].category,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w300,
                                               ),
-                                              Expanded(
-                                                child: Text(
-                                                  itemsgrid[index].price +
-                                                      ' AED',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 3.0),
+                                          Container(
+                                            child: Text(
+                                              itemsgrid[index].price + ' AED',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w400,
                                               ),
-                                            ],
+                                              textAlign: TextAlign.left,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -351,7 +458,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (index != 0 && index % 7 == 0) {
                             return StaggeredTile.count(2, 1);
                           } else if (index != 0 && index == itemsgrid.length) {
-                            return StaggeredTile.count(2, 1);
+                            return StaggeredTile.count(2, 0.5);
+                          } else if (index == 0) {
+                            return StaggeredTile.count(2, 0.5);
                           } else {
                             return StaggeredTile.fit(1);
                           }
@@ -438,44 +547,5 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
     ));
-  }
-
-  String getBannerAdUnitId() {
-    if (Platform.isIOS) {
-      return 'ca-app-pub-9959700192389744/1339524606';
-    } else if (Platform.isAndroid) {
-      return 'ca-app-pub-9959700192389744/3087720541';
-    }
-    return null;
-  }
-
-  String getAppId() {
-    if (Platform.isIOS) {
-      return 'ca-app-pub-9959700192389744~6783422976';
-    } else if (Platform.isAndroid) {
-      return 'ca-app-pub-9959700192389744~8862791402';
-    }
-    return null;
-  }
-
-  AdmobBannerSize bannerSize;
-
-  void handleEvent(
-      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
-    switch (event) {
-      case AdmobAdEvent.loaded:
-        print('New Admob $adType Ad loaded!');
-        break;
-      case AdmobAdEvent.opened:
-        print('Admob $adType Ad opened!');
-        break;
-      case AdmobAdEvent.closed:
-        print('Admob $adType Ad closed!');
-        break;
-      case AdmobAdEvent.failedToLoad:
-        print('Admob $adType failed to load. :(');
-        break;
-      default:
-    }
   }
 }

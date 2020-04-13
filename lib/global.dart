@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Color bgColor = Colors.amber;
 
 class Categories {
   final String title;
   final int id;
+  final IconData icon;
   final List<SubCategories> subCat;
 
-  Categories({this.title, this.id, this.subCat});
+  Categories({this.title, this.id, this.subCat, this.icon});
 }
 
 class SubCategories {
@@ -21,6 +23,7 @@ List<Categories> categories = [
   Categories(
     title: 'Electronics',
     id: 0,
+    icon: FontAwesomeIcons.tv,
     subCat: [
       SubCategories(id: 0, title: 'Phones & Accessories'),
       SubCategories(id: 1, title: 'Gaming'),
@@ -40,6 +43,7 @@ List<Categories> categories = [
   Categories(
     title: 'Fashion & Accessories',
     id: 1,
+    icon: FontAwesomeIcons.shirtsinbulk,
     subCat: [
       SubCategories(id: 0, title: "Women"),
       SubCategories(id: 1, title: "Men"),
@@ -50,6 +54,7 @@ List<Categories> categories = [
   Categories(
     title: 'Home & Garden',
     id: 2,
+    icon: Icons.event_seat,
     subCat: [
       SubCategories(id: 0, title: "Home & Garden"),
     ],
@@ -57,6 +62,7 @@ List<Categories> categories = [
   Categories(
     title: 'Baby & Child',
     id: 3,
+    icon: FontAwesomeIcons.baby,
     subCat: [
       SubCategories(id: 0, title: "Baby & Child"),
     ],
@@ -64,6 +70,7 @@ List<Categories> categories = [
   Categories(
     title: 'Sport & Leisure',
     id: 4,
+    icon: FontAwesomeIcons.footballBall,
     subCat: [
       SubCategories(id: 0, title: "Sport & Leisure"),
     ],
@@ -71,6 +78,7 @@ List<Categories> categories = [
   Categories(
     title: 'Movies, Books & Music',
     id: 5,
+    icon: FontAwesomeIcons.bookOpen,
     subCat: [
       SubCategories(id: 0, title: "Movies, Books & Music"),
     ],
@@ -78,6 +86,7 @@ List<Categories> categories = [
   Categories(
     title: 'Motors',
     id: 6,
+    icon: FontAwesomeIcons.car,
     subCat: [
       SubCategories(id: 0, title: "Cars"),
       SubCategories(id: 1, title: "Motorcycles & Scooters"),
@@ -86,6 +95,7 @@ List<Categories> categories = [
   Categories(
     title: 'Property',
     id: 7,
+    icon: FontAwesomeIcons.building,
     subCat: [
       SubCategories(id: 0, title: "Property for Sale"),
       SubCategories(id: 1, title: "Property for Rent"),
@@ -94,6 +104,7 @@ List<Categories> categories = [
   Categories(
     title: 'Services',
     id: 8,
+    icon: Icons.room_service,
     subCat: [
       SubCategories(id: 0, title: "Services"),
     ],
@@ -101,6 +112,7 @@ List<Categories> categories = [
   Categories(
     title: 'Other',
     id: 9,
+    icon: Icons.lightbulb_outline,
     subCat: [
       SubCategories(id: 0, title: "Other"),
     ],

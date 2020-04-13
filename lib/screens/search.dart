@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_native_admob/flutter_native_admob.dart';
+import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
-import 'package:sellship/models/Items.dart';
-import 'package:admob_flutter/admob_flutter.dart';
+import 'package:SellShip/models/Items.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,7 +15,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
-import 'package:sellship/screens/details.dart';
+import 'package:SellShip/screens/details.dart';
 
 class Search extends StatefulWidget {
   final String text;
@@ -234,13 +235,25 @@ class _SearchState extends State<Search> {
                                   return _buildProgressIndicator();
                                 }
                                 if (index != 0 && index % 7 == 0) {
-                                  return Container(
-                                    margin: EdgeInsets.only(bottom: 10.0),
-                                    child: AdmobBanner(
-                                      adUnitId: getBannerAdUnitId(),
-                                      adSize: AdmobBannerSize.LARGE_BANNER,
-                                    ),
-                                  );
+                                  return Platform.isIOS == true
+                                      ? Container(
+                                          height: 330,
+                                          padding: EdgeInsets.all(10),
+                                          margin: EdgeInsets.only(bottom: 20.0),
+                                          child: NativeAdmob(
+                                            adUnitID: _iosadUnitID,
+                                            controller: _controller,
+                                          ),
+                                        )
+                                      : Container(
+                                          height: 330,
+                                          padding: EdgeInsets.all(10),
+                                          margin: EdgeInsets.only(bottom: 20.0),
+                                          child: NativeAdmob(
+                                            adUnitID: _androidadUnitID,
+                                            controller: _controller,
+                                          ),
+                                        );
                                 }
                                 return InkWell(
                                     onTap: () {
@@ -275,42 +288,33 @@ class _SearchState extends State<Search> {
                                                   overflow: TextOverflow.fade,
                                                   style: TextStyle(
                                                     fontSize: 18,
-                                                    fontWeight: FontWeight.w400,
+                                                    fontWeight: FontWeight.w600,
                                                   ),
                                                   textAlign: TextAlign.center,
                                                 ),
                                                 SizedBox(height: 3.0),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      width: 60,
-                                                      child: Text(
-                                                        itemsgrid[index]
-                                                            .category,
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w300,
-                                                        ),
-                                                      ),
+                                                Container(
+                                                  child: Text(
+                                                    itemsgrid[index].category,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w300,
                                                     ),
-                                                    Expanded(
-                                                      child: Text(
-                                                        itemsgrid[index].price +
-                                                            ' AED',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                        ),
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                      ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 3.0),
+                                                Container(
+                                                  child: Text(
+                                                    itemsgrid[index].price +
+                                                        ' AED',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w400,
                                                     ),
-                                                  ],
+                                                    textAlign: TextAlign.left,
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -392,24 +396,9 @@ class _SearchState extends State<Search> {
     return null;
   }
 
-  AdmobBannerSize bannerSize;
+  static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
 
-  void handleEvent(
-      AdmobAdEvent event, Map<String, dynamic> args, String adType) {
-    switch (event) {
-      case AdmobAdEvent.loaded:
-        print('New Admob $adType Ad loaded!');
-        break;
-      case AdmobAdEvent.opened:
-        print('Admob $adType Ad opened!');
-        break;
-      case AdmobAdEvent.closed:
-        print('Admob $adType Ad closed!');
-        break;
-      case AdmobAdEvent.failedToLoad:
-        print('Admob $adType failed to load. :(');
-        break;
-      default:
-    }
-  }
+  static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
+
+  final _controller = NativeAdmobController();
 }

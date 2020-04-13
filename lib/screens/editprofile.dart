@@ -367,21 +367,32 @@ class EditProfileState extends State<EditProfile>
   }
 
   Widget _getEditIcon() {
-    return new GestureDetector(
-      child: new CircleAvatar(
-        backgroundColor: Colors.red,
-        radius: 14.0,
-        child: new Icon(
-          Icons.edit,
-          color: Colors.white,
-          size: 16.0,
+    return new Row(
+      children: <Widget>[
+        Text(
+          'Edit',
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
         ),
-      ),
-      onTap: () {
-        setState(() {
-          _status = false;
-        });
-      },
+        SizedBox(
+          width: 5,
+        ),
+        GestureDetector(
+          child: new CircleAvatar(
+            backgroundColor: Colors.red,
+            radius: 14.0,
+            child: new Icon(
+              Icons.edit,
+              color: Colors.white,
+              size: 16.0,
+            ),
+          ),
+          onTap: () {
+            setState(() {
+              _status = false;
+            });
+          },
+        )
+      ],
     );
   }
 }

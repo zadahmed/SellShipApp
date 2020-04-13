@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "169882499972",
+    "firebase_url": "https://sellship-94ccc.firebaseio.com",
+    "project_id": "sellship-94ccc",
+    "storage_bucket": "sellship-94ccc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169882499972:android:fcdccd0ad96a9e1a9fbbd1",
+        "android_client_info": {
+          "package_name": "com.zad.sellship"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "169882499972-bala7d32mteht4mui92poe2mvu1lsask.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ8rhP7OkvKgQAJOwqsoh7ssXS7OKReLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "169882499972-bala7d32mteht4mui92poe2mvu1lsask.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "169882499972-0fjo89kkjd9k3kdnns5g5h8q4i4m36gb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zad.sellship",
+                "app_store_id": "1506496966"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

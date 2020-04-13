@@ -1,31 +1,23 @@
 import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:sellship/screens/additem.dart';
-import 'package:admob_flutter/admob_flutter.dart';
+import 'package:SellShip/screens/additem.dart';
+
 import 'package:flutter/material.dart';
-import 'package:sellship/global.dart';
+import 'package:SellShip/global.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:sellship/screens/onboarding.dart';
-import 'package:sellship/screens/rootscreen.dart';
+import 'package:SellShip/screens/onboarding.dart';
+import 'package:SellShip/screens/rootscreen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Admob.initialize(getAppId());
   runApp(MyApp());
-}
-
-String getAppId() {
-  if (Platform.isIOS) {
-    return 'ca-app-pub-9959700192389744~6783422976';
-  } else if (Platform.isAndroid) {
-    return 'ca-app-pub-9959700192389744~8862791402';
-  }
-  return null;
 }
 
 class MyApp extends StatefulWidget {
@@ -91,11 +83,16 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
+  FirebaseAnalytics analytics = FirebaseAnalytics();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'SellShip',
-        home: firsttime == null ? OnboardingScreen() : RootScreen());
+      debugShowCheckedModeBanner: false,
+      title: 'SellShip',
+      home: firsttime == null ? OnboardingScreen() : RootScreen(),
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: analytics),
+      ],
+    );
   }
 }

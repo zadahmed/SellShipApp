@@ -10,7 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
-import 'package:sellship/screens/rootscreen.dart';
+import 'package:SellShip/screens/rootscreen.dart';
 
 class AddItem extends StatefulWidget {
   AddItem({Key key}) : super(key: key);
@@ -642,11 +642,11 @@ class _AddItemState extends State<AddItem> {
                                       .pop('dialog');
                                   Navigator.of(context, rootNavigator: true)
                                       .pop('dialog');
-//                                  Navigator.push(
-//                                    context,
-//                                    MaterialPageRoute(
-//                                        builder: (context) => RootScreen()),
-//                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RootScreen()),
+                                  );
                                 },
                               ));
                     } else {

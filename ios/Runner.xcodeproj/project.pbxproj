@@ -17,6 +17,7 @@
 		9705A1C71CF904A300538489 /* Flutter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9740EEBA1CF902C7004384FC /* Flutter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		F48C69D42444914A00BD2832 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F48C69D32444914A00BD2832 /* GoogleService-Info.plist */; };
 		F49946942438F84E00675FAA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F49946932438F84E00675FAA /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -56,6 +57,7 @@
 		B200283AEF14440FC3D4ED4F /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		F40DA588243B50A100D6EC22 /* SellShip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SellShip.entitlements; sourceTree = "<group>"; };
 		F415722C243B589200000642 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
+		F48C69D32444914A00BD2832 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F49946932438F84E00675FAA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -118,6 +120,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				F48C69D32444914A00BD2832 /* GoogleService-Info.plist */,
 				F40DA588243B50A100D6EC22 /* SellShip.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				F49946932438F84E00675FAA /* Assets.xcassets */,
@@ -215,6 +218,7 @@
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
+				F48C69D42444914A00BD2832 /* GoogleService-Info.plist in Resources */,
 				F49946942438F84E00675FAA /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 			);

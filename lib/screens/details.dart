@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:admob_flutter/admob_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_native_admob/flutter_native_admob.dart';
+import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:sellship/models/Items.dart';
+import 'package:SellShip/models/Items.dart';
 import 'package:http/http.dart' as http;
-import 'package:sellship/screens/useritems.dart';
+import 'package:SellShip/screens/useritems.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatefulWidget {
@@ -24,6 +25,13 @@ class _DetailsState extends State<Details> {
   Item newItem;
 
   var loading;
+
+  static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
+
+  static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
+
+  final _controller = NativeAdmobController();
+
   @override
   void initState() {
     super.initState();
@@ -147,14 +155,14 @@ class _DetailsState extends State<Details> {
             key: _scaffoldKey,
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.amberAccent,
               leading: InkWell(
                 onTap: () {
                   Navigator.pop(context);
                 },
                 child: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -167,6 +175,7 @@ class _DetailsState extends State<Details> {
                     Container(
                       height: 240,
                       width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
                       child: Stack(
                         children: <Widget>[
                           InkWell(
@@ -214,60 +223,73 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     SizedBox(height: 20),
-                    Text(
-                      newItem.name,
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w900,
+                    Center(
+                      child: Text(
+                        newItem.name,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ),
                     SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          newItem.category,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
+                    Center(
+                      child: Text(
+                        newItem.category,
+                        style: TextStyle(
+                          fontSize: 20,
                         ),
-                        Text(
-                          newItem.price + ' AED',
-                          style: TextStyle(
-                            fontSize: 27,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: Text(
+                        newItem.price + ' AED',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
                         ),
-                      ],
+                      ),
                     ),
                     SizedBox(height: 30),
-                    Text(
-                      'Description',
-                      style: TextStyle(
-                        fontSize: 27,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      newItem.description,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Container(
-                        // rounded corners ad.
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: AdmobBanner(
-                          adUnitId: getBannerAdUnitId(),
-                          adSize: AdmobBannerSize.LARGE_BANNER,
-                        ),
+                    Container(
+                      height: 200,
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Center(
+                              child: Text(
+                                'Description',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Expanded(
+                            flex: 1,
+                            child: new SingleChildScrollView(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 10, right: 10),
+                                child: Text(
+                                  newItem.description,
+                                  textAlign: TextAlign.justify,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 10),
@@ -286,7 +308,7 @@ class _DetailsState extends State<Details> {
                         child: ListTile(
                           title: Text(
                             newItem.username,
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white, fontSize: 18),
                           ),
                           leading: Icon(
                             Feather.user,
@@ -300,110 +322,169 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Container(
-                        // rounded corners ad.
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: AdmobBanner(
-                          adUnitId: getBannerAdUnitId(),
-                          adSize: AdmobBannerSize.LARGE_BANNER,
-                        ),
-                      ),
-                    ),
+                    Platform.isIOS == true
+                        ? Container(
+                            height: 200,
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.only(bottom: 20.0),
+                            child: NativeAdmob(
+                              adUnitID: _iosadUnitID,
+                              controller: _controller,
+                            ),
+                          )
+                        : Container(
+                            height: 200,
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.only(bottom: 20.0),
+                            child: NativeAdmob(
+                              adUnitID: _androidadUnitID,
+                              controller: _controller,
+                            ),
+                          ),
                     SizedBox(height: 10),
-                    InkWell(
-                      onTap: () async {
-                        final String googleMapsUrl =
-                            "comgooglemaps://?center=${position.latitude},${position.longitude}";
-                        final String appleMapsUrl =
-                            "https://maps.apple.com/?q=${position.latitude},${position.longitude}";
+                    Container(
+                      height: 260,
+                      color: Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Center(
+                              child: Text(
+                                'Location of Item',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          InkWell(
+                            onTap: () async {
+                              final String googleMapsUrl =
+                                  "comgooglemaps://?center=${position.latitude},${position.longitude}";
+                              final String appleMapsUrl =
+                                  "https://maps.apple.com/?q=${position.latitude},${position.longitude}";
 
-                        if (await canLaunch(googleMapsUrl)) {
-                          await launch(googleMapsUrl,
-                              forceSafariVC: true, forceWebView: true);
-                        }
-                        if (await canLaunch(appleMapsUrl)) {
-                          await launch(appleMapsUrl, forceSafariVC: false);
-                        } else {
-                          throw "Couldn't launch URL";
-                        }
-                      },
-                      child: Container(
-                        height: 200,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: GoogleMap(
-                          initialCameraPosition: CameraPosition(
-                              target: position, zoom: 18.0, bearing: 70),
-                          onMapCreated: mapCreated,
-                          markers: _markers,
-                        ),
+                              if (await canLaunch(googleMapsUrl)) {
+                                await launch(googleMapsUrl,
+                                    forceSafariVC: true, forceWebView: true);
+                              }
+                              if (await canLaunch(appleMapsUrl)) {
+                                await launch(appleMapsUrl,
+                                    forceSafariVC: false);
+                              } else {
+                                throw "Couldn't launch URL";
+                              }
+                            },
+                            child: Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: GoogleMap(
+                                initialCameraPosition: CameraPosition(
+                                    target: position, zoom: 18.0, bearing: 70),
+                                onMapCreated: mapCreated,
+                                markers: _markers,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
                       height: 20,
                     ),
+                    Platform.isIOS == true
+                        ? Container(
+                            height: 330,
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.only(bottom: 20.0),
+                            child: NativeAdmob(
+                              adUnitID: _iosadUnitID,
+                              controller: _controller,
+                            ),
+                          )
+                        : Container(
+                            height: 330,
+                            padding: EdgeInsets.all(10),
+                            margin: EdgeInsets.only(bottom: 20.0),
+                            child: NativeAdmob(
+                              adUnitID: _androidadUnitID,
+                              controller: _controller,
+                            ),
+                          ),
+                    SizedBox(height: 10),
                   ],
                 )
               ],
             ),
-            bottomNavigationBar: Row(
-              children: <Widget>[
-                InkWell(
-                  onTap: () async {
-                    final String telephone = 'tel:' + newItem.usernumber;
-                    if (await canLaunch(telephone)) {
-                      await launch(telephone);
-                    } else {
-                      throw 'Could not launch $telephone';
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 80,
-                    color: Colors.amber,
-                    child: Center(
-                      child: Text(
-                        "Call",
-                        style: TextStyle(
-                            color: Color(0xFFFBFBFB),
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500),
+            bottomNavigationBar: Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        final String telephone = 'tel:' + newItem.usernumber;
+                        if (await canLaunch(telephone)) {
+                          await launch(telephone);
+                        } else {
+                          throw 'Could not launch $telephone';
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2 - 10,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "Call",
+                            style: TextStyle(
+                                color: Color(0xFFFBFBFB),
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () async {
-                    final String telephone = 'sms:' + newItem.usernumber;
-                    if (await canLaunch(telephone)) {
-                      await launch(telephone);
-                    } else {
-                      throw 'Could not launch $telephone';
-                    }
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 80,
-                    color: Colors.amber,
-                    child: Center(
-                      child: Text(
-                        "SMS",
-                        style: TextStyle(
-                            color: Color(0xFFFBFBFB),
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w500),
+                    InkWell(
+                      onTap: () async {
+                        final String telephone = 'sms:' + newItem.usernumber;
+                        if (await canLaunch(telephone)) {
+                          await launch(telephone);
+                        } else {
+                          throw 'Could not launch $telephone';
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2 - 10,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "SMS",
+                            style: TextStyle(
+                                color: Color(0xFFFBFBFB),
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ],
-            ))
+                  ],
+                )))
         : Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
@@ -420,7 +501,7 @@ class ImageDisplayState extends State<ImageDisplay> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('sd'),
+        title: Text('Pictures'),
         backgroundColor: Colors.transparent,
       ),
       backgroundColor: Colors.black.withOpacity(0.85),

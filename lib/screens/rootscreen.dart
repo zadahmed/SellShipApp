@@ -1,18 +1,17 @@
 import 'dart:io';
 
+import 'package:SellShip/screens/messages.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:sellship/screens/additem.dart';
-import 'package:admob_flutter/admob_flutter.dart';
+import 'package:SellShip/screens/additem.dart';
 import 'package:flutter/material.dart';
-import 'package:sellship/global.dart';
+import 'package:SellShip/global.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:sellship/screens/categories.dart';
-import 'package:sellship/screens/favourites.dart';
-import 'package:sellship/screens/home.dart';
-import 'package:sellship/screens/login.dart';
+import 'package:SellShip/screens/favourites.dart';
+import 'package:SellShip/screens/home.dart';
+import 'package:SellShip/screens/login.dart';
 
 class RootScreen extends StatefulWidget {
   @override
@@ -26,7 +25,7 @@ class _RootScreenState extends State<RootScreen> {
   int _currentPage = 0;
   final List<Widget> _pages = [
     HomeScreen(),
-    CategoryScreen(),
+    Messages(),
     AddItem(),
     FavouritesScreen(),
     LoginPage(),

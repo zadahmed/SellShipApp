@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:sellship/screens/rootscreen.dart';
-import 'package:sellship/screens/styles.dart';
+import 'package:SellShip/screens/rootscreen.dart';
+import 'package:SellShip/screens/styles.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override

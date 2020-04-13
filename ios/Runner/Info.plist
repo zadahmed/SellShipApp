@@ -32,6 +32,8 @@
 <string>SellShip</string>
     <key>io.flutter.embedded_views_preview</key>
     <true/>
+    <key>GADApplicationIdentifier</key>
+    <string>ca-app-pub-9959700192389744~6783422976</string>
     <key>NSCameraUsageDescription</key>
     <string>Capture a photo of the item</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

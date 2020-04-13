@@ -7,9 +7,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:sellship/models/Items.dart';
-import 'package:sellship/screens/login.dart';
-import 'package:sellship/screens/rootscreen.dart';
+import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/screens/login.dart';
+import 'package:SellShip/screens/rootscreen.dart';
 
 class EditItem extends StatefulWidget {
   final String itemid;
