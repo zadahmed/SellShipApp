@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchItems(skip, limit);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+          (_scrollController.position.maxScrollExtent)) {
         _getmoreData();
       }
     });

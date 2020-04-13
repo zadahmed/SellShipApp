@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -69,15 +70,132 @@ class _AddItemState extends State<AddItem> {
   }
 
   File _image;
+  File _image2;
+  File _image3;
+  File _image4;
+  File _image5;
+  File _image6;
+
   List<String> _subsubcategory;
 
-  Future getImage() async {
+  Future getImageCamera() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageGallery() async {
     var image = await ImagePicker.pickImage(
         source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
 
     setState(() {
       _image = image;
     });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageCamera2() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image2 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageGallery2() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image2 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageCamera3() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image3 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageGallery3() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image3 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageCamera4() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image4 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageGallery4() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image4 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageCamera5() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image5 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageGallery5() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image5 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageCamera6() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image6 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageGallery6() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+
+    setState(() {
+      _image6 = image;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
@@ -126,29 +244,450 @@ class _AddItemState extends State<AddItem> {
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  getImage();
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey.shade100,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    height: 120,
-                                    width: 120,
-                                    child: _image == null
-                                        ? Icon(Icons.add)
-                                        : Image.file(
-                                            _image,
-                                            fit: BoxFit.cover,
-                                          )),
+                          Container(
+                            height: 130,
+                            child: Scrollbar(
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      final action = CupertinoActionSheet(
+                                        message: Text(
+                                          "Upload an Image",
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Camera",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageCamera();
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Gallery",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageGallery();
+                                            },
+                                          )
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                          isDestructiveAction: true,
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        height: 120,
+                                        width: 120,
+                                        child: _image == null
+                                            ? Icon(Icons.add)
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.file(
+                                                  _image,
+                                                  fit: BoxFit.cover,
+                                                ))),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      final action = CupertinoActionSheet(
+                                        message: Text(
+                                          "Upload an Image",
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Camera",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageCamera2();
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Gallery",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageGallery2();
+                                            },
+                                          )
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                          isDestructiveAction: true,
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        height: 120,
+                                        width: 120,
+                                        child: _image2 == null
+                                            ? Icon(Icons.add)
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.file(
+                                                  _image2,
+                                                  fit: BoxFit.cover,
+                                                ))),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      final action = CupertinoActionSheet(
+                                        message: Text(
+                                          "Upload an Image",
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Camera",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageCamera3();
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Gallery",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageGallery3();
+                                            },
+                                          )
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                          isDestructiveAction: true,
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        height: 120,
+                                        width: 120,
+                                        child: _image3 == null
+                                            ? Icon(Icons.add)
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.file(
+                                                  _image3,
+                                                  fit: BoxFit.cover,
+                                                ))),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      final action = CupertinoActionSheet(
+                                        message: Text(
+                                          "Upload an Image",
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Camera",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageCamera4();
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Gallery",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageGallery4();
+                                            },
+                                          )
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                          isDestructiveAction: true,
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        height: 120,
+                                        width: 120,
+                                        child: _image4 == null
+                                            ? Icon(Icons.add)
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.file(
+                                                  _image4,
+                                                  fit: BoxFit.cover,
+                                                ))),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      final action = CupertinoActionSheet(
+                                        message: Text(
+                                          "Upload an Image",
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Camera",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageCamera5();
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Gallery",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageGallery5();
+                                            },
+                                          )
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                          isDestructiveAction: true,
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        height: 120,
+                                        width: 120,
+                                        child: _image5 == null
+                                            ? Icon(Icons.add)
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.file(
+                                                  _image5,
+                                                  fit: BoxFit.cover,
+                                                ))),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      final action = CupertinoActionSheet(
+                                        message: Text(
+                                          "Upload an Image",
+                                          style: TextStyle(
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Camera",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageCamera6();
+                                            },
+                                          ),
+                                          CupertinoActionSheetAction(
+                                            child: Text("Upload from Gallery",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                            isDefaultAction: true,
+                                            onPressed: () {
+                                              getImageGallery6();
+                                            },
+                                          )
+                                        ],
+                                        cancelButton:
+                                            CupertinoActionSheetAction(
+                                          child: Text("Cancel",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                          isDestructiveAction: true,
+                                          onPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
+                                          },
+                                        ),
+                                      );
+                                      showCupertinoModalPopup(
+                                          context: context,
+                                          builder: (context) => action);
+                                    },
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade100,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        height: 120,
+                                        width: 120,
+                                        child: _image6 == null
+                                            ? Icon(Icons.add)
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.file(
+                                                  _image6,
+                                                  fit: BoxFit.cover,
+                                                ))),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                           SizedBox(
                             height: 20.0,
@@ -583,35 +1122,224 @@ class _AddItemState extends State<AddItem> {
                             ),
                           );
                         });
-                    String fileName = _image.path.split('/').last;
+
                     var url = 'https://sellship.co/api/additem';
 
                     Dio dio = new Dio();
+                    FormData formData;
+                    if (_image != null) {
+                      String fileName = _image.path.split('/').last;
+                      formData = FormData.fromMap({
+                        'name': businessnameController.text,
+                        'price': businesspricecontroller.text,
+                        'category': _selectedCategory,
+                        'subcategory': _selectedsubCategory == null
+                            ? ''
+                            : _selectedsubCategory,
+                        'subsubcategory': _selectedsubsubCategory == null
+                            ? ''
+                            : _selectedsubsubCategory,
+                        'latitude': position.latitude,
+                        'longitude': position.longitude,
+                        'description': businessdescriptionController.text,
+                        'city': city,
+                        'userid': userid,
+                        'username': firstname,
+                        'useremail': email,
+                        'usernumber': phonenumber,
+                        'date_uploaded': DateTime.now().toString(),
+                        'image': await MultipartFile.fromFile(_image.path,
+                            filename: fileName)
+                      });
+                    }
+                    if (_image != null && _image2 != null) {
+                      String fileName = _image.path.split('/').last;
+                      String fileName2 = _image2.path.split('/').last;
+                      formData = FormData.fromMap({
+                        'name': businessnameController.text,
+                        'price': businesspricecontroller.text,
+                        'category': _selectedCategory,
+                        'subcategory': _selectedsubCategory == null
+                            ? ''
+                            : _selectedsubCategory,
+                        'subsubcategory': _selectedsubsubCategory == null
+                            ? ''
+                            : _selectedsubsubCategory,
+                        'latitude': position.latitude,
+                        'longitude': position.longitude,
+                        'description': businessdescriptionController.text,
+                        'city': city,
+                        'userid': userid,
+                        'username': firstname,
+                        'useremail': email,
+                        'usernumber': phonenumber,
+                        'date_uploaded': DateTime.now().toString(),
+                        'image': await MultipartFile.fromFile(_image.path,
+                            filename: fileName),
+                        'image2': await MultipartFile.fromFile(_image2.path,
+                            filename: fileName2),
+                      });
+                    }
+                    if (_image != null && _image2 != null && _image3 != null) {
+                      String fileName = _image.path.split('/').last;
+                      String fileName2 = _image2.path.split('/').last;
+                      String fileName3 = _image3.path.split('/').last;
 
-                    FormData formData = FormData.fromMap({
-                      'name': businessnameController.text,
-                      'price': businesspricecontroller.text,
-                      'category': _selectedCategory,
-                      'subcategory': _selectedsubCategory == null
-                          ? ''
-                          : _selectedsubCategory,
-                      'subsubcategory': _selectedsubsubCategory == null
-                          ? ''
-                          : _selectedsubsubCategory,
-                      'latitude': position.latitude,
-                      'longitude': position.longitude,
-                      'description': businessdescriptionController.text,
-                      'city': city,
-                      'userid': userid,
-                      'username': firstname,
-                      'useremail': email,
-                      'usernumber': phonenumber,
-                      'date_uploaded': DateTime.now().toString(),
-                      'image': await MultipartFile.fromFile(_image.path,
-                          filename: fileName)
-                    });
+                      formData = FormData.fromMap({
+                        'name': businessnameController.text,
+                        'price': businesspricecontroller.text,
+                        'category': _selectedCategory,
+                        'subcategory': _selectedsubCategory == null
+                            ? ''
+                            : _selectedsubCategory,
+                        'subsubcategory': _selectedsubsubCategory == null
+                            ? ''
+                            : _selectedsubsubCategory,
+                        'latitude': position.latitude,
+                        'longitude': position.longitude,
+                        'description': businessdescriptionController.text,
+                        'city': city,
+                        'userid': userid,
+                        'username': firstname,
+                        'useremail': email,
+                        'usernumber': phonenumber,
+                        'date_uploaded': DateTime.now().toString(),
+                        'image': await MultipartFile.fromFile(_image.path,
+                            filename: fileName),
+                        'image2': await MultipartFile.fromFile(_image2.path,
+                            filename: fileName2),
+                        'image3': await MultipartFile.fromFile(_image3.path,
+                            filename: fileName3),
+                      });
+                    }
+                    if (_image != null &&
+                        _image2 != null &&
+                        _image3 != null &&
+                        _image4 != null) {
+                      String fileName = _image.path.split('/').last;
+                      String fileName2 = _image2.path.split('/').last;
+                      String fileName3 = _image3.path.split('/').last;
+                      String fileName4 = _image4.path.split('/').last;
+
+                      formData = FormData.fromMap({
+                        'name': businessnameController.text,
+                        'price': businesspricecontroller.text,
+                        'category': _selectedCategory,
+                        'subcategory': _selectedsubCategory == null
+                            ? ''
+                            : _selectedsubCategory,
+                        'subsubcategory': _selectedsubsubCategory == null
+                            ? ''
+                            : _selectedsubsubCategory,
+                        'latitude': position.latitude,
+                        'longitude': position.longitude,
+                        'description': businessdescriptionController.text,
+                        'city': city,
+                        'userid': userid,
+                        'username': firstname,
+                        'useremail': email,
+                        'usernumber': phonenumber,
+                        'date_uploaded': DateTime.now().toString(),
+                        'image': await MultipartFile.fromFile(_image.path,
+                            filename: fileName),
+                        'image2': await MultipartFile.fromFile(_image2.path,
+                            filename: fileName2),
+                        'image3': await MultipartFile.fromFile(_image3.path,
+                            filename: fileName3),
+                        'image4': await MultipartFile.fromFile(_image4.path,
+                            filename: fileName4),
+                      });
+                    }
+                    if (_image != null &&
+                        _image2 != null &&
+                        _image3 != null &&
+                        _image4 != null &&
+                        _image5 != null) {
+                      String fileName = _image.path.split('/').last;
+                      String fileName2 = _image2.path.split('/').last;
+                      String fileName3 = _image3.path.split('/').last;
+                      String fileName4 = _image4.path.split('/').last;
+                      String fileName5 = _image5.path.split('/').last;
+
+                      formData = FormData.fromMap({
+                        'name': businessnameController.text,
+                        'price': businesspricecontroller.text,
+                        'category': _selectedCategory,
+                        'subcategory': _selectedsubCategory == null
+                            ? ''
+                            : _selectedsubCategory,
+                        'subsubcategory': _selectedsubsubCategory == null
+                            ? ''
+                            : _selectedsubsubCategory,
+                        'latitude': position.latitude,
+                        'longitude': position.longitude,
+                        'description': businessdescriptionController.text,
+                        'city': city,
+                        'userid': userid,
+                        'username': firstname,
+                        'useremail': email,
+                        'usernumber': phonenumber,
+                        'date_uploaded': DateTime.now().toString(),
+                        'image': await MultipartFile.fromFile(_image.path,
+                            filename: fileName),
+                        'image2': await MultipartFile.fromFile(_image2.path,
+                            filename: fileName2),
+                        'image3': await MultipartFile.fromFile(_image3.path,
+                            filename: fileName3),
+                        'image4': await MultipartFile.fromFile(_image4.path,
+                            filename: fileName4),
+                        'image5': await MultipartFile.fromFile(_image5.path,
+                            filename: fileName5),
+                      });
+                    }
+                    if (_image != null &&
+                        _image2 != null &&
+                        _image3 != null &&
+                        _image4 != null &&
+                        _image5 != null &&
+                        _image6 != null) {
+                      String fileName = _image.path.split('/').last;
+                      String fileName2 = _image2.path.split('/').last;
+                      String fileName3 = _image3.path.split('/').last;
+                      String fileName4 = _image4.path.split('/').last;
+                      String fileName5 = _image5.path.split('/').last;
+                      String fileName6 = _image6.path.split('/').last;
+                      formData = FormData.fromMap({
+                        'name': businessnameController.text,
+                        'price': businesspricecontroller.text,
+                        'category': _selectedCategory,
+                        'subcategory': _selectedsubCategory == null
+                            ? ''
+                            : _selectedsubCategory,
+                        'subsubcategory': _selectedsubsubCategory == null
+                            ? ''
+                            : _selectedsubsubCategory,
+                        'latitude': position.latitude,
+                        'longitude': position.longitude,
+                        'description': businessdescriptionController.text,
+                        'city': city,
+                        'userid': userid,
+                        'username': firstname,
+                        'useremail': email,
+                        'usernumber': phonenumber,
+                        'date_uploaded': DateTime.now().toString(),
+                        'image': await MultipartFile.fromFile(_image.path,
+                            filename: fileName),
+                        'image2': await MultipartFile.fromFile(_image2.path,
+                            filename: fileName2),
+                        'image3': await MultipartFile.fromFile(_image3.path,
+                            filename: fileName3),
+                        'image4': await MultipartFile.fromFile(_image4.path,
+                            filename: fileName4),
+                        'image5': await MultipartFile.fromFile(_image5.path,
+                            filename: fileName5),
+                        'image6': await MultipartFile.fromFile(_image6.path,
+                            filename: fileName6),
+                      });
+                    }
 
                     var response = await dio.post(url, data: formData);
+
                     if (response.statusCode == 200) {
                       showDialog(
                           context: context,
