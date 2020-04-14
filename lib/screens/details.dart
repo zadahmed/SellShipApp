@@ -441,7 +441,7 @@ class _DetailsState extends State<Details> {
                         }
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width / 2 - 10,
+                        width: MediaQuery.of(context).size.width / 3 - 10,
                         height: 50,
                         decoration: BoxDecoration(
                             color: Colors.amber,
@@ -449,6 +449,58 @@ class _DetailsState extends State<Details> {
                         child: Center(
                           child: Text(
                             "Call",
+                            style: TextStyle(
+                                color: Color(0xFFFBFBFB),
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        userid = await storage.read(key: 'userid');
+                        var senderid = newItem.userid;
+
+                        var userurl =
+                            'https://sellship.co/api/username/' + userid;
+                        final responseuser = await http.get(userurl);
+
+                        if (responseuser.statusCode == 200) {
+                          var username1 = responseuser.body;
+                          var userurl2 =
+                              'https://sellship.co/api/username/' + senderid;
+                          final responseuser2 = await http.get(userurl2);
+                          if (responseuser2.statusCode == 200) {
+                            var username2 = responseuser2.body;
+
+                            var itemurl =
+                                'https://sellship.co/api/createroom/' +
+                                    userid +
+                                    '/' +
+                                    username1 +
+                                    '/' +
+                                    senderid +
+                                    '/' +
+                                    username2;
+                            final itemresponse = await http.get(itemurl);
+                            if (itemresponse.statusCode == 200) {
+                              print(itemresponse.body);
+                            } else {
+                              print(itemresponse.statusCode);
+                            }
+                          }
+                        }
+                      },
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 3 - 10,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            "Message",
                             style: TextStyle(
                                 color: Color(0xFFFBFBFB),
                                 fontSize: 17.0,
@@ -467,7 +519,7 @@ class _DetailsState extends State<Details> {
                         }
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width / 2 - 10,
+                        width: MediaQuery.of(context).size.width / 3 - 10,
                         height: 50,
                         decoration: BoxDecoration(
                             color: Colors.amber,

@@ -106,10 +106,10 @@ class _RootScreenState extends State<RootScreen> {
               ),
               BottomNavigationBarItem(
                   icon: Icon(
-                    FontAwesome5.list_alt,
+                    Feather.message_square,
                   ),
                   title: Text(
-                    "Categories",
+                    "Messages",
                   )),
               BottomNavigationBarItem(
                   icon: Icon(
