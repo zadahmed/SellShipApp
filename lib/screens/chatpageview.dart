@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:SellShip/recievedmessagewidget.dart';
@@ -215,8 +216,12 @@ class _ChatPageViewState extends State<ChatPageView> {
                               setState(() {
                                 childList = childList;
                               });
-                              _scrollController.jumpTo(
-                                  _scrollController.position.maxScrollExtent);
+                              Timer(Duration(milliseconds: 100), () {
+                                _scrollController.jumpTo(
+                                    _scrollController.position.maxScrollExtent);
+                              });
+//                              _scrollController.jumpTo(
+//                                  _scrollController.position.maxScrollExtent);
                             },
                           ),
                           border: InputBorder.none,
