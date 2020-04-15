@@ -139,9 +139,7 @@ class _RootScreenState extends State<RootScreen> {
               ),
             ],
           ),
-          body: SafeArea(
-            child: _pages[_currentPage],
-          ),
+          body: _pages[_currentPage],
         ));
   }
 }

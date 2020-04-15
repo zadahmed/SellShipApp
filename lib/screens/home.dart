@@ -235,19 +235,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
-      },
-      child: loading == false
-          ? SafeArea(
-              child: Column(
+        appBar: AppBar(
+            backgroundColor: Colors.amberAccent,
+            title: Column(
               children: <Widget>[
                 Container(
                   color: Colors.amberAccent,
-                  padding: EdgeInsets.all(10),
+                  padding: EdgeInsets.all(7),
                   child: Card(
-                    elevation: 0,
+                    elevation: 0.5,
                     child: ListTile(
                       leading: Icon(
                         FontAwesome.search,
@@ -269,283 +265,299 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                itemsgrid.isNotEmpty
-                    ? Expanded(
-                        child: StaggeredGridView.countBuilder(
-                        controller: _scrollController,
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 4,
-                        crossAxisSpacing: 4,
-                        itemCount: itemsgrid.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == itemsgrid.length) {
-                            return _buildProgressIndicator();
-                          }
-                          if (index == 0) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 100,
-                              margin: const EdgeInsets.only(right: 15.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: categories.length,
-                                  itemBuilder: (ctx, i) {
-                                    return Row(
-                                      children: <Widget>[
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedCat = i;
-                                            });
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CategoryScreen(
-                                                          selectedcategory:
-                                                              _selectedCat)),
-                                            );
-                                          },
-                                          child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 25.0),
-                                              width: 110.0,
-                                              constraints: BoxConstraints(
-                                                  minHeight: 101),
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: _selectedCat == i
-                                                    ? Colors.transparent
-                                                    : Colors.amberAccent,
-                                                borderRadius:
-                                                    BorderRadius.circular(11.0),
-                                              ),
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Icon(
-                                                    categories[i].icon,
+              ],
+            )),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: loading == false
+              ? Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 5,
+                    ),
+                    itemsgrid.isNotEmpty
+                        ? Expanded(
+                            child: StaggeredGridView.countBuilder(
+                            controller: _scrollController,
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 4,
+                            crossAxisSpacing: 4,
+                            itemCount: itemsgrid.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == itemsgrid.length) {
+                                return _buildProgressIndicator();
+                              }
+                              if (index == 0) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 100,
+                                  margin: const EdgeInsets.only(right: 15.0),
+                                  child: Scrollbar(
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: categories.length,
+                                      itemBuilder: (ctx, i) {
+                                        return Row(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  _selectedCat = i;
+                                                });
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CategoryScreen(
+                                                              selectedcategory:
+                                                                  _selectedCat)),
+                                                );
+                                              },
+                                              child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 25.0),
+                                                  width: 110.0,
+                                                  constraints: BoxConstraints(
+                                                      minHeight: 101),
+                                                  alignment: Alignment.center,
+                                                  decoration: BoxDecoration(
                                                     color: _selectedCat == i
-                                                        ? Colors.amberAccent
-                                                        : Colors.white,
+                                                        ? Colors.transparent
+                                                        : Colors.amberAccent,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            11.0),
                                                   ),
-                                                  SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    "${categories[i].title}",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .button
-                                                        .copyWith(
-                                                            color: _selectedCat ==
-                                                                    i
-                                                                ? Colors
-                                                                    .amberAccent
-                                                                : Colors.white),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                              )),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      Icon(
+                                                        categories[i].icon,
+                                                        color: _selectedCat == i
+                                                            ? Colors.amberAccent
+                                                            : Colors.white,
+                                                      ),
+                                                      SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        "${categories[i].title}",
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .button
+                                                            .copyWith(
+                                                                color: _selectedCat ==
+                                                                        i
+                                                                    ? Colors
+                                                                        .amberAccent
+                                                                    : Colors
+                                                                        .white),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ],
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                  )),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                );
+                              }
+                              if (index != 0 && index % 7 == 0) {
+                                return Platform.isIOS == true
+                                    ? Container(
+                                        height: 330,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
+                                        child: NativeAdmob(
+                                          adUnitID: _iosadUnitID,
+                                          controller: _controller,
                                         ),
-                                        SizedBox(
-                                          width: 10,
-                                        )
-                                      ],
+                                      )
+                                    : Container(
+                                        height: 330,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
+                                        child: NativeAdmob(
+                                          adUnitID: _androidadUnitID,
+                                          controller: _controller,
+                                        ),
+                                      );
+                              }
+                              return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Details(
+                                              itemid: itemsgrid[index].itemid)),
                                     );
                                   },
-                                ),
-                              ),
-                            );
-                          }
-                          if (index != 0 && index % 7 == 0) {
-                            return Platform.isIOS == true
-                                ? Container(
-                                    height: 330,
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(bottom: 20.0),
-                                    child: NativeAdmob(
-                                      adUnitID: _iosadUnitID,
-                                      controller: _controller,
-                                    ),
-                                  )
-                                : Container(
-                                    height: 330,
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(bottom: 20.0),
-                                    child: NativeAdmob(
-                                      adUnitID: _androidadUnitID,
-                                      controller: _controller,
-                                    ),
-                                  );
-                          }
-                          return InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Details(
-                                          itemid: itemsgrid[index].itemid)),
-                                );
-                              },
-                              child: Card(
-                                elevation: 0,
-                                child: new Column(
-                                  children: <Widget>[
-                                    new Stack(
+                                  child: Card(
+                                    elevation: 0,
+                                    child: new Column(
                                       children: <Widget>[
-                                        //new Center(child: new CircularProgressIndicator()),
-                                        new Center(
-                                          child: Image.network(
-                                            itemsgrid[index].image,
-                                            fit: BoxFit.cover,
-                                          ),
+                                        new Stack(
+                                          children: <Widget>[
+                                            //new Center(child: new CircularProgressIndicator()),
+                                            new Center(
+                                              child: Image.network(
+                                                itemsgrid[index].image,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ],
                                         ),
+                                        new Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: new Column(
+                                            children: <Widget>[
+                                              Text(
+                                                itemsgrid[index].name,
+                                                overflow: TextOverflow.fade,
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              SizedBox(height: 3.0),
+                                              Container(
+                                                child: Text(
+                                                  itemsgrid[index].category,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 3.0),
+                                              Container(
+                                                child: Text(
+                                                  itemsgrid[index].price +
+                                                      ' AED',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
                                       ],
                                     ),
-                                    new Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: new Column(
-                                        children: <Widget>[
-                                          Text(
-                                            itemsgrid[index].name,
-                                            overflow: TextOverflow.fade,
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          SizedBox(height: 3.0),
+                                  ));
+                            },
+                            staggeredTileBuilder: (int index) {
+                              if (index != 0 && index % 7 == 0) {
+                                return StaggeredTile.count(2, 1);
+                              } else if (index != 0 &&
+                                  index == itemsgrid.length) {
+                                return StaggeredTile.count(2, 0.5);
+                              } else if (index == 0) {
+                                return StaggeredTile.count(2, 0.6);
+                              } else {
+                                return StaggeredTile.fit(1);
+                              }
+                            },
+                          ))
+                        : Expanded(
+                            child: Column(
+                            children: <Widget>[
+                              Center(
+                                child: Text(
+                                  'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ),
+                              Expanded(
+                                  child: Image.asset(
+                                'assets/little_theologians_4x.jpg',
+                                fit: BoxFit.cover,
+                              ))
+                            ],
+                          )),
+                  ],
+                )
+              : Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 16.0),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.grey[100],
+                    child: Column(
+                      children: [0, 1, 2, 3, 4, 5, 6]
+                          .map((_) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: 48.0,
+                                      height: 48.0,
+                                      color: Colors.white,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
                                           Container(
-                                            child: Text(
-                                              itemsgrid[index].category,
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w300,
-                                              ),
-                                            ),
+                                            width: double.infinity,
+                                            height: 8.0,
+                                            color: Colors.white,
                                           ),
-                                          SizedBox(height: 3.0),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 2.0),
+                                          ),
                                           Container(
-                                            child: Text(
-                                              itemsgrid[index].price + ' AED',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
+                                            width: double.infinity,
+                                            height: 8.0,
+                                            color: Colors.white,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 2.0),
+                                          ),
+                                          Container(
+                                            width: 40.0,
+                                            height: 8.0,
+                                            color: Colors.white,
                                           ),
                                         ],
                                       ),
                                     )
                                   ],
                                 ),
-                              ));
-                        },
-                        staggeredTileBuilder: (int index) {
-                          if (index != 0 && index % 7 == 0) {
-                            return StaggeredTile.count(2, 1);
-                          } else if (index != 0 && index == itemsgrid.length) {
-                            return StaggeredTile.count(2, 0.5);
-                          } else if (index == 0) {
-                            return StaggeredTile.count(2, 0.5);
-                          } else {
-                            return StaggeredTile.fit(1);
-                          }
-                        },
-                      ))
-                    : Expanded(
-                        child: Column(
-                        children: <Widget>[
-                          Center(
-                            child: Text(
-                              'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                          Expanded(
-                              child: Image.asset(
-                            'assets/little_theologians_4x.jpg',
-                            fit: BoxFit.cover,
-                          ))
-                        ],
-                      )),
-              ],
-            ))
-          : Container(
-              width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[300],
-                highlightColor: Colors.grey[100],
-                child: Column(
-                  children: [0, 1, 2, 3, 4, 5, 6]
-                      .map((_) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  width: 48.0,
-                                  height: 48.0,
-                                  color: Colors.white,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        height: 8.0,
-                                        color: Colors.white,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 2.0),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        height: 8.0,
-                                        color: Colors.white,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 2.0),
-                                      ),
-                                      Container(
-                                        width: 40.0,
-                                        height: 8.0,
-                                        color: Colors.white,
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ))
-                      .toList(),
+                              ))
+                          .toList(),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-    ));
+        ));
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/screens/chatpageview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
@@ -55,6 +56,7 @@ class _DetailsState extends State<Details> {
     });
   }
 
+  List<String> images = [];
   fetchItem() async {
     var url = 'https://sellship.co/api/getitem/' + itemid;
     final response = await http.get(url);
@@ -63,10 +65,15 @@ class _DetailsState extends State<Details> {
     print(jsonbody);
     newItem = Item(
         name: jsonbody[0]['name'],
-        image: jsonbody[0]['image'],
         price: jsonbody[0]['price'],
         description: jsonbody[0]['description'],
         category: jsonbody[0]['category'],
+        image: jsonbody[0]['image'],
+        image1: jsonbody[0]['image1'],
+        image2: jsonbody[0]['image2'],
+        image3: jsonbody[0]['image3'],
+        image4: jsonbody[0]['image4'],
+        image5: jsonbody[0]['image5'],
         username: jsonbody[0]['username'],
         useremail: jsonbody[0]['useremail'],
         usernumber: jsonbody[0]['usernumber'],
@@ -75,6 +82,7 @@ class _DetailsState extends State<Details> {
         longitude: jsonbody[0]['longitude'],
         subsubcategory: jsonbody[0]['subsubcategory'],
         subcategory: jsonbody[0]['subcategory']);
+
     setState(() {
       position = LatLng(
           double.parse(newItem.latitude), double.parse(newItem.longitude));
@@ -88,6 +96,26 @@ class _DetailsState extends State<Details> {
       ));
       loading = false;
     });
+
+    if (newItem.image != null) {
+      images.add(newItem.image);
+    }
+    if (newItem.image1 != null) {
+      images.add(newItem.image1);
+    }
+    if (newItem.image2 != null) {
+      images.add(newItem.image2);
+    }
+    if (newItem.image3 != null) {
+      images.add(newItem.image3);
+    }
+    if (newItem.image4 != null) {
+      images.add(newItem.image4);
+    }
+    if (newItem.image5 != null) {
+      images.add(newItem.image5);
+    }
+    print(images.length);
     return newItem;
   }
 
@@ -178,23 +206,36 @@ class _DetailsState extends State<Details> {
                       color: Colors.white,
                       child: Stack(
                         children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(PageRouteBuilder(
-                                  opaque: false,
-                                  pageBuilder: (BuildContext context, _, __) =>
-                                      ImageDisplay(image: newItem.image)));
-                            },
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.network(
-                                newItem.image,
-                                height: 240,
-                                width: MediaQuery.of(context).size.width,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                          ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: images.length,
+                              itemBuilder: (BuildContext ctxt, int Index) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder:
+                                            (BuildContext context, _, __) =>
+                                                ImageDisplay(
+                                                    image: images[Index])));
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: Image.network(
+                                        images[Index],
+                                        height: 240,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                50,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
                           Positioned(
                             right: -10.0,
                             bottom: 3.0,
@@ -222,6 +263,10 @@ class _DetailsState extends State<Details> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 5),
+                    Align(
+                        alignment: Alignment.topRight,
+                        child: Text(images.length.toString() + '/6')),
                     SizedBox(height: 20),
                     Center(
                       child: Text(
@@ -473,21 +518,53 @@ class _DetailsState extends State<Details> {
                           final responseuser2 = await http.get(userurl2);
                           if (responseuser2.statusCode == 200) {
                             var username2 = responseuser2.body;
-
-                            var itemurl =
-                                'https://sellship.co/api/createroom/' +
+//check if there is a chat existing
+                            var checkurl =
+                                'https://sellship.co/api/checkmessageexist/' +
                                     userid +
                                     '/' +
-                                    username1 +
-                                    '/' +
-                                    senderid +
-                                    '/' +
-                                    username2;
-                            final itemresponse = await http.get(itemurl);
-                            if (itemresponse.statusCode == 200) {
-                              print(itemresponse.body);
-                            } else {
-                              print(itemresponse.statusCode);
+                                    senderid;
+                            final responsecheckurl = await http.get(checkurl);
+                            if (responsecheckurl.statusCode == 200) {
+                              var message = json.decode(responsecheckurl.body);
+                              if (message['message'] != 'Empty') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatPageView(
+                                        messageid: message['message'],
+                                        recipentname: username2,
+                                        senderid: userid,
+                                        recipentid: senderid),
+                                  ),
+                                );
+                              } else {
+                                var itemurl =
+                                    'https://sellship.co/api/createroom/' +
+                                        userid +
+                                        '/' +
+                                        username1 +
+                                        '/' +
+                                        senderid +
+                                        '/' +
+                                        username2;
+                                final itemresponse = await http.get(itemurl);
+                                if (itemresponse.statusCode == 200) {
+                                  var messageid = itemresponse.body;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPageView(
+                                          messageid: messageid,
+                                          recipentname: username2,
+                                          senderid: userid,
+                                          recipentid: senderid),
+                                    ),
+                                  );
+                                } else {
+                                  print(itemresponse.statusCode);
+                                }
+                              }
                             }
                           }
                         }

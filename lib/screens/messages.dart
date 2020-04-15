@@ -25,6 +25,9 @@ class MessagesState extends State<Messages> {
   List<String> senderid = List<String>();
   List<String> recipentid = List<String>();
 
+  List<String> lastrecieved = List<String>();
+  List<String> recieveddate = List<String>();
+
   getmessages() async {
     userid = await storage.read(key: 'userid');
 
@@ -38,18 +41,44 @@ class MessagesState extends State<Messages> {
         var messages = profilemap['messages'];
         for (int i = 0; i < messages.length; i++) {
           if (messages[i]['user1'] == userid) {
+            var messageurl =
+                'https://sellship.co/api/messagedetail/' + messages[i]['msgid'];
+            final responsemessage = await http.get(messageurl);
+
+            var messageinfo = json.decode(responsemessage.body);
+            var date = new DateTime.fromMillisecondsSinceEpoch(
+                messageinfo['date']['\$date'] * 1000);
+            var hour = date.hour;
+            var minute = date.minute;
+            var time = hour.toString() + ':' + minute.toString();
+
             setState(() {
-              print(messages[i]);
               peoplemessaged.add(messages[i]['username2']);
               messageid.add(messages[i]['msgid']);
               senderid.add(messages[i]['user1']);
+              lastrecieved.add(messageinfo['lastrecieved']);
+              recieveddate.add(time);
               recipentid.add(messages[i]['user2']);
             });
           } else if (messages[i]['user2'] == userid) {
+            var messageurl =
+                'https://sellship.co/api/messagedetail/' + messages[i]['msgid'];
+            final responsemessage = await http.get(messageurl);
+
+            var messageinfo = json.decode(responsemessage.body);
+            var date = new DateTime.fromMillisecondsSinceEpoch(
+                messageinfo['date']['\$date'] * 1000);
+            var hour = date.hour;
+            var minute = date.minute;
+            var time = hour.toString() + ':' + minute.toString();
+
             setState(() {
+              print(messages[i]);
               peoplemessaged.add(messages[i]['username1']);
               messageid.add(messages[i]['msgid']);
               senderid.add(messages[i]['user2']);
+              lastrecieved.add(messageinfo['lastrecieved']);
+              recieveddate.add(time);
               recipentid.add(messages[i]['user1']);
             });
           }
@@ -110,21 +139,21 @@ class MessagesState extends State<Messages> {
                                 peoplemessaged[Index],
                                 style: TextStyle(fontSize: 16),
                               ),
-//                  subtitle: Text(
-//                    lastMessage,
-//                    maxLines: 1,
-//                    overflow: TextOverflow.ellipsis,
-//                    style: TextStyle(fontSize: 12),
-//                  ),
+                              subtitle: Text(
+                                lastrecieved[Index],
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 12),
+                              ),
                               leading: Icon(Icons.person),
-//                  trailing: Column(
-//                    crossAxisAlignment: CrossAxisAlignment.center,
-//                    mainAxisAlignment: MainAxisAlignment.center,
-//                    children: <Widget>[
-//                      Text(
-//                        time,
-//                        style: TextStyle(fontSize: 12),
-//                      ),
+                              trailing: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    recieveddate[Index],
+                                    style: TextStyle(fontSize: 12),
+                                  ),
 //                      hasUnreadMessage
 //                          ? Container(
 //                              margin: const EdgeInsets.only(top: 5.0),
@@ -142,8 +171,8 @@ class MessagesState extends State<Messages> {
 //                              )),
 //                            )
 //                          : SizedBox()
-//                    ],
-//                  ),
+                                ],
+                              ),
                               onTap: () {
                                 Navigator.push(
                                   context,

@@ -4,6 +4,11 @@ class Item {
   final String itemid;
   final String name;
   final String image;
+  final String image1;
+  final String image2;
+  final String image3;
+  final String image4;
+  final String image5;
   final String description;
   final String price;
   final String userid;
@@ -21,6 +26,11 @@ class Item {
       {this.itemid,
       this.name,
       this.image,
+      this.image1,
+      this.image2,
+      this.image3,
+      this.image4,
+      this.image5,
       this.description,
       this.username,
       this.useremail,
