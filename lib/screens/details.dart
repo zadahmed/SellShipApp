@@ -615,6 +615,18 @@ class _DetailsState extends State<Details> {
                                 var message =
                                     json.decode(responsecheckurl.body);
                                 if (message['message'] != 'Empty') {
+                                  var url =
+                                      'https://sellship.co/api/sendmessage/' +
+                                          userid +
+                                          '/' +
+                                          senderid +
+                                          '/' +
+                                          message['message'];
+                                  await http.post(url, body: {
+                                    'message':
+                                        'Hi there! I am quite interested in the item you\'ve put up for Sale! Could you tell me more about it please?',
+                                    'time': DateTime.now().toString()
+                                  });
                                   Navigator.of(context, rootNavigator: true)
                                       .pop('dialog');
                                   Navigator.pushReplacement(
@@ -642,6 +654,20 @@ class _DetailsState extends State<Details> {
                                   final itemresponse = await http.get(itemurl);
                                   if (itemresponse.statusCode == 200) {
                                     var messageid = itemresponse.body;
+                                    var url =
+                                        'https://sellship.co/api/sendmessage/' +
+                                            userid +
+                                            '/' +
+                                            senderid +
+                                            '/' +
+                                            messageid;
+                                    await http.post(url, body: {
+                                      'message':
+                                          'Hi there! I am quite interested in the item you\'ve put up for Sale! Could you tell me more about it please?',
+                                      'time': DateTime.now().toString()
+                                    });
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
