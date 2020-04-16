@@ -100,7 +100,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Favourites ❤️",
+            "Favourites️",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
           backgroundColor: Colors.amber,
@@ -265,18 +265,18 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   Widget emptyfavourites(BuildContext context) {
     return loading == false
         ? Scaffold(
+            appBar: AppBar(
+              title: Text(
+                "Favourites",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              backgroundColor: Colors.amber,
+            ),
             backgroundColor: Colors.white,
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "Favourites ❤️",
-                    style: Theme.of(context).textTheme.display1.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
-                ),
                 SizedBox(
                   height: 15,
                 ),

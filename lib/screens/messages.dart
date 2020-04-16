@@ -73,7 +73,6 @@ class MessagesState extends State<Messages> {
             var time = hour.toString() + ':' + minute.toString();
 
             setState(() {
-              print(messages[i]);
               peoplemessaged.add(messages[i]['username1']);
               messageid.add(messages[i]['msgid']);
               senderid.add(messages[i]['user2']);

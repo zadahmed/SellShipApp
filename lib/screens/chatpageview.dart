@@ -41,107 +41,116 @@ class _ChatPageViewState extends State<ChatPageView> {
       senderid = widget.senderid;
       recipentid = widget.recipentid;
     });
-    getMessages();
+//    getMessages();
   }
 
-  getMessages() async {
+  Future<List> getRemoteMessages() async {
     var url = 'https://sellship.co/api/getmessages/' + messageid;
     final response = await http.get(url);
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-
-      for (int i = 0; i < jsonResponse.length; i++) {
-        if (jsonResponse[i]['sender'] == senderid) {
-          var date = new DateTime.fromMillisecondsSinceEpoch(
-              jsonResponse[i]['date']['\$date'] * 1000);
-          var hour = date.hour;
-          var minute = date.minute;
-
-          childList.add(Padding(
-              padding: const EdgeInsets.only(
-                  right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
-              child: Container(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 3 / 4),
-                  padding: EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: Stack(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          right: 8.0, left: 8.0, top: 8.0, bottom: 15.0),
-                      child: Text(
-                        jsonResponse[i]['message'],
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 1,
-                      right: 10,
-                      child: Text(
-                        hour.toString() + ':' + minute.toString(),
-                        style: TextStyle(
-                            fontSize: 10, color: Colors.white.withOpacity(0.6)),
-                      ),
-                    )
-                  ]),
-                ),
-              )));
-        } else {
-          var date = new DateTime.fromMillisecondsSinceEpoch(
-              jsonResponse[i]['date']['\$date'] * 1000);
-          var hour = date.hour;
-          var minute = date.minute;
-
-          childList.add(Padding(
-              padding: const EdgeInsets.only(
-                  right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
-              child: Container(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 3 / 4),
-                  padding: EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(25.0),
-                  ),
-                  child: Stack(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          right: 8.0, left: 8.0, top: 8.0, bottom: 15.0),
-                      child: Text(
-                        jsonResponse[i]['message'],
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 1,
-                      left: 10,
-                      child: Text(
-                        hour.toString() + ':' + minute.toString(),
-                        style: TextStyle(
-                            fontSize: 10, color: Colors.white.withOpacity(0.6)),
-                      ),
-                    )
-                  ]),
-                ),
-              )));
-        }
-      }
-      setState(() {
-        childList = childList;
-      });
-      Timer(Duration(milliseconds: 100), () {
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      });
-    } else {
-      print(response.statusCode);
+      return jsonResponse;
     }
+    return [];
+  }
+
+  List<Widget> mapJsonMessagesToListOfWidgetMessages(List jsonResponse) {
+    childList = [];
+
+    for (int i = 0; i < jsonResponse.length; i++) {
+      if (jsonResponse[i]['sender'] == senderid) {
+        var date = new DateTime.fromMillisecondsSinceEpoch(
+            jsonResponse[i]['date']['\$date'] * 1000);
+        var hour = date.hour;
+        var minute = date.minute;
+
+        childList.add(Padding(
+            padding: const EdgeInsets.only(
+                right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
+            child: Container(
+              alignment: Alignment.centerRight,
+              child: Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 3 / 4),
+                padding: EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: Stack(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 8.0, left: 8.0, top: 8.0, bottom: 15.0),
+                    child: Text(
+                      jsonResponse[i]['message'],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 1,
+                    right: 10,
+                    child: Text(
+                      hour.toString() + ':' + minute.toString(),
+                      style: TextStyle(
+                          fontSize: 10, color: Colors.white.withOpacity(0.6)),
+                    ),
+                  )
+                ]),
+              ),
+            )));
+      } else {
+        var date = new DateTime.fromMillisecondsSinceEpoch(
+            jsonResponse[i]['date']['\$date'] * 1000);
+        var hour = date.hour;
+        var minute = date.minute;
+
+        childList.add(Padding(
+            padding: const EdgeInsets.only(
+                right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 3 / 4),
+                padding: EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                  color: Colors.amber,
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: Stack(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 8.0, left: 8.0, top: 8.0, bottom: 15.0),
+                    child: Text(
+                      jsonResponse[i]['message'],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 1,
+                    left: 10,
+                    child: Text(
+                      hour.toString() + ':' + minute.toString(),
+                      style: TextStyle(
+                          fontSize: 10, color: Colors.white.withOpacity(0.6)),
+                    ),
+                  )
+                ]),
+              ),
+            )));
+      }
+    }
+    Timer(Duration(milliseconds: 100), () {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
+
+    return childList;
+  }
+
+  Stream<List<Widget>> getMessages() async* {
+    yield* Stream<int>.periodic(Duration(seconds: 3), (i) => i)
+        .asyncMap((i) => getRemoteMessages())
+        .map((json) => mapJsonMessagesToListOfWidgetMessages(json));
   }
 
   @override
@@ -173,22 +182,33 @@ class _ChatPageViewState extends State<ChatPageView> {
                     fit: FlexFit.tight,
                     // height: 500,
                     child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
 //                        image: DecorationImage(
 //                            image: AssetImage(
 //                                "assets/images/chat-background-1.jpg"),
 //                            fit: BoxFit.cover,
 //                            colorFilter: ColorFilter.linearToSrgbGamma()),
-                            ),
-                        child: SingleChildScrollView(
-                            controller: _scrollController,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: childList,
-                            ))),
+                          ),
+                      child: StreamBuilder(
+                          stream: getMessages(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return SingleChildScrollView(
+                                  controller: _scrollController,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: snapshot.data,
+                                  ));
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          }),
+                    ),
                   ),
+
                   Divider(height: 0, color: Colors.black26),
                   // SizedBox(
                   //   height: 50,
