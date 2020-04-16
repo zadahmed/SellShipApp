@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Messages extends StatefulWidget {
   Messages({Key key}) : super(key: key);
@@ -39,6 +41,12 @@ class MessagesState extends State<Messages> {
         var profilemap = respons;
 
         var messages = profilemap['messages'];
+        if (messages == null) {
+          setState(() {
+            loading = false;
+            userid = null;
+          });
+        }
         for (int i = 0; i < messages.length; i++) {
           if (messages[i]['user1'] == userid) {
             var messageurl =
@@ -46,55 +54,68 @@ class MessagesState extends State<Messages> {
             final responsemessage = await http.get(messageurl);
 
             var messageinfo = json.decode(responsemessage.body);
-            var date = new DateTime.fromMillisecondsSinceEpoch(
-                messageinfo['date']['\$date'] * 1000);
-            var hour = date.hour;
-            var minute = date.minute;
-            var time = hour.toString() + ':' + minute.toString();
 
-            setState(() {
-              peoplemessaged.add(messages[i]['username2']);
-              messageid.add(messages[i]['msgid']);
-              senderid.add(messages[i]['user1']);
-              lastrecieved.add(messageinfo['lastrecieved']);
-              recieveddate.add(time);
-              recipentid.add(messages[i]['user2']);
-            });
+            final f = new DateFormat('hh:mm');
+            if (messageinfo['date'] != null) {
+              DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+                  messageinfo['date']['\$date']);
+              var s = f.format(date);
+
+              setState(() {
+                peoplemessaged.add(messages[i]['username2']);
+                messageid.add(messages[i]['msgid']);
+                senderid.add(messages[i]['user1']);
+                lastrecieved.add(messageinfo['lastrecieved']);
+                recieveddate.add(s);
+                recipentid.add(messages[i]['user2']);
+              });
+            }
           } else if (messages[i]['user2'] == userid) {
             var messageurl =
                 'https://sellship.co/api/messagedetail/' + messages[i]['msgid'];
             final responsemessage = await http.get(messageurl);
 
             var messageinfo = json.decode(responsemessage.body);
-            var date = new DateTime.fromMillisecondsSinceEpoch(
-                messageinfo['date']['\$date'] * 1000);
-            var hour = date.hour;
-            var minute = date.minute;
-            var time = hour.toString() + ':' + minute.toString();
+            print(messageinfo['date']);
+            final f = new DateFormat('hh:mm');
+            if (messageinfo['date'] != null) {
+              DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+                  messageinfo['date']['\$date']);
+              var s = f.format(date);
 
-            setState(() {
-              peoplemessaged.add(messages[i]['username1']);
-              messageid.add(messages[i]['msgid']);
-              senderid.add(messages[i]['user2']);
-              lastrecieved.add(messageinfo['lastrecieved']);
-              recieveddate.add(time);
-              recipentid.add(messages[i]['user1']);
-            });
+              setState(() {
+                peoplemessaged.add(messages[i]['username1']);
+                messageid.add(messages[i]['msgid']);
+                senderid.add(messages[i]['user2']);
+                lastrecieved.add(messageinfo['lastrecieved']);
+                recieveddate.add(s);
+                recipentid.add(messages[i]['user1']);
+              });
+            }
           }
         }
+
+        setState(() {
+          loading = false;
+        });
       } else {
         print(response.statusCode);
       }
     } else {
-      //user id is null so display placeholder here
+      setState(() {
+        loading = false;
+      });
     }
   }
+
+  bool loading;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getmessages();
+    loading = true;
   }
 
   @override
@@ -113,106 +134,174 @@ class MessagesState extends State<Messages> {
           style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
-      body: Container(
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                topRight: Radius.circular(15.0),
-              )),
-          child: ListView.builder(
-              itemCount: peoplemessaged.length,
-              itemBuilder: (BuildContext ctxt, int Index) {
-                return Slidable(
-                  actionPane: SlidableDrawerActionPane(),
-                  actionExtentRatio: 0.25,
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 10,
-                            child: ListTile(
-                              title: Text(
-                                peoplemessaged[Index],
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              subtitle: Text(
-                                lastrecieved[Index],
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              leading: Icon(Icons.person),
-                              trailing: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
+      body: loading == false
+          ? Container(
+              child: userid != null
+                  ? Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15.0),
+                            topRight: Radius.circular(15.0),
+                          )),
+                      child: ListView.builder(
+                          itemCount: peoplemessaged.length,
+                          itemBuilder: (BuildContext ctxt, int Index) {
+                            return Slidable(
+                              actionPane: SlidableDrawerActionPane(),
+                              actionExtentRatio: 0.25,
+                              child: Column(
                                 children: <Widget>[
-                                  Text(
-                                    recieveddate[Index],
-                                    style: TextStyle(fontSize: 12),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 10,
+                                        child: ListTile(
+                                          title: Text(
+                                            peoplemessaged[Index],
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          subtitle: Text(
+                                            lastrecieved[Index],
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          leading: Icon(Icons.person),
+                                          trailing: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                recieveddate[Index],
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ChatPageView(
+                                                        messageid:
+                                                            messageid[Index],
+                                                        recipentname:
+                                                            peoplemessaged[
+                                                                Index],
+                                                        senderid:
+                                                            senderid[Index],
+                                                        recipentid:
+                                                            recipentid[Index]),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-//                      hasUnreadMessage
-//                          ? Container(
-//                              margin: const EdgeInsets.only(top: 5.0),
-//                              height: 18,
-//                              width: 18,
-//                              decoration: BoxDecoration(
-//                                  color: Colors.orange,
-//                                  borderRadius: BorderRadius.all(
-//                                    Radius.circular(25.0),
-//                                  )),
-//                              child: Center(
-//                                  child: Text(
-//                                newMesssageCount.toString(),
-//                                style: TextStyle(fontSize: 11),
-//                              )),
-//                            )
-//                          : SizedBox()
+                                  Divider(
+                                    endIndent: 12.0,
+                                    indent: 12.0,
+                                    height: 0,
+                                  ),
                                 ],
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatPageView(
-                                        messageid: messageid[Index],
-                                        recipentname: peoplemessaged[Index],
-                                        senderid: senderid[Index],
-                                        recipentid: recipentid[Index]),
-                                  ),
-                                );
-                              },
-                            ),
+                              secondaryActions: <Widget>[
+                                IconSlideAction(
+                                  caption: 'Archive',
+                                  color: Colors.blue,
+                                  icon: Icons.archive,
+                                  onTap: () {},
+                                ),
+                              ],
+                            );
+                          }),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Center(
+                          child: Text(
+                            'View your Messages\'s here ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20),
                           ),
-                        ],
-                      ),
-                      Divider(
-                        endIndent: 12.0,
-                        indent: 12.0,
-                        height: 0,
-                      ),
-                    ],
-                  ),
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                      caption: 'Archive',
-                      color: Colors.blue,
-                      icon: Icons.archive,
-                      onTap: () {},
+                        ),
+                        Expanded(
+                            child: Image.asset(
+                          'assets/messages.png',
+                          fit: BoxFit.fitWidth,
+                        ))
+                      ],
                     ),
-                    IconSlideAction(
-                      caption: 'Share',
-                      color: Colors.indigo,
-                      icon: Icons.share,
-                      onTap: () {},
-                    ),
-                  ],
-                );
-              }),
-        ),
-      ),
+            )
+          : Container(
+              width: double.infinity,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.grey[100],
+                child: Column(
+                  children: [0, 1, 2, 3, 4, 5, 6]
+                      .map((_) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 48.0,
+                                  height: 48.0,
+                                  color: Colors.white,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 2.0),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 2.0),
+                                      ),
+                                      Container(
+                                        width: 40.0,
+                                        height: 8.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
     );
   }
 }

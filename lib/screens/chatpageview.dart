@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class ChatPageView extends StatefulWidget {
   final String recipentname;
@@ -59,10 +61,10 @@ class _ChatPageViewState extends State<ChatPageView> {
 
     for (int i = 0; i < jsonResponse.length; i++) {
       if (jsonResponse[i]['sender'] == senderid) {
-        var date = new DateTime.fromMillisecondsSinceEpoch(
-            jsonResponse[i]['date']['\$date'] * 1000);
-        var hour = date.hour;
-        var minute = date.minute;
+        final f = new DateFormat('hh:mm');
+        DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+            jsonResponse[i]['date']['\$date']);
+        var s = f.format(date);
 
         childList.add(Padding(
             padding: const EdgeInsets.only(
@@ -90,7 +92,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                     bottom: 1,
                     right: 10,
                     child: Text(
-                      hour.toString() + ':' + minute.toString(),
+                      s,
                       style: TextStyle(
                           fontSize: 10, color: Colors.white.withOpacity(0.6)),
                     ),
@@ -99,10 +101,10 @@ class _ChatPageViewState extends State<ChatPageView> {
               ),
             )));
       } else {
-        var date = new DateTime.fromMillisecondsSinceEpoch(
-            jsonResponse[i]['date']['\$date'] * 1000);
-        var hour = date.hour;
-        var minute = date.minute;
+        final f = new DateFormat('hh:mm');
+        DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+            jsonResponse[i]['date']['\$date']);
+        var s = f.format(date);
 
         childList.add(Padding(
             padding: const EdgeInsets.only(
@@ -130,7 +132,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                     bottom: 1,
                     left: 10,
                     child: Text(
-                      hour.toString() + ':' + minute.toString(),
+                      s,
                       style: TextStyle(
                           fontSize: 10, color: Colors.white.withOpacity(0.6)),
                     ),
@@ -194,16 +196,27 @@ class _ChatPageViewState extends State<ChatPageView> {
                           stream: getMessages(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              return SingleChildScrollView(
-                                  controller: _scrollController,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: snapshot.data,
-                                  ));
+                              if (snapshot.data == null) {
+                                return SingleChildScrollView(
+                                    controller: _scrollController,
+                                    child: Container());
+                              } else {
+                                return SingleChildScrollView(
+                                    controller: _scrollController,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: snapshot.data,
+                                    ));
+                              }
                             } else {
-                              return CircularProgressIndicator();
+                              return Container(
+                                height: 100,
+                                child: SpinKitChasingDots(
+                                    color: Colors.amberAccent),
+                              );
                             }
                           }),
                     ),

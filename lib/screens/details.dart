@@ -6,6 +6,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:SellShip/models/Items.dart';
@@ -180,6 +181,7 @@ class _DetailsState extends State<Details> {
   Widget build(BuildContext context) {
     return loading == false
         ? Scaffold(
+            backgroundColor: Colors.white,
             key: _scaffoldKey,
             appBar: AppBar(
               elevation: 0,
@@ -197,11 +199,11 @@ class _DetailsState extends State<Details> {
             body: Stack(
               children: <Widget>[
                 new ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   children: <Widget>[
                     SizedBox(height: 10),
                     Container(
-                      height: 240,
+                      height: 260,
                       width: MediaQuery.of(context).size.width,
                       color: Colors.white,
                       child: Stack(
@@ -226,10 +228,10 @@ class _DetailsState extends State<Details> {
                                       borderRadius: BorderRadius.circular(15),
                                       child: Image.network(
                                         images[Index],
-                                        height: 240,
+                                        height: 260,
                                         width:
                                             MediaQuery.of(context).size.width -
-                                                50,
+                                                40,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -266,40 +268,73 @@ class _DetailsState extends State<Details> {
                     SizedBox(height: 5),
                     Align(
                         alignment: Alignment.topRight,
-                        child: Text(images.length.toString() + '/6')),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Icon(Icons.image),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(images.length.toString() + '/6')
+                          ],
+                        )),
                     SizedBox(height: 20),
-                    Center(
-                      child: Text(
-                        newItem.name,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Center(
-                      child: Text(
-                        newItem.category,
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Center(
-                      child: Text(
-                        newItem.price + ' AED',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                        ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                child: Text(
+                                  newItem.name,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                                width: 250,
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                newItem.category,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            child: Text(
+                              newItem.price + ' AED',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            width: 100,
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 30),
                     Container(
                       height: 200,
-                      color: Colors.white,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -348,20 +383,34 @@ class _DetailsState extends State<Details> {
                                   username: newItem.username)),
                         );
                       },
-                      child: Card(
-                        color: Colors.amber,
-                        child: ListTile(
-                          title: Text(
-                            newItem.username,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                          leading: Icon(
-                            Feather.user,
+                      child: Container(
+                        height: 70,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade200,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
                             color: Colors.white,
-                          ),
-                          trailing: Text(
-                            'View ${newItem.username}\'s items',
-                            style: TextStyle(fontSize: 11, color: Colors.white),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: ListTile(
+                            title: Text(
+                              newItem.username,
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
+                            ),
+                            leading: Icon(
+                              Feather.user,
+                              color: Colors.black,
+                            ),
+                            trailing: Text(
+                              'View ${newItem.username}\'s items',
+                              style:
+                                  TextStyle(fontSize: 11, color: Colors.black),
+                            ),
                           ),
                         ),
                       ),
@@ -389,12 +438,21 @@ class _DetailsState extends State<Details> {
                     SizedBox(height: 10),
                     Container(
                       height: 260,
-                      color: Colors.white,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade200,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(height: 10),
+                          SizedBox(height: 5),
                           Padding(
                             padding: EdgeInsets.only(left: 10),
                             child: Center(
@@ -408,37 +466,35 @@ class _DetailsState extends State<Details> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 10),
-                          InkWell(
-                            onTap: () async {
-                              final String googleMapsUrl =
-                                  "comgooglemaps://?center=${position.latitude},${position.longitude}";
-                              final String appleMapsUrl =
-                                  "https://maps.apple.com/?q=${position.latitude},${position.longitude}";
+                          SizedBox(height: 15),
+                          Container(
+                            height: 200,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: GoogleMap(
+                              initialCameraPosition: CameraPosition(
+                                  target: position, zoom: 18.0, bearing: 70),
+                              onMapCreated: mapCreated,
+                              markers: _markers,
+                              onTap: (LatLng) async {
+                                final String googleMapsUrl =
+                                    "comgooglemaps://?center=${position.latitude},${position.longitude}";
+                                final String appleMapsUrl =
+                                    "https://maps.apple.com/?q=${position.latitude},${position.longitude}";
 
-                              if (await canLaunch(googleMapsUrl)) {
-                                await launch(googleMapsUrl,
-                                    forceSafariVC: true, forceWebView: true);
-                              }
-                              if (await canLaunch(appleMapsUrl)) {
-                                await launch(appleMapsUrl,
-                                    forceSafariVC: false);
-                              } else {
-                                throw "Couldn't launch URL";
-                              }
-                            },
-                            child: Container(
-                              height: 200,
-                              width: MediaQuery.of(context).size.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: GoogleMap(
-                                initialCameraPosition: CameraPosition(
-                                    target: position, zoom: 18.0, bearing: 70),
-                                onMapCreated: mapCreated,
-                                markers: _markers,
-                              ),
+                                if (await canLaunch(googleMapsUrl)) {
+                                  await launch(googleMapsUrl,
+                                      forceSafariVC: true, forceWebView: true);
+                                }
+                                if (await canLaunch(appleMapsUrl)) {
+                                  await launch(appleMapsUrl,
+                                      forceSafariVC: false);
+                                } else {
+                                  throw "Couldn't launch URL";
+                                }
+                              },
                             ),
                           ),
                         ],
@@ -472,7 +528,7 @@ class _DetailsState extends State<Details> {
               ],
             ),
             bottomNavigationBar: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.only(bottom: 15, top: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -486,83 +542,119 @@ class _DetailsState extends State<Details> {
                         }
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width / 3 - 10,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Colors.amber,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            "Call",
-                            style: TextStyle(
-                                color: Color(0xFFFBFBFB),
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
+                          width: MediaQuery.of(context).size.width / 3 - 10,
+                          height: 70,
+                          decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Feather.phone_call,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Center(
+                                child: Text(
+                                  "Call",
+                                  style: TextStyle(
+                                      color: Color(0xFFFBFBFB),
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ],
+                          )),
                     ),
                     InkWell(
                       onTap: () async {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        20.0)), //this right here
+                                child: Container(
+                                  height: 100,
+                                  width: 100,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: SpinKitChasingDots(
+                                        color: Colors.amberAccent),
+                                  ),
+                                ),
+                              );
+                            });
                         userid = await storage.read(key: 'userid');
                         var senderid = newItem.userid;
+                        if (senderid != userid) {
+                          var userurl =
+                              'https://sellship.co/api/username/' + userid;
+                          final responseuser = await http.get(userurl);
 
-                        var userurl =
-                            'https://sellship.co/api/username/' + userid;
-                        final responseuser = await http.get(userurl);
+                          if (responseuser.statusCode == 200) {
+                            var username1 = responseuser.body;
+                            var userurl2 =
+                                'https://sellship.co/api/username/' + senderid;
+                            final responseuser2 = await http.get(userurl2);
+                            if (responseuser2.statusCode == 200) {
+                              var username2 = responseuser2.body;
 
-                        if (responseuser.statusCode == 200) {
-                          var username1 = responseuser.body;
-                          var userurl2 =
-                              'https://sellship.co/api/username/' + senderid;
-                          final responseuser2 = await http.get(userurl2);
-                          if (responseuser2.statusCode == 200) {
-                            var username2 = responseuser2.body;
-//check if there is a chat existing
-                            var checkurl =
-                                'https://sellship.co/api/checkmessageexist/' +
-                                    userid +
-                                    '/' +
-                                    senderid;
-                            final responsecheckurl = await http.get(checkurl);
-                            if (responsecheckurl.statusCode == 200) {
-                              var message = json.decode(responsecheckurl.body);
-                              if (message['message'] != 'Empty') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatPageView(
-                                        messageid: message['message'],
-                                        recipentname: username2,
-                                        senderid: userid,
-                                        recipentid: senderid),
-                                  ),
-                                );
-                              } else {
-                                var itemurl =
-                                    'https://sellship.co/api/createroom/' +
-                                        userid +
-                                        '/' +
-                                        username1 +
-                                        '/' +
-                                        senderid +
-                                        '/' +
-                                        username2;
-                                final itemresponse = await http.get(itemurl);
-                                if (itemresponse.statusCode == 200) {
-                                  var messageid = itemresponse.body;
-                                  Navigator.push(
+                              var checkurl =
+                                  'https://sellship.co/api/checkmessageexist/' +
+                                      userid +
+                                      '/' +
+                                      senderid;
+                              final responsecheckurl = await http.get(checkurl);
+                              if (responsecheckurl.statusCode == 200) {
+                                var message =
+                                    json.decode(responsecheckurl.body);
+                                if (message['message'] != 'Empty') {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                  Navigator.pushReplacement(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatPageView(
-                                          messageid: messageid,
-                                          recipentname: username2,
-                                          senderid: userid,
-                                          recipentid: senderid),
+                                    PageRouteBuilder(
+                                      pageBuilder:
+                                          (context, animation1, animation2) =>
+                                              ChatPageView(
+                                                  messageid: message['message'],
+                                                  recipentname: username2,
+                                                  senderid: userid,
+                                                  recipentid: senderid),
                                     ),
                                   );
                                 } else {
-                                  print(itemresponse.statusCode);
+                                  var itemurl =
+                                      'https://sellship.co/api/createroom/' +
+                                          userid +
+                                          '/' +
+                                          username1 +
+                                          '/' +
+                                          senderid +
+                                          '/' +
+                                          username2;
+                                  final itemresponse = await http.get(itemurl);
+                                  if (itemresponse.statusCode == 200) {
+                                    var messageid = itemresponse.body;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatPageView(
+                                            messageid: messageid,
+                                            recipentname: username2,
+                                            senderid: userid,
+                                            recipentid: senderid),
+                                      ),
+                                    );
+                                  } else {
+                                    print(itemresponse.statusCode);
+                                  }
                                 }
                               }
                             }
@@ -571,19 +663,29 @@ class _DetailsState extends State<Details> {
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3 - 10,
-                        height: 50,
+                        height: 70,
                         decoration: BoxDecoration(
                             color: Colors.amber,
                             borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            "Message",
-                            style: TextStyle(
-                                color: Color(0xFFFBFBFB),
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Feather.phone_call,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "Message",
+                                style: TextStyle(
+                                    color: Color(0xFFFBFBFB),
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ]),
                       ),
                     ),
                     InkWell(
@@ -597,19 +699,29 @@ class _DetailsState extends State<Details> {
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3 - 10,
-                        height: 50,
+                        height: 70,
                         decoration: BoxDecoration(
                             color: Colors.amber,
                             borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Text(
-                            "SMS",
-                            style: TextStyle(
-                                color: Color(0xFFFBFBFB),
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(
+                                Feather.phone_call,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "SMS",
+                                style: TextStyle(
+                                    color: Color(0xFFFBFBFB),
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ]),
                       ),
                     ),
                   ],

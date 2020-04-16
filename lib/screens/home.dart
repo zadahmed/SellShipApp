@@ -7,11 +7,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -224,10 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return new Padding(
       padding: const EdgeInsets.all(8.0),
       child: new Center(
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          valueColor: new AlwaysStoppedAnimation<Color>(Colors.amber),
-        ),
+        child: SpinKitChasingDots(color: Colors.amberAccent),
       ),
     );
   }
@@ -237,35 +236,29 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         appBar: AppBar(
             backgroundColor: Colors.amberAccent,
-            title: Column(
-              children: <Widget>[
-                Container(
-                  color: Colors.amberAccent,
-                  padding: EdgeInsets.all(7),
-                  child: Card(
-                    elevation: 0.5,
-                    child: ListTile(
-                      leading: Icon(
-                        FontAwesome.search,
-                        color: Colors.amber,
-                      ),
-                      title: TextField(
-                        controller: searchcontroller,
-                        onSubmitted: onSearch,
-                        decoration: InputDecoration(
-                            hintText: 'Search', border: InputBorder.none),
-                      ),
-                      trailing: IconButton(
-                        onPressed: () {
-                          searchcontroller.clear();
-                          onSearch('');
-                        },
-                        icon: Icon(Icons.cancel),
-                      ),
+            title: Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: Container(
+                color: Colors.amberAccent,
+                padding: EdgeInsets.all(1),
+                child: Card(
+                  elevation: 0.5,
+                  child: ListTile(
+                    leading: Icon(
+                      FontAwesomeIcons.ship,
+                      size: 30,
+                      color: Colors.amberAccent,
+                    ),
+                    title: TextField(
+                      controller: searchcontroller,
+                      onSubmitted: onSearch,
+                      decoration: InputDecoration(
+                          hintText: 'Search SellShip',
+                          border: InputBorder.none),
                     ),
                   ),
                 ),
-              ],
+              ),
             )),
         body: GestureDetector(
           onTap: () {
@@ -293,7 +286,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Container(
                                   width: MediaQuery.of(context).size.width,
                                   height: 100,
-                                  margin: const EdgeInsets.only(right: 15.0),
+                                  margin: const EdgeInsets.only(
+                                      right: 8.0, top: 15),
                                   child: Scrollbar(
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,

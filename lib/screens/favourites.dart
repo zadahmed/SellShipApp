@@ -103,7 +103,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
             "Favourites️",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          backgroundColor: Colors.amber,
+          backgroundColor: Colors.amberAccent,
         ),
         body: loading == false
             ? Padding(
@@ -182,7 +182,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                               ),
                               Expanded(
                                   child: Image.asset(
-                                'assets/sss.jpg',
+                                'assets/favourites.png',
                                 fit: BoxFit.cover,
                               ))
                             ],
@@ -271,7 +271,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
-              backgroundColor: Colors.amber,
+              backgroundColor: Colors.amberAccent,
             ),
             backgroundColor: Colors.white,
             body: Column(
@@ -289,8 +289,8 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                 ),
                 Expanded(
                     child: Image.asset(
-                  'assets/sss.jpg',
-                  fit: BoxFit.cover,
+                  'assets/favourites.png',
+                  fit: BoxFit.fitWidth,
                 ))
               ],
             ),
