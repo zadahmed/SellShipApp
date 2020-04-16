@@ -196,21 +196,18 @@ class _ChatPageViewState extends State<ChatPageView> {
                           stream: getMessages(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
-                              if (snapshot.data == null) {
-                                return SingleChildScrollView(
-                                    controller: _scrollController,
-                                    child: Container());
-                              } else {
-                                return SingleChildScrollView(
-                                    controller: _scrollController,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: snapshot.data,
-                                    ));
-                              }
+                              return SingleChildScrollView(
+                                  controller: _scrollController,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: snapshot.data,
+                                  ));
+                            } else if (snapshot.hasError) {
+                              return SingleChildScrollView(
+                                  controller: _scrollController,
+                                  child: Container());
                             } else {
                               return Container(
                                 height: 100,

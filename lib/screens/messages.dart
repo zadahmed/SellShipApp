@@ -46,55 +46,55 @@ class MessagesState extends State<Messages> {
             loading = false;
             userid = null;
           });
-        }
-        for (int i = 0; i < messages.length; i++) {
-          if (messages[i]['user1'] == userid) {
-            var messageurl =
-                'https://sellship.co/api/messagedetail/' + messages[i]['msgid'];
-            final responsemessage = await http.get(messageurl);
+        } else {
+          for (int i = 0; i < messages.length; i++) {
+            if (messages[i]['user1'] == userid) {
+              var messageurl = 'https://sellship.co/api/messagedetail/' +
+                  messages[i]['msgid'];
+              final responsemessage = await http.get(messageurl);
 
-            var messageinfo = json.decode(responsemessage.body);
+              var messageinfo = json.decode(responsemessage.body);
 
-            final f = new DateFormat('hh:mm');
-            if (messageinfo['date'] != null) {
-              DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-                  messageinfo['date']['\$date']);
-              var s = f.format(date);
+              final f = new DateFormat('hh:mm');
+              if (messageinfo['date'] != null) {
+                DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+                    messageinfo['date']['\$date']);
+                var s = f.format(date);
 
-              setState(() {
-                peoplemessaged.add(messages[i]['username2']);
-                messageid.add(messages[i]['msgid']);
-                senderid.add(messages[i]['user1']);
-                lastrecieved.add(messageinfo['lastrecieved']);
-                recieveddate.add(s);
-                recipentid.add(messages[i]['user2']);
-              });
-            }
-          } else if (messages[i]['user2'] == userid) {
-            var messageurl =
-                'https://sellship.co/api/messagedetail/' + messages[i]['msgid'];
-            final responsemessage = await http.get(messageurl);
+                setState(() {
+                  peoplemessaged.add(messages[i]['username2']);
+                  messageid.add(messages[i]['msgid']);
+                  senderid.add(messages[i]['user1']);
+                  lastrecieved.add(messageinfo['lastrecieved']);
+                  recieveddate.add(s);
+                  recipentid.add(messages[i]['user2']);
+                });
+              }
+            } else if (messages[i]['user2'] == userid) {
+              var messageurl = 'https://sellship.co/api/messagedetail/' +
+                  messages[i]['msgid'];
+              final responsemessage = await http.get(messageurl);
 
-            var messageinfo = json.decode(responsemessage.body);
-            print(messageinfo['date']);
-            final f = new DateFormat('hh:mm');
-            if (messageinfo['date'] != null) {
-              DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-                  messageinfo['date']['\$date']);
-              var s = f.format(date);
+              var messageinfo = json.decode(responsemessage.body);
+              print(messageinfo['date']);
+              final f = new DateFormat('hh:mm');
+              if (messageinfo['date'] != null) {
+                DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+                    messageinfo['date']['\$date']);
+                var s = f.format(date);
 
-              setState(() {
-                peoplemessaged.add(messages[i]['username1']);
-                messageid.add(messages[i]['msgid']);
-                senderid.add(messages[i]['user2']);
-                lastrecieved.add(messageinfo['lastrecieved']);
-                recieveddate.add(s);
-                recipentid.add(messages[i]['user1']);
-              });
+                setState(() {
+                  peoplemessaged.add(messages[i]['username1']);
+                  messageid.add(messages[i]['msgid']);
+                  senderid.add(messages[i]['user2']);
+                  lastrecieved.add(messageinfo['lastrecieved']);
+                  recieveddate.add(s);
+                  recipentid.add(messages[i]['user1']);
+                });
+              }
             }
           }
         }
-
         setState(() {
           loading = false;
         });
