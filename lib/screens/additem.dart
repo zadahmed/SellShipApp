@@ -48,6 +48,7 @@ class _AddItemState extends State<AddItem> {
 
   LatLng position;
   String city;
+  String country;
   final storage = new FlutterSecureStorage();
 
   @override
@@ -60,6 +61,7 @@ class _AddItemState extends State<AddItem> {
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
     var cit = await storage.read(key: 'city');
+    var country = await storage.read(key: 'country');
     userid = await storage.read(key: 'userid');
     print(userid);
 
@@ -218,13 +220,14 @@ class _AddItemState extends State<AddItem> {
             child: Text(
               "Add an Item",
               style: TextStyle(
-                  color: Color(0xFF323643),
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w700),
+                color: Colors.white,
+                fontSize: 20.0,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
           elevation: 0.0,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.amberAccent,
           iconTheme: IconThemeData(color: Color(0xFFC5CCD6)),
         ),
         body: userid != null
@@ -1066,7 +1069,7 @@ class _AddItemState extends State<AddItem> {
                     Expanded(
                         child: Image.asset(
                       'assets/little_theologians_4x.jpg',
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitWidth,
                     ))
                   ],
                 ),
@@ -1146,6 +1149,7 @@ class _AddItemState extends State<AddItem> {
                         'userid': userid,
                         'username': firstname,
                         'useremail': email,
+                        'country': country,
                         'usernumber': phonenumber,
                         'date_uploaded': DateTime.now().toString(),
                         'image': await MultipartFile.fromFile(_image.path,
@@ -1170,6 +1174,7 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city,
                         'userid': userid,
+                        'country': country,
                         'username': firstname,
                         'useremail': email,
                         'usernumber': phonenumber,
@@ -1200,6 +1205,7 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city,
                         'userid': userid,
+                        'country': country,
                         'username': firstname,
                         'useremail': email,
                         'usernumber': phonenumber,
@@ -1236,6 +1242,7 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city,
                         'userid': userid,
+                        'country': country,
                         'username': firstname,
                         'useremail': email,
                         'usernumber': phonenumber,
@@ -1275,6 +1282,7 @@ class _AddItemState extends State<AddItem> {
                         'longitude': position.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
+                        'country': country,
                         'userid': userid,
                         'username': firstname,
                         'useremail': email,
@@ -1319,6 +1327,7 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city,
                         'userid': userid,
+                        'country': country,
                         'username': firstname,
                         'useremail': email,
                         'usernumber': phonenumber,

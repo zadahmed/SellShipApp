@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/screens/categories.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
@@ -181,7 +182,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Placemark place = p[0];
     var cit = place.administrativeArea;
+    var country = place.country;
     await storage.write(key: 'city', value: cit);
+    await storage.write(key: 'country', value: country);
     setState(() {
       city = cit;
       fetchItems(skip, limit);
@@ -239,23 +242,20 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Padding(
               padding: EdgeInsets.only(bottom: 10),
               child: Container(
-                color: Colors.amberAccent,
-                padding: EdgeInsets.all(1),
-                child: Card(
-                  elevation: 0.5,
-                  child: ListTile(
-                    leading: Icon(
-                      FontAwesomeIcons.ship,
-                      size: 30,
-                      color: Colors.amberAccent,
-                    ),
-                    title: TextField(
-                      controller: searchcontroller,
-                      onSubmitted: onSearch,
-                      decoration: InputDecoration(
-                          hintText: 'Search SellShip',
-                          border: InputBorder.none),
-                    ),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                child: ListTile(
+                  leading: Icon(
+                    Feather.search,
+                    size: 25,
+                    color: Colors.amberAccent,
+                  ),
+                  title: TextField(
+                    controller: searchcontroller,
+                    onSubmitted: onSearch,
+                    decoration: InputDecoration(
+                        hintText: 'Search SellShip', border: InputBorder.none),
                   ),
                 ),
               ),
@@ -314,15 +314,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                               },
                                               child: Container(
                                                   margin: const EdgeInsets.only(
-                                                      bottom: 25.0),
-                                                  width: 110.0,
+                                                      bottom: 5.0),
+                                                  width: 115.0,
                                                   constraints: BoxConstraints(
-                                                      minHeight: 101),
+                                                      minHeight: 110),
                                                   alignment: Alignment.center,
                                                   decoration: BoxDecoration(
-                                                    color: _selectedCat == i
-                                                        ? Colors.transparent
-                                                        : Colors.amberAccent,
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        offset: Offset(
+                                                            0.0, 1.0), //(x,y)
+                                                        blurRadius: 6.0,
+                                                      ),
+                                                    ],
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             11.0),
@@ -331,25 +338,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     children: <Widget>[
                                                       Icon(
                                                         categories[i].icon,
-                                                        color: _selectedCat == i
-                                                            ? Colors.amberAccent
-                                                            : Colors.white,
+                                                        color: Colors.black,
                                                       ),
                                                       SizedBox(
                                                         height: 5,
                                                       ),
                                                       Text(
                                                         "${categories[i].title}",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .button
-                                                            .copyWith(
-                                                                color: _selectedCat ==
-                                                                        i
-                                                                    ? Colors
-                                                                        .amberAccent
-                                                                    : Colors
-                                                                        .white),
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black),
                                                         textAlign:
                                                             TextAlign.center,
                                                       ),
@@ -393,71 +391,98 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       );
                               }
-                              return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Details(
-                                              itemid: itemsgrid[index].itemid)),
-                                    );
-                                  },
-                                  child: Card(
-                                    elevation: 0,
-                                    child: new Column(
-                                      children: <Widget>[
-                                        new Stack(
-                                          children: <Widget>[
-                                            //new Center(child: new CircularProgressIndicator()),
-                                            new Center(
-                                              child: Image.network(
-                                                itemsgrid[index].image,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        new Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: new Column(
-                                            children: <Widget>[
-                                              Text(
-                                                itemsgrid[index].name,
-                                                overflow: TextOverflow.fade,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              SizedBox(height: 3.0),
-                                              Container(
-                                                child: Text(
-                                                  itemsgrid[index].category,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 3.0),
-                                              Container(
-                                                child: Text(
-                                                  itemsgrid[index].price +
-                                                      ' AED',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                ),
+                              return Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Details(
+                                                  itemid:
+                                                      itemsgrid[index].itemid)),
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset:
+                                                    Offset(0.0, 1.0), //(x,y)
+                                                blurRadius: 6.0,
                                               ),
                                             ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ));
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: new Column(
+                                          children: <Widget>[
+                                            new Stack(
+                                              children: <Widget>[
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        itemsgrid[index].image,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        SpinKitChasingDots(
+                                                            color: Colors
+                                                                .amberAccent),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            new Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: new Column(
+                                                children: <Widget>[
+                                                  Text(
+                                                    itemsgrid[index].name,
+                                                    overflow: TextOverflow.fade,
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  SizedBox(height: 3.0),
+                                                  Container(
+                                                    child: Text(
+                                                      itemsgrid[index].category,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 3.0),
+                                                  Container(
+                                                    child: Text(
+                                                      itemsgrid[index].price +
+                                                          ' AED',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )));
                             },
                             staggeredTileBuilder: (int index) {
                               if (index != 0 && index % 7 == 0) {

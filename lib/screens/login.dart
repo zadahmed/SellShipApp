@@ -625,6 +625,7 @@ class _LoginPageState extends State<LoginPage>
         backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: true,
+          elevation: 0,
           title: Text(
             "Profile️",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),

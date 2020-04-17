@@ -65,7 +65,9 @@ class _RootScreenState extends State<RootScreen> {
 
     Placemark place = p[0];
     var cit = place.administrativeArea;
+    var country = place.country;
     await storage.write(key: 'city', value: cit);
+    await storage.write(key: 'country', value: country);
     setState(() {
       city = cit;
       print(city);
@@ -87,8 +89,8 @@ class _RootScreenState extends State<RootScreen> {
         title: 'SellShip',
         home: Scaffold(
           bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Colors.black87,
-            unselectedItemColor: Colors.grey[500],
+            selectedItemColor: Colors.amber,
+            unselectedItemColor: Colors.grey[400],
             currentIndex: _currentPage,
             onTap: (i) {
               setState(() {
@@ -114,8 +116,8 @@ class _RootScreenState extends State<RootScreen> {
               BottomNavigationBarItem(
                   icon: Icon(
                     FontAwesome.plus_square,
-                    size: 40,
                     color: Colors.amber,
+                    size: 40,
                   ),
                   title: Text(
                     "Add an Item",

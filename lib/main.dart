@@ -68,7 +68,9 @@ class _MyAppState extends State<MyApp> {
 
     Placemark place = p[0];
     var cit = place.administrativeArea;
+    var country = place.country;
     await storage.write(key: 'city', value: cit);
+    await storage.write(key: 'country', value: country);
     setState(() {
       city = cit;
       print(city);

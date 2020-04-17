@@ -241,80 +241,80 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   recipentid +
                                   '/' +
                                   messageid;
-                              final response = await http.post(url, body: {
-                                'message': _text.text,
-                                'time': DateTime.now().toString()
-                              });
-                              if (response.statusCode == 200) {
-                                var date = DateTime.now();
-                                var hour = date.hour;
-                                var minute = date.minute;
-
-                                childList.add(Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 8.0,
-                                        left: 8.0,
-                                        top: 4.0,
-                                        bottom: 4.0),
-                                    child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: Container(
-                                        constraints: BoxConstraints(
-                                            maxWidth: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                3 /
-                                                4),
-                                        padding: EdgeInsets.all(12.0),
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius:
-                                              BorderRadius.circular(25.0),
-                                        ),
-                                        child: Stack(children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0,
-                                                left: 8.0,
-                                                top: 8.0,
-                                                bottom: 15.0),
-                                            child: Text(
-                                              _text.text,
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 1,
-                                            right: 10,
-                                            child: Text(
-                                              hour.toString() +
-                                                  ':' +
-                                                  minute.toString(),
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  color: Colors.white
-                                                      .withOpacity(0.6)),
-                                            ),
-                                          )
-                                        ]),
-                                      ),
-                                    )));
-                                setState(() {
-                                  childList = childList;
+                              if (_text.text.isNotEmpty) {
+                                final response = await http.post(url, body: {
+                                  'message': _text.text,
+                                  'time': DateTime.now().toString()
                                 });
-                              } else {
-                                print(response.statusCode);
+                                if (response.statusCode == 200) {
+                                  var date = DateTime.now();
+                                  var hour = date.hour;
+                                  var minute = date.minute;
+
+                                  childList.add(Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                          left: 8.0,
+                                          top: 4.0,
+                                          bottom: 4.0),
+                                      child: Container(
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          constraints: BoxConstraints(
+                                              maxWidth: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  3 /
+                                                  4),
+                                          padding: EdgeInsets.all(12.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius:
+                                                BorderRadius.circular(25.0),
+                                          ),
+                                          child: Stack(children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 8.0,
+                                                  left: 8.0,
+                                                  top: 8.0,
+                                                  bottom: 15.0),
+                                              child: Text(
+                                                _text.text,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              bottom: 1,
+                                              right: 10,
+                                              child: Text(
+                                                hour.toString() +
+                                                    ':' +
+                                                    minute.toString(),
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    color: Colors.white
+                                                        .withOpacity(0.6)),
+                                              ),
+                                            )
+                                          ]),
+                                        ),
+                                      )));
+                                  setState(() {
+                                    childList = childList;
+                                  });
+                                } else {
+                                  print(response.statusCode);
+                                }
+
+                                _text.clear();
+
+                                Timer(Duration(milliseconds: 100), () {
+                                  _scrollController.jumpTo(_scrollController
+                                      .position.maxScrollExtent);
+                                });
                               }
-
-                              _text.clear();
-
-                              Timer(Duration(milliseconds: 100), () {
-                                _scrollController.jumpTo(
-                                    _scrollController.position.maxScrollExtent);
-                              });
-//                              _scrollController.jumpTo(
-//                                  _scrollController.position.maxScrollExtent);
                             },
                           ),
                           border: InputBorder.none,

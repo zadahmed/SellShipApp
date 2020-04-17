@@ -5,9 +5,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:SellShip/models/Items.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
@@ -149,12 +150,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   Widget _buildProgressIndicator() {
     return new Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new Center(
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          valueColor: new AlwaysStoppedAnimation<Color>(Colors.amber),
-        ),
-      ),
+      child: new Center(child: SpinKitChasingDots(color: Colors.amberAccent)),
     );
   }
 
@@ -212,70 +208,98 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         ),
                                       );
                               }
-                              return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Details(
-                                              itemid: itemsgrid[index].itemid)),
-                                    );
-                                  },
-                                  child: Card(
-                                    child: new Column(
-                                      children: <Widget>[
-                                        new Stack(
-                                          children: <Widget>[
-                                            //new Center(child: new CircularProgressIndicator()),
-                                            new Center(
-                                              child: Image.network(
-                                                itemsgrid[index].image,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        new Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: new Column(
-                                            children: <Widget>[
-                                              Text(
-                                                itemsgrid[index].name,
-                                                overflow: TextOverflow.fade,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              SizedBox(height: 3.0),
-                                              Container(
-                                                child: Text(
-                                                  itemsgrid[index].category,
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(height: 3.0),
-                                              Container(
-                                                child: Text(
-                                                  itemsgrid[index].price +
-                                                      ' AED',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                ),
+                              return Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Details(
+                                                  itemid:
+                                                      itemsgrid[index].itemid)),
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset:
+                                                    Offset(0.0, 1.0), //(x,y)
+                                                blurRadius: 6.0,
                                               ),
                                             ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ));
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: new Column(
+                                          children: <Widget>[
+                                            new Stack(
+                                              children: <Widget>[
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        itemsgrid[index].image,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        SpinKitChasingDots(
+                                                            color: Colors
+                                                                .amberAccent),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            new Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: new Column(
+                                                children: <Widget>[
+                                                  Text(
+                                                    itemsgrid[index].name,
+                                                    overflow: TextOverflow.fade,
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  SizedBox(height: 3.0),
+                                                  Container(
+                                                    child: Text(
+                                                      itemsgrid[index].category,
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 3.0),
+                                                  Container(
+                                                    child: Text(
+                                                      itemsgrid[index].price +
+                                                          ' AED',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )));
                             },
                             staggeredTileBuilder: (int index) {
                               if (index != 0 && index % 7 == 0) {

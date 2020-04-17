@@ -37,12 +37,12 @@ class _CategoryScreenState extends State<CategoryScreen> {
           iconTheme: IconThemeData(color: Colors.white),
         ),
         body: Padding(
-            padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
+            padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(
-                  height: 15,
+                  height: 5,
                 ),
                 Expanded(
                   child: Column(
@@ -65,15 +65,22 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   },
                                   child: Container(
                                       margin:
-                                          const EdgeInsets.only(bottom: 25.0),
+                                          const EdgeInsets.only(bottom: 10.0),
                                       width: 110.0,
                                       constraints:
-                                          BoxConstraints(minHeight: 101),
+                                          BoxConstraints(minHeight: 110),
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                         color: _selectedCat == i
-                                            ? Colors.transparent
+                                            ? Colors.white
                                             : Colors.amberAccent,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade200,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
                                         borderRadius:
                                             BorderRadius.circular(11.0),
                                       ),
