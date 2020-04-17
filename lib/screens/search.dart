@@ -43,7 +43,7 @@ class _SearchState extends State<Search> {
   ScrollController _scrollController = ScrollController();
 
   LatLng position;
-  String city;
+  String country;
 
   final storage = new FlutterSecureStorage();
   bool loading;
@@ -75,7 +75,7 @@ class _SearchState extends State<Search> {
       skip = skip + 10;
     });
     var url = 'https://sellship.co/api/searchitems/' +
-        city +
+        country +
         '/' +
         text +
         '/' +
@@ -111,11 +111,11 @@ class _SearchState extends State<Search> {
   void readstorage() async {
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
-    var cit = await storage.read(key: 'city');
+    var countr = await storage.read(key: 'country');
 
     setState(() {
       position = LatLng(double.parse(latitude), double.parse(longitude));
-      city = cit;
+      country = countr;
       onSearch();
     });
   }
@@ -124,7 +124,7 @@ class _SearchState extends State<Search> {
 
   onSearch() async {
     var url = 'https://sellship.co/api/searchitems/' +
-        city +
+        country +
         '/' +
         text.toString().toLowerCase() +
         '/' +

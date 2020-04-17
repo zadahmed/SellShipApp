@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -61,13 +62,14 @@ class _AddItemState extends State<AddItem> {
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
     var cit = await storage.read(key: 'city');
-    var country = await storage.read(key: 'country');
+    var countr = await storage.read(key: 'country');
     userid = await storage.read(key: 'userid');
     print(userid);
 
     setState(() {
       position = LatLng(double.parse(latitude), double.parse(longitude));
       city = cit;
+      country = countr;
     });
   }
 
@@ -1109,19 +1111,9 @@ class _AddItemState extends State<AddItem> {
                             child: Container(
                               height: 100,
                               child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text('Loading'),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    CircularProgressIndicator()
-                                  ],
-                                ),
-                              ),
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: SpinKitChasingDots(
+                                      color: Colors.amberAccent)),
                             ),
                           );
                         });
@@ -1146,6 +1138,7 @@ class _AddItemState extends State<AddItem> {
                         'longitude': position.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
+                        'country': country,
                         'userid': userid,
                         'username': firstname,
                         'useremail': email,

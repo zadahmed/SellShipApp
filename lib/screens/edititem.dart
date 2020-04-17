@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:SellShip/models/Items.dart';
@@ -329,19 +330,8 @@ class EditItemState extends State<EditItem>
                 child: Container(
                   height: 100,
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('Loading'),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CircularProgressIndicator()
-                      ],
-                    ),
-                  ),
+                      padding: const EdgeInsets.all(12.0),
+                      child: SpinKitChasingDots(color: Colors.amberAccent)),
                 ),
               ));
   }

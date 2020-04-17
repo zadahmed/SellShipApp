@@ -645,46 +645,34 @@ class _LoginPageState extends State<LoginPage>
         ),
         body: loading == false
             ? Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(2.0),
                 child: Column(
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Welcome to SellShip',
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Hi ' + firstname + '!',
-                          style: TextStyle(color: Colors.black, fontSize: 20),
-                        ),
-                        FlatButton(
-                          color: Colors.amber,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfile()),
-                            );
-                          },
-                          child: Text(
-                            'Edit Profile',
-                            style: TextStyle(color: Colors.white),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            'Hi ' + firstname + '!',
+                            style: TextStyle(color: Colors.black, fontSize: 20),
                           ),
-                        ),
-                      ],
+                          FlatButton(
+                            color: Colors.amber,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditProfile()),
+                              );
+                            },
+                            child: Text(
+                              'Edit Profile',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 10.0,
@@ -701,71 +689,98 @@ class _LoginPageState extends State<LoginPage>
                     ),
                     Itemname.isNotEmpty
                         ? Expanded(
-                            child: new ListView.builder(
-                                itemCount: Itemname.length,
-                                itemBuilder: (BuildContext ctxt, int Index) {
-                                  if (Index != 0 && Index % 4 == 0) {
-                                    return Platform.isIOS == true
-                                        ? Container(
-                                            height: 200,
-                                            padding: EdgeInsets.all(10),
-                                            margin:
-                                                EdgeInsets.only(bottom: 20.0),
-                                            child: NativeAdmob(
-                                              adUnitID: _iosadUnitID,
-                                              controller: _controller,
-                                            ),
-                                          )
-                                        : Container(
-                                            height: 200,
-                                            padding: EdgeInsets.all(10),
-                                            margin:
-                                                EdgeInsets.only(bottom: 20.0),
-                                            child: NativeAdmob(
-                                              adUnitID: _androidadUnitID,
-                                              controller: _controller,
-                                            ),
-                                          );
-                                  }
-                                  return new InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Details(
-                                                  itemid: Itemid[Index])),
-                                        );
-                                      },
-                                      child: Card(
-                                          child: ListTile(
-                                        title: Text(Itemname[Index]),
-                                        trailing: FlatButton(
-                                          onPressed: () {
+                            child: Scrollbar(
+                                child: new ListView.builder(
+                                    itemCount: Itemname.length,
+                                    itemBuilder:
+                                        (BuildContext ctxt, int Index) {
+                                      if (Index != 0 && Index % 4 == 0) {
+                                        return Platform.isIOS == true
+                                            ? Container(
+                                                height: 200,
+                                                padding: EdgeInsets.all(10),
+                                                margin: EdgeInsets.only(
+                                                    bottom: 20.0),
+                                                child: NativeAdmob(
+                                                  adUnitID: _iosadUnitID,
+                                                  controller: _controller,
+                                                ),
+                                              )
+                                            : Container(
+                                                height: 200,
+                                                padding: EdgeInsets.all(10),
+                                                margin: EdgeInsets.only(
+                                                    bottom: 20.0),
+                                                child: NativeAdmob(
+                                                  adUnitID: _androidadUnitID,
+                                                  controller: _controller,
+                                                ),
+                                              );
+                                      }
+                                      return new InkWell(
+                                          onTap: () {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      EditItem(
-                                                          itemid:
-                                                              Itemid[Index])),
+                                                  builder: (context) => Details(
+                                                      itemid: Itemid[Index])),
                                             );
                                           },
-                                          child: Text('Edit Item'),
-                                        ),
-                                        leading: Container(
-                                          height: 60,
-                                          width: 60,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Image.network(
-                                            Itemimage[Index],
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        subtitle: Text(Itemcategory[Index]),
-                                      )));
-                                }))
+                                          child: Container(
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 5.0),
+                                              constraints:
+                                                  BoxConstraints(minHeight: 90),
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade200,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 6.0,
+                                                  ),
+                                                ],
+                                                borderRadius:
+                                                    BorderRadius.circular(11.0),
+                                              ),
+                                              child: ListTile(
+                                                title: Text(Itemname[Index]),
+                                                trailing: FlatButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditItem(
+                                                                  itemid: Itemid[
+                                                                      Index])),
+                                                    );
+                                                  },
+                                                  child: Text('Edit Item'),
+                                                ),
+                                                leading: Container(
+                                                  height: 60,
+                                                  width: 60,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: Image.network(
+                                                      Itemimage[Index],
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                subtitle:
+                                                    Text(Itemcategory[Index]),
+                                              )));
+                                    })))
                         : Expanded(
                             child: Column(
                             children: <Widget>[

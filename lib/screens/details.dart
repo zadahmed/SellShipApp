@@ -299,7 +299,7 @@ class _DetailsState extends State<Details> {
                                 ),
                                 width: 250,
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 5),
                               Text(
                                 newItem.category,
                                 textAlign: TextAlign.left,
@@ -307,17 +307,16 @@ class _DetailsState extends State<Details> {
                                   fontSize: 20,
                                 ),
                               ),
-                            ],
-                          ),
-                          Container(
-                            child: Text(
-                              newItem.price + ' AED',
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w600,
+                              SizedBox(height: 10),
+                              Text(
+                                newItem.price + ' AED',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                            width: 100,
+                            ],
                           ),
                         ],
                       ),
@@ -674,6 +673,9 @@ class _DetailsState extends State<Details> {
                             }
                           }
                         }
+                        setState(() {
+                          loading = false;
+                        });
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3 - 10,
@@ -686,14 +688,14 @@ class _DetailsState extends State<Details> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Icon(
-                                Feather.phone_call,
+                                Feather.message_square,
                                 color: Colors.white,
                               ),
                               SizedBox(
                                 height: 5,
                               ),
                               Text(
-                                "Message",
+                                "Chat",
                                 style: TextStyle(
                                     color: Color(0xFFFBFBFB),
                                     fontSize: 17.0,
@@ -722,7 +724,7 @@ class _DetailsState extends State<Details> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Icon(
-                                Feather.phone_call,
+                                Feather.smartphone,
                                 color: Colors.white,
                               ),
                               SizedBox(
@@ -740,7 +742,8 @@ class _DetailsState extends State<Details> {
                     ),
                   ],
                 )))
-        : Scaffold(body: Center(child: CircularProgressIndicator()));
+        : Scaffold(
+            body: Center(child: SpinKitChasingDots(color: Colors.amberAccent)));
   }
 }
 

@@ -238,28 +238,28 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Colors.amberAccent,
-            title: Padding(
-              padding: EdgeInsets.only(bottom: 10),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
-                child: ListTile(
-                  leading: Icon(
-                    Feather.search,
-                    size: 25,
-                    color: Colors.amberAccent,
-                  ),
-                  title: TextField(
-                    controller: searchcontroller,
-                    onSubmitted: onSearch,
-                    decoration: InputDecoration(
-                        hintText: 'Search SellShip', border: InputBorder.none),
-                  ),
+          backgroundColor: Colors.amberAccent,
+          title: Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
+              child: ListTile(
+                leading: Icon(
+                  Feather.search,
+                  size: 25,
+                  color: Colors.amberAccent,
+                ),
+                title: TextField(
+                  controller: searchcontroller,
+                  onSubmitted: onSearch,
+                  decoration: InputDecoration(
+                      hintText: 'Search SellShip', border: InputBorder.none),
                 ),
               ),
-            )),
+            ),
+          ),
+        ),
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());

@@ -89,6 +89,7 @@ class _RootScreenState extends State<RootScreen> {
         title: 'SellShip',
         home: Scaffold(
           bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
             selectedItemColor: Colors.amber,
             unselectedItemColor: Colors.grey[400],
             currentIndex: _currentPage,
