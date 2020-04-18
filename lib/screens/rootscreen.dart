@@ -121,8 +121,7 @@ class _RootScreenState extends State<RootScreen> {
                     size: 40,
                   ),
                   title: Text(
-                    "Add an Item",
-                    style: TextStyle(color: Colors.white),
+                    "Sell",
                   )),
               BottomNavigationBarItem(
                 icon: Icon(

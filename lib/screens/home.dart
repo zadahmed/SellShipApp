@@ -88,6 +88,290 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
+    if (city == null) {
+      _getLocation();
+    } else {
+      var url = 'https://sellship.co/api/recentitems/' +
+          city +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
+
+      final response = await http.post(url, body: {
+        'latitude': position.latitude.toString(),
+        'longitude': position.longitude.toString()
+      });
+
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    }
+  }
+
+  Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
+    if (city == null) {
+      _getLocation();
+    } else {
+      var url = 'https://sellship.co/api/belowhundred/' +
+          city +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
+
+      final response = await http.post(url, body: {
+        'latitude': position.latitude.toString(),
+        'longitude': position.longitude.toString()
+      });
+
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    }
+  }
+
+  Future<List<Item>> fetchHighestPrice(int skip, int limit) async {
+    if (city == null) {
+      _getLocation();
+    } else {
+      var url = 'https://sellship.co/api/highestprice/' +
+          city +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
+
+      final response = await http.post(url, body: {
+        'latitude': position.latitude.toString(),
+        'longitude': position.longitude.toString()
+      });
+
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    }
+  }
+
+  Future<List<Item>> fetchLowestPrice(int skip, int limit) async {
+    if (city == null) {
+      _getLocation();
+    } else {
+      var url = 'https://sellship.co/api/lowestprice/' +
+          city +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
+
+      final response = await http.post(url, body: {
+        'latitude': position.latitude.toString(),
+        'longitude': position.longitude.toString()
+      });
+
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    }
+  }
+
+  _getmorehighestprice() async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+    var url = 'https://sellship.co/api/highestprice/' +
+        city +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'],
+        category: jsonbody[i]['category'],
+      );
+      itemsgrid.add(item);
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+  }
+
+  _getmorelowestprice() async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+    var url = 'https://sellship.co/api/lowestprice/' +
+        city +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'],
+        category: jsonbody[i]['category'],
+      );
+      itemsgrid.add(item);
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+  }
+
+  _getmorebelowhundred() async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+    var url = 'https://sellship.co/api/belowhundred/' +
+        city +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'],
+        category: jsonbody[i]['category'],
+      );
+      itemsgrid.add(item);
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+  }
+
+  _getmoreRecentData() async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+    var url = 'https://sellship.co/api/recentitems/' +
+        city +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'],
+        category: jsonbody[i]['category'],
+      );
+      itemsgrid.add(item);
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+  }
+
   LatLng position;
   String city;
 
@@ -108,7 +392,18 @@ class _HomeScreenState extends State<HomeScreen> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           (_scrollController.position.maxScrollExtent)) {
-        _getmoreData();
+        print(_selectedFilter);
+        if (_selectedFilter == 'Near me') {
+          _getmoreData();
+        } else if (_selectedFilter == 'Recently\nAdded') {
+          _getmoreRecentData();
+        } else if (_selectedFilter == 'Below\n100') {
+          _getmorebelowhundred();
+        } else if (_selectedFilter == 'Lowest\nPrice') {
+          _getmorelowestprice();
+        } else if (_selectedFilter == 'Highest\nPrice') {
+          _getmorehighestprice();
+        }
       }
     });
   }
@@ -174,6 +469,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _selectedCat;
 
+  String country;
+
   final Geolocator geolocator = Geolocator();
 
   void getcity() async {
@@ -182,11 +479,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Placemark place = p[0];
     var cit = place.administrativeArea;
-    var country = place.country;
+    var countryy = place.country;
     await storage.write(key: 'city', value: cit);
-    await storage.write(key: 'country', value: country);
+    await storage.write(key: 'country', value: countryy);
     setState(() {
       city = cit;
+      country = countryy;
       fetchItems(skip, limit);
       //secure storage save it
     });
@@ -225,6 +523,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  String _selectedFilter = 'Near me';
+
   Widget _buildProgressIndicator() {
     return new Padding(
       padding: const EdgeInsets.all(8.0),
@@ -237,24 +537,28 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.amberAccent,
-          title: Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(5)),
-              child: ListTile(
-                leading: Icon(
-                  Feather.search,
-                  size: 25,
-                  color: Colors.amberAccent,
-                ),
-                title: TextField(
-                  controller: searchcontroller,
-                  onSubmitted: onSearch,
-                  decoration: InputDecoration(
-                      hintText: 'Search SellShip', border: InputBorder.none),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: AppBar(
+            backgroundColor: Colors.amberAccent,
+            title: Padding(
+              padding: EdgeInsets.only(bottom: 10, top: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5)),
+                child: ListTile(
+                  leading: Icon(
+                    Feather.search,
+                    size: 25,
+                    color: Colors.amberAccent,
+                  ),
+                  title: TextField(
+                    controller: searchcontroller,
+                    onSubmitted: onSearch,
+                    decoration: InputDecoration(
+                        hintText: 'Search SellShip', border: InputBorder.none),
+                  ),
                 ),
               ),
             ),
@@ -268,7 +572,224 @@ class _HomeScreenState extends State<HomeScreen> {
               ? Column(
                   children: <Widget>[
                     SizedBox(
+                      height: 6,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(left: 15),
+                            child: Text(
+                              'Filter',
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.blueGrey),
+                            )),
+                        SizedBox(
+                          width: 2,
+                        ),
+                        Icon(
+                          Icons.filter_list,
+                          size: 12,
+                        )
+                      ],
+                    ),
+                    SizedBox(
                       height: 5,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 5, right: 5, bottom: 8),
+                      child: Container(
+                        color: Colors.white,
+                        height: 40,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedFilter = 'Near me';
+                                  skip = 0;
+                                  limit = 10;
+                                  loading = true;
+                                });
+                                itemsgrid.clear();
+                                fetchItems(skip, limit);
+                              },
+                              child: Padding(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _selectedFilter == 'Near me'
+                                        ? Colors.white
+                                        : Colors.amber,
+                                    border: Border.all(color: Colors.amber),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  height: 40,
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Near me',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: _selectedFilter == 'Near me'
+                                              ? Colors.amber
+                                              : Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedFilter = 'Recently\nAdded';
+                                  skip = 0;
+                                  limit = 10;
+                                  loading = true;
+                                });
+                                itemsgrid.clear();
+                                fetchRecentlyAdded(skip, limit);
+                              },
+                              child: Padding(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _selectedFilter == 'Recently\nAdded'
+                                        ? Colors.white
+                                        : Colors.amber,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.amber),
+                                  ),
+                                  height: 40,
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Recently\nAdded',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: _selectedFilter ==
+                                                  'Recently\nAdded'
+                                              ? Colors.amber
+                                              : Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedFilter = 'Below\n100';
+                                  skip = 0;
+                                  limit = 10;
+                                  loading = true;
+                                });
+                                itemsgrid.clear();
+                                fetchbelowhundred(skip, limit);
+                              },
+                              child: Padding(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _selectedFilter == 'Below\n100'
+                                        ? Colors.white
+                                        : Colors.amber,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.amber),
+                                  ),
+                                  height: 40,
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Below\n100',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: _selectedFilter == 'Below\n100'
+                                              ? Colors.amber
+                                              : Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedFilter = 'Lowest\nPrice';
+                                  skip = 0;
+                                  limit = 10;
+                                  loading = true;
+                                });
+                                itemsgrid.clear();
+                                fetchLowestPrice(skip, limit);
+                              },
+                              child: Padding(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _selectedFilter == 'Lowest\nPrice'
+                                        ? Colors.white
+                                        : Colors.amber,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.amber),
+                                  ),
+                                  height: 40,
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Lowest\nPrice',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color:
+                                              _selectedFilter == 'Lowest\nPrice'
+                                                  ? Colors.amber
+                                                  : Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedFilter = 'Highest\nPrice';
+                                  skip = 0;
+                                  limit = 10;
+                                  loading = true;
+                                });
+                                itemsgrid.clear();
+                                fetchHighestPrice(skip, limit);
+                              },
+                              child: Padding(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: _selectedFilter == 'Highest\nPrice'
+                                        ? Colors.white
+                                        : Colors.amber,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.amber),
+                                  ),
+                                  height: 40,
+                                  width: 100,
+                                  child: Center(
+                                    child: Text(
+                                      'Highest\nPrice',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: _selectedFilter ==
+                                                  'Highest\nPrice'
+                                              ? Colors.amber
+                                              : Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                padding: EdgeInsets.only(left: 5, right: 5),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     itemsgrid.isNotEmpty
                         ? Expanded(
@@ -286,8 +807,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Container(
                                   width: MediaQuery.of(context).size.width,
                                   height: 100,
-                                  margin: const EdgeInsets.only(
-                                      right: 8.0, top: 15),
+                                  margin:
+                                      const EdgeInsets.only(right: 8.0, top: 1),
                                   child: Scrollbar(
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,

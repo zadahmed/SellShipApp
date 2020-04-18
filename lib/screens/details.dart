@@ -181,7 +181,6 @@ class _DetailsState extends State<Details> {
   Widget build(BuildContext context) {
     return loading == false
         ? Scaffold(
-            backgroundColor: Colors.white,
             key: _scaffoldKey,
             appBar: AppBar(
               elevation: 0,
@@ -333,7 +332,7 @@ class _DetailsState extends State<Details> {
                             ),
                           ],
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(6)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -393,7 +392,7 @@ class _DetailsState extends State<Details> {
                               ),
                             ],
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(6)),
                         child: Center(
                           child: ListTile(
                             title: Text(
@@ -446,7 +445,7 @@ class _DetailsState extends State<Details> {
                             ),
                           ],
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(6)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,7 +469,7 @@ class _DetailsState extends State<Details> {
                             height: 200,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(6),
                             ),
                             child: GoogleMap(
                               initialCameraPosition: CameraPosition(
@@ -545,7 +544,7 @@ class _DetailsState extends State<Details> {
                           height: 70,
                           decoration: BoxDecoration(
                               color: Colors.amber,
-                              borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(6)),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -682,7 +681,7 @@ class _DetailsState extends State<Details> {
                         height: 70,
                         decoration: BoxDecoration(
                             color: Colors.amber,
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(6)),
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -718,7 +717,7 @@ class _DetailsState extends State<Details> {
                         height: 70,
                         decoration: BoxDecoration(
                             color: Colors.amber,
-                            borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(6)),
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
