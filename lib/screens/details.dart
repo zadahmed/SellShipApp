@@ -57,8 +57,22 @@ class _DetailsState extends State<Details> {
     });
   }
 
+  var currency;
+
   List<String> images = [];
   fetchItem() async {
+    var country = await storage.read(key: 'country');
+
+    if (country.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (country.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = 'USD';
+      });
+    }
+
     var url = 'https://sellship.co/api/getitem/' + itemid;
     final response = await http.get(url);
 
@@ -308,7 +322,7 @@ class _DetailsState extends State<Details> {
                               ),
                               SizedBox(height: 10),
                               Text(
-                                newItem.price + ' AED',
+                                newItem.price + ' ' + currency,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontSize: 25,

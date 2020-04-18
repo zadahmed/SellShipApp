@@ -25,8 +25,19 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   List<String> Itemcategory = List<String>();
   List<String> Itemprice = List<String>();
 
+  var currency;
   getfavourites() async {
     userid = await storage.read(key: 'userid');
+    var country = await storage.read(key: 'country');
+    if (country.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (country.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = 'USD';
+      });
+    }
     print(userid);
     if (userid != null) {
       var url = 'https://sellship.co/api/favourites/' + userid;
@@ -154,8 +165,8 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                       child: Card(
                                           child: ListTile(
                                         title: Text(Itemname[Index]),
-                                        trailing:
-                                            Text(Itemprice[Index] + ' AED'),
+                                        trailing: Text(
+                                            Itemprice[Index] + ' ' + currency),
                                         leading: Container(
                                           height: 60,
                                           width: 60,

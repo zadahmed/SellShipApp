@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:SellShip/models/Items.dart';
@@ -83,7 +84,23 @@ class _CategoryDetailState extends State<CategoryDetail> {
     return itemsgrid;
   }
 
+  final storage = new FlutterSecureStorage();
+
+  var currency;
+
   Future<List<Item>> fetchItems() async {
+    var country = await storage.read(key: 'country');
+
+    if (country.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (country.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = 'USD';
+      });
+    }
+
     var url = 'https://sellship.co/api/categories/' +
         category +
         '/' +
@@ -285,7 +302,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].price +
-                                                          ' AED',
+                                                          ' ' +
+                                                          currency,
                                                       style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:

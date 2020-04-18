@@ -51,6 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   ScrollController _scrollController = ScrollController();
 
+  var currency;
+
   Future<List<Item>> fetchItems(int skip, int limit) async {
     if (city == null) {
       _getLocation();
@@ -482,6 +484,17 @@ class _HomeScreenState extends State<HomeScreen> {
     var countryy = place.country;
     await storage.write(key: 'city', value: cit);
     await storage.write(key: 'country', value: countryy);
+
+    if (country.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (country.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = 'USD';
+      });
+    }
+
     setState(() {
       city = cit;
       country = countryy;
@@ -494,6 +507,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
     var cit = await storage.read(key: 'city');
+    var countr = await storage.read(key: 'country');
 
     if (latitude == null || longitude == null) {
       _getLocation();
@@ -501,6 +515,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         position = LatLng(double.parse(latitude), double.parse(longitude));
         city = cit;
+        country = countr;
       });
     }
   }
@@ -989,7 +1004,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].price +
-                                                          ' AED',
+                                                          ' ' +
+                                                          currency,
                                                       style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:

@@ -108,10 +108,20 @@ class _SearchState extends State<Search> {
     });
   }
 
+  var currency;
   void readstorage() async {
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
     var countr = await storage.read(key: 'country');
+    if (countr.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (countr.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = 'USD';
+      });
+    }
 
     setState(() {
       position = LatLng(double.parse(latitude), double.parse(longitude));
@@ -330,7 +340,8 @@ class _SearchState extends State<Search> {
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].price +
-                                                          ' AED',
+                                                          ' ' +
+                                                          currency,
                                                       style: TextStyle(
                                                         fontSize: 16,
                                                         fontWeight:

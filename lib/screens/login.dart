@@ -1181,21 +1181,22 @@ class _LoginPageState extends State<LoginPage>
             print(itemmap);
 
             var productmap = itemmap['products'];
-
-            for (var i = 0; i < productmap.length; i++) {
-              Itemid.add(productmap[i]['_id']['\$oid']);
-              Itemname.add(productmap[i]['name']);
-              Itemimage.add(productmap[i]['image']);
-              Itemprice.add(productmap[i]['price']);
-              Itemcategory.add(productmap[i]['category']);
+            if (productmap != null) {
+              for (var i = 0; i < productmap.length; i++) {
+                Itemid.add(productmap[i]['_id']['\$oid']);
+                Itemname.add(productmap[i]['name']);
+                Itemimage.add(productmap[i]['image']);
+                Itemprice.add(productmap[i]['price']);
+                Itemcategory.add(productmap[i]['category']);
+              }
+              setState(() {
+                Itemid = Itemid;
+                Itemname = Itemname;
+                Itemimage = Itemimage;
+                Itemprice = Itemprice;
+                Itemcategory = Itemcategory;
+              });
             }
-            setState(() {
-              Itemid = Itemid;
-              Itemname = Itemname;
-              Itemimage = Itemimage;
-              Itemprice = Itemprice;
-              Itemcategory = Itemcategory;
-            });
           } else {
             print('No Items');
           }

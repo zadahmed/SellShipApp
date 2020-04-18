@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:search_map_place/search_map_place.dart';
 
 class AddItem extends StatefulWidget {
   AddItem({Key key}) : super(key: key);
@@ -58,11 +60,22 @@ class _AddItemState extends State<AddItem> {
     super.initState();
   }
 
+  var currency;
+
   void readstorage() async {
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
     var cit = await storage.read(key: 'city');
     var countr = await storage.read(key: 'country');
+    if (countr.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (countr.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = 'USD';
+      });
+    }
     userid = await storage.read(key: 'userid');
     print(userid);
 
@@ -908,6 +921,9 @@ class _AddItemState extends State<AddItem> {
                           TextField(
                             cursorColor: Color(0xFF979797),
                             controller: businessnameController,
+                            autocorrect: true,
+                            enableSuggestions: true,
+                            textCapitalization: TextCapitalization.sentences,
                             decoration: InputDecoration(
                                 labelText: "Name",
                                 labelStyle: TextStyle(color: Colors.blueGrey),
@@ -937,6 +953,9 @@ class _AddItemState extends State<AddItem> {
                           TextField(
                             cursorColor: Color(0xFF979797),
                             controller: businessdescriptionController,
+                            autocorrect: true,
+                            enableSuggestions: true,
+                            textCapitalization: TextCapitalization.sentences,
                             maxLines: 5,
                             maxLength: 1000,
                             decoration: InputDecoration(
@@ -971,7 +990,7 @@ class _AddItemState extends State<AddItem> {
                             controller: businesspricecontroller,
                             keyboardType: TextInputType.numberWithOptions(),
                             decoration: InputDecoration(
-                                labelText: "Price AED",
+                                labelText: "Price " + currency,
                                 alignLabelWithHint: true,
                                 labelStyle: TextStyle(color: Colors.blueGrey),
                                 focusColor: Colors.black,
@@ -1011,6 +1030,22 @@ class _AddItemState extends State<AddItem> {
                           ),
                           SizedBox(
                             height: 10.0,
+                          ),
+                          SearchMapPlaceWidget(
+                            apiKey: 'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
+                            // The language of the autocompletion
+                            language: 'en',
+                            location: position,
+                            radius: 10000,
+                            onSelected: (Place place) async {
+                              final geolocation = await place.geolocation;
+
+                              controller.animateCamera(CameraUpdate.newLatLng(
+                                  geolocation.coordinates));
+                              controller.animateCamera(
+                                  CameraUpdate.newLatLngBounds(
+                                      geolocation.bounds, 0));
+                            },
                           ),
                           position != null
                               ? Container(
