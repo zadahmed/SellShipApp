@@ -57,7 +57,7 @@ class _UserItemsState extends State<UserItems> {
   List<String> Itemname = List<String>();
   List<String> Itemimage = List<String>();
   List<String> Itemcategory = List<String>();
-  List<String> Itemprice = List<String>();
+  List<int> Itemprice = List<int>();
 
   final storage = new FlutterSecureStorage();
   var currency;
@@ -195,8 +195,9 @@ class _UserItemsState extends State<UserItems> {
                                 child: Card(
                                     child: ListTile(
                                   title: Text(Itemname[Index]),
-                                  trailing:
-                                      Text(Itemprice[Index] + ' ' + currency),
+                                  trailing: Text(Itemprice[Index].toString() +
+                                      ' ' +
+                                      currency),
                                   leading: Container(
                                     height: 60,
                                     width: 60,

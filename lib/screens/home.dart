@@ -54,11 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
   var currency;
 
   Future<List<Item>> fetchItems(int skip, int limit) async {
-    if (city == null) {
+    if (country == null) {
       _getLocation();
     } else {
       var url = 'https://sellship.co/api/getitems/' +
-          city +
+          country +
           '/' +
           skip.toString() +
           '/' +
@@ -91,11 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
-    if (city == null) {
+    if (country == null) {
       _getLocation();
     } else {
       var url = 'https://sellship.co/api/recentitems/' +
-          city +
+          country +
           '/' +
           skip.toString() +
           '/' +
@@ -128,11 +128,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
-    if (city == null) {
+    if (country == null) {
       _getLocation();
     } else {
       var url = 'https://sellship.co/api/belowhundred/' +
-          city +
+          country +
           '/' +
           skip.toString() +
           '/' +
@@ -165,11 +165,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Item>> fetchHighestPrice(int skip, int limit) async {
-    if (city == null) {
+    if (country == null) {
       _getLocation();
     } else {
       var url = 'https://sellship.co/api/highestprice/' +
-          city +
+          country +
           '/' +
           skip.toString() +
           '/' +
@@ -202,11 +202,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Item>> fetchLowestPrice(int skip, int limit) async {
-    if (city == null) {
+    if (country == null) {
       _getLocation();
     } else {
       var url = 'https://sellship.co/api/lowestprice/' +
-          city +
+          country +
           '/' +
           skip.toString() +
           '/' +
@@ -244,7 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
       skip = skip + 10;
     });
     var url = 'https://sellship.co/api/highestprice/' +
-        city +
+        country +
         '/' +
         skip.toString() +
         '/' +
@@ -278,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
       skip = skip + 10;
     });
     var url = 'https://sellship.co/api/lowestprice/' +
-        city +
+        country +
         '/' +
         skip.toString() +
         '/' +
@@ -312,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
       skip = skip + 10;
     });
     var url = 'https://sellship.co/api/belowhundred/' +
-        city +
+        country +
         '/' +
         skip.toString() +
         '/' +
@@ -346,7 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
       skip = skip + 10;
     });
     var url = 'https://sellship.co/api/recentitems/' +
-        city +
+        country +
         '/' +
         skip.toString() +
         '/' +
@@ -375,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   LatLng position;
-  String city;
+//  String city;
 
   final storage = new FlutterSecureStorage();
 
@@ -416,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
       skip = skip + 10;
     });
     var url = 'https://sellship.co/api/getitems/' +
-        city +
+        country +
         '/' +
         skip.toString() +
         '/' +
@@ -502,6 +502,8 @@ class _HomeScreenState extends State<HomeScreen> {
       //secure storage save it
     });
   }
+
+  String city;
 
   void readstorage() async {
     var latitude = await storage.read(key: 'latitude');
@@ -1003,7 +1005,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   SizedBox(height: 3.0),
                                                   Container(
                                                     child: Text(
-                                                      itemsgrid[index].price +
+                                                      itemsgrid[index]
+                                                              .price
+                                                              .toString() +
                                                           ' ' +
                                                           currency,
                                                       style: TextStyle(

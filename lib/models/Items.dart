@@ -10,7 +10,7 @@ class Item {
   final String image4;
   final String image5;
   final String description;
-  final String price;
+  final int price;
   final String userid;
   final String username;
   final String useremail;

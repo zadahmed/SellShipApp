@@ -322,7 +322,7 @@ class _DetailsState extends State<Details> {
                               ),
                               SizedBox(height: 10),
                               Text(
-                                newItem.price + ' ' + currency,
+                                newItem.price.toString() + ' ' + currency,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontSize: 25,

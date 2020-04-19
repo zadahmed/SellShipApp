@@ -72,7 +72,7 @@ class EditItemState extends State<EditItem>
           itemname = profilemap['name'];
           itemdescription = profilemap['description'];
           itemimage = profilemap['image'];
-          itemprice = profilemap['price'];
+          itemprice = profilemap['price'].toString();
 
           firstnamecontr.text = itemname;
           lastnamecontr.text = itemdescription;

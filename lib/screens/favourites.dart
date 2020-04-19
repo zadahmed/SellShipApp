@@ -23,7 +23,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   List<String> Itemname = List<String>();
   List<String> Itemimage = List<String>();
   List<String> Itemcategory = List<String>();
-  List<String> Itemprice = List<String>();
+  List<int> Itemprice = List<int>();
 
   var currency;
   getfavourites() async {
@@ -166,7 +166,9 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                           child: ListTile(
                                         title: Text(Itemname[Index]),
                                         trailing: Text(
-                                            Itemprice[Index] + ' ' + currency),
+                                            Itemprice[Index].toString() +
+                                                ' ' +
+                                                currency),
                                         leading: Container(
                                           height: 60,
                                           width: 60,

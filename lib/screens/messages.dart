@@ -29,6 +29,7 @@ class MessagesState extends State<Messages> {
 
   List<String> lastrecieved = List<String>();
   List<String> recieveddate = List<String>();
+  List<bool> unreadlist = List<bool>();
 
   getmessages() async {
     userid = await storage.read(key: 'userid');
@@ -66,6 +67,7 @@ class MessagesState extends State<Messages> {
                   messageid.add(messages[i]['msgid']);
                   senderid.add(messages[i]['user1']);
                   lastrecieved.add(messageinfo['lastrecieved']);
+                  unreadlist.add(messageinfo['unread']);
                   recieveddate.add(s);
                   recipentid.add(messages[i]['user2']);
                 });
@@ -88,6 +90,7 @@ class MessagesState extends State<Messages> {
                   messageid.add(messages[i]['msgid']);
                   senderid.add(messages[i]['user2']);
                   lastrecieved.add(messageinfo['lastrecieved']);
+                  unreadlist.add(messageinfo['unread']);
                   recieveddate.add(s);
                   recipentid.add(messages[i]['user1']);
                 });
@@ -178,6 +181,26 @@ class MessagesState extends State<Messages> {
                                                 recieveddate[Index],
                                                 style: TextStyle(fontSize: 12),
                                               ),
+                                              unreadlist[Index] == true
+                                                  ? Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 5.0),
+                                                      height: 18,
+                                                      width: 18,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.amber,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(
+                                                                25.0),
+                                                          )),
+                                                      child: Center(
+                                                          child: Text(
+                                                        '',
+                                                      )),
+                                                    )
+                                                  : SizedBox()
                                             ],
                                           ),
                                           onTap: () {

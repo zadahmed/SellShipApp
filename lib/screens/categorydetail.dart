@@ -301,7 +301,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                   SizedBox(height: 3.0),
                                                   Container(
                                                     child: Text(
-                                                      itemsgrid[index].price +
+                                                      itemsgrid[index]
+                                                              .price
+                                                              .toString() +
                                                           ' ' +
                                                           currency,
                                                       style: TextStyle(
