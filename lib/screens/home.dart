@@ -397,13 +397,13 @@ class _HomeScreenState extends State<HomeScreen> {
         print(_selectedFilter);
         if (_selectedFilter == 'Near me') {
           _getmoreData();
-        } else if (_selectedFilter == 'Recently\nAdded') {
+        } else if (_selectedFilter == 'Recently Added') {
           _getmoreRecentData();
-        } else if (_selectedFilter == 'Below\n100') {
+        } else if (_selectedFilter == 'Below 100') {
           _getmorebelowhundred();
-        } else if (_selectedFilter == 'Lowest\nPrice') {
+        } else if (_selectedFilter == 'Lowest Price') {
           _getmorelowestprice();
-        } else if (_selectedFilter == 'Highest\nPrice') {
+        } else if (_selectedFilter == 'Highest Price') {
           _getmorehighestprice();
         }
       }
@@ -557,27 +557,47 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(60.0),
           child: AppBar(
-            backgroundColor: Colors.amberAccent,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
             title: Padding(
               padding: EdgeInsets.only(bottom: 10, top: 10),
               child: Container(
-                decoration: BoxDecoration(
+                  height: 45,
+                  width: 500,
+                  decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(5)),
-                child: ListTile(
-                  leading: Icon(
-                    Feather.search,
-                    size: 25,
-                    color: Colors.amberAccent,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        offset: Offset(0.0, 1), //(x,y)
+                        blurRadius: 6.0,
+                      ),
+                    ],
                   ),
-                  title: TextField(
-                    controller: searchcontroller,
-                    onSubmitted: onSearch,
-                    decoration: InputDecoration(
-                        hintText: 'Search SellShip', border: InputBorder.none),
-                  ),
-                ),
-              ),
+                  child: Padding(
+                      padding: EdgeInsets.only(bottom: 5),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Icon(
+                              Feather.search,
+                              size: 24,
+                              color: Colors.amberAccent,
+                            ),
+                          ),
+                          Expanded(
+                            child: TextField(
+                              controller: searchcontroller,
+                              onSubmitted: onSearch,
+                              decoration: InputDecoration(
+                                  hintText: 'Search SellShip',
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                        ],
+                      ))),
             ),
           ),
         ),
@@ -587,226 +607,233 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           child: loading == false
               ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(
-                      height: 6,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(left: 15),
-                            child: Text(
-                              'Filter',
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.blueGrey),
-                            )),
-                        SizedBox(
-                          width: 2,
-                        ),
-                        Icon(
-                          Icons.filter_list,
-                          size: 12,
-                        )
-                      ],
-                    ),
                     SizedBox(
                       height: 5,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5, bottom: 8),
-                      child: Container(
-                        color: Colors.white,
-                        height: 40,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: <Widget>[
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedFilter = 'Near me';
-                                  skip = 0;
-                                  limit = 10;
-                                  loading = true;
-                                });
-                                itemsgrid.clear();
-                                fetchItems(skip, limit);
-                              },
-                              child: Padding(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: _selectedFilter == 'Near me'
-                                        ? Colors.white
-                                        : Colors.amber,
-                                    border: Border.all(color: Colors.amber),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  height: 40,
-                                  width: 100,
-                                  child: Center(
-                                    child: Text(
-                                      'Near me',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: _selectedFilter == 'Near me'
-                                              ? Colors.amber
-                                              : Colors.white),
+                    Container(
+                      height: 30,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.only(left: 15),
+                              child: Text(
+                                'Filter',
+                                style: TextStyle(
+                                    fontSize: 11, color: Colors.blueGrey),
+                              )),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          Icon(
+                            Icons.filter_list,
+                            size: 12,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Near me';
+                                      skip = 0;
+                                      limit = 10;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    fetchItems(skip, limit);
+                                  },
+                                  child: Padding(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: _selectedFilter == 'Near me'
+                                            ? Colors.white
+                                            : Colors.amber,
+                                        border: Border.all(color: Colors.amber),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      height: 20,
+                                      width: 100,
+                                      child: Center(
+                                        child: Text(
+                                          'Near me',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color:
+                                                  _selectedFilter == 'Near me'
+                                                      ? Colors.amber
+                                                      : Colors.white),
+                                        ),
+                                      ),
                                     ),
+                                    padding: EdgeInsets.only(left: 5, right: 5),
                                   ),
                                 ),
-                                padding: EdgeInsets.only(left: 5, right: 5),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedFilter = 'Recently\nAdded';
-                                  skip = 0;
-                                  limit = 10;
-                                  loading = true;
-                                });
-                                itemsgrid.clear();
-                                fetchRecentlyAdded(skip, limit);
-                              },
-                              child: Padding(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: _selectedFilter == 'Recently\nAdded'
-                                        ? Colors.white
-                                        : Colors.amber,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.amber),
-                                  ),
-                                  height: 40,
-                                  width: 100,
-                                  child: Center(
-                                    child: Text(
-                                      'Recently\nAdded',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: _selectedFilter ==
-                                                  'Recently\nAdded'
-                                              ? Colors.amber
-                                              : Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                padding: EdgeInsets.only(left: 5, right: 5),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedFilter = 'Below\n100';
-                                  skip = 0;
-                                  limit = 10;
-                                  loading = true;
-                                });
-                                itemsgrid.clear();
-                                fetchbelowhundred(skip, limit);
-                              },
-                              child: Padding(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: _selectedFilter == 'Below\n100'
-                                        ? Colors.white
-                                        : Colors.amber,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.amber),
-                                  ),
-                                  height: 40,
-                                  width: 100,
-                                  child: Center(
-                                    child: Text(
-                                      'Below\n100',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: _selectedFilter == 'Below\n100'
-                                              ? Colors.amber
-                                              : Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                padding: EdgeInsets.only(left: 5, right: 5),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedFilter = 'Lowest\nPrice';
-                                  skip = 0;
-                                  limit = 10;
-                                  loading = true;
-                                });
-                                itemsgrid.clear();
-                                fetchLowestPrice(skip, limit);
-                              },
-                              child: Padding(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: _selectedFilter == 'Lowest\nPrice'
-                                        ? Colors.white
-                                        : Colors.amber,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.amber),
-                                  ),
-                                  height: 40,
-                                  width: 100,
-                                  child: Center(
-                                    child: Text(
-                                      'Lowest\nPrice',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color:
-                                              _selectedFilter == 'Lowest\nPrice'
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Recently Added';
+                                      skip = 0;
+                                      limit = 10;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    fetchRecentlyAdded(skip, limit);
+                                  },
+                                  child: Padding(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color:
+                                            _selectedFilter == 'Recently Added'
+                                                ? Colors.white
+                                                : Colors.amber,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.amber),
+                                      ),
+                                      height: 20,
+                                      width: 150,
+                                      child: Center(
+                                        child: Text(
+                                          'Recently Added',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: _selectedFilter ==
+                                                      'Recently Added'
                                                   ? Colors.amber
                                                   : Colors.white),
+                                        ),
+                                      ),
                                     ),
+                                    padding: EdgeInsets.only(left: 5, right: 5),
                                   ),
                                 ),
-                                padding: EdgeInsets.only(left: 5, right: 5),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _selectedFilter = 'Highest\nPrice';
-                                  skip = 0;
-                                  limit = 10;
-                                  loading = true;
-                                });
-                                itemsgrid.clear();
-                                fetchHighestPrice(skip, limit);
-                              },
-                              child: Padding(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: _selectedFilter == 'Highest\nPrice'
-                                        ? Colors.white
-                                        : Colors.amber,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.amber),
-                                  ),
-                                  height: 40,
-                                  width: 100,
-                                  child: Center(
-                                    child: Text(
-                                      'Highest\nPrice',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          color: _selectedFilter ==
-                                                  'Highest\nPrice'
-                                              ? Colors.amber
-                                              : Colors.white),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Below 100';
+                                      skip = 0;
+                                      limit = 10;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    fetchbelowhundred(skip, limit);
+                                  },
+                                  child: Padding(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: _selectedFilter == 'Below 100'
+                                            ? Colors.white
+                                            : Colors.amber,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.amber),
+                                      ),
+                                      height: 20,
+                                      width: 150,
+                                      child: Center(
+                                        child: Text(
+                                          'Below 100',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color:
+                                                  _selectedFilter == 'Below 100'
+                                                      ? Colors.amber
+                                                      : Colors.white),
+                                        ),
+                                      ),
                                     ),
+                                    padding: EdgeInsets.only(left: 5, right: 5),
                                   ),
                                 ),
-                                padding: EdgeInsets.only(left: 5, right: 5),
-                              ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Lowest Price';
+                                      skip = 0;
+                                      limit = 10;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    fetchLowestPrice(skip, limit);
+                                  },
+                                  child: Padding(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: _selectedFilter == 'Lowest Price'
+                                            ? Colors.white
+                                            : Colors.amber,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.amber),
+                                      ),
+                                      height: 20,
+                                      width: 150,
+                                      child: Center(
+                                        child: Text(
+                                          'Lowest Price',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: _selectedFilter ==
+                                                      'Lowest Price'
+                                                  ? Colors.amber
+                                                  : Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Highest Price';
+                                      skip = 0;
+                                      limit = 10;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    fetchHighestPrice(skip, limit);
+                                  },
+                                  child: Padding(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color:
+                                            _selectedFilter == 'Highest Price'
+                                                ? Colors.white
+                                                : Colors.amber,
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.amber),
+                                      ),
+                                      height: 20,
+                                      width: 150,
+                                      child: Center(
+                                        child: Text(
+                                          'Highest Price',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: _selectedFilter ==
+                                                      'Highest Price'
+                                                  ? Colors.amber
+                                                  : Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     itemsgrid.isNotEmpty
                         ? Expanded(
@@ -978,18 +1005,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             new Padding(
                                               padding:
-                                                  const EdgeInsets.all(4.0),
+                                                  const EdgeInsets.all(5.0),
                                               child: new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Text(
                                                     itemsgrid[index].name,
-                                                    overflow: TextOverflow.fade,
                                                     style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
-                                                    textAlign: TextAlign.center,
+                                                    textAlign: TextAlign.left,
                                                   ),
                                                   SizedBox(height: 3.0),
                                                   Container(
@@ -1000,6 +1030,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontWeight:
                                                             FontWeight.w300,
                                                       ),
+                                                      textAlign: TextAlign.left,
                                                     ),
                                                   ),
                                                   SizedBox(height: 3.0),

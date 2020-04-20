@@ -1186,7 +1186,7 @@ class _LoginPageState extends State<LoginPage>
                 Itemid.add(productmap[i]['_id']['\$oid']);
                 Itemname.add(productmap[i]['name']);
                 Itemimage.add(productmap[i]['image']);
-                Itemprice.add(productmap[i]['price']);
+                Itemprice.add(productmap[i]['price'].toString());
                 Itemcategory.add(productmap[i]['category']);
               }
               setState(() {

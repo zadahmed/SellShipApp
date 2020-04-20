@@ -196,9 +196,10 @@ class _DetailsState extends State<Details> {
     return loading == false
         ? Scaffold(
             key: _scaffoldKey,
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.amberAccent,
+              backgroundColor: Colors.transparent,
               leading: InkWell(
                 onTap: () {
                   Navigator.pop(context);
@@ -211,332 +212,346 @@ class _DetailsState extends State<Details> {
             ),
             body: Stack(
               children: <Widget>[
-                new ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  children: <Widget>[
-                    SizedBox(height: 10),
-                    Container(
-                      height: 260,
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
-                      child: Stack(
-                        children: <Widget>[
-                          ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: images.length,
-                              itemBuilder: (BuildContext ctxt, int Index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(PageRouteBuilder(
-                                        opaque: false,
-                                        pageBuilder:
-                                            (BuildContext context, _, __) =>
-                                                ImageDisplay(
-                                                    image: images[Index])));
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        images[Index],
-                                        height: 260,
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                40,
-                                        fit: BoxFit.cover,
+                new MediaQuery.removePadding(
+                    removeTop: true,
+                    context: context,
+                    child: ListView(
+//                  padding: EdgeInsets.symmetric(horizontal: 10),
+                      children: <Widget>[
+                        Container(
+                          height: 300,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.white,
+                          child: Stack(
+                            children: <Widget>[
+                              ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: images.length,
+                                  itemBuilder: (BuildContext ctxt, int Index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            PageRouteBuilder(
+                                                opaque: false,
+                                                pageBuilder: (BuildContext
+                                                            context,
+                                                        _,
+                                                        __) =>
+                                                    ImageDisplay(
+                                                        image: images[Index])));
+                                      },
+                                      child: Hero(
+                                        tag: images[Index],
+                                        child: Image.network(
+                                          images[Index],
+                                          height: 300,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          fit: BoxFit.fitWidth,
+                                        ),
                                       ),
+                                    );
+                                  }),
+                              Positioned(
+                                  right: 10.0,
+                                  bottom: 5.0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.image,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        images.length.toString() + '/6',
+                                        style: TextStyle(color: Colors.white),
+                                      )
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: Text(
+                                          newItem.name,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                        width: 250,
+                                      ),
+                                      RawMaterialButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            heartColor = Colors.amber;
+                                            heartIcon = FontAwesome.heart;
+                                          });
+                                          FavouriteItem();
+                                        },
+                                        fillColor: Colors.white,
+                                        shape: CircleBorder(),
+                                        elevation: 4.0,
+                                        child: Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: Icon(
+                                            heartIcon,
+                                            color: heartColor,
+                                            size: 17,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    newItem.category,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 20,
                                     ),
                                   ),
-                                );
-                              }),
-                          Positioned(
-                            right: -10.0,
-                            bottom: 3.0,
-                            child: RawMaterialButton(
-                              onPressed: () {
-                                setState(() {
-                                  heartColor = Colors.amber;
-                                  heartIcon = FontAwesome.heart;
-                                });
-                                FavouriteItem();
-                              },
-                              fillColor: Colors.white,
-                              shape: CircleBorder(),
-                              elevation: 4.0,
-                              child: Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Icon(
-                                  heartIcon,
-                                  color: heartColor,
-                                  size: 17,
-                                ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    newItem.price.toString() + ' ' + currency,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Align(
-                        alignment: Alignment.topRight,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Icon(Icons.image),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(images.length.toString() + '/6')
-                          ],
-                        )),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                        ),
+                        SizedBox(height: 30),
+                        Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  blurRadius: 6.0,
+                                ),
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Container(
-                                child: Text(
-                                  newItem.name,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w900,
+                              SizedBox(height: 10),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Center(
+                                  child: Text(
+                                    'Description',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                width: 250,
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                newItem.category,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 20,
                                 ),
                               ),
                               SizedBox(height: 10),
-                              Text(
-                                newItem.price.toString() + ' ' + currency,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                    Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 10),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Center(
-                              child: Text(
-                                'Description',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Expanded(
-                            flex: 1,
-                            child: new SingleChildScrollView(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 10, right: 10),
-                                child: Text(
-                                  newItem.description,
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    fontSize: 18,
+                              Expanded(
+                                flex: 1,
+                                child: new SingleChildScrollView(
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    child: Text(
+                                      newItem.description,
+                                      textAlign: TextAlign.justify,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserItems(
-                                  userid: newItem.userid,
-                                  username: newItem.username)),
-                        );
-                      },
-                      child: Container(
-                        height: 70,
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade200,
-                                offset: Offset(0.0, 1.0), //(x,y)
-                                blurRadius: 6.0,
-                              ),
                             ],
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(6)),
-                        child: Center(
-                          child: ListTile(
-                            title: Text(
-                              newItem.username,
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 18),
-                            ),
-                            leading: Icon(
-                              Feather.user,
-                              color: Colors.black,
-                            ),
-                            trailing: Text(
-                              'View ${newItem.username}\'s items',
-                              style:
-                                  TextStyle(fontSize: 11, color: Colors.black),
-                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Platform.isIOS == true
-                        ? Container(
-                            height: 200,
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.only(bottom: 20.0),
-                            child: NativeAdmob(
-                              adUnitID: _iosadUnitID,
-                              controller: _controller,
-                            ),
-                          )
-                        : Container(
-                            height: 200,
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.only(bottom: 20.0),
-                            child: NativeAdmob(
-                              adUnitID: _androidadUnitID,
-                              controller: _controller,
-                            ),
-                          ),
-                    SizedBox(height: 10),
-                    Container(
-                      height: 260,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade200,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 5),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
+                        SizedBox(height: 10),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserItems(
+                                      userid: newItem.userid,
+                                      username: newItem.username)),
+                            );
+                          },
+                          child: Container(
+                            height: 70,
+                            decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade200,
+                                    offset: Offset(0.0, 1.0), //(x,y)
+                                    blurRadius: 6.0,
+                                  ),
+                                ],
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(6)),
                             child: Center(
-                              child: Text(
-                                'Location of Item',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              child: ListTile(
+                                title: Text(
+                                  newItem.username,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
+                                leading: Icon(
+                                  Feather.user,
+                                  color: Colors.black,
+                                ),
+                                trailing: Text(
+                                  'View ${newItem.username}\'s items',
+                                  style: TextStyle(
+                                      fontSize: 11, color: Colors.black),
                                 ),
                               ),
                             ),
                           ),
-                          SizedBox(height: 15),
-                          Container(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                  target: position, zoom: 18.0, bearing: 70),
-                              onMapCreated: mapCreated,
-                              markers: _markers,
-                              onTap: (LatLng) async {
-                                final String googleMapsUrl =
-                                    "comgooglemaps://?center=${position.latitude},${position.longitude}";
-                                final String appleMapsUrl =
-                                    "https://maps.apple.com/?q=${position.latitude},${position.longitude}";
+                        ),
+                        SizedBox(height: 10),
+                        Platform.isIOS == true
+                            ? Container(
+                                height: 200,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(bottom: 20.0),
+                                child: NativeAdmob(
+                                  adUnitID: _iosadUnitID,
+                                  controller: _controller,
+                                ),
+                              )
+                            : Container(
+                                height: 200,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(bottom: 20.0),
+                                child: NativeAdmob(
+                                  adUnitID: _androidadUnitID,
+                                  controller: _controller,
+                                ),
+                              ),
+                        SizedBox(height: 10),
+                        Container(
+                          height: 260,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade200,
+                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  blurRadius: 6.0,
+                                ),
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(height: 5),
+                              Padding(
+                                padding: EdgeInsets.only(left: 10),
+                                child: Center(
+                                  child: Text(
+                                    'Location of Item',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              Container(
+                                height: 200,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: GoogleMap(
+                                  initialCameraPosition: CameraPosition(
+                                      target: position,
+                                      zoom: 18.0,
+                                      bearing: 70),
+                                  onMapCreated: mapCreated,
+                                  markers: _markers,
+                                  onTap: (LatLng) async {
+                                    final String googleMapsUrl =
+                                        "comgooglemaps://?center=${position.latitude},${position.longitude}";
+                                    final String appleMapsUrl =
+                                        "https://maps.apple.com/?q=${position.latitude},${position.longitude}";
 
-                                if (await canLaunch(googleMapsUrl)) {
-                                  await launch(googleMapsUrl,
-                                      forceSafariVC: true, forceWebView: true);
-                                }
-                                if (await canLaunch(appleMapsUrl)) {
-                                  await launch(appleMapsUrl,
-                                      forceSafariVC: false);
-                                } else {
-                                  throw "Couldn't launch URL";
-                                }
-                              },
-                            ),
+                                    if (await canLaunch(googleMapsUrl)) {
+                                      await launch(googleMapsUrl,
+                                          forceSafariVC: true,
+                                          forceWebView: true);
+                                    }
+                                    if (await canLaunch(appleMapsUrl)) {
+                                      await launch(appleMapsUrl,
+                                          forceSafariVC: false);
+                                    } else {
+                                      throw "Couldn't launch URL";
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Platform.isIOS == true
-                        ? Container(
-                            height: 330,
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.only(bottom: 20.0),
-                            child: NativeAdmob(
-                              adUnitID: _iosadUnitID,
-                              controller: _controller,
-                            ),
-                          )
-                        : Container(
-                            height: 330,
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.only(bottom: 20.0),
-                            child: NativeAdmob(
-                              adUnitID: _androidadUnitID,
-                              controller: _controller,
-                            ),
-                          ),
-                    SizedBox(height: 10),
-                  ],
-                )
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Platform.isIOS == true
+                            ? Container(
+                                height: 330,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(bottom: 20.0),
+                                child: NativeAdmob(
+                                  adUnitID: _iosadUnitID,
+                                  controller: _controller,
+                                ),
+                              )
+                            : Container(
+                                height: 330,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(bottom: 20.0),
+                                child: NativeAdmob(
+                                  adUnitID: _androidadUnitID,
+                                  controller: _controller,
+                                ),
+                              ),
+                        SizedBox(height: 10),
+                      ],
+                    ))
               ],
             ),
             bottomNavigationBar: Padding(
