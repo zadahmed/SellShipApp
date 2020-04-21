@@ -90,7 +90,7 @@ class _RootScreenState extends State<RootScreen> {
         home: Scaffold(
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.amber,
+            selectedItemColor: Color.fromRGBO(239, 100, 97, 1),
             unselectedItemColor: Colors.grey[400],
             currentIndex: _currentPage,
             onTap: (i) {
@@ -117,7 +117,7 @@ class _RootScreenState extends State<RootScreen> {
               BottomNavigationBarItem(
                   icon: Icon(
                     FontAwesome.plus_square,
-                    color: Colors.amber,
+                    color: Color.fromRGBO(239, 100, 97, 1),
                     size: 40,
                   ),
                   title: Text(

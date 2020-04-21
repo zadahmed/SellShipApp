@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:SellShip/screens/onboarding.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +28,29 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  FirebaseAnalytics analytics = FirebaseAnalytics();
+
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      debugShowCheckedModeBanner: false,
+      color: Colors.blue,
+      home: new Splash(),
+    );
+  }
+}
+
+class Splash extends StatefulWidget {
+  @override
+  SplashState createState() => new SplashState();
+}
+
+class SplashState extends State<Splash> {
   final storage = new FlutterSecureStorage();
 
   var latitude;
@@ -78,23 +103,44 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  @override
-  void initState() {
-    _getLocation();
+  Future checkFirstSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
 
-    super.initState();
+    if (_seen) {
+      _getLocation();
+      Navigator.of(context).pushReplacement(
+          new MaterialPageRoute(builder: (context) => new RootScreen()));
+    } else {
+      _getLocation();
+      await prefs.setBool('seen', true);
+      Navigator.of(context).pushReplacement(
+          new MaterialPageRoute(builder: (context) => new OnboardingScreen()));
+    }
   }
 
-  FirebaseAnalytics analytics = FirebaseAnalytics();
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+    new Timer(new Duration(milliseconds: 100), () {
+      checkFirstSeen();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'SellShip',
-      home: firsttime == null ? OnboardingScreen() : RootScreen(),
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: analytics),
-      ],
+    return new Scaffold(
+      body: new Center(
+        child: new Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: EdgeInsets.only(top: 20),
+            child: Image.asset('assets/logo.png'),
+          ),
+        ),
+      ),
     );
   }
 }

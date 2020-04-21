@@ -168,7 +168,7 @@ class _ChatPageViewState extends State<ChatPageView> {
           recipentname,
           style: TextStyle(color: Colors.white, fontSize: 15),
         ),
-        backgroundColor: Colors.amberAccent,
+        backgroundColor: Color.fromRGBO(0, 73, 83, 1),
       ),
       body: SafeArea(
         child: Container(
