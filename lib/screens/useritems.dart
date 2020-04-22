@@ -138,7 +138,7 @@ class _UserItemsState extends State<UserItems> {
   Widget profile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.amber,
+        backgroundColor: Colors.deepOrange,
         title: Center(
           child: Text(
             '$username\'s Items',

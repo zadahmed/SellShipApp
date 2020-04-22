@@ -114,7 +114,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
             "Favourites️",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          backgroundColor: Colors.amberAccent,
+          backgroundColor: Colors.deepOrange,
         ),
         body: loading == false
             ? Padding(
@@ -284,7 +284,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
-              backgroundColor: Colors.amberAccent,
+              backgroundColor: Colors.deepOrange,
             ),
             backgroundColor: Colors.white,
             body: Column(

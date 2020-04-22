@@ -546,7 +546,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return new Padding(
       padding: const EdgeInsets.all(8.0),
       child: new Center(
-        child: SpinKitChasingDots(color: Colors.amberAccent),
+        child: SpinKitChasingDots(color: Colors.deepOrange),
       ),
     );
   }
@@ -584,7 +584,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(
                               Feather.search,
                               size: 24,
-                              color: Colors.amberAccent,
+                              color: Colors.deepOrange,
                             ),
                           ),
                           Expanded(
@@ -593,6 +593,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               onSubmitted: onSearch,
                               decoration: InputDecoration(
                                   hintText: 'Search SellShip',
+                                  hintStyle: TextStyle(
+                                    fontSize: 16,
+                                  ),
                                   border: InputBorder.none),
                             ),
                           ),
@@ -655,8 +658,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       decoration: BoxDecoration(
                                         color: _selectedFilter == 'Near me'
                                             ? Colors.white
-                                            : Colors.amber,
-                                        border: Border.all(color: Colors.amber),
+                                            : Colors.deepOrange,
+                                        border: Border.all(
+                                            color: Colors.deepOrange),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       height: 20,
@@ -666,9 +670,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Near me',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                              fontSize: 14,
                                               color:
                                                   _selectedFilter == 'Near me'
-                                                      ? Colors.amber
+                                                      ? Colors.deepOrange
                                                       : Colors.white),
                                         ),
                                       ),
@@ -693,9 +698,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color:
                                             _selectedFilter == 'Recently Added'
                                                 ? Colors.white
-                                                : Colors.amber,
+                                                : Colors.deepOrange,
                                         borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: Colors.amber),
+                                        border: Border.all(
+                                          color: Colors.deepOrange,
+                                        ),
                                       ),
                                       height: 20,
                                       width: 150,
@@ -704,9 +711,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Recently Added',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                              fontSize: 14,
                                               color: _selectedFilter ==
                                                       'Recently Added'
-                                                  ? Colors.amber
+                                                  ? Colors.deepOrange
                                                   : Colors.white),
                                         ),
                                       ),
@@ -730,9 +738,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       decoration: BoxDecoration(
                                         color: _selectedFilter == 'Below 100'
                                             ? Colors.white
-                                            : Colors.amber,
+                                            : Colors.deepOrange,
                                         borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: Colors.amber),
+                                        border: Border.all(
+                                          color: Colors.deepOrange,
+                                        ),
                                       ),
                                       height: 20,
                                       width: 150,
@@ -741,9 +751,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Below 100',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                              fontSize: 14,
                                               color:
                                                   _selectedFilter == 'Below 100'
-                                                      ? Colors.amber
+                                                      ? Colors.deepOrange
                                                       : Colors.white),
                                         ),
                                       ),
@@ -767,9 +778,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       decoration: BoxDecoration(
                                         color: _selectedFilter == 'Lowest Price'
                                             ? Colors.white
-                                            : Colors.amber,
+                                            : Colors.deepOrange,
                                         borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: Colors.amber),
+                                        border: Border.all(
+                                            color: Colors.deepOrange),
                                       ),
                                       height: 20,
                                       width: 150,
@@ -778,9 +790,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Lowest Price',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                              fontSize: 14,
                                               color: _selectedFilter ==
                                                       'Lowest Price'
-                                                  ? Colors.amber
+                                                  ? Colors.deepOrange
                                                   : Colors.white),
                                         ),
                                       ),
@@ -805,9 +818,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         color:
                                             _selectedFilter == 'Highest Price'
                                                 ? Colors.white
-                                                : Colors.amber,
+                                                : Colors.deepOrange,
                                         borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: Colors.amber),
+                                        border: Border.all(
+                                          color: Colors.deepOrange,
+                                        ),
                                       ),
                                       height: 20,
                                       width: 150,
@@ -816,9 +831,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Highest Price',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
+                                              fontSize: 14,
                                               color: _selectedFilter ==
                                                       'Highest Price'
-                                                  ? Colors.amber
+                                                  ? Colors.deepOrange
                                                   : Colors.white),
                                         ),
                                       ),
@@ -903,16 +919,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     children: <Widget>[
                                                       Icon(
                                                         categories[i].icon,
-                                                        color: Colors.black,
+                                                        color:
+                                                            Colors.deepOrange,
                                                       ),
                                                       SizedBox(
-                                                        height: 5,
+                                                        height: 10,
                                                       ),
                                                       Text(
                                                         "${categories[i].title}",
                                                         style: TextStyle(
-                                                            color:
-                                                                Colors.black),
+                                                            color: Colors.black,
+                                                            fontSize: 14),
                                                         textAlign:
                                                             TextAlign.center,
                                                       ),
@@ -995,7 +1012,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             url) =>
                                                         SpinKitChasingDots(
                                                             color: Colors
-                                                                .amberAccent),
+                                                                .deepOrange),
                                                     errorWidget:
                                                         (context, url, error) =>
                                                             Icon(Icons.error),
@@ -1015,7 +1032,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Text(
                                                     itemsgrid[index].name,
                                                     style: TextStyle(
-                                                      fontSize: 18,
+                                                      fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
@@ -1042,7 +1059,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           ' ' +
                                                           currency,
                                                       style: TextStyle(
-                                                        fontSize: 16,
+                                                        fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w400,
                                                       ),

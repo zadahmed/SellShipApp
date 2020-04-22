@@ -29,6 +29,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  built_collection:
+    dependency: transitive
+    description:
+      name: built_collection
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.3.2"
+  built_value:
+    dependency: transitive
+    description:
+      name: built_value
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.0.9"
   cached_network_image:
     dependency: "direct main"
     description:
@@ -106,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.11"
+  fixnum:
+    dependency: transitive
+    description:
+      name: fixnum
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.11"
   flare_dart:
     dependency: transitive
     description:
@@ -268,10 +289,24 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
+  intl_phone_number_input:
+    dependency: "direct main"
+    description:
+      name: intl_phone_number_input
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   lazy_load_scrollview:
     dependency: "direct main"
     description:
       name: lazy_load_scrollview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
+  libphonenumber:
+    dependency: transitive
+    description:
+      name: libphonenumber
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"

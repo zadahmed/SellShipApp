@@ -27,7 +27,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.amberAccent,
+          backgroundColor: Colors.deepOrange,
           elevation: 0,
           title: Text(
             "Categories",
@@ -73,7 +73,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       decoration: BoxDecoration(
                                         color: _selectedCat == i
                                             ? Colors.white
-                                            : Colors.amberAccent,
+                                            : Colors.deepOrange,
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.grey.shade200,
@@ -89,7 +89,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                           Icon(
                                             categories[i].icon,
                                             color: _selectedCat == i
-                                                ? Colors.amberAccent
+                                                ? Colors.deepOrange
                                                 : Colors.white,
                                           ),
                                           SizedBox(
@@ -102,7 +102,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 .button
                                                 .copyWith(
                                                     color: _selectedCat == i
-                                                        ? Colors.amberAccent
+                                                        ? Colors.deepOrange
                                                         : Colors.white),
                                             textAlign: TextAlign.center,
                                           ),

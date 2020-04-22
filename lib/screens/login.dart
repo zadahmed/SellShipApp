@@ -9,6 +9,7 @@ import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/bubble_indication_painter.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -16,6 +17,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/edititem.dart';
 import 'package:SellShip/screens/editprofile.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoginPage extends StatefulWidget {
@@ -167,19 +169,19 @@ class _LoginPageState extends State<LoginPage>
   Widget LoginSignup(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-          automaticallyImplyLeading: true,
-          elevation: 0,
-          title: Container(
-            height: 100,
-            width: 200,
-            child: Image.asset(
-              'assets/logo.png',
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-          backgroundColor: Colors.amberAccent,
-        ),
+//        appBar: AppBar(
+//          automaticallyImplyLeading: true,
+//          elevation: 0,
+//          title: Container(
+//            height: 100,
+//            width: 200,
+//            child: Image.asset(
+//              'assets/logo.png',
+//              fit: BoxFit.fitWidth,
+//            ),
+//          ),
+//          backgroundColor: Colors.deepOrange,
+//        ),
         body: loading == false
             ? new NotificationListener<OverscrollIndicatorNotification>(
                 onNotification: (overscroll) {
@@ -188,12 +190,12 @@ class _LoginPageState extends State<LoginPage>
                 child: SingleChildScrollView(
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height >= 825.0
+                    height: MediaQuery.of(context).size.height >= 830.0
                         ? MediaQuery.of(context).size.height
-                        : 825.0,
+                        : 830.0,
                     decoration: new BoxDecoration(
                       gradient: new LinearGradient(
-                          colors: [Colors.amberAccent, Colors.amber],
+                          colors: [Colors.deepOrangeAccent, Colors.deepOrange],
                           begin: const FractionalOffset(0.0, 0.0),
                           end: const FractionalOffset(1.0, 1.0),
                           stops: [0.0, 1.0],
@@ -204,6 +206,14 @@ class _LoginPageState extends State<LoginPage>
                       children: <Widget>[
                         SizedBox(
                           height: 10,
+                        ),
+                        Container(
+                          height: 100,
+                          width: 200,
+                          child: Image.asset(
+                            'assets/logo.png',
+                            fit: BoxFit.fitWidth,
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(top: 10.0),
@@ -490,18 +500,18 @@ class _LoginPageState extends State<LoginPage>
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
-                      color: Colors.amberAccent,
+                      color: Colors.deepOrangeAccent,
                       offset: Offset(1.0, 6.0),
                       blurRadius: 20.0,
                     ),
                     BoxShadow(
-                      color: Colors.amber,
+                      color: Colors.deepOrange,
                       offset: Offset(1.0, 6.0),
                       blurRadius: 20.0,
                     ),
                   ],
                   gradient: new LinearGradient(
-                      colors: [Colors.amber, Colors.amberAccent],
+                      colors: [Colors.deepOrange, Colors.deepOrangeAccent],
                       begin: const FractionalOffset(0.2, 0.2),
                       end: const FractionalOffset(1.0, 1.0),
                       stops: [0.0, 1.0],
@@ -509,7 +519,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
                 child: MaterialButton(
                     highlightColor: Colors.transparent,
-                    splashColor: Colors.amber,
+                    splashColor: Colors.deepOrange,
                     //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -630,7 +640,7 @@ class _LoginPageState extends State<LoginPage>
             "Profile️",
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
-          backgroundColor: Colors.amberAccent,
+          backgroundColor: Colors.deepOrange,
           actions: <Widget>[
             IconButton(
               onPressed: () {
@@ -658,7 +668,7 @@ class _LoginPageState extends State<LoginPage>
                             style: TextStyle(color: Colors.black, fontSize: 20),
                           ),
                           FlatButton(
-                            color: Colors.amber,
+                            color: Colors.deepOrange,
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -864,6 +874,8 @@ class _LoginPageState extends State<LoginPage>
               ));
   }
 
+  var numberphone;
+
   Widget _buildSignUp(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 23.0),
@@ -945,24 +957,23 @@ class _LoginPageState extends State<LoginPage>
                       Padding(
                         padding: EdgeInsets.only(
                             top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
-                        child: TextField(
+                        child:
+                            InternationalPhoneNumberInput.withCustomDecoration(
+                          isEnabled: true,
+                          onInputChanged: (PhoneNumber number) async {
+                            var numberss =
+                                await PhoneNumber.getRegionInfoFromPhoneNumber(
+                                    number.toString());
+                            setState(() {
+                              numberphone = numberss.toString();
+                            });
+                          },
                           focusNode: myFocusNodePhone,
-                          controller: signupphonecontroller,
-                          keyboardType: TextInputType.number,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Icon(
-                              FontAwesomeIcons.phone,
-                              color: Colors.black,
-                            ),
-                            hintText: "Phone Number",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
-                          ),
+                          autoValidate: true,
+                          countries: ['GB', 'US', 'AE'],
+                          textFieldController: signupphonecontroller,
+                          inputDecoration:
+                              InputDecoration(border: UnderlineInputBorder()),
                         ),
                       ),
                       Container(
@@ -1078,20 +1089,20 @@ class _LoginPageState extends State<LoginPage>
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
                   boxShadow: <BoxShadow>[
                     BoxShadow(
-                      color: Colors.amberAccent,
+                      color: Colors.deepOrangeAccent,
                       offset: Offset(1.0, 6.0),
                       blurRadius: 20.0,
                     ),
                     BoxShadow(
-                      color: Colors.amber,
+                      color: Colors.deepOrange,
                       offset: Offset(1.0, 6.0),
                       blurRadius: 20.0,
                     ),
                   ],
                   gradient: new LinearGradient(
                       colors: [
-                        Colors.amber,
-                        Colors.amberAccent,
+                        Colors.deepOrange,
+                        Colors.deepOrangeAccent,
                       ],
                       begin: const FractionalOffset(0.2, 0.2),
                       end: const FractionalOffset(1.0, 1.0),
@@ -1100,7 +1111,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
                 child: MaterialButton(
                     highlightColor: Colors.transparent,
-                    splashColor: Colors.amberAccent,
+                    splashColor: Colors.deepOrangeAccent,
                     //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -1114,10 +1125,40 @@ class _LoginPageState extends State<LoginPage>
                       ),
                     ),
                     onPressed: () {
-                      setState(() {
-                        loading = true;
-                      });
-                      Signup();
+                      if (signupEmailController.text.isNotEmpty &&
+                          signupphonecontroller.text.isNotEmpty != null &&
+                          signupNameController.text.isNotEmpty != null) {
+                        setState(() {
+                          loading = true;
+                        });
+                        Signup();
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AssetGiffyDialog(
+                                  image: Image.asset(
+                                    'assets/oops.gif',
+                                    fit: BoxFit.cover,
+                                  ),
+                                  title: Text(
+                                    'Oops!',
+                                    style: TextStyle(
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  description: Text(
+                                    'Looks like you\'re missing something',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(),
+                                  ),
+                                  onlyOkButton: true,
+                                  entryAnimation: EntryAnimation.DEFAULT,
+                                  onOkButtonPressed: () {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
+                                  },
+                                ));
+                      }
                     }),
               ),
             ],
@@ -1262,7 +1303,7 @@ class _LoginPageState extends State<LoginPage>
       'first_name': signupNameController.text,
       'last_name': signupLastnameController.text,
       'email': signupEmailController.text,
-      'phonenumber': signupphonecontroller.text,
+      'phonenumber': numberphone,
       'password': signupPasswordController.text,
     };
 

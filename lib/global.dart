@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Color bgColor = Colors.amber;
@@ -23,7 +24,7 @@ List<Categories> categories = [
   Categories(
     title: 'Electronics',
     id: 0,
-    icon: FontAwesomeIcons.tv,
+    icon: Feather.tv,
     subCat: [
       SubCategories(id: 0, title: 'Phones & Accessories'),
       SubCategories(id: 1, title: 'Gaming'),
@@ -43,7 +44,7 @@ List<Categories> categories = [
   Categories(
     title: 'Fashion & Accessories',
     id: 1,
-    icon: FontAwesomeIcons.shirtsinbulk,
+    icon: Feather.shopping_bag,
     subCat: [
       SubCategories(id: 0, title: "Women"),
       SubCategories(id: 1, title: "Men"),
@@ -54,7 +55,7 @@ List<Categories> categories = [
   Categories(
     title: 'Home & Garden',
     id: 2,
-    icon: Icons.event_seat,
+    icon: Feather.home,
     subCat: [
       SubCategories(id: 0, title: "Home & Garden"),
     ],
@@ -62,7 +63,7 @@ List<Categories> categories = [
   Categories(
     title: 'Baby & Child',
     id: 3,
-    icon: FontAwesomeIcons.baby,
+    icon: FontAwesomeIcons.babyCarriage,
     subCat: [
       SubCategories(id: 0, title: "Baby & Child"),
     ],
@@ -78,7 +79,7 @@ List<Categories> categories = [
   Categories(
     title: 'Movies, Books & Music',
     id: 5,
-    icon: FontAwesomeIcons.bookOpen,
+    icon: Feather.book_open,
     subCat: [
       SubCategories(id: 0, title: "Movies, Books & Music"),
     ],
@@ -104,7 +105,7 @@ List<Categories> categories = [
   Categories(
     title: 'Services',
     id: 8,
-    icon: Icons.room_service,
+    icon: Feather.settings,
     subCat: [
       SubCategories(id: 0, title: "Services"),
     ],

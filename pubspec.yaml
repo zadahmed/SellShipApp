@@ -48,6 +48,7 @@ dependencies:
   cached_network_image: 2.1.0+1
   search_map_place: 0.3.0
   shared_preferences: 0.5.7
+  intl_phone_number_input: 0.3.0
 
 
 
@@ -80,6 +81,7 @@ flutter:
     - messages.png
     - items.png
     - favourites.png
+    - oops.gif
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
 

@@ -90,7 +90,7 @@ class _RootScreenState extends State<RootScreen> {
         home: Scaffold(
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: Color.fromRGBO(239, 100, 97, 1),
+            selectedItemColor: Colors.deepOrange,
             unselectedItemColor: Colors.grey[400],
             currentIndex: _currentPage,
             onTap: (i) {
@@ -100,45 +100,36 @@ class _RootScreenState extends State<RootScreen> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesome.home,
-                ),
-                title: Text(
-                  "Home",
-                ),
-              ),
+                  icon: Icon(
+                    FontAwesome.home,
+                    size: 25,
+                  ),
+                  title: Text('')),
               BottomNavigationBarItem(
                   icon: Icon(
                     Feather.message_square,
+                    size: 25,
                   ),
-                  title: Text(
-                    "Messages",
-                  )),
+                  title: Text('')),
               BottomNavigationBarItem(
                   icon: Icon(
                     FontAwesome.plus_square,
-                    color: Color.fromRGBO(239, 100, 97, 1),
-                    size: 40,
+                    color: Colors.deepOrange,
+                    size: 35,
                   ),
-                  title: Text(
-                    "Sell",
-                  )),
+                  title: Text('')),
               BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesome.heart,
-                ),
-                title: Text(
-                  "Favourites",
-                ),
-              ),
+                  icon: Icon(
+                    Feather.heart,
+                    size: 25,
+                  ),
+                  title: Text('')),
               BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesome.user_circle_o,
-                ),
-                title: Text(
-                  "Profile",
-                ),
-              ),
+                  icon: Icon(
+                    Feather.user,
+                    size: 25,
+                  ),
+                  title: Text('')),
             ],
           ),
           body: _pages[_currentPage],

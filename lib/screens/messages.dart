@@ -126,7 +126,7 @@ class MessagesState extends State<Messages> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.amberAccent,
+        backgroundColor: Colors.deepOrange,
         elevation: 0,
         iconTheme: IconThemeData(
           color: Colors.white,
@@ -189,7 +189,8 @@ class MessagesState extends State<Messages> {
                                                       height: 18,
                                                       width: 18,
                                                       decoration: BoxDecoration(
-                                                          color: Colors.amber,
+                                                          color: Colors
+                                                              .deepOrangeAccent,
                                                           borderRadius:
                                                               BorderRadius.all(
                                                             Radius.circular(

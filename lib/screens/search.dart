@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -77,16 +78,13 @@ class _SearchState extends State<Search> {
     var url = 'https://sellship.co/api/searchitems/' +
         country +
         '/' +
-        text +
+        text.toString().toLowerCase().trim() +
         '/' +
         skip.toString() +
         '/' +
         limit.toString();
 
-    final response = await http.post(url, body: {
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString()
-    });
+    final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
 
@@ -136,16 +134,13 @@ class _SearchState extends State<Search> {
     var url = 'https://sellship.co/api/searchitems/' +
         country +
         '/' +
-        text.toString().toLowerCase() +
+        text.toString().toLowerCase().trim() +
         '/' +
         skip.toString() +
         '/' +
         limit.toString();
 
-    final response = await http.post(url, body: {
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString()
-    });
+    final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
 
@@ -186,7 +181,7 @@ class _SearchState extends State<Search> {
   Widget _buildProgressIndicator() {
     return new Padding(
       padding: const EdgeInsets.all(8.0),
-      child: new Center(child: SpinKitChasingDots(color: Colors.amberAccent)),
+      child: new Center(child: SpinKitChasingDots(color: Colors.deepOrange)),
     );
   }
 
@@ -196,9 +191,48 @@ class _SearchState extends State<Search> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          title: Text(
-            text,
-            style: TextStyle(color: Colors.black),
+          title: Padding(
+            padding: EdgeInsets.only(bottom: 10, top: 10),
+            child: Container(
+                height: 45,
+                width: 500,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade300,
+                      offset: Offset(0.0, 1), //(x,y)
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                ),
+                child: Padding(
+                    padding: EdgeInsets.only(bottom: 5),
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(
+                            Feather.search,
+                            size: 24,
+                            color: Colors.deepOrange,
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: searchcontroller,
+                            onSubmitted: onSearche,
+                            decoration: InputDecoration(
+                                hintText: 'Search SellShip',
+                                hintStyle: TextStyle(
+                                  fontSize: 16,
+                                ),
+                                border: InputBorder.none),
+                          ),
+                        ),
+                      ],
+                    ))),
           ),
           iconTheme: IconThemeData(color: Colors.black),
         ),
@@ -210,26 +244,6 @@ class _SearchState extends State<Search> {
               ? SafeArea(
                   child: Column(
                   children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Card(
-                        child: ListTile(
-                          leading: Icon(Icons.search),
-                          title: TextField(
-                            controller: searchcontroller,
-                            onSubmitted: onSearche,
-                            decoration: InputDecoration(
-                                hintText: 'Search', border: InputBorder.none),
-                          ),
-                          trailing: IconButton(
-                            onPressed: () {
-                              searchcontroller.clear();
-                            },
-                            icon: Icon(Icons.cancel),
-                          ),
-                        ),
-                      ),
-                    ),
                     itemsgrid.isNotEmpty
                         ? Expanded(
                             child: StaggeredGridView.countBuilder(
@@ -302,7 +316,7 @@ class _SearchState extends State<Search> {
                                                             url) =>
                                                         SpinKitChasingDots(
                                                             color: Colors
-                                                                .amberAccent),
+                                                                .deepOrange),
                                                     errorWidget:
                                                         (context, url, error) =>
                                                             Icon(Icons.error),

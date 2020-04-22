@@ -116,7 +116,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                     maxWidth: MediaQuery.of(context).size.width * 3 / 4),
                 padding: EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color: Colors.deepOrange,
                   borderRadius: BorderRadius.circular(25.0),
                 ),
                 child: Stack(children: <Widget>[
@@ -212,7 +212,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                               return Container(
                                 height: 100,
                                 child: SpinKitChasingDots(
-                                    color: Colors.amberAccent),
+                                    color: Colors.deepOrange),
                               );
                             }
                           }),

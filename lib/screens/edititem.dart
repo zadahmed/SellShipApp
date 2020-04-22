@@ -331,7 +331,7 @@ class EditItemState extends State<EditItem>
                   height: 100,
                   child: Padding(
                       padding: const EdgeInsets.all(12.0),
-                      child: SpinKitChasingDots(color: Colors.amberAccent)),
+                      child: SpinKitChasingDots(color: Colors.deepOrange)),
                 ),
               ));
   }
@@ -407,7 +407,7 @@ class EditItemState extends State<EditItem>
                   child: new RaisedButton(
                 child: new Text("Cancel"),
                 textColor: Colors.white,
-                color: Colors.amber,
+                color: Colors.deepOrange,
                 onPressed: () {
                   setState(() {
                     _status = true;

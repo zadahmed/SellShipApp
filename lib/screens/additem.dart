@@ -242,7 +242,7 @@ class _AddItemState extends State<AddItem> {
             ),
           ),
           elevation: 0.0,
-          backgroundColor: Colors.amberAccent,
+          backgroundColor: Colors.deepOrange,
           iconTheme: IconThemeData(color: Color(0xFFC5CCD6)),
         ),
         body: userid != null
@@ -1148,7 +1148,7 @@ class _AddItemState extends State<AddItem> {
                               child: Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: SpinKitChasingDots(
-                                      color: Colors.amberAccent)),
+                                      color: Colors.deepOrange)),
                             ),
                           );
                         });
@@ -1426,7 +1426,7 @@ class _AddItemState extends State<AddItem> {
                   height: 48,
                   decoration: BoxDecoration(
                       gradient: LinearGradient(
-                          colors: [Colors.amberAccent, Colors.amber],
+                          colors: [Colors.deepOrangeAccent, Colors.deepOrange],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight),
                       borderRadius: BorderRadius.circular(6.0),
