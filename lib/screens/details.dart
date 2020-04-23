@@ -60,6 +60,7 @@ class _DetailsState extends State<Details> {
   var currency;
 
   List<String> images = [];
+  DateTime dateuploaded;
   fetchItem() async {
     var country = await storage.read(key: 'country');
 
@@ -83,12 +84,16 @@ class _DetailsState extends State<Details> {
         price: jsonbody[0]['price'],
         description: jsonbody[0]['description'],
         category: jsonbody[0]['category'],
+        condition: jsonbody[0]['condition'] == null
+            ? 'Like New'
+            : jsonbody[0]['condition'],
         image: jsonbody[0]['image'],
         image1: jsonbody[0]['image1'],
         image2: jsonbody[0]['image2'],
         image3: jsonbody[0]['image3'],
         image4: jsonbody[0]['image4'],
         image5: jsonbody[0]['image5'],
+        city: jsonbody[0]['city'],
         username: jsonbody[0]['username'],
         useremail: jsonbody[0]['useremail'],
         usernumber: jsonbody[0]['usernumber'],
@@ -98,7 +103,10 @@ class _DetailsState extends State<Details> {
         subsubcategory: jsonbody[0]['subsubcategory'],
         subcategory: jsonbody[0]['subcategory']);
 
+    var q = Map<String, dynamic>.from(jsonbody[0]['dateuploaded']);
+    print(q);
     setState(() {
+      dateuploaded = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
       position = LatLng(
           double.parse(newItem.latitude), double.parse(newItem.longitude));
       _markers.add(Marker(
@@ -314,6 +322,58 @@ class _DetailsState extends State<Details> {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Text(
+                                        'Condition -',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.blueGrey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        newItem.condition.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.blueGrey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.location_on,
+                                        size: 12,
+                                        color: Colors.blueGrey,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        newItem.city.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.blueGrey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
                                 ],
                               ),
                               InkWell(
@@ -345,19 +405,6 @@ class _DetailsState extends State<Details> {
                                   ),
                                 ),
                               ),
-//                              RawMaterialButton(
-//                                onPressed: () {
-//
-//                                },
-//                                fillColor: Colors.white,
-//                                shape: CircleBorder(),
-//                                elevation: 4.0,
-//                                child: Icon(
-//                                  heartIcon,
-//                                  color: heartColor,
-//                                  size: 17,
-//                                ),
-//                              ),
                             ],
                           ),
                         ),
@@ -656,6 +703,32 @@ class _DetailsState extends State<Details> {
                               ),
                             ],
                           ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Uploaded on ',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            Text(
+                              dateuploaded.toString(),
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(
                           height: 20,

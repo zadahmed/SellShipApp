@@ -13,10 +13,12 @@ class Item {
   final int price;
   final String userid;
   final String username;
+  final String city;
   final String useremail;
   final String latitude;
   final String longitude;
   final String usernumber;
+  final String condition;
   final String category;
   final String subcategory;
   final String subsubcategory;
@@ -32,7 +34,9 @@ class Item {
       this.image4,
       this.image5,
       this.description,
+      this.condition,
       this.username,
+      this.city,
       this.useremail,
       this.usernumber,
       this.userid,

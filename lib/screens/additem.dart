@@ -45,6 +45,16 @@ class _AddItemState extends State<AddItem> {
   ];
   String _selectedCategory;
 
+  List<String> conditions = [
+    'New with tags',
+    'New, but no tags',
+    'Like new',
+    'Very Good, a bit worn',
+    'Good, some flaws visible in pictures'
+  ];
+
+  String _selectedCondition = 'Like new';
+
   String _selectedsubCategory;
   String _selectedsubsubCategory;
   List<String> _subcategories;
@@ -985,6 +995,34 @@ class _AddItemState extends State<AddItem> {
                           SizedBox(
                             height: 10.0,
                           ),
+                          Center(
+                            child: Text(
+                                'Please choose the condition of your Item'),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Container(
+                              height: 50,
+                              child: DropdownButton(
+                                hint: Text(
+                                    'Please choose the condition of your Item'), // Not necessary for Option 1
+                                value: _selectedCondition,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    _selectedCondition = newValue;
+                                  });
+                                },
+                                items: conditions.map((cond) {
+                                  return DropdownMenuItem(
+                                    child: new Text(cond),
+                                    value: cond,
+                                  );
+                                }).toList(),
+                              )),
+                          SizedBox(
+                            height: 10.0,
+                          ),
                           TextField(
                             cursorColor: Color(0xFF979797),
                             controller: businesspricecontroller,
@@ -1018,7 +1056,7 @@ class _AddItemState extends State<AddItem> {
                           ),
                           Text(
                             'Choose Item\'s Location',
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(
                             height: 5.0,
@@ -1026,26 +1064,36 @@ class _AddItemState extends State<AddItem> {
                           Text(
                             'Press on the map to choose the Item\'s location',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(
                             height: 10.0,
                           ),
-                          SearchMapPlaceWidget(
-                            apiKey: 'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
-                            // The language of the autocompletion
-                            language: 'en',
-                            location: position,
-                            radius: 10000,
-                            onSelected: (Place place) async {
-                              final geolocation = await place.geolocation;
+                          Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade200,
+                                  offset: Offset(0.0, 1), //(x,y)
+                                  blurRadius: 6.0,
+                                ),
+                              ],
+                            ),
+                            child: SearchMapPlaceWidget(
+                              apiKey: 'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
+                              // The language of the autocompletion
+                              language: 'en',
+                              location: position,
+                              radius: 10000,
+                              onSelected: (Place place) async {
+                                final geolocation = await place.geolocation;
 
-                              controller.animateCamera(CameraUpdate.newLatLng(
-                                  geolocation.coordinates));
-                              controller.animateCamera(
-                                  CameraUpdate.newLatLngBounds(
-                                      geolocation.bounds, 0));
-                            },
+                                controller.animateCamera(CameraUpdate.newLatLng(
+                                    geolocation.coordinates));
+                                controller.animateCamera(
+                                    CameraUpdate.newLatLngBounds(
+                                        geolocation.bounds, 0));
+                              },
+                            ),
                           ),
                           position != null
                               ? Container(
@@ -1174,6 +1222,7 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city,
                         'country': country,
+                        'condition': _selectedCondition,
                         'userid': userid,
                         'username': firstname,
                         'useremail': email,
@@ -1201,6 +1250,7 @@ class _AddItemState extends State<AddItem> {
                         'longitude': position.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
+                        'condition': _selectedCondition,
                         'userid': userid,
                         'country': country,
                         'username': firstname,
@@ -1232,6 +1282,7 @@ class _AddItemState extends State<AddItem> {
                         'longitude': position.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
+                        'condition': _selectedCondition,
                         'userid': userid,
                         'country': country,
                         'username': firstname,
@@ -1270,6 +1321,7 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city,
                         'userid': userid,
+                        'condition': _selectedCondition,
                         'country': country,
                         'username': firstname,
                         'useremail': email,
@@ -1311,6 +1363,7 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city,
                         'country': country,
+                        'condition': _selectedCondition,
                         'userid': userid,
                         'username': firstname,
                         'useremail': email,
@@ -1357,6 +1410,7 @@ class _AddItemState extends State<AddItem> {
                         'userid': userid,
                         'country': country,
                         'username': firstname,
+                        'condition': _selectedCondition,
                         'useremail': email,
                         'usernumber': phonenumber,
                         'date_uploaded': DateTime.now().toString(),
@@ -1429,7 +1483,6 @@ class _AddItemState extends State<AddItem> {
                           colors: [Colors.deepOrangeAccent, Colors.deepOrange],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight),
-                      borderRadius: BorderRadius.circular(6.0),
                       boxShadow: [
                         BoxShadow(
                             color: Color(0xFF9DA3B4).withOpacity(0.1),
