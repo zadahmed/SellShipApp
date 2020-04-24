@@ -15,6 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:search_map_place/search_map_place.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AddItem extends StatefulWidget {
   AddItem({Key key}) : super(key: key);
@@ -66,9 +67,14 @@ class _AddItemState extends State<AddItem> {
 
   @override
   void initState() {
+    setState(() {
+      loading = true;
+    });
     readstorage();
     super.initState();
   }
+
+  bool loading;
 
   var currency;
 
@@ -88,6 +94,9 @@ class _AddItemState extends State<AddItem> {
     }
     userid = await storage.read(key: 'userid');
     print(userid);
+    setState(() {
+      loading = false;
+    });
 
     setState(() {
       position = LatLng(double.parse(latitude), double.parse(longitude));
@@ -255,651 +264,561 @@ class _AddItemState extends State<AddItem> {
           backgroundColor: Colors.deepOrange,
           iconTheme: IconThemeData(color: Color(0xFFC5CCD6)),
         ),
-        body: userid != null
+        body: loading == false
             ? GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(new FocusNode());
                 },
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 40,
-                  margin: EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SingleChildScrollView(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            height: 130,
-                            child: Scrollbar(
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final action = CupertinoActionSheet(
-                                        message: Text(
-                                          "Upload an Image",
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.normal),
+                child: userid != null
+                    ? Container(
+                        width: MediaQuery.of(context).size.width - 40,
+                        margin: EdgeInsets.symmetric(horizontal: 20.0),
+                        child: SingleChildScrollView(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: 130,
+                                  child: Scrollbar(
+                                    child: ListView(
+                                      scrollDirection: Axis.horizontal,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Camera",
+                                        GestureDetector(
+                                          onTap: () {
+                                            final action = CupertinoActionSheet(
+                                              message: Text(
+                                                "Upload an Image",
                                                 style: TextStyle(
                                                     fontSize: 15.0,
                                                     fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageCamera();
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Gallery",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageGallery();
-                                            },
-                                          )
-                                        ],
-                                        cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel",
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight:
-                                                      FontWeight.normal)),
-                                          isDestructiveAction: true,
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
+                                                        FontWeight.normal),
+                                              ),
+                                              actions: <Widget>[
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Camera",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageCamera();
+                                                  },
+                                                ),
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Gallery",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageGallery();
+                                                  },
+                                                )
+                                              ],
+                                              cancelButton:
+                                                  CupertinoActionSheetAction(
+                                                child: Text("Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                                isDestructiveAction: true,
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                },
+                                              ),
+                                            );
+                                            showCupertinoModalPopup(
+                                                context: context,
+                                                builder: (context) => action);
                                           },
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              height: 120,
+                                              width: 120,
+                                              child: _image == null
+                                                  ? Icon(Icons.add)
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                      child: Image.file(
+                                                        _image,
+                                                        fit: BoxFit.cover,
+                                                      ))),
                                         ),
-                                      );
-                                      showCupertinoModalPopup(
-                                          context: context,
-                                          builder: (context) => action);
-                                    },
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        height: 120,
-                                        width: 120,
-                                        child: _image == null
-                                            ? Icon(Icons.add)
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.file(
-                                                  _image,
-                                                  fit: BoxFit.cover,
-                                                ))),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final action = CupertinoActionSheet(
-                                        message: Text(
-                                          "Upload an Image",
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.normal),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Camera",
+                                        GestureDetector(
+                                          onTap: () {
+                                            final action = CupertinoActionSheet(
+                                              message: Text(
+                                                "Upload an Image",
                                                 style: TextStyle(
                                                     fontSize: 15.0,
                                                     fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageCamera2();
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Gallery",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageGallery2();
-                                            },
-                                          )
-                                        ],
-                                        cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel",
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight:
-                                                      FontWeight.normal)),
-                                          isDestructiveAction: true,
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
+                                                        FontWeight.normal),
+                                              ),
+                                              actions: <Widget>[
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Camera",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageCamera2();
+                                                  },
+                                                ),
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Gallery",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageGallery2();
+                                                  },
+                                                )
+                                              ],
+                                              cancelButton:
+                                                  CupertinoActionSheetAction(
+                                                child: Text("Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                                isDestructiveAction: true,
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                },
+                                              ),
+                                            );
+                                            showCupertinoModalPopup(
+                                                context: context,
+                                                builder: (context) => action);
                                           },
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              height: 120,
+                                              width: 120,
+                                              child: _image2 == null
+                                                  ? Icon(Icons.add)
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                      child: Image.file(
+                                                        _image2,
+                                                        fit: BoxFit.cover,
+                                                      ))),
                                         ),
-                                      );
-                                      showCupertinoModalPopup(
-                                          context: context,
-                                          builder: (context) => action);
-                                    },
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        height: 120,
-                                        width: 120,
-                                        child: _image2 == null
-                                            ? Icon(Icons.add)
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.file(
-                                                  _image2,
-                                                  fit: BoxFit.cover,
-                                                ))),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final action = CupertinoActionSheet(
-                                        message: Text(
-                                          "Upload an Image",
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.normal),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Camera",
+                                        GestureDetector(
+                                          onTap: () {
+                                            final action = CupertinoActionSheet(
+                                              message: Text(
+                                                "Upload an Image",
                                                 style: TextStyle(
                                                     fontSize: 15.0,
                                                     fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageCamera3();
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Gallery",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageGallery3();
-                                            },
-                                          )
-                                        ],
-                                        cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel",
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight:
-                                                      FontWeight.normal)),
-                                          isDestructiveAction: true,
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
+                                                        FontWeight.normal),
+                                              ),
+                                              actions: <Widget>[
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Camera",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageCamera3();
+                                                  },
+                                                ),
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Gallery",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageGallery3();
+                                                  },
+                                                )
+                                              ],
+                                              cancelButton:
+                                                  CupertinoActionSheetAction(
+                                                child: Text("Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                                isDestructiveAction: true,
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                },
+                                              ),
+                                            );
+                                            showCupertinoModalPopup(
+                                                context: context,
+                                                builder: (context) => action);
                                           },
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              height: 120,
+                                              width: 120,
+                                              child: _image3 == null
+                                                  ? Icon(Icons.add)
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                      child: Image.file(
+                                                        _image3,
+                                                        fit: BoxFit.cover,
+                                                      ))),
                                         ),
-                                      );
-                                      showCupertinoModalPopup(
-                                          context: context,
-                                          builder: (context) => action);
-                                    },
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        height: 120,
-                                        width: 120,
-                                        child: _image3 == null
-                                            ? Icon(Icons.add)
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.file(
-                                                  _image3,
-                                                  fit: BoxFit.cover,
-                                                ))),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final action = CupertinoActionSheet(
-                                        message: Text(
-                                          "Upload an Image",
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.normal),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Camera",
+                                        GestureDetector(
+                                          onTap: () {
+                                            final action = CupertinoActionSheet(
+                                              message: Text(
+                                                "Upload an Image",
                                                 style: TextStyle(
                                                     fontSize: 15.0,
                                                     fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageCamera4();
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Gallery",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageGallery4();
-                                            },
-                                          )
-                                        ],
-                                        cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel",
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight:
-                                                      FontWeight.normal)),
-                                          isDestructiveAction: true,
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
+                                                        FontWeight.normal),
+                                              ),
+                                              actions: <Widget>[
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Camera",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageCamera4();
+                                                  },
+                                                ),
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Gallery",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageGallery4();
+                                                  },
+                                                )
+                                              ],
+                                              cancelButton:
+                                                  CupertinoActionSheetAction(
+                                                child: Text("Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                                isDestructiveAction: true,
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                },
+                                              ),
+                                            );
+                                            showCupertinoModalPopup(
+                                                context: context,
+                                                builder: (context) => action);
                                           },
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              height: 120,
+                                              width: 120,
+                                              child: _image4 == null
+                                                  ? Icon(Icons.add)
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                      child: Image.file(
+                                                        _image4,
+                                                        fit: BoxFit.cover,
+                                                      ))),
                                         ),
-                                      );
-                                      showCupertinoModalPopup(
-                                          context: context,
-                                          builder: (context) => action);
-                                    },
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        height: 120,
-                                        width: 120,
-                                        child: _image4 == null
-                                            ? Icon(Icons.add)
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.file(
-                                                  _image4,
-                                                  fit: BoxFit.cover,
-                                                ))),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final action = CupertinoActionSheet(
-                                        message: Text(
-                                          "Upload an Image",
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.normal),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Camera",
+                                        GestureDetector(
+                                          onTap: () {
+                                            final action = CupertinoActionSheet(
+                                              message: Text(
+                                                "Upload an Image",
                                                 style: TextStyle(
                                                     fontSize: 15.0,
                                                     fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageCamera5();
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Gallery",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageGallery5();
-                                            },
-                                          )
-                                        ],
-                                        cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel",
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight:
-                                                      FontWeight.normal)),
-                                          isDestructiveAction: true,
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
+                                                        FontWeight.normal),
+                                              ),
+                                              actions: <Widget>[
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Camera",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageCamera5();
+                                                  },
+                                                ),
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Gallery",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageGallery5();
+                                                  },
+                                                )
+                                              ],
+                                              cancelButton:
+                                                  CupertinoActionSheetAction(
+                                                child: Text("Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                                isDestructiveAction: true,
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                },
+                                              ),
+                                            );
+                                            showCupertinoModalPopup(
+                                                context: context,
+                                                builder: (context) => action);
                                           },
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              height: 120,
+                                              width: 120,
+                                              child: _image5 == null
+                                                  ? Icon(Icons.add)
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                      child: Image.file(
+                                                        _image5,
+                                                        fit: BoxFit.cover,
+                                                      ))),
                                         ),
-                                      );
-                                      showCupertinoModalPopup(
-                                          context: context,
-                                          builder: (context) => action);
-                                    },
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        height: 120,
-                                        width: 120,
-                                        child: _image5 == null
-                                            ? Icon(Icons.add)
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.file(
-                                                  _image5,
-                                                  fit: BoxFit.cover,
-                                                ))),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final action = CupertinoActionSheet(
-                                        message: Text(
-                                          "Upload an Image",
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.normal),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                        actions: <Widget>[
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Camera",
+                                        GestureDetector(
+                                          onTap: () {
+                                            final action = CupertinoActionSheet(
+                                              message: Text(
+                                                "Upload an Image",
                                                 style: TextStyle(
                                                     fontSize: 15.0,
                                                     fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageCamera6();
-                                            },
-                                          ),
-                                          CupertinoActionSheetAction(
-                                            child: Text("Upload from Gallery",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                            isDefaultAction: true,
-                                            onPressed: () {
-                                              getImageGallery6();
-                                            },
-                                          )
-                                        ],
-                                        cancelButton:
-                                            CupertinoActionSheetAction(
-                                          child: Text("Cancel",
-                                              style: TextStyle(
-                                                  fontSize: 15.0,
-                                                  fontWeight:
-                                                      FontWeight.normal)),
-                                          isDestructiveAction: true,
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
+                                                        FontWeight.normal),
+                                              ),
+                                              actions: <Widget>[
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Camera",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageCamera6();
+                                                  },
+                                                ),
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Gallery",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageGallery6();
+                                                  },
+                                                )
+                                              ],
+                                              cancelButton:
+                                                  CupertinoActionSheetAction(
+                                                child: Text("Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                                isDestructiveAction: true,
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                },
+                                              ),
+                                            );
+                                            showCupertinoModalPopup(
+                                                context: context,
+                                                builder: (context) => action);
                                           },
+                                          child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              height: 120,
+                                              width: 120,
+                                              child: _image6 == null
+                                                  ? Icon(Icons.add)
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8.0),
+                                                      child: Image.file(
+                                                        _image6,
+                                                        fit: BoxFit.cover,
+                                                      ))),
                                         ),
-                                      );
-                                      showCupertinoModalPopup(
-                                          context: context,
-                                          builder: (context) => action);
-                                    },
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        height: 120,
-                                        width: 120,
-                                        child: _image6 == null
-                                            ? Icon(Icons.add)
-                                            : ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: Image.file(
-                                                  _image6,
-                                                  fit: BoxFit.cover,
-                                                ))),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: DropdownButton(
-                              hint: Text(
-                                  'Please choose a category'), // Not necessary for Option 1
-                              value: _selectedCategory,
-                              onChanged: (newValue) {
-                                setState(() {
-                                  _selectedCategory = newValue;
-                                });
-                                if (_selectedCategory == 'Electronics') {
-                                  setState(() {
-                                    _subcategories = [
-                                      'Phones & Accessories',
-                                      'Gaming',
-                                      'Cameras & Photography',
-                                      'Car Technology',
-                                      'Computers,PCs & Laptops',
-                                      'Drones',
-                                      'Home Appliances',
-                                      'Smart Home & Security',
-                                      'Sound & Audio',
-                                      'Tablets & eReaders',
-                                      'TV & Video',
-                                      'Wearables',
-                                      'Virtual Reality',
-                                    ];
-                                  });
-                                } else if (_selectedCategory ==
-                                    'Fashion & Accessories') {
-                                  setState(() {
-                                    _subcategories = [
-                                      'Women',
-                                      'Men',
-                                      'Girls',
-                                      'Boys',
-                                    ];
-                                  });
-                                } else if (_selectedCategory == 'Motors') {
-                                  setState(() {
-                                    _subcategories = [
-                                      'Cars',
-                                      'Motorcycles & Scooters'
-                                    ];
-                                  });
-                                } else if (_selectedCategory == 'Property') {
-                                  setState(() {
-                                    _subcategories = [
-                                      'Property for Sale',
-                                      'Property for Rent',
-                                    ];
-                                  });
-                                } else {
-                                  _subcategories = null;
-                                }
-                              },
-                              items: categories.map((location) {
-                                return DropdownMenuItem(
-                                  child: new Text(location),
-                                  value: location,
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 2.0,
-                          ),
-                          _subcategories == null
-                              ? Container()
-                              : Align(
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Align(
                                   alignment: Alignment.centerLeft,
                                   child: DropdownButton(
                                     hint: Text(
-                                        'Please choose a sub category'), // Not necessary for Option 1
-                                    value: _selectedsubCategory,
+                                        'Please choose a category'), // Not necessary for Option 1
+                                    value: _selectedCategory,
                                     onChanged: (newValue) {
                                       setState(() {
-                                        _selectedsubCategory = newValue;
+                                        _selectedCategory = newValue;
                                       });
-                                      if (_selectedsubCategory == 'Women') {
+                                      if (_selectedCategory == 'Electronics') {
                                         setState(() {
-                                          _subsubcategory = [
-                                            'Shoes & Boots',
-                                            'Activewear & Sportswear',
-                                            'Dresses',
-                                            'Tops',
-                                            'Coats & Jackets',
-                                            'Jumpers & Cardigans',
-                                            'Bags & Accessories',
-                                            'Leggings',
-                                            'Jumpsuits & Playsuits',
-                                            'Lingerie',
-                                            'Nightwear',
-                                            'Loungewear',
-                                            'Hoodies & Sweatshirts',
-                                            'Jeans',
-                                            'Suits & Blazers',
-                                            'Swimwear & Beachwear',
-                                            'Shorts',
-                                            'Skirts',
-                                            'Other',
+                                          _subcategories = [
+                                            'Phones & Accessories',
+                                            'Gaming',
+                                            'Cameras & Photography',
+                                            'Car Technology',
+                                            'Computers,PCs & Laptops',
+                                            'Drones',
+                                            'Home Appliances',
+                                            'Smart Home & Security',
+                                            'Sound & Audio',
+                                            'Tablets & eReaders',
+                                            'TV & Video',
+                                            'Wearables',
+                                            'Virtual Reality',
                                           ];
                                         });
-                                      } else if (_selectedsubCategory ==
-                                          'Men') {
+                                      } else if (_selectedCategory ==
+                                          'Fashion & Accessories') {
                                         setState(() {
-                                          _subsubcategory = [
-                                            'Shoes & Boots',
-                                            'Activewear & Sportswear',
-                                            'Polo Shirts',
-                                            'Shirts',
-                                            'T- Shirts & Vests',
-                                            'Coats & Jackets',
-                                            'Jumpers & Cardigans',
-                                            'Bags & Accessories',
-                                            'Trousers',
-                                            'Chinos',
-                                            'Jumpsuits & Playsuits',
-                                            'Nightwear',
-                                            'Loungewear',
-                                            'Hoodies & Sweatshirts',
-                                            'Jeans',
-                                            'Suits & Blazers',
-                                            'Swimwear & Beachwear',
-                                            'Shorts',
-                                            'Other',
+                                          _subcategories = [
+                                            'Women',
+                                            'Men',
+                                            'Girls',
+                                            'Boys',
                                           ];
                                         });
-                                      } else if (_selectedsubCategory ==
-                                          'Girls') {
+                                      } else if (_selectedCategory ==
+                                          'Motors') {
                                         setState(() {
-                                          _subsubcategory = [
-                                            'Shoes & Boots',
-                                            'Activewear & Sportswear',
-                                            'Dresses',
-                                            'Tops',
-                                            'Coats & Jackets',
-                                            'Jumpers & Cardigans',
-                                            'Bags & Accessories',
-                                            'Leggings',
-                                            'Jumpsuits & Playsuits',
-                                            'Lingerie',
-                                            'Nightwear',
-                                            'Loungewear',
-                                            'Hoodies & Sweatshirts',
-                                            'Jeans',
-                                            'Suits & Blazers',
-                                            'Swimwear & Beachwear',
-                                            'Skirts',
-                                            'Other',
+                                          _subcategories = [
+                                            'Cars',
+                                            'Motorcycles & Scooters'
                                           ];
                                         });
-                                      } else if (_selectedsubCategory ==
-                                          'Boys') {
+                                      } else if (_selectedCategory ==
+                                          'Property') {
                                         setState(() {
-                                          _subsubcategory = [
-                                            'Shoes & Boots',
-                                            'Activewear & Sportswear',
-                                            'Polo Shirts',
-                                            'Shirts',
-                                            'T- Shirts & Vests',
-                                            'Coats & Jackets',
-                                            'Jumpers & Cardigans',
-                                            'Bags & Accessories',
-                                            'Trousers',
-                                            'Chinos',
-                                            'Jumpsuits & Playsuits',
-                                            'Nightwear',
-                                            'Loungewear',
-                                            'Hoodies & Sweatshirts',
-                                            'Jeans',
-                                            'Suits & Blazers',
-                                            'Swimwear & Beachwear',
-                                            'Shorts',
-                                            'Other',
+                                          _subcategories = [
+                                            'Property for Sale',
+                                            'Property for Rent',
                                           ];
                                         });
+                                      } else {
+                                        _subcategories = null;
                                       }
                                     },
-                                    items: _subcategories.map((location) {
+                                    items: categories.map((location) {
                                       return DropdownMenuItem(
                                         child: new Text(location),
                                         value: location,
@@ -907,256 +826,441 @@ class _AddItemState extends State<AddItem> {
                                     }).toList(),
                                   ),
                                 ),
-                          _subsubcategory == null
-                              ? Container()
-                              : Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: DropdownButton(
-                                    hint: Text(
-                                        'Please choose a sub category'), // Not necessary for Option 1
-                                    value: _selectedsubsubCategory,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        _selectedsubsubCategory = newValue;
-                                      });
-                                    },
-                                    items: _subsubcategory.map((location) {
-                                      return DropdownMenuItem(
-                                        child: new Text(location),
-                                        value: location,
-                                      );
-                                    }).toList(),
-                                  ),
+                                SizedBox(
+                                  height: 2.0,
                                 ),
-                          TextField(
-                            cursorColor: Color(0xFF979797),
-                            controller: businessnameController,
-                            autocorrect: true,
-                            enableSuggestions: true,
-                            textCapitalization: TextCapitalization.sentences,
-                            decoration: InputDecoration(
-                                labelText: "Name",
-                                labelStyle: TextStyle(color: Colors.blueGrey),
-                                focusColor: Colors.black,
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                border: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                focusedErrorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                disabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                errorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797)))),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          TextField(
-                            cursorColor: Color(0xFF979797),
-                            controller: businessdescriptionController,
-                            autocorrect: true,
-                            enableSuggestions: true,
-                            textCapitalization: TextCapitalization.sentences,
-                            maxLines: 5,
-                            maxLength: 1000,
-                            decoration: InputDecoration(
-                                labelText: "Description",
-                                alignLabelWithHint: true,
-                                labelStyle: TextStyle(color: Colors.blueGrey),
-                                focusColor: Colors.black,
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                border: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                focusedErrorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                disabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                errorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797)))),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Center(
-                            child: Text(
-                                'Please choose the condition of your Item'),
-                          ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Container(
-                              height: 50,
-                              child: DropdownButton(
-                                hint: Text(
-                                    'Please choose the condition of your Item'), // Not necessary for Option 1
-                                value: _selectedCondition,
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    _selectedCondition = newValue;
-                                  });
-                                },
-                                items: conditions.map((cond) {
-                                  return DropdownMenuItem(
-                                    child: new Text(cond),
-                                    value: cond,
-                                  );
-                                }).toList(),
-                              )),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          TextField(
-                            cursorColor: Color(0xFF979797),
-                            controller: businesspricecontroller,
-                            keyboardType: TextInputType.numberWithOptions(),
-                            decoration: InputDecoration(
-                                labelText: "Price " + currency,
-                                alignLabelWithHint: true,
-                                labelStyle: TextStyle(color: Colors.blueGrey),
-                                focusColor: Colors.black,
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                border: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                focusedErrorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                disabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                errorBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797))),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Color(0xFF979797)))),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Text(
-                            'Choose Item\'s Location',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Text(
-                            'Press on the map to choose the Item\'s location',
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade200,
-                                  offset: Offset(0.0, 1), //(x,y)
-                                  blurRadius: 6.0,
+                                _subcategories == null
+                                    ? Container()
+                                    : Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: DropdownButton(
+                                          hint: Text(
+                                              'Please choose a sub category'), // Not necessary for Option 1
+                                          value: _selectedsubCategory,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              _selectedsubCategory = newValue;
+                                            });
+                                            if (_selectedsubCategory ==
+                                                'Women') {
+                                              setState(() {
+                                                _subsubcategory = [
+                                                  'Shoes & Boots',
+                                                  'Activewear & Sportswear',
+                                                  'Dresses',
+                                                  'Tops',
+                                                  'Coats & Jackets',
+                                                  'Jumpers & Cardigans',
+                                                  'Bags & Accessories',
+                                                  'Leggings',
+                                                  'Jumpsuits & Playsuits',
+                                                  'Lingerie',
+                                                  'Nightwear',
+                                                  'Loungewear',
+                                                  'Hoodies & Sweatshirts',
+                                                  'Jeans',
+                                                  'Suits & Blazers',
+                                                  'Swimwear & Beachwear',
+                                                  'Shorts',
+                                                  'Skirts',
+                                                  'Other',
+                                                ];
+                                              });
+                                            } else if (_selectedsubCategory ==
+                                                'Men') {
+                                              setState(() {
+                                                _subsubcategory = [
+                                                  'Shoes & Boots',
+                                                  'Activewear & Sportswear',
+                                                  'Polo Shirts',
+                                                  'Shirts',
+                                                  'T- Shirts & Vests',
+                                                  'Coats & Jackets',
+                                                  'Jumpers & Cardigans',
+                                                  'Bags & Accessories',
+                                                  'Trousers',
+                                                  'Chinos',
+                                                  'Jumpsuits & Playsuits',
+                                                  'Nightwear',
+                                                  'Loungewear',
+                                                  'Hoodies & Sweatshirts',
+                                                  'Jeans',
+                                                  'Suits & Blazers',
+                                                  'Swimwear & Beachwear',
+                                                  'Shorts',
+                                                  'Other',
+                                                ];
+                                              });
+                                            } else if (_selectedsubCategory ==
+                                                'Girls') {
+                                              setState(() {
+                                                _subsubcategory = [
+                                                  'Shoes & Boots',
+                                                  'Activewear & Sportswear',
+                                                  'Dresses',
+                                                  'Tops',
+                                                  'Coats & Jackets',
+                                                  'Jumpers & Cardigans',
+                                                  'Bags & Accessories',
+                                                  'Leggings',
+                                                  'Jumpsuits & Playsuits',
+                                                  'Lingerie',
+                                                  'Nightwear',
+                                                  'Loungewear',
+                                                  'Hoodies & Sweatshirts',
+                                                  'Jeans',
+                                                  'Suits & Blazers',
+                                                  'Swimwear & Beachwear',
+                                                  'Skirts',
+                                                  'Other',
+                                                ];
+                                              });
+                                            } else if (_selectedsubCategory ==
+                                                'Boys') {
+                                              setState(() {
+                                                _subsubcategory = [
+                                                  'Shoes & Boots',
+                                                  'Activewear & Sportswear',
+                                                  'Polo Shirts',
+                                                  'Shirts',
+                                                  'T- Shirts & Vests',
+                                                  'Coats & Jackets',
+                                                  'Jumpers & Cardigans',
+                                                  'Bags & Accessories',
+                                                  'Trousers',
+                                                  'Chinos',
+                                                  'Jumpsuits & Playsuits',
+                                                  'Nightwear',
+                                                  'Loungewear',
+                                                  'Hoodies & Sweatshirts',
+                                                  'Jeans',
+                                                  'Suits & Blazers',
+                                                  'Swimwear & Beachwear',
+                                                  'Shorts',
+                                                  'Other',
+                                                ];
+                                              });
+                                            }
+                                          },
+                                          items: _subcategories.map((location) {
+                                            return DropdownMenuItem(
+                                              child: new Text(location),
+                                              value: location,
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                _subsubcategory == null
+                                    ? Container()
+                                    : Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: DropdownButton(
+                                          hint: Text(
+                                              'Please choose a sub category'), // Not necessary for Option 1
+                                          value: _selectedsubsubCategory,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              _selectedsubsubCategory =
+                                                  newValue;
+                                            });
+                                          },
+                                          items:
+                                              _subsubcategory.map((location) {
+                                            return DropdownMenuItem(
+                                              child: new Text(location),
+                                              value: location,
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                TextField(
+                                  cursorColor: Color(0xFF979797),
+                                  controller: businessnameController,
+                                  autocorrect: true,
+                                  enableSuggestions: true,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  decoration: InputDecoration(
+                                      labelText: "Name",
+                                      labelStyle:
+                                          TextStyle(color: Colors.blueGrey),
+                                      focusColor: Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797)))),
                                 ),
-                              ],
-                            ),
-                            child: SearchMapPlaceWidget(
-                              apiKey: 'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
-                              // The language of the autocompletion
-                              language: 'en',
-                              location: position,
-                              radius: 10000,
-                              onSelected: (Place place) async {
-                                final geolocation = await place.geolocation;
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                TextField(
+                                  cursorColor: Color(0xFF979797),
+                                  controller: businessdescriptionController,
+                                  autocorrect: true,
+                                  enableSuggestions: true,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  maxLines: 5,
+                                  maxLength: 1000,
+                                  decoration: InputDecoration(
+                                      labelText: "Description",
+                                      alignLabelWithHint: true,
+                                      labelStyle:
+                                          TextStyle(color: Colors.blueGrey),
+                                      focusColor: Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797)))),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Center(
+                                  child: Text(
+                                      'Please choose the condition of your Item'),
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Container(
+                                    height: 50,
+                                    child: DropdownButton(
+                                      hint: Text(
+                                          'Please choose the condition of your Item'), // Not necessary for Option 1
+                                      value: _selectedCondition,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _selectedCondition = newValue;
+                                        });
+                                      },
+                                      items: conditions.map((cond) {
+                                        return DropdownMenuItem(
+                                          child: new Text(cond),
+                                          value: cond,
+                                        );
+                                      }).toList(),
+                                    )),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                TextField(
+                                  cursorColor: Color(0xFF979797),
+                                  controller: businesspricecontroller,
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(),
+                                  decoration: InputDecoration(
+                                      labelText: "Price " + currency,
+                                      alignLabelWithHint: true,
+                                      labelStyle:
+                                          TextStyle(color: Colors.blueGrey),
+                                      focusColor: Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797))),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color(0xFF979797)))),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Text(
+                                  'Choose Item\'s Location',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                SizedBox(
+                                  height: 5.0,
+                                ),
+                                Text(
+                                  'Press on the map to choose the Item\'s location',
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(
+                                  height: 8.0,
+                                ),
+                                SearchMapPlaceWidget(
+                                  apiKey:
+                                      'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
+                                  // The language of the autocompletion
+                                  language: 'en',
+                                  location: position,
+                                  radius: 10000,
+                                  onSelected: (Place place) async {
+                                    final geolocation = await place.geolocation;
 
-                                controller.animateCamera(CameraUpdate.newLatLng(
-                                    geolocation.coordinates));
-                                controller.animateCamera(
-                                    CameraUpdate.newLatLngBounds(
-                                        geolocation.bounds, 0));
-                              },
-                            ),
-                          ),
-                          position != null
-                              ? Container(
-                                  height: 300,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: GoogleMap(
-                                    initialCameraPosition: CameraPosition(
-                                        target: position,
-                                        zoom: 18.0,
-                                        bearing: 70),
-                                    onMapCreated: mapCreated,
-                                    onCameraMove: _onCameraMove,
-                                    onTap: _handleTap,
-                                    markers: _markers,
-                                    zoomGesturesEnabled: true,
-                                    myLocationEnabled: true,
-                                    myLocationButtonEnabled: true,
-                                    compassEnabled: true,
-                                    tiltGesturesEnabled: false,
+                                    controller.animateCamera(
+                                        CameraUpdate.newLatLng(
+                                            geolocation.coordinates));
+                                    controller.animateCamera(
+                                        CameraUpdate.newLatLngBounds(
+                                            geolocation.bounds, 0));
+                                  },
+                                ),
+                                position != null
+                                    ? Container(
+                                        height: 300,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: GoogleMap(
+                                          initialCameraPosition: CameraPosition(
+                                              target: position,
+                                              zoom: 18.0,
+                                              bearing: 70),
+                                          onMapCreated: mapCreated,
+                                          onCameraMove: _onCameraMove,
+                                          onTap: _handleTap,
+                                          markers: _markers,
+                                          zoomGesturesEnabled: true,
+                                          myLocationEnabled: true,
+                                          myLocationButtonEnabled: true,
+                                          compassEnabled: true,
+                                          tiltGesturesEnabled: false,
+                                        ),
+                                      )
+                                    : Text(
+                                        'Oops! Something went wrong. \n Please try again'),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Text(
+                                  "Thank you for helping us grow!",
+                                  style: TextStyle(
+                                    color: Colors.blueGrey,
+                                    fontSize: 12.0,
                                   ),
                                 )
-                              : Text(
-                                  'Oops! Something went wrong. \n Please try again'),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Text(
-                            "Thank you for helping us grow!",
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 12.0,
+                              ],
                             ),
-                          )
-                        ],
+                          ),
+                        ),
+                      )
+                    : Scaffold(
+                        backgroundColor: Colors.white,
+                        body: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Center(
+                              child: Text(
+                                'Look\'s like you need to \n login to Add an Item️',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontSize: 20),
+                              ),
+                            ),
+                            Expanded(
+                                child: Image.asset(
+                              'assets/little_theologians_4x.jpg',
+                              fit: BoxFit.fitWidth,
+                            ))
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
               )
-            : Scaffold(
-                backgroundColor: Colors.white,
-                body: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Center(
-                      child: Text(
-                        'Look\'s like you need to \n login to Add an Item️',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ),
-                    Expanded(
-                        child: Image.asset(
-                      'assets/little_theologians_4x.jpg',
-                      fit: BoxFit.fitWidth,
-                    ))
-                  ],
+            : Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 16.0),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300],
+                  highlightColor: Colors.grey[100],
+                  child: Column(
+                    children: [0, 1, 2, 3, 4, 5, 6]
+                        .map((_) => Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 48.0,
+                                    height: 48.0,
+                                    color: Colors.white,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          height: 8.0,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 2.0),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 8.0,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 2.0),
+                                        ),
+                                        Container(
+                                          width: 40.0,
+                                          height: 8.0,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ))
+                        .toList(),
+                  ),
                 ),
               ),
         bottomNavigationBar: userid != null
