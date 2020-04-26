@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/styles.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -81,9 +82,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Buying something? Find the best items near you in less than a minute!',
-                              style: kTitleStyle,
-                            ),
+                                'Buying something? Find the best items near you in less than a minute!',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(
+                                    fontSize: 20, color: Colors.white)),
                           ],
                         ),
                       ),
@@ -103,9 +105,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Selling Something ? List your item on SellShip within seconds!',
-                              style: kTitleStyle,
-                            ),
+                                'Selling Something ? List your item on SellShip within seconds!',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(
+                                    fontSize: 20, color: Colors.white)),
                           ],
                         ),
                       ),
@@ -125,9 +128,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                             SizedBox(height: 30.0),
                             Text(
-                              'Experience a new way of friendship through selling!',
-                              style: kTitleStyle,
-                            ),
+                                'Experience a new way of friendship through selling!',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.inter(
+                                    fontSize: 20, color: Colors.white)),
                           ],
                         ),
                       ),

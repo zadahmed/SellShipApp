@@ -390,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     readstorage();
-    fetchItems(skip, limit);
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           (_scrollController.position.maxScrollExtent)) {
@@ -514,6 +514,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (latitude == null || longitude == null) {
       _getLocation();
     } else {
+      fetchItems(skip, limit);
       setState(() {
         position = LatLng(double.parse(latitude), double.parse(longitude));
         city = cit;

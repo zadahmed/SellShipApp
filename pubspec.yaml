@@ -49,6 +49,7 @@ dependencies:
   search_map_place: 0.3.0
   shared_preferences: 0.5.7
   intl_phone_number_input: 0.3.0
+  google_fonts: 1.0.0
 
 
 
