@@ -485,7 +485,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await storage.write(key: 'city', value: cit);
     await storage.write(key: 'country', value: countryy);
 
-    if (country.trim().toLowerCase() == 'united arab emirates') {
+    if (country.toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
       });
@@ -851,7 +851,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    itemsgrid.isNotEmpty
+                    itemsgrid != null
                         ? Expanded(
                             child: StaggeredGridView.countBuilder(
                             controller: _scrollController,

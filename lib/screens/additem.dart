@@ -1155,7 +1155,6 @@ class _AddItemState extends State<AddItem> {
                                           myLocationEnabled: true,
                                           myLocationButtonEnabled: true,
                                           compassEnabled: true,
-                                          tiltGesturesEnabled: false,
                                         ),
                                       )
                                     : Text(
@@ -1287,7 +1286,7 @@ class _AddItemState extends State<AddItem> {
                       _image.path.isNotEmpty &&
                       businesspricecontroller.text.isNotEmpty &&
                       businessdescriptionController.text.isNotEmpty &&
-                      position != null) {
+                      _lastMapPosition != null) {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -1321,8 +1320,8 @@ class _AddItemState extends State<AddItem> {
                         'subsubcategory': _selectedsubsubCategory == null
                             ? ''
                             : _selectedsubsubCategory,
-                        'latitude': position.latitude,
-                        'longitude': position.longitude,
+                        'latitude': _lastMapPosition.latitude,
+                        'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
                         'country': country,
@@ -1350,8 +1349,8 @@ class _AddItemState extends State<AddItem> {
                         'subsubcategory': _selectedsubsubCategory == null
                             ? ''
                             : _selectedsubsubCategory,
-                        'latitude': position.latitude,
-                        'longitude': position.longitude,
+                        'latitude': _lastMapPosition.latitude,
+                        'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
                         'condition': _selectedCondition,
@@ -1382,8 +1381,8 @@ class _AddItemState extends State<AddItem> {
                         'subsubcategory': _selectedsubsubCategory == null
                             ? ''
                             : _selectedsubsubCategory,
-                        'latitude': position.latitude,
-                        'longitude': position.longitude,
+                        'latitude': _lastMapPosition.latitude,
+                        'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
                         'condition': _selectedCondition,
@@ -1420,8 +1419,8 @@ class _AddItemState extends State<AddItem> {
                         'subsubcategory': _selectedsubsubCategory == null
                             ? ''
                             : _selectedsubsubCategory,
-                        'latitude': position.latitude,
-                        'longitude': position.longitude,
+                        'latitude': _lastMapPosition.latitude,
+                        'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
                         'userid': userid,
@@ -1462,8 +1461,8 @@ class _AddItemState extends State<AddItem> {
                         'subsubcategory': _selectedsubsubCategory == null
                             ? ''
                             : _selectedsubsubCategory,
-                        'latitude': position.latitude,
-                        'longitude': position.longitude,
+                        'latitude': _lastMapPosition.latitude,
+                        'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
                         'country': country,
@@ -1507,8 +1506,8 @@ class _AddItemState extends State<AddItem> {
                         'subsubcategory': _selectedsubsubCategory == null
                             ? ''
                             : _selectedsubsubCategory,
-                        'latitude': position.latitude,
-                        'longitude': position.longitude,
+                        'latitude': _lastMapPosition.latitude,
+                        'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
                         'city': city,
                         'userid': userid,

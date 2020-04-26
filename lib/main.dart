@@ -8,6 +8,7 @@ import 'package:SellShip/screens/additem.dart';
 
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -30,27 +31,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
+    _getLocation();
     super.initState();
   }
 
-  FirebaseAnalytics analytics = FirebaseAnalytics();
-
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
-      color: Colors.blue,
-      home: new Splash(),
-    );
-  }
-}
-
-class Splash extends StatefulWidget {
-  @override
-  SplashState createState() => new SplashState();
-}
-
-class SplashState extends State<Splash> {
   final storage = new FlutterSecureStorage();
 
   var latitude;
@@ -60,10 +44,6 @@ class SplashState extends State<Splash> {
   var firsttime;
 
   _getLocation() async {
-    firsttime = await storage.read(key: 'firsttime');
-    setState(() {
-      firsttime = firsttime;
-    });
     Location _location = new Location();
     var location;
 
@@ -84,9 +64,9 @@ class SplashState extends State<Splash> {
     }
   }
 
-  final Geolocator geolocator = Geolocator();
-  static String city;
+  var city;
 
+  final Geolocator geolocator = Geolocator();
   void getcity() async {
     List<Placemark> p = await geolocator.placemarkFromCoordinates(
         position.latitude, position.longitude);
@@ -103,16 +83,82 @@ class SplashState extends State<Splash> {
     });
   }
 
-  Future checkFirstSeen() async {
+  FirebaseAnalytics analytics = FirebaseAnalytics();
+
+  @override
+  Widget build(BuildContext context) {
+    precacheImage(AssetImage('assets/logo.png'), context);
+    return new MaterialApp(
+      debugShowCheckedModeBanner: false,
+      color: Colors.blue,
+      home: new Splash(),
+    );
+  }
+}
+
+class Splash extends StatefulWidget {
+  @override
+  SplashState createState() => new SplashState();
+}
+
+class SplashState extends State<Splash> {
+  final storage = new FlutterSecureStorage();
+//
+//  var latitude;
+//  var longitude;
+//  static LatLng position;
+//
+//  var firsttime;
+
+//  _getLocation() async {
+//    firsttime = await storage.read(key: 'firsttime');
+//    setState(() {
+//      firsttime = firsttime;
+//    });
+//    Location _location = new Location();
+//    var location;
+//
+//    try {
+//      location = await _location.getLocation();
+//      await storage.write(key: 'latitude', value: location.latitude.toString());
+//      await storage.write(
+//          key: 'longitude', value: location.longitude.toString());
+//      setState(() {
+//        position =
+//            LatLng(location.latitude.toDouble(), location.longitude.toDouble());
+//
+//        getcity();
+//      });
+//    } on Exception catch (e) {
+//      print(e);
+//      Location().requestPermission();
+//    }
+//  }
+//
+//  final Geolocator geolocator = Geolocator();
+//  static String city;
+
+  void getcity() async {
+//    List<Placemark> p = await geolocator.placemarkFromCoordinates(
+//        position.latitude, position.longitude);
+//
+//    Placemark place = p[0];
+//    var cit = place.administrativeArea;
+//    var country = place.country;
+//    await storage.write(key: 'city', value: cit);
+//    await storage.write(key: 'country', value: country);
+//    setState(() {
+//      city = cit;
+//      print(city);
+//      //secure storage save it
+//    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _seen = (prefs.getBool('seen') ?? false);
 
     if (_seen) {
-      _getLocation();
       Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => new RootScreen()));
     } else {
-      _getLocation();
       await prefs.setBool('seen', true);
       Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => new OnboardingScreen()));
@@ -122,24 +168,35 @@ class SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
-    _getLocation();
-    new Timer(new Duration(milliseconds: 100), () {
-      checkFirstSeen();
+
+    new Timer(new Duration(milliseconds: 500), () {
+      getcity();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    precacheImage(AssetImage('assets/logo.png'), context);
     return new Scaffold(
       body: new Center(
         child: new Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Image.asset('assets/logo.png'),
-          ),
-        ),
+            color: Colors.deepOrange,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+                  child: Image.asset('assets/logo.png'),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SpinKitChasingDots(color: Colors.white),
+              ],
+            )),
       ),
     );
   }
