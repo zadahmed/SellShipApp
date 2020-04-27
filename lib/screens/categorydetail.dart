@@ -11,6 +11,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -526,7 +527,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           backgroundColor: Colors.deepOrange,
           title: Text(
             subcategory,
-            style: TextStyle(color: Colors.white),
+            style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
           ),
         ),
         body: GestureDetector(
@@ -549,7 +550,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
                                 'Filter',
-                                style: TextStyle(
+                                style: GoogleFonts.lato(
                                     fontSize: 11, color: Colors.blueGrey),
                               )),
                           SizedBox(
@@ -593,8 +594,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Near me',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 14,
+                                          style: GoogleFonts.lato(
+                                              fontSize: 16,
                                               color:
                                                   _selectedFilter == 'Near me'
                                                       ? Colors.deepOrange
@@ -634,8 +635,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Recently Added',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 14,
+                                          style: GoogleFonts.lato(
+                                              fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Recently Added'
                                                   ? Colors.deepOrange
@@ -674,8 +675,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Below 100',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 14,
+                                          style: GoogleFonts.lato(
+                                              fontSize: 16,
                                               color:
                                                   _selectedFilter == 'Below 100'
                                                       ? Colors.deepOrange
@@ -713,8 +714,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Lowest Price',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 14,
+                                          style: GoogleFonts.lato(
+                                              fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Lowest Price'
                                                   ? Colors.deepOrange
@@ -754,8 +755,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Highest Price',
                                           textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 14,
+                                          style: GoogleFonts.lato(
+                                              fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Highest Price'
                                                   ? Colors.deepOrange
@@ -809,7 +810,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                       );
                               }
                               return Padding(
-                                  padding: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(7),
                                   child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -863,8 +864,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                   Text(
                                                     itemsgrid[index].name,
                                                     overflow: TextOverflow.fade,
-                                                    style: TextStyle(
-                                                      fontSize: 18,
+                                                    style: GoogleFonts.lato(
+                                                      fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
@@ -874,8 +875,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].category,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
+                                                      style: GoogleFonts.lato(
+                                                        fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w300,
                                                       ),
@@ -889,7 +890,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                               .toString() +
                                                           ' ' +
                                                           currency,
-                                                      style: TextStyle(
+                                                      style: GoogleFonts.lato(
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w400,

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:SellShip/models/Items.dart';
@@ -101,7 +102,7 @@ class EditItemState extends State<EditItem>
           backgroundColor: Colors.white,
           title: Text(
             'Edit Item',
-            style: TextStyle(color: Colors.black),
+            style: GoogleFonts.lato(fontSize: 16, color: Colors.black),
           ),
           leading: IconButton(
             icon: Icon(
@@ -144,8 +145,8 @@ class EditItemState extends State<EditItem>
                                           children: <Widget>[
                                             new Text(
                                               'Item Details',
-                                              style: TextStyle(
-                                                  fontSize: 18.0,
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ],
@@ -205,8 +206,8 @@ class EditItemState extends State<EditItem>
                                           children: <Widget>[
                                             new Text(
                                               'Item Name',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ],
@@ -244,8 +245,8 @@ class EditItemState extends State<EditItem>
                                           children: <Widget>[
                                             new Text(
                                               'Item Description',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ],
@@ -285,8 +286,8 @@ class EditItemState extends State<EditItem>
                                           children: <Widget>[
                                             new Text(
                                               'Item Price',
-                                              style: TextStyle(
-                                                  fontSize: 16.0,
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                           ],
@@ -355,7 +356,10 @@ class EditItemState extends State<EditItem>
               padding: EdgeInsets.all(3),
               child: Container(
                   child: new RaisedButton(
-                child: new Text("Save"),
+                child: new Text("Save",
+                    style: GoogleFonts.lato(
+                      fontSize: 16,
+                    )),
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () async {
@@ -405,7 +409,12 @@ class EditItemState extends State<EditItem>
               padding: EdgeInsets.all(3),
               child: Container(
                   child: new RaisedButton(
-                child: new Text("Cancel"),
+                child: new Text(
+                  "Cancel",
+                  style: GoogleFonts.lato(
+                    fontSize: 16,
+                  ),
+                ),
                 textColor: Colors.white,
                 color: Colors.deepOrange,
                 onPressed: () {
@@ -425,7 +434,12 @@ class EditItemState extends State<EditItem>
               padding: EdgeInsets.all(3),
               child: Container(
                   child: new RaisedButton(
-                child: new Text("Delete"),
+                child: new Text(
+                  "Delete",
+                  style: GoogleFonts.lato(
+                    fontSize: 16,
+                  ),
+                ),
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () async {

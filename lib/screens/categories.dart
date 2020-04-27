@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/screens/categorydetail.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CategoryScreen extends StatefulWidget {
   final int selectedcategory;
@@ -31,7 +32,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           elevation: 0,
           title: Text(
             "Categories",
-            style: TextStyle(
+            style: GoogleFonts.lato(
                 fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),
           ),
           iconTheme: IconThemeData(color: Colors.white),
@@ -97,13 +98,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                           ),
                                           Text(
                                             "${categories[i].title}",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .button
-                                                .copyWith(
-                                                    color: _selectedCat == i
-                                                        ? Colors.deepOrange
-                                                        : Colors.white),
+                                            style: GoogleFonts.lato(
+                                                fontSize: 16,
+                                                color: _selectedCat == i
+                                                    ? Colors.deepOrange
+                                                    : Colors.white),
                                             textAlign: TextAlign.center,
                                           ),
                                         ],
@@ -156,6 +155,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       Expanded(
                                         child: Text(
                                           "${categories[_selectedCat].subCat[i].title}",
+                                          style: GoogleFonts.lato(fontSize: 16),
                                         ),
                                       ),
                                       Icon(Icons.chevron_right)

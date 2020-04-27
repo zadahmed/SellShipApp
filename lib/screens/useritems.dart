@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/details.dart';
@@ -142,7 +143,7 @@ class _UserItemsState extends State<UserItems> {
         title: Center(
           child: Text(
             '$username\'s Items',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: GoogleFonts.lato(color: Colors.white, fontSize: 20),
           ),
         ),
       ),
@@ -194,10 +195,20 @@ class _UserItemsState extends State<UserItems> {
                                 },
                                 child: Card(
                                     child: ListTile(
-                                  title: Text(Itemname[Index]),
-                                  trailing: Text(Itemprice[Index].toString() +
-                                      ' ' +
-                                      currency),
+                                  title: Text(
+                                    Itemname[Index],
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  trailing: Text(
+                                    Itemprice[Index].toString() +
+                                        ' ' +
+                                        currency,
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                   leading: Container(
                                     height: 60,
                                     width: 60,
@@ -209,7 +220,12 @@ class _UserItemsState extends State<UserItems> {
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-                                  subtitle: Text(Itemcategory[Index]),
+                                  subtitle: Text(
+                                    Itemcategory[Index],
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 )));
                           }))
                 ],

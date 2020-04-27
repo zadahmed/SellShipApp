@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/details.dart';
 import 'package:shimmer/shimmer.dart';
@@ -281,8 +282,10 @@ class FavouritesScreenState extends State<FavouritesScreen> {
             appBar: AppBar(
               title: Text(
                 "Favourites",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                style: GoogleFonts.lato(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               backgroundColor: Colors.deepOrange,
             ),
@@ -294,11 +297,11 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                   height: 15,
                 ),
                 Center(
-                  child: Text(
-                    'View your favourite\'s here ',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
-                  ),
+                  child: Text('View your favourite\'s here ',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.lato(
+                        fontSize: 16,
+                      )),
                 ),
                 Expanded(
                     child: Image.asset(
@@ -320,7 +323,12 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Loading'),
+                    Text(
+                      'Loading',
+                      style: GoogleFonts.lato(
+                        fontSize: 16,
+                      ),
+                    ),
                     SizedBox(
                       height: 10,
                     ),

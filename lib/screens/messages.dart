@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
@@ -134,7 +135,10 @@ class MessagesState extends State<Messages> {
         centerTitle: true,
         title: Text(
           'Chats',
-          style: TextStyle(color: Colors.white, fontSize: 18),
+          style: GoogleFonts.lato(
+            fontSize: 18,
+            color: Colors.white,
+          ),
         ),
       ),
       body: loading == false
@@ -160,16 +164,16 @@ class MessagesState extends State<Messages> {
                                       Expanded(
                                         flex: 10,
                                         child: ListTile(
-                                          title: Text(
-                                            peoplemessaged[Index],
-                                            style: TextStyle(fontSize: 16),
-                                          ),
-                                          subtitle: Text(
-                                            lastrecieved[Index],
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(fontSize: 12),
-                                          ),
+                                          title: Text(peoplemessaged[Index],
+                                              style: GoogleFonts.lato(
+                                                fontSize: 16,
+                                              )),
+                                          subtitle: Text(lastrecieved[Index],
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.lato(
+                                                fontSize: 11,
+                                              )),
                                           leading: Icon(Icons.person),
                                           trailing: Column(
                                             crossAxisAlignment:
@@ -179,7 +183,8 @@ class MessagesState extends State<Messages> {
                                             children: <Widget>[
                                               Text(
                                                 recieveddate[Index],
-                                                style: TextStyle(fontSize: 12),
+                                                style: GoogleFonts.lato(
+                                                    fontSize: 11),
                                               ),
                                               unreadlist[Index] == true
                                                   ? Container(
@@ -254,7 +259,9 @@ class MessagesState extends State<Messages> {
                           child: Text(
                             'View your Messages\'s here ',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 20),
+                            style: GoogleFonts.lato(
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                         Expanded(

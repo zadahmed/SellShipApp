@@ -9,6 +9,7 @@ import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:flutter/foundation.dart';
@@ -225,7 +226,7 @@ class _SearchState extends State<Search> {
                             onSubmitted: onSearche,
                             decoration: InputDecoration(
                                 hintText: 'Search SellShip',
-                                hintStyle: TextStyle(
+                                hintStyle: GoogleFonts.lato(
                                   fontSize: 16,
                                 ),
                                 border: InputBorder.none),
@@ -278,7 +279,7 @@ class _SearchState extends State<Search> {
                                       );
                               }
                               return Padding(
-                                  padding: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(7),
                                   child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -332,8 +333,8 @@ class _SearchState extends State<Search> {
                                                   Text(
                                                     itemsgrid[index].name,
                                                     overflow: TextOverflow.fade,
-                                                    style: TextStyle(
-                                                      fontSize: 18,
+                                                    style: GoogleFonts.lato(
+                                                      fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
                                                     ),
@@ -343,8 +344,8 @@ class _SearchState extends State<Search> {
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].category,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
+                                                      style: GoogleFonts.lato(
+                                                        fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w300,
                                                       ),
@@ -358,8 +359,8 @@ class _SearchState extends State<Search> {
                                                               .toString() +
                                                           ' ' +
                                                           currency,
-                                                      style: TextStyle(
-                                                        fontSize: 16,
+                                                      style: GoogleFonts.lato(
+                                                        fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w400,
                                                       ),
@@ -389,10 +390,11 @@ class _SearchState extends State<Search> {
                             children: <Widget>[
                               Center(
                                 child: Text(
-                                  'Looks like you\'re the first here! \n Don\'t be shy add an Item!',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 20),
-                                ),
+                                    'Looks like you\'re the first here! \n Don\'t be shy add an Item!',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.lato(
+                                      fontSize: 16,
+                                    )),
                               ),
                               Expanded(
                                   child: Image.asset(

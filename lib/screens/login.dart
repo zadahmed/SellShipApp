@@ -10,6 +10,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/bubble_indication_painter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -295,15 +296,6 @@ class _LoginPageState extends State<LoginPage>
                                           height: 8.0,
                                           color: Colors.white,
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 2.0),
-                                        ),
-                                        Container(
-                                          width: 40.0,
-                                          height: 8.0,
-                                          color: Colors.white,
-                                        ),
                                       ],
                                     ),
                                   )
@@ -349,10 +341,7 @@ class _LoginPageState extends State<LoginPage>
       content: new Text(
         value,
         textAlign: TextAlign.center,
-        style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-            fontFamily: "WorkSansSemiBold"),
+        style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
       ),
       backgroundColor: Colors.blue,
       duration: Duration(seconds: 3),
@@ -379,10 +368,7 @@ class _LoginPageState extends State<LoginPage>
                 onPressed: _onSignInButtonPress,
                 child: Text(
                   "Existing",
-                  style: TextStyle(
-                      color: left,
-                      fontSize: 16.0,
-                      fontFamily: "WorkSansSemiBold"),
+                  style: GoogleFonts.lato(fontSize: 16, color: left),
                 ),
               ),
             ),
@@ -394,10 +380,7 @@ class _LoginPageState extends State<LoginPage>
                 onPressed: _onSignUpButtonPress,
                 child: Text(
                   "New",
-                  style: TextStyle(
-                      color: right,
-                      fontSize: 16.0,
-                      fontFamily: "WorkSansSemiBold"),
+                  style: GoogleFonts.lato(fontSize: 16, color: right),
                 ),
               ),
             ),
@@ -434,10 +417,8 @@ class _LoginPageState extends State<LoginPage>
                           focusNode: myFocusNodeEmailLogin,
                           controller: loginEmailController,
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: GoogleFonts.lato(
+                              fontSize: 16, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -446,8 +427,8 @@ class _LoginPageState extends State<LoginPage>
                               size: 22.0,
                             ),
                             hintText: "Email Address",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                            hintStyle: GoogleFonts.lato(
+                                fontSize: 16, color: Colors.black),
                           ),
                         ),
                       ),
@@ -463,10 +444,8 @@ class _LoginPageState extends State<LoginPage>
                           focusNode: myFocusNodePasswordLogin,
                           controller: loginPasswordController,
                           obscureText: _obscureTextLogin,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: GoogleFonts.lato(
+                              fontSize: 16, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -475,8 +454,8 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Password",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                            hintStyle: GoogleFonts.lato(
+                                fontSize: 16, color: Colors.black),
                             suffixIcon: GestureDetector(
                               onTap: _toggleLogin,
                               child: Icon(
@@ -526,10 +505,8 @@ class _LoginPageState extends State<LoginPage>
                           vertical: 10.0, horizontal: 42.0),
                       child: Text(
                         "LOGIN",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                            fontFamily: "WorkSansBold"),
+                        style:
+                            GoogleFonts.lato(fontSize: 20, color: Colors.black),
                       ),
                     ),
                     onPressed: () {
@@ -548,7 +525,7 @@ class _LoginPageState extends State<LoginPage>
                 child: Text(
                   'By logging In \n you agree to the Terms and Conditions',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
+                  style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
                 )),
           ),
           Padding(
@@ -575,10 +552,7 @@ class _LoginPageState extends State<LoginPage>
                   padding: EdgeInsets.only(left: 15.0, right: 15.0),
                   child: Text(
                     "Or",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontFamily: "WorkSansMedium"),
+                    style: GoogleFonts.lato(fontSize: 20, color: Colors.white),
                   ),
                 ),
                 Container(
@@ -638,7 +612,10 @@ class _LoginPageState extends State<LoginPage>
           elevation: 0,
           title: Text(
             "Profile️",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: GoogleFonts.lato(
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
           backgroundColor: Colors.deepOrange,
           actions: <Widget>[
@@ -665,7 +642,10 @@ class _LoginPageState extends State<LoginPage>
                         children: <Widget>[
                           Text(
                             'Hi ' + firstname + '!',
-                            style: TextStyle(color: Colors.black, fontSize: 20),
+                            style: GoogleFonts.lato(
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
                           ),
                           FlatButton(
                             color: Colors.deepOrange,
@@ -678,7 +658,8 @@ class _LoginPageState extends State<LoginPage>
                             },
                             child: Text(
                               'Edit Profile',
-                              style: TextStyle(color: Colors.white),
+                              style: GoogleFonts.lato(
+                                  fontSize: 16, color: Colors.white),
                             ),
                           ),
                         ],
@@ -691,7 +672,10 @@ class _LoginPageState extends State<LoginPage>
                     Center(
                       child: Text(
                         'My Items',
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                        style: GoogleFonts.lato(
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -756,7 +740,12 @@ class _LoginPageState extends State<LoginPage>
                                                     BorderRadius.circular(11.0),
                                               ),
                                               child: ListTile(
-                                                title: Text(Itemname[Index]),
+                                                title: Text(
+                                                  Itemname[Index],
+                                                  style: GoogleFonts.lato(
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
                                                 trailing: FlatButton(
                                                   onPressed: () {
                                                     Navigator.push(
@@ -768,7 +757,12 @@ class _LoginPageState extends State<LoginPage>
                                                                       Index])),
                                                     );
                                                   },
-                                                  child: Text('Edit Item'),
+                                                  child: Text(
+                                                    'Edit Item',
+                                                    style: GoogleFonts.lato(
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
                                                 ),
                                                 leading: Container(
                                                   height: 60,
@@ -787,8 +781,13 @@ class _LoginPageState extends State<LoginPage>
                                                     ),
                                                   ),
                                                 ),
-                                                subtitle:
-                                                    Text(Itemcategory[Index]),
+                                                subtitle: Text(
+                                                  Itemcategory[Index],
+                                                  style: GoogleFonts.lato(
+                                                      fontSize: 14,
+                                                      color:
+                                                          Colors.grey.shade800),
+                                                ),
                                               )));
                                     })))
                         : Expanded(
@@ -798,7 +797,9 @@ class _LoginPageState extends State<LoginPage>
                                 child: Text(
                                   'Go ahead Add an Item \n and start selling!',
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 20),
+                                  style: GoogleFonts.lato(
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
                               Expanded(
@@ -904,10 +905,8 @@ class _LoginPageState extends State<LoginPage>
                           controller: signupNameController,
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: GoogleFonts.lato(
+                              fontSize: 16, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -915,8 +914,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "First Name",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: GoogleFonts.lato(fontSize: 16.0),
                           ),
                         ),
                       ),
@@ -933,10 +931,8 @@ class _LoginPageState extends State<LoginPage>
                           controller: signupLastnameController,
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: GoogleFonts.lato(
+                              fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -944,8 +940,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Last Name",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: GoogleFonts.lato(fontSize: 16.0),
                           ),
                         ),
                       ),
@@ -988,10 +983,8 @@ class _LoginPageState extends State<LoginPage>
                           focusNode: myFocusNodeEmail,
                           controller: signupEmailController,
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: GoogleFonts.lato(
+                              fontSize: 16.0, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -999,8 +992,8 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Email Address",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: GoogleFonts.lato(
+                                fontSize: 16, color: Colors.black),
                           ),
                         ),
                       ),
@@ -1016,10 +1009,8 @@ class _LoginPageState extends State<LoginPage>
                           focusNode: myFocusNodePassword,
                           controller: signupPasswordController,
                           obscureText: _obscureTextSignup,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: GoogleFonts.lato(
+                              fontSize: 16, color: Colors.black),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -1027,8 +1018,8 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Password",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: GoogleFonts.lato(
+                                fontSize: 16, color: Colors.black),
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignup,
                               child: Icon(
@@ -1053,10 +1044,7 @@ class _LoginPageState extends State<LoginPage>
                         child: TextField(
                           controller: signupConfirmPasswordController,
                           obscureText: _obscureTextSignupConfirm,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: GoogleFonts.lato(fontSize: 16),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -1064,8 +1052,8 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Confirmation",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: GoogleFonts.lato(
+                                fontSize: 16, color: Colors.black),
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignupConfirm,
                               child: Icon(
@@ -1118,10 +1106,8 @@ class _LoginPageState extends State<LoginPage>
                           vertical: 10.0, horizontal: 42.0),
                       child: Text(
                         "SIGN UP",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                            fontFamily: "WorkSansBold"),
+                        style:
+                            GoogleFonts.lato(fontSize: 20, color: Colors.white),
                       ),
                     ),
                     onPressed: () {
@@ -1142,14 +1128,16 @@ class _LoginPageState extends State<LoginPage>
                                   ),
                                   title: Text(
                                     'Oops!',
-                                    style: TextStyle(
-                                        fontSize: 22.0,
+                                    style: GoogleFonts.lato(
+                                        fontSize: 22,
+                                        color: Colors.black,
                                         fontWeight: FontWeight.w600),
                                   ),
                                   description: Text(
                                     'Looks like you\'re missing something',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(),
+                                    style: GoogleFonts.lato(
+                                        fontSize: 18, color: Colors.black),
                                   ),
                                   onlyOkButton: true,
                                   entryAnimation: EntryAnimation.DEFAULT,
@@ -1170,7 +1158,7 @@ class _LoginPageState extends State<LoginPage>
               child: Text(
             'By Signing Up \n you agree to the Terms and Conditions',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white),
+            style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
           )),
         ],
       ),
