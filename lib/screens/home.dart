@@ -6,6 +6,7 @@ import 'package:SellShip/screens/categories.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -31,6 +32,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      new FlutterLocalNotificationsPlugin();
+  var initializationSettingsAndroid;
+  var initializationSettingsIOS;
+  var initializationSettings;
+
+  void _showNotification() {
+    _NotificationOne();
+  }
+
+  Future<void> _NotificationOne() async {
+    var time = Time(10, 0, 0);
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'channel_ID', 'channel name', 'channel description',
+        importance: Importance.Max,
+        priority: Priority.High,
+        ticker: 'test ticker');
+
+    var iOSChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
+        0,
+        'You\'ve got 2 new notifications!',
+        'Hey! Looks like people near you have added new items! Check it out now. ',
+        Day.Tuesday,
+        time,
+        platformChannelSpecifics,
+        payload: 'Welcome to SellShip');
+  }
+
   List<Item> itemsgrid = [];
 
   var skip;
@@ -58,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (country == null) {
       _getLocation();
     } else {
+      _showNotification();
       var url = 'https://sellship.co/api/getitems/' +
           country +
           '/' +
@@ -395,6 +429,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
     readstorage();
 
+    initializationSettingsAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
+    initializationSettingsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+
+    initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           (_scrollController.position.maxScrollExtent)) {
@@ -412,6 +457,28 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
     });
+  }
+
+  Future onSelectNotification(String payload) {
+    if (payload != null) {
+      print(payload);
+    }
+  }
+
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
+    await showDialog(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+              title: Text(title),
+              content: Text(body),
+              actions: <Widget>[
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  child: Text('Ok'),
+                )
+              ],
+            ));
   }
 
   _getmoreData() async {
@@ -465,7 +532,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } on Exception catch (e) {
       print(e);
-      location = null;
+      Location().requestPermission();
       _getLocation();
       setState(() {
         loading = false;

@@ -23,6 +23,8 @@ class Item {
   final String subcategory;
   final String subsubcategory;
   final double distance;
+  final String brand;
+  final String size;
 
   Item(
       {this.itemid,
@@ -46,6 +48,8 @@ class Item {
       this.category,
       this.subsubcategory,
       this.subcategory,
+      this.brand,
+      this.size,
       this.distance});
 
   factory Item.fromJson(Map<String, dynamic> json) {

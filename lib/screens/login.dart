@@ -506,7 +506,7 @@ class _LoginPageState extends State<LoginPage>
                       child: Text(
                         "LOGIN",
                         style:
-                            GoogleFonts.lato(fontSize: 20, color: Colors.black),
+                            GoogleFonts.lato(fontSize: 20, color: Colors.white),
                       ),
                     ),
                     onPressed: () {

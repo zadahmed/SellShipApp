@@ -96,6 +96,8 @@ class _DetailsState extends State<Details> {
         image5: jsonbody[0]['image5'],
         city: jsonbody[0]['city'],
         username: jsonbody[0]['username'],
+        brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
+        size: jsonbody[0]['size'] == null ? null : jsonbody[0]['size'],
         useremail: jsonbody[0]['useremail'],
         usernumber: jsonbody[0]['usernumber'],
         userid: jsonbody[0]['userid'],
@@ -340,18 +342,87 @@ class _DetailsState extends State<Details> {
                                       SizedBox(
                                         width: 5,
                                       ),
+                                      Container(
+                                        child: Text(
+                                          newItem.condition.toString(),
+                                          textAlign: TextAlign.left,
+                                          style: GoogleFonts.lato(
+                                            fontSize: 16,
+                                            color: Colors.blueGrey,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        width: 200,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
                                       Text(
-                                        newItem.condition.toString(),
-                                        textAlign: TextAlign.left,
+                                        'Brand -',
                                         style: GoogleFonts.lato(
                                           fontSize: 16,
                                           color: Colors.blueGrey,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Container(
+                                        child: Text(
+                                          newItem.brand.toString(),
+                                          textAlign: TextAlign.left,
+                                          style: GoogleFonts.lato(
+                                            fontSize: 16,
+                                            color: Colors.blueGrey,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        width: 200,
+                                      )
                                     ],
                                   ),
-                                  SizedBox(height: 5),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  newItem.size != null
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            Text(
+                                              'Size -',
+                                              style: GoogleFonts.lato(
+                                                fontSize: 16,
+                                                color: Colors.blueGrey,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Container(
+                                              child: Text(
+                                                newItem.size.toString(),
+                                                textAlign: TextAlign.left,
+                                                style: GoogleFonts.lato(
+                                                  fontSize: 16,
+                                                  color: Colors.blueGrey,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              width: 200,
+                                            )
+                                          ],
+                                        )
+                                      : Container(),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,

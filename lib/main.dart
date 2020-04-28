@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:SellShip/screens/additem.dart';
 
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,6 +36,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     _getLocation();
+
     super.initState();
   }
 
@@ -61,7 +65,7 @@ class _MyAppState extends State<MyApp> {
       });
     } on Exception catch (e) {
       print(e);
-      location = null;
+      Location().requestPermission();
     }
   }
 
@@ -104,55 +108,54 @@ class Splash extends StatefulWidget {
 
 class SplashState extends State<Splash> {
   final storage = new FlutterSecureStorage();
-//
-//  var latitude;
-//  var longitude;
-//  static LatLng position;
-//
-//  var firsttime;
 
-//  _getLocation() async {
-//    firsttime = await storage.read(key: 'firsttime');
-//    setState(() {
-//      firsttime = firsttime;
-//    });
-//    Location _location = new Location();
-//    var location;
+  var latitude;
+  var longitude;
+  static LatLng position;
+
+  var firsttime;
+
+  _getLocation() async {
+    firsttime = await storage.read(key: 'firsttime');
+    setState(() {
+      firsttime = firsttime;
+    });
+    Location _location = new Location();
+    var location;
+
+    try {
+      location = await _location.getLocation();
+      await storage.write(key: 'latitude', value: location.latitude.toString());
+      await storage.write(
+          key: 'longitude', value: location.longitude.toString());
+      setState(() {
+        position =
+            LatLng(location.latitude.toDouble(), location.longitude.toDouble());
+      });
+      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+          position.latitude, position.longitude);
+
+      Placemark place = p[0];
+      var cit = place.administrativeArea;
+      var country = place.country;
+      await storage.write(key: 'city', value: cit);
+      await storage.write(key: 'country', value: country);
+      setState(() {
+        city = cit;
+        print(city);
+        //secure storage save it
+      });
+    } on Exception catch (e) {
+      print(e);
+      Location().requestPermission();
+    }
+  }
+
 //
-//    try {
-//      location = await _location.getLocation();
-//      await storage.write(key: 'latitude', value: location.latitude.toString());
-//      await storage.write(
-//          key: 'longitude', value: location.longitude.toString());
-//      setState(() {
-//        position =
-//            LatLng(location.latitude.toDouble(), location.longitude.toDouble());
-//
-//        getcity();
-//      });
-//    } on Exception catch (e) {
-//      print(e);
-//      Location().requestPermission();
-//    }
-//  }
-//
-//  final Geolocator geolocator = Geolocator();
-//  static String city;
+  final Geolocator geolocator = Geolocator();
+  static String city;
 
   void getcity() async {
-//    List<Placemark> p = await geolocator.placemarkFromCoordinates(
-//        position.latitude, position.longitude);
-//
-//    Placemark place = p[0];
-//    var cit = place.administrativeArea;
-//    var country = place.country;
-//    await storage.write(key: 'city', value: cit);
-//    await storage.write(key: 'country', value: country);
-//    setState(() {
-//      city = cit;
-//      print(city);
-//      //secure storage save it
-//    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _seen = (prefs.getBool('seen') ?? false);
 
@@ -171,6 +174,7 @@ class SplashState extends State<Splash> {
     super.initState();
 
     new Timer(new Duration(milliseconds: 500), () {
+      _getLocation();
       getcity();
     });
   }
