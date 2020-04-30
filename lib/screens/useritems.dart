@@ -114,6 +114,27 @@ class _UserItemsState extends State<UserItems> {
         } else {
           print('No Items');
         }
+        var follower = profilemap['follower'];
+        print(follower);
+        if (follower != null) {
+          for (int i = 0; i < follower.length; i++) {
+            var meuser = await storage.read(key: 'userid');
+            if (meuser == follower[i]['\$oid']) {
+              setState(() {
+                follow = true;
+              });
+            }
+          }
+        } else {
+          follower = [];
+        }
+
+        var followin = profilemap['following'];
+        if (followin != null) {
+          print(followin);
+        } else {
+          followin = [];
+        }
 
         if (mounted) {
           setState(() {
@@ -121,6 +142,9 @@ class _UserItemsState extends State<UserItems> {
             lastname = profilemap['last_name'];
             phonenumber = profilemap['phonenumber'];
             email = profilemap['email'];
+            followers = follower.length;
+            itemssold = profilemap['products'].length;
+            following = followin.length;
             loading = false;
           });
         }
@@ -258,7 +282,40 @@ class _UserItemsState extends State<UserItems> {
                     width: 400,
                     decoration: BoxDecoration(color: Colors.amber),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () async {
+                        if (follow == true) {
+                          var user1 = await storage.read(key: 'userid');
+                          var followurl = 'https://sellship.co/api/follow/' +
+                              user1 +
+                              '/' +
+                              userid;
+
+                          final followresponse = await http.get(followurl);
+                          if (followresponse.statusCode == 200) {
+                            print('UnFollowed');
+                          }
+                          setState(() {
+                            follow = false;
+                            followers = followers - 1;
+                          });
+                        } else {
+                          var user1 = await storage.read(key: 'userid');
+                          var followurl = 'https://sellship.co/api/follow/' +
+                              user1 +
+                              '/' +
+                              userid;
+
+                          final followresponse = await http.get(followurl);
+                          if (followresponse.statusCode == 200) {
+                            print('Followed');
+                          }
+
+                          setState(() {
+                            follow = true;
+                            followers = followers + 1;
+                          });
+                        }
+                      },
                       child: Center(
                         child: Text(
                           follow == true ? 'FOLLOWING' : 'FOLLOW',

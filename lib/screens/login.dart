@@ -1476,6 +1476,21 @@ class _LoginPageState extends State<LoginPage>
         Map<String, dynamic> profilemap = respons;
         print(profilemap);
 
+        var follower = profilemap['follower'];
+        print(follower);
+        if (follower != null) {
+          print(follower);
+        } else {
+          follower = [];
+        }
+
+        var followin = profilemap['following'];
+        if (followin != null) {
+          print(followin);
+        } else {
+          followin = [];
+        }
+
         if (profilemap != null) {
           if (mounted) {
             setState(() {
@@ -1484,6 +1499,8 @@ class _LoginPageState extends State<LoginPage>
               phonenumber = profilemap['phonenumber'];
               email = profilemap['email'];
               loading = false;
+              following = followin.length;
+              followers = follower.length;
             });
           }
 
