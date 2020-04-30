@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,6 +65,7 @@ class _LoginPageState extends State<LoginPage>
 
   final facebookLogin = FacebookLogin();
   Map userProfile;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   _loginWithFB() async {
     final result = await facebookLogin.logIn(['email']);
@@ -89,6 +91,7 @@ class _LoginPageState extends State<LoginPage>
           'email': profile['email'],
           'phonenumber': '00',
           'password': 'password',
+          'fcmtoken': firebasetoken,
         };
 
         final response = await http.post(url, body: body);
@@ -110,6 +113,7 @@ class _LoginPageState extends State<LoginPage>
             Map<String, String> body = {
               'email': profile['email'],
               'password': 'password',
+              'fcmtoken': firebasetoken,
             };
 
             final response = await http.post(url, body: body);
@@ -317,6 +321,7 @@ class _LoginPageState extends State<LoginPage>
     super.dispose();
   }
 
+  var firebasetoken;
   @override
   void initState() {
     super.initState();
@@ -685,6 +690,7 @@ class _LoginPageState extends State<LoginPage>
                         ? Expanded(
                             child: Scrollbar(
                                 child: new ListView.builder(
+                                    cacheExtent: 50,
                                     itemCount: Itemname.length,
                                     itemBuilder:
                                         (BuildContext ctxt, int Index) {
@@ -711,84 +717,124 @@ class _LoginPageState extends State<LoginPage>
                                                 ),
                                               );
                                       }
-                                      return new InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Details(
-                                                      itemid: Itemid[Index])),
-                                            );
-                                          },
-                                          child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 5.0),
-                                              constraints:
-                                                  BoxConstraints(minHeight: 90),
-                                              alignment: Alignment.center,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey.shade200,
-                                                    offset: Offset(
-                                                        0.0, 1.0), //(x,y)
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                borderRadius:
-                                                    BorderRadius.circular(11.0),
-                                              ),
-                                              child: ListTile(
-                                                title: Text(
-                                                  Itemname[Index],
-                                                  style: GoogleFonts.lato(
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                                ),
-                                                trailing: FlatButton(
-                                                  onPressed: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              EditItem(
-                                                                  itemid: Itemid[
-                                                                      Index])),
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    'Edit Item',
-                                                    style: GoogleFonts.lato(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                                leading: Container(
-                                                  height: 60,
-                                                  width: 60,
+                                      return new Column(
+                                        children: <Widget>[
+                                          InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Details(
+                                                              itemid: Itemid[
+                                                                  Index])),
+                                                );
+                                              },
+                                              child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 5.0),
+                                                  constraints: BoxConstraints(
+                                                      minHeight: 90),
+                                                  alignment: Alignment.center,
                                                   decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                  child: ClipRRect(
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors
+                                                            .grey.shade200,
+                                                        offset: Offset(
+                                                            0.0, 1.0), //(x,y)
+                                                        blurRadius: 6.0,
+                                                      ),
+                                                    ],
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10),
-                                                    child: Image.network(
-                                                      Itemimage[Index],
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                                            11.0),
                                                   ),
-                                                ),
-                                                subtitle: Text(
-                                                  Itemcategory[Index],
-                                                  style: GoogleFonts.lato(
-                                                      fontSize: 14,
-                                                      color:
-                                                          Colors.grey.shade800),
-                                                ),
-                                              )));
+                                                  child: ListTile(
+                                                    title: Text(
+                                                      Itemname[Index],
+                                                      style: GoogleFonts.lato(
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                    ),
+                                                    trailing: InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EditItem(
+                                                                      itemid: Itemid[
+                                                                          Index])),
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        height: 40,
+                                                        width: 80,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Colors.deepOrange,
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Colors.grey
+                                                                  .shade300,
+                                                              offset: Offset(
+                                                                  0.0,
+                                                                  1.0), //(x,y)
+                                                              blurRadius: 6.0,
+                                                            ),
+                                                          ],
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      15.0),
+                                                        ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            'Edit Item',
+                                                            style: GoogleFonts
+                                                                .lato(
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .white),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    leading: Container(
+                                                      height: 60,
+                                                      width: 60,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: Image.network(
+                                                          Itemimage[Index],
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    subtitle: Text(
+                                                      Itemcategory[Index],
+                                                      style: GoogleFonts.lato(
+                                                          fontSize: 14,
+                                                          color: Colors
+                                                              .grey.shade800),
+                                                    ),
+                                                  ))),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                        ],
+                                      );
                                     })))
                         : Expanded(
                             child: Column(
@@ -1182,6 +1228,11 @@ class _LoginPageState extends State<LoginPage>
   void getProfileData() async {
     userid = await storage.read(key: 'userid');
     if (userid != null) {
+      _firebaseMessaging.getToken().then((token) {
+        setState(() {
+          firebasetoken = token;
+        });
+      });
       var url = 'https://sellship.co/api/user/' + userid;
       print(url);
       final response = await http.get(url);
@@ -1258,6 +1309,7 @@ class _LoginPageState extends State<LoginPage>
     Map<String, String> body = {
       'email': loginEmailController.text,
       'password': loginPasswordController.text,
+      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);
@@ -1293,6 +1345,7 @@ class _LoginPageState extends State<LoginPage>
       'email': signupEmailController.text,
       'phonenumber': numberphone,
       'password': signupPasswordController.text,
+      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);

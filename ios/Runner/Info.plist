@@ -14,6 +14,8 @@
 	<string>sellship</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
 	<key>GADApplicationIdentifier</key>
     <string>ca-app-pub-9959700192389744~6783422976</string>
 

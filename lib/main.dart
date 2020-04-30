@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:SellShip/screens/additem.dart';
@@ -33,10 +34,48 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+//  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+//
+//  static Future<dynamic> myBackgroundMessageHandler(
+//      Map<String, dynamic> message) async {
+//    print(message);
+//    return Future<void>.value();
+//  }
+//
+//  _initFirebaseMessaging() {
+//    _firebaseMessaging.configure(
+//      onMessage: (Map<String, dynamic> message) {
+//        print('AppPushs onMessage : $message');
+//        return;
+//      },
+//      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
+//      onResume: (Map<String, dynamic> message) {
+//        print('AppPushs onResume : $message');
+//        return;
+//      },
+//      onLaunch: (Map<String, dynamic> message) {
+//        print('AppPushs onLaunch : $message');
+//        return;
+//      },
+//    );
+//    _firebaseMessaging.requestNotificationPermissions(
+//        const IosNotificationSettings(sound: true, badge: true, alert: true));
+//
+//    _firebaseMessaging.onIosSettingsRegistered
+//        .listen((IosNotificationSettings settings) {
+//      print('Settings Registered : $settings');
+//    });
+//
+//    _firebaseMessaging.getToken().then((String token) {
+//      assert(token != null);
+//      print("TOken is $token");
+//    });
+//  }
+
   @override
   void initState() {
     _getLocation();
-
+//    _initFirebaseMessaging();
     super.initState();
   }
 
@@ -173,9 +212,11 @@ class SplashState extends State<Splash> {
   void initState() {
     super.initState();
 
-    new Timer(new Duration(milliseconds: 500), () {
-      _getLocation();
-      getcity();
+    new Timer(new Duration(milliseconds: 100), () {
+      if (mounted) {
+        _getLocation();
+        getcity();
+      }
     });
   }
 

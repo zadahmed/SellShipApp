@@ -253,7 +253,7 @@ class _AddItemState extends State<AddItem> {
     return Scaffold(
         key: _scaffoldKey,
         resizeToAvoidBottomPadding: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.white70,
         appBar: AppBar(
           title: Center(
             child: Text(
@@ -284,501 +284,576 @@ class _AddItemState extends State<AddItem> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 10, bottom: 10),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Images',
-                                      style: GoogleFonts.lato(
-                                          fontSize: 16, color: Colors.black),
-                                    ),
-                                  ),
-                                ),
                                 Container(
-                                  height: 130,
-                                  child: Scrollbar(
-                                    child: ListView(
-                                      scrollDirection: Axis.horizontal,
-                                      children: <Widget>[
-                                        SizedBox(
-                                          width: 10,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  height: 180,
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 10, bottom: 10),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Images',
+                                            style: GoogleFonts.lato(
+                                                fontSize: 16,
+                                                color: Colors.black),
+                                          ),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            final action = CupertinoActionSheet(
-                                              message: Text(
-                                                "Upload an Image",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal),
+                                      ),
+                                      Container(
+                                        height: 130,
+                                        child: Scrollbar(
+                                          child: ListView(
+                                            scrollDirection: Axis.horizontal,
+                                            children: <Widget>[
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                              actions: <Widget>[
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Camera",
+                                              GestureDetector(
+                                                onTap: () {
+                                                  final action =
+                                                      CupertinoActionSheet(
+                                                    message: Text(
+                                                      "Upload an Image",
                                                       style: TextStyle(
                                                           fontSize: 15.0,
                                                           fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageCamera();
-                                                  },
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Gallery",
-                                                      style: TextStyle(
-                                                          fontSize: 15.0,
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageGallery();
-                                                  },
-                                                )
-                                              ],
-                                              cancelButton:
-                                                  CupertinoActionSheetAction(
-                                                child: Text("Cancel",
-                                                    style: TextStyle(
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.normal)),
-                                                isDestructiveAction: true,
-                                                onPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop();
+                                                              .normal),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Camera",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageCamera();
+                                                        },
+                                                      ),
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Gallery",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageGallery();
+                                                        },
+                                                      )
+                                                    ],
+                                                    cancelButton:
+                                                        CupertinoActionSheetAction(
+                                                      child: Text("Cancel",
+                                                          style: TextStyle(
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
+                                                      isDestructiveAction: true,
+                                                      onPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  );
+                                                  showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          action);
                                                 },
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    height: 120,
+                                                    width: 120,
+                                                    child: _image == null
+                                                        ? Icon(Icons.add)
+                                                        : ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child: Image.file(
+                                                              _image,
+                                                              fit: BoxFit.cover,
+                                                            ))),
                                               ),
-                                            );
-                                            showCupertinoModalPopup(
-                                                context: context,
-                                                builder: (context) => action);
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              height: 120,
-                                              width: 120,
-                                              child: _image == null
-                                                  ? Icon(Icons.add)
-                                                  : ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.file(
-                                                        _image,
-                                                        fit: BoxFit.cover,
-                                                      ))),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            final action = CupertinoActionSheet(
-                                              message: Text(
-                                                "Upload an Image",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal),
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                              actions: <Widget>[
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Camera",
+                                              GestureDetector(
+                                                onTap: () {
+                                                  final action =
+                                                      CupertinoActionSheet(
+                                                    message: Text(
+                                                      "Upload an Image",
                                                       style: TextStyle(
                                                           fontSize: 15.0,
                                                           fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageCamera2();
-                                                  },
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Gallery",
-                                                      style: TextStyle(
-                                                          fontSize: 15.0,
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageGallery2();
-                                                  },
-                                                )
-                                              ],
-                                              cancelButton:
-                                                  CupertinoActionSheetAction(
-                                                child: Text("Cancel",
-                                                    style: TextStyle(
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.normal)),
-                                                isDestructiveAction: true,
-                                                onPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop();
+                                                              .normal),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Camera",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageCamera2();
+                                                        },
+                                                      ),
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Gallery",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageGallery2();
+                                                        },
+                                                      )
+                                                    ],
+                                                    cancelButton:
+                                                        CupertinoActionSheetAction(
+                                                      child: Text("Cancel",
+                                                          style: TextStyle(
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
+                                                      isDestructiveAction: true,
+                                                      onPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  );
+                                                  showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          action);
                                                 },
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    height: 120,
+                                                    width: 120,
+                                                    child: _image2 == null
+                                                        ? Icon(Icons.add)
+                                                        : ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child: Image.file(
+                                                              _image2,
+                                                              fit: BoxFit.cover,
+                                                            ))),
                                               ),
-                                            );
-                                            showCupertinoModalPopup(
-                                                context: context,
-                                                builder: (context) => action);
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              height: 120,
-                                              width: 120,
-                                              child: _image2 == null
-                                                  ? Icon(Icons.add)
-                                                  : ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.file(
-                                                        _image2,
-                                                        fit: BoxFit.cover,
-                                                      ))),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            final action = CupertinoActionSheet(
-                                              message: Text(
-                                                "Upload an Image",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal),
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                              actions: <Widget>[
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Camera",
+                                              GestureDetector(
+                                                onTap: () {
+                                                  final action =
+                                                      CupertinoActionSheet(
+                                                    message: Text(
+                                                      "Upload an Image",
                                                       style: TextStyle(
                                                           fontSize: 15.0,
                                                           fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageCamera3();
-                                                  },
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Gallery",
-                                                      style: TextStyle(
-                                                          fontSize: 15.0,
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageGallery3();
-                                                  },
-                                                )
-                                              ],
-                                              cancelButton:
-                                                  CupertinoActionSheetAction(
-                                                child: Text("Cancel",
-                                                    style: TextStyle(
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.normal)),
-                                                isDestructiveAction: true,
-                                                onPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop();
+                                                              .normal),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Camera",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageCamera3();
+                                                        },
+                                                      ),
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Gallery",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageGallery3();
+                                                        },
+                                                      )
+                                                    ],
+                                                    cancelButton:
+                                                        CupertinoActionSheetAction(
+                                                      child: Text("Cancel",
+                                                          style: TextStyle(
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
+                                                      isDestructiveAction: true,
+                                                      onPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  );
+                                                  showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          action);
                                                 },
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    height: 120,
+                                                    width: 120,
+                                                    child: _image3 == null
+                                                        ? Icon(Icons.add)
+                                                        : ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child: Image.file(
+                                                              _image3,
+                                                              fit: BoxFit.cover,
+                                                            ))),
                                               ),
-                                            );
-                                            showCupertinoModalPopup(
-                                                context: context,
-                                                builder: (context) => action);
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              height: 120,
-                                              width: 120,
-                                              child: _image3 == null
-                                                  ? Icon(Icons.add)
-                                                  : ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.file(
-                                                        _image3,
-                                                        fit: BoxFit.cover,
-                                                      ))),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            final action = CupertinoActionSheet(
-                                              message: Text(
-                                                "Upload an Image",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal),
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                              actions: <Widget>[
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Camera",
+                                              GestureDetector(
+                                                onTap: () {
+                                                  final action =
+                                                      CupertinoActionSheet(
+                                                    message: Text(
+                                                      "Upload an Image",
                                                       style: TextStyle(
                                                           fontSize: 15.0,
                                                           fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageCamera4();
-                                                  },
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Gallery",
-                                                      style: TextStyle(
-                                                          fontSize: 15.0,
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageGallery4();
-                                                  },
-                                                )
-                                              ],
-                                              cancelButton:
-                                                  CupertinoActionSheetAction(
-                                                child: Text("Cancel",
-                                                    style: TextStyle(
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.normal)),
-                                                isDestructiveAction: true,
-                                                onPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop();
+                                                              .normal),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Camera",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageCamera4();
+                                                        },
+                                                      ),
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Gallery",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageGallery4();
+                                                        },
+                                                      )
+                                                    ],
+                                                    cancelButton:
+                                                        CupertinoActionSheetAction(
+                                                      child: Text("Cancel",
+                                                          style: TextStyle(
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
+                                                      isDestructiveAction: true,
+                                                      onPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  );
+                                                  showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          action);
                                                 },
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    height: 120,
+                                                    width: 120,
+                                                    child: _image4 == null
+                                                        ? Icon(Icons.add)
+                                                        : ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child: Image.file(
+                                                              _image4,
+                                                              fit: BoxFit.cover,
+                                                            ))),
                                               ),
-                                            );
-                                            showCupertinoModalPopup(
-                                                context: context,
-                                                builder: (context) => action);
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              height: 120,
-                                              width: 120,
-                                              child: _image4 == null
-                                                  ? Icon(Icons.add)
-                                                  : ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.file(
-                                                        _image4,
-                                                        fit: BoxFit.cover,
-                                                      ))),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            final action = CupertinoActionSheet(
-                                              message: Text(
-                                                "Upload an Image",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal),
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                              actions: <Widget>[
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Camera",
+                                              GestureDetector(
+                                                onTap: () {
+                                                  final action =
+                                                      CupertinoActionSheet(
+                                                    message: Text(
+                                                      "Upload an Image",
                                                       style: TextStyle(
                                                           fontSize: 15.0,
                                                           fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageCamera5();
-                                                  },
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Gallery",
-                                                      style: TextStyle(
-                                                          fontSize: 15.0,
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageGallery5();
-                                                  },
-                                                )
-                                              ],
-                                              cancelButton:
-                                                  CupertinoActionSheetAction(
-                                                child: Text("Cancel",
-                                                    style: TextStyle(
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.normal)),
-                                                isDestructiveAction: true,
-                                                onPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop();
+                                                              .normal),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Camera",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageCamera5();
+                                                        },
+                                                      ),
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Gallery",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageGallery5();
+                                                        },
+                                                      )
+                                                    ],
+                                                    cancelButton:
+                                                        CupertinoActionSheetAction(
+                                                      child: Text("Cancel",
+                                                          style: TextStyle(
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
+                                                      isDestructiveAction: true,
+                                                      onPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  );
+                                                  showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          action);
                                                 },
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    height: 120,
+                                                    width: 120,
+                                                    child: _image5 == null
+                                                        ? Icon(Icons.add)
+                                                        : ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child: Image.file(
+                                                              _image5,
+                                                              fit: BoxFit.cover,
+                                                            ))),
                                               ),
-                                            );
-                                            showCupertinoModalPopup(
-                                                context: context,
-                                                builder: (context) => action);
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              height: 120,
-                                              width: 120,
-                                              child: _image5 == null
-                                                  ? Icon(Icons.add)
-                                                  : ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.file(
-                                                        _image5,
-                                                        fit: BoxFit.cover,
-                                                      ))),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            final action = CupertinoActionSheet(
-                                              message: Text(
-                                                "Upload an Image",
-                                                style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    fontWeight:
-                                                        FontWeight.normal),
+                                              SizedBox(
+                                                width: 10,
                                               ),
-                                              actions: <Widget>[
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Camera",
+                                              GestureDetector(
+                                                onTap: () {
+                                                  final action =
+                                                      CupertinoActionSheet(
+                                                    message: Text(
+                                                      "Upload an Image",
                                                       style: TextStyle(
                                                           fontSize: 15.0,
                                                           fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageCamera6();
-                                                  },
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  child: Text(
-                                                      "Upload from Gallery",
-                                                      style: TextStyle(
-                                                          fontSize: 15.0,
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDefaultAction: true,
-                                                  onPressed: () {
-                                                    getImageGallery6();
-                                                  },
-                                                )
-                                              ],
-                                              cancelButton:
-                                                  CupertinoActionSheetAction(
-                                                child: Text("Cancel",
-                                                    style: TextStyle(
-                                                        fontSize: 15.0,
-                                                        fontWeight:
-                                                            FontWeight.normal)),
-                                                isDestructiveAction: true,
-                                                onPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop();
+                                                              .normal),
+                                                    ),
+                                                    actions: <Widget>[
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Camera",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageCamera6();
+                                                        },
+                                                      ),
+                                                      CupertinoActionSheetAction(
+                                                        child: Text(
+                                                            "Upload from Gallery",
+                                                            style: TextStyle(
+                                                                fontSize: 15.0,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                        isDefaultAction: true,
+                                                        onPressed: () {
+                                                          getImageGallery6();
+                                                        },
+                                                      )
+                                                    ],
+                                                    cancelButton:
+                                                        CupertinoActionSheetAction(
+                                                      child: Text("Cancel",
+                                                          style: TextStyle(
+                                                              fontSize: 15.0,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
+                                                      isDestructiveAction: true,
+                                                      onPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                  );
+                                                  showCupertinoModalPopup(
+                                                      context: context,
+                                                      builder: (context) =>
+                                                          action);
                                                 },
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    height: 120,
+                                                    width: 120,
+                                                    child: _image6 == null
+                                                        ? Icon(Icons.add)
+                                                        : ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child: Image.file(
+                                                              _image6,
+                                                              fit: BoxFit.cover,
+                                                            ))),
                                               ),
-                                            );
-                                            showCupertinoModalPopup(
-                                                context: context,
-                                                builder: (context) => action);
-                                          },
-                                          child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.grey.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              height: 120,
-                                              width: 120,
-                                              child: _image6 == null
-                                                  ? Icon(Icons.add)
-                                                  : ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8.0),
-                                                      child: Image.file(
-                                                        _image6,
-                                                        fit: BoxFit.cover,
-                                                      ))),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 SizedBox(
                                   height: 20.0,
                                 ),
-                                Card(
-                                  elevation: 2,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
                                   child: ListTile(
                                     title: Text(
                                       'Category',
@@ -873,8 +948,17 @@ class _AddItemState extends State<AddItem> {
                                 ),
                                 _subcategories == null
                                     ? Container()
-                                    : Card(
-                                        elevation: 1,
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
                                         child: ListTile(
                                           title: Text(
                                             'Sub Category',
@@ -1022,8 +1106,17 @@ class _AddItemState extends State<AddItem> {
                                       ),
                                 _subsubcategory == null
                                     ? Container()
-                                    : Card(
-                                        elevation: 2,
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
                                         child: Container(
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -1065,81 +1158,126 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 5,
                                 ),
-                                TextField(
-                                  cursorColor: Color(0xFF979797),
-                                  controller: businessnameController,
-                                  autocorrect: true,
-                                  enableSuggestions: true,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  decoration: InputDecoration(
-                                      labelText: "Title",
-                                      labelStyle: GoogleFonts.lato(
-                                        fontSize: 16,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
                                       ),
-                                      focusColor: Colors.black,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      disabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797)))),
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    cursorColor: Color(0xFF979797),
+                                    controller: businessnameController,
+                                    autocorrect: true,
+                                    enableSuggestions: true,
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    decoration: InputDecoration(
+                                        labelText: "Title",
+                                        labelStyle: GoogleFonts.lato(
+                                          fontSize: 16,
+                                        ),
+                                        focusColor: Colors.black,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        disabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        ))),
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 10.0,
                                 ),
-                                TextField(
-                                  cursorColor: Color(0xFF979797),
-                                  controller: businessdescriptionController,
-                                  autocorrect: true,
-                                  enableSuggestions: true,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  maxLines: 5,
-                                  maxLength: 1000,
-                                  decoration: InputDecoration(
-                                      labelText: "Description",
-                                      alignLabelWithHint: true,
-                                      labelStyle: GoogleFonts.lato(
-                                        fontSize: 16,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
                                       ),
-                                      focusColor: Colors.black,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      disabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797))),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color(0xFF979797)))),
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    cursorColor: Color(0xFF979797),
+                                    controller: businessdescriptionController,
+                                    autocorrect: true,
+                                    enableSuggestions: true,
+                                    textCapitalization:
+                                        TextCapitalization.sentences,
+                                    maxLines: 5,
+                                    maxLength: 1000,
+                                    decoration: InputDecoration(
+                                        labelText: "Description",
+                                        alignLabelWithHint: true,
+                                        labelStyle: GoogleFonts.lato(
+                                          fontSize: 16,
+                                        ),
+                                        focusColor: Colors.black,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        focusedErrorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        disabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        errorBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        )),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                          color: Colors.grey.shade300,
+                                        ))),
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 10.0,
                                 ),
-                                Card(
-                                  elevation: 2,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
                                   child: ListTile(
                                     title: Text(
                                       'Condition',
@@ -1196,12 +1334,107 @@ class _AddItemState extends State<AddItem> {
                                 ),
                                 Container(
                                     height: 80,
-                                    child: Card(
-                                        elevation: 2,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade300,
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Center(
+                                        child: ListTile(
+                                            title: Text(
+                                              'Brand',
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 16),
+                                            ),
+                                            trailing: Container(
+                                                width: 200,
+                                                padding: EdgeInsets.only(),
+                                                child: Center(
+                                                  child: TextField(
+                                                    cursorColor:
+                                                        Color(0xFF979797),
+                                                    controller:
+                                                        businessbrandcontroller,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    decoration: InputDecoration(
+                                                        labelText: "Brand Name",
+                                                        alignLabelWithHint:
+                                                            true,
+                                                        labelStyle:
+                                                            GoogleFonts.lato(
+                                                                fontSize: 16),
+                                                        focusColor:
+                                                            Colors.black,
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        focusedErrorBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        disabledBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        errorBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        ))),
+                                                  ),
+                                                ))))),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                _selectedCategory == 'Fashion & Accessories'
+                                    ? Container(
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
                                         child: Center(
                                             child: ListTile(
                                                 title: Text(
-                                                  'Brand',
+                                                  'Size',
                                                   style: GoogleFonts.lato(
                                                       fontSize: 16),
                                                 ),
@@ -1213,68 +1446,11 @@ class _AddItemState extends State<AddItem> {
                                                         cursorColor:
                                                             Color(0xFF979797),
                                                         controller:
-                                                            businessbrandcontroller,
+                                                            businessizecontroller,
                                                         keyboardType:
                                                             TextInputType.text,
-                                                        decoration: InputDecoration(
-                                                            labelText:
-                                                                "Brand Name",
-                                                            alignLabelWithHint:
-                                                                true,
-                                                            labelStyle: GoogleFonts.lato(
-                                                                fontSize: 16),
-                                                            focusColor:
-                                                                Colors.black,
-                                                            enabledBorder: OutlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: Color(
-                                                                        0xFF979797))),
-                                                            border: OutlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: Color(
-                                                                        0xFF979797))),
-                                                            focusedErrorBorder:
-                                                                OutlineInputBorder(
-                                                                    borderSide: BorderSide(
-                                                                        color: Color(
-                                                                            0xFF979797))),
-                                                            disabledBorder:
-                                                                OutlineInputBorder(
-                                                                    borderSide:
-                                                                        BorderSide(color: Color(0xFF979797))),
-                                                            errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF979797))),
-                                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF979797)))),
-                                                      ),
-                                                    )))))),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                _selectedCategory == 'Fashion & Accessories'
-                                    ? Container(
-                                        height: 80,
-                                        child: Card(
-                                            elevation: 2,
-                                            child: Center(
-                                                child: ListTile(
-                                                    title: Text(
-                                                      'Size',
-                                                      style: GoogleFonts.lato(
-                                                          fontSize: 16),
-                                                    ),
-                                                    trailing: Container(
-                                                        width: 200,
-                                                        padding:
-                                                            EdgeInsets.only(),
-                                                        child: Center(
-                                                          child: TextField(
-                                                            cursorColor: Color(
-                                                                0xFF979797),
-                                                            controller:
-                                                                businessizecontroller,
-                                                            keyboardType:
-                                                                TextInputType
-                                                                    .text,
-                                                            decoration: InputDecoration(
+                                                        decoration:
+                                                            InputDecoration(
                                                                 labelText:
                                                                     "Size",
                                                                 alignLabelWithHint:
@@ -1283,187 +1459,254 @@ class _AddItemState extends State<AddItem> {
                                                                     GoogleFonts.lato(
                                                                         fontSize:
                                                                             16),
-                                                                focusColor:
-                                                                    Colors
-                                                                        .black,
+                                                                focusColor: Colors
+                                                                    .black,
                                                                 enabledBorder:
                                                                     OutlineInputBorder(
-                                                                        borderSide: BorderSide(
-                                                                            color: Color(
-                                                                                0xFF979797))),
-                                                                border: OutlineInputBorder(
-                                                                    borderSide: BorderSide(
-                                                                        color: Color(
-                                                                            0xFF979797))),
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
                                                                 focusedErrorBorder:
                                                                     OutlineInputBorder(
-                                                                        borderSide: BorderSide(
-                                                                            color: Color(
-                                                                                0xFF979797))),
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
                                                                 disabledBorder:
                                                                     OutlineInputBorder(
-                                                                        borderSide: BorderSide(color: Color(0xFF979797))),
-                                                                errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF979797))),
-                                                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF979797)))),
-                                                          ),
-                                                        ))))))
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                errorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                ))),
+                                                      ),
+                                                    )))))
                                     : Container(),
                                 SizedBox(
                                   height: 10.0,
                                 ),
                                 Container(
-                                  height: 80,
-                                  child: Card(
-                                      elevation: 2,
-                                      child: Center(
-                                          child: ListTile(
-                                              title: Text(
-                                                'Price',
-                                                style: GoogleFonts.lato(
-                                                    fontSize: 16),
-                                              ),
-                                              trailing: Container(
-                                                  width: 200,
-                                                  padding: EdgeInsets.only(),
-                                                  child: Center(
-                                                    child: TextField(
-                                                      cursorColor:
-                                                          Color(0xFF979797),
-                                                      controller:
-                                                          businesspricecontroller,
-                                                      keyboardType: TextInputType
-                                                          .numberWithOptions(),
-                                                      decoration: InputDecoration(
-                                                          labelText: "Price " +
-                                                              currency,
-                                                          alignLabelWithHint:
-                                                              true,
-                                                          labelStyle: GoogleFonts.lato(
-                                                              fontSize: 16),
-                                                          focusColor:
-                                                              Colors.black,
-                                                          enabledBorder: OutlineInputBorder(
-                                                              borderSide: BorderSide(
-                                                                  color: Color(
-                                                                      0xFF979797))),
-                                                          border: OutlineInputBorder(
-                                                              borderSide: BorderSide(
-                                                                  color: Color(
-                                                                      0xFF979797))),
-                                                          focusedErrorBorder:
-                                                              OutlineInputBorder(
-                                                                  borderSide: BorderSide(
-                                                                      color: Color(
-                                                                          0xFF979797))),
-                                                          disabledBorder:
-                                                              OutlineInputBorder(
-                                                                  borderSide: BorderSide(color: Color(0xFF979797))),
-                                                          errorBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF979797))),
-                                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Color(0xFF979797)))),
-                                                    ),
-                                                  ))))),
-                                ),
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade300,
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Center(
+                                        child: ListTile(
+                                            title: Text(
+                                              'Price',
+                                              style: GoogleFonts.lato(
+                                                  fontSize: 16),
+                                            ),
+                                            trailing: Container(
+                                                width: 200,
+                                                padding: EdgeInsets.only(),
+                                                child: Center(
+                                                  child: TextField(
+                                                    cursorColor:
+                                                        Color(0xFF979797),
+                                                    controller:
+                                                        businesspricecontroller,
+                                                    keyboardType: TextInputType
+                                                        .numberWithOptions(),
+                                                    decoration: InputDecoration(
+                                                        labelText:
+                                                            "Price " + currency,
+                                                        alignLabelWithHint:
+                                                            true,
+                                                        labelStyle:
+                                                            GoogleFonts.lato(
+                                                                fontSize: 16),
+                                                        focusColor:
+                                                            Colors.black,
+                                                        enabledBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        focusedErrorBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        disabledBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        errorBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        )),
+                                                        focusedBorder:
+                                                            OutlineInputBorder(
+                                                                borderSide:
+                                                                    BorderSide(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                        ))),
+                                                  ),
+                                                ))))),
                                 SizedBox(
                                   height: 20.0,
                                 ),
                                 Container(
-                                  height: 380,
-                                  child: Card(
-                                    elevation: 2,
-                                    child: Column(
-                                      children: <Widget>[
-                                        Text(
-                                          'Choose Item\'s Location',
-                                          style: GoogleFonts.lato(fontSize: 16),
-                                        ),
-                                        SizedBox(
-                                          height: 5.0,
-                                        ),
-                                        Text(
-                                          'Press on the map to choose the Item\'s location',
-                                          textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(fontSize: 16),
-                                        ),
-                                        SizedBox(
-                                          height: 8.0,
-                                        ),
-                                        Stack(
-                                          children: <Widget>[
-                                            position != null
-                                                ? Container(
-                                                    height: 300,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: GoogleMap(
-                                                      initialCameraPosition:
-                                                          CameraPosition(
-                                                              target: position,
-                                                              zoom: 18.0,
-                                                              bearing: 70),
-                                                      onMapCreated: mapCreated,
-                                                      onCameraMove:
-                                                          _onCameraMove,
-                                                      onTap: _handleTap,
-                                                      markers: _markers,
-                                                      zoomGesturesEnabled: true,
-                                                      myLocationEnabled: true,
-                                                      myLocationButtonEnabled:
-                                                          true,
-                                                      compassEnabled: true,
-                                                      gestureRecognizers: Set()
-                                                        ..add(Factory<
-                                                                EagerGestureRecognizer>(
-                                                            () =>
-                                                                EagerGestureRecognizer())),
-                                                    ),
-                                                  )
-                                                : Text(
-                                                    'Oops! Something went wrong. \n Please try again',
-                                                    style: GoogleFonts.lato(
-                                                        fontSize: 16),
-                                                  ),
-                                            Positioned(
-                                              top: 10,
-                                              left: MediaQuery.of(context)
+                                  height: 390,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text(
+                                        'Choose Item\'s Location',
+                                        style: GoogleFonts.lato(fontSize: 16),
+                                      ),
+                                      SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      Text(
+                                        'Press on the map to choose the Item\'s location',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.lato(fontSize: 16),
+                                      ),
+                                      SizedBox(
+                                        height: 10.0,
+                                      ),
+                                      Stack(
+                                        children: <Widget>[
+                                          position != null
+                                              ? Container(
+                                                  height: 300,
+                                                  width: MediaQuery.of(context)
                                                       .size
-                                                      .width *
-                                                  0.05,
-                                              child: SearchMapPlaceWidget(
-                                                apiKey:
-                                                    'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
-                                                // The language of the autocompletion
-                                                language: 'en',
-                                                location: position,
-                                                radius: 10000,
-                                                onSelected:
-                                                    (Place place) async {
-                                                  final geolocation =
-                                                      await place.geolocation;
+                                                      .width,
+                                                  child: GoogleMap(
+                                                    initialCameraPosition:
+                                                        CameraPosition(
+                                                            target: position,
+                                                            zoom: 18.0,
+                                                            bearing: 70),
+                                                    onMapCreated: mapCreated,
+                                                    onCameraMove: _onCameraMove,
+                                                    onTap: _handleTap,
+                                                    markers: _markers,
+                                                    zoomGesturesEnabled: true,
+                                                    myLocationEnabled: true,
+                                                    myLocationButtonEnabled:
+                                                        true,
+                                                    compassEnabled: true,
+                                                    gestureRecognizers: Set()
+                                                      ..add(Factory<
+                                                              EagerGestureRecognizer>(
+                                                          () =>
+                                                              EagerGestureRecognizer())),
+                                                  ),
+                                                )
+                                              : Text(
+                                                  'Oops! Something went wrong. \n Please try again',
+                                                  style: GoogleFonts.lato(
+                                                      fontSize: 16),
+                                                ),
+                                          Positioned(
+                                            top: 10,
+                                            left: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05,
+                                            child: SearchMapPlaceWidget(
+                                              apiKey:
+                                                  'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
+                                              // The language of the autocompletion
+                                              language: 'en',
+                                              location: position,
+                                              radius: 10000,
+                                              onSelected: (Place place) async {
+                                                final geolocation =
+                                                    await place.geolocation;
 
-                                                  controller.animateCamera(
-                                                      CameraUpdate.newLatLng(
-                                                          geolocation
-                                                              .coordinates));
-                                                  controller.animateCamera(
-                                                      CameraUpdate
-                                                          .newLatLngBounds(
-                                                              geolocation
-                                                                  .bounds,
-                                                              0));
-                                                },
-                                              ),
+                                                controller.animateCamera(
+                                                    CameraUpdate.newLatLng(
+                                                        geolocation
+                                                            .coordinates));
+                                                controller.animateCamera(
+                                                    CameraUpdate
+                                                        .newLatLngBounds(
+                                                            geolocation.bounds,
+                                                            0));
+                                              },
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Text(
                                   "Thank you for helping us grow!",
-                                  style: GoogleFonts.lato(fontSize: 14),
+                                  style: GoogleFonts.lato(
+                                      fontSize: 14, color: Colors.blueGrey),
                                 ),
                                 SizedBox(
                                   height: 5.0,

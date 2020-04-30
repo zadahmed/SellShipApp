@@ -536,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _getLocation();
       setState(() {
         loading = false;
-        itemsgrid = null;
+        itemsgrid = [];
       });
     }
   }
@@ -921,7 +921,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    itemsgrid != null
+                    itemsgrid.isNotEmpty
                         ? Expanded(
                             child: StaggeredGridView.countBuilder(
                             controller: _scrollController,
@@ -966,7 +966,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: Container(
                                                   margin: const EdgeInsets.only(
                                                       bottom: 5.0),
-                                                  width: 115.0,
+                                                  width: 120.0,
                                                   constraints: BoxConstraints(
                                                       minHeight: 110),
                                                   alignment: Alignment.center,
