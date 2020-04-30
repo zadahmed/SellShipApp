@@ -70,7 +70,7 @@ class _DetailsState extends State<Details> {
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
-        currency = 'USD';
+        currency = '\$';
       });
     }
 

@@ -35,7 +35,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
-        currency = 'USD';
+        currency = '\$';
       });
     }
     print(userid);

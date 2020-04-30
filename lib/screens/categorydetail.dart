@@ -98,7 +98,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
-        currency = 'USD';
+        currency = '\$';
         country = country;
       });
     }

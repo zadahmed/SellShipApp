@@ -74,7 +74,7 @@ class _UserItemsState extends State<UserItems> {
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
-        currency = 'USD';
+        currency = '\$';
       });
     }
     print(userid);
@@ -136,6 +136,20 @@ class _UserItemsState extends State<UserItems> {
           followin = [];
         }
 
+        var sol = profilemap['sold'];
+        if (sol != null) {
+          print(sol);
+        } else {
+          sol = [];
+        }
+
+        var profilepic = profilemap['profilepicture'];
+        if (profilepic != null) {
+          print(profilepic);
+        } else {
+          profilepic = null;
+        }
+
         if (mounted) {
           setState(() {
             firstname = profilemap['first_name'];
@@ -143,9 +157,10 @@ class _UserItemsState extends State<UserItems> {
             phonenumber = profilemap['phonenumber'];
             email = profilemap['email'];
             followers = follower.length;
-            itemssold = profilemap['products'].length;
+            itemssold = sol.length;
             following = followin.length;
             loading = false;
+            profilepicture = profilepic;
           });
         }
       } else {
@@ -203,7 +218,10 @@ class _UserItemsState extends State<UserItems> {
                             'assets/personplaceholder.png',
                             fit: BoxFit.cover,
                           )
-                        : Image.network(''),
+                        : Image.network(
+                            profilepicture,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                 ),
                 SizedBox(height: 25.0),
@@ -332,11 +350,11 @@ class _UserItemsState extends State<UserItems> {
                 Divider(),
                 Center(
                   child: Text(
-                    'My Items',
+                    '$firstname\'s Items',
                     style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 16,
-                    ),
+                        fontFamily: 'Montserrat',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(

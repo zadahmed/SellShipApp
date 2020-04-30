@@ -118,7 +118,7 @@ class _SearchState extends State<Search> {
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
-        currency = 'USD';
+        currency = '\$';
       });
     }
 

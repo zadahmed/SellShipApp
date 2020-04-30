@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/edititem.dart';
 import 'package:SellShip/screens/editprofile.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -344,7 +346,7 @@ class _LoginPageState extends State<LoginPage>
         style: TextStyle(
             fontFamily: 'Montserrat', fontSize: 16, color: Colors.white),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.amber,
       duration: Duration(seconds: 3),
     ));
   }
@@ -629,7 +631,57 @@ class _LoginPageState extends State<LoginPage>
   var followers;
   var itemssold;
   var following;
+  var sold;
   var totalitems;
+
+  Future getImageCamera() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
+
+    var url = 'https://sellship.co/api/imageupload/' + userid;
+    Dio dio = new Dio();
+    FormData formData;
+    String fileName = image.path.split('/').last;
+    formData = FormData.fromMap({
+      'profilepicture':
+          await MultipartFile.fromFile(image.path, filename: fileName)
+    });
+    var response = await dio.post(url, data: formData);
+
+    if (response.statusCode == 200) {
+      print(response.data);
+    }
+
+    setState(() {
+      profilepicture = response.data;
+    });
+
+    Navigator.of(context, rootNavigator: true).pop();
+  }
+
+  Future getImageGallery() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
+
+    var url = 'https://sellship.co/api/imageupload/' + userid;
+    Dio dio = new Dio();
+    FormData formData;
+    String fileName = image.path.split('/').last;
+    formData = FormData.fromMap({
+      'profilepicture':
+          await MultipartFile.fromFile(image.path, filename: fileName)
+    });
+    var response = await dio.post(url, data: formData);
+
+    if (response.statusCode == 200) {
+      print(response.data);
+    }
+
+    setState(() {
+      profilepicture = response.data;
+    });
+    Navigator.of(context, rootNavigator: true).pop();
+  }
 
   ScrollController _scrollController = ScrollController();
 
@@ -638,6 +690,7 @@ class _LoginPageState extends State<LoginPage>
   Widget profile(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        key: _scaffoldKey,
         drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
@@ -706,19 +759,67 @@ class _LoginPageState extends State<LoginPage>
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    height: 100,
-                    width: 100,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(60),
-                      child: profilepicture == null
-                          ? Image.asset(
-                              'assets/personplaceholder.png',
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(''),
+                  GestureDetector(
+                    onTap: () {
+                      final action = CupertinoActionSheet(
+                        message: Text(
+                          "Upload an Image",
+                          style: TextStyle(
+                              fontSize: 15.0, fontWeight: FontWeight.normal),
+                        ),
+                        actions: <Widget>[
+                          CupertinoActionSheetAction(
+                            child: Text("Upload from Camera",
+                                style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.normal)),
+                            isDefaultAction: true,
+                            onPressed: () {
+                              getImageCamera();
+                            },
+                          ),
+                          CupertinoActionSheetAction(
+                            child: Text("Upload from Gallery",
+                                style: TextStyle(
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.normal)),
+                            isDefaultAction: true,
+                            onPressed: () {
+                              getImageGallery();
+                            },
+                          )
+                        ],
+                        cancelButton: CupertinoActionSheetAction(
+                          child: Text("Cancel",
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.normal)),
+                          isDestructiveAction: true,
+                          onPressed: () {
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                        ),
+                      );
+                      showCupertinoModalPopup(
+                          context: context, builder: (context) => action);
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(60),
+                        child: profilepicture == null
+                            ? Image.asset(
+                                'assets/personplaceholder.png',
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                profilepicture,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 25.0),
@@ -795,22 +896,22 @@ class _LoginPageState extends State<LoginPage>
                     child: Text(
                       'My Items',
                       style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 16,
-                      ),
+                          fontFamily: 'Montserrat',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
-                  Itemname.isNotEmpty
+                  item != null
                       ? Expanded(
                           child: StaggeredGridView.countBuilder(
                           controller: _scrollController,
                           crossAxisCount: 2,
                           mainAxisSpacing: 4,
                           crossAxisSpacing: 4,
-                          itemCount: Itemname.length,
+                          itemCount: item.length,
                           itemBuilder: (context, index) {
                             if (index != 0 && index % 4 == 0) {
                               return Platform.isIOS == true
@@ -840,8 +941,8 @@ class _LoginPageState extends State<LoginPage>
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                Details(itemid: Itemid[index])),
+                                            builder: (context) => Details(
+                                                itemid: item[index].itemid)),
                                       );
                                     },
                                     child: Container(
@@ -864,7 +965,7 @@ class _LoginPageState extends State<LoginPage>
                                                 borderRadius:
                                                     BorderRadius.circular(15),
                                                 child: CachedNetworkImage(
-                                                  imageUrl: Itemimage[index],
+                                                  imageUrl: item[index].image,
                                                   placeholder: (context, url) =>
                                                       SpinKitChasingDots(
                                                           color: Colors
@@ -885,7 +986,7 @@ class _LoginPageState extends State<LoginPage>
                                                   CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
-                                                  Itemname[index],
+                                                  item[index].name,
                                                   style: TextStyle(
                                                     fontFamily: 'Montserrat',
                                                     fontSize: 16,
@@ -896,7 +997,7 @@ class _LoginPageState extends State<LoginPage>
                                                 SizedBox(height: 3.0),
                                                 Container(
                                                   child: Text(
-                                                    Itemcategory[index],
+                                                    item[index].category,
                                                     style: TextStyle(
                                                       fontFamily: 'Montserrat',
                                                       fontSize: 14,
@@ -909,7 +1010,8 @@ class _LoginPageState extends State<LoginPage>
                                                 SizedBox(height: 3.0),
                                                 Container(
                                                   child: Text(
-                                                    Itemprice[index]
+                                                    item[index]
+                                                            .price
                                                             .toString() +
                                                         ' ' +
                                                         currency,
@@ -936,10 +1038,12 @@ class _LoginPageState extends State<LoginPage>
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    EditItem(
-                                                                        itemid:
-                                                                            Itemid[index])),
+                                                                builder:
+                                                                    (context) =>
+                                                                        EditItem(
+                                                                          itemid:
+                                                                              item[index].itemid,
+                                                                        )),
                                                           );
                                                         },
                                                         child: Container(
@@ -967,11 +1071,11 @@ class _LoginPageState extends State<LoginPage>
                                                           ),
                                                           child: Center(
                                                             child: Text(
-                                                              'Edit Item',
+                                                              'Edit',
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
-                                                                  fontSize: 16,
+                                                                  fontSize: 14,
                                                                   color: Colors
                                                                       .white),
                                                             ),
@@ -979,8 +1083,50 @@ class _LoginPageState extends State<LoginPage>
                                                         ),
                                                       ),
                                                       InkWell(
-                                                        onTap: () {
-                                                          print('Item Sold');
+                                                        onTap: () async {
+                                                          if (item[index]
+                                                                  .sold ==
+                                                              true) {
+                                                            var url =
+                                                                'https://sellship.co/api/unsold/' +
+                                                                    item[index]
+                                                                        .itemid +
+                                                                    '/' +
+                                                                    userid;
+                                                            print(url);
+                                                            final response =
+                                                                await http
+                                                                    .get(url);
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                              print(response
+                                                                  .body);
+                                                            }
+                                                            getProfileData();
+                                                            showInSnackBar(
+                                                                'Item is now live!');
+                                                          } else {
+                                                            var url =
+                                                                'https://sellship.co/api/sold/' +
+                                                                    item[index]
+                                                                        .itemid +
+                                                                    '/' +
+                                                                    userid;
+                                                            print(url);
+                                                            final response =
+                                                                await http
+                                                                    .get(url);
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                              print(response
+                                                                  .body);
+                                                            }
+                                                            getProfileData();
+                                                          }
+                                                          showInSnackBar(
+                                                              'Item has been marked sold!');
                                                         },
                                                         child: Container(
                                                           height: 30,
@@ -1006,11 +1152,14 @@ class _LoginPageState extends State<LoginPage>
                                                           ),
                                                           child: Center(
                                                             child: Text(
-                                                              'Item Sold',
+                                                              item[index].sold ==
+                                                                      false
+                                                                  ? 'Mark Sold'
+                                                                  : 'Mark Live',
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Montserrat',
-                                                                  fontSize: 16,
+                                                                  fontSize: 14,
                                                                   color: Colors
                                                                       .white),
                                                             ),
@@ -1442,12 +1591,7 @@ class _LoginPageState extends State<LoginPage>
   var phonenumber;
   String userid;
 
-  List<String> Itemid = List<String>();
-  List<String> Itemname = List<String>();
-  List<String> Itemimage = List<String>();
-  List<String> Itemcategory = List<String>();
-  List<String> Itemprice = List<String>();
-
+  List<Item> item = List<Item>();
   void getProfileData() async {
     userid = await storage.read(key: 'userid');
     var country = await storage.read(key: 'country');
@@ -1458,7 +1602,7 @@ class _LoginPageState extends State<LoginPage>
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
-        currency = 'USD';
+        currency = '\$';
       });
     }
 
@@ -1474,10 +1618,9 @@ class _LoginPageState extends State<LoginPage>
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
         Map<String, dynamic> profilemap = respons;
-        print(profilemap);
 
         var follower = profilemap['follower'];
-        print(follower);
+
         if (follower != null) {
           print(follower);
         } else {
@@ -1491,6 +1634,20 @@ class _LoginPageState extends State<LoginPage>
           followin = [];
         }
 
+        var sol = profilemap['sold'];
+        if (sol != null) {
+          print(sol);
+        } else {
+          sol = [];
+        }
+
+        var profilepic = profilemap['profilepicture'];
+        if (profilepic != null) {
+          print(profilepic);
+        } else {
+          profilepic = null;
+        }
+
         if (profilemap != null) {
           if (mounted) {
             setState(() {
@@ -1501,6 +1658,8 @@ class _LoginPageState extends State<LoginPage>
               loading = false;
               following = followin.length;
               followers = follower.length;
+              itemssold = sol.length;
+              profilepicture = profilepic;
             });
           }
 
@@ -1511,26 +1670,28 @@ class _LoginPageState extends State<LoginPage>
             var itemrespons = json.decode(itemresponse.body);
             Map<String, dynamic> itemmap = itemrespons;
             print(itemmap);
-
+            List<Item> ites = List<Item>();
             var productmap = itemmap['products'];
+
             if (productmap != null) {
               for (var i = 0; i < productmap.length; i++) {
-                Itemid.add(productmap[i]['_id']['\$oid']);
-                Itemname.add(productmap[i]['name']);
-                Itemimage.add(productmap[i]['image']);
-                Itemprice.add(productmap[i]['price'].toString());
-                Itemcategory.add(productmap[i]['category']);
+                Item ite = Item(
+                    itemid: productmap[i]['_id']['\$oid'],
+                    name: productmap[i]['name'],
+                    image: productmap[i]['image'],
+                    price: productmap[i]['price'],
+                    sold: productmap[i]['sold'] == null
+                        ? false
+                        : productmap[i]['sold'],
+                    category: productmap[i]['category']);
+                ites.add(ite);
               }
               setState(() {
-                Itemid = Itemid;
-                Itemname = Itemname;
-                Itemimage = Itemimage;
-                Itemprice = Itemprice;
-                Itemcategory = Itemcategory;
+                item = ites;
               });
             }
           } else {
-            print('No Items');
+            item = [];
           }
         } else {
           setState(() {

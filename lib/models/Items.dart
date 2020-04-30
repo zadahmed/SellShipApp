@@ -24,6 +24,7 @@ class Item {
   final String subsubcategory;
   final double distance;
   final String brand;
+  final bool sold;
   final String size;
 
   Item(
@@ -50,6 +51,7 @@ class Item {
       this.subcategory,
       this.brand,
       this.size,
+      this.sold,
       this.distance});
 
   factory Item.fromJson(Map<String, dynamic> json) {

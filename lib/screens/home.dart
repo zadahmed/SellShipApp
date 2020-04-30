@@ -563,7 +563,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
-        currency = 'USD';
+        currency = '\$';
       });
     }
 
@@ -1036,7 +1036,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               }
-                              if (index != 0 && index % 7 == 0) {
+                              if (index != 0 && index % 4 == 0) {
                                 return Platform.isIOS == true
                                     ? Container(
                                         height: 330,
@@ -1163,10 +1163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )));
                             },
                             staggeredTileBuilder: (int index) {
-                              if (index != 0 && index % 7 == 0) {
-                                return StaggeredTile.count(2, 1);
-                              } else if (index != 0 &&
-                                  index == itemsgrid.length) {
+                              if (index != 0 && index == itemsgrid.length) {
                                 return StaggeredTile.count(2, 0.5);
                               } else if (index == 0) {
                                 return StaggeredTile.count(2, 0.6);
