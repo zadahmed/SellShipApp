@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
@@ -126,10 +125,8 @@ class MessagesState extends State<Messages> {
           centerTitle: true,
           title: Text(
             'Chats',
-            style: GoogleFonts.lato(
-              fontSize: 18,
-              color: Colors.white,
-            ),
+            style: TextStyle(
+                fontFamily: 'Montserrat', fontSize: 20, color: Colors.white),
           ),
         ),
         body: Container(
@@ -159,20 +156,23 @@ class MessagesState extends State<Messages> {
                                             flex: 10,
                                             child: ListTile(
                                               title: Text(
-                                                  snapshot.data[Index]
-                                                      .peoplemessaged,
-                                                  style: GoogleFonts.lato(
-                                                    fontSize: 16,
-                                                  )),
+                                                snapshot
+                                                    .data[Index].peoplemessaged,
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                ),
+                                              ),
                                               subtitle: Text(
-                                                  snapshot
-                                                      .data[Index].lastrecieved,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: GoogleFonts.lato(
-                                                    fontSize: 11,
-                                                  )),
+                                                snapshot
+                                                    .data[Index].lastrecieved,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 11,
+                                                ),
+                                              ),
                                               leading: Icon(Icons.person),
                                               trailing: Column(
                                                 crossAxisAlignment:
@@ -183,8 +183,10 @@ class MessagesState extends State<Messages> {
                                                   Text(
                                                     snapshot.data[Index]
                                                         .recieveddate,
-                                                    style: GoogleFonts.lato(
-                                                        fontSize: 11),
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 11,
+                                                    ),
                                                   ),
                                                   snapshot.data[Index].unread ==
                                                           true
@@ -334,7 +336,8 @@ class MessagesState extends State<Messages> {
                               child: Text(
                                 'View your Messages here ',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.lato(
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
                                   fontSize: 16,
                                 ),
                               ),

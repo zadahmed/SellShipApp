@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:SellShip/screens/rootscreen.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -83,8 +82,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Text(
                                 'Buying something? Find the best items near you in less than a minute!',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.lato(
-                                    fontSize: 20, color: Colors.white)),
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 20,
+                                    color: Colors.white)),
                           ],
                         ),
                       ),
@@ -106,8 +107,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Text(
                                 'Selling Something ? List your item on SellShip within seconds!',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.lato(
-                                    fontSize: 20, color: Colors.white)),
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 20,
+                                    color: Colors.white)),
                           ],
                         ),
                       ),
@@ -129,8 +132,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Text(
                                 'Experience a new way of friendship through selling!',
                                 textAlign: TextAlign.center,
-                                style: GoogleFonts.lato(
-                                    fontSize: 20, color: Colors.white)),
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 20,
+                                    color: Colors.white)),
                           ],
                         ),
                       ),
@@ -158,7 +163,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               children: <Widget>[
                                 Text(
                                   'Next',
-                                  style: GoogleFonts.lato(
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
                                     color: Colors.white,
                                     fontSize: 22.0,
                                   ),
@@ -199,7 +205,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     padding: EdgeInsets.only(bottom: 30.0),
                     child: Text(
                       'Get started',
-                      style: GoogleFonts.lato(
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
                         color: Color(0xFF5B16D0),
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,

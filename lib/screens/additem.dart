@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -258,9 +257,9 @@ class _AddItemState extends State<AddItem> {
           title: Center(
             child: Text(
               "Add an Item",
-              style: GoogleFonts.lato(
-                color: Colors.white,
-                fontSize: 20.0,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 20,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -308,9 +307,10 @@ class _AddItemState extends State<AddItem> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             'Images',
-                                            style: GoogleFonts.lato(
-                                                fontSize: 16,
-                                                color: Colors.black),
+                                            style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -857,7 +857,10 @@ class _AddItemState extends State<AddItem> {
                                   child: ListTile(
                                     title: Text(
                                       'Category',
-                                      style: GoogleFonts.lato(fontSize: 16),
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 16,
+                                      ),
                                     ),
                                     trailing: Container(
                                       width: 200,
@@ -868,9 +871,10 @@ class _AddItemState extends State<AddItem> {
                                           child: DropdownButton(
                                             hint: Text(
                                               'Choose a category',
-                                              style: GoogleFonts.lato(
-                                                  fontSize: 16,
-                                                  color: Colors.black),
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 16,
+                                              ),
                                             ), // Not necessary for Option 1
                                             value: _selectedCategory,
                                             onChanged: (newValue) {
@@ -930,9 +934,10 @@ class _AddItemState extends State<AddItem> {
                                               return DropdownMenuItem(
                                                 child: new Text(
                                                   location,
-                                                  style: GoogleFonts.lato(
-                                                      fontSize: 16,
-                                                      color: Colors.black),
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                  ),
                                                 ),
                                                 value: location,
                                               );
@@ -962,8 +967,10 @@ class _AddItemState extends State<AddItem> {
                                         child: ListTile(
                                           title: Text(
                                             'Sub Category',
-                                            style:
-                                                GoogleFonts.lato(fontSize: 16),
+                                            style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                            ),
                                           ),
                                           trailing: Container(
                                             width: 220,
@@ -974,9 +981,10 @@ class _AddItemState extends State<AddItem> {
                                                 child: DropdownButton(
                                                   hint: Text(
                                                     'Choose a sub category',
-                                                    style: GoogleFonts.lato(
-                                                        fontSize: 16,
-                                                        color: Colors.black),
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 16,
+                                                    ),
                                                   ), // Not necessary for Option 1
                                                   value: _selectedsubCategory,
                                                   onChanged: (newValue) {
@@ -990,6 +998,9 @@ class _AddItemState extends State<AddItem> {
                                                         _subsubcategory = [
                                                           'Shoes & Boots',
                                                           'Activewear & Sportswear',
+                                                          'Jewelry',
+                                                          'Make up',
+                                                          'Skincare products',
                                                           'Dresses',
                                                           'Tops',
                                                           'Coats & Jackets',
@@ -1032,6 +1043,8 @@ class _AddItemState extends State<AddItem> {
                                                           'Swimwear & Beachwear',
                                                           'Shorts',
                                                           'Other',
+                                                          'Jewelry',
+                                                          'Skincare products',
                                                         ];
                                                       });
                                                     } else if (_selectedsubCategory ==
@@ -1040,6 +1053,9 @@ class _AddItemState extends State<AddItem> {
                                                         _subsubcategory = [
                                                           'Shoes & Boots',
                                                           'Activewear & Sportswear',
+                                                          'Jewelry',
+                                                          'Skincare products',
+                                                          'Makeup',
                                                           'Dresses',
                                                           'Tops',
                                                           'Coats & Jackets',
@@ -1083,6 +1099,30 @@ class _AddItemState extends State<AddItem> {
                                                           'Other',
                                                         ];
                                                       });
+                                                    } else if (_selectedsubCategory ==
+                                                        'Unisex') {
+                                                      setState(() {
+                                                        _subsubcategory = [
+                                                          'Shoes & Boots',
+                                                          'Activewear & Sportswear',
+                                                          'Shirts',
+                                                          'T- Shirts & Vests',
+                                                          'Coats & Jackets',
+                                                          'Jumpers & Cardigans',
+                                                          'Bags & Accessories',
+                                                          'Trousers',
+                                                          'Chinos',
+                                                          'Jumpsuits & Playsuits',
+                                                          'Nightwear',
+                                                          'Loungewear',
+                                                          'Hoodies & Sweatshirts',
+                                                          'Jeans',
+                                                          'Suits & Blazers',
+                                                          'Swimwear & Beachwear',
+                                                          'Shorts',
+                                                          'Other',
+                                                        ];
+                                                      });
                                                     }
                                                   },
                                                   items: _subcategories
@@ -1090,10 +1130,11 @@ class _AddItemState extends State<AddItem> {
                                                     return DropdownMenuItem(
                                                       child: new Text(
                                                         location,
-                                                        style: GoogleFonts.lato(
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black),
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontSize: 16,
+                                                        ),
                                                       ),
                                                       value: location,
                                                     );
@@ -1127,9 +1168,10 @@ class _AddItemState extends State<AddItem> {
                                               child: DropdownButton(
                                                 hint: Text(
                                                   'Please choose a sub category',
-                                                  style: GoogleFonts.lato(
-                                                      fontSize: 16,
-                                                      color: Colors.black),
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                  ),
                                                 ), // Not necessary for Option 1
                                                 value: _selectedsubsubCategory,
                                                 onChanged: (newValue) {
@@ -1143,9 +1185,11 @@ class _AddItemState extends State<AddItem> {
                                                   return DropdownMenuItem(
                                                     child: new Text(
                                                       location,
-                                                      style: GoogleFonts.lato(
-                                                          fontSize: 16,
-                                                          color: Colors.black),
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                      ),
                                                     ),
                                                     value: location,
                                                   );
@@ -1178,7 +1222,8 @@ class _AddItemState extends State<AddItem> {
                                         TextCapitalization.sentences,
                                     decoration: InputDecoration(
                                         labelText: "Title",
-                                        labelStyle: GoogleFonts.lato(
+                                        labelStyle: TextStyle(
+                                          fontFamily: 'Montserrat',
                                           fontSize: 16,
                                         ),
                                         focusColor: Colors.black,
@@ -1234,7 +1279,8 @@ class _AddItemState extends State<AddItem> {
                                     decoration: InputDecoration(
                                         labelText: "Description",
                                         alignLabelWithHint: true,
-                                        labelStyle: GoogleFonts.lato(
+                                        labelStyle: TextStyle(
+                                          fontFamily: 'Montserrat',
                                           fontSize: 16,
                                         ),
                                         focusColor: Colors.black,
@@ -1281,7 +1327,10 @@ class _AddItemState extends State<AddItem> {
                                   child: ListTile(
                                     title: Text(
                                       'Condition',
-                                      style: GoogleFonts.lato(fontSize: 16),
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 16,
+                                      ),
                                     ),
                                     trailing: Container(
                                         width: 200,
@@ -1299,9 +1348,10 @@ class _AddItemState extends State<AddItem> {
                                                   iconSize: 20,
                                                   elevation: 10,
                                                   isExpanded: true,
-                                                  style: GoogleFonts.lato(
-                                                      fontSize: 16,
-                                                      color: Colors.black),
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                  ),
                                                   onChanged: (String newValue) {
                                                     setState(() {
                                                       _selectedCondition =
@@ -1319,10 +1369,11 @@ class _AddItemState extends State<AddItem> {
                                                         value,
                                                         textAlign:
                                                             TextAlign.center,
-                                                        style: GoogleFonts.lato(
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black),
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontSize: 16,
+                                                        ),
                                                       ),
                                                     );
                                                   }).toList(),
@@ -1348,8 +1399,10 @@ class _AddItemState extends State<AddItem> {
                                         child: ListTile(
                                             title: Text(
                                               'Brand',
-                                              style: GoogleFonts.lato(
-                                                  fontSize: 16),
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 16,
+                                              ),
                                             ),
                                             trailing: Container(
                                                 width: 200,
@@ -1366,9 +1419,11 @@ class _AddItemState extends State<AddItem> {
                                                         labelText: "Brand Name",
                                                         alignLabelWithHint:
                                                             true,
-                                                        labelStyle:
-                                                            GoogleFonts.lato(
-                                                                fontSize: 16),
+                                                        labelStyle: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontSize: 16,
+                                                        ),
                                                         focusColor:
                                                             Colors.black,
                                                         enabledBorder:
@@ -1435,8 +1490,10 @@ class _AddItemState extends State<AddItem> {
                                             child: ListTile(
                                                 title: Text(
                                                   'Size',
-                                                  style: GoogleFonts.lato(
-                                                      fontSize: 16),
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                  ),
                                                 ),
                                                 trailing: Container(
                                                     width: 200,
@@ -1456,11 +1513,14 @@ class _AddItemState extends State<AddItem> {
                                                                 alignLabelWithHint:
                                                                     true,
                                                                 labelStyle:
-                                                                    GoogleFonts.lato(
-                                                                        fontSize:
-                                                                            16),
-                                                                focusColor: Colors
-                                                                    .black,
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                ),
+                                                                focusColor:
+                                                                    Colors
+                                                                        .black,
                                                                 enabledBorder:
                                                                     OutlineInputBorder(
                                                                         borderSide:
@@ -1531,8 +1591,10 @@ class _AddItemState extends State<AddItem> {
                                         child: ListTile(
                                             title: Text(
                                               'Price',
-                                              style: GoogleFonts.lato(
-                                                  fontSize: 16),
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 16,
+                                              ),
                                             ),
                                             trailing: Container(
                                                 width: 200,
@@ -1550,9 +1612,11 @@ class _AddItemState extends State<AddItem> {
                                                             "Price " + currency,
                                                         alignLabelWithHint:
                                                             true,
-                                                        labelStyle:
-                                                            GoogleFonts.lato(
-                                                                fontSize: 16),
+                                                        labelStyle: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontSize: 16,
+                                                        ),
                                                         focusColor:
                                                             Colors.black,
                                                         enabledBorder:
@@ -1621,7 +1685,10 @@ class _AddItemState extends State<AddItem> {
                                       ),
                                       Text(
                                         'Choose Item\'s Location',
-                                        style: GoogleFonts.lato(fontSize: 16),
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 16,
+                                        ),
                                       ),
                                       SizedBox(
                                         height: 5.0,
@@ -1629,7 +1696,10 @@ class _AddItemState extends State<AddItem> {
                                       Text(
                                         'Press on the map to choose the Item\'s location',
                                         textAlign: TextAlign.center,
-                                        style: GoogleFonts.lato(fontSize: 16),
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 16,
+                                        ),
                                       ),
                                       SizedBox(
                                         height: 10.0,
@@ -1666,8 +1736,10 @@ class _AddItemState extends State<AddItem> {
                                                 )
                                               : Text(
                                                   'Oops! Something went wrong. \n Please try again',
-                                                  style: GoogleFonts.lato(
-                                                      fontSize: 16),
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                  ),
                                                 ),
                                           Positioned(
                                             top: 10,
@@ -1705,8 +1777,10 @@ class _AddItemState extends State<AddItem> {
                                 ),
                                 Text(
                                   "Thank you for helping us grow!",
-                                  style: GoogleFonts.lato(
-                                      fontSize: 14, color: Colors.blueGrey),
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 16,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 5.0,
@@ -1728,7 +1802,10 @@ class _AddItemState extends State<AddItem> {
                               child: Text(
                                 'Look\'s like you need to \n login to Add an Item️',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                             Expanded(
@@ -2172,7 +2249,8 @@ class _AddItemState extends State<AddItem> {
                   child: Center(
                     child: Text(
                       "Add an Item",
-                      style: GoogleFonts.lato(
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
                           fontSize: 16,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
@@ -2226,9 +2304,9 @@ class _AddItemState extends State<AddItem> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-            fontFamily: "WorkSansSemiBold"),
+          fontFamily: 'Montserrat',
+          fontSize: 16,
+        ),
       ),
       backgroundColor: Colors.blue,
       duration: Duration(seconds: 3),

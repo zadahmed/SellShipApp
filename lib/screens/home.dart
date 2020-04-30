@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
@@ -666,7 +666,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               onSubmitted: onSearch,
                               decoration: InputDecoration(
                                   hintText: 'Search SellShip',
-                                  hintStyle: GoogleFonts.lato(fontSize: 16),
+                                  hintStyle: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 16,
+                                  ),
                                   border: InputBorder.none),
                             ),
                           ),
@@ -696,7 +699,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
                                 'Filter',
-                                style: GoogleFonts.lato(fontSize: 11),
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 11,
+                                ),
                               )),
                           SizedBox(
                             width: 2,
@@ -739,7 +745,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Text(
                                           'Near me',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color:
                                                   _selectedFilter == 'Near me'
@@ -780,7 +787,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Text(
                                           'Recently Added',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Recently Added'
@@ -820,7 +828,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Text(
                                           'Below 100',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color:
                                                   _selectedFilter == 'Below 100'
@@ -859,7 +868,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Text(
                                           'Lowest Price',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Lowest Price'
@@ -900,7 +910,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Text(
                                           'Highest Price',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Highest Price'
@@ -997,7 +1008,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       ),
                                                       Text(
                                                         "${categories[i].title}",
-                                                        style: GoogleFonts.lato(
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
                                                           fontSize: 16,
                                                           color: Colors.black,
                                                         ),
@@ -1102,7 +1115,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 children: <Widget>[
                                                   Text(
                                                     itemsgrid[index].name,
-                                                    style: GoogleFonts.lato(
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -1113,7 +1127,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].category,
-                                                      style: GoogleFonts.lato(
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
                                                         fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w300,
@@ -1129,7 +1145,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               .toString() +
                                                           ' ' +
                                                           currency,
-                                                      style: GoogleFonts.lato(
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
                                                         fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w400,
@@ -1164,7 +1182,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                     'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.lato(fontSize: 16)),
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                    )),
                               ),
                               Expanded(
                                   child: Image.asset(

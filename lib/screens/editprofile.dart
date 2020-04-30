@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 class EditProfile extends StatefulWidget {
@@ -73,7 +72,8 @@ class EditProfileState extends State<EditProfile>
           backgroundColor: Colors.white,
           title: Text(
             'Edit Profile',
-            style: GoogleFonts.lato(fontSize: 16, color: Colors.black),
+            style: TextStyle(
+                fontFamily: 'Montserrat', fontSize: 20, color: Colors.black),
           ),
           leading: IconButton(
             icon: Icon(
@@ -114,7 +114,8 @@ class EditProfileState extends State<EditProfile>
                                     children: <Widget>[
                                       new Text(
                                         'Parsonal Information',
-                                        style: GoogleFonts.lato(
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -143,7 +144,8 @@ class EditProfileState extends State<EditProfile>
                                     children: <Widget>[
                                       new Text(
                                         'First Name',
-                                        style: GoogleFonts.lato(
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -181,7 +183,8 @@ class EditProfileState extends State<EditProfile>
                                     children: <Widget>[
                                       new Text(
                                         'Last Name',
-                                        style: GoogleFonts.lato(
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -219,7 +222,8 @@ class EditProfileState extends State<EditProfile>
                                     children: <Widget>[
                                       new Text(
                                         'Email ID',
-                                        style: GoogleFonts.lato(
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -255,7 +259,8 @@ class EditProfileState extends State<EditProfile>
                                     children: <Widget>[
                                       new Text(
                                         'Mobile',
-                                        style: GoogleFonts.lato(
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -312,7 +317,8 @@ class EditProfileState extends State<EditProfile>
                   child: new RaisedButton(
                 child: new Text(
                   "Save",
-                  style: GoogleFonts.lato(
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
                     fontSize: 16,
                   ),
                 ),
@@ -354,7 +360,8 @@ class EditProfileState extends State<EditProfile>
                   child: new RaisedButton(
                 child: new Text(
                   "Cancel",
-                  style: GoogleFonts.lato(
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
                     fontSize: 16,
                   ),
                 ),
@@ -382,7 +389,10 @@ class EditProfileState extends State<EditProfile>
       children: <Widget>[
         Text(
           'Edit',
-          style: GoogleFonts.lato(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
         ),
         SizedBox(
           width: 5,

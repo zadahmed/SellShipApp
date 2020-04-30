@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/details.dart';
@@ -136,101 +139,301 @@ class _UserItemsState extends State<UserItems> {
     return null;
   }
 
+  var profilepicture;
+
+  var followers;
+  var itemssold;
+  var following;
+  var totalitems;
+
+  ScrollController _scrollController = ScrollController();
+
+  var follow;
+
   Widget profile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepOrange,
         title: Center(
           child: Text(
-            '$username\'s Items',
-            style: GoogleFonts.lato(color: Colors.white, fontSize: 20),
+            '$username',
+            style: TextStyle(fontFamily: 'Montserrat', fontSize: 20),
           ),
         ),
       ),
       body: loading == false
-          ? SafeArea(
-              child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Divider(),
-                  SizedBox(
-                    height: 10.0,
+          ? Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 100,
+                  width: 100,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(60),
+                    child: profilepicture == null
+                        ? Image.asset(
+                            'assets/personplaceholder.png',
+                            fit: BoxFit.cover,
+                          )
+                        : Image.network(''),
                   ),
-                  Expanded(
-                      child: new ListView.builder(
-                          itemCount: Itemname.length,
-                          itemBuilder: (BuildContext ctxt, int Index) {
-                            if (Index != 0 && Index % 4 == 0) {
-                              return Platform.isIOS == true
-                                  ? Container(
-                                      height: 200,
-                                      padding: EdgeInsets.all(10),
-                                      margin: EdgeInsets.only(bottom: 20.0),
-                                      child: NativeAdmob(
-                                        adUnitID: _iosadUnitID,
-                                        controller: _controller,
-                                      ),
-                                    )
-                                  : Container(
-                                      height: 200,
-                                      padding: EdgeInsets.all(10),
-                                      margin: EdgeInsets.only(bottom: 20.0),
-                                      child: NativeAdmob(
-                                        adUnitID: _androidadUnitID,
-                                        controller: _controller,
-                                      ),
-                                    );
-                            }
-                            return new InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            Details(itemid: Itemid[Index])),
+                ),
+                SizedBox(height: 25.0),
+                Text(
+                  firstname + ' ' + lastname,
+                  style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 4.0),
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            followers == null ? '0' : followers.toString(),
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 5.0),
+                          Text(
+                            'FOLLOWERS',
+                            style: TextStyle(
+                                fontFamily: 'Montserrat', color: Colors.grey),
+                          )
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            itemssold == null ? '0' : itemssold.toString(),
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 5.0),
+                          Text(
+                            'ITEMS SOLD',
+                            style: TextStyle(
+                                fontFamily: 'Montserrat', color: Colors.grey),
+                          )
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            following == null ? '0' : following.toString(),
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 5.0),
+                          Text(
+                            'FOLLOWING',
+                            style: TextStyle(
+                                fontFamily: 'Montserrat', color: Colors.grey),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Container(
+                    height: 50,
+                    width: 400,
+                    decoration: BoxDecoration(color: Colors.amber),
+                    child: InkWell(
+                      onTap: () {},
+                      child: Center(
+                        child: Text(
+                          follow == true ? 'FOLLOWING' : 'FOLLOW',
+                          style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Divider(),
+                Center(
+                  child: Text(
+                    'My Items',
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Itemname.isNotEmpty
+                    ? Expanded(
+                        child: StaggeredGridView.countBuilder(
+                        controller: _scrollController,
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                        itemCount: Itemname.length,
+                        itemBuilder: (context, index) {
+                          if (index != 0 && index % 4 == 0) {
+                            return Platform.isIOS == true
+                                ? Container(
+                                    height: 330,
+                                    padding: EdgeInsets.all(10),
+                                    margin: EdgeInsets.only(bottom: 20.0),
+                                    child: NativeAdmob(
+                                      adUnitID: _iosadUnitID,
+                                      controller: _controller,
+                                    ),
+                                  )
+                                : Container(
+                                    height: 330,
+                                    padding: EdgeInsets.all(10),
+                                    margin: EdgeInsets.only(bottom: 20.0),
+                                    child: NativeAdmob(
+                                      adUnitID: _androidadUnitID,
+                                      controller: _controller,
+                                    ),
                                   );
-                                },
-                                child: Card(
-                                    child: ListTile(
-                                  title: Text(
-                                    Itemname[Index],
-                                    style: GoogleFonts.lato(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  trailing: Text(
-                                    Itemprice[Index].toString() +
-                                        ' ' +
-                                        currency,
-                                    style: GoogleFonts.lato(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  leading: Container(
-                                    height: 60,
-                                    width: 60,
+                          }
+                          return Padding(
+                              padding: EdgeInsets.all(7),
+                              child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Details(itemid: Itemid[index])),
+                                    );
+                                  },
+                                  child: Container(
                                     decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
+                                        color: Colors.white,
                                         borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Image.network(
-                                      Itemimage[Index],
-                                      fit: BoxFit.cover,
+                                            BorderRadius.circular(15)),
+                                    child: new Column(
+                                      children: <Widget>[
+                                        new Stack(
+                                          children: <Widget>[
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              child: CachedNetworkImage(
+                                                imageUrl: Itemimage[index],
+                                                placeholder: (context, url) =>
+                                                    SpinKitChasingDots(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        new Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: new Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                Itemname[index],
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                textAlign: TextAlign.left,
+                                              ),
+                                              SizedBox(height: 3.0),
+                                              Container(
+                                                child: Text(
+                                                  Itemcategory[index],
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                              SizedBox(height: 3.0),
+                                              Container(
+                                                child: Text(
+                                                  Itemprice[index].toString() +
+                                                      ' ' +
+                                                      currency,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  ),
-                                  subtitle: Text(
-                                    Itemcategory[Index],
-                                    style: GoogleFonts.lato(
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                )));
-                          }))
-                ],
-              ),
-            ))
+                                  )));
+                        },
+                        staggeredTileBuilder: (int index) {
+                          return StaggeredTile.fit(1);
+                        },
+                      ))
+                    : Expanded(
+                        child: Column(
+                        children: <Widget>[
+                          Center(
+                            child: Text(
+                              'Go ahead Add an Item \n and start selling!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              child: Image.asset(
+                            'assets/items.png',
+                            fit: BoxFit.fitWidth,
+                          ))
+                        ],
+                      )),
+              ],
+            )
           : Container(
               width: double.infinity,
               padding:

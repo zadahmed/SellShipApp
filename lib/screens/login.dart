@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +9,11 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:SellShip/bubble_indication_painter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -174,19 +176,12 @@ class _LoginPageState extends State<LoginPage>
   Widget LoginSignup(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-//        appBar: AppBar(
-//          automaticallyImplyLeading: true,
-//          elevation: 0,
-//          title: Container(
-//            height: 100,
-//            width: 200,
-//            child: Image.asset(
-//              'assets/logo.png',
-//              fit: BoxFit.fitWidth,
-//            ),
-//          ),
-//          backgroundColor: Colors.deepOrange,
-//        ),
+        appBar: AppBar(
+          automaticallyImplyLeading: true,
+          elevation: 0,
+          title: Text('Profile'),
+          backgroundColor: Colors.deepOrange,
+        ),
         body: loading == false
             ? new NotificationListener<OverscrollIndicatorNotification>(
                 onNotification: (overscroll) {
@@ -346,7 +341,8 @@ class _LoginPageState extends State<LoginPage>
       content: new Text(
         value,
         textAlign: TextAlign.center,
-        style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
+        style: TextStyle(
+            fontFamily: 'Montserrat', fontSize: 16, color: Colors.white),
       ),
       backgroundColor: Colors.blue,
       duration: Duration(seconds: 3),
@@ -371,10 +367,9 @@ class _LoginPageState extends State<LoginPage>
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onPressed: _onSignInButtonPress,
-                child: Text(
-                  "Existing",
-                  style: GoogleFonts.lato(fontSize: 16, color: left),
-                ),
+                child: Text("Existing",
+                    style: TextStyle(
+                        fontFamily: 'Montserrat', fontSize: 16, color: left)),
               ),
             ),
             //Container(height: 33.0, width: 1.0, color: Colors.white),
@@ -383,10 +378,9 @@ class _LoginPageState extends State<LoginPage>
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onPressed: _onSignUpButtonPress,
-                child: Text(
-                  "New",
-                  style: GoogleFonts.lato(fontSize: 16, color: right),
-                ),
+                child: Text("New",
+                    style: TextStyle(
+                        fontFamily: 'Montserrat', fontSize: 16, color: right)),
               ),
             ),
           ],
@@ -422,8 +416,10 @@ class _LoginPageState extends State<LoginPage>
                           focusNode: myFocusNodeEmailLogin,
                           controller: loginEmailController,
                           keyboardType: TextInputType.emailAddress,
-                          style: GoogleFonts.lato(
-                              fontSize: 16, color: Colors.black),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                          ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -432,8 +428,10 @@ class _LoginPageState extends State<LoginPage>
                               size: 22.0,
                             ),
                             hintText: "Email Address",
-                            hintStyle: GoogleFonts.lato(
-                                fontSize: 16, color: Colors.black),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -449,8 +447,10 @@ class _LoginPageState extends State<LoginPage>
                           focusNode: myFocusNodePasswordLogin,
                           controller: loginPasswordController,
                           obscureText: _obscureTextLogin,
-                          style: GoogleFonts.lato(
-                              fontSize: 16, color: Colors.black),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                          ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -459,8 +459,10 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Password",
-                            hintStyle: GoogleFonts.lato(
-                                fontSize: 16, color: Colors.black),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                            ),
                             suffixIcon: GestureDetector(
                               onTap: _toggleLogin,
                               child: Icon(
@@ -510,8 +512,11 @@ class _LoginPageState extends State<LoginPage>
                           vertical: 10.0, horizontal: 42.0),
                       child: Text(
                         "LOGIN",
-                        style:
-                            GoogleFonts.lato(fontSize: 20, color: Colors.white),
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white),
                       ),
                     ),
                     onPressed: () {
@@ -522,16 +527,6 @@ class _LoginPageState extends State<LoginPage>
                     }),
               ),
             ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10.0),
-            child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  'By logging In \n you agree to the Terms and Conditions',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
-                )),
           ),
           Padding(
             padding: EdgeInsets.only(top: 10.0),
@@ -557,7 +552,10 @@ class _LoginPageState extends State<LoginPage>
                   padding: EdgeInsets.only(left: 15.0, right: 15.0),
                   child: Text(
                     "Or",
-                    style: GoogleFonts.lato(fontSize: 20, color: Colors.white),
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 16,
+                        color: Colors.white),
                   ),
                 ),
                 Container(
@@ -584,43 +582,110 @@ class _LoginPageState extends State<LoginPage>
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   _loginWithFB();
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(15.0),
-                  decoration: new BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: new Icon(
-                    FontAwesomeIcons.facebookF,
-                    color: Color(0xFF0084ff),
-                  ),
-                ),
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: new BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(25)),
+                    width: 300,
+                    height: 50,
+                    child: Text(
+                      'Login with Facebook',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Montserrat',
+                          fontSize: 16,
+                          color: Colors.white),
+                    )),
               ),
             ],
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: FlatButton(
+                onPressed: () {},
+                child: Text(
+                  'By logging In \n you agree to the Terms and Conditions',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 12,
+                      color: Colors.white),
+                )),
           ),
         ],
       ),
     );
   }
 
+  var profilepicture;
   var loading;
+  var followers;
+  var itemssold;
+  var following;
+  var totalitems;
+
+  ScrollController _scrollController = ScrollController();
+
+  var currency;
 
   Widget profile(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                child: Text(
+                  'Settings',
+                  style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  'Edit Profile',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditProfile()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text('Item 2'),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                },
+              ),
+            ],
+          ),
+        ),
         appBar: AppBar(
           automaticallyImplyLeading: true,
           elevation: 0,
           title: Text(
             "Profile️",
-            style: GoogleFonts.lato(
-              fontSize: 20,
-              color: Colors.white,
-            ),
+            style: TextStyle(
+                fontFamily: 'Montserrat', fontSize: 20, color: Colors.white),
           ),
           backgroundColor: Colors.deepOrange,
           actions: <Widget>[
@@ -636,227 +701,357 @@ class _LoginPageState extends State<LoginPage>
           ],
         ),
         body: loading == false
-            ? Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            'Hi ' + firstname + '!',
-                            style: GoogleFonts.lato(
-                              fontSize: 20,
-                              color: Colors.black,
-                            ),
-                          ),
-                          FlatButton(
-                            color: Colors.deepOrange,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfile()),
-                              );
-                            },
-                            child: Text(
-                              'Edit Profile',
-                              style: GoogleFonts.lato(
-                                  fontSize: 16, color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
+            ? Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: 100,
+                    width: 100,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(60),
+                      child: profilepicture == null
+                          ? Image.asset(
+                              'assets/personplaceholder.png',
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(''),
                     ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Divider(),
-                    Center(
-                      child: Text(
-                        'My Items',
-                        style: GoogleFonts.lato(
-                          fontSize: 20,
-                          color: Colors.black,
+                  ),
+                  SizedBox(height: 25.0),
+                  Text(
+                    firstname + ' ' + lastname,
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 4.0),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        top: 10, left: 30, right: 30, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              followers == null ? '0' : followers.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 5.0),
+                            Text(
+                              'FOLLOWERS',
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat', color: Colors.grey),
+                            )
+                          ],
                         ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              itemssold == null ? '0' : itemssold.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 5.0),
+                            Text(
+                              'ITEMS SOLD',
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat', color: Colors.grey),
+                            )
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              following == null ? '0' : following.toString(),
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 5.0),
+                            Text(
+                              'FOLLOWING',
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat', color: Colors.grey),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                  Center(
+                    child: Text(
+                      'My Items',
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 16,
                       ),
                     ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Itemname.isNotEmpty
-                        ? Expanded(
-                            child: Scrollbar(
-                                child: new ListView.builder(
-                                    cacheExtent: 50,
-                                    itemCount: Itemname.length,
-                                    itemBuilder:
-                                        (BuildContext ctxt, int Index) {
-                                      if (Index != 0 && Index % 4 == 0) {
-                                        return Platform.isIOS == true
-                                            ? Container(
-                                                height: 200,
-                                                padding: EdgeInsets.all(10),
-                                                margin: EdgeInsets.only(
-                                                    bottom: 20.0),
-                                                child: NativeAdmob(
-                                                  adUnitID: _iosadUnitID,
-                                                  controller: _controller,
-                                                ),
-                                              )
-                                            : Container(
-                                                height: 200,
-                                                padding: EdgeInsets.all(10),
-                                                margin: EdgeInsets.only(
-                                                    bottom: 20.0),
-                                                child: NativeAdmob(
-                                                  adUnitID: _androidadUnitID,
-                                                  controller: _controller,
-                                                ),
-                                              );
-                                      }
-                                      return new Column(
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Itemname.isNotEmpty
+                      ? Expanded(
+                          child: StaggeredGridView.countBuilder(
+                          controller: _scrollController,
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 4,
+                          crossAxisSpacing: 4,
+                          itemCount: Itemname.length,
+                          itemBuilder: (context, index) {
+                            if (index != 0 && index % 4 == 0) {
+                              return Platform.isIOS == true
+                                  ? Container(
+                                      height: 330,
+                                      padding: EdgeInsets.all(10),
+                                      margin: EdgeInsets.only(bottom: 20.0),
+                                      child: NativeAdmob(
+                                        adUnitID: _iosadUnitID,
+                                        controller: _controller,
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 330,
+                                      padding: EdgeInsets.all(10),
+                                      margin: EdgeInsets.only(bottom: 20.0),
+                                      child: NativeAdmob(
+                                        adUnitID: _androidadUnitID,
+                                        controller: _controller,
+                                      ),
+                                    );
+                            }
+                            return Padding(
+                                padding: EdgeInsets.all(7),
+                                child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                Details(itemid: Itemid[index])),
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: new Column(
                                         children: <Widget>[
-                                          InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Details(
-                                                              itemid: Itemid[
-                                                                  Index])),
-                                                );
-                                              },
-                                              child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      bottom: 5.0),
-                                                  constraints: BoxConstraints(
-                                                      minHeight: 90),
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors
-                                                            .grey.shade200,
-                                                        offset: Offset(
-                                                            0.0, 1.0), //(x,y)
-                                                        blurRadius: 6.0,
-                                                      ),
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            11.0),
+                                          new Stack(
+                                            children: <Widget>[
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: Itemimage[index],
+                                                  placeholder: (context, url) =>
+                                                      SpinKitChasingDots(
+                                                          color: Colors
+                                                              .deepOrange),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          new Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: new Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  Itemname[index],
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
                                                   ),
-                                                  child: ListTile(
-                                                    title: Text(
-                                                      Itemname[Index],
-                                                      style: GoogleFonts.lato(
-                                                          fontSize: 16,
-                                                          color: Colors.black),
+                                                  textAlign: TextAlign.left,
+                                                ),
+                                                SizedBox(height: 3.0),
+                                                Container(
+                                                  child: Text(
+                                                    Itemcategory[index],
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w300,
                                                     ),
-                                                    trailing: InkWell(
-                                                      onTap: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  EditItem(
-                                                                      itemid: Itemid[
-                                                                          Index])),
-                                                        );
-                                                      },
-                                                      child: Container(
-                                                        height: 40,
-                                                        width: 80,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color:
-                                                              Colors.deepOrange,
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              color: Colors.grey
-                                                                  .shade300,
-                                                              offset: Offset(
-                                                                  0.0,
-                                                                  1.0), //(x,y)
-                                                              blurRadius: 6.0,
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 3.0),
+                                                Container(
+                                                  child: Text(
+                                                    Itemprice[index]
+                                                            .toString() +
+                                                        ' ' +
+                                                        currency,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Container(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: <Widget>[
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    EditItem(
+                                                                        itemid:
+                                                                            Itemid[index])),
+                                                          );
+                                                        },
+                                                        child: Container(
+                                                          height: 30,
+                                                          width: 80,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors
+                                                                .deepOrange,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                offset: Offset(
+                                                                    0.0,
+                                                                    1.0), //(x,y)
+                                                                blurRadius: 6.0,
+                                                              ),
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15.0),
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Edit Item',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .white),
                                                             ),
-                                                          ],
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      15.0),
-                                                        ),
-                                                        child: Center(
-                                                          child: Text(
-                                                            'Edit Item',
-                                                            style: GoogleFonts
-                                                                .lato(
-                                                                    fontSize:
-                                                                        16,
-                                                                    color: Colors
-                                                                        .white),
                                                           ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    leading: Container(
-                                                      height: 60,
-                                                      width: 60,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10)),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        child: Image.network(
-                                                          Itemimage[Index],
-                                                          fit: BoxFit.cover,
+                                                      InkWell(
+                                                        onTap: () {
+                                                          print('Item Sold');
+                                                        },
+                                                        child: Container(
+                                                          height: 30,
+                                                          width: 80,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.amber,
+                                                            boxShadow: [
+                                                              BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                                offset: Offset(
+                                                                    0.0,
+                                                                    1.0), //(x,y)
+                                                                blurRadius: 6.0,
+                                                              ),
+                                                            ],
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15.0),
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Item Sold',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                    subtitle: Text(
-                                                      Itemcategory[Index],
-                                                      style: GoogleFonts.lato(
-                                                          fontSize: 14,
-                                                          color: Colors
-                                                              .grey.shade800),
-                                                    ),
-                                                  ))),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
                                         ],
-                                      );
-                                    })))
-                        : Expanded(
-                            child: Column(
-                            children: <Widget>[
-                              Center(
-                                child: Text(
-                                  'Go ahead Add an Item \n and start selling!',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.lato(
-                                    fontSize: 20,
-                                  ),
+                                      ),
+                                    )));
+                          },
+                          staggeredTileBuilder: (int index) {
+                            return StaggeredTile.fit(1);
+                          },
+                        ))
+                      : Expanded(
+                          child: Column(
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                'Go ahead Add an Item \n and start selling!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 20,
                                 ),
                               ),
-                              Expanded(
-                                  child: Image.asset(
-                                'assets/items.png',
-                                fit: BoxFit.fitWidth,
-                              ))
-                            ],
-                          )),
-                  ],
-                ),
+                            ),
+                            Expanded(
+                                child: Image.asset(
+                              'assets/items.png',
+                              fit: BoxFit.fitWidth,
+                            ))
+                          ],
+                        )),
+                ],
               )
             : Container(
                 width: double.infinity,
@@ -951,8 +1146,10 @@ class _LoginPageState extends State<LoginPage>
                           controller: signupNameController,
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.words,
-                          style: GoogleFonts.lato(
-                              fontSize: 16, color: Colors.black),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                          ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -960,7 +1157,10 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "First Name",
-                            hintStyle: GoogleFonts.lato(fontSize: 16.0),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -977,8 +1177,10 @@ class _LoginPageState extends State<LoginPage>
                           controller: signupLastnameController,
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.words,
-                          style: GoogleFonts.lato(
-                              fontSize: 16.0, color: Colors.black),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                          ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -986,7 +1188,10 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Last Name",
-                            hintStyle: GoogleFonts.lato(fontSize: 16.0),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -1029,8 +1234,10 @@ class _LoginPageState extends State<LoginPage>
                           focusNode: myFocusNodeEmail,
                           controller: signupEmailController,
                           keyboardType: TextInputType.emailAddress,
-                          style: GoogleFonts.lato(
-                              fontSize: 16.0, color: Colors.black),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                          ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -1038,8 +1245,10 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Email Address",
-                            hintStyle: GoogleFonts.lato(
-                                fontSize: 16, color: Colors.black),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ),
@@ -1055,8 +1264,10 @@ class _LoginPageState extends State<LoginPage>
                           focusNode: myFocusNodePassword,
                           controller: signupPasswordController,
                           obscureText: _obscureTextSignup,
-                          style: GoogleFonts.lato(
-                              fontSize: 16, color: Colors.black),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                          ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -1064,8 +1275,10 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Password",
-                            hintStyle: GoogleFonts.lato(
-                                fontSize: 16, color: Colors.black),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                            ),
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignup,
                               child: Icon(
@@ -1090,7 +1303,10 @@ class _LoginPageState extends State<LoginPage>
                         child: TextField(
                           controller: signupConfirmPasswordController,
                           obscureText: _obscureTextSignupConfirm,
-                          style: GoogleFonts.lato(fontSize: 16),
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                          ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -1098,8 +1314,10 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Confirmation",
-                            hintStyle: GoogleFonts.lato(
-                                fontSize: 16, color: Colors.black),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                            ),
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignupConfirm,
                               child: Icon(
@@ -1152,8 +1370,10 @@ class _LoginPageState extends State<LoginPage>
                           vertical: 10.0, horizontal: 42.0),
                       child: Text(
                         "SIGN UP",
-                        style:
-                            GoogleFonts.lato(fontSize: 20, color: Colors.white),
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                            color: Colors.white),
                       ),
                     ),
                     onPressed: () {
@@ -1174,16 +1394,18 @@ class _LoginPageState extends State<LoginPage>
                                   ),
                                   title: Text(
                                     'Oops!',
-                                    style: GoogleFonts.lato(
-                                        fontSize: 22,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 22,
+                                    ),
                                   ),
                                   description: Text(
                                     'Looks like you\'re missing something',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.lato(
-                                        fontSize: 18, color: Colors.black),
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                    ),
                                   ),
                                   onlyOkButton: true,
                                   entryAnimation: EntryAnimation.DEFAULT,
@@ -1204,7 +1426,8 @@ class _LoginPageState extends State<LoginPage>
               child: Text(
             'By Signing Up \n you agree to the Terms and Conditions',
             textAlign: TextAlign.center,
-            style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
+            style: TextStyle(
+                fontFamily: 'Montserrat', fontSize: 12, color: Colors.white),
           )),
         ],
       ),
@@ -1227,6 +1450,18 @@ class _LoginPageState extends State<LoginPage>
 
   void getProfileData() async {
     userid = await storage.read(key: 'userid');
+    var country = await storage.read(key: 'country');
+
+    if (country.toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (country.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = 'USD';
+      });
+    }
+
     if (userid != null) {
       _firebaseMessaging.getToken().then((token) {
         setState(() {

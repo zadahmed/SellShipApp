@@ -11,7 +11,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -527,7 +526,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
           backgroundColor: Colors.deepOrange,
           title: Text(
             subcategory,
-            style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
+            style: TextStyle(
+                fontFamily: 'Montserrat', fontSize: 16, color: Colors.white),
           ),
         ),
         body: GestureDetector(
@@ -550,8 +550,10 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               padding: EdgeInsets.only(left: 15),
                               child: Text(
                                 'Filter',
-                                style: GoogleFonts.lato(
-                                    fontSize: 11, color: Colors.blueGrey),
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 11,
+                                    color: Colors.blueGrey),
                               )),
                           SizedBox(
                             width: 2,
@@ -594,7 +596,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Near me',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color:
                                                   _selectedFilter == 'Near me'
@@ -635,7 +638,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Recently Added',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Recently Added'
@@ -675,7 +679,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Below 100',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color:
                                                   _selectedFilter == 'Below 100'
@@ -714,7 +719,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Lowest Price',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Lowest Price'
@@ -755,7 +761,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Highest Price',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
                                               fontSize: 16,
                                               color: _selectedFilter ==
                                                       'Highest Price'
@@ -864,7 +871,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                   Text(
                                                     itemsgrid[index].name,
                                                     overflow: TextOverflow.fade,
-                                                    style: GoogleFonts.lato(
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
                                                       fontSize: 16,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -875,7 +883,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].category,
-                                                      style: GoogleFonts.lato(
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w300,
@@ -890,7 +900,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                               .toString() +
                                                           ' ' +
                                                           currency,
-                                                      style: GoogleFonts.lato(
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w400,
@@ -923,7 +935,10 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                 child: Text(
                                   'Looks like you\'re the first here! \n Don\'t be shy add an Item!',
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                               Expanded(

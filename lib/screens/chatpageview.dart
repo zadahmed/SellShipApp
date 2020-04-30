@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -86,8 +86,10 @@ class _ChatPageViewState extends State<ChatPageView> {
                         right: 8.0, left: 8.0, top: 8.0, bottom: 15.0),
                     child: Text(
                       jsonResponse[i]['message'],
-                      style:
-                          GoogleFonts.lato(fontSize: 14, color: Colors.white),
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 14,
+                          color: Colors.white),
                     ),
                   ),
                   Positioned(
@@ -95,8 +97,10 @@ class _ChatPageViewState extends State<ChatPageView> {
                     right: 10,
                     child: Text(
                       s,
-                      style:
-                          GoogleFonts.lato(fontSize: 10, color: Colors.white),
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 10,
+                          color: Colors.white),
                     ),
                   )
                 ]),
@@ -126,16 +130,20 @@ class _ChatPageViewState extends State<ChatPageView> {
                     padding: const EdgeInsets.only(
                         right: 8.0, left: 8.0, top: 8.0, bottom: 15.0),
                     child: Text(jsonResponse[i]['message'],
-                        style: GoogleFonts.lato(
-                            fontSize: 14, color: Colors.white)),
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 14,
+                            color: Colors.white)),
                   ),
                   Positioned(
                     bottom: 1,
                     left: 10,
                     child: Text(
                       s,
-                      style: GoogleFonts.lato(
-                          fontSize: 10, color: Colors.white.withOpacity(0.6)),
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 10,
+                          color: Colors.white.withOpacity(0.6)),
                     ),
                   )
                 ]),
@@ -167,7 +175,8 @@ class _ChatPageViewState extends State<ChatPageView> {
       appBar: AppBar(
         title: Text(
           recipentname,
-          style: GoogleFonts.lato(fontSize: 16, color: Colors.white),
+          style: TextStyle(
+              fontFamily: 'Montserrat', fontSize: 20, color: Colors.white),
         ),
         backgroundColor: Color.fromRGBO(0, 73, 83, 1),
       ),
@@ -281,8 +290,9 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                   top: 8.0,
                                                   bottom: 15.0),
                                               child: Text(_text.text,
-                                                  style: GoogleFonts.lato(
-                                                      fontSize: 16,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 14,
                                                       color: Colors.white)),
                                             ),
                                             Positioned(
@@ -292,7 +302,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                 hour.toString() +
                                                     ':' +
                                                     minute.toString(),
-                                                style: GoogleFonts.lato(
+                                                style: TextStyle(
+                                                    fontFamily: 'Montserrat',
                                                     fontSize: 10,
                                                     color: Colors.white
                                                         .withOpacity(0.6)),

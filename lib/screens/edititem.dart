@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:SellShip/models/Items.dart';
@@ -102,7 +101,8 @@ class EditItemState extends State<EditItem>
           backgroundColor: Colors.white,
           title: Text(
             'Edit Item',
-            style: GoogleFonts.lato(fontSize: 16, color: Colors.black),
+            style: TextStyle(
+                fontFamily: 'Montserrat', fontSize: 16, color: Colors.black),
           ),
           leading: IconButton(
             icon: Icon(
@@ -145,7 +145,8 @@ class EditItemState extends State<EditItem>
                                           children: <Widget>[
                                             new Text(
                                               'Item Details',
-                                              style: GoogleFonts.lato(
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -206,7 +207,8 @@ class EditItemState extends State<EditItem>
                                           children: <Widget>[
                                             new Text(
                                               'Item Name',
-                                              style: GoogleFonts.lato(
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -245,7 +247,8 @@ class EditItemState extends State<EditItem>
                                           children: <Widget>[
                                             new Text(
                                               'Item Description',
-                                              style: GoogleFonts.lato(
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -286,7 +289,8 @@ class EditItemState extends State<EditItem>
                                           children: <Widget>[
                                             new Text(
                                               'Item Price',
-                                              style: GoogleFonts.lato(
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -357,7 +361,8 @@ class EditItemState extends State<EditItem>
               child: Container(
                   child: new RaisedButton(
                 child: new Text("Save",
-                    style: GoogleFonts.lato(
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
                       fontSize: 16,
                     )),
                 textColor: Colors.white,
@@ -411,7 +416,8 @@ class EditItemState extends State<EditItem>
                   child: new RaisedButton(
                 child: new Text(
                   "Cancel",
-                  style: GoogleFonts.lato(
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
                     fontSize: 16,
                   ),
                 ),
@@ -436,7 +442,8 @@ class EditItemState extends State<EditItem>
                   child: new RaisedButton(
                 child: new Text(
                   "Delete",
-                  style: GoogleFonts.lato(
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
                     fontSize: 16,
                   ),
                 ),

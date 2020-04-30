@@ -50,6 +50,7 @@ List<Categories> categories = [
       SubCategories(id: 1, title: "Men"),
       SubCategories(id: 2, title: "Girls"),
       SubCategories(id: 3, title: "Boys"),
+      SubCategories(id: 4, title: "Unisex"),
     ],
   ),
   Categories(

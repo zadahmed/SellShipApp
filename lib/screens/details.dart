@@ -7,7 +7,6 @@ import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:SellShip/models/Items.dart';
@@ -180,7 +179,8 @@ class _DetailsState extends State<Details> {
       content: new Text(
         value,
         textAlign: TextAlign.center,
-        style: GoogleFonts.lato(
+        style: TextStyle(
+          fontFamily: 'Montserrat',
           fontSize: 16,
           color: Colors.white,
         ),
@@ -279,8 +279,10 @@ class _DetailsState extends State<Details> {
                                       ),
                                       Text(
                                         images.length.toString() + '/6',
-                                        style: GoogleFonts.lato(
-                                            fontSize: 16, color: Colors.white),
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 16,
+                                            color: Colors.white),
                                       )
                                     ],
                                   )),
@@ -302,7 +304,8 @@ class _DetailsState extends State<Details> {
                                     child: Text(
                                       newItem.name,
                                       textAlign: TextAlign.left,
-                                      style: GoogleFonts.lato(
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -313,7 +316,8 @@ class _DetailsState extends State<Details> {
                                   Text(
                                     newItem.category,
                                     textAlign: TextAlign.left,
-                                    style: GoogleFonts.lato(
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
                                       fontSize: 16,
                                     ),
                                   ),
@@ -321,7 +325,8 @@ class _DetailsState extends State<Details> {
                                   Text(
                                     newItem.price.toString() + ' ' + currency,
                                     textAlign: TextAlign.left,
-                                    style: GoogleFonts.lato(
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -333,7 +338,8 @@ class _DetailsState extends State<Details> {
                                     children: <Widget>[
                                       Text(
                                         'Condition -',
-                                        style: GoogleFonts.lato(
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
                                           fontSize: 16,
                                           color: Colors.blueGrey,
                                           fontWeight: FontWeight.w500,
@@ -346,7 +352,8 @@ class _DetailsState extends State<Details> {
                                         child: Text(
                                           newItem.condition.toString(),
                                           textAlign: TextAlign.left,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                            fontFamily: 'Montserrat',
                                             fontSize: 16,
                                             color: Colors.blueGrey,
                                             fontWeight: FontWeight.w500,
@@ -363,7 +370,8 @@ class _DetailsState extends State<Details> {
                                     children: <Widget>[
                                       Text(
                                         'Brand -',
-                                        style: GoogleFonts.lato(
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
                                           fontSize: 16,
                                           color: Colors.blueGrey,
                                           fontWeight: FontWeight.w500,
@@ -376,7 +384,8 @@ class _DetailsState extends State<Details> {
                                         child: Text(
                                           newItem.brand.toString(),
                                           textAlign: TextAlign.left,
-                                          style: GoogleFonts.lato(
+                                          style: TextStyle(
+                                            fontFamily: 'Montserrat',
                                             fontSize: 16,
                                             color: Colors.blueGrey,
                                             fontWeight: FontWeight.w500,
@@ -396,7 +405,8 @@ class _DetailsState extends State<Details> {
                                           children: <Widget>[
                                             Text(
                                               'Size -',
-                                              style: GoogleFonts.lato(
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
                                                 fontSize: 16,
                                                 color: Colors.blueGrey,
                                                 fontWeight: FontWeight.w500,
@@ -409,7 +419,8 @@ class _DetailsState extends State<Details> {
                                               child: Text(
                                                 newItem.size.toString(),
                                                 textAlign: TextAlign.left,
-                                                style: GoogleFonts.lato(
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
                                                   fontSize: 16,
                                                   color: Colors.blueGrey,
                                                   fontWeight: FontWeight.w500,
@@ -438,7 +449,8 @@ class _DetailsState extends State<Details> {
                                       Text(
                                         newItem.city.toString(),
                                         textAlign: TextAlign.left,
-                                        style: GoogleFonts.lato(
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
                                           fontSize: 16,
                                           color: Colors.blueGrey,
                                           fontWeight: FontWeight.w500,
@@ -508,8 +520,10 @@ class _DetailsState extends State<Details> {
                               child: ListTile(
                                 title: Text(
                                   newItem.username,
-                                  style: GoogleFonts.lato(
-                                      fontSize: 16, color: Colors.black),
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                      color: Colors.black),
                                 ),
                                 leading: Icon(
                                   FontAwesome5.user_circle,
@@ -572,7 +586,8 @@ class _DetailsState extends State<Details> {
                                   child: Text(
                                     'Description',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.lato(
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -589,7 +604,8 @@ class _DetailsState extends State<Details> {
                                     child: Text(
                                       newItem.description,
                                       textAlign: TextAlign.justify,
-                                      style: GoogleFonts.lato(
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -623,7 +639,8 @@ class _DetailsState extends State<Details> {
                                   child: Text(
                                     'Location of Item',
                                     textAlign: TextAlign.center,
-                                    style: GoogleFonts.lato(
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -676,7 +693,8 @@ class _DetailsState extends State<Details> {
                           children: <Widget>[
                             Text(
                               'Uploaded on ',
-                              style: GoogleFonts.lato(
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
                                 fontSize: 12,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w300,
@@ -685,7 +703,8 @@ class _DetailsState extends State<Details> {
                             Text(
                               dateuploaded.toString(),
                               textAlign: TextAlign.left,
-                              style: GoogleFonts.lato(
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
                                 fontSize: 12,
                                 color: Colors.grey,
                                 fontWeight: FontWeight.w300,
@@ -848,7 +867,8 @@ class _DetailsState extends State<Details> {
                           ),
                           Text(
                             "Chat",
-                            style: GoogleFonts.lato(
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
                                 fontSize: 16,
                                 color: Color(0xFFFBFBFB),
                                 fontWeight: FontWeight.w500),
@@ -879,7 +899,8 @@ class ImageDisplayState extends State<ImageDisplay> {
       appBar: AppBar(
         title: Text(
           'Pictures',
-          style: GoogleFonts.lato(
+          style: TextStyle(
+            fontFamily: 'Montserrat',
             fontSize: 16,
           ),
         ),
