@@ -171,12 +171,6 @@ class _SearchState extends State<Search> {
         ),
       ),
     );
-//    Navigator.push(
-//        context,
-//        MaterialPageRoute(
-//            builder: (BuildContext context) => Search(
-//                  text: texte,
-//                )));
   }
 
   Widget _buildProgressIndicator() {
@@ -253,12 +247,9 @@ class _SearchState extends State<Search> {
                             crossAxisCount: 2,
                             mainAxisSpacing: 4,
                             crossAxisSpacing: 4,
-                            itemCount: itemsgrid.length + 1,
+                            itemCount: itemsgrid.length,
                             itemBuilder: (context, index) {
-                              if (index == itemsgrid.length) {
-                                return _buildProgressIndicator();
-                              }
-                              if (index != 0 && index % 7 == 0) {
+                              if (index != 0 && index % 6 == 0) {
                                 return Platform.isIOS == true
                                     ? Container(
                                         height: 330,
@@ -280,7 +271,7 @@ class _SearchState extends State<Search> {
                                       );
                               }
                               return Padding(
-                                  padding: EdgeInsets.all(7),
+                                  padding: EdgeInsets.all(4),
                                   child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -293,27 +284,28 @@ class _SearchState extends State<Search> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.shade300,
-                                                offset:
-                                                    Offset(0.0, 1.0), //(x,y)
-                                                blurRadius: 6.0,
-                                              ),
-                                            ],
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                          color: Colors.white,
+                                        ),
                                         child: new Column(
                                           children: <Widget>[
                                             new Stack(
                                               children: <Widget>[
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
+                                                Container(
+                                                  height: 150,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
                                                   child: CachedNetworkImage(
                                                     imageUrl:
                                                         itemsgrid[index].image,
+                                                    fit: BoxFit.cover,
                                                     placeholder: (context,
                                                             url) =>
                                                         SpinKitChasingDots(
@@ -328,21 +320,29 @@ class _SearchState extends State<Search> {
                                             ),
                                             new Padding(
                                               padding:
-                                                  const EdgeInsets.all(4.0),
+                                                  const EdgeInsets.all(5.0),
                                               child: new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Text(
-                                                    itemsgrid[index].name,
-                                                    overflow: TextOverflow.fade,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                  Container(
+                                                    height: 20,
+                                                    child: Text(
+                                                      itemsgrid[index].name,
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                    textAlign: TextAlign.center,
                                                   ),
-                                                  SizedBox(height: 3.0),
+                                                  SizedBox(height: 5.0),
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].category,
@@ -355,7 +355,7 @@ class _SearchState extends State<Search> {
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 3.0),
+                                                  SizedBox(height: 5.0),
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index]
@@ -366,11 +366,10 @@ class _SearchState extends State<Search> {
                                                       style: TextStyle(
                                                         fontFamily:
                                                             'Montserrat',
-                                                        fontSize: 14,
+                                                        fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                            FontWeight.w800,
                                                       ),
-                                                      textAlign: TextAlign.left,
                                                     ),
                                                   ),
                                                 ],
@@ -381,14 +380,7 @@ class _SearchState extends State<Search> {
                                       )));
                             },
                             staggeredTileBuilder: (int index) {
-                              if (index != 0 && index % 7 == 0) {
-                                return StaggeredTile.count(2, 1);
-                              } else if (index != 0 &&
-                                  index == itemsgrid.length) {
-                                return StaggeredTile.count(2, 1);
-                              } else {
-                                return StaggeredTile.fit(1);
-                              }
+                              return StaggeredTile.extent(1, 240.0);
                             },
                           ))
                         : Expanded(

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -507,13 +508,6 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   bool loading;
 
-  Widget _buildProgressIndicator() {
-    return new Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: new Center(child: SpinKitChasingDots(color: Colors.deepOrange)),
-    );
-  }
-
   ScrollController _scrollController = ScrollController();
 
   String _selectedFilter = 'Near me';
@@ -525,9 +519,12 @@ class _CategoryDetailState extends State<CategoryDetail> {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Colors.deepOrange,
           title: Text(
-            subcategory,
+            subcategory.toUpperCase(),
             style: TextStyle(
-                fontFamily: 'Montserrat', fontSize: 16, color: Colors.white),
+                fontFamily: 'Montserrat',
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w800),
           ),
         ),
         body: GestureDetector(
@@ -538,6 +535,199 @@ class _CategoryDetailState extends State<CategoryDetail> {
               ? SafeArea(
                   child: Column(
                   children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 30,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          InkWell(
+                            child: Container(
+                              height: 30,
+                              width: MediaQuery.of(context).size.width / 2 - 10,
+                              child: Center(
+                                child: Text(
+                                  'SORT',
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.black),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              20.0)), //this right here
+                                      child: Container(
+                                        height: 290,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ListTile(
+                                                title: Text(
+                                                  'Sort',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                              InkWell(
+                                                child: ListTile(
+                                                  title: Text(
+                                                    'New',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  setState(() {
+                                                    _selectedFilter =
+                                                        'Recently Added';
+                                                    skip = 0;
+                                                    limit = 10;
+                                                    loading = true;
+                                                  });
+                                                  itemsgrid.clear();
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                  fetchRecentlyAdded(
+                                                      skip, limit);
+                                                },
+                                              ),
+                                              InkWell(
+                                                child: ListTile(
+                                                  title: Text(
+                                                    'Near me',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  setState(() {
+                                                    _selectedFilter = 'Near me';
+                                                    skip = 0;
+                                                    limit = 10;
+                                                    loading = true;
+                                                  });
+                                                  itemsgrid.clear();
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                  fetchItems(skip, limit);
+                                                },
+                                              ),
+                                              InkWell(
+                                                child: ListTile(
+                                                  title: Text(
+                                                    'Price Low to High',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  setState(() {
+                                                    _selectedFilter =
+                                                        'Lowest Price';
+                                                    skip = 0;
+                                                    limit = 10;
+                                                    loading = true;
+                                                  });
+                                                  itemsgrid.clear();
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                  fetchLowestPrice(skip, limit);
+                                                },
+                                              ),
+                                              InkWell(
+                                                child: ListTile(
+                                                  title: Text(
+                                                    'Price High to Low',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  setState(() {
+                                                    _selectedFilter =
+                                                        'Highest Price';
+                                                    skip = 0;
+                                                    limit = 10;
+                                                    loading = true;
+                                                  });
+                                                  itemsgrid.clear();
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                  fetchHighestPrice(
+                                                      skip, limit);
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            },
+                          ),
+                          Container(
+                              height: 30,
+                              child: VerticalDivider(color: Colors.black)),
+                          Container(
+                            height: 30,
+                            width: MediaQuery.of(context).size.width / 2 - 10,
+                            child: Center(
+                              child: Text(
+                                'FILTER',
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     SizedBox(
                       height: 10,
                     ),
@@ -570,16 +760,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               scrollDirection: Axis.horizontal,
                               children: <Widget>[
                                 InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedFilter = 'Near me';
-                                      skip = 0;
-                                      limit = 10;
-                                      loading = true;
-                                    });
-                                    itemsgrid.clear();
-                                    fetchItems(skip, limit);
-                                  },
+                                  onTap: () {},
                                   child: Padding(
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -610,16 +791,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedFilter = 'Recently Added';
-                                      skip = 0;
-                                      limit = 10;
-                                      loading = true;
-                                    });
-                                    itemsgrid.clear();
-                                    fetchRecentlyAdded(skip, limit);
-                                  },
+                                  onTap: () {},
                                   child: Padding(
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -693,16 +865,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedFilter = 'Lowest Price';
-                                      skip = 0;
-                                      limit = 10;
-                                      loading = true;
-                                    });
-                                    itemsgrid.clear();
-                                    fetchLowestPrice(skip, limit);
-                                  },
+                                  onTap: () {},
                                   child: Padding(
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -733,16 +896,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedFilter = 'Highest Price';
-                                      skip = 0;
-                                      limit = 10;
-                                      loading = true;
-                                    });
-                                    itemsgrid.clear();
-                                    fetchHighestPrice(skip, limit);
-                                  },
+                                  onTap: () {},
                                   child: Padding(
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -790,12 +944,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
                             crossAxisCount: 2,
                             mainAxisSpacing: 4,
                             crossAxisSpacing: 4,
-                            itemCount: itemsgrid.length + 1,
+                            itemCount: itemsgrid.length,
                             itemBuilder: (context, index) {
-                              if (index == itemsgrid.length) {
-                                return _buildProgressIndicator();
-                              }
-                              if (index != 0 && index % 7 == 0) {
+                              if (index != 0 && index % 6 == 0) {
                                 return Platform.isIOS == true
                                     ? Container(
                                         height: 330,
@@ -817,7 +968,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                       );
                               }
                               return Padding(
-                                  padding: EdgeInsets.all(7),
+                                  padding: EdgeInsets.all(4),
                                   child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -830,27 +981,28 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.shade300,
-                                                offset:
-                                                    Offset(0.0, 1.0), //(x,y)
-                                                blurRadius: 6.0,
-                                              ),
-                                            ],
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                          color: Colors.white,
+                                        ),
                                         child: new Column(
                                           children: <Widget>[
                                             new Stack(
                                               children: <Widget>[
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
+                                                Container(
+                                                  height: 150,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
                                                   child: CachedNetworkImage(
                                                     imageUrl:
                                                         itemsgrid[index].image,
+                                                    fit: BoxFit.cover,
                                                     placeholder: (context,
                                                             url) =>
                                                         SpinKitChasingDots(
@@ -865,34 +1017,42 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             ),
                                             new Padding(
                                               padding:
-                                                  const EdgeInsets.all(4.0),
+                                                  const EdgeInsets.all(5.0),
                                               child: new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Text(
-                                                    itemsgrid[index].name,
-                                                    overflow: TextOverflow.fade,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                  Container(
+                                                    height: 20,
+                                                    child: Text(
+                                                      itemsgrid[index].name,
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                    textAlign: TextAlign.center,
                                                   ),
-                                                  SizedBox(height: 3.0),
+                                                  SizedBox(height: 5.0),
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].category,
                                                       style: TextStyle(
                                                         fontFamily:
                                                             'Montserrat',
-                                                        fontSize: 16,
+                                                        fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w300,
                                                       ),
                                                     ),
                                                   ),
-                                                  SizedBox(height: 3.0),
+                                                  SizedBox(height: 5.0),
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index]
@@ -905,9 +1065,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                             'Montserrat',
                                                         fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                            FontWeight.w800,
                                                       ),
-                                                      textAlign: TextAlign.left,
                                                     ),
                                                   ),
                                                 ],
@@ -918,14 +1077,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                       )));
                             },
                             staggeredTileBuilder: (int index) {
-                              if (index != 0 && index % 7 == 0) {
-                                return StaggeredTile.count(2, 1);
-                              } else if (index != 0 &&
-                                  index == itemsgrid.length) {
-                                return StaggeredTile.count(2, 1);
-                              } else {
-                                return StaggeredTile.fit(1);
-                              }
+                              return StaggeredTile.extent(1, 240.0);
                             },
                           ))
                         : Expanded(

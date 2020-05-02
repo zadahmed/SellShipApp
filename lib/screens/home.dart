@@ -441,8 +441,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onSelectNotification: onSelectNotification);
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          (_scrollController.position.maxScrollExtent)) {
+      if (_scrollController.position.pixels >=
+          (_scrollController.position.maxScrollExtent / 2)) {
         print(_selectedFilter);
         if (_selectedFilter == 'Near me') {
           _getmoreData();
@@ -570,7 +570,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       city = cit;
       country = countryy;
-      fetchItems(skip, limit);
+      fetchRecentlyAdded(skip, limit);
       //secure storage save it
     });
   }
@@ -586,7 +586,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (latitude == null || longitude == null) {
       _getLocation();
     } else {
-      fetchItems(skip, limit);
+      fetchRecentlyAdded(skip, limit);
       setState(() {
         position = LatLng(double.parse(latitude), double.parse(longitude));
         city = cit;
@@ -602,7 +602,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         skip = 0;
         limit = 10;
-        fetchItems(skip, limit);
+        fetchRecentlyAdded(skip, limit);
       });
     } else {
       searchcontroller.clear();
@@ -613,16 +613,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  String _selectedFilter = 'Near me';
-
-  Widget _buildProgressIndicator() {
-    return new Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: new Center(
-        child: SpinKitChasingDots(color: Colors.deepOrange),
-      ),
-    );
-  }
+  String _selectedFilter = 'Recently Added';
 
   @override
   Widget build(BuildContext context) {
@@ -721,46 +712,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 InkWell(
                                   onTap: () {
                                     setState(() {
-                                      _selectedFilter = 'Near me';
-                                      skip = 0;
-                                      limit = 10;
-                                      loading = true;
-                                    });
-                                    itemsgrid.clear();
-                                    fetchItems(skip, limit);
-                                  },
-                                  child: Padding(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: _selectedFilter == 'Near me'
-                                            ? Colors.white
-                                            : Colors.deepOrange,
-                                        border: Border.all(
-                                            color: Colors.deepOrange),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      height: 20,
-                                      width: 100,
-                                      child: Center(
-                                        child: Text(
-                                          'Near me',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
-                                              color:
-                                                  _selectedFilter == 'Near me'
-                                                      ? Colors.deepOrange
-                                                      : Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
                                       _selectedFilter = 'Recently Added';
                                       skip = 0;
                                       limit = 10;
@@ -794,6 +745,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       'Recently Added'
                                                   ? Colors.deepOrange
                                                   : Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.only(left: 5, right: 5),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Near me';
+                                      skip = 0;
+                                      limit = 10;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    fetchItems(skip, limit);
+                                  },
+                                  child: Padding(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: _selectedFilter == 'Near me'
+                                            ? Colors.white
+                                            : Colors.deepOrange,
+                                        border: Border.all(
+                                            color: Colors.deepOrange),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      height: 20,
+                                      width: 100,
+                                      child: Center(
+                                        child: Text(
+                                          'Near me',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                              color:
+                                                  _selectedFilter == 'Near me'
+                                                      ? Colors.deepOrange
+                                                      : Colors.white),
                                         ),
                                       ),
                                     ),
@@ -939,11 +930,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisCount: 2,
                             mainAxisSpacing: 4,
                             crossAxisSpacing: 4,
-                            itemCount: itemsgrid.length + 1,
+                            itemCount: itemsgrid.length,
                             itemBuilder: (context, index) {
-                              if (index == itemsgrid.length) {
-                                return _buildProgressIndicator();
-                              }
                               if (index == 0) {
                                 return Container(
                                   width: MediaQuery.of(context).size.width,
@@ -1036,7 +1024,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 );
                               }
-                              if (index != 0 && index % 4 == 0) {
+                              if (index != 0 && index % 6 == 0) {
                                 return Platform.isIOS == true
                                     ? Container(
                                         height: 330,
@@ -1058,7 +1046,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       );
                               }
                               return Padding(
-                                  padding: EdgeInsets.all(7),
+                                  padding: EdgeInsets.all(4),
                                   child: InkWell(
                                       onTap: () {
                                         Navigator.push(
@@ -1071,27 +1059,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.shade300,
-                                                offset:
-                                                    Offset(0.0, 1.0), //(x,y)
-                                                blurRadius: 6.0,
-                                              ),
-                                            ],
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                          color: Colors.white,
+                                        ),
                                         child: new Column(
                                           children: <Widget>[
                                             new Stack(
                                               children: <Widget>[
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
+                                                Container(
+                                                  height: 150,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
                                                   child: CachedNetworkImage(
                                                     imageUrl:
                                                         itemsgrid[index].image,
+                                                    fit: BoxFit.cover,
                                                     placeholder: (context,
                                                             url) =>
                                                         SpinKitChasingDots(
@@ -1111,19 +1100,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.center,
                                                 children: <Widget>[
-                                                  Text(
-                                                    itemsgrid[index].name,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                                  Container(
+                                                    height: 20,
+                                                    child: Text(
+                                                      itemsgrid[index].name,
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
-                                                    textAlign: TextAlign.left,
                                                   ),
-                                                  SizedBox(height: 3.0),
+                                                  SizedBox(height: 5.0),
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index].category,
@@ -1134,10 +1128,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         fontWeight:
                                                             FontWeight.w300,
                                                       ),
-                                                      textAlign: TextAlign.left,
                                                     ),
                                                   ),
-                                                  SizedBox(height: 3.0),
+                                                  SizedBox(height: 5.0),
                                                   Container(
                                                     child: Text(
                                                       itemsgrid[index]
@@ -1148,11 +1141,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       style: TextStyle(
                                                         fontFamily:
                                                             'Montserrat',
-                                                        fontSize: 14,
+                                                        fontSize: 16,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                            FontWeight.w800,
                                                       ),
-                                                      textAlign: TextAlign.left,
                                                     ),
                                                   ),
                                                 ],
@@ -1163,12 +1155,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )));
                             },
                             staggeredTileBuilder: (int index) {
-                              if (index != 0 && index == itemsgrid.length) {
-                                return StaggeredTile.count(2, 0.5);
-                              } else if (index == 0) {
+                              if (index == 0) {
                                 return StaggeredTile.count(2, 0.6);
                               } else {
-                                return StaggeredTile.fit(1);
+                                return StaggeredTile.extent(1, 240.0);
                               }
                             },
                           ))

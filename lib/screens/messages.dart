@@ -99,6 +99,8 @@ class MessagesState extends State<Messages> {
       } else {
         print(response.statusCode);
       }
+    } else {
+      messagesd = null;
     }
     messagesd.sort();
     return messagesd;

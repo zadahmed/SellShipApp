@@ -543,26 +543,6 @@ class _DetailsState extends State<Details> {
                           ),
                         ),
                         SizedBox(height: 5),
-                        Platform.isIOS == true
-                            ? Container(
-                                height: 200,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(bottom: 20.0),
-                                child: NativeAdmob(
-                                  adUnitID: _iosadUnitID,
-                                  controller: _controller,
-                                ),
-                              )
-                            : Container(
-                                height: 200,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(bottom: 20.0),
-                                child: NativeAdmob(
-                                  adUnitID: _androidadUnitID,
-                                  controller: _controller,
-                                ),
-                              ),
-                        SizedBox(height: 5),
                         Container(
                           height: 200,
                           decoration: BoxDecoration(
@@ -616,6 +596,26 @@ class _DetailsState extends State<Details> {
                           ),
                         ),
                         SizedBox(height: 10),
+                        Platform.isIOS == true
+                            ? Container(
+                                height: 200,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(bottom: 20.0),
+                                child: NativeAdmob(
+                                  adUnitID: _iosadUnitID,
+                                  controller: _controller,
+                                ),
+                              )
+                            : Container(
+                                height: 200,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.only(bottom: 20.0),
+                                child: NativeAdmob(
+                                  adUnitID: _androidadUnitID,
+                                  controller: _controller,
+                                ),
+                              ),
+                        SizedBox(height: 5),
                         Container(
                           height: 260,
                           decoration: BoxDecoration(
@@ -715,26 +715,6 @@ class _DetailsState extends State<Details> {
                         SizedBox(
                           height: 20,
                         ),
-                        Platform.isIOS == true
-                            ? Container(
-                                height: 330,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(bottom: 20.0),
-                                child: NativeAdmob(
-                                  adUnitID: _iosadUnitID,
-                                  controller: _controller,
-                                ),
-                              )
-                            : Container(
-                                height: 330,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(bottom: 20.0),
-                                child: NativeAdmob(
-                                  adUnitID: _androidadUnitID,
-                                  controller: _controller,
-                                ),
-                              ),
-                        SizedBox(height: 10),
                       ],
                     ))
               ],

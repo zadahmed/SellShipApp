@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:SellShip/models/Items.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/details.dart';
 import 'package:shimmer/shimmer.dart';
@@ -19,12 +23,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   var userid;
   final storage = new FlutterSecureStorage();
 
-  List<String> Itemid = List<String>();
-  List<String> Itemname = List<String>();
-  List<String> Itemimage = List<String>();
-  List<String> Itemcategory = List<String>();
-  List<int> Itemprice = List<int>();
-
+  List<Item> item = List<Item>();
   var currency;
   getfavourites() async {
     userid = await storage.read(key: 'userid');
@@ -46,23 +45,28 @@ class FavouritesScreenState extends State<FavouritesScreen> {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
           var profilemap = respons;
-          print(profilemap);
-          for (var i = 0; i < profilemap.length; i++) {
-            Itemid.add(profilemap[i]['_id']['\$oid']);
-            Itemname.add(profilemap[i]['name']);
-            Itemimage.add(profilemap[i]['image']);
-            Itemprice.add(profilemap[i]['price']);
-            Itemcategory.add(profilemap[i]['category']);
-          }
+          List<Item> ites = List<Item>();
 
-          setState(() {
-            Itemid = Itemid;
-            Itemname = Itemname;
-            Itemimage = Itemimage;
-            Itemprice = Itemprice;
-            Itemcategory = Itemcategory;
-            loading = false;
-          });
+          if (profilemap != null) {
+            for (var i = 0; i < profilemap.length; i++) {
+              Item ite = Item(
+                  itemid: profilemap[i]['_id']['\$oid'],
+                  name: profilemap[i]['name'],
+                  image: profilemap[i]['image'],
+                  price: profilemap[i]['price'],
+                  sold: profilemap[i]['sold'] == null
+                      ? false
+                      : profilemap[i]['sold'],
+                  category: profilemap[i]['category']);
+              ites.add(ite);
+            }
+            setState(() {
+              item = ites;
+              loading = false;
+            });
+          } else {
+            item = [];
+          }
         } else {
           setState(() {
             loading = false;
@@ -107,6 +111,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
     super.didChangeDependencies();
   }
 
+  ScrollController _scrollController = ScrollController();
   Widget favourites(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -125,64 +130,146 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                     SizedBox(
                       height: 15,
                     ),
-                    Itemname.isNotEmpty
+                    item != null
                         ? Expanded(
-                            child: new ListView.builder(
-                                itemCount: Itemname.length,
-                                itemBuilder: (BuildContext ctxt, int Index) {
-                                  if (Index != 0 && Index % 4 == 0) {
-                                    return Platform.isIOS == true
-                                        ? Container(
-                                            height: 200,
-                                            padding: EdgeInsets.all(10),
-                                            margin:
-                                                EdgeInsets.only(bottom: 20.0),
-                                            child: NativeAdmob(
-                                              adUnitID: _iosadUnitID,
-                                              controller: _controller,
-                                            ),
-                                          )
-                                        : Container(
-                                            height: 200,
-                                            padding: EdgeInsets.all(10),
-                                            margin:
-                                                EdgeInsets.only(bottom: 20.0),
-                                            child: NativeAdmob(
-                                              adUnitID: _androidadUnitID,
-                                              controller: _controller,
-                                            ),
-                                          );
-                                  }
-                                  return new InkWell(
+                            child: StaggeredGridView.countBuilder(
+                            controller: _scrollController,
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 4,
+                            crossAxisSpacing: 4,
+                            itemCount: item.length,
+                            itemBuilder: (context, index) {
+                              if (index != 0 && index % 4 == 0) {
+                                return Platform.isIOS == true
+                                    ? Container(
+                                        height: 330,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
+                                        child: NativeAdmob(
+                                          adUnitID: _iosadUnitID,
+                                          controller: _controller,
+                                        ),
+                                      )
+                                    : Container(
+                                        height: 330,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
+                                        child: NativeAdmob(
+                                          adUnitID: _androidadUnitID,
+                                          controller: _controller,
+                                        ),
+                                      );
+                              }
+                              return Padding(
+                                  padding: EdgeInsets.all(7),
+                                  child: InkWell(
                                       onTap: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => Details(
-                                                  itemid: Itemid[Index])),
+                                                  itemid: item[index].itemid)),
                                         );
                                       },
-                                      child: Card(
-                                          child: ListTile(
-                                        title: Text(Itemname[Index]),
-                                        trailing: Text(
-                                            Itemprice[Index].toString() +
-                                                ' ' +
-                                                currency),
-                                        leading: Container(
-                                          height: 60,
-                                          width: 60,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          child: Image.network(
-                                            Itemimage[Index],
-                                            fit: BoxFit.cover,
-                                          ),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset:
+                                                    Offset(0.0, 1.0), //(x,y)
+                                                blurRadius: 6.0,
+                                              ),
+                                            ],
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: new Column(
+                                          children: <Widget>[
+                                            new Stack(
+                                              children: <Widget>[
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: item[index].image,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        SpinKitChasingDots(
+                                                            color: Colors
+                                                                .deepOrange),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            new Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: new Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    item[index].name,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                  SizedBox(height: 3.0),
+                                                  Container(
+                                                    child: Text(
+                                                      item[index].category,
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 3.0),
+                                                  Container(
+                                                    child: Text(
+                                                      item[index]
+                                                              .price
+                                                              .toString() +
+                                                          ' ' +
+                                                          currency,
+                                                      style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                      ),
+                                                      textAlign: TextAlign.left,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                        subtitle: Text(Itemcategory[Index]),
                                       )));
-                                }))
+                            },
+                            staggeredTileBuilder: (int index) {
+                              return StaggeredTile.fit(1);
+                            },
+                          ))
                         : Expanded(
                             child: Column(
                             children: <Widget>[

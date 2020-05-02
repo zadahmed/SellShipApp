@@ -701,10 +701,11 @@ class _LoginPageState extends State<LoginPage>
                   style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontSize: 20.0,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold),
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Colors.white,
                 ),
               ),
               ListTile(
@@ -723,10 +724,57 @@ class _LoginPageState extends State<LoginPage>
                 },
               ),
               ListTile(
-                title: Text('Item 2'),
+                title: Text(
+                  'Help and Support',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 16.0,
+                  ),
+                ),
                 onTap: () {
                   // Update the state of the app.
                   // ...
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Terms and Conditions',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Privacy Policy',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  // Update the state of the app.
+                  // ...
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Log out',
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  storage.delete(key: 'userid');
+                  setState(() {
+                    userid = null;
+                  });
                 },
               ),
             ],
@@ -741,17 +789,6 @@ class _LoginPageState extends State<LoginPage>
                 fontFamily: 'Montserrat', fontSize: 20, color: Colors.white),
           ),
           backgroundColor: Colors.deepOrange,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                storage.delete(key: 'userid');
-                setState(() {
-                  userid = null;
-                });
-              },
-              icon: Icon(Feather.log_out),
-            )
-          ],
         ),
         body: loading == false
             ? Column(
@@ -1738,7 +1775,12 @@ class _LoginPageState extends State<LoginPage>
         print('Loggd in ');
         setState(() {
           userid = jsondata['id'];
-          getProfileData();
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) => LoginPage(),
+            ),
+          );
         });
       } else if (jsondata['status']['message'].toString().trim() ==
           'User does not exist, please sign up') {
@@ -1772,7 +1814,12 @@ class _LoginPageState extends State<LoginPage>
         print('signned up ');
         setState(() {
           userid = jsondata['id'];
-          getProfileData();
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation1, animation2) => LoginPage(),
+            ),
+          );
         });
       } else {
         print('User Already Exists');
