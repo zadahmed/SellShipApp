@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage>
           'email': profile['email'],
           'phonenumber': '00',
           'password': 'password',
-          'fcmtoken': firebasetoken,
+//          'fcmtoken': firebasetoken,
         };
 
         final response = await http.post(url, body: body);
@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage>
             Map<String, String> body = {
               'email': profile['email'],
               'password': 'password',
-              'fcmtoken': firebasetoken,
+//              'fcmtoken': firebasetoken,
             };
 
             final response = await http.post(url, body: body);
@@ -1759,7 +1759,7 @@ class _LoginPageState extends State<LoginPage>
     Map<String, String> body = {
       'email': loginEmailController.text,
       'password': loginPasswordController.text,
-      'fcmtoken': firebasetoken,
+//      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);
@@ -1800,7 +1800,7 @@ class _LoginPageState extends State<LoginPage>
       'email': signupEmailController.text,
       'phonenumber': numberphone,
       'password': signupPasswordController.text,
-      'fcmtoken': firebasetoken,
+//      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);
