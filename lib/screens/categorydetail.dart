@@ -567,7 +567,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                           borderRadius: BorderRadius.circular(
                                               20.0)), //this right here
                                       child: Container(
-                                        height: 290,
+                                        height: 350,
                                         child: Padding(
                                           padding: const EdgeInsets.all(1.0),
                                           child: Column(
@@ -641,6 +641,35 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                           rootNavigator: true)
                                                       .pop('dialog');
                                                   fetchItems(skip, limit);
+                                                },
+                                              ),
+                                              InkWell(
+                                                child: ListTile(
+                                                  title: Text(
+                                                    'Below 100',
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  setState(() {
+                                                    _selectedFilter =
+                                                        'Below 100';
+                                                    skip = 0;
+                                                    limit = 10;
+                                                    loading = true;
+                                                  });
+                                                  itemsgrid.clear();
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                  fetchbelowhundred(
+                                                      skip, limit);
                                                 },
                                               ),
                                               InkWell(
@@ -723,212 +752,6 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      height: 30,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(left: 15),
-                              child: Text(
-                                'Filter',
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 11,
-                                    color: Colors.blueGrey),
-                              )),
-                          SizedBox(
-                            width: 2,
-                          ),
-                          Icon(
-                            Icons.filter_list,
-                            size: 12,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: <Widget>[
-                                InkWell(
-                                  onTap: () {},
-                                  child: Padding(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: _selectedFilter == 'Near me'
-                                            ? Colors.white
-                                            : Colors.deepOrange,
-                                        border: Border.all(
-                                            color: Colors.deepOrange),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      height: 20,
-                                      width: 100,
-                                      child: Center(
-                                        child: Text(
-                                          'Near me',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
-                                              color:
-                                                  _selectedFilter == 'Near me'
-                                                      ? Colors.deepOrange
-                                                      : Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: Padding(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color:
-                                            _selectedFilter == 'Recently Added'
-                                                ? Colors.white
-                                                : Colors.deepOrange,
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                          color: Colors.deepOrange,
-                                        ),
-                                      ),
-                                      height: 20,
-                                      width: 150,
-                                      child: Center(
-                                        child: Text(
-                                          'Recently Added',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
-                                              color: _selectedFilter ==
-                                                      'Recently Added'
-                                                  ? Colors.deepOrange
-                                                  : Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedFilter = 'Below 100';
-                                      skip = 0;
-                                      limit = 10;
-                                      loading = true;
-                                    });
-                                    itemsgrid.clear();
-                                    fetchbelowhundred(skip, limit);
-                                  },
-                                  child: Padding(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: _selectedFilter == 'Below 100'
-                                            ? Colors.white
-                                            : Colors.deepOrange,
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                          color: Colors.deepOrange,
-                                        ),
-                                      ),
-                                      height: 20,
-                                      width: 150,
-                                      child: Center(
-                                        child: Text(
-                                          'Below 100',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
-                                              color:
-                                                  _selectedFilter == 'Below 100'
-                                                      ? Colors.deepOrange
-                                                      : Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: Padding(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: _selectedFilter == 'Lowest Price'
-                                            ? Colors.white
-                                            : Colors.deepOrange,
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                            color: Colors.deepOrange),
-                                      ),
-                                      height: 20,
-                                      width: 150,
-                                      child: Center(
-                                        child: Text(
-                                          'Lowest Price',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
-                                              color: _selectedFilter ==
-                                                      'Lowest Price'
-                                                  ? Colors.deepOrange
-                                                  : Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: Padding(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color:
-                                            _selectedFilter == 'Highest Price'
-                                                ? Colors.white
-                                                : Colors.deepOrange,
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                          color: Colors.deepOrange,
-                                        ),
-                                      ),
-                                      height: 20,
-                                      width: 150,
-                                      child: Center(
-                                        child: Text(
-                                          'Highest Price',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
-                                              color: _selectedFilter ==
-                                                      'Highest Price'
-                                                  ? Colors.deepOrange
-                                                  : Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    padding: EdgeInsets.only(left: 5, right: 5),
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
                         ],

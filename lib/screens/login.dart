@@ -1775,12 +1775,7 @@ class _LoginPageState extends State<LoginPage>
         print('Loggd in ');
         setState(() {
           userid = jsondata['id'];
-          Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation1, animation2) => LoginPage(),
-            ),
-          );
+          getProfileData();
         });
       } else if (jsondata['status']['message'].toString().trim() ==
           'User does not exist, please sign up') {
@@ -1814,12 +1809,7 @@ class _LoginPageState extends State<LoginPage>
         print('signned up ');
         setState(() {
           userid = jsondata['id'];
-          Navigator.pushReplacement(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation1, animation2) => LoginPage(),
-            ),
-          );
+          getProfileData();
         });
       } else {
         print('User Already Exists');
