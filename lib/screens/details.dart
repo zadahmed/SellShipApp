@@ -202,6 +202,8 @@ class _DetailsState extends State<Details> {
   Color heartColor;
   IconData heartIcon;
 
+  int _current = 0;
+
   @override
   Widget build(BuildContext context) {
     return loading == false
@@ -264,28 +266,48 @@ class _DetailsState extends State<Details> {
                                       ),
                                     );
                                   }),
-                              Positioned(
-                                  right: 10.0,
-                                  bottom: 5.0,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.image,
-                                        color: Colors.white,
+
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: images.map((url) {
+                                    int index = images.indexOf(url);
+                                    return Container(
+                                      width: 8.0,
+                                      height: 8.0,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 2.0),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _current == index
+                                            ? Colors.deepOrange
+                                            : Colors.white,
                                       ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        images.length.toString() + '/6',
-                                        style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 16,
-                                            color: Colors.white),
-                                      )
-                                    ],
-                                  )),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+
+//                                  Row(
+//                                    mainAxisAlignment: MainAxisAlignment.end,
+//                                    children: <Widget>[
+//                                      Icon(
+//                                        Icons.image,
+//                                        color: Colors.white,
+//                                      ),
+//                                      SizedBox(
+//                                        width: 5,
+//                                      ),
+//                                      Text(
+//                                        images.length.toString() + '/6',
+//                                        style: TextStyle(
+//                                            fontFamily: 'Montserrat',
+//                                            fontSize: 16,
+//                                            color: Colors.white),
+//                                      )
+//                                    ],
+//                                  )),
                             ],
                           ),
                         ),

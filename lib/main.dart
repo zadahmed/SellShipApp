@@ -35,46 +35,31 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 //  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 //
-//  static Future<dynamic> myBackgroundMessageHandler(
-//      Map<String, dynamic> message) async {
-//    print(message);
-//    return Future<void>.value();
+//  _getToken() {
+//    _firebaseMessaging.getToken().then((deviceToken) {
+//      print(deviceToken);
+//    });
 //  }
 //
-//  _initFirebaseMessaging() {
+//  _configureFirebaseListeners() {
 //    _firebaseMessaging.configure(
-//      onMessage: (Map<String, dynamic> message) {
-//        print('AppPushs onMessage : $message');
-//        return;
+//      onMessage: (Map<String, dynamic> message) async {
+//        print('onMessage: $message');
 //      },
-//      onBackgroundMessage: Platform.isIOS ? null : myBackgroundMessageHandler,
-//      onResume: (Map<String, dynamic> message) {
-//        print('AppPushs onResume : $message');
-//        return;
+//      onLaunch: (Map<String, dynamic> message) async {
+//        print('onLaunch: $message');
 //      },
-//      onLaunch: (Map<String, dynamic> message) {
-//        print('AppPushs onLaunch : $message');
-//        return;
+//      onResume: (Map<String, dynamic> message) async {
+//        print('onResume: $message');
 //      },
 //    );
-//    _firebaseMessaging.requestNotificationPermissions(
-//        const IosNotificationSettings(sound: true, badge: true, alert: true));
-//
-//    _firebaseMessaging.onIosSettingsRegistered
-//        .listen((IosNotificationSettings settings) {
-//      print('Settings Registered : $settings');
-//    });
-//
-//    _firebaseMessaging.getToken().then((String token) {
-//      assert(token != null);
-//      print("TOken is $token");
-//    });
 //  }
 
   @override
   void initState() {
+//    _getToken();
+//    _configureFirebaseListeners();
     _getLocation();
-//    _initFirebaseMessaging();
     super.initState();
   }
 
@@ -211,7 +196,7 @@ class SplashState extends State<Splash> {
   void initState() {
     super.initState();
 
-    new Timer(new Duration(milliseconds: 100), () {
+    new Timer(new Duration(milliseconds: 200), () {
       if (mounted) {
         _getLocation();
         getcity();

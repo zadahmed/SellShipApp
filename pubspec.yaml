@@ -49,10 +49,10 @@ dependencies:
   search_map_place: 0.3.0
   shared_preferences: 0.5.7
   intl_phone_number_input: 0.3.0
-  firebase_messaging: 6.0.2
+  firebase_messaging: ^6.0.9
   flutter_local_notifications: 1.4.2
   webview_flutter: 0.3.21
-
+  carousel_slider: 2.0.0
 
 
 
@@ -87,6 +87,9 @@ flutter:
     - favourites.png
     - oops.gif
     - personplaceholder.png
+    - Laptop.jpeg
+    - home.jpeg
+    - womenfashion.jpg
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
 
