@@ -541,9 +541,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   var images = [
-    'assets/womenfashion.jpg',
-    'assets/Laptop.jpeg',
-    'assets/home.jpeg',
+    'assets/fashion.png',
+    'assets/laptop.png',
+    'assets/sports.png',
   ];
 
   TextEditingController searchcontroller = new TextEditingController();
@@ -566,6 +566,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String _selectedFilter = 'Recently Added';
 
+  ScrollController carouselController = ScrollController();
   int _current = 0;
 
   @override
@@ -781,60 +782,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ]);
                                 }
                                 if (index == 1) {
-                                  return Container(
-                                    height: 300,
-                                    width: MediaQuery.of(context).size.width,
-                                    color: Colors.white,
-                                    child: Stack(
-                                      children: <Widget>[
-                                        ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: images.length,
-                                            itemBuilder:
-                                                (BuildContext ctxt, int Index) {
-                                              return InkWell(
-                                                child: Hero(
-                                                  tag: images[Index],
-                                                  child: Image.asset(
-                                                    images[Index],
-                                                    height: 300,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    fit: BoxFit.fitWidth,
-                                                  ),
-                                                ),
-                                              );
-                                            }),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: images.map((url) {
-                                              int index = images.indexOf(url);
-                                              return Container(
-                                                width: 8.0,
-                                                height: 8.0,
-                                                margin: EdgeInsets.symmetric(
-                                                    vertical: 10.0,
-                                                    horizontal: 2.0),
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: _current == index
-                                                      ? Colors.deepOrange
-                                                      : Colors.white,
-                                                ),
-                                              );
-                                            }).toList(),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                  return Stack(
+                                    children: <Widget>[
+                                      Container(
+                                          height: 300,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: CarouselSlider(
+                                            options: CarouselOptions(
+                                              carouselController:
+                                                  carouselController,
+                                              autoPlay: true,
+                                              autoPlayAnimationDuration:
+                                                  Duration(seconds: 1),
+                                              aspectRatio: 2.0,
+                                              enlargeCenterPage: true,
+                                            ),
+                                            items: images
+                                                .map((item) => InkWell(
+                                                    child: Hero(
+                                                        tag: item,
+                                                        child: Image.asset(
+                                                          item,
+                                                          fit: BoxFit.fitWidth,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                        ))))
+                                                .toList(),
+                                          )),
+                                    ],
                                   );
                                 }
-                                if (index == 2) {
+                                if (index == 2 && nearmeitemsgrid.isNotEmpty) {
                                   return nearmeitemsgrid.isNotEmpty
                                       ? Column(
                                           mainAxisAlignment:
@@ -1166,7 +1147,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 } else if (index == 1) {
                                   return StaggeredTile.count(2, 1.2);
                                 } else if (index == 2 &&
-                                    nearmeitemsgrid != null) {
+                                    nearmeitemsgrid.isNotEmpty) {
                                   return StaggeredTile.count(2, 1.4);
                                 } else {
                                   return StaggeredTile.extent(1, 240.0);

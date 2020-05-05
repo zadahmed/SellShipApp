@@ -61,6 +61,7 @@ class _AddItemState extends State<AddItem> {
 
   String _selectedsubCategory;
   String _selectedsubsubCategory;
+  String _selectedbrand;
   List<String> _subcategories;
 
   LatLng position;
@@ -236,6 +237,8 @@ class _AddItemState extends State<AddItem> {
     });
     Navigator.of(context, rootNavigator: true).pop();
   }
+
+  List<String> brands = List<String>();
 
   @override
   void dispose() {
@@ -877,12 +880,39 @@ class _AddItemState extends State<AddItem> {
                                               ),
                                             ), // Not necessary for Option 1
                                             value: _selectedCategory,
-                                            onChanged: (newValue) {
+                                            onChanged: (newValue) async {
                                               setState(() {
                                                 _selectedCategory = newValue;
                                               });
                                               if (_selectedCategory ==
                                                   'Electronics') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
                                                 setState(() {
                                                   _subcategories = [
                                                     'Phones & Accessories',
@@ -902,6 +932,39 @@ class _AddItemState extends State<AddItem> {
                                                 });
                                               } else if (_selectedCategory ==
                                                   'Fashion & Accessories') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  brands.clear();
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
                                                 setState(() {
                                                   _subcategories = [
                                                     'Women',
@@ -1150,13 +1213,13 @@ class _AddItemState extends State<AddItem> {
                                     : Container(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
+//                                          boxShadow: [
+//                                            BoxShadow(
+//                                              color: Colors.grey.shade300,
+//                                              offset: Offset(0.0, 1.0), //(x,y)
+//                                              blurRadius: 6.0,
+//                                            ),
+//                                          ],
                                         ),
                                         child: Container(
                                           width:
@@ -1274,8 +1337,8 @@ class _AddItemState extends State<AddItem> {
                                     enableSuggestions: true,
                                     textCapitalization:
                                         TextCapitalization.sentences,
-                                    maxLines: 5,
-                                    maxLength: 1000,
+                                    maxLines: 6,
+//                                    maxLength: 1000,
                                     decoration: InputDecoration(
                                         labelText: "Description",
                                         alignLabelWithHint: true,
@@ -1370,10 +1433,11 @@ class _AddItemState extends State<AddItem> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
-                                                          fontSize: 16,
-                                                        ),
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontSize: 16,
+                                                            color:
+                                                                Colors.black),
                                                       ),
                                                     );
                                                   }).toList(),
@@ -1383,93 +1447,285 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 10.0,
                                 ),
-                                Container(
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade300,
-                                          offset: Offset(0.0, 1.0), //(x,y)
-                                          blurRadius: 6.0,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Center(
-                                        child: ListTile(
-                                            title: Text(
-                                              'Brand',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 16,
-                                              ),
+                                brands.isEmpty
+                                    ? Container(
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
                                             ),
-                                            trailing: Container(
-                                                width: 200,
-                                                padding: EdgeInsets.only(),
-                                                child: Center(
-                                                  child: TextField(
-                                                    cursorColor:
-                                                        Color(0xFF979797),
-                                                    controller:
-                                                        businessbrandcontroller,
-                                                    keyboardType:
-                                                        TextInputType.text,
-                                                    decoration: InputDecoration(
-                                                        labelText: "Brand Name",
-                                                        alignLabelWithHint:
-                                                            true,
-                                                        labelStyle: TextStyle(
+                                          ],
+                                        ),
+                                        child: Center(
+                                            child: ListTile(
+                                                title: Text(
+                                                  'Brand',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                trailing: Container(
+                                                    width: 200,
+                                                    padding: EdgeInsets.only(),
+                                                    child: Center(
+                                                      child: TextField(
+                                                        cursorColor:
+                                                            Color(0xFF979797),
+                                                        controller:
+                                                            businessbrandcontroller,
+                                                        keyboardType:
+                                                            TextInputType.text,
+                                                        textCapitalization:
+                                                            TextCapitalization
+                                                                .words,
+                                                        decoration:
+                                                            InputDecoration(
+                                                                labelText:
+                                                                    "Brand Name",
+                                                                alignLabelWithHint:
+                                                                    true,
+                                                                labelStyle:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                ),
+                                                                focusColor:
+                                                                    Colors
+                                                                        .black,
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedErrorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                disabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                errorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                ))),
+                                                      ),
+                                                    )))))
+                                    : Container(),
+                                brands.isNotEmpty
+                                    ? Container(
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Center(
+                                            child: ListTile(
+                                          title: Text(
+                                            'Brand',
+                                            style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          trailing: Container(
+                                              width: 200,
+                                              padding: EdgeInsets.only(),
+                                              child: Center(
+                                                  child: Align(
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      child: DropdownButton<
+                                                          String>(
+                                                        value: _selectedbrand,
+                                                        hint: Text(
+                                                            'Item brand'), // No
+                                                        icon: Icon(Icons
+                                                            .keyboard_arrow_down),
+                                                        iconSize: 20,
+                                                        elevation: 10,
+                                                        isExpanded: true,
+                                                        style: TextStyle(
                                                           fontFamily:
                                                               'Montserrat',
                                                           fontSize: 16,
                                                         ),
-                                                        focusColor:
-                                                            Colors.black,
-                                                        enabledBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        border:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        focusedErrorBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        disabledBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        errorBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        focusedBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        ))),
+                                                        onChanged:
+                                                            (String newValue) {
+                                                          setState(() {
+                                                            _selectedbrand =
+                                                                newValue;
+                                                          });
+                                                        },
+                                                        items: brands.map<
+                                                            DropdownMenuItem<
+                                                                String>>((String
+                                                            value) {
+                                                          return DropdownMenuItem<
+                                                              String>(
+                                                            value: value,
+                                                            child: Text(
+                                                              value,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                          );
+                                                        }).toList(),
+                                                      )))),
+                                        )))
+                                    : Container(),
+                                _selectedbrand == 'Other'
+                                    ? Container(
+                                        height: 80,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Center(
+                                            child: ListTile(
+                                                title: Text(
+                                                  'Other Brand Name',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
                                                   ),
-                                                ))))),
+                                                ),
+                                                trailing: Container(
+                                                    width: 200,
+                                                    padding: EdgeInsets.only(),
+                                                    child: Center(
+                                                      child: TextField(
+                                                        cursorColor:
+                                                            Color(0xFF979797),
+                                                        controller:
+                                                            businessbrandcontroller,
+                                                        keyboardType:
+                                                            TextInputType.text,
+                                                        textCapitalization:
+                                                            TextCapitalization
+                                                                .words,
+                                                        decoration:
+                                                            InputDecoration(
+                                                                labelText:
+                                                                    "Brand Name",
+                                                                alignLabelWithHint:
+                                                                    true,
+                                                                labelStyle:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                ),
+                                                                focusColor:
+                                                                    Colors
+                                                                        .black,
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedErrorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                disabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                errorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                ))),
+                                                      ),
+                                                    )))))
+                                    : Container(),
                                 SizedBox(
                                   height: 10.0,
                                 ),
@@ -1944,7 +2200,7 @@ class _AddItemState extends State<AddItem> {
                         'condition': _selectedCondition,
                         'brand': businessbrandcontroller.text == null
                             ? ''
-                            : businessbrandcontroller.text,
+                            : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -1979,7 +2235,7 @@ class _AddItemState extends State<AddItem> {
                         'userid': userid,
                         'brand': businessbrandcontroller.text == null
                             ? ''
-                            : businessbrandcontroller.text,
+                            : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2016,7 +2272,7 @@ class _AddItemState extends State<AddItem> {
                         'condition': _selectedCondition,
                         'brand': businessbrandcontroller.text == null
                             ? ''
-                            : businessbrandcontroller.text,
+                            : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2061,7 +2317,7 @@ class _AddItemState extends State<AddItem> {
                         'condition': _selectedCondition,
                         'brand': businessbrandcontroller.text == null
                             ? ''
-                            : businessbrandcontroller.text,
+                            : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2108,7 +2364,7 @@ class _AddItemState extends State<AddItem> {
                         'country': country,
                         'brand': businessbrandcontroller.text == null
                             ? ''
-                            : businessbrandcontroller.text,
+                            : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2161,7 +2417,7 @@ class _AddItemState extends State<AddItem> {
                         'username': firstname,
                         'brand': businessbrandcontroller.text == null
                             ? ''
-                            : businessbrandcontroller.text,
+                            : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,

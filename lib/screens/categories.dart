@@ -40,7 +40,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           iconTheme: IconThemeData(color: Colors.white),
         ),
         body: Padding(
-            padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
+            padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -52,7 +52,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     children: <Widget>[
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 100,
+                        height: 155,
                         margin: const EdgeInsets.only(right: 15.0),
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -61,60 +61,43 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             return Row(
                               children: <Widget>[
                                 GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedCat = i;
-                                    });
-                                  },
-                                  child: Container(
-                                      margin:
-                                          const EdgeInsets.only(bottom: 10.0),
-                                      width: 110.0,
-                                      constraints:
-                                          BoxConstraints(minHeight: 110),
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: _selectedCat == i
-                                            ? Colors.white
-                                            : Colors.deepOrange,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade200,
-                                            offset: Offset(0.0, 1.0), //(x,y)
-                                            blurRadius: 6.0,
-                                          ),
-                                        ],
-                                        borderRadius:
-                                            BorderRadius.circular(11.0),
-                                      ),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Icon(
-                                            categories[i].icon,
-                                            color: _selectedCat == i
-                                                ? Colors.deepOrange
-                                                : Colors.white,
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            "${categories[i].title}",
-                                            style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 16,
-                                                color: _selectedCat == i
-                                                    ? Colors.deepOrange
-                                                    : Colors.white),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                      )),
-                                ),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedCat = i;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 5.0,
+                                          right: 5.0,
+                                          top: 8.0,
+                                          bottom: 5.0),
+                                      child: Container(
+                                          height: 155.0,
+                                          width: 170.0,
+                                          child: Column(children: <Widget>[
+                                            Container(
+                                              height: 100,
+                                              width: 150,
+                                              child: Image.asset(
+                                                categories[i].image,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            Center(
+                                              child: Text(
+                                                categories[i].title,
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontFamily: "Montserrat",
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 16.0,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ])),
+                                    )),
                                 SizedBox(
                                   width: 10,
                                 )
@@ -123,12 +106,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           },
                         ),
                       ),
-
-//                  Content of categories
                       Expanded(
                         flex: 4,
-                        child: ListView.builder(
+                        child: GridView.builder(
                           itemCount: categories[_selectedCat].subCat.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: (140 / 80),
+                          ),
                           itemBuilder: (ctx, i) {
                             return InkWell(
                                 onTap: () {
@@ -144,30 +130,31 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                     .title)),
                                   );
                                 },
-                                child: Container(
-                                  margin: EdgeInsets.only(bottom: 15),
-                                  padding: const EdgeInsets.all(9.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Text(
-                                          "${categories[_selectedCat].subCat[i].title}",
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 16,
-                                          ),
-                                        ),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Container(
+                                      height: 80,
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepOrange,
                                       ),
-                                      Icon(Icons.chevron_right)
-                                    ],
-                                  ),
-                                ));
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "${categories[_selectedCat].subCat[i].title}",
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ),
+                                          Icon(Icons.chevron_right)
+                                        ],
+                                      ),
+                                    )));
                           },
                         ),
                       )
