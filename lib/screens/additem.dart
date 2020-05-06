@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -10,10 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:location/location.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:shimmer/shimmer.dart';
@@ -2207,7 +2204,6 @@ class _AddItemState extends State<AddItem> {
                         'userid': userid,
                         'username': firstname,
                         'useremail': email,
-                        'country': country,
                         'usernumber': phonenumber,
                         'date_uploaded': DateTime.now().toString(),
                         'image': await MultipartFile.fromFile(_image.path,

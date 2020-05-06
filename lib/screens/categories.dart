@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
@@ -16,7 +15,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(() {
       _selectedCat = widget.selectedcategory;

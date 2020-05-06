@@ -1,14 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/edititem.dart';
-import 'package:SellShip/screens/editprofile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -31,7 +28,6 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
 
   static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
 
-  final _controller = NativeAdmobController();
   ScrollController _scrollController = ScrollController();
 
   var userid;

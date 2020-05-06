@@ -1,17 +1,7 @@
 import 'dart:async';
-import 'dart:ffi';
-import 'dart:io';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:SellShip/screens/additem.dart';
-
 import 'package:flutter/material.dart';
-import 'package:SellShip/global.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

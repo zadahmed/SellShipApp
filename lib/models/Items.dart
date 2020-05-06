@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 
 class Item {
   final String itemid;

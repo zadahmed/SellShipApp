@@ -1,27 +1,19 @@
 import 'dart:io';
-
+import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/myitems.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_native_admob/flutter_native_admob.dart';
-import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:SellShip/bubble_indication_painter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:SellShip/models/Items.dart';
-import 'package:SellShip/screens/details.dart';
-import 'package:SellShip/screens/edititem.dart';
 import 'package:SellShip/screens/editprofile.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -79,7 +71,7 @@ class _LoginPageState extends State<LoginPage>
       case FacebookLoginStatus.loggedIn:
         final token = result.accessToken.token;
         final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=${token}');
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
 
         setState(() {
           loading = true;
@@ -96,7 +88,7 @@ class _LoginPageState extends State<LoginPage>
           'email': profile['email'],
           'phonenumber': '00',
           'password': 'password',
-//          'fcmtoken': firebasetoken,
+          'fcmtoken': firebasetoken,
         };
 
         final response = await http.post(url, body: body);
@@ -119,7 +111,7 @@ class _LoginPageState extends State<LoginPage>
             Map<String, String> body = {
               'email': profile['email'],
               'password': 'password',
-//              'fcmtoken': firebasetoken,
+              'fcmtoken': firebasetoken,
             };
 
             final response = await http.post(url, body: body);
@@ -178,10 +170,20 @@ class _LoginPageState extends State<LoginPage>
   }
 
   var firebasetoken;
+  getNotifications() async {
+    var token = await FirebaseNotifications().getNotifications();
+    setState(() {
+      firebasetoken = token;
+    });
+    print(token + "\n Token was recieved from firebase");
+  }
+
+
+
   @override
   void initState() {
     super.initState();
-
+    getNotifications();
     setState(() {
       loading = true;
     });
@@ -410,12 +412,16 @@ class _LoginPageState extends State<LoginPage>
                           ),
                           Padding(
                             padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                            child: Text(
-                              "Or",
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 16,
-                                  color: Colors.white),
+                            child: InkWell(
+                              onTap: () {
+                              },
+                              child: Text(
+                                "Or",
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 16,
+                                    color: Colors.white),
+                              ),
                             ),
                           ),
                           Container(
@@ -542,8 +548,6 @@ class _LoginPageState extends State<LoginPage>
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  ScrollController _scrollController = ScrollController();
-
   var currency;
 
   Widget profile(BuildContext context) {
@@ -570,13 +574,15 @@ class _LoginPageState extends State<LoginPage>
                             ),
                             Row(
                               children: <Widget>[
-                                Text(
-                                  'Hey there Welcome to SellShip!',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 16.0,
-                                    color: Colors.white,
+                                InkWell(
+                                  child: Text(
+                                    'Hey there Welcome to SellShip!',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16.0,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -597,13 +603,15 @@ class _LoginPageState extends State<LoginPage>
                             ),
                             Row(
                               children: <Widget>[
-                                Text(
-                                  'Hey $firstname Welcome to SellShip!',
-                                  style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                InkWell(
+                                  child: Text(
+                                    'Hey $firstname Welcome to SellShip!',
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 16.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                               ],
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1460,7 +1468,7 @@ class _LoginPageState extends State<LoginPage>
     }
 
     if (userid != null) {
-      _firebaseMessaging.getToken().then((token) {
+      await _firebaseMessaging.getToken().then((token) {
         setState(() {
           firebasetoken = token;
         });
@@ -1575,7 +1583,7 @@ class _LoginPageState extends State<LoginPage>
     Map<String, String> body = {
       'email': loginEmailController.text,
       'password': loginPasswordController.text,
-//      'fcmtoken': firebasetoken,
+      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);
@@ -1612,7 +1620,7 @@ class _LoginPageState extends State<LoginPage>
       'email': signupEmailController.text,
       'phonenumber': numberphone,
       'password': signupPasswordController.text,
-//      'fcmtoken': firebasetoken,
+      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);
