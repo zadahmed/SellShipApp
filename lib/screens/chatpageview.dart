@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,13 +13,14 @@ class ChatPageView extends StatefulWidget {
   final String messageid;
   final String senderid;
   final String recipentid;
-
+  final fcmToken;
+  final senderName;
   const ChatPageView(
       {Key key,
       this.recipentname,
       this.messageid,
       this.senderid,
-      this.recipentid})
+      this.recipentid,@required this.fcmToken,@required this.senderName})
       : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class _ChatPageViewState extends State<ChatPageView> {
   var messageid;
   var senderid;
   var recipentid;
-
+  var fcmToken;
   @override
   void initState() {
     super.initState();
@@ -43,7 +45,10 @@ class _ChatPageViewState extends State<ChatPageView> {
       messageid = widget.messageid;
       senderid = widget.senderid;
       recipentid = widget.recipentid;
+      fcmToken = widget.fcmToken;
     });
+    print(widget.fcmToken);
+    print(widget.senderName);
 //    getMessages();
   }
 
@@ -245,6 +250,11 @@ class _ChatPageViewState extends State<ChatPageView> {
                           suffixIcon: IconButton(
                             icon: Icon(Icons.send),
                             onPressed: () async {
+                              FirebaseNotifications().postNotification(
+                                body: _text.text,
+                                title: widget.senderName,
+                                to: widget.fcmToken
+                              );
                               var url = 'https://sellship.co/api/sendmessage/' +
                                   senderid +
                                   '/' +
@@ -317,6 +327,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   });
                                 } else {
                                   print(response.statusCode);
+                                  print(response.body);
                                 }
 
                                 _text.clear();

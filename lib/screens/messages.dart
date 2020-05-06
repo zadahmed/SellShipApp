@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:SellShip/models/messages.dart';
 import 'package:SellShip/screens/chatpageview.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -54,16 +52,19 @@ class MessagesState extends State<Messages> {
                     messageinfo['date']['\$date']);
                 var s = f.format(date);
                 var q = t.format(date);
-
+                print(messages[i]);
+                print(messages[i]['fcmtokenreciever']);
                 ChatMessages msg = ChatMessages(
                     messageid: messages[i]['msgid'],
-                    peoplemessaged: messages[i]['username2'],
+                    peoplemessaged: jsonDecode(messages[i]['username2'])['firstname'] + " "+jsonDecode(messages[i]['username2'])['lastname'],
                     senderid: messages[i]['user1'],
                     lastrecieved: messageinfo['lastrecieved'],
                     unread: messageinfo['unread'],
                     recieveddate: s,
                     hiddendate: q,
-                    recipentid: messages[i]['user2']);
+                    senderName: jsonDecode(messages[i]['username1'])['firstname'],
+                    recipentid: messages[i]['user2'],
+                    fcmtokenreciever: messages[i]['fcmtokenreciever']);
 
                 messagesd.add(msg);
               }
@@ -81,15 +82,22 @@ class MessagesState extends State<Messages> {
                     messageinfo['date']['\$date']);
                 var s = f.format(date);
                 var q = t.format(date);
+                print(messages[i]);
+                print(messages[i]['fcmtokenreciever']);
+
                 ChatMessages msg = ChatMessages(
-                    messageid: messages[i]['msgid'],
-                    peoplemessaged: messages[i]['username1'],
-                    senderid: messages[i]['user2'],
-                    lastrecieved: messageinfo['lastrecieved'],
-                    unread: messageinfo['unread'],
-                    recieveddate: s,
-                    hiddendate: q,
-                    recipentid: messages[i]['user1']);
+                  senderName: jsonDecode(messages[i]['username1'])['firstname'] + " "+jsonDecode(messages[i]['username1'])['lastname'],
+                  messageid: messages[i]['msgid'],
+                  peoplemessaged: jsonDecode(messages[i]['username1'])['firstname'] + " "+jsonDecode(messages[i]['username1'])['lastname'],
+                  senderid: messages[i]['user2'],
+                  lastrecieved: messageinfo['lastrecieved'],
+                  unread: messageinfo['unread'],
+                  recieveddate: s,
+
+                  hiddendate: q,
+                  recipentid: messages[i]['user1'],
+                  fcmtokenreciever: messages[i]['fcmtokenreciever'],
+                );
 
                 messagesd.add(msg);
               }
@@ -110,8 +118,8 @@ class MessagesState extends State<Messages> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    print(messagesd);
   }
 
   @override
@@ -146,7 +154,9 @@ class MessagesState extends State<Messages> {
                         if (snapshot.data != null) {
                           return ListView.builder(
                               itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext ctxt, int Index) {
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                // print(jsonDecode(
+                                //     snapshot.data[index].toString()));
                                 return Slidable(
                                   actionPane: SlidableDrawerActionPane(),
                                   actionExtentRatio: 0.25,
@@ -159,7 +169,7 @@ class MessagesState extends State<Messages> {
                                             child: ListTile(
                                               title: Text(
                                                 snapshot
-                                                    .data[Index].peoplemessaged,
+                                                    .data[index].peoplemessaged,
                                                 style: TextStyle(
                                                   fontFamily: 'Montserrat',
                                                   fontSize: 16,
@@ -167,7 +177,7 @@ class MessagesState extends State<Messages> {
                                               ),
                                               subtitle: Text(
                                                 snapshot
-                                                    .data[Index].lastrecieved,
+                                                    .data[index].lastrecieved,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
@@ -183,14 +193,14 @@ class MessagesState extends State<Messages> {
                                                     MainAxisAlignment.center,
                                                 children: <Widget>[
                                                   Text(
-                                                    snapshot.data[Index]
+                                                    snapshot.data[index]
                                                         .recieveddate,
                                                     style: TextStyle(
                                                       fontFamily: 'Montserrat',
                                                       fontSize: 11,
                                                     ),
                                                   ),
-                                                  snapshot.data[Index].unread ==
+                                                  snapshot.data[index].unread ==
                                                           true
                                                       ? Container(
                                                           margin:
@@ -223,18 +233,24 @@ class MessagesState extends State<Messages> {
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         ChatPageView(
-                                                            messageid: snapshot
-                                                                .data[Index]
-                                                                .messageid,
-                                                            recipentname: snapshot
-                                                                .data[Index]
-                                                                .peoplemessaged,
-                                                            senderid: snapshot
-                                                                .data[Index]
-                                                                .senderid,
-                                                            recipentid: snapshot
-                                                                .data[Index]
-                                                                .recipentid),
+                                                      senderName: snapshot
+                                                          .data[index]
+                                                          .senderName,
+                                                      messageid: snapshot
+                                                          .data[index]
+                                                          .messageid,
+                                                      recipentname: snapshot
+                                                          .data[index]
+                                                          .peoplemessaged,
+                                                      senderid: snapshot
+                                                          .data[index].senderid,
+                                                      recipentid: snapshot
+                                                          .data[index]
+                                                          .recipentid,
+                                                      fcmToken: snapshot
+                                                          .data[index]
+                                                          .fcmtokenreciever,
+                                                    ),
                                                   ),
                                                 );
                                               },
