@@ -817,11 +817,11 @@ class _DetailsState extends State<Details> {
                                 'https://sellship.co/api/createroom/' +
                                     userid +
                                     '/' +
-                                    username1 +
+                                    username1['firstname'] + " " + username1['lastname'] + 
                                     '/' +
                                     senderid +
                                     '/' +
-                                    username2;
+                                    username2['firstname'] + " " + username2['lastname'];
                             final itemresponse = await http.get(itemurl);
                             if (itemresponse.statusCode == 200) {
                               var messageid = itemresponse.body;
