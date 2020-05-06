@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class ChatMessages implements Comparable<ChatMessages> {
   final String messageid;
   final String peoplemessaged;
@@ -7,6 +9,8 @@ class ChatMessages implements Comparable<ChatMessages> {
   final String recieveddate;
   final String hiddendate;
   final bool unread;
+  final fcmtokenreciever;
+  final senderName;
 
   ChatMessages(
       {this.messageid,
@@ -16,7 +20,7 @@ class ChatMessages implements Comparable<ChatMessages> {
       this.lastrecieved,
       this.hiddendate,
       this.recieveddate,
-      this.unread});
+      this.unread,@required this.fcmtokenreciever,@required this.senderName});
 
   int compareTo(ChatMessages other) {
     int order = other.hiddendate.compareTo(hiddendate);

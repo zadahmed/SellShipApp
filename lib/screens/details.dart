@@ -147,7 +147,7 @@ class _DetailsState extends State<Details> {
   final storage = new FlutterSecureStorage();
   var userid;
 
-  void FavouriteItem() async {
+  void favouriteItem() async {
     userid = await storage.read(key: 'userid');
     print(userid);
     if (userid != null) {
@@ -241,7 +241,7 @@ class _DetailsState extends State<Details> {
                               ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: images.length,
-                                  itemBuilder: (BuildContext ctxt, int Index) {
+                                  itemBuilder: (BuildContext ctxt, int index) {
                                     return InkWell(
                                       onTap: () {
                                         Navigator.of(context).push(
@@ -252,12 +252,12 @@ class _DetailsState extends State<Details> {
                                                         _,
                                                         __) =>
                                                     ImageDisplay(
-                                                        image: images[Index])));
+                                                        image: images[index])));
                                       },
                                       child: Hero(
-                                        tag: images[Index],
+                                        tag: images[index],
                                         child: Image.network(
-                                          images[Index],
+                                          images[index],
                                           height: 300,
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -489,7 +489,7 @@ class _DetailsState extends State<Details> {
                                     heartColor = Colors.deepOrange;
                                     heartIcon = FontAwesome.heart;
                                   });
-                                  FavouriteItem();
+                                  favouriteItem();
                                 },
                                 child: Container(
                                   height: 30,
@@ -683,7 +683,7 @@ class _DetailsState extends State<Details> {
                                       bearing: 70),
                                   onMapCreated: mapCreated,
                                   markers: _markers,
-                                  onTap: (LatLng) async {
+                                  onTap: (latLng) async {
                                     final String googleMapsUrl =
                                         "comgooglemaps://?center=${position.latitude},${position.longitude}";
                                     final String appleMapsUrl =
@@ -765,18 +765,26 @@ class _DetailsState extends State<Details> {
                       });
                   userid = await storage.read(key: 'userid');
                   var senderid = newItem.userid;
+                  print("user id\n" + userid);
                   if (senderid != userid) {
                     var userurl = 'https://sellship.co/api/username/' + userid;
                     final responseuser = await http.get(userurl);
 
                     if (responseuser.statusCode == 200) {
-                      var username1 = responseuser.body;
+                      var username1 = jsonDecode(responseuser.body);
+
+                      print('Ok');
+                      print("Username 1 :\n " + username1.toString());
                       var userurl2 =
                           'https://sellship.co/api/username/' + senderid;
                       final responseuser2 = await http.get(userurl2);
                       if (responseuser2.statusCode == 200) {
-                        var username2 = responseuser2.body;
+                                              print('Ok');
 
+                        var username2 = jsonDecode(responseuser2.body);
+                        print("Username 2 :\n " + username2.toString());
+
+                        print(responseuser2.body);
                         var checkurl =
                             'https://sellship.co/api/checkmessageexist/' +
                                 userid +
@@ -786,6 +794,7 @@ class _DetailsState extends State<Details> {
                         if (responsecheckurl.statusCode == 200) {
                           var message = json.decode(responsecheckurl.body);
                           if (message['message'] != 'Empty') {
+                            print("Message: \n"+message.toString());
                             Navigator.of(context, rootNavigator: true)
                                 .pop('dialog');
                             Navigator.pushReplacement(
@@ -794,10 +803,13 @@ class _DetailsState extends State<Details> {
                                 pageBuilder:
                                     (context, animation1, animation2) =>
                                         ChatPageView(
-                                            messageid: message['message'],
-                                            recipentname: username2,
-                                            senderid: userid,
-                                            recipentid: senderid),
+                                  messageid: message['message'],
+                                  recipentname: username2['firstname'] + " " + username2['lastname'],
+                                  senderid: userid,
+                                  recipentid: senderid,
+                                  fcmToken: username2['fcmtoken'],
+                                  senderName: username1['firstname'],
+                                ),
                               ),
                             );
                           } else {
@@ -830,10 +842,13 @@ class _DetailsState extends State<Details> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ChatPageView(
-                                      messageid: messageid,
-                                      recipentname: username2,
-                                      senderid: userid,
-                                      recipentid: senderid),
+                                    messageid: messageid,
+                                    recipentname: username2['firstname'] + " " + username2['lastname'],
+                                    senderid: userid,
+                                    recipentid: senderid,
+                                    fcmToken: username2['fcmtoken'],
+                                    senderName: username1['firstname'],
+                                  ),
                                 ),
                               );
                             } else {
