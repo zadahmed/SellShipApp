@@ -33,6 +33,7 @@ class _AddItemState extends State<AddItem> {
   final businessnameController = TextEditingController();
   final businessdescriptionController = TextEditingController();
   final businesspricecontroller = TextEditingController();
+  final businessoriginalpricecontroller = TextEditingController();
   final businessbrandcontroller = TextEditingController();
   final businessizecontroller = TextEditingController();
   List<String> categories = [
@@ -245,6 +246,7 @@ class _AddItemState extends State<AddItem> {
     businessdescriptionController.dispose();
     businessnameController.dispose();
     businesspricecontroller.dispose();
+    businessoriginalpricecontroller.dispose();
     businessbrandcontroller.dispose();
     businessizecontroller.dispose();
     super.dispose();
@@ -1832,7 +1834,7 @@ class _AddItemState extends State<AddItem> {
                                   height: 10.0,
                                 ),
                                 Container(
-                                    height: 80,
+                                    height: 130,
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       boxShadow: [
@@ -1843,82 +1845,184 @@ class _AddItemState extends State<AddItem> {
                                         ),
                                       ],
                                     ),
-                                    child: Center(
-                                        child: ListTile(
-                                            title: Text(
-                                              'Price',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            trailing: Container(
-                                                width: 200,
-                                                padding: EdgeInsets.only(),
-                                                child: Center(
-                                                  child: TextField(
-                                                    cursorColor:
-                                                        Color(0xFF979797),
-                                                    controller:
-                                                        businesspricecontroller,
-                                                    keyboardType: TextInputType
-                                                        .numberWithOptions(),
-                                                    decoration: InputDecoration(
-                                                        labelText:
-                                                            "Price " + currency,
-                                                        alignLabelWithHint:
-                                                            true,
-                                                        labelStyle: TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
-                                                          fontSize: 16,
-                                                        ),
-                                                        focusColor:
-                                                            Colors.black,
-                                                        enabledBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        border:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        focusedErrorBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        disabledBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        errorBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        )),
-                                                        focusedBorder:
-                                                            OutlineInputBorder(
-                                                                borderSide:
-                                                                    BorderSide(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                        ))),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        Center(
+                                            child: ListTile(
+                                                title: Text(
+                                                  'Original Price (optional)',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
                                                   ),
-                                                ))))),
+                                                ),
+                                                trailing: Container(
+                                                    width: 200,
+                                                    padding: EdgeInsets.only(),
+                                                    child: Center(
+                                                      child: TextField(
+                                                        cursorColor:
+                                                            Color(0xFF979797),
+                                                        controller:
+                                                            businessoriginalpricecontroller,
+                                                        keyboardType: TextInputType
+                                                            .numberWithOptions(),
+                                                        decoration:
+                                                            InputDecoration(
+                                                                labelText:
+                                                                    "Price " +
+                                                                        currency,
+                                                                alignLabelWithHint:
+                                                                    true,
+                                                                labelStyle:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                ),
+                                                                focusColor:
+                                                                    Colors
+                                                                        .black,
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedErrorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                disabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                errorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                ))),
+                                                      ),
+                                                    )))),
+                                        Center(
+                                            child: ListTile(
+                                                title: Text(
+                                                  'Selling Price',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                trailing: Container(
+                                                    width: 200,
+                                                    padding: EdgeInsets.only(),
+                                                    child: Center(
+                                                      child: TextField(
+                                                        cursorColor:
+                                                            Color(0xFF979797),
+                                                        controller:
+                                                            businesspricecontroller,
+                                                        keyboardType: TextInputType
+                                                            .numberWithOptions(),
+                                                        decoration:
+                                                            InputDecoration(
+                                                                labelText:
+                                                                    "Price " +
+                                                                        currency,
+                                                                alignLabelWithHint:
+                                                                    true,
+                                                                labelStyle:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                ),
+                                                                focusColor:
+                                                                    Colors
+                                                                        .black,
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedErrorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                disabledBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                errorBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                )),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                        borderSide:
+                                                                            BorderSide(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                ))),
+                                                      ),
+                                                    ))))
+                                      ],
+                                    )),
                                 SizedBox(
                                   height: 20.0,
                                 ),
@@ -2185,6 +2289,10 @@ class _AddItemState extends State<AddItem> {
                       formData = FormData.fromMap({
                         'name': businessnameController.text,
                         'price': businesspricecontroller.text,
+                        'originalprice':
+                            businessoriginalpricecontroller.text == null
+                                ? ''
+                                : businessoriginalpricecontroller.text,
                         'category': _selectedCategory,
                         'subcategory': _selectedsubCategory == null
                             ? ''
@@ -2220,6 +2328,10 @@ class _AddItemState extends State<AddItem> {
                       formData = FormData.fromMap({
                         'name': businessnameController.text,
                         'price': businesspricecontroller.text,
+                        'originalprice':
+                            businessoriginalpricecontroller.text == null
+                                ? ''
+                                : businessoriginalpricecontroller.text,
                         'category': _selectedCategory,
                         'subcategory': _selectedsubCategory == null
                             ? ''
@@ -2259,6 +2371,10 @@ class _AddItemState extends State<AddItem> {
                         'name': businessnameController.text,
                         'price': businesspricecontroller.text,
                         'category': _selectedCategory,
+                        'originalprice':
+                            businessoriginalpricecontroller.text == null
+                                ? ''
+                                : businessoriginalpricecontroller.text,
                         'subcategory': _selectedsubCategory == null
                             ? ''
                             : _selectedsubCategory,
@@ -2303,6 +2419,10 @@ class _AddItemState extends State<AddItem> {
                         'name': businessnameController.text,
                         'price': businesspricecontroller.text,
                         'category': _selectedCategory,
+                        'originalprice':
+                            businessoriginalpricecontroller.text == null
+                                ? ''
+                                : businessoriginalpricecontroller.text,
                         'subcategory': _selectedsubCategory == null
                             ? ''
                             : _selectedsubCategory,
@@ -2351,6 +2471,10 @@ class _AddItemState extends State<AddItem> {
                         'name': businessnameController.text,
                         'price': businesspricecontroller.text,
                         'category': _selectedCategory,
+                        'originalprice':
+                            businessoriginalpricecontroller.text == null
+                                ? ''
+                                : businessoriginalpricecontroller.text,
                         'subcategory': _selectedsubCategory == null
                             ? ''
                             : _selectedsubCategory,
@@ -2402,6 +2526,10 @@ class _AddItemState extends State<AddItem> {
                         'name': businessnameController.text,
                         'price': businesspricecontroller.text,
                         'category': _selectedCategory,
+                        'originalprice':
+                            businessoriginalpricecontroller.text == null
+                                ? ''
+                                : businessoriginalpricecontroller.text,
                         'subcategory': _selectedsubCategory == null
                             ? ''
                             : _selectedsubCategory,

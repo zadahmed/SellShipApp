@@ -578,64 +578,101 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: loading == false
           ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                     width: MediaQuery.of(context).size.height,
                     height: 110,
-                    color: Colors.deepOrange,
                     child: Column(
                       children: <Widget>[
                         SizedBox(
-                          height: 20,
+                          height: 15,
                         ),
                         Container(
                           height: 30,
-                          width: 100,
+                          width: 120,
                           child: Image.asset(
-                            'assets/logo.png',
+                            'assets/logotransparent.png',
                             fit: BoxFit.cover,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10, top: 5),
-                          child: Container(
-                              height: 45,
-                              width: 400,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Padding(
-                                  padding: EdgeInsets.only(bottom: 5),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: Icon(
-                                          Feather.search,
-                                          size: 24,
-                                          color: Colors.deepOrange,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: searchcontroller,
-                                          onSubmitted: onSearch,
-                                          decoration: InputDecoration(
-                                              hintText:
-                                                  'What are you looking for today?',
-                                              hintStyle: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 16,
-                                              ),
-                                              border: InputBorder.none),
-                                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(bottom: 5, top: 5, left: 10),
+                              child: Container(
+                                  height: 45,
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
                                       ),
                                     ],
-                                  ))),
-                        ),
+                                  ),
+                                  child: Padding(
+                                      padding: EdgeInsets.only(bottom: 5),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.all(5),
+                                            child: Icon(
+                                              Feather.search,
+                                              size: 24,
+                                              color: Colors.deepOrange,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: TextField(
+                                              controller: searchcontroller,
+                                              onSubmitted: onSearch,
+                                              decoration: InputDecoration(
+                                                  hintText:
+                                                      'What are you looking for today?',
+                                                  hintStyle: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 16,
+                                                  ),
+                                                  border: InputBorder.none),
+                                            ),
+                                          ),
+                                        ],
+                                      ))),
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            CircleAvatar(
+                              maxRadius: 17,
+                              backgroundColor: Colors.deepOrange,
+                              foregroundColor: Colors.white,
+                              child: Icon(
+                                Icons.favorite,
+                                size: 16,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            CircleAvatar(
+                              maxRadius: 17,
+                              backgroundColor: Colors.deepOrange,
+                              foregroundColor: Colors.white,
+                              child: Icon(
+                                Icons.chat_bubble,
+                                size: 16,
+                              ),
+                            )
+                          ],
+                        )
                       ],
                     )),
                 itemsgrid.isNotEmpty
@@ -1118,22 +1155,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       ),
                                                     ),
                                                     SizedBox(height: 5.0),
-                                                    Container(
-                                                      child: Text(
-                                                        itemsgrid[index]
-                                                                .price
-                                                                .toString() +
-                                                            ' ' +
-                                                            currency,
-                                                        style: TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w800,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    currency != null
+                                                        ? Container(
+                                                            child: Text(
+                                                              itemsgrid[index]
+                                                                      .price
+                                                                      .toString() +
+                                                                  ' ' +
+                                                                  currency,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : Container(
+                                                            child: Text(
+                                                              itemsgrid[index]
+                                                                  .price
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                              ),
+                                                            ),
+                                                          )
                                                   ],
                                                 ),
                                               )

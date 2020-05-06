@@ -30,138 +30,108 @@ class _CategoryScreenState extends State<CategoryScreen> {
           backgroundColor: Colors.deepOrange,
           elevation: 0,
           title: Text(
-            "Categories",
+            'CATEGORIES',
             style: TextStyle(
                 fontFamily: 'Montserrat',
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
                 color: Colors.white,
-                fontSize: 20),
+                fontWeight: FontWeight.w800),
           ),
           iconTheme: IconThemeData(color: Colors.white),
         ),
         body: Padding(
             padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 5,
-                ),
-                Expanded(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                    Widget>[
+              SizedBox(
+                height: 5,
+              ),
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: categories.length,
+                  itemBuilder: (ctx, i) {
+                    return Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 155,
-                        margin: const EdgeInsets.only(right: 15.0),
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categories.length,
-                          itemBuilder: (ctx, i) {
-                            return Row(
-                              children: <Widget>[
-                                GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedCat = i;
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 5.0,
-                                          right: 5.0,
-                                          top: 8.0,
-                                          bottom: 5.0),
-                                      child: Container(
-                                          height: 155.0,
-                                          width: 170.0,
-                                          child: Column(children: <Widget>[
-                                            Container(
-                                              height: 100,
-                                              width: 150,
-                                              child: Image.asset(
-                                                categories[i].image,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                            Center(
-                                              child: Text(
-                                                categories[i].title,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontFamily: "Montserrat",
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 16.0,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ])),
-                                    )),
-                                SizedBox(
-                                  width: 10,
-                                )
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: GridView.builder(
-                          itemCount: categories[_selectedCat].subCat.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: (140 / 80),
+                        child: ExpansionTile(
+                          leading: Icon(
+                            categories[i].icon,
+                            color: Colors.deepOrange,
                           ),
-                          itemBuilder: (ctx, i) {
-                            return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CategoryDetail(
-                                            category:
-                                                categories[_selectedCat].title,
-                                            subcategory:
-                                                categories[_selectedCat]
-                                                    .subCat[i]
-                                                    .title)),
-                                  );
-                                },
-                                child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Container(
-                                      height: 80,
-                                      width: 150,
-                                      decoration: BoxDecoration(
-                                        color: Colors.deepOrange,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Expanded(
-                                            child: Text(
-                                              "${categories[_selectedCat].subCat[i].title}",
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          ),
-                                          Icon(Icons.chevron_right)
-                                        ],
-                                      ),
-                                    )));
+                          title: Text(
+                            categories[i].title,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          onExpansionChanged: (changed) {
+                            if (changed == true) {
+                              _selectedCat = i;
+                            }
                           },
-                        ),
-                      )
-                    ],
-                  ),
+                          children: <Widget>[
+                            Container(
+                              height: 300,
+                              child: GridView.builder(
+                                itemCount: categories[i].subCat.length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: (140 / 80),
+                                ),
+                                itemBuilder: (ctx, i) {
+                                  return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryDetail(
+                                                      category: categories[
+                                                              _selectedCat]
+                                                          .title,
+                                                      subcategory: categories[
+                                                              _selectedCat]
+                                                          .subCat[i]
+                                                          .title)),
+                                        );
+                                      },
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Container(
+                                            height: 80,
+                                            width: 150,
+                                            decoration: BoxDecoration(
+                                              color: Colors.deepOrange,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Text(
+                                                    "${categories[_selectedCat].subCat[i].title}",
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Icon(Icons.chevron_right)
+                                              ],
+                                            ),
+                                          )));
+                                },
+                              ),
+                            )
+                          ],
+                        ));
+                  },
                 ),
-              ],
-            )));
+              )
+            ])));
   }
 }
