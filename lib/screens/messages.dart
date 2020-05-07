@@ -32,7 +32,6 @@ class MessagesState extends State<Messages> {
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
         var profilemap = respons;
-
         var messages = profilemap['messages'];
         if (messages == null) {
           messagesd = [];
@@ -42,9 +41,8 @@ class MessagesState extends State<Messages> {
               var messageurl = 'https://sellship.co/api/messagedetail/' +
                   messages[i]['msgid'];
               final responsemessage = await http.get(messageurl);
-
+              
               var messageinfo = json.decode(responsemessage.body);
-
               final f = new DateFormat('hh:mm');
               final t = new DateFormat('yyyy-MM-dd hh:mm');
               if (messageinfo['date'] != null) {
@@ -53,16 +51,15 @@ class MessagesState extends State<Messages> {
                 var s = f.format(date);
                 var q = t.format(date);
                 print(messages[i]);
-                print(messages[i]['fcmtokenreciever']);
                 ChatMessages msg = ChatMessages(
                     messageid: messages[i]['msgid'],
-                    peoplemessaged: jsonDecode(messages[i]['username2'])['firstname'] + " "+jsonDecode(messages[i]['username2'])['lastname'],
+                    peoplemessaged: messages[i]['username2'],
                     senderid: messages[i]['user1'],
                     lastrecieved: messageinfo['lastrecieved'],
                     unread: messageinfo['unread'],
                     recieveddate: s,
                     hiddendate: q,
-                    senderName: jsonDecode(messages[i]['username1'])['firstname'],
+                    senderName: messages[i]['username1'],
                     recipentid: messages[i]['user2'],
                     fcmtokenreciever: messages[i]['fcmtokenreciever']);
 
@@ -86,9 +83,9 @@ class MessagesState extends State<Messages> {
                 print(messages[i]['fcmtokenreciever']);
 
                 ChatMessages msg = ChatMessages(
-                  senderName: jsonDecode(messages[i]['username1'])['firstname'] + " "+jsonDecode(messages[i]['username1'])['lastname'],
+                  senderName: messages[i]['username1'],
                   messageid: messages[i]['msgid'],
-                  peoplemessaged: jsonDecode(messages[i]['username1'])['firstname'] + " "+jsonDecode(messages[i]['username1'])['lastname'],
+                  peoplemessaged: messages[i]['username1'],
                   senderid: messages[i]['user2'],
                   lastrecieved: messageinfo['lastrecieved'],
                   unread: messageinfo['unread'],
