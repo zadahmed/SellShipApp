@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/chatpageview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -817,13 +818,20 @@ class _DetailsState extends State<Details> {
                                 'https://sellship.co/api/createroom/' +
                                     userid +
                                     '/' +
-                                    username1['firstname'] + " " + username1['lastname'] + 
+                                    username1['firstname'] +
                                     '/' +
                                     senderid +
                                     '/' +
-                                    username2['firstname'] + " " + username2['lastname'];
+                                    username2['firstname'];
+
+                                    print(userid.toString());
+                                    print(username1.toString());
+                                    print(senderid.toString());
+                                    print(username2.toString());
                             final itemresponse = await http.get(itemurl);
                             if (itemresponse.statusCode == 200) {
+                              FirebaseNotifications().postNotification(title: username1['firstname'],body: "Hi there! I am quite interested in your item",
+                              to: username2['fcmtoken']);
                               var messageid = itemresponse.body;
                               var url = 'https://sellship.co/api/sendmessage/' +
                                   userid +
