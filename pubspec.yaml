@@ -89,19 +89,11 @@ flutter:
     - fashion.png
     - laptop.png
     - sports.png
-    - motorcycle.jpg
-    - car.jpg
-    - phoneaccessories.jpg
-    - sport.png
-    - tv.jpg
-    - videogame.jpg
-    - couple.jpeg
-    - baby.png
-    - books.jpeg
-    - garden.jpeg
     - home.jpg
-    - sport.jpeg
     - logotransparent.png
+    - assets/electronics/
+    - assets/beauty/
+    - assets/fashion/
 
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg

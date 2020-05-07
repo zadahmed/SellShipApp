@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/screens/categorydetail.dart';
@@ -99,26 +98,39 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       child: Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Container(
-                                            height: 80,
+                                            height: 100,
                                             width: 150,
-                                            decoration: BoxDecoration(
-                                              color: Colors.deepOrange,
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                            color: Colors.white,
+                                            child: Stack(
                                               children: <Widget>[
-                                                Expanded(
-                                                  child: Text(
-                                                    "${categories[_selectedCat].subCat[i].title}",
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 16,
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 20),
+                                                  child: Container(
+                                                    height: 80,
+                                                    width: 150,
+                                                    child: Image.asset(
+                                                      categories[_selectedCat]
+                                                          .subCat[i]
+                                                          .image,
+                                                      fit: BoxFit.cover,
                                                     ),
                                                   ),
                                                 ),
-                                                Icon(Icons.chevron_right)
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Text(
+                                                    "${categories[_selectedCat].subCat[i].title}",
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           )));
