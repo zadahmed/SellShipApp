@@ -28,31 +28,27 @@ class FirebaseNotifications {
     return token;
   }
 
-    postNotification({title,body,to}) async {
+  postNotification({title, body, to}) async {
     var res = await http.post(
       'https://fcm.googleapis.com/fcm/send',
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization':
-            'key=AAAAJ43JO4Q:APA91bHI8hTE9I0ixGPjWrLrvmzORIdJi-SSorkSAbXhqyMdSCQZlsdDvicG7cmvE_DgfPvO8nbOsc3CCuFkBGwUY4lH4y359o_86IMruYzOzGjflziTI0HZsm6OfRcTS2mX-kwfyVUS',
+            'key=AAAAJ43JO4Q:APA91bGKOls-gW5zRmx5Eh96VBtrRQqxhk9uQG2u8tyIhK7h8I8Ov7e6NTaBNv8XQ0HYPNJ2zA88d7e1KCjhl7IpprRnSYa00YPKd4RpGZQYfLNevDHtxv0vL8NOnPWjP4wGX_Xd2jJD',
       },
       body: jsonEncode(
         <String, dynamic>{
-          'notification': <String, dynamic>{
-            'body': body,
-            'title': title,
-            "content_available": true
-          },
-          'priority': 'high',
-          'data': <String, dynamic>{
-            'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-            'id': '1',
-            'status': 'done'
-          },
-          'to':to 
+          "data": {"title": title, "Body": body},
+          "to": to
         },
       ),
     );
+    print(jsonEncode(
+        <String, dynamic>{
+          "data": {"title": title, "Body": body},
+          "to": to
+        },
+      ));
     print(res.body);
   }
 }
