@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
@@ -689,8 +690,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   scrollDirection: Axis.vertical,
                   child: new Column(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Row(
                           children: <Widget>[
@@ -726,70 +726,74 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         ),
-                        SizedBox(
-                          height: 5,
-                        ),
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: 75,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: categories.length,
-                            itemBuilder: (ctx, i) {
-                              return Row(
-                                children: <Widget>[
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 5.0),
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                    3 -
-                                                20,
-                                        height: 75,
-                                        alignment: Alignment.center,
-                                        child: Column(
-                                          children: <Widget>[
-                                            Container(
-                                              height: 30,
-                                              width: 120,
-                                              child: Icon(
-                                                categories[i].icon,
-                                                color: Colors.deepOrange,
+                          child: MediaQuery.removePadding(
+                            context: context,
+                            removeTop: true,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: categories.length,
+                              itemBuilder: (ctx, i) {
+                                return Row(
+                                  children: <Widget>[
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Container(
+                                          margin: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3 -
+                                              20,
+                                          height: 75,
+                                          alignment: Alignment.center,
+                                          child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                height: 30,
+                                                width: 120,
+                                                child: Icon(
+                                                  categories[i].icon,
+                                                  color: Colors.deepOrange,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 2,
-                                            ),
-                                            Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: Text(
-                                                "${categories[i].title}",
-                                                style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 14,
-                                                    color: Colors.black),
-                                                textAlign: TextAlign.center,
+                                              SizedBox(
+                                                height: 2,
                                               ),
-                                            )
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              );
-                            },
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Text(
+                                                  "${categories[i].title}",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 14,
+                                                      color: Colors.black),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              )
+                                            ],
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                         ),
                         Container(
-                            height: 300,
+                            height: 200,
                             width: MediaQuery.of(context).size.width,
                             child: CarouselSlider(
                               options: CarouselOptions(
@@ -812,36 +816,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ))))
                                   .toList(),
                             )),
-                        Row(children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                            child: Text('Near me',
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.black)),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  right: 20, top: 10, bottom: 10),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NearMe()),
-                                  );
-                                },
-                                child: Text('View All',
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 10, top: 10, bottom: 10),
+                                child: Text('Near me',
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
                                         color: Colors.black)),
-                              )),
-                        ]),
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      right: 20, top: 10, bottom: 10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => NearMe()),
+                                      );
+                                    },
+                                    child: Text('View All',
+                                        style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black)),
+                                  )),
+                            ]),
                         SizedBox(
                           height: 5,
                         ),
@@ -852,6 +858,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     itemCount: 15,
+                                    shrinkWrap: true,
                                     itemBuilder: (ctx, i) {
                                       return Row(
                                         children: <Widget>[
@@ -1023,7 +1030,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 2,
-                                              childAspectRatio: 0.8),
+                                              childAspectRatio: 0.85),
                                       itemCount: itemsgrid.length,
                                       itemBuilder: (context, index) {
                                         if (index != 0 && index % 8 == 0) {

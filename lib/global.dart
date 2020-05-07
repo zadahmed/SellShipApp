@@ -48,7 +48,7 @@ List<Categories> categories = [
       SubCategories(
           id: 5,
           title: 'Computer accessories',
-          image: 'assets/electronics/laptop.jpeg'),
+          image: 'assets/electronics/computeraccessories.jpg'),
       SubCategories(
           id: 6, title: 'Drones', image: 'assets/electronics/drones.jpeg'),
       SubCategories(
@@ -79,11 +79,11 @@ List<Categories> categories = [
     icon: Feather.shopping_bag,
     image: 'assets/couple.jpeg',
     subCat: [
-      SubCategories(id: 0, title: "Women"),
-      SubCategories(id: 1, title: "Men"),
-      SubCategories(id: 2, title: "Girls"),
-      SubCategories(id: 3, title: "Boys"),
-      SubCategories(id: 4, title: "Unisex"),
+      SubCategories(id: 0, title: "Women", image: 'assets/fashion/women.jpeg'),
+      SubCategories(id: 1, title: "Men", image: 'assets/fashion/men.jpg'),
+      SubCategories(id: 2, title: "Girls", image: 'assets/fashion/girl.jpeg'),
+      SubCategories(id: 3, title: "Boys", image: 'assets/fashion/boys.jpg'),
+      SubCategories(id: 4, title: "Unisex", image: 'assets/fashion/unisex.jpg'),
     ],
   ),
   Categories(
@@ -92,16 +92,31 @@ List<Categories> categories = [
     icon: Feather.eye,
     image: 'assets/couple.jpeg',
     subCat: [
-      SubCategories(id: 0, title: "Fragrance"),
-      SubCategories(id: 1, title: "Perfume for men"),
-      SubCategories(id: 2, title: "Perfume for women"),
-      SubCategories(id: 3, title: "Makeup"),
-      SubCategories(id: 4, title: "Haircare"),
-      SubCategories(id: 5, title: "Skincare"),
-      SubCategories(id: 6, title: "Tools & Accessories"),
-      SubCategories(id: 7, title: "Mens grooming"),
-      SubCategories(id: 8, title: "Gift sets"),
-      SubCategories(id: 9, title: "All Beauty"),
+      SubCategories(
+          id: 0, title: "Fragrance", image: 'assets/beauty/fragrance.jpeg'),
+      SubCategories(
+          id: 1,
+          title: "Perfume for men",
+          image: 'assets/beauty/perfumemen.jpeg'),
+      SubCategories(
+          id: 2,
+          title: "Perfume for women",
+          image: 'assets/beauty/perfumewomen.jpeg'),
+      SubCategories(id: 3, title: "Makeup", image: 'assets/beauty/makeup.jpg'),
+      SubCategories(
+          id: 4, title: "Haircare", image: 'assets/beauty/haircare.png'),
+      SubCategories(
+          id: 5, title: "Skincare", image: 'assets/beauty/skincare.jpg'),
+      SubCategories(
+          id: 6,
+          title: "Tools and Accessories",
+          image: 'assets/beauty/tools.jpeg'),
+      SubCategories(
+          id: 7,
+          title: "Mens grooming",
+          image: 'assets/beauty/mengrooming.jpeg'),
+      SubCategories(
+          id: 8, title: "Gift sets", image: 'assets/beauty/giftset.jpeg'),
     ],
   ),
   Categories(
@@ -110,15 +125,26 @@ List<Categories> categories = [
     icon: Feather.home,
     image: 'assets/home.jpg',
     subCat: [
-      SubCategories(id: 0, title: "Bedding"),
-      SubCategories(id: 1, title: "Bath"),
-      SubCategories(id: 2, title: "Home Decor"),
-      SubCategories(id: 3, title: "Kitchen and Dining"),
-      SubCategories(id: 4, title: "Home storage & organization"),
-      SubCategories(id: 5, title: "Furniture"),
-      SubCategories(id: 6, title: "Garden & outdoor"),
-      SubCategories(id: 7, title: "Lamps & Lighting"),
-      SubCategories(id: 8, title: "Tools & Home improvement"),
+      SubCategories(id: 0, title: "Bedding", image: 'assets/home/bedding.jpeg'),
+      SubCategories(id: 1, title: "Bath", image: 'assets/home/bath.jpeg'),
+      SubCategories(
+          id: 2, title: "Home Decor", image: 'assets/home/homedecor.jpeg'),
+      SubCategories(
+          id: 3, title: "Kitchen and Dining", image: 'assets/home/dining.jpeg'),
+      SubCategories(
+          id: 4,
+          title: "Home storage & organization",
+          image: 'assets/home/organizer.jpeg'),
+      SubCategories(
+          id: 5, title: "Furniture", image: 'assets/home/furniture.jpeg'),
+      SubCategories(
+          id: 6, title: "Garden & outdoor", image: 'assets/home/garden.jpeg'),
+      SubCategories(
+          id: 7, title: "Lamps & Lighting", image: 'assets/home/lamp.jpeg'),
+      SubCategories(
+          id: 8,
+          title: "Tools & Home improvement",
+          image: 'assets/home/tools.jpeg'),
     ],
   ),
   Categories(

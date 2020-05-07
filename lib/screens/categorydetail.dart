@@ -824,7 +824,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                   child: CachedNetworkImage(
                                                     imageUrl:
                                                         itemsgrid[index].image,
-                                                    fit: BoxFit.cover,
+                                                    fit: BoxFit.fitHeight,
                                                     placeholder: (context,
                                                             url) =>
                                                         SpinKitChasingDots(
