@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/myitems.dart';
+import 'package:SellShip/screens/search.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -555,76 +556,54 @@ class _LoginPageState extends State<LoginPage>
   }
 
   var currency;
+  TextEditingController searchcontroller = new TextEditingController();
+
+  onSearch(String texte) async {
+    if (texte.isEmpty) {
+      setState(() {});
+    } else {
+      searchcontroller.clear();
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Search(text: texte)),
+      );
+    }
+  }
 
   Widget profile(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
+        appBar: PreferredSize(
+            preferredSize: Size(double.infinity, 50),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Container(
+                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          height: 30,
+                          width: 120,
+                          child: Image.asset(
+                            'assets/logotransparent.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            )),
         body: loading == false
             ? Column(
                 children: <Widget>[
                   SizedBox(
-                    height: 20,
-                  ),
-                  userid == null
-                      ? Container(
-                          height: 70,
-                          color: Colors.deepOrange,
-                          child: Column(children: <Widget>[
-                            Container(
-                              height: 40,
-                              width: 120,
-                              child: Image.asset(
-                                'assets/logo.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                InkWell(
-                                  child: Text(
-                                    'Hey there Welcome to SellShip!',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.center,
-                            )
-                          ]))
-                      : Container(
-                          height: 70,
-                          color: Colors.deepOrange,
-                          child: Column(children: <Widget>[
-                            Container(
-                              height: 40,
-                              width: 120,
-                              child: Image.asset(
-                                'assets/logo.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                InkWell(
-                                  child: Text(
-                                    'Hey $firstname Welcome to SellShip!',
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.center,
-                            )
-                          ])),
-                  SizedBox(
-                    height: 5,
+                    height: 2,
                   ),
                   userid != null
                       ? GestureDetector(

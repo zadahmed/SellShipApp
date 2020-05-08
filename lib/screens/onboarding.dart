@@ -1,3 +1,4 @@
+import 'package:SellShip/screens/starterscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -28,13 +29,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 8.0,
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Color(0xFF7B51D3),
+        color: isActive ? Colors.deepOrangeAccent : Colors.deepOrange,
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
     );
   }
-
-  final storage = new FlutterSecureStorage();
 
   @override
   void initState() {
@@ -47,7 +46,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: Container(
-          decoration: BoxDecoration(color: Colors.amberAccent),
+          decoration: BoxDecoration(color: Colors.white),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 30.0),
             child: Column(
@@ -85,7 +84,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 style: TextStyle(
                                     fontFamily: 'Montserrat',
                                     fontSize: 20,
-                                    color: Colors.white)),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepOrange)),
                           ],
                         ),
                       ),
@@ -110,7 +110,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 style: TextStyle(
                                     fontFamily: 'Montserrat',
                                     fontSize: 20,
-                                    color: Colors.white)),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepOrange)),
                           ],
                         ),
                       ),
@@ -122,7 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Center(
                               child: Image(
                                 image: AssetImage(
-                                  'assets/logo.png',
+                                  'assets/logotransparent.png',
                                 ),
                                 height: 300.0,
                                 width: 300.0,
@@ -135,7 +136,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 style: TextStyle(
                                     fontFamily: 'Montserrat',
                                     fontSize: 20,
-                                    color: Colors.white)),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepOrange)),
                           ],
                         ),
                       ),
@@ -149,7 +151,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 _currentPage != _numPages - 1
                     ? Expanded(
                         child: Align(
-                          alignment: FractionalOffset.bottomRight,
+                          alignment: Alignment.bottomCenter,
                           child: FlatButton(
                             onPressed: () {
                               _pageController.nextPage(
@@ -165,14 +167,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   'Next',
                                   style: TextStyle(
                                     fontFamily: 'Montserrat',
-                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepOrange,
                                     fontSize: 22.0,
                                   ),
                                 ),
                                 SizedBox(width: 10.0),
                                 Icon(
                                   Icons.arrow_forward,
-                                  color: Colors.white,
+                                  color: Colors.deepOrange,
                                   size: 30.0,
                                 ),
                               ],
@@ -190,14 +193,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ? Container(
               height: 80.0,
               width: double.infinity,
-              color: Colors.white,
+              color: Colors.deepOrange,
               child: GestureDetector(
                 onTap: () async {
-                  await storage.write(key: 'firsttime', value: 'true');
+//                  await storage.write(key: 'firsttime', value: 'true');
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => RootScreen()),
+                    MaterialPageRoute(builder: (context) => StarterScreen()),
                   );
                 },
                 child: Center(
@@ -207,7 +210,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       'Get started',
                       style: TextStyle(
                         fontFamily: 'Montserrat',
-                        color: Color(0xFF5B16D0),
+                        color: Colors.white,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),

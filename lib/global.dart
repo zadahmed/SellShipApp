@@ -153,12 +153,21 @@ List<Categories> categories = [
     image: 'assets/baby.png',
     icon: FontAwesomeIcons.babyCarriage,
     subCat: [
-      SubCategories(id: 0, title: "Kids toys"),
-      SubCategories(id: 1, title: "Baby transport"),
-      SubCategories(id: 2, title: "Nursing and feeding"),
-      SubCategories(id: 3, title: "Bathing & Baby care"),
-      SubCategories(id: 4, title: "Baby clothing & shoes"),
-      SubCategories(id: 5, title: "Parenting Books"),
+      SubCategories(id: 0, title: "Kids toys", image: 'assets/baby/toy.jpeg'),
+      SubCategories(
+          id: 1, title: "Baby transport", image: 'assets/baby/accesso.jpeg'),
+      SubCategories(
+          id: 2, title: "Nursing and feeding", image: 'assets/baby/milk.jpeg'),
+      SubCategories(
+          id: 3,
+          title: "Bathing & Baby care",
+          image: 'assets/baby/accesso.jpeg'),
+      SubCategories(
+          id: 4,
+          title: "Baby clothing & shoes",
+          image: 'assets/baby/clothes.jpeg'),
+      SubCategories(
+          id: 5, title: "Parenting Books", image: 'assets/baby/book.jpeg'),
     ],
   ),
   Categories(
@@ -167,16 +176,24 @@ List<Categories> categories = [
     image: 'assets/sport.jpeg',
     icon: FontAwesomeIcons.footballBall,
     subCat: [
-      SubCategories(id: 0, title: "Camping & Hiking"),
-      SubCategories(id: 1, title: "Cycling"),
-      SubCategories(id: 2, title: "Scooters & accessories"),
-      SubCategories(id: 3, title: "Strength & weights"),
-      SubCategories(id: 4, title: "Yoga"),
-      SubCategories(id: 5, title: "Cardio equipment"),
-      SubCategories(id: 6, title: "Water sports"),
-      SubCategories(id: 7, title: "Raquet sports"),
-      SubCategories(id: 8, title: "Boxing"),
-      SubCategories(id: 9, title: "Other"),
+      SubCategories(
+          id: 0, title: "Camping & Hiking", image: 'assets/sport/campng.jpeg'),
+      SubCategories(id: 1, title: "Cycling", image: 'assets/sport/cycle.jpeg'),
+      SubCategories(
+          id: 2,
+          title: "Scooters & accessories",
+          image: 'assets/sport/scooter.jpeg'),
+      SubCategories(
+          id: 3, title: "Strength & weights", image: 'assets/sport/gym.jpeg'),
+      SubCategories(id: 4, title: "Yoga", image: 'assets/sport/yoga.jpeg'),
+      SubCategories(
+          id: 5, title: "Cardio equipment", image: 'assets/sport/equipm.jpeg'),
+      SubCategories(
+          id: 6, title: "Water sports", image: 'assets/sport/watersport.jpeg'),
+      SubCategories(
+          id: 7, title: "Raquet sports", image: 'assets/sport/raquet.jpeg'),
+      SubCategories(id: 8, title: "Boxing", image: 'assets/sport/boxing.jpeg'),
+      SubCategories(id: 9, title: "Other", image: 'assets/sport/raquet.jpeg'),
     ],
   ),
   Categories(
@@ -185,22 +202,44 @@ List<Categories> categories = [
     image: 'assets/books.jpeg',
     icon: Feather.book_open,
     subCat: [
-      SubCategories(id: 0, title: "Childrens books"),
-      SubCategories(id: 1, title: "Fiction books"),
-      SubCategories(id: 2, title: "Comics"),
-      SubCategories(id: 3, title: "Sports"),
-      SubCategories(id: 4, title: "Science"),
-      SubCategories(id: 5, title: "Diet, Health & Fitness"),
-      SubCategories(id: 6, title: "Business & Finance"),
-      SubCategories(id: 7, title: "Biogpraphy & Autobiography"),
-      SubCategories(id: 8, title: "Crime & Mystery"),
-      SubCategories(id: 9, title: "History"),
-      SubCategories(id: 10, title: "Cook Books & Food"),
-      SubCategories(id: 11, title: "Education"),
-      SubCategories(id: 12, title: "Foreign Language Study"),
-      SubCategories(id: 13, title: "Travel"),
-      SubCategories(id: 14, title: "Magazine"),
-      SubCategories(id: 15, title: "Other"),
+      SubCategories(
+          id: 0, title: "Childrens books", image: 'assets/books/kids.jpeg'),
+      SubCategories(
+          id: 1, title: "Fiction books", image: 'assets/books/fiction.jpeg'),
+      SubCategories(id: 2, title: "Comics", image: 'assets/books/comic.jpeg'),
+      SubCategories(id: 3, title: "Sports", image: 'assets/books/non.jpeg'),
+      SubCategories(
+          id: 4, title: "Science", image: 'assets/books/science.jpeg'),
+      SubCategories(
+          id: 5,
+          title: "Diet, Health & Fitness",
+          image: 'assets/books/diet.jpeg'),
+      SubCategories(
+          id: 6,
+          title: "Business & Finance",
+          image: 'assets/books/business.jpeg'),
+      SubCategories(
+          id: 7,
+          title: "Biogpraphy & Autobiography",
+          image: 'assets/books/bio.jpeg'),
+      SubCategories(
+          id: 8, title: "Crime & Mystery", image: 'assets/books/crime.jpeg'),
+      SubCategories(
+          id: 9, title: "History", image: 'assets/books/hisstory.jpeg'),
+      SubCategories(
+          id: 10,
+          title: "Cook Books & Food",
+          image: 'assets/books/cooking.jpeg'),
+      SubCategories(
+          id: 11, title: "Education", image: 'assets/books/education.jpeg'),
+      SubCategories(
+          id: 12,
+          title: "Foreign Language Study",
+          image: 'assets/books/language.jpeg'),
+      SubCategories(id: 13, title: "Travel", image: 'assets/books/travel.jpeg'),
+      SubCategories(
+          id: 14, title: "Magazine", image: 'assets/books/magazin.jpeg'),
+      SubCategories(id: 15, title: "Other", image: 'assets/books/kids.jpeg'),
     ],
   ),
   Categories(
@@ -209,13 +248,20 @@ List<Categories> categories = [
     icon: FontAwesomeIcons.car,
     image: 'assets/car.jpg',
     subCat: [
-      SubCategories(id: 0, title: "Used Cars"),
-      SubCategories(id: 1, title: "Motorcycles & Scooters"),
-      SubCategories(id: 2, title: "Heavy vehicles"),
-      SubCategories(id: 3, title: "Boats"),
-      SubCategories(id: 4, title: "Number plates"),
-      SubCategories(id: 5, title: "Auto accessories"),
-      SubCategories(id: 6, title: "Car Technology"),
+      SubCategories(id: 0, title: "Used Cars", image: 'assets/motor/car.jpeg'),
+      SubCategories(
+          id: 1,
+          title: "Motorcycles & Scooters",
+          image: 'assets/motor/motorcycle.jpeg'),
+      SubCategories(
+          id: 2, title: "Heavy vehicles", image: 'assets/motor/heavy.jpeg'),
+      SubCategories(id: 3, title: "Boats", image: 'assets/motor/water.jpeg'),
+      SubCategories(
+          id: 4, title: "Number plates", image: 'assets/motor/plate.jpeg'),
+      SubCategories(
+          id: 5, title: "Auto accessories", image: 'assets/motor/access.jpeg'),
+      SubCategories(
+          id: 6, title: "Car Technology", image: 'assets/motor/tech.jpeg'),
     ],
   ),
   Categories(

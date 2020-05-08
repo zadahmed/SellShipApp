@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
@@ -266,6 +267,244 @@ class _CategoryDetailState extends State<CategoryDetail> {
     return itemsgrid;
   }
 
+  Future<List<Item>> fetchbrands(String brand) async {
+    var categoryurl = 'https://sellship.co/api/filter/category/brand/' +
+        country +
+        '/' +
+        category +
+        '/' +
+        brand +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> fetchCondition(String condition) async {
+    var categoryurl = 'https://sellship.co/api/filter/category/condition/' +
+        country +
+        '/' +
+        category +
+        '/' +
+        condition +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> fetchPrice(String minprice, String maxprice) async {
+    var categoryurl = 'https://sellship.co/api/filter/category/price/' +
+        country +
+        '/' +
+        category +
+        '/' +
+        minprice +
+        '/' +
+        maxprice +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> getmorecondition(String condition) async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+    var categoryurl = 'https://sellship.co/api/filter/category/condition/' +
+        country +
+        '/' +
+        category +
+        '/' +
+        condition +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> getmorePrice(String minprice, String maxprice) async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+    var categoryurl = 'https://sellship.co/api/filter/category/price/' +
+        country +
+        '/' +
+        category +
+        '/' +
+        minprice +
+        '/' +
+        maxprice +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> getmorebrands(String brand) async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+    var categoryurl = 'https://sellship.co/api/filter/category/brand/' +
+        country +
+        '/' +
+        category +
+        '/' +
+        brand +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'],
+          category: jsonbody[i]['category'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
   Future<List<Item>> fetchLowestPrice(int skip, int limit) async {
     var url = 'https://sellship.co/api/categories/lowestprice/' +
         category +
@@ -306,6 +545,36 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
     return itemsgrid;
   }
+
+  loadbrands() async {
+    var categoryurl = 'https://sellship.co/api/getbrands/' + category;
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var categoryrespons = json.decode(categoryresponse.body);
+      print(categoryrespons);
+      for (int i = 0; i < categoryrespons.length; i++) {
+        brands.add(categoryrespons[i]);
+      }
+      setState(() {
+        brands = brands;
+      });
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  List<String> brands = List<String>();
+  TextEditingController minpricecontroller = new TextEditingController();
+  TextEditingController maxpricecontroller = new TextEditingController();
+
+  List<String> conditions = [
+    'New with tags',
+    'New, but no tags',
+    'Like new',
+    'Very Good, a bit worn',
+    'Good, some flaws visible in pictures'
+  ];
+  String _selectedCondition;
 
   _getmorehighestprice() async {
     setState(() {
@@ -470,7 +739,10 @@ class _CategoryDetailState extends State<CategoryDetail> {
   final storage = new FlutterSecureStorage();
 
   var currency;
-
+  String brand;
+  String minprice;
+  String maxprice;
+  String condition;
   String category;
   String subcategory;
 
@@ -483,7 +755,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       subcategory = widget.subcategory;
       loading = true;
     });
-
+    loadbrands();
     fetchItems(skip, limit);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -508,12 +780,13 @@ class _CategoryDetailState extends State<CategoryDetail> {
   bool loading;
 
   ScrollController _scrollController = ScrollController();
-
+  final scaffoldState = GlobalKey<ScaffoldState>();
   String _selectedFilter = 'Near me';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: scaffoldState,
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Colors.deepOrange,
@@ -538,13 +811,13 @@ class _CategoryDetailState extends State<CategoryDetail> {
                       height: 10,
                     ),
                     Container(
-                      height: 30,
+                      height: 40,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           InkWell(
                             child: Container(
-                              height: 30,
+                              height: 40,
                               width: MediaQuery.of(context).size.width / 2 - 10,
                               child: Center(
                                 child: Text(
@@ -558,201 +831,555 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               ),
                             ),
                             onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              20.0)), //this right here
-                                      child: Container(
-                                        height: 350,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(1.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              ListTile(
-                                                title: Text(
-                                                  'Sort',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                              InkWell(
-                                                child: ListTile(
-                                                  title: Text(
-                                                    'New',
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _selectedFilter =
-                                                        'Recently Added';
-                                                    skip = 0;
-                                                    limit = 10;
-                                                    loading = true;
-                                                  });
-                                                  itemsgrid.clear();
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                  fetchRecentlyAdded(
-                                                      skip, limit);
-                                                },
-                                              ),
-                                              InkWell(
-                                                child: ListTile(
-                                                  title: Text(
-                                                    'Near me',
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _selectedFilter = 'Near me';
-                                                    skip = 0;
-                                                    limit = 10;
-                                                    loading = true;
-                                                  });
-                                                  itemsgrid.clear();
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                  fetchItems(skip, limit);
-                                                },
-                                              ),
-                                              InkWell(
-                                                child: ListTile(
-                                                  title: Text(
-                                                    'Below 100',
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _selectedFilter =
-                                                        'Below 100';
-                                                    skip = 0;
-                                                    limit = 10;
-                                                    loading = true;
-                                                  });
-                                                  itemsgrid.clear();
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                  fetchbelowhundred(
-                                                      skip, limit);
-                                                },
-                                              ),
-                                              InkWell(
-                                                child: ListTile(
-                                                  title: Text(
-                                                    'Price Low to High',
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _selectedFilter =
-                                                        'Lowest Price';
-                                                    skip = 0;
-                                                    limit = 10;
-                                                    loading = true;
-                                                  });
-                                                  itemsgrid.clear();
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                  fetchLowestPrice(skip, limit);
-                                                },
-                                              ),
-                                              InkWell(
-                                                child: ListTile(
-                                                  title: Text(
-                                                    'Price High to Low',
-                                                    style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                                onTap: () {
-                                                  setState(() {
-                                                    _selectedFilter =
-                                                        'Highest Price';
-                                                    skip = 0;
-                                                    limit = 10;
-                                                    loading = true;
-                                                  });
-                                                  itemsgrid.clear();
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                  fetchHighestPrice(
-                                                      skip, limit);
-                                                },
-                                              ),
-                                            ],
+                              scaffoldState.currentState
+                                  .showBottomSheet((context) {
+                                return Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(1.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        ListTile(
+                                          title: Text(
+                                            'Sort',
+                                            style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.black),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  });
+                                        InkWell(
+                                          child: ListTile(
+                                            title: Text(
+                                              'New',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedFilter =
+                                                  'Recently Added';
+                                              skip = 0;
+                                              limit = 10;
+                                              loading = true;
+                                            });
+                                            itemsgrid.clear();
+                                            Navigator.of(context).pop();
+
+                                            fetchRecentlyAdded(skip, limit);
+                                          },
+                                        ),
+                                        InkWell(
+                                          child: ListTile(
+                                            title: Text(
+                                              'Near me',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedFilter = 'Near me';
+                                              skip = 0;
+                                              limit = 10;
+                                              loading = true;
+                                            });
+                                            itemsgrid.clear();
+                                            Navigator.of(context).pop();
+
+                                            fetchItems(skip, limit);
+                                          },
+                                        ),
+                                        InkWell(
+                                          child: ListTile(
+                                            title: Text(
+                                              'Below 100',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedFilter = 'Below 100';
+                                              skip = 0;
+                                              limit = 10;
+                                              loading = true;
+                                            });
+                                            itemsgrid.clear();
+                                            Navigator.of(context).pop();
+
+                                            fetchbelowhundred(skip, limit);
+                                          },
+                                        ),
+                                        InkWell(
+                                          child: ListTile(
+                                            title: Text(
+                                              'Price Low to High',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedFilter = 'Lowest Price';
+                                              skip = 0;
+                                              limit = 10;
+                                              loading = true;
+                                            });
+                                            itemsgrid.clear();
+                                            Navigator.of(context).pop();
+
+                                            fetchLowestPrice(skip, limit);
+                                          },
+                                        ),
+                                        InkWell(
+                                          child: ListTile(
+                                            title: Text(
+                                              'Price High to Low',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              _selectedFilter = 'Highest Price';
+                                              skip = 0;
+                                              limit = 10;
+                                              loading = true;
+                                            });
+                                            itemsgrid.clear();
+                                            Navigator.of(context).pop();
+
+                                            fetchHighestPrice(skip, limit);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              });
                             },
                           ),
                           Container(
-                              height: 30,
+                              height: 40,
                               child: VerticalDivider(color: Colors.black)),
-                          Container(
-                            height: 30,
-                            width: MediaQuery.of(context).size.width / 2 - 10,
-                            child: Center(
-                              child: Text(
-                                'FILTER',
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.black),
+                          InkWell(
+                            onTap: () {
+                              scaffoldState.currentState
+                                  .showBottomSheet((context) {
+                                return Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(1.0),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          ListTile(
+                                            title: Text(
+                                              'Filter',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w800,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          ExpansionTile(
+                                            title: Text(
+                                              'Brand',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                            children: <Widget>[
+                                              Container(
+                                                  height: 500,
+                                                  child: AlphabetListScrollView(
+                                                    strList: brands,
+                                                    indexedHeight: (i) {
+                                                      return 40;
+                                                    },
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return InkWell(
+                                                        onTap: () async {
+                                                          setState(() {
+                                                            _selectedFilter =
+                                                                'Brands';
+                                                            brand =
+                                                                brands[index];
+                                                            skip = 0;
+                                                            limit = 10;
+                                                            loading = true;
+                                                          });
+                                                          itemsgrid.clear();
+                                                          Navigator.of(context)
+                                                              .pop();
+
+                                                          fetchbrands(
+                                                              brands[index]);
+                                                        },
+                                                        child: ListTile(
+                                                          title: Text(
+                                                              brands[index]),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ))
+                                            ],
+                                          ),
+                                          ExpansionTile(
+                                            title: Text(
+                                              'Condition',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 30, right: 30),
+                                                child: Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: Center(
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child:
+                                                                DropdownButton<
+                                                                    String>(
+                                                              value:
+                                                                  _selectedCondition,
+                                                              hint: Text(
+                                                                  'Please choose the condition of your Item'), // No
+                                                              icon: Icon(Icons
+                                                                  .keyboard_arrow_down),
+                                                              iconSize: 20,
+                                                              elevation: 1,
+                                                              isExpanded: true,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                              ),
+                                                              onChanged: (String
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  _selectedCondition =
+                                                                      newValue;
+                                                                });
+
+                                                                setState(() {
+                                                                  _selectedFilter =
+                                                                      'Condition';
+                                                                  condition =
+                                                                      _selectedCondition;
+                                                                  skip = 0;
+                                                                  limit = 10;
+                                                                  loading =
+                                                                      true;
+                                                                });
+                                                                itemsgrid
+                                                                    .clear();
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+
+                                                                fetchCondition(
+                                                                    _selectedCondition);
+                                                              },
+                                                              items: conditions.map<
+                                                                  DropdownMenuItem<
+                                                                      String>>((String
+                                                                  value) {
+                                                                return DropdownMenuItem<
+                                                                    String>(
+                                                                  value: value,
+                                                                  child: Text(
+                                                                    value,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .black),
+                                                                  ),
+                                                                );
+                                                              }).toList(),
+                                                            )))),
+                                              ),
+                                            ],
+                                          ),
+                                          ExpansionTile(
+                                            title: Text(
+                                              'Price',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                            children: <Widget>[
+                                              Container(
+                                                  height: 130,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        offset: Offset(
+                                                            0.0, 1.0), //(x,y)
+                                                        blurRadius: 6.0,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: <Widget>[
+                                                      Center(
+                                                          child: ListTile(
+                                                              title: Text(
+                                                                'Minimum Price',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              trailing:
+                                                                  Container(
+                                                                      width:
+                                                                          200,
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .only(),
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            TextField(
+                                                                          cursorColor:
+                                                                              Color(0xFF979797),
+                                                                          controller:
+                                                                              minpricecontroller,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(),
+                                                                          decoration: InputDecoration(
+                                                                              labelText: "Price " + currency,
+                                                                              alignLabelWithHint: true,
+                                                                              labelStyle: TextStyle(
+                                                                                fontFamily: 'Montserrat',
+                                                                                fontSize: 16,
+                                                                              ),
+                                                                              focusColor: Colors.black,
+                                                                              enabledBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              border: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              focusedErrorBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              disabledBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              errorBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              ))),
+                                                                        ),
+                                                                      )))),
+                                                      Center(
+                                                          child: ListTile(
+                                                              title: Text(
+                                                                'Maximum Price',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                ),
+                                                              ),
+                                                              trailing:
+                                                                  Container(
+                                                                      width:
+                                                                          200,
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .only(),
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            TextField(
+                                                                          cursorColor:
+                                                                              Color(0xFF979797),
+                                                                          controller:
+                                                                              maxpricecontroller,
+                                                                          keyboardType:
+                                                                              TextInputType.numberWithOptions(),
+                                                                          decoration: InputDecoration(
+                                                                              labelText: "Price " + currency,
+                                                                              alignLabelWithHint: true,
+                                                                              labelStyle: TextStyle(
+                                                                                fontFamily: 'Montserrat',
+                                                                                fontSize: 16,
+                                                                              ),
+                                                                              focusColor: Colors.black,
+                                                                              enabledBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              border: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              focusedErrorBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              disabledBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              errorBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              )),
+                                                                              focusedBorder: OutlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                color: Colors.grey.shade300,
+                                                                              ))),
+                                                                        ),
+                                                                      ))))
+                                                    ],
+                                                  )),
+                                              InkWell(
+                                                  onTap: () async {
+                                                    setState(() {
+                                                      _selectedFilter = 'Price';
+                                                      minprice =
+                                                          minpricecontroller
+                                                              .text;
+                                                      maxprice =
+                                                          maxpricecontroller
+                                                              .text;
+                                                      skip = 0;
+                                                      limit = 10;
+                                                      loading = true;
+                                                    });
+                                                    itemsgrid.clear();
+                                                    Navigator.of(context).pop();
+
+                                                    fetchPrice(
+                                                        minpricecontroller.text,
+                                                        maxpricecontroller
+                                                            .text);
+                                                  },
+                                                  child: Container(
+                                                    height: 50,
+                                                    color: Colors.deepOrange,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Filter',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ))
+                                            ],
+                                          ),
+                                          ExpansionTile(
+                                            title: Text(
+                                              'Delivery',
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: MediaQuery.of(context).size.width / 2 - 10,
+                              child: Center(
+                                child: Text(
+                                  'FILTER',
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.black),
+                                ),
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),

@@ -76,7 +76,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
-                                  childAspectRatio: (140 / 80),
+                                  childAspectRatio: 1.1,
                                 ),
                                 itemBuilder: (ctx, i) {
                                   return InkWell(
@@ -98,22 +98,22 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       child: Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Container(
-                                            height: 100,
+                                            height: 120,
                                             width: 150,
                                             color: Colors.white,
                                             child: Column(
                                               children: <Widget>[
                                                 Padding(
                                                   padding: EdgeInsets.only(
-                                                      bottom: 20),
+                                                      bottom: 10),
                                                   child: Container(
-                                                    height: 80,
+                                                    height: 90,
                                                     width: 150,
                                                     child: Image.asset(
                                                       categories[_selectedCat]
                                                           .subCat[i]
                                                           .image,
-                                                      fit: BoxFit.cover,
+                                                      fit: BoxFit.fitHeight,
                                                     ),
                                                   ),
                                                 ),

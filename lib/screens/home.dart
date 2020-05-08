@@ -571,45 +571,33 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: Size(double.infinity, 120),
+            preferredSize: Size(double.infinity, 90),
             child: Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                    color: Colors.grey.shade300, spreadRadius: 5, blurRadius: 6)
-              ]),
               width: MediaQuery.of(context).size.width,
-              height: 120,
+              height: 90,
               child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        bottomRight: Radius.circular(20))),
-                child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 15,
+                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        height: 30,
+                        width: 120,
+                        child: Image.asset(
+                          'assets/logotransparent.png',
+                          fit: BoxFit.cover,
                         ),
-                        Container(
-                          height: 30,
-                          width: 120,
-                          child: Image.asset(
-                            'assets/logotransparent.png',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(bottom: 5, top: 5, left: 10),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+//                                  height: 45,
+//                                  width: 300,
+
                               child: Container(
                                   height: 45,
-                                  width: 300,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
@@ -648,37 +636,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ),
                                         ],
-                                      ))),
+                                      )))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          CircleAvatar(
+                            maxRadius: 17,
+                            backgroundColor: Colors.deepOrange,
+                            foregroundColor: Colors.white,
+                            child: Icon(
+                              Icons.favorite,
+                              size: 16,
                             ),
-                            SizedBox(
-                              width: 15,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CircleAvatar(
+                            maxRadius: 17,
+                            backgroundColor: Colors.deepOrange,
+                            foregroundColor: Colors.white,
+                            child: Icon(
+                              Icons.chat_bubble,
+                              size: 16,
                             ),
-                            CircleAvatar(
-                              maxRadius: 17,
-                              backgroundColor: Colors.deepOrange,
-                              foregroundColor: Colors.white,
-                              child: Icon(
-                                Icons.favorite,
-                                size: 16,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            CircleAvatar(
-                              maxRadius: 17,
-                              backgroundColor: Colors.deepOrange,
-                              foregroundColor: Colors.white,
-                              child: Icon(
-                                Icons.chat_bubble,
-                                size: 16,
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    )),
-              ),
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                        ],
+                      )
+                    ],
+                  )),
             )),
         body: GestureDetector(
           onTap: () {
@@ -1030,7 +1019,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 2,
-                                              childAspectRatio: 0.85),
+                                              childAspectRatio: 0.80),
                                       itemCount: itemsgrid.length,
                                       itemBuilder: (context, index) {
                                         if (index != 0 && index % 8 == 0) {
