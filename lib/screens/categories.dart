@@ -12,14 +12,17 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   int _selectedCat;
 
+  int _previousCAt;
   @override
   void initState() {
     super.initState();
     setState(() {
+      _previousCAt = widget.selectedcategory;
       _selectedCat = widget.selectedcategory;
     });
   }
 
+  final scaffoldState = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +55,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     return Container(
                         width: MediaQuery.of(context).size.width,
                         child: ExpansionTile(
+                          initiallyExpanded: _previousCAt == i ? true : false,
                           leading: Icon(
                             categories[i].icon,
                             color: Colors.deepOrange,

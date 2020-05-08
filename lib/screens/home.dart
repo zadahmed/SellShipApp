@@ -729,7 +729,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return Row(
                                   children: <Widget>[
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryScreen(
+                                                      selectedcategory: i)),
+                                        );
+                                      },
                                       child: Container(
                                           margin: const EdgeInsets.only(
                                               bottom: 5.0),
