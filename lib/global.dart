@@ -231,17 +231,6 @@ List<Categories> categories = [
     ],
   ),
   Categories(
-    title: 'Pets',
-    id: 9,
-    icon: FontAwesomeIcons.dog,
-    image: 'assets/home.jpg',
-    subCat: [
-      SubCategories(id: 0, title: "Pet food"),
-      SubCategories(id: 1, title: "Pets"),
-      SubCategories(id: 2, title: "Pet accessories"),
-    ],
-  ),
-  Categories(
     title: 'Other',
     id: 10,
     icon: Icons.lightbulb_outline,

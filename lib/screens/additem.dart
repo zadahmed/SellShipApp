@@ -36,13 +36,14 @@ class _AddItemState extends State<AddItem> {
   List<String> categories = [
     'Electronics',
     'Fashion & Accessories',
+    'Beauty',
     'Home & Garden',
     'Baby & Child',
     'Sport & Leisure',
-    'Movies, Books & Music',
+    'Books',
     'Motors',
     'Property',
-    'Services',
+    'Pets',
     'Other'
   ];
   String _selectedCategory;
@@ -249,6 +250,9 @@ class _AddItemState extends State<AddItem> {
     super.dispose();
   }
 
+  bool salepressed;
+  bool freepressed;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -310,9 +314,9 @@ class _AddItemState extends State<AddItem> {
                                           child: Text(
                                             'Images',
                                             style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
-                                            ),
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700),
                                           ),
                                         ),
                                       ),
@@ -845,6 +849,20 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 20.0,
                                 ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 10, bottom: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Category',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -893,6 +911,7 @@ class _AddItemState extends State<AddItem> {
                                                 if (categoryresponse
                                                         .statusCode ==
                                                     200) {
+                                                  brands.clear();
                                                   var categoryrespons = json
                                                       .decode(categoryresponse
                                                           .body);
@@ -905,6 +924,10 @@ class _AddItemState extends State<AddItem> {
                                                     brands.add(
                                                         categoryrespons[i]);
                                                   }
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
                                                   setState(() {
                                                     brands = brands;
                                                   });
@@ -916,15 +939,13 @@ class _AddItemState extends State<AddItem> {
                                                   _subcategories = [
                                                     'Phones & Accessories',
                                                     'Gaming',
+                                                    'TV & Video',
                                                     'Cameras & Photography',
-                                                    'Car Technology',
                                                     'Computers,PCs & Laptops',
-                                                    'Drones',
+                                                    'Computer accessories',
                                                     'Home Appliances',
-                                                    'Smart Home & Security',
                                                     'Sound & Audio',
                                                     'Tablets & eReaders',
-                                                    'TV & Video',
                                                     'Wearables',
                                                     'Virtual Reality',
                                                   ];
@@ -970,22 +991,275 @@ class _AddItemState extends State<AddItem> {
                                                     'Men',
                                                     'Girls',
                                                     'Boys',
+                                                    'Unisex',
+                                                  ];
+                                                });
+                                              } else if (_selectedCategory ==
+                                                  'Beauty') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  brands.clear();
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
+                                                setState(() {
+                                                  _subcategories = [
+                                                    'Fragrance',
+                                                    'Perfume for men',
+                                                    'Perfume for women',
+                                                    'Makeup',
+                                                    'Haircare',
+                                                    'Skincare',
+                                                    'Tools and Accessories',
+                                                    'Mens grooming',
+                                                    'Gift sets',
+                                                  ];
+                                                });
+                                              } else if (_selectedCategory ==
+                                                  'Home & Garden') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  brands.clear();
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
+                                                setState(() {
+                                                  _subcategories = [
+                                                    'Bedding',
+                                                    'Bath',
+                                                    'Home Decor',
+                                                    'Kitchen and Dining',
+                                                    'Home storage',
+                                                    'Furniture',
+                                                    'Garden & outdoor',
+                                                    'Lamps & Lighting',
+                                                    'Tools & Home improvement',
+                                                  ];
+                                                });
+                                              } else if (_selectedCategory ==
+                                                  'Baby & Child') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  brands.clear();
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
+                                                setState(() {
+                                                  _subcategories = [
+                                                    'Kids toys',
+                                                    'Baby transport',
+                                                    'Nursing and feeding',
+                                                    'Bathing & Baby care',
+                                                    'Baby clothing & shoes',
+                                                    'Parenting Books',
+                                                  ];
+                                                });
+                                              } else if (_selectedCategory ==
+                                                  'Sport & Leisure') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  brands.clear();
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
+                                                setState(() {
+                                                  _subcategories = [
+                                                    'Camping & Hiking',
+                                                    'Cycling',
+                                                    'Scooters & accessories',
+                                                    'Strength & weights',
+                                                    'Yoga',
+                                                    'Cardio equipment',
+                                                    'Water sports',
+                                                    'Raquet sports',
+                                                    'Boxing',
+                                                    'Other',
+                                                  ];
+                                                });
+                                              } else if (_selectedCategory ==
+                                                  'Books') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  brands.clear();
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
+                                                setState(() {
+                                                  _subcategories = [
+                                                    'Childrens books',
+                                                    'Fiction books',
+                                                    'Comics',
+                                                    'Sports',
+                                                    'Science',
+                                                    'Diet, Health & Fitness',
+                                                    'Business & Finance',
+                                                    'Biogpraphy & Autobiography',
+                                                    'Crime & Mystery',
+                                                    'History',
+                                                    'Cook Books & Food',
+                                                    'Education',
+                                                    'Foreign Language Study',
+                                                    'Travel',
+                                                    'Magazine',
+                                                    'Other',
                                                   ];
                                                 });
                                               } else if (_selectedCategory ==
                                                   'Motors') {
                                                 setState(() {
                                                   _subcategories = [
-                                                    'Cars',
-                                                    'Motorcycles & Scooters'
+                                                    'Used Cars',
+                                                    'Motorcycles & Scooters',
+                                                    'Heavy vehicles',
+                                                    'Boats',
+                                                    'Number plates',
+                                                    'Auto accessories',
+                                                    'Car Technology'
                                                   ];
                                                 });
                                               } else if (_selectedCategory ==
                                                   'Property') {
                                                 setState(() {
                                                   _subcategories = [
-                                                    'Property for Sale',
-                                                    'Property for Rent',
+                                                    'For Sale - Houses & Apartment',
+                                                    'For Rent - Houses & Apartment',
+                                                    'For Rent - Shops & Offices',
+                                                    'Guest Houses',
                                                   ];
                                                 });
                                               } else {
@@ -1010,21 +1284,11 @@ class _AddItemState extends State<AddItem> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(
-                                  height: 2.0,
-                                ),
                                 _subcategories == null
                                     ? Container()
                                     : Container(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
                                         ),
                                         child: ListTile(
                                           title: Text(
@@ -1035,11 +1299,12 @@ class _AddItemState extends State<AddItem> {
                                             ),
                                           ),
                                           trailing: Container(
-                                            width: 220,
+                                            width: 230,
                                             padding: EdgeInsets.only(),
                                             child: Center(
                                               child: Align(
-                                                alignment: Alignment.center,
+                                                alignment:
+                                                    Alignment.centerRight,
                                                 child: DropdownButton(
                                                   hint: Text(
                                                     'Choose a sub category',
@@ -1061,8 +1326,6 @@ class _AddItemState extends State<AddItem> {
                                                           'Shoes & Boots',
                                                           'Activewear & Sportswear',
                                                           'Jewelry',
-                                                          'Make up',
-                                                          'Skincare products',
                                                           'Dresses',
                                                           'Tops',
                                                           'Coats & Jackets',
@@ -1116,8 +1379,6 @@ class _AddItemState extends State<AddItem> {
                                                           'Shoes & Boots',
                                                           'Activewear & Sportswear',
                                                           'Jewelry',
-                                                          'Skincare products',
-                                                          'Makeup',
                                                           'Dresses',
                                                           'Tops',
                                                           'Coats & Jackets',
@@ -1263,6 +1524,20 @@ class _AddItemState extends State<AddItem> {
                                       ),
                                 SizedBox(
                                   height: 5,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 10, bottom: 10, top: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Product Detail',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
                                 ),
                                 Container(
                                   decoration: BoxDecoration(
@@ -1444,110 +1719,8 @@ class _AddItemState extends State<AddItem> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 10.0,
+                                  height: 5.0,
                                 ),
-                                brands.isEmpty
-                                    ? Container(
-                                        height: 80,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Center(
-                                            child: ListTile(
-                                                title: Text(
-                                                  'Brand',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                                trailing: Container(
-                                                    width: 200,
-                                                    padding: EdgeInsets.only(),
-                                                    child: Center(
-                                                      child: TextField(
-                                                        cursorColor:
-                                                            Color(0xFF979797),
-                                                        controller:
-                                                            businessbrandcontroller,
-                                                        keyboardType:
-                                                            TextInputType.text,
-                                                        textCapitalization:
-                                                            TextCapitalization
-                                                                .words,
-                                                        decoration:
-                                                            InputDecoration(
-                                                                labelText:
-                                                                    "Brand Name",
-                                                                alignLabelWithHint:
-                                                                    true,
-                                                                labelStyle:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize: 16,
-                                                                ),
-                                                                focusColor:
-                                                                    Colors
-                                                                        .black,
-                                                                enabledBorder:
-                                                                    OutlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300,
-                                                                )),
-                                                                border:
-                                                                    OutlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300,
-                                                                )),
-                                                                focusedErrorBorder:
-                                                                    OutlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300,
-                                                                )),
-                                                                disabledBorder:
-                                                                    OutlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300,
-                                                                )),
-                                                                errorBorder:
-                                                                    OutlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300,
-                                                                )),
-                                                                focusedBorder:
-                                                                    OutlineInputBorder(
-                                                                        borderSide:
-                                                                            BorderSide(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300,
-                                                                ))),
-                                                      ),
-                                                    )))))
-                                    : Container(),
                                 brands.isNotEmpty
                                     ? Container(
                                         height: 80,
@@ -1828,7 +2001,60 @@ class _AddItemState extends State<AddItem> {
                                                     )))))
                                     : Container(),
                                 SizedBox(
-                                  height: 10.0,
+                                  height: 5.0,
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 10, bottom: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Item Price',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  height: 30,
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: <Widget>[
+                                     InkWell(
+
+                                  child: Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: Container(
+                                              width: 80,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.amberAccent,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0)),
+                                              child: Center(
+                                                child: Text('Sale'),
+                                              ))),
+                                       onTap: (){
+
+                                       },
+                                     ),
+                  InkWell(
+                    child: Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: Container(
+                                              width: 80,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.amberAccent,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20.0)),
+                                              child: Center(
+                                                child: Text('Free'),
+                                              ))),),
+                                    ],
+                                  ),
                                 ),
                                 Container(
                                     height: 130,
@@ -2304,7 +2530,7 @@ class _AddItemState extends State<AddItem> {
                         'country': country,
                         'condition': _selectedCondition,
                         'brand': businessbrandcontroller.text == null
-                            ? ''
+                            ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
@@ -2342,7 +2568,7 @@ class _AddItemState extends State<AddItem> {
                         'condition': _selectedCondition,
                         'userid': userid,
                         'brand': businessbrandcontroller.text == null
-                            ? ''
+                            ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
@@ -2383,7 +2609,7 @@ class _AddItemState extends State<AddItem> {
                         'city': city,
                         'condition': _selectedCondition,
                         'brand': businessbrandcontroller.text == null
-                            ? ''
+                            ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
@@ -2432,7 +2658,7 @@ class _AddItemState extends State<AddItem> {
                         'userid': userid,
                         'condition': _selectedCondition,
                         'brand': businessbrandcontroller.text == null
-                            ? ''
+                            ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
@@ -2483,7 +2709,7 @@ class _AddItemState extends State<AddItem> {
                         'city': city,
                         'country': country,
                         'brand': businessbrandcontroller.text == null
-                            ? ''
+                            ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''
@@ -2540,7 +2766,7 @@ class _AddItemState extends State<AddItem> {
                         'country': country,
                         'username': firstname,
                         'brand': businessbrandcontroller.text == null
-                            ? ''
+                            ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null
                             ? ''

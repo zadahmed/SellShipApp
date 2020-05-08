@@ -101,7 +101,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                             height: 100,
                                             width: 150,
                                             color: Colors.white,
-                                            child: Stack(
+                                            child: Column(
                                               children: <Widget>[
                                                 Padding(
                                                   padding: EdgeInsets.only(

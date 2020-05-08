@@ -176,9 +176,16 @@ class _LoginPageState extends State<LoginPage>
       firebasetoken = token;
     });
     print(token + "\n Token was recieved from firebase");
+    var url =
+        'https://sellship.co/api/checktokenfcm/' + userid + '/' + firebasetoken;
+    print(url);
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.statusCode);
+    }
   }
-
-
 
   @override
   void initState() {
@@ -413,8 +420,7 @@ class _LoginPageState extends State<LoginPage>
                           Padding(
                             padding: EdgeInsets.only(left: 15.0, right: 15.0),
                             child: InkWell(
-                              onTap: () {
-                              },
+                              onTap: () {},
                               child: Text(
                                 "Or",
                                 style: TextStyle(
