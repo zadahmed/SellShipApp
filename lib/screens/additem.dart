@@ -2022,37 +2022,35 @@ class _AddItemState extends State<AddItem> {
                                   child: ListView(
                                     scrollDirection: Axis.horizontal,
                                     children: <Widget>[
-                                     InkWell(
-
-                                  child: Padding(
-                                          padding: EdgeInsets.only(left: 10),
-                                          child: Container(
-                                              width: 80,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.amberAccent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0)),
-                                              child: Center(
-                                                child: Text('Sale'),
-                                              ))),
-                                       onTap: (){
-
-                                       },
-                                     ),
-                  InkWell(
-                    child: Padding(
-                                          padding: EdgeInsets.only(left: 10),
-                                          child: Container(
-                                              width: 80,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.amberAccent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0)),
-                                              child: Center(
-                                                child: Text('Free'),
-                                              ))),),
+                                      InkWell(
+                                        child: Padding(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: Container(
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.amberAccent,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.0)),
+                                                child: Center(
+                                                  child: Text('Sale'),
+                                                ))),
+                                        onTap: () {},
+                                      ),
+                                      InkWell(
+                                        child: Padding(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: Container(
+                                                width: 80,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.amberAccent,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.0)),
+                                                child: Center(
+                                                  child: Text('Free'),
+                                                ))),
+                                      ),
                                     ],
                                   ),
                                 ),
