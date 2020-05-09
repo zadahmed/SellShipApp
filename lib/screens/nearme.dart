@@ -46,6 +46,8 @@ class _NearMeState extends State<NearMe> {
   @override
   void dispose() {
     _scrollController.dispose();
+    minpricecontroller.dispose();
+    maxpricecontroller.dispose();
     super.dispose();
   }
 
@@ -107,10 +109,7 @@ class _NearMeState extends State<NearMe> {
           '/' +
           limit.toString();
 
-      final response = await http.post(url, body: {
-        'latitude': position.latitude.toString(),
-        'longitude': position.longitude.toString()
-      });
+      final response = await http.get(url);
 
       var jsonbody = json.decode(response.body);
 
@@ -146,11 +145,7 @@ class _NearMeState extends State<NearMe> {
           '/' +
           limit.toString();
 
-      final response = await http.post(url, body: {
-        'latitude': position.latitude.toString(),
-        'longitude': position.longitude.toString()
-      });
-
+      final response = await http.get(url);
       var jsonbody = json.decode(response.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
@@ -182,11 +177,7 @@ class _NearMeState extends State<NearMe> {
           skip.toString() +
           '/' +
           limit.toString();
-
-      final response = await http.post(url, body: {
-        'latitude': position.latitude.toString(),
-        'longitude': position.longitude.toString()
-      });
+      final response = await http.get(url);
 
       var jsonbody = json.decode(response.body);
 
@@ -220,10 +211,7 @@ class _NearMeState extends State<NearMe> {
           '/' +
           limit.toString();
 
-      final response = await http.post(url, body: {
-        'latitude': position.latitude.toString(),
-        'longitude': position.longitude.toString()
-      });
+      final response = await http.get(url);
 
       var jsonbody = json.decode(response.body);
 
@@ -484,10 +472,7 @@ class _NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
 
-    final response = await http.post(url, body: {
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString()
-    });
+    final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
 
@@ -518,10 +503,7 @@ class _NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
 
-    final response = await http.post(url, body: {
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString()
-    });
+    final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
 
@@ -552,10 +534,7 @@ class _NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
 
-    final response = await http.post(url, body: {
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString()
-    });
+    final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
 
@@ -590,10 +569,7 @@ class _NearMeState extends State<NearMe> {
         '/' +
         limit.toString();
 
-    final response = await http.post(url, body: {
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString()
-    });
+    final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
 
@@ -732,7 +708,7 @@ class _NearMeState extends State<NearMe> {
     var cit = place.administrativeArea;
     var countryy = place.country;
     await storage.write(key: 'city', value: cit);
-    await storage.write(key: 'country', value: countryy);
+    await storage.write(key: 'locationcountry', value: countryy);
 
     if (country.toLowerCase() == 'united arab emirates') {
       setState(() {
@@ -746,29 +722,20 @@ class _NearMeState extends State<NearMe> {
     fetchItems(skip, limit);
     setState(() {
       city = cit;
-      country = countryy;
     });
   }
 
   String city;
 
   void readstorage() async {
-    var latitude = await storage.read(key: 'latitude');
-    var longitude = await storage.read(key: 'longitude');
-    var cit = await storage.read(key: 'city');
     var countr = await storage.read(key: 'country');
-    if (latitude == null || longitude == null) {
-      _getLocation();
-    } else {
-      fetchItems(skip, limit);
-      loadbrands();
+    setState(() {
+      country = countr;
+    });
 
-      setState(() {
-        position = LatLng(double.parse(latitude), double.parse(longitude));
-        city = cit;
-        country = countr;
-      });
-    }
+    _getLocation();
+
+    loadbrands();
   }
 
   loadbrands() async {
@@ -1431,16 +1398,16 @@ class _NearMeState extends State<NearMe> {
                                                   ))
                                             ],
                                           ),
-                                          ExpansionTile(
-                                            title: Text(
-                                              'Delivery',
-                                              style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
+//                                          ExpansionTile(
+//                                            title: Text(
+//                                              'Delivery',
+//                                              style: TextStyle(
+//                                                  fontFamily: 'Montserrat',
+//                                                  fontSize: 16,
+//                                                  fontWeight: FontWeight.w400,
+//                                                  color: Colors.black),
+//                                            ),
+//                                          ),
                                         ],
                                       ),
                                     ),
@@ -1470,15 +1437,18 @@ class _NearMeState extends State<NearMe> {
                       height: 5,
                     ),
                     itemsgrid.isNotEmpty
-                        ? Expanded(
+                        ? Flexible(
                             child: MediaQuery.removePadding(
                                 context: context,
                                 removeTop: true,
-                                child: StaggeredGridView.countBuilder(
+                                child: GridView.builder(
+                                  shrinkWrap: true,
+                                  cacheExtent: 100,
                                   controller: _scrollController,
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 4,
-                                  crossAxisSpacing: 4,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 0.80),
                                   itemCount: itemsgrid.length,
                                   itemBuilder: (context, index) {
                                     if (index != 0 && index % 8 == 0) {
@@ -1605,32 +1575,50 @@ class _NearMeState extends State<NearMe> {
                                                           ),
                                                         ),
                                                         SizedBox(height: 5.0),
-                                                        Container(
-                                                          child: Text(
-                                                            itemsgrid[index]
-                                                                    .price
-                                                                    .toString() +
-                                                                ' ' +
-                                                                currency,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                            ),
-                                                          ),
-                                                        ),
+                                                        currency != null
+                                                            ? Container(
+                                                                child: Text(
+                                                                  itemsgrid[index]
+                                                                          .price
+                                                                          .toString() +
+                                                                      ' ' +
+                                                                      currency,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : Container(
+                                                                child: Text(
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                  ),
+                                                                ),
+                                                              )
                                                       ],
                                                     ),
                                                   )
                                                 ],
                                               ),
                                             )));
-                                  },
-                                  staggeredTileBuilder: (int index) {
-                                    return StaggeredTile.extent(1, 240.0);
                                   },
                                 )))
                         : Expanded(

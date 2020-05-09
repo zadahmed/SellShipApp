@@ -200,7 +200,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => StarterScreen()),
+                    MaterialPageRoute(builder: (context) => StarterPage()),
                   );
                 },
                 child: Center(

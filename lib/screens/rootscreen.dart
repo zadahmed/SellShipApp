@@ -19,66 +19,17 @@ class RootScreen extends StatefulWidget {
 }
 
 class _RootScreenState extends State<RootScreen> {
-// Create storage
   final storage = new FlutterSecureStorage();
 
   int _currentPage = 0;
   final List<Widget> _pages = [
     HomeScreen(),
-    Messages(),
     AddItem(),
-    FavouritesScreen(),
     LoginPage(),
   ];
 
-  var latitude;
-  var longitude;
-  static LatLng position;
-
-  _getLocation() async {
-    Location _location = new Location();
-    var location;
-
-    try {
-      location = await _location.getLocation();
-      await storage.write(key: 'latitude', value: location.latitude.toString());
-      await storage.write(
-          key: 'longitude', value: location.longitude.toString());
-      setState(() {
-        position =
-            LatLng(location.latitude.toDouble(), location.longitude.toDouble());
-
-        getcity();
-      });
-    } on Exception catch (e) {
-      print(e);
-      location = null;
-    }
-  }
-
-  final Geolocator geolocator = Geolocator();
-  static String city;
-
-  void getcity() async {
-    List<Placemark> p = await geolocator.placemarkFromCoordinates(
-        position.latitude, position.longitude);
-
-    Placemark place = p[0];
-    var cit = place.administrativeArea;
-    var country = place.country;
-    await storage.write(key: 'city', value: cit);
-    await storage.write(key: 'country', value: country);
-    setState(() {
-      city = cit;
-      print(city);
-      //secure storage save it
-    });
-  }
-
   @override
   void initState() {
-    _getLocation();
-
     super.initState();
   }
 
@@ -107,21 +58,9 @@ class _RootScreenState extends State<RootScreen> {
                   title: Text('')),
               BottomNavigationBarItem(
                   icon: Icon(
-                    Feather.message_square,
-                    size: 25,
-                  ),
-                  title: Text('')),
-              BottomNavigationBarItem(
-                  icon: Icon(
                     FontAwesome.plus_square,
                     color: Colors.deepOrange,
                     size: 35,
-                  ),
-                  title: Text('')),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Feather.heart,
-                    size: 25,
                   ),
                   title: Text('')),
               BottomNavigationBarItem(

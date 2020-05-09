@@ -2003,57 +2003,6 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 5.0,
                                 ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 10, bottom: 10),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Item Price',
-                                      style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 30,
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: <Widget>[
-                                      InkWell(
-                                        child: Padding(
-                                            padding: EdgeInsets.only(left: 10),
-                                            child: Container(
-                                                width: 80,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.amberAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20.0)),
-                                                child: Center(
-                                                  child: Text('Sale'),
-                                                ))),
-                                        onTap: () {},
-                                      ),
-                                      InkWell(
-                                        child: Padding(
-                                            padding: EdgeInsets.only(left: 10),
-                                            child: Container(
-                                                width: 80,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.amberAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20.0)),
-                                                child: Center(
-                                                  child: Text('Free'),
-                                                ))),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                                 Container(
                                     height: 130,
                                     decoration: BoxDecoration(

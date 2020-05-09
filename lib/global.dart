@@ -270,10 +270,20 @@ List<Categories> categories = [
     icon: FontAwesomeIcons.building,
     image: 'assets/home.jpg',
     subCat: [
-      SubCategories(id: 0, title: "For Sale - Houses & Apartment"),
-      SubCategories(id: 1, title: "For Rent - Houses & Apartment"),
-      SubCategories(id: 2, title: "For Rent - Shops & Offices"),
-      SubCategories(id: 3, title: "Guest Houses"),
+      SubCategories(
+          id: 0,
+          title: "For Sale - Houses & Apartment",
+          image: 'assets/property/forsalehouse.jpeg'),
+      SubCategories(
+          id: 1,
+          title: "For Rent - Houses & Apartment",
+          image: 'assets/property/forrenthouse.jpeg'),
+      SubCategories(
+          id: 2,
+          title: "For Rent - Shops & Offices",
+          image: 'assets/property/building.jpeg'),
+      SubCategories(
+          id: 3, title: "Guest Houses", image: 'assets/property/forrent1.jpeg'),
     ],
   ),
   Categories(
@@ -282,7 +292,7 @@ List<Categories> categories = [
     icon: Icons.lightbulb_outline,
     image: 'assets/tv.jpeg',
     subCat: [
-      SubCategories(id: 0, title: "Other"),
+      SubCategories(id: 0, title: "Other", image: 'assets/property/other.jpeg'),
     ],
   ),
 ];

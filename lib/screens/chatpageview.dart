@@ -20,7 +20,9 @@ class ChatPageView extends StatefulWidget {
       this.recipentname,
       this.messageid,
       this.senderid,
-      this.recipentid,@required this.fcmToken,@required this.senderName})
+      this.recipentid,
+      @required this.fcmToken,
+      @required this.senderName})
       : super(key: key);
 
   @override
@@ -192,21 +194,11 @@ class _ChatPageViewState extends State<ChatPageView> {
             children: <Widget>[
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.start,
-                // mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   Flexible(
                     fit: FlexFit.tight,
-                    // height: 500,
                     child: Container(
                       width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-//                        image: DecorationImage(
-//                            image: AssetImage(
-//                                "assets/images/chat-background-1.jpg"),
-//                            fit: BoxFit.cover,
-//                            colorFilter: ColorFilter.linearToSrgbGamma()),
-                          ),
                       child: StreamBuilder(
                           stream: getMessages(),
                           builder: (context, snapshot) {
@@ -251,10 +243,9 @@ class _ChatPageViewState extends State<ChatPageView> {
                             icon: Icon(Icons.send),
                             onPressed: () async {
                               FirebaseNotifications().postNotification(
-                                body: _text.text,
-                                title: widget.senderName,
-                                to: widget.fcmToken
-                              );
+                                  body: _text.text,
+                                  title: widget.senderName,
+                                  to: widget.fcmToken);
                               var url = 'https://sellship.co/api/sendmessage/' +
                                   senderid +
                                   '/' +

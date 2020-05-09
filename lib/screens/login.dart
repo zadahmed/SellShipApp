@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
+import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/myitems.dart';
+import 'package:SellShip/screens/privacypolicy.dart';
 import 'package:SellShip/screens/search.dart';
+import 'package:SellShip/screens/termscondition.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -176,15 +179,19 @@ class _LoginPageState extends State<LoginPage>
     setState(() {
       firebasetoken = token;
     });
-    print(token + "\n Token was recieved from firebase");
-    var url =
-        'https://sellship.co/api/checktokenfcm/' + userid + '/' + firebasetoken;
-    print(url);
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      print(response.body);
-    } else {
-      print(response.statusCode);
+    if (userid != null) {
+      print(token + "\n Token was recieved from firebase");
+      var url = 'https://sellship.co/api/checktokenfcm/' +
+          userid +
+          '/' +
+          firebasetoken;
+      print(url);
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print(response.body);
+      } else {
+        print(response.statusCode);
+      }
     }
   }
 
@@ -574,16 +581,16 @@ class _LoginPageState extends State<LoginPage>
     return Scaffold(
         key: _scaffoldKey,
         appBar: PreferredSize(
-            preferredSize: Size(double.infinity, 50),
+            preferredSize: Size(double.infinity, 70),
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: 50,
+              height: 70,
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                 ),
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -888,31 +895,61 @@ class _LoginPageState extends State<LoginPage>
                                   },
                                 ))
                             : Container(),
-                        Container(
-                          color: Colors.white,
-                          child: ListTile(
-                            leading: Icon(
-                              Feather.help_circle,
-                              color: Colors.deepOrange,
-                            ),
-                            trailing: Icon(
-                              Feather.arrow_right,
-                              size: 16,
-                              color: Colors.deepOrange,
-                            ),
-                            title: Text(
-                              'Help and Support',
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 16.0,
-                              ),
-                            ),
-                            onTap: () {
-                              // Update the state of the app.
-                              // ...
-                            },
-                          ),
-                        ),
+                        userid != null
+                            ? Container(
+                                color: Colors.white,
+                                child: ListTile(
+                                  leading: Icon(
+                                    Feather.heart,
+                                    color: Colors.deepOrange,
+                                  ),
+                                  trailing: Icon(
+                                    Feather.arrow_right,
+                                    size: 16,
+                                    color: Colors.deepOrange,
+                                  ),
+                                  title: Text(
+                                    'Favourites',
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              FavouritesScreen()),
+                                    );
+                                  },
+                                ))
+                            : Container(),
+//                        Container(
+//                          color: Colors.white,
+//                          child: ListTile(
+//                            leading: Icon(
+//                              Feather.help_circle,
+//                              color: Colors.deepOrange,
+//                            ),
+//                            trailing: Icon(
+//                              Feather.arrow_right,
+//                              size: 16,
+//                              color: Colors.deepOrange,
+//                            ),
+//                            title: Text(
+//                              'Help and Support',
+//                              style: TextStyle(
+//                                fontFamily: 'Montserrat',
+//                                fontSize: 16.0,
+//                              ),
+//                            ),
+//                            onTap: () {
+//                              // Update the state of the app.
+//                              // ...
+//                            },
+//                          ),
+//                        ),
                         Container(
                           color: Colors.white,
                           child: ListTile(
@@ -933,8 +970,11 @@ class _LoginPageState extends State<LoginPage>
                               ),
                             ),
                             onTap: () {
-                              // Update the state of the app.
-                              // ...
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TermsandConditions()),
+                              );
                             },
                           ),
                         ),
@@ -958,8 +998,11 @@ class _LoginPageState extends State<LoginPage>
                               ),
                             ),
                             onTap: () {
-                              // Update the state of the app.
-                              // ...
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PrivacyPolicy()),
+                              );
                             },
                           ),
                         ),
