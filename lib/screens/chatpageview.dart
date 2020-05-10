@@ -242,10 +242,6 @@ class _ChatPageViewState extends State<ChatPageView> {
                           suffixIcon: IconButton(
                             icon: Icon(Icons.send),
                             onPressed: () async {
-                              FirebaseNotifications().postNotification(
-                                  body: _text.text,
-                                  title: widget.senderName,
-                                  to: widget.fcmToken);
                               var url = 'https://sellship.co/api/sendmessage/' +
                                   senderid +
                                   '/' +

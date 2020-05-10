@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/categorydetail.dart';
@@ -443,6 +444,22 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       location = await _location.getLocation();
       await storage.write(key: 'latitude', value: location.latitude.toString());
+      var userid = await storage.read(key: 'userid');
+
+      var token = await FirebaseNotifications().getNotifications();
+      if (userid != null) {
+        print(token + "\n Token was recieved from firebase");
+        var url =
+            'https://sellship.co/api/checktokenfcm/' + userid + '/' + token;
+        print(url);
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          print(response.body);
+        } else {
+          print(response.statusCode);
+        }
+      }
+
       await storage.write(
           key: 'longitude', value: location.longitude.toString());
       setState(() {
@@ -866,7 +883,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ? Container(
                                         width:
                                             MediaQuery.of(context).size.width,
-                                        height: 210,
+                                        height: 230,
                                         child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             itemCount: 15,
@@ -1063,10 +1080,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       bottom: 10),
                                                   child: Container(
                                                       height: 40,
-                                                      width: 120,
+                                                      width: 180,
                                                       color: Colors.white,
                                                       child: Center(
-                                                        child: Text('Buy Now',
+                                                        child: Text(
+                                                            '#PRELOVEDFASHION',
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     'Montserrat',

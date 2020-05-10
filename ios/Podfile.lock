@@ -73,8 +73,6 @@ PODS:
     - FBSDKCoreKit (~> 5.5)
     - FBSDKLoginKit (~> 5.5)
     - Flutter
-  - flutter_local_notifications (0.0.1):
-    - Flutter
   - flutter_native_admob (0.0.1):
     - Flutter
     - Google-Mobile-Ads-SDK
@@ -168,10 +166,6 @@ PODS:
     - Flutter
   - vibration (1.2.4):
     - Flutter
-  - video_player (0.0.1):
-    - Flutter
-  - video_player_web (0.0.1):
-    - Flutter
   - webview_flutter (0.0.1):
     - Flutter
 
@@ -180,7 +174,6 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_facebook_login (from `.symlinks/plugins/flutter_facebook_login/ios`)
-  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_admob (from `.symlinks/plugins/flutter_native_admob/ios`)
   - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
@@ -201,8 +194,6 @@ DEPENDENCIES:
   - url_launcher_macos (from `.symlinks/plugins/url_launcher_macos/ios`)
   - url_launcher_web (from `.symlinks/plugins/url_launcher_web/ios`)
   - vibration (from `.symlinks/plugins/vibration/ios`)
-  - video_player (from `.symlinks/plugins/video_player/ios`)
-  - video_player_web (from `.symlinks/plugins/video_player_web/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
@@ -240,8 +231,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_facebook_login:
     :path: ".symlinks/plugins/flutter_facebook_login/ios"
-  flutter_local_notifications:
-    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_native_admob:
     :path: ".symlinks/plugins/flutter_native_admob/ios"
   flutter_plugin_android_lifecycle:
@@ -282,10 +271,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_web/ios"
   vibration:
     :path: ".symlinks/plugins/vibration/ios"
-  video_player:
-    :path: ".symlinks/plugins/video_player/ios"
-  video_player_web:
-    :path: ".symlinks/plugins/video_player_web/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
 
@@ -305,7 +290,6 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 58cb17277641a0084d98d4951ba1f1fb0588c8c6
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_facebook_login: cfb5659f686b1c575ef205c6b6fd20db9679d3c4
-  flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_native_admob: 384f39f8b8dc0a96624c7cfa4cd255205e7c3da5
   flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
@@ -338,10 +322,8 @@ SPEC CHECKSUMS:
   url_launcher_macos: fd7894421cd39320dce5f292fc99ea9270b2a313
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
   vibration: f0c5bb486671fb81e973bfb451d89f8efd07c9c9
-  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
-  video_player_web: da8cadb8274ed4f8dbee8d7171b420dedd437ce7
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: 76e797caafc5b7c3e0b11efbdffbf475712d1a93
+PODFILE CHECKSUM: 6af737d3b019fb374e6fc674509b596003d58dcf
 
 COCOAPODS: 1.8.4

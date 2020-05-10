@@ -3,10 +3,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:SellShip/screens/onboarding.dart';
 import 'package:SellShip/screens/rootscreen.dart';

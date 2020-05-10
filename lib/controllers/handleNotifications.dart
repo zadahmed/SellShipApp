@@ -17,8 +17,7 @@ class FirebaseNotifications {
       },
     );
     await _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
     _firebaseMessaging.onIosSettingsRegistered
         .listen((IosNotificationSettings settings) {
       print("Settings registered: $settings");
@@ -44,11 +43,11 @@ class FirebaseNotifications {
       ),
     );
     print(jsonEncode(
-        <String, dynamic>{
-          "data": {"title": title, "Body": body},
-          "to": to
-        },
-      ));
+      <String, dynamic>{
+        "data": {"title": title, "Body": body},
+        "to": to
+      },
+    ));
     print(res.body);
   }
 }

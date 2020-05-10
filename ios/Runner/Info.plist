@@ -16,11 +16,6 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
-	<key>NSAppTransportSecurity</key>
-    <dict>
-      <key>NSAllowsArbitraryLoads</key>
-      <true/>
-    </dict>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -38,10 +33,8 @@
 	<string>212796279954587</string>
 	<key>FacebookDisplayName</key>
 	<string>SellShip</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<false/>
-	<key>FirebaseScreenReportingEnabled</key>
-	<true/>
+	 <key>FirebaseAppDelegateProxyEnabled</key>
+     <false/>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-9959700192389744~6783422976</string>
 	<key>LSApplicationQueriesSchemes</key>
@@ -54,6 +47,11 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Capture a photo of the item</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -69,7 +67,6 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

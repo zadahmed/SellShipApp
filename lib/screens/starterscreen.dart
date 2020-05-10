@@ -1,9 +1,7 @@
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_animations/simple_animations.dart';
 
 class StarterPage extends StatefulWidget {
   @override

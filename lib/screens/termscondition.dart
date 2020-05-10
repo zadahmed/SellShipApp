@@ -224,30 +224,29 @@ Any rights not expressly granted herein are reserved.
 """;
 
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: new Scaffold(
-            appBar: new AppBar(
-              backgroundColor: Colors.deepOrange,
-              title: const Text(
-                'Terms and Conditions',
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
-                ),
-              ),
+    return new Scaffold(
+        appBar: new AppBar(
+          backgroundColor: Colors.deepOrange,
+          title: const Text(
+            'Terms and Conditions',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
             ),
-            backgroundColor: Colors.white,
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(pdfText),
-              ),
-            )));
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(pdfText),
+          ),
+        ));
   }
 }
