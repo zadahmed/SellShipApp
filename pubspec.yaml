@@ -52,7 +52,7 @@ dependencies:
   webview_flutter: 0.3.21
   carousel_slider: 2.0.0
   alphabet_list_scroll_view: 1.0.6
-
+  overlay_support: 1.0.3
 
 
 

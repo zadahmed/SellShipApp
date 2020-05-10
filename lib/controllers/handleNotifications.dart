@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class FirebaseNotifications {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -8,6 +10,11 @@ class FirebaseNotifications {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
+        var title = message['notification']['title'];
+        var body = message['notification']['body'];
+        showSimpleNotification(Text(title.toString()),
+            background: Colors.deepOrange, subtitle: Text(body));
+
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");

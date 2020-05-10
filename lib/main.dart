@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:SellShip/screens/onboarding.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -29,11 +30,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     precacheImage(AssetImage('assets/logo.png'), context);
-    return new MaterialApp(
+    return new OverlaySupport(
+        child: MaterialApp(
       debugShowCheckedModeBanner: false,
       color: Colors.blue,
       home: new Splash(),
-    );
+    ));
   }
 }
 
