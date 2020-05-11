@@ -130,146 +130,173 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                     SizedBox(
                       height: 15,
                     ),
-                    item != null
-                        ? Expanded(
-                            child: StaggeredGridView.countBuilder(
-                            controller: _scrollController,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 4,
-                            crossAxisSpacing: 4,
-                            itemCount: item.length,
-                            itemBuilder: (context, index) {
-                              if (index != 0 && index % 4 == 0) {
-                                return Platform.isIOS == true
-                                    ? Container(
-                                        height: 330,
-                                        padding: EdgeInsets.all(10),
-                                        margin: EdgeInsets.only(bottom: 20.0),
-                                        child: NativeAdmob(
-                                          adUnitID: _iosadUnitID,
-                                          controller: _controller,
-                                        ),
-                                      )
-                                    : Container(
-                                        height: 330,
-                                        padding: EdgeInsets.all(10),
-                                        margin: EdgeInsets.only(bottom: 20.0),
-                                        child: NativeAdmob(
-                                          adUnitID: _androidadUnitID,
-                                          controller: _controller,
-                                        ),
-                                      );
-                              }
-                              return Padding(
-                                  padding: EdgeInsets.all(7),
-                                  child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Details(
-                                                  itemid: item[index].itemid)),
-                                        );
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey.shade300,
-                                                offset:
-                                                    Offset(0.0, 1.0), //(x,y)
-                                                blurRadius: 6.0,
-                                              ),
-                                            ],
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: new Column(
-                                          children: <Widget>[
-                                            new Stack(
-                                              children: <Widget>[
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: item[index].image,
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        SpinKitChasingDots(
-                                                            color: Colors
-                                                                .deepOrange),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Icon(Icons.error),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            new Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: new Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                    item[index].name,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                    ),
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                  SizedBox(height: 3.0),
-                                                  Container(
-                                                    child: Text(
-                                                      item[index].category,
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w300,
-                                                      ),
-                                                      textAlign: TextAlign.left,
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 3.0),
-                                                  Container(
-                                                    child: Text(
-                                                      item[index]
-                                                              .price
-                                                              .toString() +
-                                                          ' ' +
-                                                          currency,
-                                                      style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                      ),
-                                                      textAlign: TextAlign.left,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 5,
+                    item.isNotEmpty
+                        ? Flexible(
+                            child: MediaQuery.removePadding(
+                                context: context,
+                                removeTop: true,
+                                child: GridView.builder(
+                                  cacheExtent:
+                                      double.parse(item.length.toString()),
+                                  shrinkWrap: true,
+                                  controller: _scrollController,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 0.65),
+                                  itemCount: item.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                        padding: EdgeInsets.all(4),
+                                        child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Details(
+                                                            itemid: item[index]
+                                                                .itemid)),
+                                              );
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade300,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 6.0,
                                                   ),
                                                 ],
+                                                color: Colors.white,
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      )));
-                            },
-                            staggeredTileBuilder: (int index) {
-                              return StaggeredTile.fit(1);
-                            },
-                          ))
+                                              child: new Column(
+                                                children: <Widget>[
+                                                  new Stack(
+                                                    children: <Widget>[
+                                                      Container(
+                                                        height: 150,
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl:
+                                                              item[index].image,
+                                                          fit: BoxFit.cover,
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              SpinKitChasingDots(
+                                                                  color: Colors
+                                                                      .deepOrange),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              Icon(Icons.error),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  new Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5.0),
+                                                        child: new Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              height: 20,
+                                                              child: Text(
+                                                                item[index]
+                                                                    .name,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                ),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 5.0),
+                                                            Container(
+                                                              child: Text(
+                                                                item[index]
+                                                                    .category,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 5.0),
+                                                            currency != null
+                                                                ? Container(
+                                                                    child: Text(
+                                                                      item[index]
+                                                                              .price
+                                                                              .toString() +
+                                                                          ' ' +
+                                                                          currency,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Container(
+                                                                    child: Text(
+                                                                      item[index]
+                                                                          .price
+                                                                          .toString(),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )),
+                                                ],
+                                              ),
+                                            )));
+                                  },
+                                )))
                         : Expanded(
                             child: Column(
                             children: <Widget>[

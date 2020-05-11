@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:SellShip/controllers/handleNotifications.dart';
+import 'package:SellShip/models/Items.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -13,11 +14,13 @@ class ChatPageView extends StatefulWidget {
   final String messageid;
   final String senderid;
   final String recipentid;
+  final String itemid;
   final fcmToken;
   final senderName;
   const ChatPageView(
       {Key key,
       this.recipentname,
+      this.itemid,
       this.messageid,
       this.senderid,
       this.recipentid,
@@ -39,12 +42,13 @@ class _ChatPageViewState extends State<ChatPageView> {
   var senderid;
   var recipentid;
   var fcmToken;
-
+  var itemid;
   int skip;
   int limit;
   @override
   void initState() {
     super.initState();
+
     setState(() {
       skip = 10;
       recipentname = widget.recipentname;
@@ -52,8 +56,9 @@ class _ChatPageViewState extends State<ChatPageView> {
       senderid = widget.senderid;
       recipentid = widget.recipentid;
       fcmToken = widget.fcmToken;
+      itemid = widget.itemid;
     });
-
+    getItem();
     _scrollController
       ..addListener(() {
         if (_scrollController.position.atEdge) {
@@ -64,6 +69,27 @@ class _ChatPageViewState extends State<ChatPageView> {
           }
         }
       });
+  }
+
+  Item itemselling;
+  getItem() async {
+    print(itemid);
+    var url = 'https://sellship.co/api/getitem/' + itemid;
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+      Item item = Item(
+        itemid: jsonbody[0]['_id']['\$oid'],
+        name: jsonbody[0]['name'],
+        image: jsonbody[0]['image'],
+        price: jsonbody[0]['price'],
+        category: jsonbody[0]['category'],
+      );
+      setState(() {
+        itemselling = item;
+      });
+    }
+    print(itemselling.name);
   }
 
   Future<List> getRemoteMessages() async {
@@ -240,8 +266,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                   ),
 
                   Divider(height: 0, color: Colors.black26),
-                  // SizedBox(
-                  //   height: 50,
+
                   Container(
                     color: Colors.white,
                     height: 50,
@@ -309,9 +334,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                       ]),
                                     ),
                                   )));
-                              setState(() {
-                                childList = childList;
-                              });
+
                               var url = 'https://sellship.co/api/sendmessage/' +
                                   senderid +
                                   '/' +

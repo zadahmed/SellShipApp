@@ -47,13 +47,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
               Expanded(
                 child: ListView.builder(
+                  key: Key('builder ${_selectedCat.toString()}'),
                   scrollDirection: Axis.vertical,
                   itemCount: categories.length,
                   itemBuilder: (ctx, i) {
                     return Container(
                         width: MediaQuery.of(context).size.width,
                         child: ExpansionTile(
-                          initiallyExpanded: _selectedCat == i ? true : false,
+                          key: Key(i.toString()),
+                          initiallyExpanded: i == _selectedCat ? true : false,
                           leading: Icon(
                             categories[i].icon,
                             color: Colors.deepOrange,
@@ -66,9 +68,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 fontWeight: FontWeight.w400),
                           ),
                           onExpansionChanged: (changed) {
-                            setState(() {
-                              _selectedCat = i;
-                            });
+                            if (changed == true) {
+                              setState(() {
+                                _selectedCat = i;
+                              });
+                            } else {
+                              setState(() {
+                                _selectedCat = -1;
+                              });
+                            }
                           },
                           children: <Widget>[
                             Container(

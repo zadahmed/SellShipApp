@@ -11,6 +11,9 @@ class ChatMessages implements Comparable<ChatMessages> {
   final bool unread;
   final fcmtokenreciever;
   final senderName;
+  final String profilepicture;
+  final String itemname;
+  final String itemid;
 
   ChatMessages(
       {this.messageid,
@@ -19,8 +22,13 @@ class ChatMessages implements Comparable<ChatMessages> {
       this.recipentid,
       this.lastrecieved,
       this.hiddendate,
+      this.itemid,
       this.recieveddate,
-      this.unread,@required this.fcmtokenreciever,@required this.senderName});
+      this.profilepicture,
+      this.itemname,
+      this.unread,
+      @required this.fcmtokenreciever,
+      @required this.senderName});
 
   int compareTo(ChatMessages other) {
     int order = other.hiddendate.compareTo(hiddendate);

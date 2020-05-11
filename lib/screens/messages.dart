@@ -34,7 +34,7 @@ class MessagesState extends State<Messages> {
         var respons = json.decode(response.body);
         var profilemap = respons;
         var messages = profilemap['messages'];
-        if (messages == null) {
+        if (messages.isEmpty) {
           messagesd = [];
         } else {
           for (int i = 0; i < messages.length; i++) {
@@ -44,6 +44,9 @@ class MessagesState extends State<Messages> {
               final responsemessage = await http.get(messageurl);
 
               var messageinfo = json.decode(responsemessage.body);
+              var imageprofile = messageinfo['profilepicture'];
+              var itemname = messageinfo['itemname'];
+              var itemid = messageinfo['itemid']['\$oid'];
               final f = new DateFormat('hh:mm');
               final t = new DateFormat('yyyy-MM-dd hh:mm');
               if (messageinfo['date'] != null) {
@@ -51,18 +54,21 @@ class MessagesState extends State<Messages> {
                     messageinfo['date']['\$date']);
                 var s = f.format(date);
                 var q = t.format(date);
-                print(messages[i]);
+
                 ChatMessages msg = ChatMessages(
-                    messageid: messages[i]['msgid'],
-                    peoplemessaged: messages[i]['username2'],
-                    senderid: messages[i]['user1'],
+                    messageid: messageinfo['msgid'],
+                    peoplemessaged: messageinfo['user2name'],
+                    senderid: messageinfo['user1'],
                     lastrecieved: messageinfo['lastrecieved'],
                     unread: messageinfo['unread'],
                     recieveddate: s,
                     hiddendate: q,
-                    senderName: messages[i]['username1'],
-                    recipentid: messages[i]['user2'],
-                    fcmtokenreciever: messages[i]['fcmtokenreciever']);
+                    itemname: itemname,
+                    senderName: messageinfo['user1name'],
+                    recipentid: messageinfo['user2'],
+                    profilepicture: imageprofile,
+                    itemid: itemid,
+                    fcmtokenreciever: messageinfo['fcmtokenreciever']);
 
                 messagesd.add(msg);
               }
@@ -72,7 +78,9 @@ class MessagesState extends State<Messages> {
               final responsemessage = await http.get(messageurl);
 
               var messageinfo = json.decode(responsemessage.body);
-              print(messageinfo['date']);
+              var imageprofile = messageinfo['profilepicture'];
+              var itemname = messageinfo['itemname'];
+              var itemid = messageinfo['itemid']['\$oid'];
               final f = new DateFormat('hh:mm');
               final t = new DateFormat('yyyy-MM-dd hh:mm');
               if (messageinfo['date'] != null) {
@@ -80,26 +88,29 @@ class MessagesState extends State<Messages> {
                     messageinfo['date']['\$date']);
                 var s = f.format(date);
                 var q = t.format(date);
-                print(messages[i]);
-                print(messages[i]['fcmtokenreciever']);
 
                 ChatMessages msg = ChatMessages(
-                  senderName: messages[i]['username1'],
-                  messageid: messages[i]['msgid'],
-                  peoplemessaged: messages[i]['username1'],
-                  senderid: messages[i]['user2'],
+                  senderName: messageinfo['user2name'],
+                  messageid: messageinfo['msgid'],
+                  itemname: itemname,
+                  peoplemessaged: messageinfo['user1name'],
+                  senderid: messageinfo['user2'],
                   lastrecieved: messageinfo['lastrecieved'],
                   unread: messageinfo['unread'],
                   recieveddate: s,
                   hiddendate: q,
-                  recipentid: messages[i]['user1'],
-                  fcmtokenreciever: messages[i]['fcmtokenreciever'],
+                  itemid: itemid,
+                  profilepicture: imageprofile,
+                  recipentid: messageinfo['user1'],
+                  fcmtokenreciever: messageinfo['fcmtokenreciever'],
                 );
 
                 messagesd.add(msg);
               }
             }
           }
+
+          print(messagesd.length);
         }
       } else {
         print(response.statusCode);
@@ -167,25 +178,78 @@ class MessagesState extends State<Messages> {
                                                 flex: 10,
                                                 child: ListTile(
                                                   title: Text(
-                                                    snapshot.data[index]
-                                                        .peoplemessaged,
+                                                    snapshot
+                                                        .data[index].itemname,
                                                     style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontFamily: 'Montserrat',
                                                       fontSize: 16,
                                                     ),
                                                   ),
-                                                  subtitle: Text(
-                                                    snapshot.data[index]
-                                                        .lastrecieved,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 11,
+                                                  isThreeLine: true,
+                                                  subtitle: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        snapshot.data[index]
+                                                            .peoplemessaged,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontSize: 13,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      Text(
+                                                        snapshot.data[index]
+                                                            .lastrecieved,
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontSize: 11,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  leading: Container(
+                                                    height: 70,
+                                                    width: 70,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: snapshot
+                                                                  .data[index]
+                                                                  .profilepicture ==
+                                                              null
+                                                          ? Image.asset(
+                                                              'assets/personplaceholder.png',
+                                                              fit: BoxFit.cover,
+                                                            )
+                                                          : Image.network(
+                                                              snapshot
+                                                                  .data[index]
+                                                                  .profilepicture,
+                                                              fit: BoxFit.cover,
+                                                            ),
                                                     ),
                                                   ),
-                                                  leading: Icon(Icons.person),
                                                   trailing: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -255,6 +319,9 @@ class MessagesState extends State<Messages> {
                                                           fcmToken: snapshot
                                                               .data[index]
                                                               .fcmtokenreciever,
+                                                          itemid: snapshot
+                                                              .data[index]
+                                                              .itemid,
                                                         ),
                                                       ),
                                                     );

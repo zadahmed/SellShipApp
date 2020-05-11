@@ -2196,6 +2196,22 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 20.0,
                                 ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 10,
+                                    bottom: 10,
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Item Location',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
                                 Container(
                                   height: 390,
                                   decoration: BoxDecoration(
@@ -2210,16 +2226,6 @@ class _AddItemState extends State<AddItem> {
                                   ),
                                   child: Column(
                                     children: <Widget>[
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'Choose Item\'s Location',
-                                        style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 16,
-                                        ),
-                                      ),
                                       SizedBox(
                                         height: 5.0,
                                       ),
@@ -2431,6 +2437,8 @@ class _AddItemState extends State<AddItem> {
                   } else if (businessnameController.text.isNotEmpty &&
                       _image.path.isNotEmpty &&
                       businesspricecontroller.text.isNotEmpty &&
+                      businessbrandcontroller.text.isNotEmpty &&
+                      _selectedCondition.isNotEmpty &&
                       businessdescriptionController.text.isNotEmpty &&
                       _lastMapPosition != null) {
                     showDialog(

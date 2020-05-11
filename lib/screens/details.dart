@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/chatpageview.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -63,8 +64,10 @@ class _DetailsState extends State<Details> {
 
   List<String> images = [];
   DateTime dateuploaded;
+
   fetchItem() async {
     var country = await storage.read(key: 'country');
+    userid = await storage.read(key: 'userid');
 
     if (country.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
@@ -288,9 +291,14 @@ class _DetailsState extends State<Details> {
                                       },
                                       child: Hero(
                                         tag: images[index],
-                                        child: Image.network(
-                                          images[index],
+                                        child: CachedNetworkImage(
+                                          imageUrl: images[index],
                                           height: 300,
+                                          placeholder: (context, url) =>
+                                              SpinKitChasingDots(
+                                                  color: Colors.deepOrange),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
                                           width:
                                               MediaQuery.of(context).size.width,
                                           fit: BoxFit.fitWidth,
@@ -777,103 +785,37 @@ class _DetailsState extends State<Details> {
               height: 60,
               child: GestureDetector(
                 onTap: () async {
-                  userid = await storage.read(key: 'userid');
                   var senderid = newItem.userid;
-                  print("user id\n" + userid);
                   if (senderid != userid) {
-                    var userurl = 'https://sellship.co/api/username/' + userid;
-                    final responseuser = await http.get(userurl);
-
-                    if (responseuser.statusCode == 200) {
-                      var username1 = jsonDecode(responseuser.body);
-
-                      print('Ok');
-                      print("Username 1 :\n " + username1.toString());
-                      var userurl2 =
-                          'https://sellship.co/api/username/' + senderid;
-                      final responseuser2 = await http.get(userurl2);
-                      if (responseuser2.statusCode == 200) {
-                        print('Ok');
-
-                        var username2 = jsonDecode(responseuser2.body);
-                        print("Username 2 :\n " + username2.toString());
-
-                        print(responseuser2.body);
-                        var checkurl =
-                            'https://sellship.co/api/checkmessageexist/' +
-                                userid +
-                                '/' +
-                                senderid;
-                        final responsecheckurl = await http.get(checkurl);
-                        if (responsecheckurl.statusCode == 200) {
-                          var message = json.decode(responsecheckurl.body);
-                          if (message['message'] != 'Empty') {
-                            print("Message: \n" + message.toString());
-                            Navigator.of(context, rootNavigator: true)
-                                .pop('dialog');
-                            Navigator.pushReplacement(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation1, animation2) =>
-                                        ChatPageView(
-                                  messageid: message['message'],
-                                  recipentname: username2['firstname'] +
-                                      " " +
-                                      username2['lastname'],
-                                  senderid: userid,
-                                  recipentid: senderid,
-                                  fcmToken: username2['fcmtoken'],
-                                  senderName: username1['firstname'],
-                                ),
-                              ),
-                            );
-                          } else {
-                            var itemurl =
-                                'https://sellship.co/api/createroom/' +
-                                    userid +
-                                    '/' +
-                                    username1['firstname'] +
-                                    '/' +
-                                    senderid +
-                                    '/' +
-                                    username2['firstname'];
-
-                            print(userid.toString());
-                            print(username1.toString());
-                            print(senderid.toString());
-                            print(username2.toString());
-                            final itemresponse = await http.get(itemurl);
-                            if (itemresponse.statusCode == 200) {
-                              var messageid = itemresponse.body;
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop('dialog');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatPageView(
-                                    messageid: messageid,
-                                    recipentname: username2['firstname'] +
-                                        " " +
-                                        username2['lastname'],
-                                    senderid: userid,
-                                    recipentid: senderid,
-                                    fcmToken: username2['fcmtoken'],
-                                    senderName: username1['firstname'],
-                                  ),
-                                ),
-                              );
-                            } else {
-                              print(itemresponse.statusCode);
-                            }
-                          }
-                        }
-                      }
-                    }
+                    var itemurl = 'https://sellship.co/api/createroom/' +
+                        userid +
+                        '/' +
+                        senderid +
+                        '/' +
+                        itemid;
+                    final response = await http.get(itemurl);
+                    var messageinfo = json.decode(response.body);
+                    var messageid = (messageinfo['messageid']);
+                    var recieverfcmtoken = (messageinfo['recieverfcmtoken']);
+                    var sendername = (messageinfo['sendername']);
+                    var recipentname = (messageinfo['recievername']);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPageView(
+                          messageid: messageid,
+                          recipentname: recipentname,
+                          senderid: userid,
+                          recipentid: senderid,
+                          fcmToken: recieverfcmtoken,
+                          senderName: sendername,
+                          itemid: itemid,
+                        ),
+                      ),
+                    );
+                  } else {
+                    print('Same User');
                   }
-                  setState(() {
-                    loading = false;
-                  });
                 },
                 child: Padding(
                   padding:
