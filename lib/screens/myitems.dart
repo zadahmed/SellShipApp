@@ -23,10 +23,6 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final storage = new FlutterSecureStorage();
 
-  static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
-
-  static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
-
   ScrollController _scrollController = ScrollController();
 
   var userid;
@@ -574,9 +570,9 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                 item = ites;
                 loading = false;
               });
+            } else {
+              item = [];
             }
-          } else {
-            item = [];
           }
         } else {
           setState(() {

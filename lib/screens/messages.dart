@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:SellShip/models/messages.dart';
 import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/test.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
@@ -139,9 +141,12 @@ class MessagesState extends State<Messages> {
           ),
           centerTitle: true,
           title: Text(
-            'Chats',
+            'CHATS',
             style: TextStyle(
-                fontFamily: 'Montserrat', fontSize: 20, color: Colors.white),
+                fontFamily: 'Montserrat',
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.w800),
           ),
         ),
         body: RefreshIndicator(
@@ -231,24 +236,35 @@ class MessagesState extends State<Messages> {
                                                             BorderRadius
                                                                 .circular(10)),
                                                     child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      child: snapshot
-                                                                  .data[index]
-                                                                  .profilepicture ==
-                                                              null
-                                                          ? Image.asset(
-                                                              'assets/personplaceholder.png',
-                                                              fit: BoxFit.cover,
-                                                            )
-                                                          : Image.network(
-                                                              snapshot
-                                                                  .data[index]
-                                                                  .profilepicture,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                    ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: snapshot
+                                                                    .data[index]
+                                                                    .profilepicture ==
+                                                                null
+                                                            ? Image.asset(
+                                                                'assets/personplaceholder.png',
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )
+                                                            : CachedNetworkImage(
+                                                                imageUrl: snapshot
+                                                                    .data[index]
+                                                                    .profilepicture,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    SpinKitChasingDots(
+                                                                        color: Colors
+                                                                            .deepOrange),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                              )),
                                                   ),
                                                   trailing: Column(
                                                     crossAxisAlignment:

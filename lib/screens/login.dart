@@ -5,6 +5,7 @@ import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/termscondition.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'dart:convert';
@@ -671,9 +673,14 @@ class _LoginPageState extends State<LoginPage>
                                       'assets/personplaceholder.png',
                                       fit: BoxFit.cover,
                                     )
-                                  : Image.network(
-                                      profilepicture,
+                                  : CachedNetworkImage(
+                                      imageUrl: profilepicture,
                                       fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          SpinKitChasingDots(
+                                              color: Colors.deepOrange),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
                                     ),
                             ),
                           ),
