@@ -44,8 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   var skip;
   var limit;
 
-  bool loading;
-
   @override
   void dispose() {
     _scrollController.dispose();
@@ -94,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
       if (nearmeitemsgrid != null) {
         setState(() {
           nearmeitemsgrid = nearmeitemsgrid;
-          loading = false;
         });
       } else {
         setState(() {
@@ -130,7 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     print(itemsgrid);
     setState(() {
-      loading = false;
       itemsgrid = itemsgrid;
     });
 
@@ -163,7 +159,6 @@ class _HomeScreenState extends State<HomeScreen> {
         itemsgrid.add(item);
       }
       setState(() {
-        loading = false;
         itemsgrid = itemsgrid;
       });
 
@@ -197,7 +192,6 @@ class _HomeScreenState extends State<HomeScreen> {
         itemsgrid.add(item);
       }
       setState(() {
-        loading = false;
         itemsgrid = itemsgrid;
       });
 
@@ -231,7 +225,6 @@ class _HomeScreenState extends State<HomeScreen> {
         itemsgrid.add(item);
       }
       setState(() {
-        loading = false;
         itemsgrid = itemsgrid;
       });
 
@@ -378,7 +371,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       skip = 0;
       limit = 10;
-      loading = true;
     });
 
     readstorage();
@@ -484,7 +476,6 @@ class _HomeScreenState extends State<HomeScreen> {
       print(e);
       Location().requestPermission();
       setState(() {
-        loading = false;
         nearmeitemsgrid = [];
       });
     }
@@ -664,29 +655,169 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   )),
             )),
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: loading == false
-              ? LayoutBuilder(builder:
-                  (BuildContext context, BoxConstraints viewportConstraints) {
-                  return SingleChildScrollView(
-                      controller: _scrollController,
-                      child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: viewportConstraints.maxHeight,
-                          ),
-                          child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Row(
+        body: GestureDetector(onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        }, child: LayoutBuilder(builder:
+            (BuildContext context, BoxConstraints viewportConstraints) {
+          return SingleChildScrollView(
+              controller: _scrollController,
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10, top: 10, bottom: 10),
+                              child: Text('Categories',
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.black)),
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    right: 20, top: 10, bottom: 10),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CategoryScreen(
+                                              selectedcategory: 0)),
+                                    );
+                                  },
+                                  child: Text('View All',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.black)),
+                                )),
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 75,
+                          child: MediaQuery.removePadding(
+                            context: context,
+                            removeTop: true,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: categories.length,
+                              itemBuilder: (ctx, i) {
+                                return Row(
                                   children: <Widget>[
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryScreen(
+                                                      selectedcategory: i)),
+                                        );
+                                      },
+                                      child: Container(
+                                          margin: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          width: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  3 -
+                                              20,
+                                          height: 75,
+                                          alignment: Alignment.center,
+                                          child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                height: 30,
+                                                width: 120,
+                                                child: Icon(
+                                                  categories[i].icon,
+                                                  color: Colors.deepOrange,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Text(
+                                                  "${categories[i].title}",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 14,
+                                                      color: Colors.black),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              )
+                                            ],
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        Container(
+                            height: 200,
+                            width: MediaQuery.of(context).size.width,
+                            child: CarouselSlider(
+                              options: CarouselOptions(
+                                carouselController: carouselController,
+                                autoPlay: true,
+                                autoPlayAnimationDuration: Duration(seconds: 1),
+                                aspectRatio: 2.0,
+                                enlargeCenterPage: true,
+                              ),
+                              items: images
+                                  .map((item) => InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryScreen()),
+                                        );
+                                      },
+                                      child: Hero(
+                                          tag: item,
+                                          child: Image.asset(
+                                            item,
+                                            fit: BoxFit.fitWidth,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                          ))))
+                                  .toList(),
+                            )),
+                        nearmeitemsgrid.isNotEmpty
+                            ? Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
                                     Padding(
                                       padding: EdgeInsets.only(
                                           left: 10, top: 10, bottom: 10),
-                                      child: Text('Categories',
+                                      child: Text('Near me',
                                           style: TextStyle(
                                               fontFamily: 'Montserrat',
                                               fontSize: 16,
@@ -702,8 +833,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      CategoryScreen(
-                                                          selectedcategory: 0)),
+                                                      NearMe()),
                                             );
                                           },
                                           child: Text('View All',
@@ -713,349 +843,253 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   fontWeight: FontWeight.w300,
                                                   color: Colors.black)),
                                         )),
-                                  ],
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 75,
-                                  child: MediaQuery.removePadding(
-                                    context: context,
-                                    removeTop: true,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      shrinkWrap: true,
-                                      itemCount: categories.length,
-                                      itemBuilder: (ctx, i) {
-                                        return Row(
-                                          children: <Widget>[
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryScreen(
-                                                              selectedcategory:
-                                                                  i)),
-                                                );
-                                              },
-                                              child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      bottom: 5.0),
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          3 -
-                                                      20,
-                                                  height: 75,
-                                                  alignment: Alignment.center,
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        height: 30,
-                                                        width: 120,
-                                                        child: Icon(
-                                                          categories[i].icon,
-                                                          color:
-                                                              Colors.deepOrange,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 2,
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: Text(
-                                                          "${categories[i].title}",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                              fontSize: 14,
-                                                              color:
-                                                                  Colors.black),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      )
-                                                    ],
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                  )),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                    height: 200,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: CarouselSlider(
-                                      options: CarouselOptions(
-                                        carouselController: carouselController,
-                                        autoPlay: true,
-                                        autoPlayAnimationDuration:
-                                            Duration(seconds: 1),
-                                        aspectRatio: 2.0,
-                                        enlargeCenterPage: true,
-                                      ),
-                                      items: images
-                                          .map((item) => InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryScreen()),
-                                                );
-                                              },
-                                              child: Hero(
-                                                  tag: item,
-                                                  child: Image.asset(
-                                                    item,
-                                                    fit: BoxFit.fitWidth,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                  ))))
-                                          .toList(),
-                                    )),
-                                nearmeitemsgrid.isNotEmpty
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                  ])
+                            : Container(),
+                        nearmeitemsgrid.isNotEmpty
+                            ? SizedBox(
+                                height: 5,
+                              )
+                            : Container(),
+                        nearmeitemsgrid.isNotEmpty
+                            ? Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 230,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 15,
+                                    shrinkWrap: true,
+                                    itemBuilder: (ctx, i) {
+                                      return Row(
                                         children: <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 10,
-                                                  top: 10,
-                                                  bottom: 10),
-                                              child: Text('Near me',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      color: Colors.black)),
-                                            ),
-                                            Padding(
-                                                padding: EdgeInsets.only(
-                                                    right: 20,
-                                                    top: 10,
-                                                    bottom: 10),
-                                                child: InkWell(
+                                          Padding(
+                                              padding: EdgeInsets.all(4),
+                                              child: InkWell(
                                                   onTap: () {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              NearMe()),
+                                                          builder: (context) => Details(
+                                                              itemid:
+                                                                  nearmeitemsgrid[
+                                                                          i]
+                                                                      .itemid)),
                                                     );
                                                   },
-                                                  child: Text('View All',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
-                                                          fontSize: 14,
-                                                          fontWeight:
-                                                              FontWeight.w300,
-                                                          color: Colors.black)),
-                                                )),
-                                          ])
-                                    : Container(),
-                                nearmeitemsgrid.isNotEmpty
-                                    ? SizedBox(
-                                        height: 5,
-                                      )
-                                    : Container(),
-                                nearmeitemsgrid.isNotEmpty
-                                    ? Container(
+                                                  child: Container(
+                                                    width: 150,
+                                                    decoration: BoxDecoration(
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          offset: Offset(
+                                                              0.0, 1.0), //(x,y)
+                                                          blurRadius: 6.0,
+                                                        ),
+                                                      ],
+                                                      color: Colors.white,
+                                                    ),
+                                                    child: new Column(
+                                                      children: <Widget>[
+                                                        new Stack(
+                                                          children: <Widget>[
+                                                            Container(
+                                                              height: 120,
+                                                              width: 150,
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    nearmeitemsgrid[
+                                                                            i]
+                                                                        .image,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    SpinKitChasingDots(
+                                                                        color: Colors
+                                                                            .deepOrange),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        new Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(5.0),
+                                                          child: new Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: <Widget>[
+                                                              Container(
+                                                                height: 20,
+                                                                child: Text(
+                                                                  nearmeitemsgrid[
+                                                                          i]
+                                                                      .name,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                  ),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 5.0),
+                                                              Container(
+                                                                child: Text(
+                                                                  nearmeitemsgrid[
+                                                                          i]
+                                                                      .category,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 5.0),
+                                                              Container(
+                                                                child: Text(
+                                                                  nearmeitemsgrid[
+                                                                              i]
+                                                                          .price
+                                                                          .toString() +
+                                                                      ' ' +
+                                                                      currency,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ))),
+                                        ],
+                                      );
+                                    }))
+                            : Container(),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          height: 600,
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            children: <Widget>[
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CategoryScreen()),
+                                  );
+                                },
+                                child: Container(
+                                  height: 100,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height,
                                         width:
                                             MediaQuery.of(context).size.width,
-                                        height: 230,
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: 15,
-                                            shrinkWrap: true,
-                                            itemBuilder: (ctx, i) {
-                                              return Row(
-                                                children: <Widget>[
-                                                  Padding(
-                                                      padding:
-                                                          EdgeInsets.all(4),
-                                                      child: InkWell(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      Details(
-                                                                          itemid:
-                                                                              nearmeitemsgrid[i].itemid)),
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            width: 150,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade300,
-                                                                  offset: Offset(
-                                                                      0.0,
-                                                                      1.0), //(x,y)
-                                                                  blurRadius:
-                                                                      6.0,
-                                                                ),
-                                                              ],
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                            child: new Column(
-                                                              children: <
-                                                                  Widget>[
-                                                                new Stack(
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Container(
-                                                                      height:
-                                                                          120,
-                                                                      width:
-                                                                          150,
-                                                                      child:
-                                                                          CachedNetworkImage(
-                                                                        imageUrl:
-                                                                            nearmeitemsgrid[i].image,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                        placeholder:
-                                                                            (context, url) =>
-                                                                                SpinKitChasingDots(color: Colors.deepOrange),
-                                                                        errorWidget: (context,
-                                                                                url,
-                                                                                error) =>
-                                                                            Icon(Icons.error),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                new Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          5.0),
-                                                                  child:
-                                                                      new Column(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .center,
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Container(
-                                                                        height:
-                                                                            20,
-                                                                        child:
-                                                                            Text(
-                                                                          nearmeitemsgrid[i]
-                                                                              .name,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontFamily:
-                                                                                'Montserrat',
-                                                                            fontSize:
-                                                                                16,
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                          ),
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          height:
-                                                                              5.0),
-                                                                      Container(
-                                                                        child:
-                                                                            Text(
-                                                                          nearmeitemsgrid[i]
-                                                                              .category,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontFamily:
-                                                                                'Montserrat',
-                                                                            fontSize:
-                                                                                14,
-                                                                            fontWeight:
-                                                                                FontWeight.w300,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          height:
-                                                                              5.0),
-                                                                      Container(
-                                                                        child:
-                                                                            Text(
-                                                                          nearmeitemsgrid[i].price.toString() +
-                                                                              ' ' +
-                                                                              currency,
-                                                                          style:
-                                                                              TextStyle(
-                                                                            fontFamily:
-                                                                                'Montserrat',
-                                                                            fontSize:
-                                                                                16,
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ))),
-                                                ],
-                                              );
-                                            }))
-                                    : Container(),
-                                SizedBox(
-                                  height: 5,
+                                        child: Image.asset(
+                                          'assets/homeshow/clothes.jpeg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(bottom: 10),
+                                          child: Container(
+                                              height: 40,
+                                              width: 180,
+                                              color: Colors.white,
+                                              child: Center(
+                                                child: Text('#PRELOVEDFASHION',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        color: Colors.black)),
+                                              )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                                Container(
-                                  height: 600,
-                                  color: Colors.white,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Column(
-                                    children: <Widget>[
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CategoryScreen()),
-                                          );
-                                        },
+                              ),
+                              Container(
+                                height: 500,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                  image: new ExactAssetImage(
+                                      'assets/homeshow/bgimage.jpeg'),
+                                  fit: BoxFit.cover,
+                                )),
+                                child: GridView.count(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1.4,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryDetail(
+                                                      category:
+                                                          'Fashion & Accessories',
+                                                      subcategory: "Women")),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10),
                                         child: Container(
-                                          height: 100,
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: Stack(
@@ -1068,7 +1102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .size
                                                     .width,
                                                 child: Image.asset(
-                                                  'assets/homeshow/clothes.jpeg',
+                                                  'assets/homeshow/ladies.jpeg',
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -1079,14 +1113,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   padding: EdgeInsets.only(
                                                       bottom: 10),
                                                   child: Container(
-                                                      height: 40,
-                                                      width: 180,
+                                                      height: 30,
+                                                      width: 100,
                                                       color: Colors.white,
                                                       child: Center(
-                                                        child: Text(
-                                                            '#PRELOVEDFASHION',
-                                                            textAlign: TextAlign
-                                                                .center,
+                                                        child: Text('Women',
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     'Montserrat',
@@ -1103,597 +1134,502 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                       ),
-                                      Container(
-                                        height: 500,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                          image: new ExactAssetImage(
-                                              'assets/homeshow/bgimage.jpeg'),
-                                          fit: BoxFit.cover,
-                                        )),
-                                        child: GridView.count(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
-                                          crossAxisCount: 2,
-                                          childAspectRatio: 1.4,
-                                          children: <Widget>[
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryDetail(
-                                                              category:
-                                                                  'Fashion & Accessories',
-                                                              subcategory:
-                                                                  "Women")),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Stack(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Image.asset(
-                                                          'assets/homeshow/ladies.jpeg',
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10),
-                                                          child: Container(
-                                                              height: 30,
-                                                              width: 100,
-                                                              color:
-                                                                  Colors.white,
-                                                              child: Center(
-                                                                child: Text(
-                                                                    'Women',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Montserrat',
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w800,
-                                                                        color: Colors
-                                                                            .black)),
-                                                              )),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryDetail(
+                                                      category:
+                                                          'Fashion & Accessories',
+                                                      subcategory: "Men")),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Stack(
+                                            children: <Widget>[
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Image.asset(
+                                                  'assets/homeshow/men.jpeg',
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryDetail(
-                                                              category:
-                                                                  'Fashion & Accessories',
-                                                              subcategory:
-                                                                  "Men")),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Stack(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Image.asset(
-                                                          'assets/homeshow/men.jpeg',
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10),
-                                                          child: Container(
-                                                              height: 30,
-                                                              width: 100,
-                                                              color:
-                                                                  Colors.white,
-                                                              child: Center(
-                                                                child: Text(
-                                                                    'Men',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Montserrat',
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w800,
-                                                                        color: Colors
-                                                                            .black)),
-                                                              )),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 10),
+                                                  child: Container(
+                                                      height: 30,
+                                                      width: 100,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text('Men',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                                color: Colors
+                                                                    .black)),
+                                                      )),
                                                 ),
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryDetail(
-                                                              category:
-                                                                  'Fashion & Accessories',
-                                                              subcategory:
-                                                                  "Boys")),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Stack(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Image.asset(
-                                                          'assets/homeshow/boy.jpeg',
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10),
-                                                          child: Container(
-                                                              height: 30,
-                                                              width: 100,
-                                                              color:
-                                                                  Colors.white,
-                                                              child: Center(
-                                                                child: Text(
-                                                                    'Boys',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Montserrat',
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w800,
-                                                                        color: Colors
-                                                                            .black)),
-                                                              )),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryDetail(
-                                                              category:
-                                                                  'Fashion & Accessories',
-                                                              subcategory:
-                                                                  "Girls")),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Stack(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Image.asset(
-                                                          'assets/homeshow/girls.jpeg',
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10),
-                                                          child: Container(
-                                                              height: 30,
-                                                              width: 100,
-                                                              color:
-                                                                  Colors.white,
-                                                              child: Center(
-                                                                child: Text(
-                                                                    'Girls',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Montserrat',
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w800,
-                                                                        color: Colors
-                                                                            .black)),
-                                                              )),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryDetail(
-                                                              category:
-                                                                  'Fashion & Accessories',
-                                                              subcategory:
-                                                                  "Women")),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Stack(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Image.asset(
-                                                          'assets/homeshow/bag.jpeg',
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10),
-                                                          child: Container(
-                                                              height: 30,
-                                                              width: 100,
-                                                              color:
-                                                                  Colors.white,
-                                                              child: Center(
-                                                                child: Text(
-                                                                    'Bags',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Montserrat',
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w800,
-                                                                        color: Colors
-                                                                            .black)),
-                                                              )),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CategoryDetail(
-                                                              category:
-                                                                  'Fashion & Accessories',
-                                                              subcategory:
-                                                                  "Women")),
-                                                );
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.all(10),
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Stack(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        height: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .height,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Image.asset(
-                                                          'assets/homeshow/watch.jpeg',
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  bottom: 10),
-                                                          child: Container(
-                                                              height: 30,
-                                                              width: 100,
-                                                              color:
-                                                                  Colors.white,
-                                                              child: Center(
-                                                                child: Text(
-                                                                    'Watches',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Montserrat',
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w800,
-                                                                        color: Colors
-                                                                            .black)),
-                                                              )),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Row(children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 10, top: 10, bottom: 5),
-                                    child: Text('Recently Added',
-                                        style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w800,
-                                            color: Colors.black)),
-                                  ),
-                                ]),
-                                itemsgrid.isNotEmpty
-                                    ? Flexible(
-                                        child: MediaQuery.removePadding(
-                                            context: context,
-                                            removeTop: true,
-                                            child: GridView.builder(
-                                              cacheExtent: 100,
-                                              shrinkWrap: true,
-                                              physics:
-                                                  NeverScrollableScrollPhysics(),
-                                              gridDelegate:
-                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 2,
-                                                      childAspectRatio: 0.80),
-                                              itemCount: itemsgrid.length,
-                                              itemBuilder: (context, index) {
-                                                if (index != 0 &&
-                                                    index % 8 == 0) {
-                                                  return Platform.isIOS == true
-                                                      ? Container(
-                                                          height: 330,
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  bottom: 20.0),
-                                                          child: NativeAdmob(
-                                                            adUnitID:
-                                                                _iosadUnitID,
-                                                            controller:
-                                                                _controller,
-                                                          ),
-                                                        )
-                                                      : Container(
-                                                          height: 330,
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  bottom: 20.0),
-                                                          child: NativeAdmob(
-                                                            adUnitID:
-                                                                _androidadUnitID,
-                                                            controller:
-                                                                _controller,
-                                                          ),
-                                                        );
-                                                }
-
-                                                return Padding(
-                                                    padding: EdgeInsets.all(4),
-                                                    child: InkWell(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) => Details(
-                                                                    itemid: itemsgrid[
-                                                                            index]
-                                                                        .itemid)),
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            boxShadow: [
-                                                              BoxShadow(
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryDetail(
+                                                      category:
+                                                          'Fashion & Accessories',
+                                                      subcategory: "Boys")),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Stack(
+                                            children: <Widget>[
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Image.asset(
+                                                  'assets/homeshow/boy.jpeg',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 10),
+                                                  child: Container(
+                                                      height: 30,
+                                                      width: 100,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text('Boys',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
                                                                 color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                                offset: Offset(
-                                                                    0.0,
-                                                                    1.0), //(x,y)
-                                                                blurRadius: 6.0,
-                                                              ),
-                                                            ],
-                                                            color: Colors.white,
+                                                                    .black)),
+                                                      )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryDetail(
+                                                      category:
+                                                          'Fashion & Accessories',
+                                                      subcategory: "Girls")),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Stack(
+                                            children: <Widget>[
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Image.asset(
+                                                  'assets/homeshow/girls.jpeg',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 10),
+                                                  child: Container(
+                                                      height: 30,
+                                                      width: 100,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text('Girls',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                                color: Colors
+                                                                    .black)),
+                                                      )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryDetail(
+                                                      category:
+                                                          'Fashion & Accessories',
+                                                      subcategory: "Women")),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Stack(
+                                            children: <Widget>[
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Image.asset(
+                                                  'assets/homeshow/bag.jpeg',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 10),
+                                                  child: Container(
+                                                      height: 30,
+                                                      width: 100,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text('Bags',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                                color: Colors
+                                                                    .black)),
+                                                      )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CategoryDetail(
+                                                      category:
+                                                          'Fashion & Accessories',
+                                                      subcategory: "Women")),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Stack(
+                                            children: <Widget>[
+                                              Container(
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Image.asset(
+                                                  'assets/homeshow/watch.jpeg',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      bottom: 10),
+                                                  child: Container(
+                                                      height: 30,
+                                                      width: 100,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text('Watches',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                                color: Colors
+                                                                    .black)),
+                                                      )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(children: <Widget>[
+                          Padding(
+                            padding:
+                                EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                            child: Text('Recently Added',
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black)),
+                          ),
+                        ]),
+                        itemsgrid.isNotEmpty
+                            ? Flexible(
+                                child: MediaQuery.removePadding(
+                                    context: context,
+                                    removeTop: true,
+                                    child: GridView.builder(
+                                      cacheExtent: double.parse(
+                                          itemsgrid.length.toString()),
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              childAspectRatio: 0.80),
+                                      itemCount: itemsgrid.length,
+                                      itemBuilder: (context, index) {
+                                        if (index != 0 && index % 8 == 0) {
+                                          return Platform.isIOS == true
+                                              ? Container(
+                                                  height: 330,
+                                                  padding: EdgeInsets.all(10),
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 20.0),
+                                                  child: NativeAdmob(
+                                                    adUnitID: _iosadUnitID,
+                                                    controller: _controller,
+                                                  ),
+                                                )
+                                              : Container(
+                                                  height: 330,
+                                                  padding: EdgeInsets.all(10),
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 20.0),
+                                                  child: NativeAdmob(
+                                                    adUnitID: _androidadUnitID,
+                                                    controller: _controller,
+                                                  ),
+                                                );
+                                        }
+
+                                        return Padding(
+                                            padding: EdgeInsets.all(4),
+                                            child: InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Details(
+                                                                itemid: itemsgrid[
+                                                                        index]
+                                                                    .itemid)),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors
+                                                            .grey.shade300,
+                                                        offset: Offset(
+                                                            0.0, 1.0), //(x,y)
+                                                        blurRadius: 6.0,
+                                                      ),
+                                                    ],
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: new Column(
+                                                    children: <Widget>[
+                                                      new Stack(
+                                                        children: <Widget>[
+                                                          Container(
+                                                            height: 150,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              imageUrl:
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .image,
+                                                              fit: BoxFit.cover,
+                                                              placeholder: (context,
+                                                                      url) =>
+                                                                  SpinKitChasingDots(
+                                                                      color: Colors
+                                                                          .deepOrange),
+                                                              errorWidget: (context,
+                                                                      url,
+                                                                      error) =>
+                                                                  Icon(Icons
+                                                                      .error),
+                                                            ),
                                                           ),
-                                                          child: new Column(
+                                                        ],
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment
+                                                            .centerLeft,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(5),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                             children: <Widget>[
-                                                              new Stack(
-                                                                children: <
-                                                                    Widget>[
-                                                                  Container(
-                                                                    height: 150,
-                                                                    width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width,
-                                                                    child:
-                                                                        CachedNetworkImage(
-                                                                      imageUrl:
-                                                                          itemsgrid[index]
-                                                                              .image,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      placeholder: (context,
-                                                                              url) =>
-                                                                          SpinKitChasingDots(
-                                                                              color: Colors.deepOrange),
-                                                                      errorWidget: (context,
-                                                                              url,
-                                                                              error) =>
-                                                                          Icon(Icons
-                                                                              .error),
-                                                                    ),
+                                                              Container(
+                                                                height: 20,
+                                                                child: Text(
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .name,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
                                                                   ),
-                                                                ],
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
                                                               ),
-                                                              new Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .all(
-                                                                        5.0),
-                                                                child:
-                                                                    new Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .center,
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Container(
-                                                                      height:
-                                                                          20,
+                                                              SizedBox(
+                                                                  height: 5.0),
+                                                              Container(
+                                                                child: Text(
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .category,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 5.0),
+                                                              currency != null
+                                                                  ? Container(
                                                                       child:
                                                                           Text(
-                                                                        itemsgrid[index]
-                                                                            .name,
+                                                                        itemsgrid[index].price.toString() +
+                                                                            ' ' +
+                                                                            currency,
                                                                         style:
                                                                             TextStyle(
                                                                           fontFamily:
@@ -1703,150 +1639,56 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                           fontWeight:
                                                                               FontWeight.w800,
                                                                         ),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
                                                                       ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                        height:
-                                                                            5.0),
-                                                                    Container(
+                                                                    )
+                                                                  : Container(
                                                                       child:
                                                                           Text(
                                                                         itemsgrid[index]
-                                                                            .category,
+                                                                            .price
+                                                                            .toString(),
                                                                         style:
                                                                             TextStyle(
                                                                           fontFamily:
                                                                               'Montserrat',
                                                                           fontSize:
-                                                                              14,
+                                                                              16,
                                                                           fontWeight:
-                                                                              FontWeight.w300,
+                                                                              FontWeight.w800,
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                        height:
-                                                                            5.0),
-                                                                    currency !=
-                                                                            null
-                                                                        ? Container(
-                                                                            child:
-                                                                                Text(
-                                                                              itemsgrid[index].price.toString() + ' ' + currency,
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Montserrat',
-                                                                                fontSize: 16,
-                                                                                fontWeight: FontWeight.w800,
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                        : Container(
-                                                                            child:
-                                                                                Text(
-                                                                              itemsgrid[index].price.toString(),
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'Montserrat',
-                                                                                fontSize: 16,
-                                                                                fontWeight: FontWeight.w800,
-                                                                              ),
-                                                                            ),
-                                                                          )
-                                                                  ],
-                                                                ),
-                                                              )
+                                                                    )
                                                             ],
                                                           ),
-                                                        )));
-                                              },
-                                            )))
-                                    : Container(
-                                        height:
-                                            MediaQuery.of(context).size.height,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Column(
-                                          children: <Widget>[
-                                            Center(
-                                              child: Text(
-                                                  'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 16,
-                                                  )),
-                                            ),
-                                            Expanded(
-                                                child: Image.asset(
-                                              'assets/little_theologians_4x.jpg',
-                                              fit: BoxFit.cover,
-                                            ))
-                                          ],
-                                        )),
-                              ])));
-                })
-              : Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 16.0),
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300],
-                    highlightColor: Colors.grey[100],
-                    child: Column(
-                      children: [0, 1, 2, 3, 4, 5, 6]
-                          .map((_) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 48.0,
-                                      height: 48.0,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )));
+                                      },
+                                    )))
+                            : Container(
+                                height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                                child: Column(
+                                  children: <Widget>[
+                                    Center(
+                                      child: Text(
+                                          'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 16,
+                                          )),
                                     ),
                                     Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: double.infinity,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2.0),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2.0),
-                                          ),
-                                          Container(
-                                            width: 40.0,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                        child: Image.asset(
+                                      'assets/little_theologians_4x.jpg',
+                                      fit: BoxFit.cover,
+                                    ))
                                   ],
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
-        ));
+                                )),
+                      ])));
+        })));
   }
 }

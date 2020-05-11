@@ -8,9 +8,6 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
-import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -332,93 +329,98 @@ class _SearchState extends State<Search> {
                                                       ),
                                                     ],
                                                   ),
-                                                  new Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: new Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Container(
-                                                          height: 20,
-                                                          child: Text(
-                                                            itemsgrid[index]
-                                                                .name,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: new Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5.0),
+                                                        child: new Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              height: 20,
+                                                              child: Text(
+                                                                itemsgrid[index]
+                                                                    .name,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                ),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
                                                             ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        Container(
-                                                          child: Text(
-                                                            itemsgrid[index]
-                                                                .category,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
+                                                            SizedBox(
+                                                                height: 5.0),
+                                                            Container(
+                                                              child: Text(
+                                                                itemsgrid[index]
+                                                                    .category,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Montserrat',
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        currency != null
-                                                            ? Container(
-                                                                child: Text(
-                                                                  itemsgrid[index]
+                                                            SizedBox(
+                                                                height: 5.0),
+                                                            currency != null
+                                                                ? Container(
+                                                                    child: Text(
+                                                                      itemsgrid[index]
+                                                                              .price
+                                                                              .toString() +
+                                                                          ' ' +
+                                                                          currency,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Container(
+                                                                    child: Text(
+                                                                      itemsgrid[
+                                                                              index]
                                                                           .price
-                                                                          .toString() +
-                                                                      ' ' +
-                                                                      currency,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            : Container(
-                                                                child: Text(
-                                                                  itemsgrid[
-                                                                          index]
-                                                                      .price
-                                                                      .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                      ],
-                                                    ),
-                                                  )
+                                                                          .toString(),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                          ],
+                                                        ),
+                                                      )),
                                                 ],
                                               ),
                                             )));

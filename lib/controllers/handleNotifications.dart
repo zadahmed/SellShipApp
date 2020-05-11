@@ -14,7 +14,6 @@ class FirebaseNotifications {
         var body = message['notification']['body'];
         showSimpleNotification(Text(title.toString()),
             background: Colors.deepOrange, subtitle: Text(body));
-
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");

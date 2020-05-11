@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 
@@ -94,278 +93,336 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                   SizedBox(
                     height: 10.0,
                   ),
-                  item != null
-                      ? Expanded(
-                          child: StaggeredGridView.countBuilder(
-                          controller: _scrollController,
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 4,
-                          crossAxisSpacing: 4,
-                          itemCount: item.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                                padding: EdgeInsets.all(7),
-                                child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Details(
-                                                itemid: item[index].itemid)),
-                                      );
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
+                  item.isNotEmpty
+                      ? Flexible(
+                          child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: GridView.builder(
+                                cacheExtent:
+                                    double.parse(item.length.toString()),
+                                shrinkWrap: true,
+                                controller: _scrollController,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: 0.65),
+                                itemCount: item.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                      padding: EdgeInsets.all(4),
+                                      child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Details(
+                                                      itemid:
+                                                          item[index].itemid)),
+                                            );
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade300,
+                                                  offset:
+                                                      Offset(0.0, 1.0), //(x,y)
+                                                  blurRadius: 6.0,
+                                                ),
+                                              ],
+                                              color: Colors.white,
                                             ),
-                                          ],
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      child: new Column(
-                                        children: <Widget>[
-                                          new Stack(
-                                            children: <Widget>[
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                child: CachedNetworkImage(
-                                                  imageUrl: item[index].image,
-                                                  placeholder: (context, url) =>
-                                                      SpinKitChasingDots(
-                                                          color: Colors
-                                                              .deepOrange),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          new Padding(
-                                            padding: const EdgeInsets.all(5.0),
                                             child: new Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                Text(
-                                                  item[index].name,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                ),
-                                                SizedBox(height: 3.0),
-                                                Container(
-                                                  child: Text(
-                                                    item[index].category,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                    ),
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 3.0),
-                                                Container(
-                                                  child: Text(
-                                                    item[index]
-                                                            .price
-                                                            .toString() +
-                                                        ' ' +
-                                                        currency,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                    ),
-                                                    textAlign: TextAlign.left,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Container(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      InkWell(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        EditItem(
-                                                                          itemid:
-                                                                              item[index].itemid,
-                                                                        )),
-                                                          );
-                                                        },
-                                                        child: Container(
-                                                          height: 30,
-                                                          width: 80,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors
-                                                                .deepOrange,
-                                                            boxShadow: [
-                                                              BoxShadow(
+                                                new Stack(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      height: 150,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            item[index].image,
+                                                        fit: BoxFit.cover,
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            SpinKitChasingDots(
                                                                 color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                                offset: Offset(
-                                                                    0.0,
-                                                                    1.0), //(x,y)
-                                                                blurRadius: 6.0,
-                                                              ),
-                                                            ],
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15.0),
-                                                          ),
-                                                          child: Center(
+                                                                    .deepOrange),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            Icon(Icons.error),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                new Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      child: new Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Container(
+                                                            height: 20,
                                                             child: Text(
-                                                              'Edit',
+                                                              item[index].name,
                                                               style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .white),
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                              ),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                             ),
                                                           ),
-                                                        ),
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          if (item[index]
-                                                                  .sold ==
-                                                              true) {
-                                                            var url =
-                                                                'https://sellship.co/api/unsold/' +
-                                                                    item[index]
-                                                                        .itemid +
-                                                                    '/' +
-                                                                    userid;
-                                                            print(url);
-                                                            final response =
-                                                                await http
-                                                                    .get(url);
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              print(response
-                                                                  .body);
-                                                            }
-                                                            getProfileData();
-                                                            showInSnackBar(
-                                                                'Item is now live!');
-                                                          } else {
-                                                            var url =
-                                                                'https://sellship.co/api/sold/' +
-                                                                    item[index]
-                                                                        .itemid +
-                                                                    '/' +
-                                                                    userid;
-                                                            print(url);
-                                                            final response =
-                                                                await http
-                                                                    .get(url);
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              print(response
-                                                                  .body);
-                                                            }
-                                                            getProfileData();
-                                                          }
-                                                          showInSnackBar(
-                                                              'Item has been marked sold!');
-                                                        },
-                                                        child: Container(
-                                                          height: 30,
-                                                          width: 80,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.amber,
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                                offset: Offset(
-                                                                    0.0,
-                                                                    1.0), //(x,y)
-                                                                blurRadius: 6.0,
-                                                              ),
-                                                            ],
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15.0),
-                                                          ),
-                                                          child: Center(
+                                                          SizedBox(height: 5.0),
+                                                          Container(
                                                             child: Text(
-                                                              item[index].sold ==
-                                                                      false
-                                                                  ? 'Mark Sold'
-                                                                  : 'Mark Live',
+                                                              item[index]
+                                                                  .category,
                                                               style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Montserrat',
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .white),
+                                                                fontFamily:
+                                                                    'Montserrat',
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
+                                                          SizedBox(height: 5.0),
+                                                          currency != null
+                                                              ? Container(
+                                                                  child: Text(
+                                                                    item[index]
+                                                                            .price
+                                                                            .toString() +
+                                                                        ' ' +
+                                                                        currency,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : Container(
+                                                                  child: Text(
+                                                                    item[index]
+                                                                        .price
+                                                                        .toString(),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Container(
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceEvenly,
+                                                              children: <
+                                                                  Widget>[
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              EditItem(
+                                                                                itemid: item[index].itemid,
+                                                                              )),
+                                                                    );
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    height: 30,
+                                                                    width: 80,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .deepOrange,
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade300,
+                                                                          offset: Offset(
+                                                                              0.0,
+                                                                              1.0), //(x,y)
+                                                                          blurRadius:
+                                                                              6.0,
+                                                                        ),
+                                                                      ],
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              15.0),
+                                                                    ),
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          Text(
+                                                                        'Edit',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Montserrat',
+                                                                            fontSize:
+                                                                                14,
+                                                                            color:
+                                                                                Colors.white),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                InkWell(
+                                                                  onTap:
+                                                                      () async {
+                                                                    if (item[index]
+                                                                            .sold ==
+                                                                        true) {
+                                                                      var url = 'https://sellship.co/api/unsold/' +
+                                                                          item[index]
+                                                                              .itemid +
+                                                                          '/' +
+                                                                          userid;
+                                                                      print(
+                                                                          url);
+                                                                      final response =
+                                                                          await http
+                                                                              .get(url);
+                                                                      if (response
+                                                                              .statusCode ==
+                                                                          200) {
+                                                                        print(response
+                                                                            .body);
+                                                                      }
+                                                                      getProfileData();
+                                                                      showInSnackBar(
+                                                                          'Item is now live!');
+                                                                    } else {
+                                                                      var url = 'https://sellship.co/api/sold/' +
+                                                                          item[index]
+                                                                              .itemid +
+                                                                          '/' +
+                                                                          userid;
+                                                                      print(
+                                                                          url);
+                                                                      final response =
+                                                                          await http
+                                                                              .get(url);
+                                                                      if (response
+                                                                              .statusCode ==
+                                                                          200) {
+                                                                        print(response
+                                                                            .body);
+                                                                      }
+                                                                      getProfileData();
+                                                                    }
+                                                                    showInSnackBar(
+                                                                        'Item has been marked sold!');
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    height: 30,
+                                                                    width: 80,
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: Colors
+                                                                          .amber,
+                                                                      boxShadow: [
+                                                                        BoxShadow(
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade300,
+                                                                          offset: Offset(
+                                                                              0.0,
+                                                                              1.0), //(x,y)
+                                                                          blurRadius:
+                                                                              6.0,
+                                                                        ),
+                                                                      ],
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              15.0),
+                                                                    ),
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          Text(
+                                                                        item[index].sold ==
+                                                                                false
+                                                                            ? 'Mark Sold'
+                                                                            : 'Mark Live',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Montserrat',
+                                                                            fontSize:
+                                                                                14,
+                                                                            color:
+                                                                                Colors.white),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                )
+                                                    )),
                                               ],
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    )));
-                          },
-                          staggeredTileBuilder: (int index) {
-                            return StaggeredTile.fit(1);
-                          },
-                        ))
+                                          )));
+                                },
+                              )))
                       : Expanded(
                           child: Column(
                           children: <Widget>[
                             Center(
                               child: Text(
-                                'Go ahead Add an Item \n and start selling!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 20,
-                                ),
-                              ),
+                                  'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 16,
+                                  )),
                             ),
                             Expanded(
                                 child: Image.asset(
-                              'assets/items.png',
-                              fit: BoxFit.fitWidth,
+                              'assets/little_theologians_4x.jpg',
+                              fit: BoxFit.cover,
                             ))
                           ],
                         )),

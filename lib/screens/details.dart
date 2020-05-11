@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/chatpageview.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
@@ -224,6 +225,36 @@ class _DetailsState extends State<Details> {
                   color: Colors.white,
                 ),
               ),
+              actions: <Widget>[
+                InkWell(
+                    onTap: () async {
+                      final DynamicLinkParameters parameters =
+                          DynamicLinkParameters(
+                        uriPrefix: 'https:/sellship.page.link',
+                        link: Uri.parse('https://sellship.co/'),
+                        androidParameters: AndroidParameters(
+                          packageName: 'com.zad.sellship',
+                          minimumVersion: 190,
+                        ),
+                        iosParameters: IosParameters(
+                          bundleId: 'com.zad.sellship',
+                          minimumVersion: '2.0.0',
+                          appStoreId: '1506496966',
+                        ),
+                        socialMetaTagParameters: SocialMetaTagParameters(
+                          title: 'Check out what I found on SellShip!',
+                          description:
+                              'Found this awesome ${newItem.name} on SellShip',
+                        ),
+                      );
+
+                      final ShortDynamicLink shortDynamicLink =
+                          await parameters.buildShortLink();
+                      final Uri shortUrl = shortDynamicLink.shortUrl;
+                      print(shortUrl);
+                    },
+                    child: Icon(Icons.share)),
+              ],
             ),
             body: Stack(
               children: <Widget>[
@@ -746,24 +777,6 @@ class _DetailsState extends State<Details> {
               height: 60,
               child: GestureDetector(
                 onTap: () async {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20.0)), //this right here
-                          child: Container(
-                            height: 100,
-                            width: 100,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child:
-                                  SpinKitChasingDots(color: Colors.deepOrange),
-                            ),
-                          ),
-                        );
-                      });
                   userid = await storage.read(key: 'userid');
                   var senderid = newItem.userid;
                   print("user id\n" + userid);
@@ -780,7 +793,7 @@ class _DetailsState extends State<Details> {
                           'https://sellship.co/api/username/' + senderid;
                       final responseuser2 = await http.get(userurl2);
                       if (responseuser2.statusCode == 200) {
-                                              print('Ok');
+                        print('Ok');
 
                         var username2 = jsonDecode(responseuser2.body);
                         print("Username 2 :\n " + username2.toString());
@@ -795,7 +808,7 @@ class _DetailsState extends State<Details> {
                         if (responsecheckurl.statusCode == 200) {
                           var message = json.decode(responsecheckurl.body);
                           if (message['message'] != 'Empty') {
-                            print("Message: \n"+message.toString());
+                            print("Message: \n" + message.toString());
                             Navigator.of(context, rootNavigator: true)
                                 .pop('dialog');
                             Navigator.pushReplacement(
@@ -805,7 +818,9 @@ class _DetailsState extends State<Details> {
                                     (context, animation1, animation2) =>
                                         ChatPageView(
                                   messageid: message['message'],
-                                  recipentname: username2['firstname'] + " " + username2['lastname'],
+                                  recipentname: username2['firstname'] +
+                                      " " +
+                                      username2['lastname'],
                                   senderid: userid,
                                   recipentid: senderid,
                                   fcmToken: username2['fcmtoken'],
@@ -824,26 +839,13 @@ class _DetailsState extends State<Details> {
                                     '/' +
                                     username2['firstname'];
 
-                                    print(userid.toString());
-                                    print(username1.toString());
-                                    print(senderid.toString());
-                                    print(username2.toString());
+                            print(userid.toString());
+                            print(username1.toString());
+                            print(senderid.toString());
+                            print(username2.toString());
                             final itemresponse = await http.get(itemurl);
                             if (itemresponse.statusCode == 200) {
-                              FirebaseNotifications().postNotification(title: username1['firstname'],body: "Hi there! I am quite interested in your item",
-                              to: username2['fcmtoken']);
                               var messageid = itemresponse.body;
-                              var url = 'https://sellship.co/api/sendmessage/' +
-                                  userid +
-                                  '/' +
-                                  senderid +
-                                  '/' +
-                                  messageid;
-                              await http.post(url, body: {
-                                'message':
-                                    'Hi there! I am quite interested in the item you\'ve put up for Sale! Could you tell me more about it please?',
-                                'time': DateTime.now().toString()
-                              });
                               Navigator.of(context, rootNavigator: true)
                                   .pop('dialog');
                               Navigator.push(
@@ -851,7 +853,9 @@ class _DetailsState extends State<Details> {
                                 MaterialPageRoute(
                                   builder: (context) => ChatPageView(
                                     messageid: messageid,
-                                    recipentname: username2['firstname'] + " " + username2['lastname'],
+                                    recipentname: username2['firstname'] +
+                                        " " +
+                                        username2['lastname'],
                                     senderid: userid,
                                     recipentid: senderid,
                                     fcmToken: username2['fcmtoken'],

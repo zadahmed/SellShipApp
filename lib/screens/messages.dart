@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:SellShip/models/messages.dart';
 import 'package:SellShip/screens/chatpageview.dart';
+import 'package:SellShip/screens/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -41,7 +42,7 @@ class MessagesState extends State<Messages> {
               var messageurl = 'https://sellship.co/api/messagedetail/' +
                   messages[i]['msgid'];
               final responsemessage = await http.get(messageurl);
-              
+
               var messageinfo = json.decode(responsemessage.body);
               final f = new DateFormat('hh:mm');
               final t = new DateFormat('yyyy-MM-dd hh:mm');
@@ -90,7 +91,6 @@ class MessagesState extends State<Messages> {
                   lastrecieved: messageinfo['lastrecieved'],
                   unread: messageinfo['unread'],
                   recieveddate: s,
-
                   hiddendate: q,
                   recipentid: messages[i]['user1'],
                   fcmtokenreciever: messages[i]['fcmtokenreciever'],
@@ -111,12 +111,9 @@ class MessagesState extends State<Messages> {
     return messagesd;
   }
 
-  bool loading;
-
   @override
   void initState() {
     super.initState();
-    print(messagesd);
   }
 
   @override
@@ -136,302 +133,323 @@ class MessagesState extends State<Messages> {
                 fontFamily: 'Montserrat', fontSize: 20, color: Colors.white),
           ),
         ),
-        body: Container(
+        body: RefreshIndicator(
+            onRefresh: getMessages,
             child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15.0),
-                      topRight: Radius.circular(15.0),
-                    )),
-                child: FutureBuilder(
-                    future: getMessages(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data != null) {
-                          return ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext ctxt, int index) {
-                                // print(jsonDecode(
-                                //     snapshot.data[index].toString()));
-                                return Slidable(
-                                  actionPane: SlidableDrawerActionPane(),
-                                  actionExtentRatio: 0.25,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15.0),
+                          topRight: Radius.circular(15.0),
+                        )),
+                    child: StreamBuilder(
+                        stream: getMessages().asStream(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          if (snapshot.hasData) {
+                            if (snapshot.data != null) {
+                              return ListView.builder(
+                                  cacheExtent: double.parse(
+                                      snapshot.data.length.toString()),
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (BuildContext ctxt, int index) {
+                                    // print(jsonDecode(
+                                    //     snapshot.data[index].toString()));
+                                    return Slidable(
+                                      actionPane: SlidableDrawerActionPane(),
+                                      actionExtentRatio: 0.25,
+                                      child: Column(
                                         children: <Widget>[
-                                          Expanded(
-                                            flex: 10,
-                                            child: ListTile(
-                                              title: Text(
-                                                snapshot
-                                                    .data[index].peoplemessaged,
-                                                style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              subtitle: Text(
-                                                snapshot
-                                                    .data[index].lastrecieved,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 11,
-                                                ),
-                                              ),
-                                              leading: Icon(Icons.person),
-                                              trailing: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Text(
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                flex: 10,
+                                                child: ListTile(
+                                                  title: Text(
                                                     snapshot.data[index]
-                                                        .recieveddate,
+                                                        .peoplemessaged,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                  subtitle: Text(
+                                                    snapshot.data[index]
+                                                        .lastrecieved,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                       fontFamily: 'Montserrat',
                                                       fontSize: 11,
                                                     ),
                                                   ),
-                                                  snapshot.data[index].unread ==
-                                                          true
-                                                      ? Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 5.0),
-                                                          height: 18,
-                                                          width: 18,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  color: Colors
-                                                                      .deepOrangeAccent,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .all(
-                                                                    Radius.circular(
-                                                                        25.0),
-                                                                  )),
-                                                          child: Center(
-                                                              child: Text(
-                                                            '',
-                                                          )),
-                                                        )
-                                                      : SizedBox()
-                                                ],
-                                              ),
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ChatPageView(
-                                                      senderName: snapshot
-                                                          .data[index]
-                                                          .senderName,
-                                                      messageid: snapshot
-                                                          .data[index]
-                                                          .messageid,
-                                                      recipentname: snapshot
-                                                          .data[index]
-                                                          .peoplemessaged,
-                                                      senderid: snapshot
-                                                          .data[index].senderid,
-                                                      recipentid: snapshot
-                                                          .data[index]
-                                                          .recipentid,
-                                                      fcmToken: snapshot
-                                                          .data[index]
-                                                          .fcmtokenreciever,
-                                                    ),
+                                                  leading: Icon(Icons.person),
+                                                  trailing: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      Text(
+                                                        snapshot.data[index]
+                                                            .recieveddate,
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Montserrat',
+                                                          fontSize: 11,
+                                                        ),
+                                                      ),
+                                                      snapshot.data[index]
+                                                                  .unread ==
+                                                              true
+                                                          ? Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 5.0),
+                                                              height: 18,
+                                                              width: 18,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      color: Colors
+                                                                          .deepOrangeAccent,
+                                                                      borderRadius:
+                                                                          BorderRadius
+                                                                              .all(
+                                                                        Radius.circular(
+                                                                            25.0),
+                                                                      )),
+                                                              child: Center(
+                                                                  child: Text(
+                                                                '',
+                                                              )),
+                                                            )
+                                                          : SizedBox()
+                                                    ],
                                                   ),
-                                                );
-                                              },
-                                            ),
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ChatPageView(
+                                                          senderName: snapshot
+                                                              .data[index]
+                                                              .senderName,
+                                                          messageid: snapshot
+                                                              .data[index]
+                                                              .messageid,
+                                                          recipentname: snapshot
+                                                              .data[index]
+                                                              .peoplemessaged,
+                                                          senderid: snapshot
+                                                              .data[index]
+                                                              .senderid,
+                                                          recipentid: snapshot
+                                                              .data[index]
+                                                              .recipentid,
+                                                          fcmToken: snapshot
+                                                              .data[index]
+                                                              .fcmtokenreciever,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Divider(
+                                            endIndent: 12.0,
+                                            indent: 12.0,
+                                            height: 0,
                                           ),
                                         ],
                                       ),
-                                      Divider(
-                                        endIndent: 12.0,
-                                        indent: 12.0,
-                                        height: 0,
-                                      ),
-                                    ],
-                                  ),
-                                  secondaryActions: <Widget>[
-                                    IconSlideAction(
-                                      caption: 'Archive',
-                                      color: Colors.blue,
-                                      icon: Icons.archive,
-                                      onTap: () {},
-                                    ),
-                                  ],
-                                );
-                              });
-                        } else {
-                          return Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 16.0),
-                            child: Shimmer.fromColors(
-                              baseColor: Colors.grey[300],
-                              highlightColor: Colors.grey[100],
-                              child: Column(
-                                children: [0, 1, 2, 3, 4, 5, 6]
-                                    .map((_) => Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                width: 48.0,
-                                                height: 48.0,
-                                                color: Colors.white,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 8.0,
-                                                      color: Colors.white,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 2.0),
-                                                    ),
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 8.0,
-                                                      color: Colors.white,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 2.0),
-                                                    ),
-                                                    Container(
-                                                      width: 40.0,
-                                                      height: 8.0,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ))
-                                    .toList(),
-                              ),
-                            ),
-                          );
-                        }
-                      } else if (snapshot.hasError) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Center(
-                              child: Text(
-                                'View your Messages here ',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                                child: Image.asset(
-                              'assets/messages.png',
-                              fit: BoxFit.fitWidth,
-                            ))
-                          ],
-                        );
-                      } else {
-                        return Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 16.0),
-                          child: Shimmer.fromColors(
-                            baseColor: Colors.grey[300],
-                            highlightColor: Colors.grey[100],
-                            child: Column(
-                              children: [0, 1, 2, 3, 4, 5, 6]
-                                  .map((_) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8.0),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 48.0,
-                                              height: 48.0,
-                                              color: Colors.white,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 8.0),
-                                            ),
-                                            Expanded(
-                                              child: Column(
+                                      secondaryActions: <Widget>[
+                                        IconSlideAction(
+                                          caption: 'Archive',
+                                          color: Colors.blue,
+                                          icon: Icons.archive,
+                                          onTap: () {},
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            } else {
+                              return Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 16.0),
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey[300],
+                                  highlightColor: Colors.grey[100],
+                                  child: Column(
+                                    children: [0, 1, 2, 3, 4, 5, 6]
+                                        .map((_) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0),
+                                              child: Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
-                                                    width: double.infinity,
-                                                    height: 8.0,
+                                                    width: 48.0,
+                                                    height: 48.0,
                                                     color: Colors.white,
                                                   ),
                                                   Padding(
                                                     padding: const EdgeInsets
                                                             .symmetric(
-                                                        vertical: 2.0),
+                                                        horizontal: 8.0),
                                                   ),
-                                                  Container(
-                                                    width: double.infinity,
-                                                    height: 8.0,
-                                                    color: Colors.white,
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 2.0),
-                                                  ),
-                                                  Container(
-                                                    width: 40.0,
-                                                    height: 8.0,
-                                                    color: Colors.white,
-                                                  ),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 8.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical:
+                                                                      2.0),
+                                                        ),
+                                                        Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 8.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical:
+                                                                      2.0),
+                                                        ),
+                                                        Container(
+                                                          width: 40.0,
+                                                          height: 8.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
                                                 ],
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ))
-                                  .toList(),
-                            ),
-                          ),
-                        );
-                      }
-                    }))));
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                              );
+                            }
+                          } else if (snapshot.hasError) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Center(
+                                  child: Text(
+                                    'View your Messages here ',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                    child: Image.asset(
+                                  'assets/messages.png',
+                                  fit: BoxFit.fitWidth,
+                                ))
+                              ],
+                            );
+                          } else {
+                            return Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 16.0),
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.grey[300],
+                                highlightColor: Colors.grey[100],
+                                child: Column(
+                                  children: [0, 1, 2, 3, 4, 5, 6]
+                                      .map((_) => Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: 48.0,
+                                                  height: 48.0,
+                                                  color: Colors.white,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 8.0),
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        width: double.infinity,
+                                                        height: 8.0,
+                                                        color: Colors.white,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 2.0),
+                                                      ),
+                                                      Container(
+                                                        width: double.infinity,
+                                                        height: 8.0,
+                                                        color: Colors.white,
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 2.0),
+                                                      ),
+                                                      Container(
+                                                        width: 40.0,
+                                                        height: 8.0,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ))
+                                      .toList(),
+                                ),
+                              ),
+                            );
+                          }
+                        })))));
   }
 }

@@ -39,26 +39,42 @@ class _ChatPageViewState extends State<ChatPageView> {
   var senderid;
   var recipentid;
   var fcmToken;
+
+  int skip;
+  int limit;
   @override
   void initState() {
     super.initState();
     setState(() {
+      skip = 10;
       recipentname = widget.recipentname;
       messageid = widget.messageid;
       senderid = widget.senderid;
       recipentid = widget.recipentid;
       fcmToken = widget.fcmToken;
     });
-    print(widget.fcmToken);
-    print(widget.senderName);
-//    getMessages();
+
+    _scrollController
+      ..addListener(() {
+        if (_scrollController.position.atEdge) {
+          if (_scrollController.position.pixels == 0) {
+            setState(() {
+              skip = skip + 10;
+            });
+          }
+        }
+      });
   }
 
   Future<List> getRemoteMessages() async {
-    var url = 'https://sellship.co/api/getmessages/' + messageid;
+    var url = 'https://sellship.co/api/getmessages/' +
+        messageid +
+        '/' +
+        skip.toString();
     final response = await http.get(url);
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
+      print(jsonResponse);
       return jsonResponse;
     }
     return [];
@@ -158,15 +174,12 @@ class _ChatPageViewState extends State<ChatPageView> {
             )));
       }
     }
-    Timer(Duration(milliseconds: 100), () {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-    });
 
     return childList;
   }
 
   Stream<List<Widget>> getMessages() async* {
-    yield* Stream<int>.periodic(Duration(seconds: 3), (i) => i)
+    yield* Stream<int>.periodic(Duration(microseconds: 3), (i) => i)
         .asyncMap((i) => getRemoteMessages())
         .map((json) => mapJsonMessagesToListOfWidgetMessages(json));
   }
@@ -242,84 +255,82 @@ class _ChatPageViewState extends State<ChatPageView> {
                           suffixIcon: IconButton(
                             icon: Icon(Icons.send),
                             onPressed: () async {
+                              var x = _text.text;
+                              _text.clear();
+                              var date = DateTime.now();
+                              final f = new DateFormat('hh:mm');
+                              var s = f.format(date);
+                              childList.add(Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 8.0,
+                                      left: 8.0,
+                                      top: 4.0,
+                                      bottom: 4.0),
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Container(
+                                      constraints: BoxConstraints(
+                                          maxWidth: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              3 /
+                                              4),
+                                      padding: EdgeInsets.all(12.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
+                                      ),
+                                      child: Stack(children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 8.0,
+                                              left: 8.0,
+                                              top: 8.0,
+                                              bottom: 15.0),
+                                          child: Text(x,
+                                              style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontSize: 14,
+                                                  color: Colors.white)),
+                                        ),
+                                        Positioned(
+                                          bottom: 1,
+                                          right: 10,
+                                          child: Text(
+                                            s,
+                                            style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 10,
+                                                color: Colors.white
+                                                    .withOpacity(0.6)),
+                                          ),
+                                        )
+                                      ]),
+                                    ),
+                                  )));
+                              setState(() {
+                                childList = childList;
+                              });
                               var url = 'https://sellship.co/api/sendmessage/' +
                                   senderid +
                                   '/' +
                                   recipentid +
                                   '/' +
                                   messageid;
-                              if (_text.text.isNotEmpty) {
+                              if (x.isNotEmpty) {
                                 final response = await http.post(url, body: {
-                                  'message': _text.text,
+                                  'message': x,
                                   'time': DateTime.now().toString()
                                 });
                                 if (response.statusCode == 200) {
-                                  var date = DateTime.now();
-                                  var hour = date.hour;
-                                  var minute = date.minute;
-
-                                  childList.add(Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 8.0,
-                                          left: 8.0,
-                                          top: 4.0,
-                                          bottom: 4.0),
-                                      child: Container(
-                                        alignment: Alignment.centerRight,
-                                        child: Container(
-                                          constraints: BoxConstraints(
-                                              maxWidth: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  3 /
-                                                  4),
-                                          padding: EdgeInsets.all(12.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue,
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
-                                          ),
-                                          child: Stack(children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 8.0,
-                                                  left: 8.0,
-                                                  top: 8.0,
-                                                  bottom: 15.0),
-                                              child: Text(_text.text,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 14,
-                                                      color: Colors.white)),
-                                            ),
-                                            Positioned(
-                                              bottom: 1,
-                                              right: 10,
-                                              child: Text(
-                                                hour.toString() +
-                                                    ':' +
-                                                    minute.toString(),
-                                                style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 10,
-                                                    color: Colors.white
-                                                        .withOpacity(0.6)),
-                                              ),
-                                            )
-                                          ]),
-                                        ),
-                                      )));
-                                  setState(() {
-                                    childList = childList;
-                                  });
+                                  print('ok');
                                 } else {
                                   print(response.statusCode);
                                   print(response.body);
                                 }
 
-                                _text.clear();
-
-                                Timer(Duration(milliseconds: 100), () {
+                                Timer(Duration(microseconds: 1), () {
                                   _scrollController.jumpTo(_scrollController
                                       .position.maxScrollExtent);
                                 });
