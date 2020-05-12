@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
@@ -80,6 +81,9 @@ class _AddItemState extends State<AddItem> {
   bool loading;
 
   var currency;
+
+  bool meetupcheckbox = false;
+  bool shippingcheckbox = false;
 
   void readstorage() async {
     var latitude = await storage.read(key: 'latitude');
@@ -1241,6 +1245,39 @@ class _AddItemState extends State<AddItem> {
                                                 });
                                               } else if (_selectedCategory ==
                                                   'Motors') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  brands.clear();
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
                                                 setState(() {
                                                   _subcategories = [
                                                     'Used Cars',
@@ -1254,6 +1291,39 @@ class _AddItemState extends State<AddItem> {
                                                 });
                                               } else if (_selectedCategory ==
                                                   'Property') {
+                                                var categoryurl =
+                                                    'https://sellship.co/api/getbrands/' +
+                                                        _selectedCategory;
+                                                final categoryresponse =
+                                                    await http.get(categoryurl);
+                                                if (categoryresponse
+                                                        .statusCode ==
+                                                    200) {
+                                                  brands.clear();
+                                                  var categoryrespons = json
+                                                      .decode(categoryresponse
+                                                          .body);
+                                                  print(categoryrespons);
+                                                  for (int i = 0;
+                                                      i <
+                                                          categoryrespons
+                                                              .length;
+                                                      i++) {
+                                                    brands.add(
+                                                        categoryrespons[i]);
+                                                  }
+
+                                                  if (brands == null) {
+                                                    brands = [];
+                                                  }
+                                                  brands.add('Other');
+                                                  setState(() {
+                                                    brands = brands;
+                                                  });
+                                                } else {
+                                                  print(categoryresponse
+                                                      .statusCode);
+                                                }
                                                 setState(() {
                                                   _subcategories = [
                                                     'For Sale - Houses & Apartment',
@@ -1342,7 +1412,7 @@ class _AddItemState extends State<AddItem> {
                                                           'Hair accessories',
                                                           'Belts',
                                                           'Watches',
-                                                          'Arabian wear',
+                                                          'Modest wear',
                                                           'Leggings',
                                                           'Jumpsuits & Playsuits',
                                                           'Lingerie',
@@ -1416,7 +1486,7 @@ class _AddItemState extends State<AddItem> {
                                                           'Hair accessories',
                                                           'Belts',
                                                           'Watches',
-                                                          'Arabian wear',
+                                                          'Modest wear',
                                                           'Leggings',
                                                           'Nightwear',
                                                           'Loungewear',
@@ -1764,7 +1834,7 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 5.0,
                                 ),
-                                brands.isNotEmpty
+                                brands.isNotEmpty || brands != null
                                     ? Container(
                                         height: 80,
                                         decoration: BoxDecoration(
@@ -2237,7 +2307,60 @@ class _AddItemState extends State<AddItem> {
                                       ],
                                     )),
                                 SizedBox(
-                                  height: 20.0,
+                                  height: 10.0,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 10, bottom: 10, top: 5),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Delivery Method',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade300,
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(children: <Widget>[
+                                      CheckboxListTile(
+                                        title: const Text('Meetup'),
+                                        value: meetupcheckbox,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            meetupcheckbox = value;
+                                          });
+                                        },
+                                        secondary:
+                                            const Icon(FontAwesome.handshake_o),
+                                      ),
+                                      CheckboxListTile(
+                                        title: const Text('Shipping Included'),
+                                        value: shippingcheckbox,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            shippingcheckbox = value;
+                                          });
+                                        },
+                                        secondary:
+                                            const Icon(Icons.local_shipping),
+                                      ),
+                                    ])),
+                                SizedBox(
+                                  height: 10,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -2287,7 +2410,7 @@ class _AddItemState extends State<AddItem> {
                                         children: <Widget>[
                                           position != null
                                               ? Container(
-                                                  height: 300,
+                                                  height: 355,
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -2480,7 +2603,8 @@ class _AddItemState extends State<AddItem> {
                   } else if (businessnameController.text.isNotEmpty &&
                       _image.path.isNotEmpty &&
                       businesspricecontroller.text.isNotEmpty &&
-                      businessbrandcontroller.text.isNotEmpty &&
+                      (businessbrandcontroller.text.isNotEmpty ||
+                          _selectedbrand.isNotEmpty) &&
                       _selectedCondition.isNotEmpty &&
                       businessdescriptionController.text.isNotEmpty &&
                       _lastMapPosition != null) {
@@ -2524,6 +2648,8 @@ class _AddItemState extends State<AddItem> {
                         'latitude': _lastMapPosition.latitude,
                         'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
+                        'meetup': meetupcheckbox,
+                        'shipping': shippingcheckbox,
                         'city': city,
                         'country': country,
                         'condition': _selectedCondition,
@@ -2561,6 +2687,8 @@ class _AddItemState extends State<AddItem> {
                             : _selectedsubsubCategory,
                         'latitude': _lastMapPosition.latitude,
                         'longitude': _lastMapPosition.longitude,
+                        'meetup': meetupcheckbox,
+                        'shipping': shippingcheckbox,
                         'description': businessdescriptionController.text,
                         'city': city,
                         'condition': _selectedCondition,
@@ -2606,6 +2734,8 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city,
                         'condition': _selectedCondition,
+                        'meetup': meetupcheckbox,
+                        'shipping': shippingcheckbox,
                         'brand': businessbrandcontroller.text == null
                             ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
@@ -2655,6 +2785,8 @@ class _AddItemState extends State<AddItem> {
                         'city': city,
                         'userid': userid,
                         'condition': _selectedCondition,
+                        'meetup': meetupcheckbox,
+                        'shipping': shippingcheckbox,
                         'brand': businessbrandcontroller.text == null
                             ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
@@ -2713,6 +2845,8 @@ class _AddItemState extends State<AddItem> {
                             ? ''
                             : businessizecontroller.text,
                         'condition': _selectedCondition,
+                        'meetup': meetupcheckbox,
+                        'shipping': shippingcheckbox,
                         'userid': userid,
                         'username': firstname,
                         'useremail': email,
@@ -2763,6 +2897,8 @@ class _AddItemState extends State<AddItem> {
                         'userid': userid,
                         'country': country,
                         'username': firstname,
+                        'meetup': meetupcheckbox,
+                        'shipping': shippingcheckbox,
                         'brand': businessbrandcontroller.text == null
                             ? _selectedbrand
                             : businessbrandcontroller.text.trim(),

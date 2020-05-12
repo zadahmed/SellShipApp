@@ -463,12 +463,12 @@ class _HomeScreenState extends State<HomeScreen> {
           position.latitude, position.longitude);
       Placemark place = p[0];
       var cit = place.administrativeArea;
-      var country = place.country;
+      var countr = place.country;
       await storage.write(key: 'city', value: cit);
-      await storage.write(key: 'locationcountry', value: country);
+      await storage.write(key: 'locationcountry', value: countr);
       setState(() {
         city = cit;
-        locationcountry = country;
+        locationcountry = countr;
         print(city);
       });
       fetchItems(skip, limit);
@@ -499,7 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchItems(skip, limit);
     setState(() {
       city = cit;
-      country = countryy;
+      locationcountry = countryy;
     });
   }
 

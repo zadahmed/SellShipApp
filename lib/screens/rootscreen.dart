@@ -67,6 +67,8 @@ class _RootScreenState extends State<RootScreen> {
             type: BottomNavigationBarType.fixed,
             selectedItemColor: Colors.deepOrange,
             unselectedItemColor: Colors.grey[400],
+            showSelectedLabels: false, // <-- HERE
+            showUnselectedLabels: false, //
             currentIndex: _currentPage,
             onTap: (i) {
               setState(() {
@@ -75,24 +77,24 @@ class _RootScreenState extends State<RootScreen> {
             },
             items: [
               BottomNavigationBarItem(
-                  icon: Icon(
-                    FontAwesome.home,
-                    size: 25,
-                  ),
-                  title: Text('')),
+                icon: Icon(
+                  FontAwesome.home,
+                  size: 25,
+                ),
+              ),
               BottomNavigationBarItem(
-                  icon: Icon(
-                    FontAwesome.plus_square,
-                    color: Colors.deepOrange,
-                    size: 35,
-                  ),
-                  title: Text('')),
+                icon: Icon(
+                  FontAwesome.plus_square,
+                  color: Colors.deepOrange,
+                  size: 35,
+                ),
+              ),
               BottomNavigationBarItem(
-                  icon: Icon(
-                    Feather.user,
-                    size: 25,
-                  ),
-                  title: Text('')),
+                icon: Icon(
+                  Feather.user,
+                  size: 25,
+                ),
+              ),
             ],
           ),
           body: _pages[_currentPage],

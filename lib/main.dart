@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:SellShip/screens/details.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -58,12 +60,44 @@ class SplashState extends State<Splash> {
     }
   }
 
+  Future handleDynamicLinks() async {
+    // 1. Get the initial dynamic link if the app is opened with a dynamic link
+    final PendingDynamicLinkData data =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+
+    _handleDeepLink(data);
+
+    FirebaseDynamicLinks.instance.onLink(
+        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+      _handleDeepLink(dynamicLink);
+    }, onError: (OnLinkErrorException e) async {
+      print('Link Failed: ${e.message}');
+    });
+  }
+
+  void _handleDeepLink(PendingDynamicLinkData data) {
+    final Uri deepLink = data?.link;
+    if (deepLink != null) {
+      print('_handleDeepLink | deeplink: $deepLink');
+
+      var id = deepLink.queryParameters['id'];
+
+      if (id != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Details(itemid: id)),
+        );
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
     new Timer(new Duration(milliseconds: 200), () {
       if (mounted) {
+        handleDynamicLinks();
         navigatetoscreen();
       }
     });

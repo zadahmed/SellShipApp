@@ -15,6 +15,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/useritems.dart';
+import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatefulWidget {
@@ -208,7 +209,28 @@ class _DetailsState extends State<Details> {
   IconData heartIcon;
 
   int _current = 0;
+  Future<String> createFirstPostLink(String id) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://sellship.page.link',
+      link: Uri.parse('https://sellship.co/items?id=$id'),
+      androidParameters: AndroidParameters(
+        packageName: 'com.zad.sellship',
+      ),
+      iosParameters: IosParameters(
+        bundleId: 'com.zad.sellship',
+        appStoreId: '1506496966',
+      ),
+      socialMetaTagParameters: SocialMetaTagParameters(
+        title: 'Check out what I found on SellShip!',
+        description: 'Found this awesome ${newItem.name} on SellShip',
+      ),
+    );
 
+    final Uri dynamicUrl = await parameters.buildUrl();
+    return dynamicUrl.toString();
+  }
+
+  int inde;
   @override
   Widget build(BuildContext context) {
     return loading == false
@@ -229,34 +251,17 @@ class _DetailsState extends State<Details> {
                 ),
               ),
               actions: <Widget>[
-                InkWell(
-                    onTap: () async {
-                      final DynamicLinkParameters parameters =
-                          DynamicLinkParameters(
-                        uriPrefix: 'https:/sellship.page.link',
-                        link: Uri.parse('https://sellship.co/'),
-                        androidParameters: AndroidParameters(
-                          packageName: 'com.zad.sellship',
-                          minimumVersion: 190,
-                        ),
-                        iosParameters: IosParameters(
-                          bundleId: 'com.zad.sellship',
-                          minimumVersion: '2.0.0',
-                          appStoreId: '1506496966',
-                        ),
-                        socialMetaTagParameters: SocialMetaTagParameters(
-                          title: 'Check out what I found on SellShip!',
-                          description:
-                              'Found this awesome ${newItem.name} on SellShip',
-                        ),
-                      );
-
-                      final ShortDynamicLink shortDynamicLink =
-                          await parameters.buildShortLink();
-                      final Uri shortUrl = shortDynamicLink.shortUrl;
-                      print(shortUrl);
-                    },
-                    child: Icon(Icons.share)),
+                Padding(
+                  padding: EdgeInsets.only(right: 10, bottom: 5),
+                  child: InkWell(
+                      onTap: () async {
+                        var s = await createFirstPostLink(itemid);
+                        Share.share('Check out what I found $s',
+                            subject:
+                                'Look at this awesome item I found on SellShip!');
+                      },
+                      child: Icon(Icons.share)),
+                ),
               ],
             ),
             body: Stack(
@@ -268,14 +273,18 @@ class _DetailsState extends State<Details> {
 //                  padding: EdgeInsets.symmetric(horizontal: 10),
                       children: <Widget>[
                         Container(
-                          height: 300,
+                          height: 350,
                           width: MediaQuery.of(context).size.width,
                           color: Colors.white,
                           child: Stack(
                             children: <Widget>[
-                              ListView.builder(
-                                  scrollDirection: Axis.horizontal,
+                              PageView.builder(
                                   itemCount: images.length,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      inde = index;
+                                    });
+                                  },
                                   itemBuilder: (BuildContext ctxt, int index) {
                                     return InkWell(
                                       onTap: () {
@@ -293,7 +302,9 @@ class _DetailsState extends State<Details> {
                                         tag: images[index],
                                         child: CachedNetworkImage(
                                           imageUrl: images[index],
-                                          height: 300,
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
                                           placeholder: (context, url) =>
                                               SpinKitChasingDots(
                                                   color: Colors.deepOrange),
@@ -301,18 +312,17 @@ class _DetailsState extends State<Details> {
                                               Icon(Icons.error),
                                           width:
                                               MediaQuery.of(context).size.width,
-                                          fit: BoxFit.fitWidth,
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     );
                                   }),
-
                               Align(
                                 alignment: Alignment.bottomCenter,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: images.map((url) {
-                                    int index = images.indexOf(url);
+                                    inde = images.indexOf(url);
                                     return Container(
                                       width: 8.0,
                                       height: 8.0,
@@ -320,7 +330,7 @@ class _DetailsState extends State<Details> {
                                           vertical: 10.0, horizontal: 2.0),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: _current == index
+                                        color: _current == inde
                                             ? Colors.deepOrange
                                             : Colors.white,
                                       ),
@@ -328,235 +338,99 @@ class _DetailsState extends State<Details> {
                                   }).toList(),
                                 ),
                               ),
-
-//                                  Row(
-//                                    mainAxisAlignment: MainAxisAlignment.end,
-//                                    children: <Widget>[
-//                                      Icon(
-//                                        Icons.image,
-//                                        color: Colors.white,
-//                                      ),
-//                                      SizedBox(
-//                                        width: 5,
-//                                      ),
-//                                      Text(
-//                                        images.length.toString() + '/6',
-//                                        style: TextStyle(
-//                                            fontFamily: 'Montserrat',
-//                                            fontSize: 16,
-//                                            color: Colors.white),
-//                                      )
-//                                    ],
-//                                  )),
                             ],
                           ),
                         ),
                         SizedBox(height: 10),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(
-                                    child: Text(
-                                      newItem.name,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                        ListTile(
+                          dense: true,
+                          title: Text(
+                            newItem.name,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          trailing: Container(
+                            height: 50,
+                            width: 80,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      heartColor = Colors.deepOrange;
+                                      heartIcon = FontAwesome.heart;
+                                    });
+                                    favouriteItem();
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    width: 30,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade300,
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(20),
                                     ),
-                                    width: 250,
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    newItem.category,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16,
+                                    child: Icon(
+                                      heartIcon,
+                                      color: heartColor,
+                                      size: 17,
                                     ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    newItem.price.toString() + ' ' + currency,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Text(
-                                        'Condition -',
-                                        style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 16,
-                                          color: Colors.blueGrey,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          newItem.condition.toString(),
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 16,
-                                            color: Colors.blueGrey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        width: 200,
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Text(
-                                        'Brand -',
-                                        style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 16,
-                                          color: Colors.blueGrey,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          newItem.brand.toString(),
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 16,
-                                            color: Colors.blueGrey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        width: 200,
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  newItem.size != null
-                                      ? Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: <Widget>[
-                                            Text(
-                                              'Size -',
-                                              style: TextStyle(
-                                                fontFamily: 'Montserrat',
-                                                fontSize: 16,
-                                                color: Colors.blueGrey,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Container(
-                                              child: Text(
-                                                newItem.size.toString(),
-                                                textAlign: TextAlign.left,
-                                                style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 16,
-                                                  color: Colors.blueGrey,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              width: 200,
-                                            )
-                                          ],
-                                        )
-                                      : Container(),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.location_on,
-                                        size: 12,
-                                        color: Colors.blueGrey,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        newItem.city.toString(),
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 16,
-                                          color: Colors.blueGrey,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5),
-                                ],
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    heartColor = Colors.deepOrange;
-                                    heartIcon = FontAwesome.heart;
-                                  });
-                                  favouriteItem();
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Icon(
-                                    heartIcon,
-                                    color: heartColor,
-                                    size: 17,
                                   ),
                                 ),
-                              ),
-                            ],
+                                InkWell(
+                                  onTap: () {
+                                    //report item
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    width: 30,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade300,
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Icon(
+                                      Icons.warning,
+                                      color: Colors.grey,
+                                      size: 17,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        SizedBox(height: 10),
-                        InkWell(
+                        ListTile(
+                          dense: true,
+                          leading: Icon(FontAwesome.money),
+                          title: Text(
+                            newItem.price.toString() + ' ' + currency,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        ListTile(
                           onTap: () {
                             Navigator.push(
                               context,
@@ -566,98 +440,148 @@ class _DetailsState extends State<Details> {
                                       username: newItem.username)),
                             );
                           },
-                          child: Container(
-                            height: 70,
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    offset: Offset(0.0, 1.0), //(x,y)
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6)),
-                            child: Center(
-                              child: ListTile(
-                                title: Text(
-                                  newItem.username,
-                                  style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                ),
-                                leading: Icon(
-                                  FontAwesome5.user_circle,
-                                  color: Colors.deepOrange,
-                                  size: 24,
-                                ),
-                                trailing: Padding(
-                                  padding: EdgeInsets.only(bottom: 5),
-                                  child: Icon(
-                                    Feather.arrow_right_circle,
-                                    size: 20,
-                                    color: Colors.deepOrangeAccent,
-                                  ),
-                                ),
-                              ),
+                          dense: true,
+                          leading: Icon(FontAwesome.user_circle),
+                          title: Text(
+                            newItem.username,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 16,
+                                color: Colors.black),
+                          ),
+                        ),
+                        ListTile(
+                          dense: true,
+                          leading: Icon(FontAwesome.heart),
+                          title: Text(
+                            newItem.price.toString() + ' Likes',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                        SizedBox(height: 5),
-                        Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade300,
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(6)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(height: 10),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Center(
-                                  child: Text(
-                                    'Description',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                        ExpansionTile(
+                          title: Text('Item Details'),
+                          leading: Icon(Icons.textsms),
+                          children: <Widget>[
+                            ListTile(
+                              dense: true,
+                              leading: Icon(Icons.category),
+                              title: Text(
+                                newItem.category,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              SizedBox(height: 10),
-                              Expanded(
-                                flex: 1,
-                                child: new SingleChildScrollView(
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 10),
-                                    child: Text(
-                                      newItem.description,
-                                      textAlign: TextAlign.justify,
+                            ),
+                            ListTile(
+                              dense: true,
+                              leading: Icon(Icons.hourglass_full),
+                              title: Text(
+                                newItem.condition.toString(),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              dense: true,
+                              leading: Icon(FontAwesome.tag),
+                              title: Text(
+                                newItem.brand.toString(),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            newItem.size != null
+                                ? ListTile(
+                                    dense: true,
+                                    leading: Icon(Icons.signal_cellular_null),
+                                    title: Text(
+                                      newItem.size.toString(),
+                                      textAlign: TextAlign.left,
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
+                                        color: Colors.blueGrey,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                            ListTile(
+                              dense: true,
+                              leading: Icon(Icons.location_on),
+                              title: Text(
+                                newItem.city.toString(),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10, bottom: 10, top: 10),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Description',
+                                  style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 150,
+                              width: MediaQuery.of(context).size.width - 10,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: new SingleChildScrollView(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Text(
+                                          newItem.description,
+                                          textAlign: TextAlign.justify,
+                                          style: TextStyle(
+                                            fontFamily: 'Montserrat',
+                                            fontSize: 16,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 10),
                         Platform.isIOS == true
                             ? Container(
                                 height: 200,
@@ -677,7 +601,20 @@ class _DetailsState extends State<Details> {
                                   controller: _controller,
                                 ),
                               ),
-                        SizedBox(height: 5),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Item Location',
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                        ),
                         Container(
                           height: 260,
                           decoration: BoxDecoration(
@@ -694,22 +631,6 @@ class _DetailsState extends State<Details> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              SizedBox(height: 5),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Center(
-                                  child: Text(
-                                    'Location of Item',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 15),
                               Container(
                                 height: 200,
                                 width: MediaQuery.of(context).size.width,
@@ -781,71 +702,108 @@ class _DetailsState extends State<Details> {
                     ))
               ],
             ),
-            bottomNavigationBar: Container(
-              height: 60,
-              child: GestureDetector(
-                onTap: () async {
-                  var senderid = newItem.userid;
-                  if (senderid != userid) {
-                    var itemurl = 'https://sellship.co/api/createroom/' +
-                        userid +
-                        '/' +
-                        senderid +
-                        '/' +
-                        itemid;
-                    final response = await http.get(itemurl);
-                    var messageinfo = json.decode(response.body);
-                    var messageid = (messageinfo['messageid']);
-                    var recieverfcmtoken = (messageinfo['recieverfcmtoken']);
-                    var sendername = (messageinfo['sendername']);
-                    var recipentname = (messageinfo['recievername']);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatPageView(
-                          messageid: messageid,
-                          recipentname: recipentname,
-                          senderid: userid,
-                          recipentid: senderid,
-                          fcmToken: recieverfcmtoken,
-                          senderName: sendername,
-                          itemid: itemid,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: AnimatedOpacity(
+              duration: const Duration(milliseconds: 500),
+              opacity: 1,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () async {
+                        var senderid = newItem.userid;
+                        if (senderid != userid) {
+                          var itemurl = 'https://sellship.co/api/createroom/' +
+                              userid +
+                              '/' +
+                              senderid +
+                              '/' +
+                              itemid;
+                          final response = await http.get(itemurl);
+                          var messageinfo = json.decode(response.body);
+                          var messageid = (messageinfo['messageid']);
+                          var recieverfcmtoken =
+                              (messageinfo['recieverfcmtoken']);
+                          var sendername = (messageinfo['sendername']);
+                          var recipentname = (messageinfo['recievername']);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatPageView(
+                                messageid: messageid,
+                                recipentname: recipentname,
+                                senderid: userid,
+                                recipentid: senderid,
+                                fcmToken: recieverfcmtoken,
+                                senderName: sendername,
+                                itemid: itemid,
+                              ),
+                            ),
+                          );
+                        } else {
+                          print('Same User');
+                        }
+                      },
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                            border: Border.all(
+                                color: Colors.amber.withOpacity(0.2)),
+                          ),
+                          child: Icon(
+                            Icons.chat_bubble,
+                            color: Colors.white,
+                            size: 28,
+                          ),
                         ),
                       ),
-                    );
-                  } else {
-                    print('Same User');
-                  }
-                },
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(top: 9, bottom: 9, left: 15, right: 15),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.circular(25)),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Feather.message_square,
-                            color: Colors.white,
-                            size: 20,
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {},
+                        child: Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.deepOrange.withOpacity(0.4),
+                                  offset: const Offset(1.1, 1.1),
+                                  blurRadius: 10.0),
+                            ],
                           ),
-                          SizedBox(
-                            width: 5,
+                          child: Center(
+                            child: Text(
+                              'Make an Offer',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                letterSpacing: 0.0,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                          Text(
-                            "Chat",
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 16,
-                                color: Color(0xFFFBFBFB),
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ]),
-                  ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
