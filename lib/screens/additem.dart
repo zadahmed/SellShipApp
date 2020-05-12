@@ -89,7 +89,7 @@ class _AddItemState extends State<AddItem> {
     var latitude = await storage.read(key: 'latitude');
     var longitude = await storage.read(key: 'longitude');
     var cit = await storage.read(key: 'city');
-    var countr = await storage.read(key: 'country');
+    var countr = await storage.read(key: 'locationcountry');
     if (countr.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';

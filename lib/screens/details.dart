@@ -749,65 +749,151 @@ class _DetailsState extends State<Details> {
                         }
                       },
                       child: Container(
-                        width: 48,
                         height: 48,
+                        width: MediaQuery.of(context).size.width - 40,
                         child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.amber,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(16.0),
-                            ),
-                            border: Border.all(
-                                color: Colors.amber.withOpacity(0.2)),
-                          ),
-                          child: Icon(
-                            Icons.chat_bubble,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {},
-                        child: Container(
-                          height: 48,
-                          decoration: BoxDecoration(
-                            color: Colors.deepOrange,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(16.0),
-                            ),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: Colors.deepOrange.withOpacity(0.4),
-                                  offset: const Offset(1.1, 1.1),
-                                  blurRadius: 10.0),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Make an Offer',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                                letterSpacing: 0.0,
-                                color: Colors.white,
+                            decoration: BoxDecoration(
+                              color: Colors.deepOrange,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(16.0),
                               ),
+                              border: Border.all(
+                                  color: Colors.deepOrange.withOpacity(0.2)),
                             ),
-                          ),
-                        ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Chat',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Icon(
+                                  Icons.chat_bubble,
+                                  color: Colors.white,
+                                  size: 16,
+                                ),
+                              ],
+                            )),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
           )
+//            AnimatedOpacity(
+//              duration: const Duration(milliseconds: 500),
+//              opacity: 1,
+//              child: Padding(
+//                padding: const EdgeInsets.only(left: 16, bottom: 16, right: 16),
+//                child: Row(
+//                  mainAxisAlignment: MainAxisAlignment.center,
+//                  crossAxisAlignment: CrossAxisAlignment.center,
+//                  children: <Widget>[
+//                    InkWell(
+//                      onTap: () async {
+//                        var senderid = newItem.userid;
+//                        if (senderid != userid) {
+//                          var itemurl = 'https://sellship.co/api/createroom/' +
+//                              userid +
+//                              '/' +
+//                              senderid +
+//                              '/' +
+//                              itemid;
+//                          final response = await http.get(itemurl);
+//                          var messageinfo = json.decode(response.body);
+//                          var messageid = (messageinfo['messageid']);
+//                          var recieverfcmtoken =
+//                              (messageinfo['recieverfcmtoken']);
+//                          var sendername = (messageinfo['sendername']);
+//                          var recipentname = (messageinfo['recievername']);
+//                          Navigator.push(
+//                            context,
+//                            MaterialPageRoute(
+//                              builder: (context) => ChatPageView(
+//                                messageid: messageid,
+//                                recipentname: recipentname,
+//                                senderid: userid,
+//                                recipentid: senderid,
+//                                fcmToken: recieverfcmtoken,
+//                                senderName: sendername,
+//                                itemid: itemid,
+//                              ),
+//                            ),
+//                          );
+//                        } else {
+//                          print('Same User');
+//                        }
+//                      },
+//                      child: Container(
+//                        width: 48,
+//                        height: 48,
+//                        child: Container(
+//                          decoration: BoxDecoration(
+//                            color: Colors.amber,
+//                            borderRadius: const BorderRadius.all(
+//                              Radius.circular(16.0),
+//                            ),
+//                            border: Border.all(
+//                                color: Colors.amber.withOpacity(0.2)),
+//                          ),
+//                          child: Icon(
+//                            Icons.chat_bubble,
+//                            color: Colors.white,
+//                            size: 28,
+//                          ),
+//                        ),
+//                      ),
+//                    ),
+//                    const SizedBox(
+//                      width: 16,
+//                    ),
+//                    Expanded(
+//                      child: InkWell(
+//                        onTap: () {},
+//                        child: Container(
+//                          height: 48,
+//                          decoration: BoxDecoration(
+//                            color: Colors.deepOrange,
+//                            borderRadius: const BorderRadius.all(
+//                              Radius.circular(16.0),
+//                            ),
+//                            boxShadow: <BoxShadow>[
+//                              BoxShadow(
+//                                  color: Colors.deepOrange.withOpacity(0.4),
+//                                  offset: const Offset(1.1, 1.1),
+//                                  blurRadius: 10.0),
+//                            ],
+//                          ),
+//                          child: Center(
+//                            child: Text(
+//                              'Make an Offer',
+//                              textAlign: TextAlign.left,
+//                              style: TextStyle(
+//                                fontWeight: FontWeight.w600,
+//                                fontSize: 18,
+//                                letterSpacing: 0.0,
+//                                color: Colors.white,
+//                              ),
+//                            ),
+//                          ),
+//                        ),
+//                      ),
+//                    )
+//                  ],
+//                ),
+//              ),
+//            ),
+//          )
         : Scaffold(
             body: Center(
                 child: SpinKitChasingDots(color: Colors.deepOrangeAccent)));

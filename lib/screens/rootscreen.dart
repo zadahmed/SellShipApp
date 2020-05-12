@@ -77,24 +77,24 @@ class _RootScreenState extends State<RootScreen> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesome.home,
-                  size: 25,
-                ),
-              ),
+                  icon: Icon(
+                    FontAwesome.home,
+                    size: 25,
+                  ),
+                  title: Text('')),
               BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesome.plus_square,
-                  color: Colors.deepOrange,
-                  size: 35,
-                ),
-              ),
+                  icon: Icon(
+                    FontAwesome.plus_square,
+                    color: Colors.deepOrange,
+                    size: 35,
+                  ),
+                  title: Text('')),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Feather.user,
-                  size: 25,
-                ),
-              ),
+                  icon: Icon(
+                    Feather.user,
+                    size: 25,
+                  ),
+                  title: Text('')),
             ],
           ),
           body: _pages[_currentPage],
