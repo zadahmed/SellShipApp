@@ -2653,7 +2653,7 @@ class _AddItemState extends State<AddItem> {
                         'city': city,
                         'country': country,
                         'condition': _selectedCondition,
-                        'brand': businessbrandcontroller.text == null
+                        'brand': businessbrandcontroller.text.isEmpty
                             ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
                         'size': businessizecontroller.text == null

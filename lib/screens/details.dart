@@ -37,6 +37,7 @@ class _DetailsState extends State<Details> {
   static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
 
   final _controller = NativeAdmobController();
+  final scaffoldState = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -49,6 +50,111 @@ class _DetailsState extends State<Details> {
       heartIcon = FontAwesome5.heart;
     });
     fetchItem();
+  }
+
+  TextEditingController offercontroller = TextEditingController();
+
+  void showMe(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext contex) {
+          return Container(
+              height: 120,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Make an Offer',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    title: Container(
+                        width: 200,
+                        padding: EdgeInsets.only(),
+                        child: Center(
+                          child: TextField(
+                            cursorColor: Color(0xFF979797),
+                            controller: offercontroller,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                                labelText: "Offer Price",
+                                alignLabelWithHint: true,
+                                labelStyle: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                ),
+                                focusColor: Colors.black,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ))),
+                          ),
+                        )),
+                    trailing: InkWell(
+                      onTap: () async {
+                        print('Make Offer');
+                        print(offercontroller.text);
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 48,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                            border:
+                                Border.all(color: Colors.red.withOpacity(0.2)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Make Offer',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ));
+        });
   }
 
   Set<Marker> _markers = Set();
@@ -749,151 +855,67 @@ class _DetailsState extends State<Details> {
                         }
                       },
                       child: Container(
+                        width: 48,
                         height: 48,
-                        width: MediaQuery.of(context).size.width - 40,
                         child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.deepOrange,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(16.0),
-                              ),
-                              border: Border.all(
-                                  color: Colors.deepOrange.withOpacity(0.2)),
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'Chat',
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Icon(
-                                  Icons.chat_bubble,
-                                  color: Colors.white,
-                                  size: 16,
-                                ),
-                              ],
-                            )),
+                            border: Border.all(
+                                color: Colors.amber.withOpacity(0.2)),
+                          ),
+                          child: Icon(
+                            Icons.chat_bubble,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ),
                       ),
                     ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          showMe(context);
+                        },
+                        child: Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.deepOrange.withOpacity(0.4),
+                                  offset: const Offset(1.1, 1.1),
+                                  blurRadius: 10.0),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Make an Offer',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                letterSpacing: 0.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
             ),
           )
-//            AnimatedOpacity(
-//              duration: const Duration(milliseconds: 500),
-//              opacity: 1,
-//              child: Padding(
-//                padding: const EdgeInsets.only(left: 16, bottom: 16, right: 16),
-//                child: Row(
-//                  mainAxisAlignment: MainAxisAlignment.center,
-//                  crossAxisAlignment: CrossAxisAlignment.center,
-//                  children: <Widget>[
-//                    InkWell(
-//                      onTap: () async {
-//                        var senderid = newItem.userid;
-//                        if (senderid != userid) {
-//                          var itemurl = 'https://sellship.co/api/createroom/' +
-//                              userid +
-//                              '/' +
-//                              senderid +
-//                              '/' +
-//                              itemid;
-//                          final response = await http.get(itemurl);
-//                          var messageinfo = json.decode(response.body);
-//                          var messageid = (messageinfo['messageid']);
-//                          var recieverfcmtoken =
-//                              (messageinfo['recieverfcmtoken']);
-//                          var sendername = (messageinfo['sendername']);
-//                          var recipentname = (messageinfo['recievername']);
-//                          Navigator.push(
-//                            context,
-//                            MaterialPageRoute(
-//                              builder: (context) => ChatPageView(
-//                                messageid: messageid,
-//                                recipentname: recipentname,
-//                                senderid: userid,
-//                                recipentid: senderid,
-//                                fcmToken: recieverfcmtoken,
-//                                senderName: sendername,
-//                                itemid: itemid,
-//                              ),
-//                            ),
-//                          );
-//                        } else {
-//                          print('Same User');
-//                        }
-//                      },
-//                      child: Container(
-//                        width: 48,
-//                        height: 48,
-//                        child: Container(
-//                          decoration: BoxDecoration(
-//                            color: Colors.amber,
-//                            borderRadius: const BorderRadius.all(
-//                              Radius.circular(16.0),
-//                            ),
-//                            border: Border.all(
-//                                color: Colors.amber.withOpacity(0.2)),
-//                          ),
-//                          child: Icon(
-//                            Icons.chat_bubble,
-//                            color: Colors.white,
-//                            size: 28,
-//                          ),
-//                        ),
-//                      ),
-//                    ),
-//                    const SizedBox(
-//                      width: 16,
-//                    ),
-//                    Expanded(
-//                      child: InkWell(
-//                        onTap: () {},
-//                        child: Container(
-//                          height: 48,
-//                          decoration: BoxDecoration(
-//                            color: Colors.deepOrange,
-//                            borderRadius: const BorderRadius.all(
-//                              Radius.circular(16.0),
-//                            ),
-//                            boxShadow: <BoxShadow>[
-//                              BoxShadow(
-//                                  color: Colors.deepOrange.withOpacity(0.4),
-//                                  offset: const Offset(1.1, 1.1),
-//                                  blurRadius: 10.0),
-//                            ],
-//                          ),
-//                          child: Center(
-//                            child: Text(
-//                              'Make an Offer',
-//                              textAlign: TextAlign.left,
-//                              style: TextStyle(
-//                                fontWeight: FontWeight.w600,
-//                                fontSize: 18,
-//                                letterSpacing: 0.0,
-//                                color: Colors.white,
-//                              ),
-//                            ),
-//                          ),
-//                        ),
-//                      ),
-//                    )
-//                  ],
-//                ),
-//              ),
-//            ),
-//          )
         : Scaffold(
             body: Center(
                 child: SpinKitChasingDots(color: Colors.deepOrangeAccent)));

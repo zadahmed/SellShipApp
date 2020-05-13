@@ -755,11 +755,6 @@ class _NearMeState extends State<NearMe> {
   }
 
   List<String> brands = List<String>();
-  var images = [
-    'assets/womenfashion.jpg',
-    'assets/Laptop.jpeg',
-    'assets/home.jpeg',
-  ];
 
   TextEditingController searchcontroller = new TextEditingController();
 

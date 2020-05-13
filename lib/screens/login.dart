@@ -79,9 +79,21 @@ class _LoginPageState extends State<LoginPage>
         final graphResponse = await http.get(
             'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
 
-        setState(() {
-          loading = true;
-        });
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(20.0)), //this right here
+                child: Container(
+                  height: 100,
+                  child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: SpinKitChasingDots(color: Colors.deepOrange)),
+                ),
+              );
+            });
         final profile = json.decode(graphResponse.body);
 
         var url = 'https://sellship.co/api/signup';
@@ -104,7 +116,7 @@ class _LoginPageState extends State<LoginPage>
           print(jsondata);
           if (jsondata['id'] != null) {
             await storage.write(key: 'userid', value: jsondata['id']);
-
+            Navigator.of(context, rootNavigator: true).pop('dialog');
             print('signned up ');
             setState(() {
               userid = jsondata['id'];
@@ -129,6 +141,7 @@ class _LoginPageState extends State<LoginPage>
                 await storage.write(key: 'userid', value: jsondata['id']);
 
                 print('Loggd in ');
+                Navigator.of(context, rootNavigator: true).pop('dialog');
                 setState(() {
                   userid = jsondata['id'];
                   Navigator.pop(context);
@@ -399,9 +412,23 @@ class _LoginPageState extends State<LoginPage>
                                 ),
                               ),
                               onPressed: () {
-                                setState(() {
-                                  loading = true;
-                                });
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20.0)), //this right here
+                                        child: Container(
+                                          height: 100,
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: SpinKitChasingDots(
+                                                  color: Colors.deepOrange)),
+                                        ),
+                                      );
+                                    });
                                 Login();
                               }),
                         ),
@@ -760,7 +787,7 @@ class _LoginPageState extends State<LoginPage>
                           ),
                         ),
                   userid != null ? SizedBox(height: 25.0) : Container(),
-                  userid != null
+                  firstname != null
                       ? Text(
                           firstname + ' ' + lastname,
                           style: TextStyle(
@@ -1420,9 +1447,24 @@ class _LoginPageState extends State<LoginPage>
                                         null &&
                                     signupNameController.text.isNotEmpty !=
                                         null) {
-                                  setState(() {
-                                    loading = true;
-                                  });
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Dialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      20.0)), //this right here
+                                          child: Container(
+                                            height: 100,
+                                            child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: SpinKitChasingDots(
+                                                    color: Colors.deepOrange)),
+                                          ),
+                                        );
+                                      });
                                   Signup();
                                 } else {
                                   showDialog(
@@ -1632,6 +1674,7 @@ class _LoginPageState extends State<LoginPage>
           await storage.write(key: 'businessid', value: jsondata['businessid']);
         }
         print('Loggd in ');
+        Navigator.of(context, rootNavigator: true).pop('dialog');
         setState(() {
           userid = jsondata['id'];
           Navigator.pop(context);
@@ -1665,13 +1708,13 @@ class _LoginPageState extends State<LoginPage>
       print(jsondata);
       if (jsondata['id'] != null) {
         await storage.write(key: 'userid', value: jsondata['id']);
-
+        Navigator.of(context, rootNavigator: true).pop('dialog');
         print('signned up ');
         setState(() {
           userid = jsondata['id'];
-          Navigator.pop(context);
-          getProfileData();
         });
+        Navigator.pop(context);
+        getProfileData();
       } else {
         print('User Already Exists');
       }

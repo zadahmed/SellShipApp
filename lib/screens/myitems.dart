@@ -571,7 +571,10 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                 loading = false;
               });
             } else {
-              item = [];
+              setState(() {
+                item = [];
+                loading = false;
+              });
             }
           }
         } else {
