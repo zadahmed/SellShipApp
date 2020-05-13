@@ -123,8 +123,41 @@ class _DetailsState extends State<Details> {
                         )),
                     trailing: InkWell(
                       onTap: () async {
-                        print('Make Offer');
-                        print(offercontroller.text);
+                        var recieverid = newItem.userid;
+                        if (recieverid != userid) {
+                          var itemurl = 'https://sellship.co/api/createoffer/' +
+                              userid +
+                              '/' +
+                              recieverid +
+                              '/' +
+                              itemid +
+                              '/' +
+                              offercontroller.text.trim();
+                          final response = await http.get(itemurl);
+                          var messageinfo = json.decode(response.body);
+                          var messageid = (messageinfo['messageid']);
+                          var recieverfcmtoken =
+                              (messageinfo['recieverfcmtoken']);
+                          var sendername = (messageinfo['sendername']);
+                          var recipentname = (messageinfo['recievername']);
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatPageView(
+                                messageid: messageid,
+                                recipentname: recipentname,
+                                senderid: userid,
+                                recipentid: recieverid,
+                                fcmToken: recieverfcmtoken,
+                                senderName: sendername,
+                                itemid: itemid,
+                              ),
+                            ),
+                          );
+                        } else {
+                          print('Same User');
+                        }
                       },
                       child: Container(
                         width: 100,
@@ -821,12 +854,12 @@ class _DetailsState extends State<Details> {
                   children: <Widget>[
                     InkWell(
                       onTap: () async {
-                        var senderid = newItem.userid;
-                        if (senderid != userid) {
+                        var recieverid = newItem.userid;
+                        if (recieverid != userid) {
                           var itemurl = 'https://sellship.co/api/createroom/' +
                               userid +
                               '/' +
-                              senderid +
+                              recieverid +
                               '/' +
                               itemid;
                           final response = await http.get(itemurl);
@@ -843,7 +876,7 @@ class _DetailsState extends State<Details> {
                                 messageid: messageid,
                                 recipentname: recipentname,
                                 senderid: userid,
-                                recipentid: senderid,
+                                recipentid: recieverid,
                                 fcmToken: recieverfcmtoken,
                                 senderName: sendername,
                                 itemid: itemid,

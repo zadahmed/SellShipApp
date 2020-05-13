@@ -14,6 +14,7 @@ class ChatMessages implements Comparable<ChatMessages> {
   final String profilepicture;
   final String itemname;
   final String itemid;
+  final String offer;
 
   ChatMessages(
       {this.messageid,
@@ -23,6 +24,7 @@ class ChatMessages implements Comparable<ChatMessages> {
       this.lastrecieved,
       this.hiddendate,
       this.itemid,
+      this.offer,
       this.recieveddate,
       this.profilepicture,
       this.itemname,

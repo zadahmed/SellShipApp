@@ -29,97 +29,58 @@ class MessagesState extends State<Messages> {
     messagesd.clear();
     userid = await storage.read(key: 'userid');
 
-    if (userid != null) {
-      var url = 'https://sellship.co/api/user/' + userid;
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        var respons = json.decode(response.body);
-        var profilemap = respons;
-        var messages = profilemap['messages'];
-        if (messages.isEmpty) {
-          messagesd = [];
-        } else {
-          for (int i = 0; i < messages.length; i++) {
-            if (messages[i]['user1'] == userid) {
-              var messageurl = 'https://sellship.co/api/messagedetail/' +
-                  messages[i]['msgid'];
-              final responsemessage = await http.get(messageurl);
+    var messageurl =
+        'https://sellship.co/api/messagedetail/' + userid.toString();
+    final responsemessage = await http.get(messageurl);
 
-              var messageinfo = json.decode(responsemessage.body);
-              var imageprofile = messageinfo['profilepicture'];
-              var itemname = messageinfo['itemname'];
-              var itemid = messageinfo['itemid']['\$oid'];
-              final f = new DateFormat('hh:mm');
-              final t = new DateFormat('yyyy-MM-dd hh:mm');
-              if (messageinfo['date'] != null) {
-                DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-                    messageinfo['date']['\$date']);
-                var s = f.format(date);
-                var q = t.format(date);
+    var messageinfo = json.decode(responsemessage.body);
 
-                ChatMessages msg = ChatMessages(
-                    messageid: messageinfo['msgid'],
-                    peoplemessaged: messageinfo['user2name'],
-                    senderid: messageinfo['user1'],
-                    lastrecieved: messageinfo['lastrecieved'],
-                    unread: messageinfo['unread'],
-                    recieveddate: s,
-                    hiddendate: q,
-                    itemname: itemname,
-                    senderName: messageinfo['user1name'],
-                    recipentid: messageinfo['user2'],
-                    profilepicture: imageprofile,
-                    itemid: itemid,
-                    fcmtokenreciever: messageinfo['fcmtokenreciever']);
+    if (messageinfo.isNotEmpty) {
+      for (int i = 0; i < messageinfo.length; i++) {
+        print(messageinfo[i]);
+        var imageprofile = messageinfo[i]['profilepicture'];
+        var itemname = messageinfo[i]['itemname'];
+        var itemid = messageinfo[i]['itemid']['\$oid'];
+        final f = new DateFormat('hh:mm');
+        final t = new DateFormat('yyyy-MM-dd hh:mm');
 
-                messagesd.add(msg);
-              }
-            } else if (messages[i]['user2'] == userid) {
-              var messageurl = 'https://sellship.co/api/messagedetail/' +
-                  messages[i]['msgid'];
-              final responsemessage = await http.get(messageurl);
+        var offe;
 
-              var messageinfo = json.decode(responsemessage.body);
-              var imageprofile = messageinfo['profilepicture'];
-              var itemname = messageinfo['itemname'];
-              var itemid = messageinfo['itemid']['\$oid'];
-              final f = new DateFormat('hh:mm');
-              final t = new DateFormat('yyyy-MM-dd hh:mm');
-              if (messageinfo['date'] != null) {
-                DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-                    messageinfo['date']['\$date']);
-                var s = f.format(date);
-                var q = t.format(date);
-
-                ChatMessages msg = ChatMessages(
-                  senderName: messageinfo['user2name'],
-                  messageid: messageinfo['msgid'],
-                  itemname: itemname,
-                  peoplemessaged: messageinfo['user1name'],
-                  senderid: messageinfo['user2'],
-                  lastrecieved: messageinfo['lastrecieved'],
-                  unread: messageinfo['unread'],
-                  recieveddate: s,
-                  hiddendate: q,
-                  itemid: itemid,
-                  profilepicture: imageprofile,
-                  recipentid: messageinfo['user1'],
-                  fcmtokenreciever: messageinfo['fcmtokenreciever'],
-                );
-
-                messagesd.add(msg);
-              }
-            }
-          }
-
-          print(messagesd.length);
+        if (messageinfo[i]['offer'] != null) {
+          offe = messageinfo[i]['offer'];
+        } else if (messageinfo[i]['offer'] == null) {
+          offe = null;
         }
-      } else {
-        print(response.statusCode);
+
+        if (messageinfo[i]['date'] != null) {
+          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+              messageinfo[i]['date']['\$date']);
+          var s = f.format(date);
+          var q = t.format(date);
+
+          ChatMessages msg = ChatMessages(
+              messageid: messageinfo[i]['msgid'],
+              peoplemessaged: messageinfo[i]['user2name'],
+              senderid: messageinfo[i]['user1'],
+              offer: offe,
+              lastrecieved: messageinfo[i]['lastrecieved'],
+              unread: messageinfo[i]['unread'],
+              recieveddate: s,
+              hiddendate: q,
+              itemname: itemname,
+              senderName: messageinfo[i]['user1name'],
+              recipentid: messageinfo[i]['user2'],
+              profilepicture: imageprofile,
+              itemid: itemid,
+              fcmtokenreciever: messageinfo[i]['fcmtokenreciever']);
+
+          messagesd.add(msg);
+        }
       }
     } else {
-      messagesd = null;
+      messagesd = [];
     }
+
     messagesd.sort();
     return messagesd;
   }
@@ -315,30 +276,31 @@ class MessagesState extends State<Messages> {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ChatPageView(
-                                                          senderName: snapshot
-                                                              .data[index]
-                                                              .senderName,
-                                                          messageid: snapshot
-                                                              .data[index]
-                                                              .messageid,
-                                                          recipentname: snapshot
-                                                              .data[index]
-                                                              .peoplemessaged,
-                                                          senderid: snapshot
-                                                              .data[index]
-                                                              .senderid,
-                                                          recipentid: snapshot
-                                                              .data[index]
-                                                              .recipentid,
-                                                          fcmToken: snapshot
-                                                              .data[index]
-                                                              .fcmtokenreciever,
-                                                          itemid: snapshot
-                                                              .data[index]
-                                                              .itemid,
-                                                        ),
+                                                        builder: (context) => ChatPageView(
+                                                            senderName: snapshot
+                                                                .data[index]
+                                                                .senderName,
+                                                            messageid: snapshot
+                                                                .data[index]
+                                                                .messageid,
+                                                            recipentname: snapshot
+                                                                .data[index]
+                                                                .peoplemessaged,
+                                                            senderid: snapshot
+                                                                .data[index]
+                                                                .senderid,
+                                                            recipentid: snapshot
+                                                                .data[index]
+                                                                .recipentid,
+                                                            fcmToken: snapshot
+                                                                .data[index]
+                                                                .fcmtokenreciever,
+                                                            itemid: snapshot
+                                                                .data[index]
+                                                                .itemid,
+                                                            offer: snapshot
+                                                                .data[index]
+                                                                .offer),
                                                       ),
                                                     );
                                                   },

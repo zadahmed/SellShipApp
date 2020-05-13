@@ -19,6 +19,7 @@ class ChatPageView extends StatefulWidget {
   final String messageid;
   final String senderid;
   final String recipentid;
+  final String offer;
   final String itemid;
   final fcmToken;
   final senderName;
@@ -28,6 +29,7 @@ class ChatPageView extends StatefulWidget {
       this.itemid,
       this.messageid,
       this.senderid,
+      this.offer,
       this.recipentid,
       @required this.fcmToken,
       @required this.senderName})
@@ -49,7 +51,10 @@ class _ChatPageViewState extends State<ChatPageView> {
   var fcmToken;
   var itemid;
   int skip;
+  var offer;
   int limit;
+
+  String userid;
   @override
   void initState() {
     super.initState();
@@ -62,7 +67,9 @@ class _ChatPageViewState extends State<ChatPageView> {
       recipentid = widget.recipentid;
       fcmToken = widget.fcmToken;
       itemid = widget.itemid;
+      offer = widget.offer;
     });
+
     getItem();
     _scrollController
       ..addListener(() {
@@ -79,7 +86,9 @@ class _ChatPageViewState extends State<ChatPageView> {
   var currency;
   final storage = new FlutterSecureStorage();
   Item itemselling;
+
   getItem() async {
+    userid = await storage.read(key: 'userid');
     var countr = await storage.read(key: 'country');
     if (countr.toLowerCase() == 'united arab emirates') {
       setState(() {
@@ -130,7 +139,9 @@ class _ChatPageViewState extends State<ChatPageView> {
     childList = [];
 
     for (int i = 0; i < jsonResponse.length; i++) {
-      if (jsonResponse[i]['sender'] == senderid) {
+      print(jsonResponse[i]);
+      print(userid);
+      if (jsonResponse[i]['sender'] == userid) {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             jsonResponse[i]['date']['\$date']);
@@ -188,7 +199,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                     ),
                   ],
                 ))));
-      } else {
+      } else if (jsonResponse[i]['reciever'] == recipentid) {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             jsonResponse[i]['date']['\$date']);
@@ -253,6 +264,128 @@ class _ChatPageViewState extends State<ChatPageView> {
         .map((json) => mapJsonMessagesToListOfWidgetMessages(json));
   }
 
+  TextEditingController offercontroller = TextEditingController();
+
+  void showMe(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext contex) {
+          return Container(
+              height: 120,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Make an Offer',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    title: Container(
+                        width: 200,
+                        padding: EdgeInsets.only(),
+                        child: Center(
+                          child: TextField(
+                            cursorColor: Color(0xFF979797),
+                            controller: offercontroller,
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: InputDecoration(
+                                labelText: "Offer Price",
+                                alignLabelWithHint: true,
+                                labelStyle: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                ),
+                                focusColor: Colors.black,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ))),
+                          ),
+                        )),
+                    trailing: InkWell(
+                      onTap: () async {
+                        var itemurl = 'https://sellship.co/api/createoffer/' +
+                            senderid +
+                            '/' +
+                            recipentid +
+                            '/' +
+                            itemid +
+                            '/' +
+                            offercontroller.text.trim();
+                        final response = await http.get(itemurl);
+                        var messageinfo = json.decode(response.body);
+
+                        setState(() {
+                          offer = messageinfo['offer'];
+                        });
+                        Navigator.of(context).pop();
+                        print(offer);
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 48,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                            border:
+                                Border.all(color: Colors.red.withOpacity(0.2)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Make Offer',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ));
+        });
+  }
+
+  bool offerstatus;
+  String offerstring;
+
   @override
   void dispose() {
     super.dispose();
@@ -262,10 +395,10 @@ class _ChatPageViewState extends State<ChatPageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size(double.infinity, 160),
+          preferredSize: Size(double.infinity, offer == null ? 160 : 210),
           child: Container(
               width: MediaQuery.of(context).size.width,
-              height: 160,
+              height: offer == null ? 160 : 210,
               child: Column(
                 children: <Widget>[
                   Container(
@@ -323,7 +456,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                   ),
                   itemselling != null
                       ? Padding(
-                          padding: EdgeInsets.all(10),
+                          padding:
+                              EdgeInsets.only(left: 10, right: 10, top: 10),
                           child: InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -378,6 +512,65 @@ class _ChatPageViewState extends State<ChatPageView> {
                                           color: Colors.deepOrange,
                                           fontWeight: FontWeight.bold),
                                     ),
+                                  ))))
+                      : Container(),
+                  offer != null
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          Details(itemid: itemselling.itemid)),
+                                );
+                              },
+                              child: Container(
+                                  height: 30,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    color: Colors.deepOrange,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 20),
+                                        child: Text(
+                                          'Offer Price ' + offer + ' $currency',
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                      InkWell(
+                                          onTap: () {
+                                            if (userid == recipentid) {
+                                              //accept
+                                            } else {
+                                              showMe(context);
+                                            }
+                                          },
+                                          child: Container(
+                                            height: 30,
+                                            width: 50,
+                                            color: Colors.amber,
+                                            child: Center(
+                                              child: Text(
+                                                userid == recipentid
+                                                    ? 'Accept'
+                                                    : 'Edit',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ))
+                                    ],
                                   ))))
                       : Container()
                 ],
@@ -502,7 +695,7 @@ class _ChatPageViewState extends State<ChatPageView> {
 
                                 var url =
                                     'https://sellship.co/api/sendmessage/' +
-                                        senderid +
+                                        userid +
                                         '/' +
                                         recipentid +
                                         '/' +
