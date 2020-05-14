@@ -91,7 +91,7 @@ class _SearchState extends State<Search> {
         itemid: jsonbody[i]['_id']['\$oid'],
         name: jsonbody[i]['name'],
         image: jsonbody[i]['image'],
-        price: jsonbody[i]['price'],
+        price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
       );
       itemsgrid.add(item);
@@ -147,7 +147,7 @@ class _SearchState extends State<Search> {
         itemid: jsonbody[i]['_id']['\$oid'],
         name: jsonbody[i]['name'],
         image: jsonbody[i]['image'],
-        price: jsonbody[i]['price'],
+        price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
       );
       itemsgrid.add(item);
@@ -244,7 +244,7 @@ class _SearchState extends State<Search> {
                                 removeTop: true,
                                 child: GridView.builder(
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                  controller: _scrollController,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,

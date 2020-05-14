@@ -577,7 +577,7 @@ class _NearMeState extends State<NearMe> {
         itemid: jsonbody[i]['_id']['\$oid'],
         name: jsonbody[i]['name'],
         image: jsonbody[i]['image'],
-        price: jsonbody[i]['price'],
+        price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
       );
       itemsgrid.add(item);

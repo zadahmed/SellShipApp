@@ -56,14 +56,21 @@ class _DetailsState extends State<Details> {
 
   void showMe(BuildContext context) {
     showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        backgroundColor: Colors.white,
         context: context,
-        builder: (BuildContext contex) {
-          return Container(
-              height: 120,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+//                  Padding(
+//                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+//                    child: Text('Enter your address'),
+//                  ),
                   Padding(
                     padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
                     child: Align(
@@ -77,117 +84,125 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                   ),
-                  ListTile(
-                    title: Container(
-                        width: 200,
-                        padding: EdgeInsets.only(),
-                        child: Center(
-                          child: TextField(
-                            cursorColor: Color(0xFF979797),
-                            controller: offercontroller,
-                            keyboardType: TextInputType.text,
-                            textCapitalization: TextCapitalization.words,
-                            decoration: InputDecoration(
-                                labelText: "Offer Price",
-                                alignLabelWithHint: true,
-                                labelStyle: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 16,
-                                ),
-                                focusColor: Colors.black,
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                disabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                ))),
-                          ),
-                        )),
-                    trailing: InkWell(
-                      onTap: () async {
-                        var recieverid = newItem.userid;
-                        if (recieverid != userid) {
-                          var itemurl = 'https://sellship.co/api/createoffer/' +
-                              userid +
-                              '/' +
-                              recieverid +
-                              '/' +
-                              itemid +
-                              '/' +
-                              offercontroller.text.trim();
-                          final response = await http.get(itemurl);
-                          var messageinfo = json.decode(response.body);
-                          var messageid = (messageinfo['messageid']);
-                          var recieverfcmtoken =
-                              (messageinfo['recieverfcmtoken']);
-                          var sendername = (messageinfo['sendername']);
-                          var recipentname = (messageinfo['recievername']);
-                          Navigator.of(context).pop();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChatPageView(
-                                messageid: messageid,
-                                recipentname: recipentname,
-                                senderid: userid,
-                                recipentid: recieverid,
-                                fcmToken: recieverfcmtoken,
-                                senderName: sendername,
-                                itemid: itemid,
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: ListTile(
+                        title: Container(
+                            width: 200,
+                            padding: EdgeInsets.only(),
+                            child: Center(
+                              child: TextField(
+                                cursorColor: Color(0xFF979797),
+                                controller: offercontroller,
+                                keyboardType: TextInputType.text,
+                                textCapitalization: TextCapitalization.words,
+                                decoration: InputDecoration(
+                                    labelText: "Offer Price",
+                                    alignLabelWithHint: true,
+                                    labelStyle: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                    ),
+                                    focusColor: Colors.black,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    disabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    ))),
                               ),
-                            ),
-                          );
-                        } else {
-                          print('Same User');
-                        }
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 48,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(16.0),
-                            ),
-                            border:
-                                Border.all(color: Colors.red.withOpacity(0.2)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Make Offer',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 16),
+                            )),
+                        trailing: InkWell(
+                          onTap: () async {
+                            var recieverid = newItem.userid;
+                            if (recieverid != userid) {
+                              var itemurl =
+                                  'https://sellship.co/api/createoffer/' +
+                                      userid +
+                                      '/' +
+                                      recieverid +
+                                      '/' +
+                                      itemid +
+                                      '/' +
+                                      offercontroller.text.trim();
+                              final response = await http.get(itemurl);
+                              var messageinfo = json.decode(response.body);
+                              var messageid = (messageinfo['messageid']);
+                              var recieverfcmtoken =
+                                  (messageinfo['recieverfcmtoken']);
+                              var sendername = (messageinfo['sendername']);
+                              var recipentname = (messageinfo['recievername']);
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatPageView(
+                                    messageid: messageid,
+                                    recipentname: recipentname,
+                                    senderid: userid,
+                                    recipentid: recieverid,
+                                    fcmToken: recieverfcmtoken,
+                                    senderName: sendername,
+                                    itemid: itemid,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              print('Same User');
+                            }
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 48,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(16.0),
+                                ),
+                                border: Border.all(
+                                    color: Colors.red.withOpacity(0.2)),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Make Offer',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  )
+                      )),
+                  SizedBox(height: 10),
                 ],
-              ));
-        });
+              ),
+            ));
   }
 
   Set<Marker> _markers = Set();
@@ -226,7 +241,7 @@ class _DetailsState extends State<Details> {
     print(jsonbody);
     newItem = Item(
         name: jsonbody[0]['name'],
-        price: jsonbody[0]['price'],
+        price: jsonbody[0]['price'].toString(),
         description: jsonbody[0]['description'],
         category: jsonbody[0]['category'],
         condition: jsonbody[0]['condition'] == null

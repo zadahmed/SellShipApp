@@ -1617,7 +1617,7 @@ class _LoginPageState extends State<LoginPage>
                     itemid: productmap[i]['_id']['\$oid'],
                     name: productmap[i]['name'],
                     image: productmap[i]['image'],
-                    price: productmap[i]['price'],
+                    price: productmap[i]['price'].toString(),
                     sold: productmap[i]['sold'] == null
                         ? false
                         : productmap[i]['sold'],

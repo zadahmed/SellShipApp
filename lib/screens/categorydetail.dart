@@ -74,7 +74,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -127,7 +127,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -168,7 +168,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -209,7 +209,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -250,7 +250,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -290,7 +290,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsonbody[i]['_id']['\$oid'],
           name: jsonbody[i]['name'],
           image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'],
+          price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
         );
         itemsgrid.add(item);
@@ -327,7 +327,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsonbody[i]['_id']['\$oid'],
           name: jsonbody[i]['name'],
           image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'],
+          price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
         );
         itemsgrid.add(item);
@@ -366,7 +366,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsonbody[i]['_id']['\$oid'],
           name: jsonbody[i]['name'],
           image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'],
+          price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
         );
         itemsgrid.add(item);
@@ -407,7 +407,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsonbody[i]['_id']['\$oid'],
           name: jsonbody[i]['name'],
           image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'],
+          price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
         );
         itemsgrid.add(item);
@@ -450,7 +450,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsonbody[i]['_id']['\$oid'],
           name: jsonbody[i]['name'],
           image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'],
+          price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
         );
         itemsgrid.add(item);
@@ -491,7 +491,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsonbody[i]['_id']['\$oid'],
           name: jsonbody[i]['name'],
           image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'],
+          price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
         );
         itemsgrid.add(item);
@@ -529,7 +529,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -604,7 +604,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -644,7 +644,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -684,7 +684,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);
@@ -724,7 +724,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
           image: jsondata['image'],
-          price: jsondata['price'],
+          price: jsondata['price'].toString(),
           category: jsondata['category'],
         );
         itemsgrid.add(item);

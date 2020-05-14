@@ -53,7 +53,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                   itemid: profilemap[i]['_id']['\$oid'],
                   name: profilemap[i]['name'],
                   image: profilemap[i]['image'],
-                  price: profilemap[i]['price'],
+                  price: profilemap[i]['price'].toString(),
                   sold: profilemap[i]['sold'] == null
                       ? false
                       : profilemap[i]['sold'],

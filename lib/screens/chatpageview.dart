@@ -21,6 +21,7 @@ class ChatPageView extends StatefulWidget {
   final String recipentid;
   final String offer;
   final String itemid;
+  final int offerstage;
   final fcmToken;
   final senderName;
   const ChatPageView(
@@ -28,6 +29,7 @@ class ChatPageView extends StatefulWidget {
       this.recipentname,
       this.itemid,
       this.messageid,
+      this.offerstage,
       this.senderid,
       this.offer,
       this.recipentid,
@@ -53,7 +55,7 @@ class _ChatPageViewState extends State<ChatPageView> {
   int skip;
   var offer;
   int limit;
-
+  String offeruserstring;
   String userid;
   @override
   void initState() {
@@ -68,8 +70,10 @@ class _ChatPageViewState extends State<ChatPageView> {
       fcmToken = widget.fcmToken;
       itemid = widget.itemid;
       offer = widget.offer;
+      offerstage = widget.offerstage;
     });
 
+    changeofferstate();
     getItem();
     _scrollController
       ..addListener(() {
@@ -89,6 +93,7 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   getItem() async {
     userid = await storage.read(key: 'userid');
+
     var countr = await storage.read(key: 'country');
     if (countr.toLowerCase() == 'united arab emirates') {
       setState(() {
@@ -111,7 +116,7 @@ class _ChatPageViewState extends State<ChatPageView> {
         image: jsonbody[0]['image'],
         userid: jsonbody[0]['userid'],
         username: jsonbody[0]['username'],
-        price: jsonbody[0]['price'],
+        price: jsonbody[0]['price'].toString(),
         category: jsonbody[0]['category'],
       );
       setState(() {
@@ -127,6 +132,7 @@ class _ChatPageViewState extends State<ChatPageView> {
         '/' +
         skip.toString();
     final response = await http.get(url);
+
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       print(jsonResponse);
@@ -135,12 +141,38 @@ class _ChatPageViewState extends State<ChatPageView> {
     return [];
   }
 
+  changeofferstate() async {
+    var url = 'https://sellship.co/api/getofferstage/' + messageid;
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+
+      var offerstage = jsonbody['offerstage'];
+      if (offerstage == 0) {
+        setState(() {
+          offerstring = 'Edit';
+          offeruserstring = 'Accept';
+        });
+      } else if (offerstage == 1) {
+        setState(() {
+          offerstring = 'Pay';
+          offeruserstring = 'Cancel';
+        });
+      } else if (offerstage == 2) {
+        setState(() {
+          offerstring = 'View Order';
+          offeruserstring = 'View Order';
+        });
+      }
+    }
+  }
+
   List<Widget> mapJsonMessagesToListOfWidgetMessages(List jsonResponse) {
     childList = [];
+    changeofferstate();
 
     for (int i = 0; i < jsonResponse.length; i++) {
-      print(jsonResponse[i]);
-      print(userid);
       if (jsonResponse[i]['sender'] == userid) {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
@@ -268,16 +300,19 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   void showMe(BuildContext context) {
     showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        backgroundColor: Colors.white,
         context: context,
-        builder: (BuildContext contex) {
-          return Container(
-              height: 120,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
+                    padding: EdgeInsets.only(left: 15, bottom: 10, top: 5),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -377,13 +412,14 @@ class _ChatPageViewState extends State<ChatPageView> {
                         ),
                       ),
                     ),
-                  )
+                  ),
+                  SizedBox(height: 10),
                 ],
-              ));
-        });
+              ),
+            ));
   }
 
-  bool offerstatus;
+  int offerstage;
   String offerstring;
 
   @override
@@ -391,19 +427,54 @@ class _ChatPageViewState extends State<ChatPageView> {
     super.dispose();
   }
 
+  acceptoffer() async {
+    var url = 'https://sellship.co/api/acceptoffer/' +
+        messageid +
+        '/' +
+        userid +
+        '/' +
+        recipentid;
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      print('Success');
+      setState(() {
+        offerstage = 1;
+      });
+      print(offerstage);
+    }
+  }
+
+  canceloffer() async {
+    var url = 'https://sellship.co/api/canceloffer/' +
+        messageid +
+        '/' +
+        userid +
+        '/' +
+        recipentid;
+    final response = await http.get(url);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('Success');
+      setState(() {
+        offerstage = 0;
+      });
+      print(offerstage);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: Size(double.infinity, offer == null ? 160 : 210),
+          preferredSize: Size(double.infinity, offer == null ? 180 : 210),
           child: Container(
               width: MediaQuery.of(context).size.width,
-              height: offer == null ? 160 : 210,
+              height: offer == null ? 180 : 210,
               child: Column(
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    height: 70,
+                    padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
+                    height: 90,
                     color: Colors.deepOrange,
                     child: Stack(
                       children: <Widget>[
@@ -549,27 +620,38 @@ class _ChatPageViewState extends State<ChatPageView> {
                                       ),
                                       InkWell(
                                           onTap: () {
-                                            if (userid == recipentid) {
-                                              //accept
-                                            } else {
-                                              showMe(context);
+                                            if (offerstage == 0) {
+                                              if (userid == recipentid) {
+                                                acceptoffer();
+                                              } else {
+                                                showMe(context);
+                                              }
+                                            } else if (offerstage == 1) {
+                                              if (userid == recipentid) {
+                                                canceloffer();
+                                              } else {
+                                                print('pay');
+                                              }
                                             }
                                           },
-                                          child: Container(
-                                            height: 30,
-                                            width: 50,
-                                            color: Colors.amber,
-                                            child: Center(
-                                              child: Text(
-                                                userid == recipentid
-                                                    ? 'Accept'
-                                                    : 'Edit',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ))
+                                          child: offerstring != null
+                                              ? Container(
+                                                  height: 30,
+                                                  width: 70,
+                                                  color: Colors.amber,
+                                                  child: Center(
+                                                    child: Text(
+                                                      userid == recipentid
+                                                          ? offeruserstring
+                                                          : offerstring,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container())
                                     ],
                                   ))))
                       : Container()

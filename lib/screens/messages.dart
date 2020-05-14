@@ -45,11 +45,18 @@ class MessagesState extends State<Messages> {
         final t = new DateFormat('yyyy-MM-dd hh:mm');
 
         var offe;
+        var offerstage;
 
         if (messageinfo[i]['offer'] != null) {
           offe = messageinfo[i]['offer'];
         } else if (messageinfo[i]['offer'] == null) {
           offe = null;
+        }
+
+        if (messageinfo[i]['offerstage'] != null) {
+          offerstage = messageinfo[i]['offerstage'];
+        } else if (messageinfo[i]['offerstage'] == null) {
+          offerstage = null;
         }
 
         if (messageinfo[i]['date'] != null) {
@@ -63,6 +70,7 @@ class MessagesState extends State<Messages> {
               peoplemessaged: messageinfo[i]['user2name'],
               senderid: messageinfo[i]['user1'],
               offer: offe,
+              offerstage: offerstage,
               lastrecieved: messageinfo[i]['lastrecieved'],
               unread: messageinfo[i]['unread'],
               recieveddate: s,
@@ -298,6 +306,9 @@ class MessagesState extends State<Messages> {
                                                             itemid: snapshot
                                                                 .data[index]
                                                                 .itemid,
+                                                            offerstage: snapshot
+                                                                .data[index]
+                                                                .offerstage,
                                                             offer: snapshot
                                                                 .data[index]
                                                                 .offer),

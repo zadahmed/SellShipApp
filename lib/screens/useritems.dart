@@ -61,7 +61,7 @@ class _UserItemsState extends State<UserItems> {
   List<String> Itemname = List<String>();
   List<String> Itemimage = List<String>();
   List<String> Itemcategory = List<String>();
-  List<int> Itemprice = List<int>();
+  List<String> Itemprice = List<String>();
 
   final storage = new FlutterSecureStorage();
   var currency;
@@ -101,7 +101,7 @@ class _UserItemsState extends State<UserItems> {
             Itemid.add(productmap[i]['_id']['\$oid']);
             Itemname.add(productmap[i]['name']);
             Itemimage.add(productmap[i]['image']);
-            Itemprice.add(productmap[i]['price']);
+            Itemprice.add(productmap[i]['price'].toString());
             Itemcategory.add(productmap[i]['category']);
           }
           setState(() {
@@ -193,322 +193,383 @@ class _UserItemsState extends State<UserItems> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepOrange,
-        title: Center(
-          child: Text(
-            '$username',
-            style: TextStyle(fontFamily: 'Montserrat', fontSize: 20),
-          ),
+        title: Text(
+          '$username'.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: TextStyle(fontFamily: 'Montserrat', fontSize: 16),
         ),
       ),
       body: loading == false
-          ? Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 100,
-                  width: 100,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(60),
-                    child: profilepicture == null
-                        ? Image.asset(
-                            'assets/personplaceholder.png',
-                            fit: BoxFit.cover,
-                          )
-                        : Image.network(
-                            profilepicture,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                ),
-                SizedBox(height: 25.0),
-                Text(
-                  firstname + ' ' + lastname,
-                  style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 4.0),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            followers == null ? '0' : followers.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 5.0),
-                          Text(
-                            'FOLLOWERS',
-                            style: TextStyle(
-                                fontFamily: 'Montserrat', color: Colors.grey),
-                          )
-                        ],
+          ? LayoutBuilder(builder:
+              (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                  controller: _scrollController,
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: viewportConstraints.maxHeight,
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            itemssold == null ? '0' : itemssold.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold),
+                          SizedBox(
+                            height: 10,
                           ),
-                          SizedBox(height: 5.0),
-                          Text(
-                            'ITEMS SOLD',
-                            style: TextStyle(
-                                fontFamily: 'Montserrat', color: Colors.grey),
-                          )
-                        ],
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            following == null ? '0' : following.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 5.0),
-                          Text(
-                            'FOLLOWING',
-                            style: TextStyle(
-                                fontFamily: 'Montserrat', color: Colors.grey),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Container(
-                    height: 50,
-                    width: 400,
-                    decoration: BoxDecoration(color: Colors.amber),
-                    child: InkWell(
-                      onTap: () async {
-                        if (follow == true) {
-                          var user1 = await storage.read(key: 'userid');
-                          var followurl = 'https://sellship.co/api/follow/' +
-                              user1 +
-                              '/' +
-                              userid;
-
-                          final followresponse = await http.get(followurl);
-                          if (followresponse.statusCode == 200) {
-                            print('UnFollowed');
-                          }
-                          setState(() {
-                            follow = false;
-                            followers = followers - 1;
-                          });
-                        } else {
-                          var user1 = await storage.read(key: 'userid');
-                          var followurl = 'https://sellship.co/api/follow/' +
-                              user1 +
-                              '/' +
-                              userid;
-
-                          final followresponse = await http.get(followurl);
-                          if (followresponse.statusCode == 200) {
-                            print('Followed');
-                          }
-
-                          setState(() {
-                            follow = true;
-                            followers = followers + 1;
-                          });
-                        }
-                      },
-                      child: Center(
-                        child: Text(
-                          follow == true ? 'FOLLOWING' : 'FOLLOW',
-                          style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Divider(),
-                Center(
-                  child: Text(
-                    '$firstname\'s Items',
-                    style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Itemname.isNotEmpty
-                    ? Expanded(
-                        child: StaggeredGridView.countBuilder(
-                        controller: _scrollController,
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 4,
-                        crossAxisSpacing: 4,
-                        itemCount: Itemname.length,
-                        itemBuilder: (context, index) {
-                          if (index != 0 && index % 4 == 0) {
-                            return Platform.isIOS == true
-                                ? Container(
-                                    height: 330,
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(bottom: 20.0),
-                                    child: NativeAdmob(
-                                      adUnitID: _iosadUnitID,
-                                      controller: _controller,
+                          Container(
+                            height: 100,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(60),
+                              child: profilepicture == null
+                                  ? Image.asset(
+                                      'assets/personplaceholder.png',
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      profilepicture,
+                                      fit: BoxFit.cover,
                                     ),
-                                  )
-                                : Container(
-                                    height: 330,
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(bottom: 20.0),
-                                    child: NativeAdmob(
-                                      adUnitID: _androidadUnitID,
-                                      controller: _controller,
+                            ),
+                          ),
+                          SizedBox(height: 25.0),
+                          Text(
+                            firstname + ' ' + lastname,
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 4.0),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 10, left: 30, right: 30, bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      followers == null
+                                          ? '0'
+                                          : followers.toString(),
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  );
-                          }
-                          return Padding(
-                              padding: EdgeInsets.all(7),
+                                    SizedBox(height: 5.0),
+                                    Text(
+                                      'FOLLOWERS',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      itemssold == null
+                                          ? '0'
+                                          : itemssold.toString(),
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(height: 5.0),
+                                    Text(
+                                      'ITEMS SOLD',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      following == null
+                                          ? '0'
+                                          : following.toString(),
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(height: 5.0),
+                                    Text(
+                                      'FOLLOWING',
+                                      style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          color: Colors.grey),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              height: 50,
+                              width: 400,
+                              decoration: BoxDecoration(color: Colors.amber),
                               child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              Details(itemid: Itemid[index])),
-                                    );
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: Offset(0.0, 1.0), //(x,y)
-                                            blurRadius: 6.0,
-                                          ),
-                                        ],
+                                onTap: () async {
+                                  if (follow == true) {
+                                    var user1 =
+                                        await storage.read(key: 'userid');
+                                    var followurl =
+                                        'https://sellship.co/api/follow/' +
+                                            user1 +
+                                            '/' +
+                                            userid;
+
+                                    final followresponse =
+                                        await http.get(followurl);
+                                    if (followresponse.statusCode == 200) {
+                                      print('UnFollowed');
+                                    }
+                                    setState(() {
+                                      follow = false;
+                                      followers = followers - 1;
+                                    });
+                                  } else {
+                                    var user1 =
+                                        await storage.read(key: 'userid');
+                                    var followurl =
+                                        'https://sellship.co/api/follow/' +
+                                            user1 +
+                                            '/' +
+                                            userid;
+
+                                    final followresponse =
+                                        await http.get(followurl);
+                                    if (followresponse.statusCode == 200) {
+                                      print('Followed');
+                                    }
+
+                                    setState(() {
+                                      follow = true;
+                                      followers = followers + 1;
+                                    });
+                                  }
+                                },
+                                child: Center(
+                                  child: Text(
+                                    follow == true ? 'FOLLOWING' : 'FOLLOW',
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 16,
                                         color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: new Column(
-                                      children: <Widget>[
-                                        new Stack(
-                                          children: <Widget>[
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              child: CachedNetworkImage(
-                                                imageUrl: Itemimage[index],
-                                                placeholder: (context, url) =>
-                                                    SpinKitChasingDots(
-                                                        color:
-                                                            Colors.deepOrange),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        new Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: new Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                Itemname[index],
-                                                style: TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                textAlign: TextAlign.left,
-                                              ),
-                                              SizedBox(height: 3.0),
-                                              Container(
-                                                child: Text(
-                                                  Itemcategory[index],
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w300,
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                ),
-                                              ),
-                                              SizedBox(height: 3.0),
-                                              Container(
-                                                child: Text(
-                                                  Itemprice[index].toString() +
-                                                      ' ' +
-                                                      currency,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                  textAlign: TextAlign.left,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )));
-                        },
-                        staggeredTileBuilder: (int index) {
-                          return StaggeredTile.fit(1);
-                        },
-                      ))
-                    : Expanded(
-                        child: Column(
-                        children: <Widget>[
-                          Center(
-                            child: Text(
-                              'Go ahead Add an Item \n and start selling!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                          Expanded(
-                              child: Image.asset(
-                            'assets/items.png',
-                            fit: BoxFit.fitWidth,
-                          ))
+                          Divider(),
+                          Center(
+                            child: Text(
+                              '$firstname\'s Items',
+                              style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Itemname.isNotEmpty
+                              ? Flexible(
+                                  child: MediaQuery.removePadding(
+                                      context: context,
+                                      removeTop: true,
+                                      child: GridView.builder(
+                                        cacheExtent: double.parse(
+                                            Itemname.length.toString()),
+                                        shrinkWrap: true,
+                                        controller: _scrollController,
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2,
+                                                childAspectRatio: 0.65),
+                                        itemCount: Itemname.length,
+                                        itemBuilder: (context, index) {
+                                          if (index != 0 && index % 4 == 0) {
+                                            return Platform.isIOS == true
+                                                ? Container(
+                                                    height: 330,
+                                                    padding: EdgeInsets.all(10),
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 20.0),
+                                                    child: NativeAdmob(
+                                                      adUnitID: _iosadUnitID,
+                                                      controller: _controller,
+                                                    ),
+                                                  )
+                                                : Container(
+                                                    height: 330,
+                                                    padding: EdgeInsets.all(10),
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 20.0),
+                                                    child: NativeAdmob(
+                                                      adUnitID:
+                                                          _androidadUnitID,
+                                                      controller: _controller,
+                                                    ),
+                                                  );
+                                          }
+                                          return Padding(
+                                              padding: EdgeInsets.all(4),
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Details(
+                                                                  itemid: Itemid[
+                                                                      index])),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        new Stack(
+                                                          children: <Widget>[
+                                                            Container(
+                                                              height: 150,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      Itemimage[
+                                                                          index],
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      SpinKitChasingDots(
+                                                                          color:
+                                                                              Colors.deepOrange),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        new Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        5.0),
+                                                                child: new Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .start,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .center,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Column(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: <
+                                                                            Widget>[
+                                                                          Text(
+                                                                            Itemname[index],
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Montserrat',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.w600,
+                                                                            ),
+                                                                            textAlign:
+                                                                                TextAlign.left,
+                                                                          ),
+                                                                          SizedBox(
+                                                                              height: 3.0),
+                                                                          Container(
+                                                                            child:
+                                                                                Text(
+                                                                              Itemcategory[index],
+                                                                              style: TextStyle(
+                                                                                fontFamily: 'Montserrat',
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.w300,
+                                                                              ),
+                                                                              textAlign: TextAlign.left,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                              height: 3.0),
+                                                                          Container(
+                                                                            child:
+                                                                                Text(
+                                                                              Itemprice[index].toString() + ' ' + currency,
+                                                                              style: TextStyle(
+                                                                                fontFamily: 'Montserrat',
+                                                                                fontSize: 14,
+                                                                                fontWeight: FontWeight.w400,
+                                                                              ),
+                                                                              textAlign: TextAlign.left,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ])))
+                                                      ],
+                                                    ),
+                                                  )));
+                                        },
+                                      )))
+                              : Expanded(
+                                  child: Column(
+                                  children: <Widget>[
+                                    Center(
+                                      child: Text(
+                                        'Go ahead Add an Item \n and start selling!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                        child: Image.asset(
+                                      'assets/items.png',
+                                      fit: BoxFit.fitWidth,
+                                    ))
+                                  ],
+                                )),
                         ],
-                      )),
-              ],
-            )
+                      )));
+            })
           : Container(
               width: double.infinity,
               padding:

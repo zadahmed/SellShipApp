@@ -1,4 +1,3 @@
-
 class Item {
   final String itemid;
   final String name;
@@ -9,7 +8,7 @@ class Item {
   final String image4;
   final String image5;
   final String description;
-  final int price;
+  final String price;
   final String userid;
   final String username;
   final String city;

@@ -44,7 +44,6 @@ class _AddItemState extends State<AddItem> {
     'Books',
     'Motors',
     'Property',
-    'Pets',
     'Other'
   ];
   String _selectedCategory;
@@ -1326,9 +1325,9 @@ class _AddItemState extends State<AddItem> {
                                                 }
                                                 setState(() {
                                                   _subcategories = [
-                                                    'For Sale - Houses & Apartment',
-                                                    'For Rent - Houses & Apartment',
-                                                    'For Rent - Shops & Offices',
+                                                    'For Sale \nHouses & Apartment',
+                                                    'For Rent \nHouses & Apartment',
+                                                    'For Rent \nShops & Offices',
                                                     'Guest Houses',
                                                   ];
                                                 });
@@ -1369,7 +1368,7 @@ class _AddItemState extends State<AddItem> {
                                             ),
                                           ),
                                           trailing: Container(
-                                            width: 230,
+                                            width: 245,
                                             padding: EdgeInsets.only(),
                                             child: Center(
                                               child: Align(
@@ -2633,11 +2632,11 @@ class _AddItemState extends State<AddItem> {
                       String fileName = _image.path.split('/').last;
                       formData = FormData.fromMap({
                         'name': businessnameController.text,
-                        'price': businesspricecontroller.text,
+                        'price': businesspricecontroller.text.trim(),
                         'originalprice':
                             businessoriginalpricecontroller.text == null
                                 ? ''
-                                : businessoriginalpricecontroller.text,
+                                : businessoriginalpricecontroller.text.trim(),
                         'category': _selectedCategory,
                         'subcategory': _selectedsubCategory == null
                             ? ''
@@ -2650,8 +2649,8 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'meetup': meetupcheckbox,
                         'shipping': shippingcheckbox,
-                        'city': city,
-                        'country': country,
+                        'city': city.trim(),
+                        'country': country.trim(),
                         'condition': _selectedCondition,
                         'brand': businessbrandcontroller.text.isEmpty
                             ? _selectedbrand
@@ -2673,11 +2672,11 @@ class _AddItemState extends State<AddItem> {
                       String fileName2 = _image2.path.split('/').last;
                       formData = FormData.fromMap({
                         'name': businessnameController.text,
-                        'price': businesspricecontroller.text,
+                        'price': businesspricecontroller.text.trim(),
                         'originalprice':
                             businessoriginalpricecontroller.text == null
                                 ? ''
-                                : businessoriginalpricecontroller.text,
+                                : businessoriginalpricecontroller.text.trim(),
                         'category': _selectedCategory,
                         'subcategory': _selectedsubCategory == null
                             ? ''
@@ -2690,7 +2689,7 @@ class _AddItemState extends State<AddItem> {
                         'meetup': meetupcheckbox,
                         'shipping': shippingcheckbox,
                         'description': businessdescriptionController.text,
-                        'city': city,
+                        'city': city.trim(),
                         'condition': _selectedCondition,
                         'userid': userid,
                         'brand': businessbrandcontroller.text == null
@@ -2699,7 +2698,7 @@ class _AddItemState extends State<AddItem> {
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
-                        'country': country,
+                        'country': country.trim(),
                         'username': firstname,
                         'useremail': email,
                         'usernumber': phonenumber,
@@ -2717,12 +2716,12 @@ class _AddItemState extends State<AddItem> {
 
                       formData = FormData.fromMap({
                         'name': businessnameController.text,
-                        'price': businesspricecontroller.text,
+                        'price': businesspricecontroller.text.trim(),
                         'category': _selectedCategory,
                         'originalprice':
                             businessoriginalpricecontroller.text == null
                                 ? ''
-                                : businessoriginalpricecontroller.text,
+                                : businessoriginalpricecontroller.text.trim(),
                         'subcategory': _selectedsubCategory == null
                             ? ''
                             : _selectedsubCategory,
@@ -2732,7 +2731,7 @@ class _AddItemState extends State<AddItem> {
                         'latitude': _lastMapPosition.latitude,
                         'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
-                        'city': city,
+                        'city': city.trim(),
                         'condition': _selectedCondition,
                         'meetup': meetupcheckbox,
                         'shipping': shippingcheckbox,
@@ -2743,7 +2742,7 @@ class _AddItemState extends State<AddItem> {
                             ? ''
                             : businessizecontroller.text,
                         'userid': userid,
-                        'country': country,
+                        'country': country.trim(),
                         'username': firstname,
                         'useremail': email,
                         'usernumber': phonenumber,
@@ -2767,12 +2766,12 @@ class _AddItemState extends State<AddItem> {
 
                       formData = FormData.fromMap({
                         'name': businessnameController.text,
-                        'price': businesspricecontroller.text,
+                        'price': businesspricecontroller.text.trim(),
                         'category': _selectedCategory,
                         'originalprice':
                             businessoriginalpricecontroller.text == null
                                 ? ''
-                                : businessoriginalpricecontroller.text,
+                                : businessoriginalpricecontroller.text.trim(),
                         'subcategory': _selectedsubCategory == null
                             ? ''
                             : _selectedsubCategory,
@@ -2782,7 +2781,7 @@ class _AddItemState extends State<AddItem> {
                         'latitude': _lastMapPosition.latitude,
                         'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
-                        'city': city,
+                        'city': city.trim(),
                         'userid': userid,
                         'condition': _selectedCondition,
                         'meetup': meetupcheckbox,
@@ -2793,7 +2792,7 @@ class _AddItemState extends State<AddItem> {
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
-                        'country': country,
+                        'country': country.trim(),
                         'username': firstname,
                         'useremail': email,
                         'usernumber': phonenumber,
@@ -2821,12 +2820,12 @@ class _AddItemState extends State<AddItem> {
 
                       formData = FormData.fromMap({
                         'name': businessnameController.text,
-                        'price': businesspricecontroller.text,
+                        'price': businesspricecontroller.text.trim(),
                         'category': _selectedCategory,
                         'originalprice':
                             businessoriginalpricecontroller.text == null
                                 ? ''
-                                : businessoriginalpricecontroller.text,
+                                : businessoriginalpricecontroller.text.trim(),
                         'subcategory': _selectedsubCategory == null
                             ? ''
                             : _selectedsubCategory,
@@ -2836,8 +2835,8 @@ class _AddItemState extends State<AddItem> {
                         'latitude': _lastMapPosition.latitude,
                         'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
-                        'city': city,
-                        'country': country,
+                        'city': city.trim(),
+                        'country': country.trim(),
                         'brand': businessbrandcontroller.text == null
                             ? _selectedbrand
                             : businessbrandcontroller.text.trim(),
@@ -2878,12 +2877,12 @@ class _AddItemState extends State<AddItem> {
                       String fileName6 = _image6.path.split('/').last;
                       formData = FormData.fromMap({
                         'name': businessnameController.text,
-                        'price': businesspricecontroller.text,
+                        'price': businesspricecontroller.text.trim(),
                         'category': _selectedCategory,
                         'originalprice':
                             businessoriginalpricecontroller.text == null
                                 ? ''
-                                : businessoriginalpricecontroller.text,
+                                : businessoriginalpricecontroller.text.trim(),
                         'subcategory': _selectedsubCategory == null
                             ? ''
                             : _selectedsubCategory,
@@ -2893,9 +2892,9 @@ class _AddItemState extends State<AddItem> {
                         'latitude': _lastMapPosition.latitude,
                         'longitude': _lastMapPosition.longitude,
                         'description': businessdescriptionController.text,
-                        'city': city,
+                        'city': city.trim(),
                         'userid': userid,
-                        'country': country,
+                        'country': country.trim(),
                         'username': firstname,
                         'meetup': meetupcheckbox,
                         'shipping': shippingcheckbox,
