@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -170,7 +171,10 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   List<Widget> mapJsonMessagesToListOfWidgetMessages(List jsonResponse) {
     childList = [];
-    changeofferstate();
+
+    if (offerstage != null) {
+      changeofferstate();
+    }
 
     for (int i = 0; i < jsonResponse.length; i++) {
       if (jsonResponse[i]['sender'] == userid) {
@@ -428,37 +432,41 @@ class _ChatPageViewState extends State<ChatPageView> {
   }
 
   acceptoffer() async {
-    var url = 'https://sellship.co/api/acceptoffer/' +
-        messageid +
-        '/' +
-        userid +
-        '/' +
-        recipentid;
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      print('Success');
-      setState(() {
-        offerstage = 1;
-      });
-      print(offerstage);
+    if (offerstage != null) {
+      var url = 'https://sellship.co/api/acceptoffer/' +
+          messageid +
+          '/' +
+          userid +
+          '/' +
+          recipentid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print('Success');
+        setState(() {
+          offerstage = 1;
+        });
+        print(offerstage);
+      }
     }
   }
 
   canceloffer() async {
-    var url = 'https://sellship.co/api/canceloffer/' +
-        messageid +
-        '/' +
-        userid +
-        '/' +
-        recipentid;
-    final response = await http.get(url);
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print('Success');
-      setState(() {
-        offerstage = 0;
-      });
-      print(offerstage);
+    if (offerstage != null) {
+      var url = 'https://sellship.co/api/canceloffer/' +
+          messageid +
+          '/' +
+          userid +
+          '/' +
+          recipentid;
+      final response = await http.get(url);
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        print('Success');
+        setState(() {
+          offerstage = 0;
+        });
+        print(offerstage);
+      }
     }
   }
 
@@ -630,7 +638,14 @@ class _ChatPageViewState extends State<ChatPageView> {
                                               if (userid == recipentid) {
                                                 canceloffer();
                                               } else {
-                                                print('pay');
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          Checkout(
+                                                              item:
+                                                                  itemselling)),
+                                                );
                                               }
                                             }
                                           },

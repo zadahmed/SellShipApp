@@ -8,6 +8,8 @@ import 'package:SellShip/screens/categorydetail.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/nearme.dart';
+import 'package:SellShip/screens/subcategory.dart';
+import 'package:SellShip/screens/womenfashion.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -900,10 +902,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CategoryDetail(
-                                                      category:
-                                                          'Fashion & Accessories',
-                                                      subcategory: "Women")),
+                                                  WomenFashion()),
                                         );
                                       },
                                       child: Padding(
@@ -1151,11 +1150,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CategoryDetail(
-                                                      category:
-                                                          'Fashion & Accessories',
-                                                      subcategory: "Women")),
+                                              builder: (context) => SubCategory(
+                                                  category:
+                                                      'Fashion & Accessories',
+                                                  subcategory: "Bags")),
                                         );
                                       },
                                       child: Padding(
@@ -1214,11 +1212,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CategoryDetail(
-                                                      category:
-                                                          'Fashion & Accessories',
-                                                      subcategory: "Women")),
+                                              builder: (context) => SubCategory(
+                                                  category:
+                                                      'Fashion & Accessories',
+                                                  subcategory: "Watches")),
                                         );
                                       },
                                       child: Padding(

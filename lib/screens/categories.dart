@@ -1,3 +1,4 @@
+import 'package:SellShip/screens/womenfashion.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/screens/categorydetail.dart';
@@ -91,19 +92,31 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 itemBuilder: (ctx, i) {
                                   return InkWell(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CategoryDetail(
-                                                      category: categories[
-                                                              _selectedCat]
-                                                          .title,
-                                                      subcategory: categories[
-                                                              _selectedCat]
-                                                          .subCat[i]
-                                                          .title)),
-                                        );
+                                        if (categories[_selectedCat]
+                                                .subCat[i]
+                                                .title ==
+                                            'Women') {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    WomenFashion()),
+                                          );
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CategoryDetail(
+                                                        category: categories[
+                                                                _selectedCat]
+                                                            .title,
+                                                        subcategory: categories[
+                                                                _selectedCat]
+                                                            .subCat[i]
+                                                            .title)),
+                                          );
+                                        }
                                       },
                                       child: Padding(
                                           padding: const EdgeInsets.all(10.0),
