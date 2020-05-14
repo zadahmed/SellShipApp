@@ -643,6 +643,9 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           Checkout(
+                                                              messageid:
+                                                                  messageid,
+                                                              offer: offer,
                                                               item:
                                                                   itemselling)),
                                                 );

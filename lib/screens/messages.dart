@@ -307,11 +307,23 @@ class MessagesState extends State<Messages> {
                                                                 .data[index]
                                                                 .itemid,
                                                             offerstage: snapshot
-                                                                .data[index]
-                                                                .offerstage,
+                                                                        .data[
+                                                                            index]
+                                                                        .offerstage ==
+                                                                    null
+                                                                ? null
+                                                                : snapshot
+                                                                    .data[index]
+                                                                    .offerstage,
                                                             offer: snapshot
-                                                                .data[index]
-                                                                .offer),
+                                                                        .data[
+                                                                            index]
+                                                                        .offer ==
+                                                                    null
+                                                                ? null
+                                                                : snapshot
+                                                                    .data[index]
+                                                                    .offer),
                                                       ),
                                                     );
                                                   },

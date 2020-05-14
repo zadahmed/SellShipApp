@@ -1,25 +1,61 @@
+import 'dart:convert';
+
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/payments/existingcard.dart';
+import 'package:SellShip/payments/stripeservice.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_credit_card/credit_card_form.dart';
+import 'package:flutter_credit_card/credit_card_model.dart';
+import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+import 'package:stripe_payment/stripe_payment.dart';
+import 'package:http/http.dart' as http;
 
 class Checkout extends StatefulWidget {
   Item item;
-  Checkout({Key key, this.item}) : super(key: key);
+  String offer;
+  String messageid;
+  Checkout({Key key, this.item, this.messageid, this.offer}) : super(key: key);
   @override
   _CheckoutState createState() => _CheckoutState();
 }
 
 class _CheckoutState extends State<Checkout> {
   Item item;
+  String messageid;
+  String offer;
   @override
   void initState() {
     super.initState();
-    getcurrency();
+
+    StripeService.init();
+
     setState(() {
+      messageid = widget.messageid;
       item = widget.item;
+      offer = widget.offer;
     });
+    calculatefees();
+    getcurrency();
+  }
+
+  var fees;
+  var totalpayable;
+
+  calculatefees() {
+    if (int.parse(offer) < 20) {
+      fees = 2.0;
+    } else {
+      fees = 0.15 * int.parse(offer);
+      if (fees > 200.0) {
+        fees = 200;
+      }
+    }
+
+    totalpayable = double.parse(offer) + fees;
   }
 
   var currency;
@@ -38,9 +74,30 @@ class _CheckoutState extends State<Checkout> {
     }
   }
 
+  payViaNewCard(BuildContext context) async {
+    ProgressDialog dialog = new ProgressDialog(context);
+    dialog.style(message: 'Please wait...');
+    await dialog.show();
+    var response =
+        await StripeService.payWithNewCard(amount: '15000', currency: 'USD');
+    await dialog.hide();
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(response.message),
+      duration:
+          new Duration(milliseconds: response.success == true ? 1200 : 3000),
+    ));
+  }
+
+  String cardNumber = '';
+  String expiryDate = '';
+  String cardHolderName = '';
+  String cvvCode = '';
+  bool isCvvFocused = false;
+  final scaffoldState = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: scaffoldState,
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Colors.deepOrange,
@@ -59,9 +116,46 @@ class _CheckoutState extends State<Checkout> {
           opacity: 1,
           child: Padding(
               padding: const EdgeInsets.only(left: 16, bottom: 16, right: 16),
-              child: Expanded(
+              child: Container(
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () async {
+                    ProgressDialog dialog = new ProgressDialog(context);
+                    dialog.style(message: 'Please wait...');
+                    await dialog.show();
+
+                    var slash = expiryDate.indexOf('/');
+
+                    CreditCard stripeCard = CreditCard(
+                      number: cardNumber,
+                      expMonth: int.parse(expiryDate.substring(0, slash)),
+                      expYear: int.parse(expiryDate.substring(
+                        slash + 1,
+                      )),
+                    );
+
+                    var response = await StripeService.payViaExistingCard(
+                        amount: (totalpayable.toInt() * 100).toString(),
+                        currency: 'USD',
+                        card: stripeCard);
+                    await dialog.hide();
+                    if (response.success == true) {
+                      var messageurl = 'https://sellship.co/api/payment/' +
+                          messageid +
+                          '/' +
+                          item.itemid +
+                          '/' +
+                          offer.toString() +
+                          '/' +
+                          fees.toString() +
+                          '/' +
+                          totalpayable.toString();
+                      final response = await http.get(messageurl);
+
+                      print(response.body);
+
+                      await dialog.hide();
+                    }
+                  },
                   child: Container(
                     height: 48,
                     decoration: BoxDecoration(
@@ -148,9 +242,92 @@ class _CheckoutState extends State<Checkout> {
                                   color: Colors.deepOrange,
                                   fontWeight: FontWeight.bold),
                             ),
-                          ))))
+                          )))),
+              Padding(
+                padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Total Amount',
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              Padding(
+                  padding:
+                      EdgeInsets.only(left: 10, bottom: 10, top: 20, right: 10),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(item.name),
+                          Text(offer.toString())
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text('Platform Fees'),
+                          Text(fees.toString())
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text('Total Payable'),
+                          Text(totalpayable.toString())
+                        ],
+                      ),
+                    ],
+                  )),
+              Padding(
+                padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Payment',
+                    style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              CreditCardWidget(
+                cardNumber: cardNumber,
+                expiryDate: expiryDate,
+                cardHolderName: cardHolderName,
+                cvvCode: cvvCode,
+                showBackView: isCvvFocused,
+              ),
+              CreditCardForm(
+                onCreditCardModelChange: onCreditCardModelChange,
+              ),
+              SizedBox(
+                height: 80,
+              )
             ],
           ),
         ));
+  }
+
+  void onCreditCardModelChange(CreditCardModel creditCardModel) {
+    setState(() {
+      cardNumber = creditCardModel.cardNumber;
+      expiryDate = creditCardModel.expiryDate;
+      cardHolderName = creditCardModel.cardHolderName;
+      cvvCode = creditCardModel.cvvCode;
+      isCvvFocused = creditCardModel.isCvvFocused;
+    });
   }
 }
