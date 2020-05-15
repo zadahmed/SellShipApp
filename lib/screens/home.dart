@@ -69,7 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (country == null) {
       _getLocation();
     } else {
-      nearmeitemsgrid.clear();
       var url = 'https://sellship.co/api/getitems/' +
           locationcountry +
           '/' +
@@ -83,18 +82,19 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       if (response.statusCode == 200) {
         var jsonbody = json.decode(response.body);
-
+        nearmeitemsgrid.clear();
         for (var i = 0; i < jsonbody.length; i++) {
           Item item = Item(
             itemid: jsonbody[i]['_id']['\$oid'],
             name: jsonbody[i]['name'],
             image: jsonbody[i]['image'],
-            price: jsonbody[i]['price'],
+            price: jsonbody[i]['price'].toString(),
             category: jsonbody[i]['category'],
           );
           nearmeitemsgrid.add(item);
         }
       }
+
       if (nearmeitemsgrid != null) {
         setState(() {
           nearmeitemsgrid = nearmeitemsgrid;
@@ -105,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
 
+      print(nearmeitemsgrid.length);
       return nearmeitemsgrid;
     }
   }
