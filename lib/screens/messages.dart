@@ -281,51 +281,73 @@ class MessagesState extends State<Messages> {
                                                     ],
                                                   ),
                                                   onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => ChatPageView(
-                                                            senderName: snapshot
-                                                                .data[index]
-                                                                .senderName,
-                                                            messageid: snapshot
-                                                                .data[index]
-                                                                .messageid,
-                                                            recipentname: snapshot
-                                                                .data[index]
-                                                                .peoplemessaged,
-                                                            senderid: snapshot
-                                                                .data[index]
-                                                                .senderid,
-                                                            recipentid: snapshot
-                                                                .data[index]
-                                                                .recipentid,
-                                                            fcmToken: snapshot
-                                                                .data[index]
-                                                                .fcmtokenreciever,
-                                                            itemid: snapshot
-                                                                .data[index]
-                                                                .itemid,
-                                                            offerstage: snapshot
-                                                                        .data[
-                                                                            index]
-                                                                        .offerstage ==
-                                                                    null
-                                                                ? null
-                                                                : snapshot
-                                                                    .data[index]
-                                                                    .offerstage,
-                                                            offer: snapshot
-                                                                        .data[
-                                                                            index]
-                                                                        .offer ==
-                                                                    null
-                                                                ? null
-                                                                : snapshot
-                                                                    .data[index]
-                                                                    .offer),
-                                                      ),
-                                                    );
+                                                    if (snapshot.data[index]
+                                                            .offerstage !=
+                                                        null) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      ChatPageView(
+                                                                        senderName: snapshot
+                                                                            .data[index]
+                                                                            .senderName,
+                                                                        messageid: snapshot
+                                                                            .data[index]
+                                                                            .messageid,
+                                                                        recipentname: snapshot
+                                                                            .data[index]
+                                                                            .peoplemessaged,
+                                                                        senderid: snapshot
+                                                                            .data[index]
+                                                                            .senderid,
+                                                                        recipentid: snapshot
+                                                                            .data[index]
+                                                                            .recipentid,
+                                                                        fcmToken: snapshot
+                                                                            .data[index]
+                                                                            .fcmtokenreciever,
+                                                                        itemid: snapshot
+                                                                            .data[index]
+                                                                            .itemid,
+                                                                        offerstage: snapshot
+                                                                            .data[index]
+                                                                            .offerstage,
+                                                                        offer: snapshot
+                                                                            .data[index]
+                                                                            .offer,
+                                                                      )));
+                                                    } else {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      ChatPageView(
+                                                                        senderName: snapshot
+                                                                            .data[index]
+                                                                            .senderName,
+                                                                        messageid: snapshot
+                                                                            .data[index]
+                                                                            .messageid,
+                                                                        recipentname: snapshot
+                                                                            .data[index]
+                                                                            .peoplemessaged,
+                                                                        senderid: snapshot
+                                                                            .data[index]
+                                                                            .senderid,
+                                                                        recipentid: snapshot
+                                                                            .data[index]
+                                                                            .recipentid,
+                                                                        fcmToken: snapshot
+                                                                            .data[index]
+                                                                            .fcmtokenreciever,
+                                                                        itemid: snapshot
+                                                                            .data[index]
+                                                                            .itemid,
+                                                                      )));
+                                                    }
                                                   },
                                                 ),
                                               ),

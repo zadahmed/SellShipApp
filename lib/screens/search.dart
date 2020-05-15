@@ -120,10 +120,15 @@ class _SearchState extends State<Search> {
     }
 
     setState(() {
-      position = LatLng(double.parse(latitude), double.parse(longitude));
       country = countr;
       onSearch();
     });
+
+    if (position != null) {
+      setState(() {
+        position = LatLng(double.parse(latitude), double.parse(longitude));
+      });
+    }
   }
 
   TextEditingController searchcontroller = new TextEditingController();

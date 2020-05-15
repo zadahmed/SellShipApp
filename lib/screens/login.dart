@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
+import 'package:SellShip/screens/balance.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
@@ -897,6 +898,31 @@ class _LoginPageState extends State<LoginPage>
                                       color: Colors.deepOrange,
                                     ),
                                     title: Text('My Items'),
+                                  ),
+                                ))
+                            : Container(),
+                        userid != null
+                            ? Container(
+                                color: Colors.white,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Balance()),
+                                    );
+                                  },
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.attach_money,
+                                      color: Colors.deepOrange,
+                                    ),
+                                    trailing: Icon(
+                                      Feather.arrow_right,
+                                      size: 16,
+                                      color: Colors.deepOrange,
+                                    ),
+                                    title: Text('Balance'),
                                   ),
                                 ))
                             : Container(),

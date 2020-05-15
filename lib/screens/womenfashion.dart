@@ -69,11 +69,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Sneakers',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -118,11 +119,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Flats',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -167,11 +169,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Sportswear',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -216,11 +219,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Jewelry',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -265,11 +269,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Dresses',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -314,11 +319,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Tops',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -363,11 +369,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Coats & Jackets',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -412,11 +419,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Jumpers & Cardigan',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -461,11 +469,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Bags',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -510,11 +519,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Heels',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -559,11 +569,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Sandals',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -608,11 +619,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Boots',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -657,11 +669,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Sports shoes',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -706,11 +719,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Sunglasses',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -755,11 +769,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Eye-wear',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -804,11 +819,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Hair accessories',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -853,11 +869,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Belts',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -902,11 +919,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Watches',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -951,11 +969,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Modest wear',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -1000,11 +1019,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Jumpsuits & Playsuits',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -1049,11 +1069,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Nightwear & Loungewear',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -1098,11 +1119,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Hoodies & Sweatshirts',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -1147,11 +1169,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Jeans',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -1196,11 +1219,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Suits & Blazers',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -1245,11 +1269,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Swimwear & Beachwear',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -1294,11 +1319,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Shorts',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,
@@ -1343,11 +1369,12 @@ class _WomenFashiontState extends State<WomenFashion> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10),
                           child: Container(
-                              height: 30,
-                              width: 100,
+                              height: 40,
+                              width: 120,
                               color: Colors.white,
                               child: Center(
                                 child: Text('Skirts',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         fontSize: 16,

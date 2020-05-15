@@ -8,6 +8,7 @@ import 'package:SellShip/screens/categorydetail.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/nearme.dart';
+import 'package:SellShip/screens/recentlyadded.dart';
 import 'package:SellShip/screens/subcategory.dart';
 import 'package:SellShip/screens/womenfashion.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
@@ -314,7 +315,6 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchRecentlyAdded(skip, limit);
 
     _getLocation();
-    loadbrands();
   }
 
   var images = [
@@ -340,40 +340,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
   }
-
-  List<String> brands = List<String>();
-  loadbrands() async {
-    var categoryurl = 'https://sellship.co/api/getallbrands';
-    final categoryresponse = await http.get(categoryurl);
-    if (categoryresponse.statusCode == 200) {
-      var categoryrespons = json.decode(categoryresponse.body);
-      print(categoryrespons);
-      for (int i = 0; i < categoryrespons.length; i++) {
-        brands.add(categoryrespons[i]);
-      }
-      setState(() {
-        brands = brands;
-      });
-    } else {
-      print(categoryresponse.statusCode);
-    }
-  }
-
-  TextEditingController minpricecontroller = new TextEditingController();
-  TextEditingController maxpricecontroller = new TextEditingController();
-
-  List<String> conditions = [
-    'New with tags',
-    'New, but no tags',
-    'Like new',
-    'Very Good, a bit worn',
-    'Good, some flaws visible in pictures'
-  ];
-
-  String _selectedCondition;
-  String _selectedFilter = 'Recently Added';
-
-  ScrollController carouselController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -601,38 +567,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        Container(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width,
-                            child: CarouselSlider(
-                              options: CarouselOptions(
-                                carouselController: carouselController,
-                                autoPlay: true,
-                                autoPlayAnimationDuration: Duration(seconds: 1),
-                                aspectRatio: 2.0,
-                                enlargeCenterPage: true,
-                              ),
-                              items: images
-                                  .map((item) => InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CategoryScreen()),
-                                        );
-                                      },
-                                      child: Hero(
-                                          tag: item,
-                                          child: Image.asset(
-                                            item,
-                                            fit: BoxFit.fitWidth,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                          ))))
-                                  .toList(),
-                            )),
                         nearmeitemsgrid.isNotEmpty
                             ? Row(
                                 mainAxisAlignment:
@@ -1151,6 +1085,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => SubCategory(
+                                                  sub: 'Women',
                                                   category:
                                                       'Fashion & Accessories',
                                                   subcategory: "Bags")),
@@ -1213,6 +1148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => SubCategory(
+                                                  sub: 'Women',
                                                   category:
                                                       'Fashion & Accessories',
                                                   subcategory: "Watches")),
@@ -1423,25 +1359,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               ),
                                                               SizedBox(
                                                                   height: 5.0),
-                                                              Container(
-                                                                child: Text(
-                                                                  itemsgrid[
-                                                                          index]
-                                                                      .category,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w300,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 5.0),
                                                               currency != null
                                                                   ? Container(
                                                                       child:
@@ -1507,6 +1424,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ))
                                   ],
                                 )),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width - 10,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RecentlyAdded()),
+                              );
+                            },
+                            child: Container(
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: Colors.deepOrange,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.deepOrange.withOpacity(0.4),
+                                      offset: const Offset(1.1, 1.1),
+                                      blurRadius: 10.0),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'SHOW MORE',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    letterSpacing: 0.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
                       ])));
         })));
   }

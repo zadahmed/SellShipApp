@@ -4,6 +4,7 @@ import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/orderdetail.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -119,6 +120,8 @@ class _ChatPageViewState extends State<ChatPageView> {
         username: jsonbody[0]['username'],
         price: jsonbody[0]['price'].toString(),
         category: jsonbody[0]['category'],
+        condition: jsonbody[0]['condition'],
+        brand: jsonbody[0]['brand'],
       );
       setState(() {
         itemselling = item;
@@ -151,20 +154,26 @@ class _ChatPageViewState extends State<ChatPageView> {
 
       var offerstage = jsonbody['offerstage'];
       if (offerstage == 0) {
-        setState(() {
-          offerstring = 'Edit';
-          offeruserstring = 'Accept';
-        });
+        if (mounted) {
+          setState(() {
+            offerstring = 'Edit';
+            offeruserstring = 'Accept';
+          });
+        }
       } else if (offerstage == 1) {
-        setState(() {
-          offerstring = 'Pay';
-          offeruserstring = 'Cancel';
-        });
+        if (mounted) {
+          setState(() {
+            offerstring = 'Pay';
+            offeruserstring = 'Cancel';
+          });
+        }
       } else if (offerstage == 2) {
-        setState(() {
-          offerstring = 'View Order';
-          offeruserstring = 'View Order';
-        });
+        if (mounted) {
+          setState(() {
+            offerstring = 'View Order';
+            offeruserstring = 'View Order';
+          });
+        }
       }
     }
   }
@@ -650,6 +659,16 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                                   itemselling)),
                                                 );
                                               }
+                                            } else if (offerstage == 2) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OrderDetail(
+                                                            messageid:
+                                                                messageid,
+                                                            item: itemselling)),
+                                              );
                                             }
                                           },
                                           child: offerstring != null

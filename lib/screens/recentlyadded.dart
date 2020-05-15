@@ -28,13 +28,13 @@ import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:shimmer/shimmer.dart';
 
-class NearMe extends StatefulWidget {
-  NearMe({Key key}) : super(key: key);
+class RecentlyAdded extends StatefulWidget {
+  RecentlyAdded({Key key}) : super(key: key);
   @override
-  _NearMeState createState() => _NearMeState();
+  _RecentlyAddedState createState() => _RecentlyAddedState();
 }
 
-class _NearMeState extends State<NearMe> {
+class _RecentlyAddedState extends State<RecentlyAdded> {
   List<Item> itemsgrid = [];
 
   var skip;
@@ -659,7 +659,7 @@ class _NearMeState extends State<NearMe> {
         itemid: jsonbody[i]['_id']['\$oid'],
         name: jsonbody[i]['name'],
         image: jsonbody[i]['image'],
-        price: jsonbody[i]['price'].toString(),
+        price: jsonbody[i]['price'],
         category: jsonbody[i]['category'],
       );
       itemsgrid.add(item);
@@ -718,7 +718,7 @@ class _NearMeState extends State<NearMe> {
         currency = '\$';
       });
     }
-    fetchItems(skip, limit);
+//    fetchItems(skip, limit);
     setState(() {
       city = cit;
     });
@@ -742,6 +742,7 @@ class _NearMeState extends State<NearMe> {
       });
     }
 
+    fetchRecentlyAdded(skip, limit);
     _getLocation();
 
     loadbrands();
@@ -796,10 +797,10 @@ class _NearMeState extends State<NearMe> {
     }
   }
 
-  String _selectedFilter = 'Near me';
+  String _selectedFilter = 'Recently Added';
 
-  int _current = 0;
   final scaffoldState = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

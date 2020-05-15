@@ -4,12 +4,16 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/payments/existingcard.dart';
 import 'package:SellShip/payments/stripeservice.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/orderdetail.dart';
+import 'package:SellShip/screens/paymentdone.dart';
+import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
@@ -59,6 +63,7 @@ class _CheckoutState extends State<Checkout> {
   }
 
   var currency;
+  var stripecurrency;
   final storage = new FlutterSecureStorage();
 
   getcurrency() async {
@@ -66,26 +71,14 @@ class _CheckoutState extends State<Checkout> {
     if (countr.toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
+        stripecurrency = 'AED';
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+        stripecurrency = 'USD';
       });
     }
-  }
-
-  payViaNewCard(BuildContext context) async {
-    ProgressDialog dialog = new ProgressDialog(context);
-    dialog.style(message: 'Please wait...');
-    await dialog.show();
-    var response =
-        await StripeService.payWithNewCard(amount: '15000', currency: 'USD');
-    await dialog.hide();
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text(response.message),
-      duration:
-          new Duration(milliseconds: response.success == true ? 1200 : 3000),
-    ));
   }
 
   String cardNumber = '';
@@ -135,7 +128,7 @@ class _CheckoutState extends State<Checkout> {
 
                     var response = await StripeService.payViaExistingCard(
                         amount: (totalpayable.toInt() * 100).toString(),
-                        currency: 'USD',
+                        currency: stripecurrency,
                         card: stripeCard);
                     await dialog.hide();
                     if (response.success == true) {
@@ -151,9 +144,43 @@ class _CheckoutState extends State<Checkout> {
                           totalpayable.toString();
                       final response = await http.get(messageurl);
 
-                      print(response.body);
-
+                      if (response.statusCode == 200) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PaymentDone(
+                                    item: item,
+                                    messageid: messageid,
+                                  )),
+                        );
+                      }
                       await dialog.hide();
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (_) => AssetGiffyDialog(
+                                image: Image.asset(
+                                  'assets/oops.gif',
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(
+                                  'Oops!',
+                                  style: TextStyle(
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                description: Text(
+                                  'The transaction failed! Try again!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(),
+                                ),
+                                onlyOkButton: true,
+                                entryAnimation: EntryAnimation.DEFAULT,
+                                onOkButtonPressed: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                },
+                              ));
                     }
                   },
                   child: Container(
@@ -265,7 +292,7 @@ class _CheckoutState extends State<Checkout> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(item.name),
-                          Text(offer.toString())
+                          Text(offer.toString() + ' ' + currency)
                         ],
                       ),
                       SizedBox(
@@ -275,7 +302,7 @@ class _CheckoutState extends State<Checkout> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text('Platform Fees'),
-                          Text(fees.toString())
+                          Text(fees.toString() + ' ' + currency)
                         ],
                       ),
                       SizedBox(
@@ -284,8 +311,8 @@ class _CheckoutState extends State<Checkout> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('Total Payable'),
-                          Text(totalpayable.toString())
+                          Text('Total'),
+                          Text(totalpayable.toString() + ' ' + currency)
                         ],
                       ),
                     ],
