@@ -15,6 +15,8 @@ import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/login.dart';
 
 class RootScreen extends StatefulWidget {
+  int index;
+  RootScreen({Key key, this.index}) : super(key: key);
   @override
   _RootScreenState createState() => _RootScreenState();
 }
@@ -32,6 +34,11 @@ class _RootScreenState extends State<RootScreen> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      if (widget.index != null) {
+        _currentPage = widget.index;
+      }
+    });
     this.initDynamicLinks();
   }
 

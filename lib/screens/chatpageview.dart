@@ -225,7 +225,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                           child: Text(
                             jsonResponse[i]['message'],
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'SF',
                                 fontSize: 14,
                                 color: Colors.white),
                           ),
@@ -237,7 +237,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                       child: Text(
                         s,
                         style: TextStyle(
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'SF',
                             fontSize: 10,
                             color: Colors.black),
                       ),
@@ -279,7 +279,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                           padding: const EdgeInsets.only(right: 2.0, left: 2.0),
                           child: Text(jsonResponse[i]['message'],
                               style: TextStyle(
-                                  fontFamily: 'Montserrat',
+                                  fontFamily: 'SF',
                                   fontSize: 14,
                                   color: Colors.black)),
                         ),
@@ -290,7 +290,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                       child: Text(
                         s,
                         style: TextStyle(
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'SF',
                             fontSize: 10,
                             color: Colors.black.withOpacity(0.6)),
                       ),
@@ -324,108 +324,119 @@ class _ChatPageViewState extends State<ChatPageView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
+//                  Padding(
+//                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+//                    child: Text('Enter your address'),
+//                  ),
                   Padding(
-                    padding: EdgeInsets.only(left: 15, bottom: 10, top: 5),
+                    padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Make an Offer',
                         style: TextStyle(
-                            fontFamily: 'Montserrat',
+                            fontFamily: 'SF',
                             fontSize: 16,
                             fontWeight: FontWeight.w700),
                       ),
                     ),
                   ),
-                  ListTile(
-                    title: Container(
-                        width: 200,
-                        padding: EdgeInsets.only(),
-                        child: Center(
-                          child: TextField(
-                            cursorColor: Color(0xFF979797),
-                            controller: offercontroller,
-                            keyboardType: TextInputType.text,
-                            textCapitalization: TextCapitalization.words,
-                            decoration: InputDecoration(
-                                labelText: "Offer Price",
-                                alignLabelWithHint: true,
-                                labelStyle: TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 16,
-                                ),
-                                focusColor: Colors.black,
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                focusedErrorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                disabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                errorBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                )),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                  color: Colors.grey.shade300,
-                                ))),
-                          ),
-                        )),
-                    trailing: InkWell(
-                      onTap: () async {
-                        var itemurl = 'https://sellship.co/api/createoffer/' +
-                            senderid +
-                            '/' +
-                            recipentid +
-                            '/' +
-                            itemid +
-                            '/' +
-                            offercontroller.text.trim();
-                        final response = await http.get(itemurl);
-                        var messageinfo = json.decode(response.body);
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: ListTile(
+                        title: Container(
+                            width: 200,
+                            padding: EdgeInsets.only(),
+                            child: Center(
+                              child: TextField(
+                                cursorColor: Color(0xFF979797),
+                                controller: offercontroller,
+                                keyboardType: TextInputType.text,
+                                textCapitalization: TextCapitalization.words,
+                                decoration: InputDecoration(
+                                    labelText: "Offer Price",
+                                    alignLabelWithHint: true,
+                                    labelStyle: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 16,
+                                    ),
+                                    focusColor: Colors.black,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    border: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    disabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    errorBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    )),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    ))),
+                              ),
+                            )),
+                        trailing: InkWell(
+                          onTap: () async {
+                            var itemurl =
+                                'https://sellship.co/api/createoffer/' +
+                                    senderid +
+                                    '/' +
+                                    recipentid +
+                                    '/' +
+                                    itemid +
+                                    '/' +
+                                    offercontroller.text.trim();
+                            final response = await http.get(itemurl);
+                            var messageinfo = json.decode(response.body);
 
-                        setState(() {
-                          offer = messageinfo['offer'];
-                        });
-                        Navigator.of(context).pop();
-                        print(offer);
-                      },
-                      child: Container(
-                        width: 100,
-                        height: 48,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(16.0),
-                            ),
-                            border:
-                                Border.all(color: Colors.red.withOpacity(0.2)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Make Offer',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 16),
+                            setState(() {
+                              offer = messageinfo['offer'];
+                            });
+                            Navigator.of(context).pop();
+                            print(offer);
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 48,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(16.0),
+                                ),
+                                border: Border.all(
+                                    color: Colors.red.withOpacity(0.2)),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Make Offer',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'SF',
+                                      fontSize: 16),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
+                      )),
                   SizedBox(height: 10),
                 ],
               ),
@@ -500,7 +511,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                           child: Text(
                             recipentname,
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'SF',
                                 fontSize: 16,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w800),
@@ -572,7 +583,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                     title: Text(
                                       itemselling.name,
                                       style: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 16,
                                           color: Colors.black,
                                           fontWeight: FontWeight.w800),
@@ -595,7 +606,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                           ' ' +
                                           currency,
                                       style: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 14,
                                           color: Colors.deepOrange,
                                           fontWeight: FontWeight.bold),
@@ -629,7 +640,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                         child: Text(
                                           'Offer Price ' + offer + ' $currency',
                                           style: TextStyle(
-                                              fontFamily: 'Montserrat',
+                                              fontFamily: 'SF',
                                               fontSize: 16,
                                               color: Colors.white,
                                               fontWeight: FontWeight.w600),
@@ -792,7 +803,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                 bottom: 15.0),
                                             child: Text(x,
                                                 style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 14,
                                                     color: Colors.white)),
                                           ),
@@ -802,7 +813,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                             child: Text(
                                               s,
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 10,
                                                   color: Colors.white
                                                       .withOpacity(0.6)),

@@ -24,7 +24,7 @@ class _MensFashionState extends State<MensFashion> {
         title: Text(
           'Mens Fashion',
           style: TextStyle(
-              fontFamily: 'Montserrat',
+              fontFamily: 'SF',
               fontSize: 16,
               color: Colors.black,
               fontWeight: FontWeight.w800),
@@ -44,9 +44,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Sneakers")),
+                          subcategory: "Shoes & Boots")),
                 );
               },
               child: Padding(
@@ -60,7 +60,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/sneakers.jpeg',
+                          'assets/men/shoes.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -73,10 +73,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Sneakers',
+                                child: Text('Shoes & Boots',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -94,57 +94,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
-                          category: 'Fashion & Accessories',
-                          subcategory: "Flats")),
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          'assets/women/Flats.jpeg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Container(
-                              height: 40,
-                              width: 120,
-                              color: Colors.white,
-                              child: Center(
-                                child: Text('Flats',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black)),
-                              )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Activewear & Sportswear")),
                 );
@@ -160,7 +110,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/sportswear.jpeg',
+                          'assets/men/active.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -173,10 +123,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Sportswear',
+                                child: Text('Activewear & Sportswear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -194,9 +144,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Jewelry")),
+                          subcategory: "Polo Shirts & T- Shirts")),
                 );
               },
               child: Padding(
@@ -210,7 +160,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/jewelry.jpeg',
+                          'assets/men/polo.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -223,10 +173,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Jewelry',
+                                child: Text('Polo Shirts & T- Shirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -244,9 +194,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Dresses")),
+                          subcategory: "Shirts")),
                 );
               },
               child: Padding(
@@ -260,7 +210,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/dresses.jpeg',
+                          'assets/men/shirt.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -273,10 +223,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Dresses',
+                                child: Text('Shirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -294,9 +244,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Tops")),
+                          subcategory: "Sneakers")),
                 );
               },
               child: Padding(
@@ -310,7 +260,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/tops.jpeg',
+                          'assets/men/shoes.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -323,10 +273,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Tops',
+                                child: Text('Sneakers',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -344,9 +294,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Coats & Jackets")),
+                          subcategory: "Loafers & slip-ons")),
                 );
               },
               child: Padding(
@@ -360,7 +310,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/jackets.jpeg',
+                          'assets/men/formalshoes.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -373,10 +323,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Coats & Jackets',
+                                child: Text('Loafers & slip-ons',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -394,9 +344,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Jumpers & Cardigans")),
+                          subcategory: "Formal shoes")),
                 );
               },
               child: Padding(
@@ -410,7 +360,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/jumpers.jpeg',
+                          'assets/men/formsl.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -423,10 +373,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Jumpers & Cardigan',
+                                child: Text('Formal shoes',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -444,207 +394,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
-                          category: 'Fashion & Accessories',
-                          subcategory: "Bags")),
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          'assets/women/bags.jpeg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Container(
-                              height: 40,
-                              width: 120,
-                              color: Colors.white,
-                              child: Center(
-                                child: Text('Bags',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black)),
-                              )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SubCategory(
-                          sub: 'Women',
-                          category: 'Fashion & Accessories',
-                          subcategory: "Heels")),
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          'assets/women/Heels.jpeg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Container(
-                              height: 40,
-                              width: 120,
-                              color: Colors.white,
-                              child: Center(
-                                child: Text('Heels',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black)),
-                              )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SubCategory(
-                          sub: 'Women',
-                          category: 'Fashion & Accessories',
-                          subcategory: "Sandals,slippers and flip-flops")),
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          'assets/women/Sandals.jpeg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Container(
-                              height: 40,
-                              width: 120,
-                              color: Colors.white,
-                              child: Center(
-                                child: Text('Sandals',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black)),
-                              )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SubCategory(
-                          sub: 'Women',
-                          category: 'Fashion & Accessories',
-                          subcategory: "Boots")),
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          'assets/women/Boots.jpeg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Container(
-                              height: 40,
-                              width: 120,
-                              color: Colors.white,
-                              child: Center(
-                                child: Text('Boots',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black)),
-                              )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Sports shoes")),
                 );
@@ -660,7 +410,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/Sportsshoes.jpeg',
+                          'assets/men/sports.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -676,7 +426,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Sports shoes',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -694,9 +444,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Sunglasses")),
+                          subcategory: "Bags & Wallet")),
                 );
               },
               child: Padding(
@@ -710,7 +460,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/sunglasses.jpeg',
+                          'assets/men/wallet.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -723,10 +473,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Sunglasses',
+                                child: Text('Bags & Wallet',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -744,9 +494,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Eye-wear")),
+                          subcategory: "Coats & Jackets")),
                 );
               },
               child: Padding(
@@ -760,7 +510,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/eyewear.jpeg',
+                          'assets/men/jackets.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -773,10 +523,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Eye-wear',
+                                child: Text('Coats & Jackets',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -794,7 +544,107 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
+                          category: 'Fashion & Accessories',
+                          subcategory: "Jumpers & Cardigans")),
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: Image.asset(
+                          'assets/men/coats.jpeg',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Container(
+                              height: 40,
+                              width: 120,
+                              color: Colors.white,
+                              child: Center(
+                                child: Text('Jumpers & Cardigans',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.black)),
+                              )),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SubCategory(
+                          sub: 'Men',
+                          category: 'Fashion & Accessories',
+                          subcategory: "Trousers")),
+                );
+              },
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: Image.asset(
+                          'assets/men/pants.jpeg',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Container(
+                              height: 40,
+                              width: 120,
+                              color: Colors.white,
+                              child: Center(
+                                child: Text('Trousers',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.black)),
+                              )),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SubCategory(
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Hair accessories")),
                 );
@@ -810,7 +660,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/hairaccessories.jpeg',
+                          'assets/men/hair.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -826,7 +676,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Hair accessories',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -844,7 +694,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Belts")),
                 );
@@ -860,7 +710,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/belts.jpeg',
+                          'assets/men/belts.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -876,7 +726,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Belts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -894,9 +744,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Watches")),
+                          subcategory: "Eyewear")),
                 );
               },
               child: Padding(
@@ -910,7 +760,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/watch.jpeg',
+                          'assets/men/eyewear.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -923,10 +773,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Watches',
+                                child: Text('Eyewear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -944,9 +794,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Modest wear")),
+                          subcategory: "Sunglasses")),
                 );
               },
               child: Padding(
@@ -960,7 +810,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/modest.jpeg',
+                          'assets/men/sunglasses.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -973,10 +823,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Modest wear',
+                                child: Text('Sunglasses',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -994,57 +844,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
-                          category: 'Fashion & Accessories',
-                          subcategory: "Jumpsuits & Playsuits")),
-                );
-              },
-              child: Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          'assets/women/jumpsuit.jpeg',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Container(
-                              height: 40,
-                              width: 120,
-                              color: Colors.white,
-                              child: Center(
-                                child: Text('Jumpsuits & Playsuits',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.black)),
-                              )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Nightwear & Loungewear")),
                 );
@@ -1060,7 +860,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/loungewear.jpeg',
+                          'assets/men/nightwear.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -1076,7 +876,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Nightwear & Loungewear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1094,7 +894,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Hoodies & Sweatshirts")),
                 );
@@ -1110,7 +910,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/hoodie.jpeg',
+                          'assets/men/hoodie.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -1126,7 +926,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Hoodies & Sweatshirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1144,7 +944,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Jeans")),
                 );
@@ -1160,7 +960,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/jeans.jpeg',
+                          'assets/men/jeans.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -1176,7 +976,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Jeans',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1194,7 +994,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Suits & Blazers")),
                 );
@@ -1210,7 +1010,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/suits.jpeg',
+                          'assets/men/suits.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -1226,7 +1026,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Suits & Blazers',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1244,7 +1044,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Swimwear & Beachwear")),
                 );
@@ -1260,7 +1060,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/swimwear.jpeg',
+                          'assets/men/swimshorts.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -1276,7 +1076,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Swimwear & Beachwear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1294,7 +1094,7 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
                           subcategory: "Shorts")),
                 );
@@ -1310,7 +1110,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/shorts.jpeg',
+                          'assets/men/shorts.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -1326,7 +1126,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Shorts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1344,9 +1144,9 @@ class _MensFashionState extends State<MensFashion> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => SubCategory(
-                          sub: 'Women',
+                          sub: 'Men',
                           category: 'Fashion & Accessories',
-                          subcategory: "Skirts")),
+                          subcategory: "Others")),
                 );
               },
               child: Padding(
@@ -1360,7 +1160,7 @@ class _MensFashionState extends State<MensFashion> {
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          'assets/women/skirts.jpeg',
+                          'assets/men/jackets.jpeg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -1373,10 +1173,10 @@ class _MensFashionState extends State<MensFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Skirts',
+                                child: Text('Others',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),

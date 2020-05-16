@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
+import 'package:SellShip/screens/boysfashion.dart';
 import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/categorydetail.dart';
 import 'package:SellShip/screens/favourites.dart';
+import 'package:SellShip/screens/girlsfashion.dart';
+import 'package:SellShip/screens/menfashion.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/nearme.dart';
 import 'package:SellShip/screens/recentlyadded.dart';
@@ -90,6 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
             image: jsonbody[i]['image'],
             price: jsonbody[i]['price'].toString(),
             category: jsonbody[i]['category'],
+            sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
           );
           nearmeitemsgrid.add(item);
         }
@@ -129,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
       itemsgrid.add(item);
     }
@@ -155,65 +160,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     readstorage();
-
-    _scrollController
-      ..addListener(() {
-        var triggerFetchMoreSize = _scrollController.position.maxScrollExtent;
-
-//        if (_scrollController.position.pixels == triggerFetchMoreSize) {
-//          if (_selectedFilter == 'Near me') {
-//            _getNearMeData();
-//          } else if (_selectedFilter == 'Recently Added') {
-//            _getmoreRecentData();
-//          } else if (_selectedFilter == 'Below 100') {
-//            _getmorebelowhundred();
-//          } else if (_selectedFilter == 'Lowest Price') {
-//            _getmorelowestprice();
-//          } else if (_selectedFilter == 'Highest Price') {
-//            _getmorehighestprice();
-//          } else if (_selectedFilter == 'Brands') {
-//            getmorebrands(brand);
-//          } else if (_selectedFilter == 'Price') {
-//            getmorePrice(minprice, maxprice);
-//          } else if (_selectedFilter == 'Condition') {
-//            getmorecondition(condition);
-//          }
-//        }
-      });
-  }
-
-  _getmoreData() async {
-    setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
-    });
-    var url = 'https://sellship.co/api/getitems/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.post(url, body: {
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString()
-    });
-
-    var jsonbody = json.decode(response.body);
-
-    for (var i = 0; i < jsonbody.length; i++) {
-      Item item = Item(
-        itemid: jsonbody[i]['_id']['\$oid'],
-        name: jsonbody[i]['name'],
-        image: jsonbody[i]['image'],
-        price: jsonbody[i]['price'],
-        category: jsonbody[i]['category'],
-      );
-      itemsgrid.add(item);
-    }
-    setState(() {
-      itemsgrid = itemsgrid;
-    });
   }
 
   _getLocation() async {
@@ -223,7 +169,18 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       location = await _location.getLocation();
       await storage.write(key: 'latitude', value: location.latitude.toString());
+      await storage.write(
+          key: 'longitude', value: location.longitude.toString());
       var userid = await storage.read(key: 'userid');
+
+      await storage.write(
+          key: 'longitude', value: location.longitude.toString());
+      setState(() {
+        position =
+            LatLng(location.latitude.toDouble(), location.longitude.toDouble());
+        getcity();
+      });
+      fetchItems(skip, limit);
 
       var token = await FirebaseNotifications().getNotifications();
       if (userid != null) {
@@ -239,13 +196,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
-      await storage.write(
-          key: 'longitude', value: location.longitude.toString());
-      setState(() {
-        position =
-            LatLng(location.latitude.toDouble(), location.longitude.toDouble());
-        getcity();
-      });
       List<Placemark> p = await geolocator.placemarkFromCoordinates(
           position.latitude, position.longitude);
       Placemark place = p[0];
@@ -258,7 +208,6 @@ class _HomeScreenState extends State<HomeScreen> {
         locationcountry = countr;
         print(city);
       });
-      fetchItems(skip, limit);
     } on Exception catch (e) {
       print(e);
       Location().requestPermission();
@@ -347,12 +296,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         key: scaffoldState,
         appBar: PreferredSize(
-            preferredSize: Size(double.infinity, 115),
+            preferredSize: Size(double.infinity, 125),
             child: Container(
               width: MediaQuery.of(context).size.width,
-              height: 120,
+              height: 125,
               child: Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  margin: EdgeInsets.fromLTRB(0, 30, 0, 5),
                   child: Column(
                     children: <Widget>[
                       Container(
@@ -366,83 +315,82 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 5,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Expanded(
-//                                  height: 45,
-//                                  width: 300,
-
-                              child: Container(
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                      padding: EdgeInsets.only(bottom: 5),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.all(5),
-                                            child: Icon(
-                                              Feather.search,
-                                              size: 24,
-                                              color: Colors.deepOrange,
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: TextField(
-                                              controller: searchcontroller,
-                                              onSubmitted: onSearch,
-                                              decoration: InputDecoration(
-                                                  hintText:
-                                                      'What are you looking for today?',
-                                                  hintStyle: TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 16,
-                                                  ),
-                                                  border: InputBorder.none),
-                                            ),
+                      Padding(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                  child: Container(
+                                      height: 55,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
                                           ),
                                         ],
-                                      )))),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          CircleAvatar(
-                            backgroundColor: Colors.deepOrange,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Messages()),
-                                );
-                              },
-                              child: Icon(
-                                Feather.message_square,
-                                color: Colors.white,
-                                size: 16,
+                                      ),
+                                      child: Padding(
+                                          padding: EdgeInsets.only(bottom: 5),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Icon(
+                                                  Feather.search,
+                                                  size: 24,
+                                                  color: Colors.deepOrange,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: TextField(
+                                                  controller: searchcontroller,
+                                                  onSubmitted: onSearch,
+                                                  decoration: InputDecoration(
+                                                      hintText:
+                                                          'What are you looking for today?',
+                                                      hintStyle: TextStyle(
+                                                        fontFamily: 'SF',
+                                                        fontSize: 16,
+                                                      ),
+                                                      border: InputBorder.none),
+                                                ),
+                                              ),
+                                            ],
+                                          )))),
+                              SizedBox(
+                                width: 5,
                               ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 6,
-                          ),
-                        ],
-                      )
+                              CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Messages()),
+                                    );
+                                  },
+                                  child: Icon(
+                                    SimpleLineIcons.paper_plane,
+                                    color: Colors.deepOrange,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 6,
+                              ),
+                            ],
+                          )),
                     ],
                   )),
             )),
@@ -467,8 +415,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   left: 10, top: 10, bottom: 10),
                               child: Text('Categories',
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 16,
+                                      fontFamily: 'SF',
+                                      fontSize: 20,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black)),
                             ),
@@ -486,7 +434,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                   child: Text('View All',
                                       style: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 14,
                                           fontWeight: FontWeight.w300,
                                           color: Colors.black)),
@@ -518,8 +466,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       },
                                       child: Container(
-                                          margin: const EdgeInsets.only(
-                                              bottom: 5.0),
                                           width: MediaQuery.of(context)
                                                       .size
                                                       .width /
@@ -546,7 +492,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 child: Text(
                                                   "${categories[i].title}",
                                                   style: TextStyle(
-                                                      fontFamily: 'Montserrat',
+                                                      fontFamily: 'SF',
                                                       fontSize: 14,
                                                       color: Colors.black),
                                                   textAlign: TextAlign.center,
@@ -575,11 +521,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: <Widget>[
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          left: 10, top: 10, bottom: 10),
+                                          left: 10, top: 10, bottom: 5),
                                       child: Text('Near me',
                                           style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 16,
+                                              fontFamily: 'SF',
+                                              fontSize: 20,
                                               fontWeight: FontWeight.w800,
                                               color: Colors.black)),
                                     ),
@@ -597,7 +543,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           },
                                           child: Text('View All',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w300,
                                                   color: Colors.black)),
@@ -621,7 +567,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       return Row(
                                         children: <Widget>[
                                           Padding(
-                                              padding: EdgeInsets.all(4),
+                                              padding: EdgeInsets.all(10),
                                               child: InkWell(
                                                   onTap: () {
                                                     Navigator.push(
@@ -635,46 +581,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     );
                                                   },
                                                   child: Container(
-                                                    width: 150,
-                                                    decoration: BoxDecoration(
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        ),
-                                                      ],
-                                                      color: Colors.white,
-                                                    ),
-                                                    child: new Column(
+                                                    child: Column(
                                                       children: <Widget>[
                                                         new Stack(
                                                           children: <Widget>[
                                                             Container(
-                                                              height: 120,
-                                                              width: 150,
-                                                              child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl:
-                                                                    nearmeitemsgrid[
-                                                                            i]
-                                                                        .image,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                placeholder: (context,
-                                                                        url) =>
-                                                                    SpinKitChasingDots(
-                                                                        color: Colors
-                                                                            .deepOrange),
-                                                                errorWidget: (context,
-                                                                        url,
-                                                                        error) =>
-                                                                    Icon(Icons
-                                                                        .error),
+                                                              height: 150,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      nearmeitemsgrid[
+                                                                              i]
+                                                                          .image,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      SpinKitChasingDots(
+                                                                          color:
+                                                                              Colors.deepOrange),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                ),
                                                               ),
-                                                            ),
+                                                            )
                                                           ],
                                                         ),
                                                         new Padding(
@@ -698,7 +641,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   style:
                                                                       TextStyle(
                                                                     fontFamily:
-                                                                        'Montserrat',
+                                                                        'SF',
                                                                     fontSize:
                                                                         16,
                                                                     fontWeight:
@@ -714,35 +657,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   height: 5.0),
                                                               Container(
                                                                 child: Text(
-                                                                  nearmeitemsgrid[
-                                                                          i]
-                                                                      .category,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w300,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 5.0),
-                                                              Container(
-                                                                child: Text(
-                                                                  nearmeitemsgrid[
+                                                                  currency +
+                                                                      ' ' +
+                                                                      nearmeitemsgrid[
                                                                               i]
                                                                           .price
-                                                                          .toString() +
-                                                                      ' ' +
-                                                                      currency,
+                                                                          .toString(),
                                                                   style:
                                                                       TextStyle(
                                                                     fontFamily:
-                                                                        'Montserrat',
+                                                                        'SF',
                                                                     fontSize:
                                                                         16,
                                                                     fontWeight:
@@ -805,8 +729,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 child: Text('#PRELOVEDFASHION',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
+                                                        fontFamily: 'SF',
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w800,
@@ -876,7 +799,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         child: Text('Women',
                                                             style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                                 fontWeight:
                                                                     FontWeight
@@ -897,10 +820,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CategoryDetail(
-                                                      category:
-                                                          'Fashion & Accessories',
-                                                      subcategory: "Men")),
+                                                  MensFashion()),
                                         );
                                       },
                                       child: Padding(
@@ -939,7 +859,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         child: Text('Men',
                                                             style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                                 fontWeight:
                                                                     FontWeight
@@ -960,10 +880,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CategoryDetail(
-                                                      category:
-                                                          'Fashion & Accessories',
-                                                      subcategory: "Boys")),
+                                                  BoysFashion()),
                                         );
                                       },
                                       child: Padding(
@@ -1002,7 +919,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         child: Text('Boys',
                                                             style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                                 fontWeight:
                                                                     FontWeight
@@ -1023,10 +940,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  CategoryDetail(
-                                                      category:
-                                                          'Fashion & Accessories',
-                                                      subcategory: "Girls")),
+                                                  GirlsFashion()),
                                         );
                                       },
                                       child: Padding(
@@ -1065,7 +979,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         child: Text('Girls',
                                                             style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                                 fontWeight:
                                                                     FontWeight
@@ -1128,7 +1042,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         child: Text('Bags',
                                                             style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                                 fontWeight:
                                                                     FontWeight
@@ -1191,7 +1105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         child: Text('Watches',
                                                             style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                                 fontWeight:
                                                                     FontWeight
@@ -1215,11 +1129,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(children: <Widget>[
                           Padding(
                             padding:
-                                EdgeInsets.only(left: 10, top: 10, bottom: 10),
+                                EdgeInsets.only(left: 10, top: 10, bottom: 5),
                             child: Text('Recently Added',
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 16,
+                                    fontFamily: 'SF',
+                                    fontSize: 20,
                                     fontWeight: FontWeight.w800,
                                     color: Colors.black)),
                           ),
@@ -1237,7 +1151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 2,
-                                              childAspectRatio: 0.80),
+                                              childAspectRatio: 0.85),
                                       itemCount: itemsgrid.length,
                                       itemBuilder: (context, index) {
                                         if (index != 0 && index % 8 == 0) {
@@ -1265,7 +1179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         }
 
                                         return Padding(
-                                            padding: EdgeInsets.all(4),
+                                            padding: EdgeInsets.all(10),
                                             child: InkWell(
                                                 onTap: () {
                                                   Navigator.push(
@@ -1279,19 +1193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   );
                                                 },
                                                 child: Container(
-                                                  decoration: BoxDecoration(
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors
-                                                            .grey.shade300,
-                                                        offset: Offset(
-                                                            0.0, 1.0), //(x,y)
-                                                        blurRadius: 6.0,
-                                                      ),
-                                                    ],
-                                                    color: Colors.white,
-                                                  ),
-                                                  child: new Column(
+                                                  child: Column(
                                                     children: <Widget>[
                                                       new Stack(
                                                         children: <Widget>[
@@ -1302,25 +1204,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         context)
                                                                     .size
                                                                     .width,
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl:
-                                                                  itemsgrid[
-                                                                          index]
-                                                                      .image,
-                                                              fit: BoxFit.cover,
-                                                              placeholder: (context,
-                                                                      url) =>
-                                                                  SpinKitChasingDots(
-                                                                      color: Colors
-                                                                          .deepOrange),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Icon(Icons
-                                                                      .error),
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    itemsgrid[
+                                                                            index]
+                                                                        .image,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    SpinKitChasingDots(
+                                                                        color: Colors
+                                                                            .deepOrange),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                              ),
                                                             ),
-                                                          ),
+                                                          )
                                                         ],
                                                       ),
                                                       Align(
@@ -1346,7 +1255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   style:
                                                                       TextStyle(
                                                                     fontFamily:
-                                                                        'Montserrat',
+                                                                        'SF',
                                                                     fontSize:
                                                                         16,
                                                                     fontWeight:
@@ -1364,13 +1273,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   ? Container(
                                                                       child:
                                                                           Text(
-                                                                        itemsgrid[index].price.toString() +
+                                                                        currency +
                                                                             ' ' +
-                                                                            currency,
+                                                                            itemsgrid[index].price.toString(),
                                                                         style:
                                                                             TextStyle(
                                                                           fontFamily:
-                                                                              'Montserrat',
+                                                                              'SF',
                                                                           fontSize:
                                                                               16,
                                                                           fontWeight:
@@ -1387,7 +1296,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         style:
                                                                             TextStyle(
                                                                           fontFamily:
-                                                                              'Montserrat',
+                                                                              'SF',
                                                                           fontSize:
                                                                               16,
                                                                           fontWeight:
@@ -1414,7 +1323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily: 'Montserrat',
+                                            fontFamily: 'SF',
                                             fontSize: 16,
                                           )),
                                     ),
@@ -1457,6 +1366,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   'SHOW MORE',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
+                                    fontFamily: 'SF',
                                     fontWeight: FontWeight.w800,
                                     fontSize: 16,
                                     letterSpacing: 0.0,

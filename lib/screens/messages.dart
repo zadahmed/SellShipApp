@@ -112,7 +112,7 @@ class MessagesState extends State<Messages> {
           title: Text(
             'CHATS',
             style: TextStyle(
-                fontFamily: 'Montserrat',
+                fontFamily: 'SF',
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.w800),
@@ -157,7 +157,7 @@ class MessagesState extends State<Messages> {
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontFamily: 'Montserrat',
+                                                      fontFamily: 'SF',
                                                       fontSize: 16,
                                                     ),
                                                   ),
@@ -177,8 +177,7 @@ class MessagesState extends State<Messages> {
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(
-                                                            fontFamily:
-                                                                'Montserrat',
+                                                            fontFamily: 'SF',
                                                             fontSize: 13,
                                                             color:
                                                                 Colors.black),
@@ -190,8 +189,7 @@ class MessagesState extends State<Messages> {
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
+                                                          fontFamily: 'SF',
                                                           fontSize: 11,
                                                         ),
                                                       ),
@@ -247,8 +245,7 @@ class MessagesState extends State<Messages> {
                                                         snapshot.data[index]
                                                             .recieveddate,
                                                         style: TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
+                                                          fontFamily: 'SF',
                                                           fontSize: 11,
                                                         ),
                                                       ),
@@ -457,7 +454,7 @@ class MessagesState extends State<Messages> {
                                     'View your Messages here ',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     ),
                                   ),

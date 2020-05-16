@@ -802,7 +802,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           title: Text(
             subcategory.toUpperCase(),
             style: TextStyle(
-                fontFamily: 'Montserrat',
+                fontFamily: 'SF',
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.w800),
@@ -832,7 +832,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                 child: Text(
                                   'SORT',
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -857,7 +857,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                           title: Text(
                                             'Sort',
                                             style: TextStyle(
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: 'SF',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w800,
                                                 color: Colors.black),
@@ -868,7 +868,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'New',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -893,7 +893,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'Near me',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -917,7 +917,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'Below 100',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -941,7 +941,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'Price Low to High',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -965,7 +965,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'Price High to Low',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1014,7 +1014,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'Filter',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.black),
@@ -1024,7 +1024,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'Brand',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1070,7 +1070,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'Condition',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1102,7 +1102,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                               isExpanded: true,
                                                               style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                               ),
                                                               onChanged: (String
@@ -1145,7 +1145,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                             .center,
                                                                     style: TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         color: Colors
@@ -1161,7 +1161,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             title: Text(
                                               'Price',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1193,7 +1193,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1218,7 +1218,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'Montserrat',
+                                                                                fontFamily: 'SF',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1255,7 +1255,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1280,7 +1280,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'Montserrat',
+                                                                                fontFamily: 'SF',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1345,8 +1345,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                       child: Text(
                                                         'Filter',
                                                         style: TextStyle(
-                                                            fontFamily:
-                                                                'Montserrat',
+                                                            fontFamily: 'SF',
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w400,
@@ -1361,7 +1360,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
 //                                            title: Text(
 //                                              'Delivery',
 //                                              style: TextStyle(
-//                                                  fontFamily: 'Montserrat',
+//                                                  fontFamily: 'SF',
 //                                                  fontSize: 16,
 //                                                  fontWeight: FontWeight.w400,
 //                                                  color: Colors.black),
@@ -1381,7 +1380,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                 child: Text(
                                   'FILTER',
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -1512,7 +1511,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -1532,7 +1531,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
@@ -1545,15 +1544,15 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                             currency != null
                                                                 ? Container(
                                                                     child: Text(
-                                                                      itemsgrid[index]
-                                                                              .price
-                                                                              .toString() +
+                                                                      currency +
                                                                           ' ' +
-                                                                          currency,
+                                                                          itemsgrid[index]
+                                                                              .price
+                                                                              .toString(),
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -1570,7 +1569,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -1594,7 +1593,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                     'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     )),
                               ),

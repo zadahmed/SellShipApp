@@ -73,7 +73,7 @@ class _OrderDetailState extends State<OrderDetail> {
               child: Text(
                 'Item Information',
                 style: TextStyle(
-                    fontFamily: 'Montserrat',
+                    fontFamily: 'SF',
                     fontSize: 16,
                     fontWeight: FontWeight.w700),
               ),
@@ -108,7 +108,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         title: Text(
                           item.name,
                           style: TextStyle(
-                              fontFamily: 'Montserrat',
+                              fontFamily: 'SF',
                               fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.w800),
@@ -128,15 +128,15 @@ class _OrderDetailState extends State<OrderDetail> {
                         subtitle: Text(
                           item.category,
                           style: TextStyle(
-                              fontFamily: 'Montserrat',
+                              fontFamily: 'SF',
                               fontSize: 14,
                               color: Colors.deepOrange,
                               fontWeight: FontWeight.bold),
                         ),
                         trailing: Text(
-                          item.price.toString() + ' ' + currency,
+                          currency + ' ' + item.price.toString(),
                           style: TextStyle(
-                              fontFamily: 'Montserrat',
+                              fontFamily: 'SF',
                               fontSize: 14,
                               color: Colors.deepOrange,
                               fontWeight: FontWeight.bold),
@@ -149,7 +149,7 @@ class _OrderDetailState extends State<OrderDetail> {
               child: Text(
                 'Seller Information',
                 style: TextStyle(
-                    fontFamily: 'Montserrat',
+                    fontFamily: 'SF',
                     fontSize: 16,
                     fontWeight: FontWeight.w700),
               ),
@@ -186,9 +186,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     title: Text(
                       item.username,
                       style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 16,
-                          color: Colors.black),
+                          fontFamily: 'SF', fontSize: 16, color: Colors.black),
                     ),
                   ),
                 ),

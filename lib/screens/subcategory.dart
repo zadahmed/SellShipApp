@@ -798,7 +798,7 @@ class _SubCategoryState extends State<SubCategory> {
           title: Text(
             subcategory.toUpperCase(),
             style: TextStyle(
-                fontFamily: 'Montserrat',
+                fontFamily: 'SF',
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.w800),
@@ -828,7 +828,7 @@ class _SubCategoryState extends State<SubCategory> {
                                 child: Text(
                                   'SORT',
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -853,7 +853,7 @@ class _SubCategoryState extends State<SubCategory> {
                                           title: Text(
                                             'Sort',
                                             style: TextStyle(
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: 'SF',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w800,
                                                 color: Colors.black),
@@ -864,7 +864,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'New',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -889,7 +889,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'Near me',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -913,7 +913,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'Below 100',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -937,7 +937,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'Price Low to High',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -961,7 +961,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'Price High to Low',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1010,7 +1010,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'Filter',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.black),
@@ -1020,7 +1020,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'Brand',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1066,7 +1066,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'Condition',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1098,7 +1098,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                               isExpanded: true,
                                                               style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                               ),
                                                               onChanged: (String
@@ -1141,7 +1141,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                             .center,
                                                                     style: TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         color: Colors
@@ -1157,7 +1157,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             title: Text(
                                               'Price',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1189,7 +1189,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1214,7 +1214,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'Montserrat',
+                                                                                fontFamily: 'SF',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1251,7 +1251,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1276,7 +1276,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'Montserrat',
+                                                                                fontFamily: 'SF',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1341,8 +1341,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                       child: Text(
                                                         'Filter',
                                                         style: TextStyle(
-                                                            fontFamily:
-                                                                'Montserrat',
+                                                            fontFamily: 'SF',
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w400,
@@ -1357,7 +1356,7 @@ class _SubCategoryState extends State<SubCategory> {
 //                                            title: Text(
 //                                              'Delivery',
 //                                              style: TextStyle(
-//                                                  fontFamily: 'Montserrat',
+//                                                  fontFamily: 'SF',
 //                                                  fontSize: 16,
 //                                                  fontWeight: FontWeight.w400,
 //                                                  color: Colors.black),
@@ -1377,7 +1376,7 @@ class _SubCategoryState extends State<SubCategory> {
                                 child: Text(
                                   'FILTER',
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -1508,7 +1507,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -1528,7 +1527,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
@@ -1541,15 +1540,15 @@ class _SubCategoryState extends State<SubCategory> {
                                                             currency != null
                                                                 ? Container(
                                                                     child: Text(
-                                                                      itemsgrid[index]
-                                                                              .price
-                                                                              .toString() +
+                                                                      currency +
                                                                           ' ' +
-                                                                          currency,
+                                                                          itemsgrid[index]
+                                                                              .price
+                                                                              .toString(),
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -1566,7 +1565,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -1590,7 +1589,7 @@ class _SubCategoryState extends State<SubCategory> {
                                     'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     )),
                               ),

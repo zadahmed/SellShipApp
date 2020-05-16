@@ -25,9 +25,20 @@ class _BalanceState extends State<Balance> {
   var userid;
   final storage = new FlutterSecureStorage();
   var balance;
+  var currency;
 
   getBalance() async {
     userid = await storage.read(key: 'userid');
+    var countr = await storage.read(key: 'country');
+    if (countr.toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (countr.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = '\$';
+      });
+    }
     var url = 'https://sellship.co/api/getbalance/' + userid;
 
     final response = await http.get(url);
@@ -52,7 +63,7 @@ class _BalanceState extends State<Balance> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'Montserrat',
+          fontFamily: 'SF',
           fontSize: 16,
         ),
       ),
@@ -105,7 +116,7 @@ class _BalanceState extends State<Balance> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(balance.toString())
+                      Text(currency + ' ' + balance.toString())
                     ],
                   )),
                 ),

@@ -223,7 +223,7 @@ class _SearchState extends State<Search> {
                             decoration: InputDecoration(
                                 hintText: 'Search SellShip',
                                 hintStyle: TextStyle(
-                                  fontFamily: 'Montserrat',
+                                  fontFamily: 'SF',
                                   fontSize: 16,
                                 ),
                                 border: InputBorder.none),
@@ -357,7 +357,7 @@ class _SearchState extends State<Search> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -377,7 +377,7 @@ class _SearchState extends State<Search> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
@@ -390,15 +390,15 @@ class _SearchState extends State<Search> {
                                                             currency != null
                                                                 ? Container(
                                                                     child: Text(
-                                                                      itemsgrid[index]
-                                                                              .price
-                                                                              .toString() +
+                                                                      currency +
                                                                           ' ' +
-                                                                          currency,
+                                                                          itemsgrid[index]
+                                                                              .price
+                                                                              .toString(),
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -415,7 +415,7 @@ class _SearchState extends State<Search> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -439,7 +439,7 @@ class _SearchState extends State<Search> {
                                     'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     )),
                               ),

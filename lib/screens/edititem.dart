@@ -98,8 +98,8 @@ class EditItemState extends State<EditItem>
           backgroundColor: Colors.white,
           title: Text(
             'Edit Item',
-            style: TextStyle(
-                fontFamily: 'Montserrat', fontSize: 16, color: Colors.black),
+            style:
+                TextStyle(fontFamily: 'SF', fontSize: 16, color: Colors.black),
           ),
           leading: IconButton(
             icon: Icon(
@@ -143,7 +143,7 @@ class EditItemState extends State<EditItem>
                                             new Text(
                                               'Item Details',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -205,7 +205,7 @@ class EditItemState extends State<EditItem>
                                             new Text(
                                               'Item Name',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -245,7 +245,7 @@ class EditItemState extends State<EditItem>
                                             new Text(
                                               'Item Description',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -287,7 +287,7 @@ class EditItemState extends State<EditItem>
                                             new Text(
                                               'Item Price',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -359,7 +359,7 @@ class EditItemState extends State<EditItem>
                   child: new RaisedButton(
                 child: new Text("Save",
                     style: TextStyle(
-                      fontFamily: 'Montserrat',
+                      fontFamily: 'SF',
                       fontSize: 16,
                     )),
                 textColor: Colors.white,
@@ -414,7 +414,7 @@ class EditItemState extends State<EditItem>
                 child: new Text(
                   "Cancel",
                   style: TextStyle(
-                    fontFamily: 'Montserrat',
+                    fontFamily: 'SF',
                     fontSize: 16,
                   ),
                 ),
@@ -440,7 +440,7 @@ class EditItemState extends State<EditItem>
                 child: new Text(
                   "Delete",
                   style: TextStyle(
-                    fontFamily: 'Montserrat',
+                    fontFamily: 'SF',
                     fontSize: 16,
                   ),
                 ),

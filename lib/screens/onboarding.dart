@@ -82,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 'Buying something? Find the best items near you in less than a minute!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.deepOrange)),
@@ -108,7 +108,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 'Selling Something ? List your item on SellShip within seconds!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.deepOrange)),
@@ -134,7 +134,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 'Experience a new way of friendship through selling!',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.deepOrange)),
@@ -166,7 +166,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 Text(
                                   'Next',
                                   style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontWeight: FontWeight.bold,
                                     color: Colors.deepOrange,
                                     fontSize: 22.0,
@@ -209,7 +209,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Text(
                       'Get started',
                       style: TextStyle(
-                        fontFamily: 'Montserrat',
+                        fontFamily: 'SF',
                         color: Colors.white,
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,

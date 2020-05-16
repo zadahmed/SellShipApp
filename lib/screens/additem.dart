@@ -267,7 +267,7 @@ class _AddItemState extends State<AddItem> {
             child: Text(
               "Add an Item",
               style: TextStyle(
-                fontFamily: 'Montserrat',
+                fontFamily: 'SF',
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
               ),
@@ -317,7 +317,7 @@ class _AddItemState extends State<AddItem> {
                                           child: Text(
                                             'Images',
                                             style: TextStyle(
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: 'SF',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w700),
                                           ),
@@ -860,7 +860,7 @@ class _AddItemState extends State<AddItem> {
                                     child: Text(
                                       'Category',
                                       style: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -881,7 +881,7 @@ class _AddItemState extends State<AddItem> {
                                     title: Text(
                                       'Category',
                                       style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -895,7 +895,7 @@ class _AddItemState extends State<AddItem> {
                                             hint: Text(
                                               'Choose a category',
                                               style: TextStyle(
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: 'SF',
                                                 fontSize: 16,
                                               ),
                                             ), // Not necessary for Option 1
@@ -1340,7 +1340,7 @@ class _AddItemState extends State<AddItem> {
                                                 child: new Text(
                                                   location,
                                                   style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -1363,7 +1363,7 @@ class _AddItemState extends State<AddItem> {
                                           title: Text(
                                             'Sub Category',
                                             style: TextStyle(
-                                              fontFamily: 'Montserrat',
+                                              fontFamily: 'SF',
                                               fontSize: 16,
                                             ),
                                           ),
@@ -1378,7 +1378,7 @@ class _AddItemState extends State<AddItem> {
                                                   hint: Text(
                                                     'Choose a sub category',
                                                     style: TextStyle(
-                                                      fontFamily: 'Montserrat',
+                                                      fontFamily: 'SF',
                                                       fontSize: 16,
                                                     ),
                                                   ), // Not necessary for Option 1
@@ -1412,12 +1412,11 @@ class _AddItemState extends State<AddItem> {
                                                           'Watches',
                                                           'Modest wear',
                                                           'Jumpsuits & Playsuits',
-                                                          'Nightwear & Loungewear',
                                                           'Hoodies & Sweatshirts',
                                                           'Jeans',
                                                           'Suits & Blazers',
                                                           'Swimwear & Beachwear',
-                                                          'Shorts',
+                                                          'Bottoms',
                                                           'Skirts',
                                                           'Other',
                                                         ];
@@ -1428,106 +1427,57 @@ class _AddItemState extends State<AddItem> {
                                                         _subsubcategory = [
                                                           'Shoes & Boots',
                                                           'Activewear & Sportswear',
-                                                          'Polo Shirts',
+                                                          'Polo Shirts & T- Shirts',
                                                           'Shirts',
                                                           'Sneakers',
                                                           'Loafers & slip-ons',
                                                           'Formal shoes',
                                                           'Sports shoes',
-                                                          'T- Shirts & Vests',
                                                           'Coats & Jackets',
                                                           'Jumpers & Cardigans',
-                                                          'Bags',
+                                                          'Bags & Wallet',
                                                           'Trousers',
-                                                          'Chinos',
-                                                          'Wallets',
                                                           'Hair accessories',
                                                           'Belts',
                                                           'Eyewear',
                                                           'Sunglasses',
-                                                          'Jumpsuits & Playsuits',
-                                                          'Nightwear',
-                                                          'Loungewear',
+                                                          'Nightwear & Loungewear',
                                                           'Hoodies & Sweatshirts',
                                                           'Jeans',
                                                           'Suits & Blazers',
                                                           'Swimwear & Beachwear',
                                                           'Shorts',
                                                           'Other',
-                                                          'Jewelry',
-                                                          'Skincare products',
                                                         ];
                                                       });
                                                     } else if (_selectedsubCategory ==
                                                         'Girls') {
                                                       setState(() {
                                                         _subsubcategory = [
-                                                          'Sneakers',
-                                                          'Flats',
-                                                          'Activewear & Sportswear',
-                                                          'Jewelry',
-                                                          'Dresses',
-                                                          'Tops',
-                                                          'Coats & Jackets',
-                                                          'Jumpers & Cardigans',
                                                           'Bags',
-                                                          'Heels',
-                                                          'Sandals,slippers and flip-flops',
-                                                          'Boots',
-                                                          'Sports shoes',
-                                                          'Wallets',
-                                                          'Sunglasses',
-                                                          'Eye-wear',
-                                                          'Hair accessories',
-                                                          'Belts',
-                                                          'Watches',
-                                                          'Modest wear',
-                                                          'Leggings',
-                                                          'Nightwear',
-                                                          'Loungewear',
+                                                          'Bottoms',
+                                                          'Dresses',
+                                                          'Tops and Tees',
+                                                          'Hats',
+                                                          'Accessories',
+                                                          'Jumpsuits',
+                                                          'Nightwear & Loungewear',
+                                                          'Socks',
                                                           'Hoodies & Sweatshirts',
-                                                          'Jeans',
-                                                          'Suits & Blazers',
-                                                          'Swimwear & Beachwear',
-                                                          'Shorts',
-                                                          'Skirts',
-                                                          'Other',
+                                                          'Swimwear & Beachwear'
                                                         ];
                                                       });
                                                     } else if (_selectedsubCategory ==
                                                         'Boys') {
                                                       setState(() {
                                                         _subsubcategory = [
-                                                          'Shoes & Boots',
-                                                          'Activewear & Sportswear',
-                                                          'Polo Shirts',
-                                                          'Shirts',
-                                                          'Sneakers',
-                                                          'Loafers & slip-ons',
-                                                          'Formal shoes',
-                                                          'Sports shoes',
-                                                          'T- Shirts & Vests',
-                                                          'Coats & Jackets',
-                                                          'Jumpers & Cardigans',
-                                                          'Bags',
-                                                          'Trousers',
-                                                          'Chinos',
-                                                          'Wallets',
-                                                          'Hair accessories',
-                                                          'Belts',
-                                                          'Eyewear',
-                                                          'Sunglasses',
-                                                          'Jumpsuits & Playsuits',
-                                                          'Nightwear',
-                                                          'Loungewear',
+                                                          'Hats',
                                                           'Hoodies & Sweatshirts',
-                                                          'Jeans',
-                                                          'Suits & Blazers',
-                                                          'Swimwear & Beachwear',
-                                                          'Shorts',
-                                                          'Other',
-                                                          'Jewelry',
-                                                          'Skincare products',
+                                                          'Nightwear & Loungewear',
+                                                          'Bottoms',
+                                                          'Shirts & T-Shirts',
+                                                          'Socks',
+                                                          'Tops',
                                                         ];
                                                       });
                                                     } else if (_selectedsubCategory ==
@@ -1562,8 +1512,7 @@ class _AddItemState extends State<AddItem> {
                                                       child: new Text(
                                                         location,
                                                         style: TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
+                                                          fontFamily: 'SF',
                                                           fontSize: 16,
                                                         ),
                                                       ),
@@ -1600,7 +1549,7 @@ class _AddItemState extends State<AddItem> {
                                                 hint: Text(
                                                   'Please choose a sub category',
                                                   style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                 ), // Not necessary for Option 1
@@ -1617,8 +1566,7 @@ class _AddItemState extends State<AddItem> {
                                                     child: new Text(
                                                       location,
                                                       style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
+                                                        fontFamily: 'SF',
                                                         fontSize: 16,
                                                       ),
                                                     ),
@@ -1641,7 +1589,7 @@ class _AddItemState extends State<AddItem> {
                                     child: Text(
                                       'Product Detail',
                                       style: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -1668,7 +1616,7 @@ class _AddItemState extends State<AddItem> {
                                     decoration: InputDecoration(
                                         labelText: "Title",
                                         labelStyle: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 16,
                                         ),
                                         focusColor: Colors.black,
@@ -1725,7 +1673,7 @@ class _AddItemState extends State<AddItem> {
                                         labelText: "Description",
                                         alignLabelWithHint: true,
                                         labelStyle: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 16,
                                         ),
                                         focusColor: Colors.black,
@@ -1773,7 +1721,7 @@ class _AddItemState extends State<AddItem> {
                                     title: Text(
                                       'Condition',
                                       style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -1794,7 +1742,7 @@ class _AddItemState extends State<AddItem> {
                                                   elevation: 10,
                                                   isExpanded: true,
                                                   style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                   onChanged: (String newValue) {
@@ -1815,8 +1763,7 @@ class _AddItemState extends State<AddItem> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
-                                                            fontFamily:
-                                                                'Montserrat',
+                                                            fontFamily: 'SF',
                                                             fontSize: 16,
                                                             color:
                                                                 Colors.black),
@@ -1847,7 +1794,7 @@ class _AddItemState extends State<AddItem> {
                                           title: Text(
                                             'Brand',
                                             style: TextStyle(
-                                              fontFamily: 'Montserrat',
+                                              fontFamily: 'SF',
                                               fontSize: 16,
                                             ),
                                           ),
@@ -1869,8 +1816,7 @@ class _AddItemState extends State<AddItem> {
                                                         elevation: 10,
                                                         isExpanded: true,
                                                         style: TextStyle(
-                                                          fontFamily:
-                                                              'Montserrat',
+                                                          fontFamily: 'SF',
                                                           fontSize: 16,
                                                         ),
                                                         onChanged:
@@ -1894,7 +1840,7 @@ class _AddItemState extends State<AddItem> {
                                                                       .center,
                                                               style: TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                   color: Colors
                                                                       .black),
@@ -1922,7 +1868,7 @@ class _AddItemState extends State<AddItem> {
                                                 title: Text(
                                                   'Other Brand Name',
                                                   style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -1949,7 +1895,7 @@ class _AddItemState extends State<AddItem> {
                                                                 labelStyle:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                                 focusColor:
@@ -2027,7 +1973,7 @@ class _AddItemState extends State<AddItem> {
                                                 title: Text(
                                                   'Size',
                                                   style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -2051,7 +1997,7 @@ class _AddItemState extends State<AddItem> {
                                                                 labelStyle:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                                 focusColor:
@@ -2132,7 +2078,7 @@ class _AddItemState extends State<AddItem> {
                                                 title: Text(
                                                   'Original Price (optional)',
                                                   style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -2157,7 +2103,7 @@ class _AddItemState extends State<AddItem> {
                                                                 labelStyle:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                                 focusColor:
@@ -2218,7 +2164,7 @@ class _AddItemState extends State<AddItem> {
                                                 title: Text(
                                                   'Selling Price',
                                                   style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -2243,7 +2189,7 @@ class _AddItemState extends State<AddItem> {
                                                                 labelStyle:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                                 focusColor:
@@ -2312,7 +2258,7 @@ class _AddItemState extends State<AddItem> {
                                     child: Text(
                                       'Delivery Method',
                                       style: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -2367,7 +2313,7 @@ class _AddItemState extends State<AddItem> {
                                     child: Text(
                                       'Item Location',
                                       style: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -2394,7 +2340,7 @@ class _AddItemState extends State<AddItem> {
                                         'Press on the map to choose the Item\'s location',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontFamily: 'Montserrat',
+                                          fontFamily: 'SF',
                                           fontSize: 16,
                                         ),
                                       ),
@@ -2434,7 +2380,7 @@ class _AddItemState extends State<AddItem> {
                                               : Text(
                                                   'Oops! Something went wrong. \n Please try again',
                                                   style: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -2475,7 +2421,7 @@ class _AddItemState extends State<AddItem> {
                                 Text(
                                   "Thank you for helping us grow!",
                                   style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontSize: 16,
                                   ),
                                 ),
@@ -2500,7 +2446,7 @@ class _AddItemState extends State<AddItem> {
                                 'Look\'s like you need to \n login to Add an Item️',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontFamily: 'Montserrat',
+                                  fontFamily: 'SF',
                                   fontSize: 16,
                                 ),
                               ),
@@ -2985,7 +2931,7 @@ class _AddItemState extends State<AddItem> {
                     child: Text(
                       "Add an Item",
                       style: TextStyle(
-                          fontFamily: 'Montserrat',
+                          fontFamily: 'SF',
                           fontSize: 16,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
@@ -3039,7 +2985,7 @@ class _AddItemState extends State<AddItem> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'Montserrat',
+          fontFamily: 'SF',
           fontSize: 16,
         ),
       ),

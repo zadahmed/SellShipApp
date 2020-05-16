@@ -96,7 +96,7 @@ class _StarterPageState extends State<StarterPage>
                               Text(
                                 'UAE',
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontSize: 16,
                                     color: Colors.white),
                               )
@@ -132,7 +132,7 @@ class _StarterPageState extends State<StarterPage>
                               Text(
                                 'USA',
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontSize: 16,
                                     color: Colors.white),
                               )

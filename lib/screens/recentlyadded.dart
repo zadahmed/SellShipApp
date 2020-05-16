@@ -807,7 +807,10 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
         key: scaffoldState,
         appBar: AppBar(
           backgroundColor: Colors.deepOrange,
-          title: Text('Items'),
+          title: Text(
+            'Recently Added',
+            style: TextStyle(fontFamily: 'SF', fontSize: 20),
+          ),
           elevation: 0,
         ),
         body: GestureDetector(
@@ -826,13 +829,14 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                         child: Column(
                           children: <Widget>[
                             Padding(
-                              padding: EdgeInsets.only(bottom: 10, top: 5),
+                              padding: EdgeInsets.only(
+                                  bottom: 10, top: 5, left: 10, right: 10),
                               child: Container(
                                   height: 45,
                                   width: 400,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Padding(
                                       padding: EdgeInsets.only(bottom: 5),
@@ -854,7 +858,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                   hintText:
                                                       'What are you looking for today?',
                                                   hintStyle: TextStyle(
-                                                    fontFamily: 'Montserrat',
+                                                    fontFamily: 'SF',
                                                     fontSize: 16,
                                                   ),
                                                   border: InputBorder.none),
@@ -878,7 +882,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                 child: Text(
                                   'SORT',
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -903,7 +907,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                           title: Text(
                                             'Sort',
                                             style: TextStyle(
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: 'SF',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w800,
                                                 color: Colors.black),
@@ -914,7 +918,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'New',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -939,7 +943,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Near me',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -963,7 +967,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Below 100',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -987,7 +991,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Price Low to High',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1011,7 +1015,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Price High to Low',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1060,7 +1064,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Filter',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.black),
@@ -1070,7 +1074,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Brand',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1116,7 +1120,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Condition',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1148,7 +1152,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                               isExpanded: true,
                                                               style: TextStyle(
                                                                 fontFamily:
-                                                                    'Montserrat',
+                                                                    'SF',
                                                                 fontSize: 16,
                                                               ),
                                                               onChanged: (String
@@ -1191,7 +1195,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                             .center,
                                                                     style: TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         color: Colors
@@ -1207,7 +1211,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Price',
                                               style: TextStyle(
-                                                  fontFamily: 'Montserrat',
+                                                  fontFamily: 'SF',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1239,7 +1243,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1264,7 +1268,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'Montserrat',
+                                                                                fontFamily: 'SF',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1301,7 +1305,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1326,7 +1330,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'Montserrat',
+                                                                                fontFamily: 'SF',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1391,8 +1395,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                       child: Text(
                                                         'Filter',
                                                         style: TextStyle(
-                                                            fontFamily:
-                                                                'Montserrat',
+                                                            fontFamily: 'SF',
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w400,
@@ -1407,7 +1410,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 //                                            title: Text(
 //                                              'Delivery',
 //                                              style: TextStyle(
-//                                                  fontFamily: 'Montserrat',
+//                                                  fontFamily: 'SF',
 //                                                  fontSize: 16,
 //                                                  fontWeight: FontWeight.w400,
 //                                                  color: Colors.black),
@@ -1427,7 +1430,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                 child: Text(
                                   'FILTER',
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -1453,7 +1456,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
-                                          childAspectRatio: 0.80),
+                                          childAspectRatio: 0.85),
                                   itemCount: itemsgrid.length,
                                   itemBuilder: (context, index) {
                                     if (index != 0 && index % 8 == 0) {
@@ -1481,7 +1484,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                     }
 
                                     return Padding(
-                                        padding: EdgeInsets.all(4),
+                                        padding: EdgeInsets.all(10),
                                         child: InkWell(
                                             onTap: () {
                                               Navigator.push(
@@ -1494,136 +1497,134 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                     .itemid)),
                                               );
                                             },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey.shade300,
-                                                    offset: Offset(
-                                                        0.0, 1.0), //(x,y)
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                color: Colors.white,
-                                              ),
-                                              child: new Column(
-                                                children: <Widget>[
-                                                  new Stack(
+                                            child: Hero(
+                                                tag: itemsgrid[index].itemid,
+                                                child: Container(
+                                                  child: Column(
                                                     children: <Widget>[
-                                                      Container(
-                                                        height: 150,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              itemsgrid[index]
-                                                                  .image,
-                                                          fit: BoxFit.cover,
-                                                          placeholder: (context,
-                                                                  url) =>
-                                                              SpinKitChasingDots(
-                                                                  color: Colors
-                                                                      .deepOrange),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
-                                                        ),
+                                                      new Stack(
+                                                        children: <Widget>[
+                                                          Container(
+                                                            height: 150,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    itemsgrid[
+                                                                            index]
+                                                                        .image,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    SpinKitChasingDots(
+                                                                        color: Colors
+                                                                            .deepOrange),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
                                                       ),
+                                                      Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    5),
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: <
+                                                                  Widget>[
+                                                                Container(
+                                                                  height: 20,
+                                                                  child: Text(
+                                                                    itemsgrid[
+                                                                            index]
+                                                                        .name,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .left,
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'SF',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                    ),
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                    height:
+                                                                        5.0),
+                                                                currency != null
+                                                                    ? Container(
+                                                                        child:
+                                                                            Text(
+                                                                          currency +
+                                                                              ' ' +
+                                                                              itemsgrid[index].price.toString(),
+                                                                          textAlign:
+                                                                              TextAlign.left,
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontFamily:
+                                                                                'SF',
+                                                                            fontSize:
+                                                                                16,
+                                                                            fontWeight:
+                                                                                FontWeight.w800,
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : Container(
+                                                                        child:
+                                                                            Text(
+                                                                          itemsgrid[index]
+                                                                              .price
+                                                                              .toString(),
+                                                                          style:
+                                                                              TextStyle(
+                                                                            fontFamily:
+                                                                                'SF',
+                                                                            fontSize:
+                                                                                16,
+                                                                            fontWeight:
+                                                                                FontWeight.w800,
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                              ],
+                                                            ),
+                                                          ))
                                                     ],
                                                   ),
-                                                  new Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: new Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Container(
-                                                          height: 20,
-                                                          child: Text(
-                                                            itemsgrid[index]
-                                                                .name,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                            ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        Container(
-                                                          child: Text(
-                                                            itemsgrid[index]
-                                                                .category,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Montserrat',
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        currency != null
-                                                            ? Container(
-                                                                child: Text(
-                                                                  itemsgrid[index]
-                                                                          .price
-                                                                          .toString() +
-                                                                      ' ' +
-                                                                      currency,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            : Container(
-                                                                child: Text(
-                                                                  itemsgrid[
-                                                                          index]
-                                                                      .price
-                                                                      .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'Montserrat',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            )));
+                                                ))));
                                   },
                                 )))
                         : Expanded(
@@ -1634,7 +1635,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                     'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     )),
                               ),

@@ -31,7 +31,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           title: Text(
             'CATEGORIES',
             style: TextStyle(
-                fontFamily: 'Montserrat',
+                fontFamily: 'SF',
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.w800),
@@ -64,7 +64,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           title: Text(
                             categories[i].title,
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'SF',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400),
                           ),
@@ -146,8 +146,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                   child: Text(
                                                     "${categories[_selectedCat].subCat[i].title}",
                                                     style: TextStyle(
-                                                        fontFamily:
-                                                            'Montserrat',
+                                                        fontFamily: 'SF',
                                                         fontSize: 16,
                                                         fontWeight:
                                                             FontWeight.w600),

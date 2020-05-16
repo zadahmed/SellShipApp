@@ -24,7 +24,7 @@ class _WomenFashiontState extends State<WomenFashion> {
         title: Text(
           'Womens Fashion',
           style: TextStyle(
-              fontFamily: 'Montserrat',
+              fontFamily: 'SF',
               fontSize: 16,
               color: Colors.black,
               fontWeight: FontWeight.w800),
@@ -76,7 +76,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Sneakers',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -126,7 +126,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Flats',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -176,7 +176,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Sportswear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -226,7 +226,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Jewelry',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -276,7 +276,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Dresses',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -326,7 +326,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Tops',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -376,7 +376,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Coats & Jackets',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -426,7 +426,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Jumpers & Cardigan',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -476,7 +476,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Bags',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -526,7 +526,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Heels',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -576,7 +576,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Sandals',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -626,7 +626,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Boots',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -676,7 +676,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Sports shoes',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -726,7 +726,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Sunglasses',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -776,7 +776,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Eye-wear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -826,7 +826,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Hair accessories',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -876,7 +876,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Belts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -926,7 +926,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Watches',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -976,7 +976,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Modest wear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1026,7 +1026,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Jumpsuits & Playsuits',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1076,7 +1076,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Nightwear & Loungewear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1126,7 +1126,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Hoodies & Sweatshirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1176,7 +1176,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Jeans',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1226,7 +1226,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Suits & Blazers',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1276,7 +1276,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Swimwear & Beachwear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1296,7 +1296,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                       builder: (context) => SubCategory(
                           sub: 'Women',
                           category: 'Fashion & Accessories',
-                          subcategory: "Shorts")),
+                          subcategory: "Bottoms")),
                 );
               },
               child: Padding(
@@ -1323,10 +1323,10 @@ class _WomenFashiontState extends State<WomenFashion> {
                               width: 120,
                               color: Colors.white,
                               child: Center(
-                                child: Text('Shorts',
+                                child: Text('Bottoms',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1376,7 +1376,7 @@ class _WomenFashiontState extends State<WomenFashion> {
                                 child: Text('Skirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),

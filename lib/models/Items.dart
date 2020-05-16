@@ -11,6 +11,7 @@ class Item {
   final String price;
   final String userid;
   final String username;
+  final int likes;
   final String city;
   final String useremail;
   final String latitude;
@@ -34,6 +35,7 @@ class Item {
       this.image3,
       this.image4,
       this.image5,
+      this.likes,
       this.description,
       this.condition,
       this.username,

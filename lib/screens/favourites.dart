@@ -221,7 +221,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -241,7 +241,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'Montserrat',
+                                                                      'SF',
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
@@ -254,15 +254,15 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                             currency != null
                                                                 ? Container(
                                                                     child: Text(
-                                                                      item[index]
-                                                                              .price
-                                                                              .toString() +
+                                                                      currency +
                                                                           ' ' +
-                                                                          currency,
+                                                                          item[index]
+                                                                              .price
+                                                                              .toString(),
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -278,7 +278,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'Montserrat',
+                                                                            'SF',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -396,7 +396,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
               title: Text(
                 "Favourites",
                 style: TextStyle(
-                    fontFamily: 'Montserrat',
+                    fontFamily: 'SF',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white),
@@ -414,7 +414,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                   child: Text('View your favourite\'s here ',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Montserrat',
+                        fontFamily: 'SF',
                         fontSize: 16,
                       )),
                 ),
@@ -441,7 +441,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                     Text(
                       'Loading',
                       style: TextStyle(
-                        fontFamily: 'Montserrat',
+                        fontFamily: 'SF',
                         fontSize: 16,
                       ),
                     ),

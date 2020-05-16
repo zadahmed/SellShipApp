@@ -97,7 +97,7 @@ class _CheckoutState extends State<Checkout> {
           title: Text(
             'CHECKOUT',
             style: TextStyle(
-                fontFamily: 'Montserrat',
+                fontFamily: 'SF',
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.w800),
@@ -244,7 +244,7 @@ class _CheckoutState extends State<Checkout> {
                             title: Text(
                               item.name,
                               style: TextStyle(
-                                  fontFamily: 'Montserrat',
+                                  fontFamily: 'SF',
                                   fontSize: 16,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w800),
@@ -264,7 +264,7 @@ class _CheckoutState extends State<Checkout> {
                             subtitle: Text(
                               item.price.toString() + ' ' + currency,
                               style: TextStyle(
-                                  fontFamily: 'Montserrat',
+                                  fontFamily: 'SF',
                                   fontSize: 14,
                                   color: Colors.deepOrange,
                                   fontWeight: FontWeight.bold),
@@ -277,7 +277,7 @@ class _CheckoutState extends State<Checkout> {
                   child: Text(
                     'Total Amount',
                     style: TextStyle(
-                        fontFamily: 'Montserrat',
+                        fontFamily: 'SF',
                         fontSize: 16,
                         fontWeight: FontWeight.w700),
                   ),
@@ -324,7 +324,7 @@ class _CheckoutState extends State<Checkout> {
                   child: Text(
                     'Payment',
                     style: TextStyle(
-                        fontFamily: 'Montserrat',
+                        fontFamily: 'SF',
                         fontSize: 16,
                         fontWeight: FontWeight.w700),
                   ),

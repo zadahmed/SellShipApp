@@ -235,8 +235,7 @@ class _LoginPageState extends State<LoginPage>
       content: new Text(
         value,
         textAlign: TextAlign.center,
-        style: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 16, color: Colors.white),
+        style: TextStyle(fontFamily: 'SF', fontSize: 16, color: Colors.white),
       ),
       backgroundColor: Colors.amber,
       duration: Duration(seconds: 3),
@@ -315,7 +314,7 @@ class _LoginPageState extends State<LoginPage>
                                     controller: loginEmailController,
                                     keyboardType: TextInputType.emailAddress,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     ),
                                     decoration: InputDecoration(
@@ -327,7 +326,7 @@ class _LoginPageState extends State<LoginPage>
                                       ),
                                       hintText: "Email Address",
                                       hintStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -349,7 +348,7 @@ class _LoginPageState extends State<LoginPage>
                                     controller: loginPasswordController,
                                     obscureText: _obscureTextLogin,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     ),
                                     decoration: InputDecoration(
@@ -361,7 +360,7 @@ class _LoginPageState extends State<LoginPage>
                                       ),
                                       hintText: "Password",
                                       hintStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                       suffixIcon: GestureDetector(
@@ -406,7 +405,7 @@ class _LoginPageState extends State<LoginPage>
                                 child: Text(
                                   "LOGIN",
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
                                       color: Colors.white),
@@ -462,7 +461,7 @@ class _LoginPageState extends State<LoginPage>
                               child: Text(
                                 "Or",
                                 style: TextStyle(
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontSize: 16,
                                     color: Colors.white),
                               ),
@@ -508,7 +507,7 @@ class _LoginPageState extends State<LoginPage>
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Montserrat',
+                                    fontFamily: 'SF',
                                     fontSize: 16,
                                     color: Colors.white),
                               )),
@@ -524,7 +523,7 @@ class _LoginPageState extends State<LoginPage>
                             'By logging In \n you agree to the Terms and Conditions',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'SF',
                                 fontSize: 12,
                                 color: Colors.white),
                           )),
@@ -746,7 +745,7 @@ class _LoginPageState extends State<LoginPage>
                                       Text(
                                         'Login',
                                         style: TextStyle(
-                                            fontFamily: 'Montserrat',
+                                            fontFamily: 'SF',
                                             fontSize: 16.0,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -776,7 +775,7 @@ class _LoginPageState extends State<LoginPage>
                                       Text(
                                         'Sign Up',
                                         style: TextStyle(
-                                            fontFamily: 'Montserrat',
+                                            fontFamily: 'SF',
                                             fontSize: 16.0,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -792,7 +791,7 @@ class _LoginPageState extends State<LoginPage>
                       ? Text(
                           firstname + ' ' + lastname,
                           style: TextStyle(
-                              fontFamily: 'Montserrat',
+                              fontFamily: 'SF',
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold),
                         )
@@ -813,15 +812,14 @@ class _LoginPageState extends State<LoginPage>
                                         ? '0'
                                         : followers.toString(),
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(height: 5.0),
                                   Text(
                                     'FOLLOWERS',
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.grey),
+                                        fontFamily: 'SF', color: Colors.grey),
                                   )
                                 ],
                               ),
@@ -833,15 +831,14 @@ class _LoginPageState extends State<LoginPage>
                                         ? '0'
                                         : itemssold.toString(),
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(height: 5.0),
                                   Text(
                                     'ITEMS SOLD',
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.grey),
+                                        fontFamily: 'SF', color: Colors.grey),
                                   )
                                 ],
                               ),
@@ -853,15 +850,14 @@ class _LoginPageState extends State<LoginPage>
                                         ? '0'
                                         : following.toString(),
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(height: 5.0),
                                   Text(
                                     'FOLLOWING',
                                     style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        color: Colors.grey),
+                                        fontFamily: 'SF', color: Colors.grey),
                                   )
                                 ],
                               )
@@ -942,7 +938,7 @@ class _LoginPageState extends State<LoginPage>
                                   title: Text(
                                     'Edit Profile',
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16.0,
                                     ),
                                   ),
@@ -971,7 +967,7 @@ class _LoginPageState extends State<LoginPage>
                                   title: Text(
                                     'Favourites',
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16.0,
                                     ),
                                   ),
@@ -1000,7 +996,7 @@ class _LoginPageState extends State<LoginPage>
 //                            title: Text(
 //                              'Help and Support',
 //                              style: TextStyle(
-//                                fontFamily: 'Montserrat',
+//                                fontFamily: 'SF',
 //                                fontSize: 16.0,
 //                              ),
 //                            ),
@@ -1025,7 +1021,7 @@ class _LoginPageState extends State<LoginPage>
                             title: Text(
                               'Terms and Conditions',
                               style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'SF',
                                 fontSize: 16.0,
                               ),
                             ),
@@ -1053,7 +1049,7 @@ class _LoginPageState extends State<LoginPage>
                             title: Text(
                               'Privacy Policy',
                               style: TextStyle(
-                                fontFamily: 'Montserrat',
+                                fontFamily: 'SF',
                                 fontSize: 16.0,
                               ),
                             ),
@@ -1078,7 +1074,7 @@ class _LoginPageState extends State<LoginPage>
                                   title: Text(
                                     'Log out',
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16.0,
                                     ),
                                   ),
@@ -1233,7 +1229,7 @@ class _LoginPageState extends State<LoginPage>
                                     textCapitalization:
                                         TextCapitalization.words,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     ),
                                     decoration: InputDecoration(
@@ -1244,7 +1240,7 @@ class _LoginPageState extends State<LoginPage>
                                       ),
                                       hintText: "First Name",
                                       hintStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -1268,7 +1264,7 @@ class _LoginPageState extends State<LoginPage>
                                     textCapitalization:
                                         TextCapitalization.words,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     ),
                                     decoration: InputDecoration(
@@ -1279,7 +1275,7 @@ class _LoginPageState extends State<LoginPage>
                                       ),
                                       hintText: "Last Name",
                                       hintStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -1331,7 +1327,7 @@ class _LoginPageState extends State<LoginPage>
                                     controller: signupEmailController,
                                     keyboardType: TextInputType.emailAddress,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     ),
                                     decoration: InputDecoration(
@@ -1342,7 +1338,7 @@ class _LoginPageState extends State<LoginPage>
                                       ),
                                       hintText: "Email Address",
                                       hintStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -1364,7 +1360,7 @@ class _LoginPageState extends State<LoginPage>
                                     controller: signupPasswordController,
                                     obscureText: _obscureTextSignup,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     ),
                                     decoration: InputDecoration(
@@ -1375,7 +1371,7 @@ class _LoginPageState extends State<LoginPage>
                                       ),
                                       hintText: "Password",
                                       hintStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                       suffixIcon: GestureDetector(
@@ -1406,7 +1402,7 @@ class _LoginPageState extends State<LoginPage>
                                     controller: signupConfirmPasswordController,
                                     obscureText: _obscureTextSignupConfirm,
                                     style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                     ),
                                     decoration: InputDecoration(
@@ -1417,7 +1413,7 @@ class _LoginPageState extends State<LoginPage>
                                       ),
                                       hintText: "Confirmation",
                                       hintStyle: TextStyle(
-                                        fontFamily: 'Montserrat',
+                                        fontFamily: 'SF',
                                         fontSize: 16,
                                       ),
                                       suffixIcon: GestureDetector(
@@ -1462,7 +1458,7 @@ class _LoginPageState extends State<LoginPage>
                                 child: Text(
                                   "SIGN UP",
                                   style: TextStyle(
-                                      fontFamily: 'Montserrat',
+                                      fontFamily: 'SF',
                                       fontSize: 16,
                                       color: Colors.white),
                                 ),
@@ -1503,7 +1499,7 @@ class _LoginPageState extends State<LoginPage>
                                             title: Text(
                                               'Oops!',
                                               style: TextStyle(
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: 'SF',
                                                 fontSize: 22,
                                               ),
                                             ),
@@ -1511,7 +1507,7 @@ class _LoginPageState extends State<LoginPage>
                                               'Looks like you\'re missing something',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                fontFamily: 'Montserrat',
+                                                fontFamily: 'SF',
                                                 fontSize: 16,
                                               ),
                                             ),
@@ -1537,9 +1533,7 @@ class _LoginPageState extends State<LoginPage>
                       'By Signing Up \n you agree to the Terms and Conditions',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 12,
-                          color: Colors.white),
+                          fontFamily: 'SF', fontSize: 12, color: Colors.white),
                     )),
                   ],
                 ),
