@@ -100,12 +100,6 @@ class FavouritesScreenState extends State<FavouritesScreen> {
     getfavourites();
   }
 
-  static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
-
-  static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
-
-  final _controller = NativeAdmobController();
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -196,6 +190,32 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                               Icon(Icons.error),
                                                         ),
                                                       ),
+                                                      item[index].sold == true
+                                                          ? Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topRight,
+                                                              child: Container(
+                                                                height: 20,
+                                                                width: 50,
+                                                                color: Colors
+                                                                    .amber,
+                                                                child: Text(
+                                                                  'Sold',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'SF',
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ))
+                                                          : Container(),
                                                     ],
                                                   ),
                                                   new Align(

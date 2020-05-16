@@ -180,7 +180,6 @@ class _HomeScreenState extends State<HomeScreen> {
             LatLng(location.latitude.toDouble(), location.longitude.toDouble());
         getcity();
       });
-      fetchItems(skip, limit);
 
       var token = await FirebaseNotifications().getNotifications();
       if (userid != null) {
@@ -382,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Icon(
                                     SimpleLineIcons.paper_plane,
                                     color: Colors.deepOrange,
-                                    size: 20,
+                                    size: 24,
                                   ),
                                 ),
                               ),
@@ -1151,7 +1150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 2,
-                                              childAspectRatio: 0.85),
+                                              childAspectRatio: 0.80),
                                       itemCount: itemsgrid.length,
                                       itemBuilder: (context, index) {
                                         if (index != 0 && index % 8 == 0) {
@@ -1192,125 +1191,149 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     .itemid)),
                                                   );
                                                 },
-                                                child: Container(
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      new Stack(
+                                                child: Hero(
+                                                    tag:
+                                                        itemsgrid[index].itemid,
+                                                    child: Container(
+                                                      child: Column(
                                                         children: <Widget>[
-                                                          Container(
-                                                            height: 150,
-                                                            width:
-                                                                MediaQuery.of(
+                                                          new Stack(
+                                                            children: <Widget>[
+                                                              Container(
+                                                                height: 150,
+                                                                width: MediaQuery.of(
                                                                         context)
                                                                     .size
                                                                     .width,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15),
-                                                              child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl:
-                                                                    itemsgrid[
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15),
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    imageUrl: itemsgrid[
                                                                             index]
                                                                         .image,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                placeholder: (context,
-                                                                        url) =>
-                                                                    SpinKitChasingDots(
-                                                                        color: Colors
-                                                                            .deepOrange),
-                                                                errorWidget: (context,
-                                                                        url,
-                                                                        error) =>
-                                                                    Icon(Icons
-                                                                        .error),
-                                                              ),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(5),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Container(
-                                                                height: 20,
-                                                                child: Text(
-                                                                  itemsgrid[
-                                                                          index]
-                                                                      .name,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'SF',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    placeholder: (context,
+                                                                            url) =>
+                                                                        SpinKitChasingDots(
+                                                                            color:
+                                                                                Colors.deepOrange),
+                                                                    errorWidget: (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        Icon(Icons
+                                                                            .error),
                                                                   ),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
                                                                 ),
                                                               ),
-                                                              SizedBox(
-                                                                  height: 5.0),
-                                                              currency != null
-                                                                  ? Container(
+                                                              itemsgrid[index]
+                                                                          .sold ==
+                                                                      true
+                                                                  ? Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .topRight,
                                                                       child:
-                                                                          Text(
-                                                                        currency +
-                                                                            ' ' +
-                                                                            itemsgrid[index].price.toString(),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontFamily:
-                                                                              'SF',
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.w800,
+                                                                          Container(
+                                                                        height:
+                                                                            20,
+                                                                        width:
+                                                                            50,
+                                                                        color: Colors
+                                                                            .amber,
+                                                                        child:
+                                                                            Text(
+                                                                          'Sold',
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'SF',
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold),
                                                                         ),
-                                                                      ),
-                                                                    )
-                                                                  : Container(
-                                                                      child:
-                                                                          Text(
-                                                                        itemsgrid[index]
-                                                                            .price
-                                                                            .toString(),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontFamily:
-                                                                              'SF',
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.w800,
-                                                                        ),
-                                                                      ),
-                                                                    )
+                                                                      ))
+                                                                  : Container(),
                                                             ],
                                                           ),
-                                                        ),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Container(
+                                                                    height: 20,
+                                                                    child: Text(
+                                                                      itemsgrid[
+                                                                              index]
+                                                                          .name,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'SF',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          5.0),
+                                                                  currency !=
+                                                                          null
+                                                                      ? Container(
+                                                                          child:
+                                                                              Text(
+                                                                            currency +
+                                                                                ' ' +
+                                                                                itemsgrid[index].price.toString(),
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'SF',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.w800,
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                      : Container(
+                                                                          child:
+                                                                              Text(
+                                                                            itemsgrid[index].price.toString(),
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'SF',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.w800,
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                )));
+                                                    ))));
                                       },
                                     )))
                             : Container(

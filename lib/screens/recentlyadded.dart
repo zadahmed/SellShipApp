@@ -85,6 +85,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -119,6 +120,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -154,6 +156,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -187,6 +190,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -221,6 +225,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -254,6 +259,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -289,6 +295,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -326,6 +333,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -365,6 +373,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -406,6 +415,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -445,6 +455,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -482,6 +493,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
       itemsgrid.add(item);
     }
@@ -513,6 +525,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
       itemsgrid.add(item);
     }
@@ -544,6 +557,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
 
       itemsgrid.add(item);
@@ -579,6 +593,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
       itemsgrid.add(item);
     }
@@ -661,6 +676,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'],
         category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
       itemsgrid.add(item);
     }
@@ -1456,7 +1472,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
-                                          childAspectRatio: 0.85),
+                                          childAspectRatio: 0.80),
                                   itemCount: itemsgrid.length,
                                   itemBuilder: (context, index) {
                                     if (index != 0 && index % 8 == 0) {
@@ -1536,7 +1552,35 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                         .error),
                                                               ),
                                                             ),
-                                                          )
+                                                          ),
+                                                          itemsgrid[index]
+                                                                      .sold ==
+                                                                  true
+                                                              ? Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .topRight,
+                                                                  child:
+                                                                      Container(
+                                                                    height: 20,
+                                                                    width: 50,
+                                                                    color: Colors
+                                                                        .amber,
+                                                                    child: Text(
+                                                                      'Sold',
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              'SF',
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                  ))
+                                                              : Container(),
                                                         ],
                                                       ),
                                                       Align(

@@ -152,6 +152,31 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                             Icon(Icons.error),
                                                       ),
                                                     ),
+                                                    item[index].sold == true
+                                                        ? Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: Container(
+                                                              height: 20,
+                                                              width: 50,
+                                                              color:
+                                                                  Colors.amber,
+                                                              child: Text(
+                                                                'Sold',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ))
+                                                        : Container(),
                                                   ],
                                                 ),
                                                 new Align(

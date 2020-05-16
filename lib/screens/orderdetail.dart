@@ -122,6 +122,7 @@ class _OrderDetailState extends State<OrderDetail> {
                             borderRadius: BorderRadius.circular(10),
                             child: CachedNetworkImage(
                               imageUrl: item.image,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

@@ -491,30 +491,31 @@ class _DetailsState extends State<Details> {
               child: ListView(
 //                  padding: EdgeInsets.symmetric(horizontal: 10),
                 children: <Widget>[
-                  Container(
-                    height: 350,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    child: Stack(
-                      children: <Widget>[
-                        PageView.builder(
-                            itemCount: images.length,
-                            onPageChanged: (index) {
-                              setState(() {
-                                inde = index;
-                              });
-                            },
-                            itemBuilder: (BuildContext ctxt, int index) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(PageRouteBuilder(
-                                      opaque: false,
-                                      pageBuilder: (BuildContext context, _,
-                                              __) =>
-                                          ImageDisplay(image: images[index])));
-                                },
-                                child: Hero(
-                                  tag: itemid,
+                  Hero(
+                    tag: itemid,
+                    child: Container(
+                      height: 350,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                      child: Stack(
+                        children: <Widget>[
+                          PageView.builder(
+                              itemCount: images.length,
+                              onPageChanged: (index) {
+                                setState(() {
+                                  inde = index;
+                                });
+                              },
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(PageRouteBuilder(
+                                        opaque: false,
+                                        pageBuilder:
+                                            (BuildContext context, _, __) =>
+                                                ImageDisplay(
+                                                    image: images[index])));
+                                  },
                                   child: CachedNetworkImage(
                                     imageUrl: images[index],
                                     height: MediaQuery.of(context).size.height,
@@ -526,31 +527,31 @@ class _DetailsState extends State<Details> {
                                     width: MediaQuery.of(context).size.width,
                                     fit: BoxFit.cover,
                                   ),
-                                ),
-                              );
-                            }),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: images.map((url) {
-                              inde = images.indexOf(url);
-                              return Container(
-                                width: 8.0,
-                                height: 8.0,
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 2.0),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _current == inde
-                                      ? Colors.deepOrange
-                                      : Colors.white,
-                                ),
-                              );
-                            }).toList(),
+                                );
+                              }),
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: images.map((url) {
+                                inde = images.indexOf(url);
+                                return Container(
+                                  width: 8.0,
+                                  height: 8.0,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 2.0),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _current == inde
+                                        ? Colors.deepOrange
+                                        : Colors.white,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 10),

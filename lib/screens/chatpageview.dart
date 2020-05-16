@@ -152,24 +152,27 @@ class _ChatPageViewState extends State<ChatPageView> {
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
-      var offerstage = jsonbody['offerstage'];
-      if (offerstage == 0) {
+      var offerstag = jsonbody['offerstage'];
+      if (offerstag == 0) {
         if (mounted) {
           setState(() {
+            offerstage = offerstag;
             offerstring = 'Edit';
             offeruserstring = 'Accept';
           });
         }
-      } else if (offerstage == 1) {
+      } else if (offerstag == 1) {
         if (mounted) {
           setState(() {
+            offerstage = offerstag;
             offerstring = 'Pay';
             offeruserstring = 'Cancel';
           });
         }
-      } else if (offerstage == 2) {
+      } else if (offerstag == 2) {
         if (mounted) {
           setState(() {
+            offerstage = offerstag;
             offerstring = 'View Order';
             offeruserstring = 'View Order';
           });
@@ -602,9 +605,9 @@ class _ChatPageViewState extends State<ChatPageView> {
                                       ),
                                     ),
                                     subtitle: Text(
-                                      itemselling.price.toString() +
+                                      currency +
                                           ' ' +
-                                          currency,
+                                          itemselling.price.toString(),
                                       style: TextStyle(
                                           fontFamily: 'SF',
                                           fontSize: 14,
@@ -615,7 +618,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                       : Container(),
                   offer != null
                       ? Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
+                          padding:
+                              EdgeInsets.only(top: 10, left: 10, right: 10),
                           child: InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -628,21 +632,34 @@ class _ChatPageViewState extends State<ChatPageView> {
                               child: Container(
                                   height: 30,
                                   width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                    color: Colors.deepOrange,
-                                  ),
                                   child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 20),
+                                      Container(
+                                        height: 30,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
                                         child: Text(
                                           'Offer Price ' + offer + ' $currency',
+                                          textAlign: TextAlign.left,
                                           style: TextStyle(
                                               fontFamily: 'SF',
                                               fontSize: 16,
-                                              color: Colors.white,
+                                              color: Colors.black,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -686,7 +703,20 @@ class _ChatPageViewState extends State<ChatPageView> {
                                               ? Container(
                                                   height: 30,
                                                   width: 70,
-                                                  color: Colors.amber,
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        Colors.deepOrangeAccent,
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors
+                                                            .deepOrangeAccent
+                                                            .shade200,
+                                                        offset: Offset(
+                                                            0.0, 1.0), //(x,y)
+                                                        blurRadius: 6.0,
+                                                      ),
+                                                    ],
+                                                  ),
                                                   child: Center(
                                                     child: Text(
                                                       userid == recipentid

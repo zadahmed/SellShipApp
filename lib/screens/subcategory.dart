@@ -81,6 +81,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -134,6 +135,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -175,6 +177,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -216,6 +219,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -257,6 +261,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -297,6 +302,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -334,6 +340,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -373,6 +380,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -414,6 +422,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -457,6 +466,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -498,6 +508,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
         );
         itemsgrid.add(item);
       }
@@ -534,6 +545,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -607,6 +619,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -645,6 +658,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -683,6 +697,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -721,6 +736,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
+          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
         );
         itemsgrid.add(item);
       }
@@ -1482,6 +1498,33 @@ class _SubCategoryState extends State<SubCategory> {
                                                               Icon(Icons.error),
                                                         ),
                                                       ),
+                                                      itemsgrid[index].sold ==
+                                                              true
+                                                          ? Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topRight,
+                                                              child: Container(
+                                                                height: 20,
+                                                                width: 50,
+                                                                color: Colors
+                                                                    .amber,
+                                                                child: Text(
+                                                                  'Sold',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'SF',
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ))
+                                                          : Container(),
                                                     ],
                                                   ),
                                                   new Align(

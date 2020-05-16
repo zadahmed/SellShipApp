@@ -62,6 +62,7 @@ class _UserItemsState extends State<UserItems> {
   List<String> Itemimage = List<String>();
   List<String> Itemcategory = List<String>();
   List<String> Itemprice = List<String>();
+  List<bool> Itemsold = List<bool>();
 
   final storage = new FlutterSecureStorage();
   var currency;
@@ -103,6 +104,8 @@ class _UserItemsState extends State<UserItems> {
             Itemimage.add(productmap[i]['image']);
             Itemprice.add(productmap[i]['price'].toString());
             Itemcategory.add(productmap[i]['category']);
+            Itemsold.add(
+                profilemap[i]['sold'] == null ? false : profilemap[i]['sold']);
           }
           setState(() {
             Itemid = Itemid;
@@ -110,6 +113,7 @@ class _UserItemsState extends State<UserItems> {
             Itemimage = Itemimage;
             Itemprice = Itemprice;
             Itemcategory = Itemcategory;
+            Itemsold = Itemsold;
           });
         } else {
           print('No Items');
@@ -471,6 +475,33 @@ class _UserItemsState extends State<UserItems> {
                                                                 ),
                                                               ),
                                                             ),
+                                                            Itemsold[index] ==
+                                                                    true
+                                                                ? Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topRight,
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          20,
+                                                                      width: 50,
+                                                                      color: Colors
+                                                                          .amber,
+                                                                      child:
+                                                                          Text(
+                                                                        'Sold',
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'SF',
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight: FontWeight.bold),
+                                                                      ),
+                                                                    ))
+                                                                : Container(),
                                                           ],
                                                         ),
                                                         new Align(
