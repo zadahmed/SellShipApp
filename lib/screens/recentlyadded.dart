@@ -99,40 +99,37 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
   }
 
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
-    if (country == null) {
-      _getLocation();
-    } else {
-      var url = 'https://sellship.co/api/recentitems/' +
-          country +
-          '/' +
-          skip.toString() +
-          '/' +
-          limit.toString();
+    loadbrands();
+    var url = 'https://sellship.co/api/recentitems/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
 
-      final response = await http.get(url);
+    final response = await http.get(url);
 
-      var jsonbody = json.decode(response.body);
+    var jsonbody = json.decode(response.body);
 
-      for (var i = 0; i < jsonbody.length; i++) {
-        Item item = Item(
-          itemid: jsonbody[i]['_id']['\$oid'],
-          name: jsonbody[i]['name'],
-          image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'].toString(),
-          category: jsonbody[i]['category'],
-          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      setState(() {
-        loading = false;
-        itemsgrid = itemsgrid;
-      });
-
-      print(itemsgrid);
-      return itemsgrid;
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
     }
+
+    setState(() {
+      loading = false;
+      itemsgrid = itemsgrid;
+    });
+
+    print(itemsgrid);
+    return itemsgrid;
   }
 
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
@@ -734,7 +731,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
         currency = '\$';
       });
     }
-//    fetchItems(skip, limit);
+
     setState(() {
       city = cit;
     });
@@ -760,8 +757,6 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
     fetchRecentlyAdded(skip, limit);
     _getLocation();
-
-    loadbrands();
   }
 
   loadbrands() async {
@@ -835,8 +830,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           },
           child: loading == false
               ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
                         width: MediaQuery.of(context).size.height,
@@ -1098,11 +1093,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             children: <Widget>[
                                               Container(
                                                   height: 500,
-                                                  child: AlphabetListScrollView(
-                                                    strList: brands,
-                                                    indexedHeight: (i) {
-                                                      return 40;
-                                                    },
+                                                  child: ListView.builder(
+                                                    itemCount: brands.length,
                                                     itemBuilder:
                                                         (context, index) {
                                                       return InkWell(
@@ -1124,8 +1116,12 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                               brands[index]);
                                                         },
                                                         child: ListTile(
-                                                          title: Text(
-                                                              brands[index]),
+                                                          title: brands[
+                                                                      index] !=
+                                                                  null
+                                                              ? Text(
+                                                                  brands[index])
+                                                              : Text('sd'),
                                                         ),
                                                       );
                                                     },

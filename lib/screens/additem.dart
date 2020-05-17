@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:location/location.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -85,9 +87,6 @@ class _AddItemState extends State<AddItem> {
   bool shippingcheckbox = false;
 
   void readstorage() async {
-    var latitude = await storage.read(key: 'latitude');
-    var longitude = await storage.read(key: 'longitude');
-    var cit = await storage.read(key: 'city');
     var countr = await storage.read(key: 'locationcountry');
     if (countr.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
@@ -99,15 +98,16 @@ class _AddItemState extends State<AddItem> {
       });
     }
     userid = await storage.read(key: 'userid');
+
+    Location _location = new Location();
+
+    var location = await _location.getLocation();
+    var positio =
+        LatLng(location.latitude.toDouble(), location.longitude.toDouble());
     print(userid);
     setState(() {
       loading = false;
-    });
-
-    setState(() {
-      position = LatLng(double.parse(latitude), double.parse(longitude));
-      city = cit;
-      country = countr;
+      position = positio;
     });
   }
 
@@ -2539,16 +2539,25 @@ class _AddItemState extends State<AddItem> {
                     }
                   }
 
+                  String brand;
+                  String brandcontrollertext =
+                      businessbrandcontroller.text.trim();
+                  if (brandcontrollertext.isNotEmpty) {
+                    brand = businessbrandcontroller.text;
+                  } else if (_selectedbrand.isNotEmpty) {
+                    brand = _selectedbrand;
+                  }
+
                   if (phonenumber == null || email == null) {
                     showInSnackBar('Please update your Phone Number and Email');
                   } else if (businessnameController.text.isNotEmpty &&
                       _image.path.isNotEmpty &&
+                      brand.isNotEmpty &&
                       businesspricecontroller.text.isNotEmpty &&
-                      (businessbrandcontroller.text.isNotEmpty ||
-                          _selectedbrand.isNotEmpty) &&
                       _selectedCondition.isNotEmpty &&
                       businessdescriptionController.text.isNotEmpty &&
-                      _lastMapPosition != null) {
+                      city != null &&
+                      country != null) {
                     showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -2594,9 +2603,7 @@ class _AddItemState extends State<AddItem> {
                         'city': city.trim(),
                         'country': country.trim(),
                         'condition': _selectedCondition,
-                        'brand': businessbrandcontroller.text.isEmpty
-                            ? _selectedbrand
-                            : businessbrandcontroller.text.trim(),
+                        'brand': brand,
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2634,9 +2641,7 @@ class _AddItemState extends State<AddItem> {
                         'city': city.trim(),
                         'condition': _selectedCondition,
                         'userid': userid,
-                        'brand': businessbrandcontroller.text == null
-                            ? _selectedbrand
-                            : businessbrandcontroller.text.trim(),
+                        'brand': brand,
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2677,9 +2682,7 @@ class _AddItemState extends State<AddItem> {
                         'condition': _selectedCondition,
                         'meetup': meetupcheckbox,
                         'shipping': shippingcheckbox,
-                        'brand': businessbrandcontroller.text == null
-                            ? _selectedbrand
-                            : businessbrandcontroller.text.trim(),
+                        'brand': brand,
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2728,9 +2731,7 @@ class _AddItemState extends State<AddItem> {
                         'condition': _selectedCondition,
                         'meetup': meetupcheckbox,
                         'shipping': shippingcheckbox,
-                        'brand': businessbrandcontroller.text == null
-                            ? _selectedbrand
-                            : businessbrandcontroller.text.trim(),
+                        'brand': brand,
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2779,9 +2780,7 @@ class _AddItemState extends State<AddItem> {
                         'description': businessdescriptionController.text,
                         'city': city.trim(),
                         'country': country.trim(),
-                        'brand': businessbrandcontroller.text == null
-                            ? _selectedbrand
-                            : businessbrandcontroller.text.trim(),
+                        'brand': brand,
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2840,9 +2839,7 @@ class _AddItemState extends State<AddItem> {
                         'username': firstname,
                         'meetup': meetupcheckbox,
                         'shipping': shippingcheckbox,
-                        'brand': businessbrandcontroller.text == null
-                            ? _selectedbrand
-                            : businessbrandcontroller.text.trim(),
+                        'brand': brand,
                         'size': businessizecontroller.text == null
                             ? ''
                             : businessizecontroller.text,
@@ -2942,7 +2939,9 @@ class _AddItemState extends State<AddItem> {
             : Text(''));
   }
 
-  _handleTap(LatLng point) {
+  final Geolocator geolocator = Geolocator();
+
+  _handleTap(LatLng point) async {
     if (_markers.isNotEmpty) {
       _markers.remove(_markers.last);
       setState(() {
@@ -2956,7 +2955,15 @@ class _AddItemState extends State<AddItem> {
         ));
 
         _lastMapPosition = point;
-        print(_lastMapPosition);
+      });
+      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+          _lastMapPosition.latitude, _lastMapPosition.longitude);
+      Placemark place = p[0];
+      var cit = place.administrativeArea;
+      var countr = place.country;
+      setState(() {
+        city = cit;
+        country = countr;
       });
     } else {
       setState(() {
@@ -2971,6 +2978,15 @@ class _AddItemState extends State<AddItem> {
 
         _lastMapPosition = point;
         print(_lastMapPosition);
+      });
+      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+          _lastMapPosition.latitude, _lastMapPosition.longitude);
+      Placemark place = p[0];
+      var cit = place.administrativeArea;
+      var countr = place.country;
+      setState(() {
+        city = cit;
+        country = countr;
       });
     }
   }

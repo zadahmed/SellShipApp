@@ -325,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Expanded(
                                   child: Container(
-                                      height: 55,
+                                      height: 45,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
@@ -488,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   "${categories[i].title}",
                                                   style: TextStyle(
                                                       fontFamily: 'SF',
-                                                      fontSize: 14,
+                                                      fontSize: 16,
                                                       color: Colors.black),
                                                   textAlign: TextAlign.center,
                                                 ),
@@ -582,11 +582,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           children: <Widget>[
                                                             Container(
                                                               height: 150,
-                                                              width:
-                                                                  MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width,
+                                                              width: 200,
                                                               child: ClipRRect(
                                                                 borderRadius:
                                                                     BorderRadius
@@ -615,64 +611,72 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             )
                                                           ],
                                                         ),
-                                                        new Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(5.0),
-                                                          child: new Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: <Widget>[
-                                                              Container(
-                                                                height: 20,
-                                                                child: Text(
-                                                                  nearmeitemsgrid[
-                                                                          i]
-                                                                      .name,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'SF',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                  ),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 5.0),
-                                                              Container(
-                                                                child: Text(
-                                                                  currency +
-                                                                      ' ' +
+                                                        Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Container(
+                                                                    height: 20,
+                                                                    child: Text(
                                                                       nearmeitemsgrid[
                                                                               i]
-                                                                          .price
-                                                                          .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'SF',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
+                                                                          .name,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'SF',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
+                                                                    ),
                                                                   ),
-                                                                ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          5.0),
+                                                                  Container(
+                                                                    child: Text(
+                                                                      currency +
+                                                                          ' ' +
+                                                                          nearmeitemsgrid[i]
+                                                                              .price
+                                                                              .toString(),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'SF',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
-                                                        )
+                                                            ))
                                                       ],
                                                     ),
                                                   ))),
@@ -684,7 +688,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 5,
                         ),
                         Container(
-                          height: 600,
+                          height: 530,
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width,
                           child: Column(
@@ -737,13 +741,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ),
                               Container(
-                                height: 500,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                  image: new ExactAssetImage(
-                                      'assets/homeshow/bgimage.jpeg'),
-                                  fit: BoxFit.cover,
-                                )),
+                                height: 400,
                                 child: GridView.count(
                                   physics: NeverScrollableScrollPhysics(),
                                   crossAxisCount: 2,
@@ -775,9 +773,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                child: Image.asset(
-                                                  'assets/homeshow/ladies.jpeg',
-                                                  fit: BoxFit.cover,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: Image.asset(
+                                                    'assets/homeshow/ladies.jpeg',
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                               Align(
@@ -829,15 +831,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Stack(
                                             children: <Widget>[
                                               Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
                                                 height: MediaQuery.of(context)
                                                     .size
                                                     .height,
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                child: Image.asset(
-                                                  'assets/homeshow/men.jpeg',
-                                                  fit: BoxFit.cover,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: Image.asset(
+                                                    'assets/homeshow/men.jpeg',
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                               Align(
@@ -889,15 +899,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Stack(
                                             children: <Widget>[
                                               Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
                                                 height: MediaQuery.of(context)
                                                     .size
                                                     .height,
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                child: Image.asset(
-                                                  'assets/homeshow/boy.jpeg',
-                                                  fit: BoxFit.cover,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: Image.asset(
+                                                    'assets/homeshow/boy.jpeg',
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                               Align(
@@ -949,15 +967,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Stack(
                                             children: <Widget>[
                                               Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
                                                 height: MediaQuery.of(context)
                                                     .size
                                                     .height,
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                child: Image.asset(
-                                                  'assets/homeshow/girls.jpeg',
-                                                  fit: BoxFit.cover,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: Image.asset(
+                                                    'assets/homeshow/girls.jpeg',
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                               Align(
@@ -1012,15 +1038,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Stack(
                                             children: <Widget>[
                                               Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
                                                 height: MediaQuery.of(context)
                                                     .size
                                                     .height,
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                child: Image.asset(
-                                                  'assets/homeshow/bag.jpeg',
-                                                  fit: BoxFit.cover,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: Image.asset(
+                                                    'assets/homeshow/bag.jpeg',
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                               Align(
@@ -1075,15 +1109,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Stack(
                                             children: <Widget>[
                                               Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
                                                 height: MediaQuery.of(context)
                                                     .size
                                                     .height,
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                child: Image.asset(
-                                                  'assets/homeshow/watch.jpeg',
-                                                  fit: BoxFit.cover,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: Image.asset(
+                                                    'assets/homeshow/watch.jpeg',
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                               Align(

@@ -61,41 +61,39 @@ class _NearMeState extends State<NearMe> {
   var currency;
 
   Future<List<Item>> fetchItems(int skip, int limit) async {
-    if (country == null) {
-      _getLocation();
-    } else {
-      var url = 'https://sellship.co/api/getitems/' +
-          country +
-          '/' +
-          skip.toString() +
-          '/' +
-          limit.toString();
+    print(country);
+    var url = 'https://sellship.co/api/getitems/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
 
-      final response = await http.post(url, body: {
-        'latitude': position.latitude.toString(),
-        'longitude': position.longitude.toString()
-      });
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
 
-      var jsonbody = json.decode(response.body);
-
-      for (var i = 0; i < jsonbody.length; i++) {
-        Item item = Item(
-          itemid: jsonbody[i]['_id']['\$oid'],
-          name: jsonbody[i]['name'],
-          image: jsonbody[i]['image'],
-          price: jsonbody[i]['price'].toString(),
-          category: jsonbody[i]['category'],
-          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-        );
-        itemsgrid.add(item);
-      }
-      setState(() {
-        itemsgrid = itemsgrid;
-        loading = false;
-      });
-
-      return itemsgrid;
+    var jsonbody = json.decode(response.body);
+    print(response.statusCode);
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
     }
+
+    setState(() {
+      itemsgrid = itemsgrid;
+      loading = false;
+    });
+
+    return itemsgrid;
   }
 
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
@@ -698,7 +696,7 @@ class _NearMeState extends State<NearMe> {
         position =
             LatLng(location.latitude.toDouble(), location.longitude.toDouble());
 
-        getcity();
+        fetchItems(skip, limit);
       });
     } on Exception catch (e) {
       print(e);
@@ -714,33 +712,6 @@ class _NearMeState extends State<NearMe> {
   String country;
 
   final Geolocator geolocator = Geolocator();
-
-  void getcity() async {
-    List<Placemark> p = await geolocator.placemarkFromCoordinates(
-        position.latitude, position.longitude);
-
-    Placemark place = p[0];
-    var cit = place.administrativeArea;
-    var countryy = place.country;
-    await storage.write(key: 'city', value: cit);
-    await storage.write(key: 'locationcountry', value: countryy);
-
-    if (country.toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
-    } else if (country.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
-    }
-    fetchItems(skip, limit);
-    setState(() {
-      city = cit;
-    });
-  }
-
-  String city;
 
   void readstorage() async {
     var countr = await storage.read(key: 'country');
@@ -834,8 +805,8 @@ class _NearMeState extends State<NearMe> {
           },
           child: loading == false
               ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
                         width: MediaQuery.of(context).size.height,
@@ -844,13 +815,14 @@ class _NearMeState extends State<NearMe> {
                         child: Column(
                           children: <Widget>[
                             Padding(
-                              padding: EdgeInsets.only(bottom: 10, top: 5),
+                              padding: EdgeInsets.only(
+                                  bottom: 10, top: 5, left: 10, right: 10),
                               child: Container(
                                   height: 45,
                                   width: 400,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Padding(
                                       padding: EdgeInsets.only(bottom: 5),
@@ -1498,7 +1470,7 @@ class _NearMeState extends State<NearMe> {
                                     }
 
                                     return Padding(
-                                        padding: EdgeInsets.all(4),
+                                        padding: EdgeInsets.all(10),
                                         child: InkWell(
                                             onTap: () {
                                               Navigator.push(
@@ -1512,41 +1484,34 @@ class _NearMeState extends State<NearMe> {
                                               );
                                             },
                                             child: Container(
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey.shade300,
-                                                    offset: Offset(
-                                                        0.0, 1.0), //(x,y)
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                color: Colors.white,
-                                              ),
                                               child: new Column(
                                                 children: <Widget>[
                                                   new Stack(
                                                     children: <Widget>[
                                                       Container(
                                                         height: 150,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              itemsgrid[index]
-                                                                  .image,
-                                                          fit: BoxFit.cover,
-                                                          placeholder: (context,
-                                                                  url) =>
-                                                              SpinKitChasingDots(
-                                                                  color: Colors
-                                                                      .deepOrange),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
+                                                        width: 200,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                itemsgrid[index]
+                                                                    .image,
+                                                            fit: BoxFit.cover,
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                SpinKitChasingDots(
+                                                                    color: Colors
+                                                                        .deepOrange),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                          ),
                                                         ),
                                                       ),
                                                       itemsgrid[index].sold ==
@@ -1578,92 +1543,80 @@ class _NearMeState extends State<NearMe> {
                                                           : Container(),
                                                     ],
                                                   ),
-                                                  new Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: new Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Container(
-                                                          height: 20,
-                                                          child: Text(
-                                                            itemsgrid[index]
-                                                                .name,
-                                                            style: TextStyle(
-                                                              fontFamily: 'SF',
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(5),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              height: 20,
+                                                              child: Text(
+                                                                itemsgrid[index]
+                                                                    .name,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'SF',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                ),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
                                                             ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        Container(
-                                                          child: Text(
-                                                            itemsgrid[index]
-                                                                .category,
-                                                            style: TextStyle(
-                                                              fontFamily: 'SF',
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        currency != null
-                                                            ? Container(
-                                                                child: Text(
-                                                                  currency +
-                                                                      ' ' +
+                                                            SizedBox(
+                                                                height: 5.0),
+                                                            currency != null
+                                                                ? Container(
+                                                                    child: Text(
+                                                                      currency +
+                                                                          ' ' +
+                                                                          itemsgrid[index]
+                                                                              .price
+                                                                              .toString(),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'SF',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : Container(
+                                                                    child: Text(
                                                                       itemsgrid[
                                                                               index]
                                                                           .price
                                                                           .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'SF',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            : Container(
-                                                                child: Text(
-                                                                  itemsgrid[
-                                                                          index]
-                                                                      .price
-                                                                      .toString(),
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'SF',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                      ],
-                                                    ),
-                                                  )
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'SF',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                          ],
+                                                        ),
+                                                      ))
                                                 ],
                                               ),
                                             )));

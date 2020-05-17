@@ -12,10 +12,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:http/http.dart' as http;
 
 import 'package:SellShip/screens/details.dart';
+import 'package:location/location.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SubCategory extends StatefulWidget {
@@ -58,6 +60,26 @@ class _SubCategoryState extends State<SubCategory> {
       limit = limit + 10;
       skip = skip + 10;
     });
+    country = await storage.read(key: 'country');
+
+    if (country.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+        country = country;
+      });
+    } else if (country.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = '\$';
+        country = country;
+      });
+    }
+
+    Location _location = new Location();
+
+    var location = await _location.getLocation();
+
+    var position =
+        LatLng(location.latitude.toDouble(), location.longitude.toDouble());
 
     var url = 'https://sellship.co/api/subcategories/' +
         sub +
@@ -69,8 +91,12 @@ class _SubCategoryState extends State<SubCategory> {
         skip.toString() +
         '/' +
         limit.toString();
-    print(url);
-    final response = await http.get(url);
+
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
@@ -81,7 +107,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -98,19 +124,12 @@ class _SubCategoryState extends State<SubCategory> {
   String country;
 
   Future<List<Item>> fetchItems(int skip, int limit) async {
-    country = await storage.read(key: 'country');
+    Location _location = new Location();
 
-    if (country.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-        country = country;
-      });
-    } else if (country.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-        country = country;
-      });
-    }
+    var location = await _location.getLocation();
+
+    var position =
+        LatLng(location.latitude.toDouble(), location.longitude.toDouble());
 
     var url = 'https://sellship.co/api/subcategories/' +
         sub +
@@ -123,7 +142,11 @@ class _SubCategoryState extends State<SubCategory> {
         '/' +
         limit.toString();
 
-    final response = await http.get(url);
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       itemsgrid.clear();
@@ -135,7 +158,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -177,7 +200,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -219,7 +242,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -261,7 +284,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -282,6 +305,8 @@ class _SubCategoryState extends State<SubCategory> {
   Future<List<Item>> fetchbrands(String brand) async {
     var categoryurl = 'https://sellship.co/api/filter/subcategory/brand/' +
         country +
+        '/' +
+        sub +
         '/' +
         subcategory +
         '/' +
@@ -321,6 +346,8 @@ class _SubCategoryState extends State<SubCategory> {
     var categoryurl = 'https://sellship.co/api/filter/subcategory/condition/' +
         country +
         '/' +
+        sub +
+        '/' +
         subcategory +
         '/' +
         condition +
@@ -358,6 +385,8 @@ class _SubCategoryState extends State<SubCategory> {
   Future<List<Item>> fetchPrice(String minprice, String maxprice) async {
     var categoryurl = 'https://sellship.co/api/filter/subcategory/price/' +
         country +
+        '/' +
+        sub +
         '/' +
         subcategory +
         '/' +
@@ -403,6 +432,8 @@ class _SubCategoryState extends State<SubCategory> {
     var categoryurl = 'https://sellship.co/api/filter/subcategory/condition/' +
         country +
         '/' +
+        sub +
+        '/' +
         subcategory +
         '/' +
         condition +
@@ -444,6 +475,8 @@ class _SubCategoryState extends State<SubCategory> {
     });
     var categoryurl = 'https://sellship.co/api/filter/subcategory/price/' +
         country +
+        '/' +
+        sub +
         '/' +
         subcategory +
         '/' +
@@ -489,6 +522,8 @@ class _SubCategoryState extends State<SubCategory> {
     var categoryurl = 'https://sellship.co/api/filter/subcategory/brand/' +
         country +
         '/' +
+        sub +
+        '/' +
         subcategory +
         '/' +
         brand +
@@ -525,6 +560,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   Future<List<Item>> fetchLowestPrice(int skip, int limit) async {
     var url = 'https://sellship.co/api/subcategories/lowestprice/' +
+        sub +
+        '/' +
         subcategory +
         '/' +
         country +
@@ -545,7 +582,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -564,6 +601,21 @@ class _SubCategoryState extends State<SubCategory> {
   }
 
   loadbrands() async {
+    country = await storage.read(key: 'country');
+
+    if (country.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+        country = country;
+      });
+    } else if (country.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = '\$';
+        country = country;
+      });
+    }
+
+    fetchRecentlyAdded(skip, limit);
     var categoryurl = 'https://sellship.co/api/getbrands/' + category;
     final categoryresponse = await http.get(categoryurl);
     if (categoryresponse.statusCode == 200) {
@@ -600,6 +652,8 @@ class _SubCategoryState extends State<SubCategory> {
     });
 
     var url = 'https://sellship.co/api/subcategories/highestprice/' +
+        sub +
+        '/' +
         subcategory +
         '/' +
         country +
@@ -619,7 +673,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -639,6 +693,8 @@ class _SubCategoryState extends State<SubCategory> {
     });
 
     var url = 'https://sellship.co/api/subcategories/lowestprice/' +
+        sub +
+        '/' +
         subcategory +
         '/' +
         country +
@@ -658,7 +714,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -678,6 +734,8 @@ class _SubCategoryState extends State<SubCategory> {
     });
 
     var url = 'https://sellship.co/api/subcategories/belowhundred/' +
+        sub +
+        '/' +
         subcategory +
         '/' +
         country +
@@ -697,7 +755,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -717,6 +775,8 @@ class _SubCategoryState extends State<SubCategory> {
     });
 
     var url = 'https://sellship.co/api/subcategories/recent/' +
+        sub +
+        '/' +
         subcategory +
         '/' +
         country +
@@ -736,7 +796,7 @@ class _SubCategoryState extends State<SubCategory> {
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -770,7 +830,7 @@ class _SubCategoryState extends State<SubCategory> {
       loading = true;
     });
     loadbrands();
-    fetchItems(skip, limit);
+
     _scrollController
       ..addListener(() {
         var triggerFetchMoreSize = _scrollController.position.maxScrollExtent;
@@ -802,7 +862,7 @@ class _SubCategoryState extends State<SubCategory> {
 
   ScrollController _scrollController = ScrollController();
   final scaffoldState = GlobalKey<ScaffoldState>();
-  String _selectedFilter = 'Near me';
+  String _selectedFilter = 'Recently Added';
 
   @override
   Widget build(BuildContext context) {
@@ -1368,16 +1428,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                   ))
                                             ],
                                           ),
-//                                          ExpansionTile(
-//                                            title: Text(
-//                                              'Delivery',
-//                                              style: TextStyle(
-//                                                  fontFamily: 'SF',
-//                                                  fontSize: 16,
-//                                                  fontWeight: FontWeight.w400,
-//                                                  color: Colors.black),
-//                                            ),
-//                                          ),
+//
                                         ],
                                       ),
                                     ),
@@ -1461,41 +1512,34 @@ class _SubCategoryState extends State<SubCategory> {
                                               );
                                             },
                                             child: Container(
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey.shade300,
-                                                    offset: Offset(
-                                                        0.0, 1.0), //(x,y)
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                color: Colors.white,
-                                              ),
                                               child: new Column(
                                                 children: <Widget>[
                                                   new Stack(
                                                     children: <Widget>[
                                                       Container(
                                                         height: 150,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              itemsgrid[index]
-                                                                  .image,
-                                                          fit: BoxFit.cover,
-                                                          placeholder: (context,
-                                                                  url) =>
-                                                              SpinKitChasingDots(
-                                                                  color: Colors
-                                                                      .deepOrange),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
+                                                        width: 200,
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                itemsgrid[index]
+                                                                    .image,
+                                                            fit: BoxFit.cover,
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                SpinKitChasingDots(
+                                                                    color: Colors
+                                                                        .deepOrange),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                          ),
                                                         ),
                                                       ),
                                                       itemsgrid[index].sold ==
@@ -1540,7 +1584,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                   .start,
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .center,
+                                                                  .start,
                                                           children: <Widget>[
                                                             Container(
                                                               height: 20,
@@ -1559,23 +1603,6 @@ class _SubCategoryState extends State<SubCategory> {
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 5.0),
-                                                            Container(
-                                                              child: Text(
-                                                                itemsgrid[index]
-                                                                    .category,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'SF',
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                ),
                                                               ),
                                                             ),
                                                             SizedBox(

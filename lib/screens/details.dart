@@ -156,6 +156,8 @@ class _DetailsState extends State<Details> {
                                   (messageinfo['recieverfcmtoken']);
                               var sendername = (messageinfo['sendername']);
                               var recipentname = (messageinfo['recievername']);
+                              var offer = messageinfo['offer'];
+                              var offerstage = messageinfo['offerstage'];
                               Navigator.of(context).pop();
                               Navigator.push(
                                 context,
@@ -164,6 +166,8 @@ class _DetailsState extends State<Details> {
                                     messageid: messageid,
                                     recipentname: recipentname,
                                     senderid: userid,
+                                    offer: offer,
+                                    offerstage: offerstage,
                                     recipentid: recieverid,
                                     fcmToken: recieverfcmtoken,
                                     senderName: sendername,
@@ -956,6 +960,7 @@ class _DetailsState extends State<Details> {
                     var recieverfcmtoken = (messageinfo['recieverfcmtoken']);
                     var sendername = (messageinfo['sendername']);
                     var recipentname = (messageinfo['recievername']);
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
