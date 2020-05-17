@@ -105,7 +105,7 @@ class _UserItemsState extends State<UserItems> {
             Itemprice.add(productmap[i]['price'].toString());
             Itemcategory.add(productmap[i]['category']);
             Itemsold.add(
-                profilemap[i]['sold'] == null ? false : profilemap[i]['sold']);
+                productmap[i]['sold'] == null ? false : productmap[i]['sold']);
           }
           setState(() {
             Itemid = Itemid;

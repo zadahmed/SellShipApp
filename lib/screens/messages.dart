@@ -46,6 +46,7 @@ class MessagesState extends State<Messages> {
 
         var offe;
         var offerstage;
+        var unread;
 
         if (messageinfo[i]['offer'] != null) {
           offe = messageinfo[i]['offer'];
@@ -57,6 +58,20 @@ class MessagesState extends State<Messages> {
           offerstage = messageinfo[i]['offerstage'];
         } else if (messageinfo[i]['offerstage'] == null) {
           offerstage = null;
+        }
+
+        if (messageinfo[i]['unread'] != null) {
+          unread = messageinfo[i]['unread'];
+
+          if (messageinfo[i]['lastid'] != null) {
+            if (userid != messageinfo[i]['lastid']) {
+              unread = true;
+            } else {
+              unread = false;
+            }
+          } else {
+            unread = false;
+          }
         }
 
         if (messageinfo[i]['date'] != null) {
@@ -72,7 +87,7 @@ class MessagesState extends State<Messages> {
               offer: offe,
               offerstage: offerstage,
               lastrecieved: messageinfo[i]['lastrecieved'],
-              unread: messageinfo[i]['unread'],
+              unread: unread,
               recieveddate: s,
               hiddendate: q,
               itemname: itemname,
@@ -257,8 +272,8 @@ class MessagesState extends State<Messages> {
                                                                   const EdgeInsets
                                                                           .only(
                                                                       top: 5.0),
-                                                              height: 18,
-                                                              width: 18,
+                                                              height: 15,
+                                                              width: 15,
                                                               decoration:
                                                                   BoxDecoration(
                                                                       color: Colors
@@ -267,11 +282,17 @@ class MessagesState extends State<Messages> {
                                                                           BorderRadius
                                                                               .all(
                                                                         Radius.circular(
-                                                                            25.0),
+                                                                            23.0),
                                                                       )),
                                                               child: Center(
                                                                   child: Text(
-                                                                '',
+                                                                '1',
+                                                                style: TextStyle(
+                                                                    fontSize: 8,
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    color: Colors
+                                                                        .white),
                                                               )),
                                                             )
                                                           : SizedBox()

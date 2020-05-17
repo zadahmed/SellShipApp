@@ -229,7 +229,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                             jsonResponse[i]['message'],
                             style: TextStyle(
                                 fontFamily: 'SF',
-                                fontSize: 14,
+                                fontSize: 16,
                                 color: Colors.white),
                           ),
                         ),
@@ -241,7 +241,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                         s,
                         style: TextStyle(
                             fontFamily: 'SF',
-                            fontSize: 10,
+                            fontSize: 12,
                             color: Colors.black),
                       ),
                     ),
@@ -283,7 +283,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                           child: Text(jsonResponse[i]['message'],
                               style: TextStyle(
                                   fontFamily: 'SF',
-                                  fontSize: 14,
+                                  fontSize: 16,
                                   color: Colors.black)),
                         ),
                       ]),
@@ -294,7 +294,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                         s,
                         style: TextStyle(
                             fontFamily: 'SF',
-                            fontSize: 10,
+                            fontSize: 12,
                             color: Colors.black.withOpacity(0.6)),
                       ),
                     ),
@@ -500,66 +500,59 @@ class _ChatPageViewState extends State<ChatPageView> {
           preferredSize: Size(double.infinity, offer == null ? 180 : 210),
           child: Container(
               width: MediaQuery.of(context).size.width,
-              height: offer == null ? 180 : 210,
+              height: offer == null ? 180 : 220,
               child: Column(
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
                     height: 90,
                     color: Colors.deepOrange,
-                    child: Stack(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            recipentname,
-                            style: TextStyle(
-                                fontFamily: 'SF',
-                                fontSize: 16,
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child: InkWell(
+                              child: Icon(
+                                Icons.arrow_back_ios,
                                 color: Colors.white,
-                                fontWeight: FontWeight.w800),
-                          ),
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              }),
+                        ),
+                        Text(
+                          recipentname,
+                          style: TextStyle(
+                              fontFamily: 'SF',
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 10, bottom: 5),
-                          child: Align(
-                            alignment: Alignment.centerRight,
-                            child: InkWell(
-                                child: Icon(
-                                  Feather.user,
-                                  color: Colors.white,
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => UserItems(
-                                            userid: itemselling.userid,
-                                            username: itemselling.username)),
-                                  );
-                                }),
-                          ),
+                          padding: EdgeInsets.all(5),
+                          child: InkWell(
+                              child: Icon(
+                                Feather.user,
+                                color: Colors.white,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UserItems(
+                                          userid: itemselling.userid,
+                                          username: itemselling.username)),
+                                );
+                              }),
                         ),
-                        Padding(
-                            padding: EdgeInsets.only(left: 10, bottom: 5),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: InkWell(
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    color: Colors.white,
-                                  ),
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  }),
-                            )),
                       ],
                     ),
                   ),
                   itemselling != null
                       ? Padding(
-                          padding:
-                              EdgeInsets.only(left: 10, right: 10, top: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10, top: 5),
                           child: InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -580,6 +573,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                         blurRadius: 6.0,
                                       ),
                                     ],
+                                    borderRadius: BorderRadius.circular(15),
                                     color: Colors.white,
                                   ),
                                   child: ListTile(
@@ -601,6 +595,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                         borderRadius: BorderRadius.circular(10),
                                         child: CachedNetworkImage(
                                           imageUrl: itemselling.image,
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     ),
@@ -610,7 +605,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                           itemselling.price.toString(),
                                       style: TextStyle(
                                           fontFamily: 'SF',
-                                          fontSize: 14,
+                                          fontSize: 16,
                                           color: Colors.deepOrange,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -618,8 +613,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                       : Container(),
                   offer != null
                       ? Padding(
-                          padding:
-                              EdgeInsets.only(top: 10, left: 10, right: 10),
+                          padding: EdgeInsets.only(
+                              top: 5, left: 10, right: 10, bottom: 10),
                           child: InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -642,9 +637,11 @@ class _ChatPageViewState extends State<ChatPageView> {
                                         height: 30,
                                         width:
                                             MediaQuery.of(context).size.width -
-                                                100,
+                                                130,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Colors.grey.shade300,
@@ -653,15 +650,25 @@ class _ChatPageViewState extends State<ChatPageView> {
                                             ),
                                           ],
                                         ),
-                                        child: Text(
-                                          'Offer Price ' + offer + ' $currency',
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontFamily: 'SF',
-                                              fontSize: 16,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+                                        child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 10, top: 5),
+                                            child: currency != null
+                                                ? Text(
+                                                    'Offer Price ' +
+                                                        currency +
+                                                        ' ' +
+                                                        offer.toString(),
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                        fontFamily: 'SF',
+                                                        fontSize: 16,
+                                                        color:
+                                                            Colors.deepOrange,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  )
+                                                : Container()),
                                       ),
                                       InkWell(
                                           onTap: () {
@@ -702,10 +709,13 @@ class _ChatPageViewState extends State<ChatPageView> {
                                           child: offerstring != null
                                               ? Container(
                                                   height: 30,
-                                                  width: 70,
+                                                  width: 100,
                                                   decoration: BoxDecoration(
                                                     color:
                                                         Colors.deepOrangeAccent,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: Colors
@@ -725,6 +735,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
+                                                          fontFamily: 'SF',
+                                                          fontSize: 16,
                                                           color: Colors.white),
                                                     ),
                                                   ),
@@ -784,106 +796,108 @@ class _ChatPageViewState extends State<ChatPageView> {
                       child: TextField(
                         maxLines: 20,
                         controller: _text,
+                        style: TextStyle(fontFamily: 'SF', fontSize: 16),
                         decoration: InputDecoration(
-                          // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          suffixIcon: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: InkWell(
-                              child: CircleAvatar(
-                                child: Icon(
-                                  Feather.send,
-                                  size: 20,
-                                  color: Colors.white,
+                            // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            suffixIcon: Padding(
+                              padding: EdgeInsets.all(5),
+                              child: InkWell(
+                                child: CircleAvatar(
+                                  child: Icon(
+                                    Feather.send,
+                                    size: 20,
+                                    color: Colors.white,
+                                  ),
+                                  backgroundColor: Colors.deepOrange,
                                 ),
-                                backgroundColor: Colors.deepOrange,
-                              ),
-                              onTap: () async {
-                                var x = _text.text;
-                                _text.clear();
-                                var date = DateTime.now();
-                                final f = new DateFormat('hh:mm');
-                                var s = f.format(date);
-                                childList.add(Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 8.0,
-                                        left: 8.0,
-                                        top: 4.0,
-                                        bottom: 4.0),
-                                    child: Container(
-                                      alignment: Alignment.centerRight,
+                                onTap: () async {
+                                  var x = _text.text;
+                                  _text.clear();
+                                  var date = DateTime.now();
+                                  final f = new DateFormat('hh:mm');
+                                  var s = f.format(date);
+                                  childList.add(Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                          left: 8.0,
+                                          top: 4.0,
+                                          bottom: 4.0),
                                       child: Container(
-                                        constraints: BoxConstraints(
-                                            maxWidth: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                3 /
-                                                4),
-                                        padding: EdgeInsets.all(12.0),
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius:
-                                              BorderRadius.circular(25.0),
-                                        ),
-                                        child: Stack(children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0,
-                                                left: 8.0,
-                                                top: 8.0,
-                                                bottom: 15.0),
-                                            child: Text(x,
+                                        alignment: Alignment.centerRight,
+                                        child: Container(
+                                          constraints: BoxConstraints(
+                                              maxWidth: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  3 /
+                                                  4),
+                                          padding: EdgeInsets.all(12.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.deepOrange,
+                                            borderRadius:
+                                                BorderRadius.circular(25.0),
+                                          ),
+                                          child: Stack(children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 8.0,
+                                                  left: 8.0,
+                                                  top: 8.0,
+                                                  bottom: 15.0),
+                                              child: Text(x,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 14,
+                                                      color: Colors.white)),
+                                            ),
+                                            Positioned(
+                                              bottom: 1,
+                                              right: 10,
+                                              child: Text(
+                                                s,
                                                 style: TextStyle(
                                                     fontFamily: 'SF',
-                                                    fontSize: 14,
-                                                    color: Colors.white)),
-                                          ),
-                                          Positioned(
-                                            bottom: 1,
-                                            right: 10,
-                                            child: Text(
-                                              s,
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 10,
-                                                  color: Colors.white
-                                                      .withOpacity(0.6)),
-                                            ),
-                                          )
-                                        ]),
-                                      ),
-                                    )));
+                                                    fontSize: 10,
+                                                    color: Colors.white
+                                                        .withOpacity(0.6)),
+                                              ),
+                                            )
+                                          ]),
+                                        ),
+                                      )));
 
-                                var url =
-                                    'https://sellship.co/api/sendmessage/' +
-                                        userid +
-                                        '/' +
-                                        recipentid +
-                                        '/' +
-                                        messageid;
-                                if (x.isNotEmpty) {
-                                  final response = await http.post(url, body: {
-                                    'message': x,
-                                    'time': DateTime.now().toString()
-                                  });
-                                  if (response.statusCode == 200) {
-                                    print('ok');
-                                  } else {
-                                    print(response.statusCode);
-                                    print(response.body);
+                                  var url =
+                                      'https://sellship.co/api/sendmessage/' +
+                                          userid +
+                                          '/' +
+                                          recipentid +
+                                          '/' +
+                                          messageid;
+                                  if (x.isNotEmpty) {
+                                    final response = await http.post(url,
+                                        body: {
+                                          'message': x,
+                                          'time': DateTime.now().toString()
+                                        });
+                                    if (response.statusCode == 200) {
+                                      print('ok');
+                                    } else {
+                                      print(response.statusCode);
+                                      print(response.body);
+                                    }
+
+                                    Timer(Duration(microseconds: 1), () {
+                                      _scrollController.jumpTo(_scrollController
+                                          .position.maxScrollExtent);
+                                    });
                                   }
-
-                                  Timer(Duration(microseconds: 1), () {
-                                    _scrollController.jumpTo(_scrollController
-                                        .position.maxScrollExtent);
-                                  });
-                                }
-                              },
+                                },
+                              ),
                             ),
-                          ),
-
-                          border: InputBorder.none,
-                          hintText: "Enter your message",
-                        ),
+                            border: InputBorder.none,
+                            hintText: "Enter your message",
+                            hintStyle:
+                                TextStyle(fontFamily: 'SF', fontSize: 16)),
                       ),
                     ),
                   ),

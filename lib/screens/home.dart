@@ -465,11 +465,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       },
                                       child: Container(
-                                          width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  3 -
-                                              20,
+                                          width: 100,
                                           height: 75,
                                           alignment: Alignment.center,
                                           child: Column(
