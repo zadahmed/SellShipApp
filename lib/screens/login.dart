@@ -1702,10 +1702,81 @@ class _LoginPageState extends State<LoginPage>
         });
       } else if (jsondata['status']['message'].toString().trim() ==
           'User does not exist, please sign up') {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        showDialog(
+            context: context,
+            builder: (_) => AssetGiffyDialog(
+                  image: Image.asset(
+                    'assets/oops.gif',
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(
+                    'Oops!',
+                    style:
+                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                  ),
+                  description: Text(
+                    'Looks like you don\'t have an account with us!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(),
+                  ),
+                  onlyOkButton: true,
+                  entryAnimation: EntryAnimation.DEFAULT,
+                  onOkButtonPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                  },
+                ));
       } else if (jsondata['status']['message'].toString().trim() ==
-          'Invalid password, try again') {}
+          'Invalid password, try again') {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        showDialog(
+            context: context,
+            builder: (_) => AssetGiffyDialog(
+                  image: Image.asset(
+                    'assets/oops.gif',
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(
+                    'Oops!',
+                    style:
+                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                  ),
+                  description: Text(
+                    'Looks like thats the wrong password!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(),
+                  ),
+                  onlyOkButton: true,
+                  entryAnimation: EntryAnimation.DEFAULT,
+                  onOkButtonPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                  },
+                ));
+      }
     } else {
-      print(response.statusCode);
+      Navigator.of(context, rootNavigator: true).pop('dialog');
+      showDialog(
+          context: context,
+          builder: (_) => AssetGiffyDialog(
+                image: Image.asset(
+                  'assets/oops.gif',
+                  fit: BoxFit.cover,
+                ),
+                title: Text(
+                  'Oops!',
+                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                ),
+                description: Text(
+                  'Looks like something went wrong!\nPlease try again!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(),
+                ),
+                onlyOkButton: true,
+                entryAnimation: EntryAnimation.DEFAULT,
+                onOkButtonPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                },
+              ));
     }
   }
 
@@ -1736,21 +1807,56 @@ class _LoginPageState extends State<LoginPage>
         Navigator.pop(context);
         getProfileData();
       } else {
-        print('User Already Exists');
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        showDialog(
+            context: context,
+            builder: (_) => AssetGiffyDialog(
+                  image: Image.asset(
+                    'assets/oops.gif',
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(
+                    'Oops!',
+                    style:
+                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                  ),
+                  description: Text(
+                    'Looks like you already have an account! Please login instead',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(),
+                  ),
+                  onlyOkButton: true,
+                  entryAnimation: EntryAnimation.DEFAULT,
+                  onOkButtonPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                  },
+                ));
       }
     } else {
-      print(response.statusCode);
+      Navigator.of(context, rootNavigator: true).pop('dialog');
+      showDialog(
+          context: context,
+          builder: (_) => AssetGiffyDialog(
+                image: Image.asset(
+                  'assets/oops.gif',
+                  fit: BoxFit.cover,
+                ),
+                title: Text(
+                  'Oops!',
+                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                ),
+                description: Text(
+                  'Looks like something went wrong!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(),
+                ),
+                onlyOkButton: true,
+                entryAnimation: EntryAnimation.DEFAULT,
+                onOkButtonPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                },
+              ));
     }
-  }
-
-  void _onSignInButtonPress() {
-    _pageController.animateToPage(0,
-        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
-  }
-
-  void _onSignUpButtonPress() {
-    _pageController?.animateToPage(1,
-        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
   }
 
   void _toggleLogin() {

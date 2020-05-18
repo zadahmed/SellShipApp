@@ -1,3 +1,6 @@
+import 'package:SellShip/screens/boysfashion.dart';
+import 'package:SellShip/screens/girlsfashion.dart';
+import 'package:SellShip/screens/menfashion.dart';
 import 'package:SellShip/screens/womenfashion.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
@@ -101,6 +104,36 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     WomenFashion()),
+                                          );
+                                        } else if (categories[_selectedCat]
+                                                .subCat[i]
+                                                .title ==
+                                            'Men') {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    MensFashion()),
+                                          );
+                                        } else if (categories[_selectedCat]
+                                                .subCat[i]
+                                                .title ==
+                                            'Boys') {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BoysFashion()),
+                                          );
+                                        } else if (categories[_selectedCat]
+                                                .subCat[i]
+                                                .title ==
+                                            'Girls') {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    GirlsFashion()),
                                           );
                                         } else {
                                           Navigator.push(

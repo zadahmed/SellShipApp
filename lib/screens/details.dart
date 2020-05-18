@@ -22,7 +22,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatefulWidget {
   final String itemid;
-  Details({Key key, this.itemid}) : super(key: key);
+  final bool sold;
+  Details({Key key, this.itemid, this.sold}) : super(key: key);
   @override
   _DetailsState createState() => _DetailsState();
 }
@@ -40,7 +41,7 @@ class _DetailsState extends State<Details> {
 
   final _controller = NativeAdmobController();
   final scaffoldState = GlobalKey<ScaffoldState>();
-
+  bool sold;
   @override
   void initState() {
     super.initState();
@@ -49,9 +50,11 @@ class _DetailsState extends State<Details> {
       loading = true;
       itemid = widget.itemid;
       heartColor = Colors.grey;
+      sold = widget.sold;
       heartIcon = FontAwesome5.heart;
     });
     fetchItem();
+    getfavourites();
   }
 
   TextEditingController offercontroller = TextEditingController();
@@ -205,7 +208,7 @@ class _DetailsState extends State<Details> {
                           ),
                         ),
                       )),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                 ],
               ),
             ));
@@ -285,6 +288,42 @@ class _DetailsState extends State<Details> {
   }
 
   var currency;
+  bool favourited;
+
+  getfavourites() async {
+    userid = await storage.read(key: 'userid');
+
+    if (userid != null) {
+      var url = 'https://sellship.co/api/favourites/' + userid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        if (response.body != 'Empty') {
+          var respons = json.decode(response.body);
+          var profilemap = respons;
+          if (profilemap != null) {
+            for (var i = 0; i < profilemap.length; i++) {
+              var favouriteitem = profilemap[i]['_id']['\$oid'];
+
+              if (favouriteitem == itemid) {
+                print('sds');
+                setState(() {
+                  favourited = true;
+                  heartColor = Colors.deepOrange;
+                  heartIcon = FontAwesome.heart;
+                });
+              } else {
+                setState(() {
+                  favourited = false;
+                  heartColor = Colors.grey;
+                  heartIcon = FontAwesome5.heart;
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
   List<String> images = [];
   DateTime dateuploaded;
@@ -322,6 +361,7 @@ class _DetailsState extends State<Details> {
         image3: jsonbody[0]['image3'],
         image4: jsonbody[0]['image4'],
         image5: jsonbody[0]['image5'],
+        sold: jsonbody[0]['sold'] == null ? false : jsonbody[0]['sold'],
         likes: jsonbody[0]['likes'] == null ? 0 : jsonbody[0]['likes'],
         city: jsonbody[0]['city'],
         username: jsonbody[0]['username'],
@@ -371,6 +411,7 @@ class _DetailsState extends State<Details> {
       images.add(newItem.image5);
     }
     print(images.length);
+
     return newItem;
   }
 
@@ -391,7 +432,24 @@ class _DetailsState extends State<Details> {
 
       if (response.statusCode == 200) {
         var jsondata = json.decode(response.body);
-        print(jsondata);
+        var favs = jsondata['favourites'];
+        if (favs != null) {
+          for (int i = 0; i < favs.length; i++) {
+            if (favs[i]['\$oid'] == itemid) {
+              setState(() {
+                favourited = true;
+                heartColor = Colors.deepOrange;
+                heartIcon = FontAwesome.heart;
+              });
+            } else {
+              setState(() {
+                favourited = false;
+                heartColor = Colors.grey;
+                heartIcon = FontAwesome5.heart;
+              });
+            }
+          }
+        }
       } else {
         print(response.statusCode);
       }
@@ -457,110 +515,118 @@ class _DetailsState extends State<Details> {
   int inde;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      key: _scaffoldKey,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-          ),
-        ),
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 10, bottom: 5),
-            child: InkWell(
-                onTap: () async {
-                  var s = await createFirstPostLink(itemid);
-                  Share.share('Check out what I found $s',
-                      subject:
-                          'Look at this awesome item I found on SellShip!');
+    return loading == false
+        ? Scaffold(
+            backgroundColor: Colors.white,
+            key: _scaffoldKey,
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              leading: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
                 },
-                child: Icon(Icons.share)),
-          ),
-        ],
-      ),
-      body: Stack(
-        children: <Widget>[
-          new MediaQuery.removePadding(
-              removeTop: true,
-              context: context,
-              child: ListView(
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white,
+                ),
+              ),
+              actions: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(right: 10, bottom: 5),
+                  child: InkWell(
+                      onTap: () async {
+                        var s = await createFirstPostLink(itemid);
+                        Share.share('Check out what I found $s',
+                            subject:
+                                'Look at this awesome item I found on SellShip!');
+                      },
+                      child: Icon(Icons.share)),
+                ),
+              ],
+            ),
+            body: Stack(
+              children: <Widget>[
+                new MediaQuery.removePadding(
+                    removeTop: true,
+                    context: context,
+                    child: ListView(
 //                  padding: EdgeInsets.symmetric(horizontal: 10),
-                children: <Widget>[
-                  Hero(
-                    tag: itemid,
-                    child: Container(
-                      height: 350,
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
-                      child: Stack(
-                        children: <Widget>[
-                          PageView.builder(
-                              itemCount: images.length,
-                              onPageChanged: (index) {
-                                setState(() {
-                                  inde = index;
-                                });
-                              },
-                              itemBuilder: (BuildContext ctxt, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(PageRouteBuilder(
-                                        opaque: false,
-                                        pageBuilder:
-                                            (BuildContext context, _, __) =>
-                                                ImageDisplay(
-                                                    image: images[index])));
-                                  },
-                                  child: CachedNetworkImage(
-                                    imageUrl: images[index],
-                                    height: MediaQuery.of(context).size.height,
-                                    placeholder: (context, url) =>
-                                        SpinKitChasingDots(
-                                            color: Colors.deepOrange),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
-                                    width: MediaQuery.of(context).size.width,
-                                    fit: BoxFit.cover,
+                      children: <Widget>[
+                        Hero(
+                          tag: itemid,
+                          child: Container(
+                            height: 350,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.white,
+                            child: Stack(
+                              children: <Widget>[
+                                PageView.builder(
+                                    itemCount: images.length,
+                                    onPageChanged: (index) {
+                                      setState(() {
+                                        inde = index;
+                                      });
+                                    },
+                                    itemBuilder:
+                                        (BuildContext ctxt, int index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              PageRouteBuilder(
+                                                  opaque: false,
+                                                  pageBuilder: (BuildContext
+                                                              context,
+                                                          _,
+                                                          __) =>
+                                                      ImageDisplay(
+                                                          image:
+                                                              images[index])));
+                                        },
+                                        child: CachedNetworkImage(
+                                          imageUrl: images[index],
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          placeholder: (context, url) =>
+                                              SpinKitChasingDots(
+                                                  color: Colors.deepOrange),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      );
+                                    }),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: images.map((url) {
+                                      inde = images.indexOf(url);
+                                      return Container(
+                                        width: 8.0,
+                                        height: 8.0,
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 10.0, horizontal: 2.0),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: _current == inde
+                                              ? Colors.deepOrange
+                                              : Colors.white,
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
-                                );
-                              }),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: images.map((url) {
-                                inde = images.indexOf(url);
-                                return Container(
-                                  width: 8.0,
-                                  height: 8.0,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 2.0),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: _current == inde
-                                        ? Colors.deepOrange
-                                        : Colors.white,
-                                  ),
-                                );
-                              }).toList(),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  loading == false
-                      ? Column(
+                        ),
+                        SizedBox(height: 10),
+                        Column(
                           children: <Widget>[
                             ListTile(
                               dense: true,
@@ -582,10 +648,6 @@ class _DetailsState extends State<Details> {
                                   children: <Widget>[
                                     InkWell(
                                       onTap: () {
-                                        setState(() {
-                                          heartColor = Colors.deepOrange;
-                                          heartIcon = FontAwesome.heart;
-                                        });
                                         favouriteItem();
                                       },
                                       child: Container(
@@ -925,156 +987,210 @@ class _DetailsState extends State<Details> {
                             ),
                           ],
                         )
-                      : Center(
-                          child: SpinKitChasingDots(
-                            color: Colors.deepOrange,
-                          ),
-                        )
-                ],
-              ))
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: AnimatedOpacity(
-        duration: const Duration(milliseconds: 500),
-        opacity: 1,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16, bottom: 16, right: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              InkWell(
-                onTap: () async {
-                  var recieverid = newItem.userid;
-                  if (recieverid != userid) {
-                    var itemurl = 'https://sellship.co/api/createroom/' +
-                        userid +
-                        '/' +
-                        recieverid +
-                        '/' +
-                        itemid;
-                    final response = await http.get(itemurl);
-                    var messageinfo = json.decode(response.body);
-                    var messageid = (messageinfo['messageid']);
-                    var recieverfcmtoken = (messageinfo['recieverfcmtoken']);
-                    var sendername = (messageinfo['sendername']);
-                    var recipentname = (messageinfo['recievername']);
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatPageView(
-                          messageid: messageid,
-                          recipentname: recipentname,
-                          senderid: userid,
-                          recipentid: recieverid,
-                          fcmToken: recieverfcmtoken,
-                          senderName: sendername,
-                          itemid: itemid,
-                        ),
-                      ),
-                    );
-                  } else {
-                    print('Same User');
-                  }
-                },
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.amber,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(16.0),
-                      ),
-                      border: Border.all(color: Colors.amber.withOpacity(0.2)),
-                    ),
-                    child: Icon(
-                      Icons.chat_bubble,
-                      color: Colors.white,
-                      size: 22,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 16,
-              ),
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    if (userid != null) {
-                      showMe(context);
-                    } else {
-                      showDialog(
-                          context: context,
-                          builder: (_) => AssetGiffyDialog(
-                                image: Image.asset(
-                                  'assets/oops.gif',
-                                  fit: BoxFit.cover,
-                                ),
-                                title: Text(
-                                  'Oops!',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                description: Text(
-                                  'You need to login to create an offer!',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(),
-                                ),
-                                onlyOkButton: true,
-                                entryAnimation: EntryAnimation.DEFAULT,
-                                onOkButtonPressed: () {
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop('dialog');
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            RootScreen(index: 2)),
-                                  );
-                                },
-                              ));
-                    }
-                  },
-                  child: Container(
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: Colors.deepOrange,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(16.0),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            color: Colors.deepOrange.withOpacity(0.4),
-                            offset: const Offset(1.1, 1.1),
-                            blurRadius: 10.0),
                       ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Make an Offer',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          letterSpacing: 0.0,
-                          color: Colors.white,
-                        ),
+                    ))
+              ],
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: newItem.sold == false
+                ? AnimatedOpacity(
+                    duration: const Duration(milliseconds: 500),
+                    opacity: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, bottom: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () async {
+                              var recieverid = newItem.userid;
+                              if (recieverid != userid) {
+                                var itemurl =
+                                    'https://sellship.co/api/createroom/' +
+                                        userid +
+                                        '/' +
+                                        recieverid +
+                                        '/' +
+                                        itemid;
+                                final response = await http.get(itemurl);
+                                var messageinfo = json.decode(response.body);
+                                var messageid = (messageinfo['messageid']);
+                                var recieverfcmtoken =
+                                    (messageinfo['recieverfcmtoken']);
+                                var sendername = (messageinfo['sendername']);
+                                var recipentname =
+                                    (messageinfo['recievername']);
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatPageView(
+                                      messageid: messageid,
+                                      recipentname: recipentname,
+                                      senderid: userid,
+                                      recipentid: recieverid,
+                                      fcmToken: recieverfcmtoken,
+                                      senderName: sendername,
+                                      itemid: itemid,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                print('Same User');
+                              }
+                            },
+                            child: Container(
+                              width: 48,
+                              height: 48,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.amber,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(16.0),
+                                  ),
+                                  border: Border.all(
+                                      color: Colors.amber.withOpacity(0.2)),
+                                ),
+                                child: Icon(
+                                  Icons.chat_bubble,
+                                  color: Colors.white,
+                                  size: 22,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                if (userid != null) {
+                                  showMe(context);
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => AssetGiffyDialog(
+                                            image: Image.asset(
+                                              'assets/oops.gif',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            title: Text(
+                                              'Oops!',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 22.0,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            description: Text(
+                                              'You need to login to create an offer!',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(),
+                                            ),
+                                            onlyOkButton: true,
+                                            entryAnimation:
+                                                EntryAnimation.DEFAULT,
+                                            onOkButtonPressed: () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop('dialog');
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RootScreen(index: 2)),
+                                              );
+                                            },
+                                          ));
+                                }
+                              },
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: Colors.deepOrange,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(16.0),
+                                  ),
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color:
+                                            Colors.deepOrange.withOpacity(0.4),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 10.0),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Make an Offer',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      letterSpacing: 0.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+                  )
+                : AnimatedOpacity(
+                    duration: const Duration(milliseconds: 500),
+                    opacity: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16, bottom: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: Colors.amber,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(16.0),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.amber.withOpacity(0.4),
+                                      offset: const Offset(1.1, 1.1),
+                                      blurRadius: 10.0),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Item Sold',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    letterSpacing: 0.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ))
+        : Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: SpinKitChasingDots(
+                color: Colors.deepOrange,
+              ),
+            ));
   }
 }
 

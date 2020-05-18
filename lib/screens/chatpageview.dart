@@ -327,10 +327,6 @@ class _ChatPageViewState extends State<ChatPageView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-//                  Padding(
-//                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-//                    child: Text('Enter your address'),
-//                  ),
                   Padding(
                     padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
                     child: Align(
@@ -440,7 +436,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                           ),
                         ),
                       )),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                 ],
               ),
             ));
@@ -512,7 +508,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.all(5),
+                          padding: EdgeInsets.all(10),
                           child: InkWell(
                               child: Icon(
                                 Icons.arrow_back_ios,
@@ -531,7 +527,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                               fontWeight: FontWeight.w600),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(5),
+                          padding: EdgeInsets.all(10),
                           child: InkWell(
                               child: Icon(
                                 Feather.user,

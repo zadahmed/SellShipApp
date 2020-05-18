@@ -398,7 +398,7 @@ class _UserItemsState extends State<UserItems> {
                                         gridDelegate:
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                                 crossAxisCount: 2,
-                                                childAspectRatio: 0.65),
+                                                childAspectRatio: 0.80),
                                         itemCount: Itemname.length,
                                         itemBuilder: (context, index) {
                                           if (index != 0 && index % 4 == 0) {
@@ -434,145 +434,139 @@ class _UserItemsState extends State<UserItems> {
                                                       MaterialPageRoute(
                                                           builder: (context) =>
                                                               Details(
+                                                                  sold: Itemsold[
+                                                                      index],
                                                                   itemid: Itemid[
                                                                       index])),
                                                     );
                                                   },
-                                                  child: Container(
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        new Stack(
+                                                  child: Hero(
+                                                      tag: Itemid[index],
+                                                      child: Container(
+                                                        child: Column(
                                                           children: <Widget>[
-                                                            Container(
-                                                              height: 150,
-                                                              width:
-                                                                  MediaQuery.of(
+                                                            new Stack(
+                                                              children: <
+                                                                  Widget>[
+                                                                Container(
+                                                                  height: 150,
+                                                                  width: MediaQuery.of(
                                                                           context)
                                                                       .size
                                                                       .width,
-                                                              child: ClipRRect(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
                                                                             15),
-                                                                child:
-                                                                    CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      Itemimage[
-                                                                          index],
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  placeholder: (context,
-                                                                          url) =>
-                                                                      SpinKitChasingDots(
-                                                                          color:
-                                                                              Colors.deepOrange),
-                                                                  errorWidget: (context,
-                                                                          url,
-                                                                          error) =>
-                                                                      Icon(Icons
-                                                                          .error),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Itemsold[index] ==
-                                                                    true
-                                                                ? Align(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .topRight,
                                                                     child:
-                                                                        Container(
-                                                                      height:
-                                                                          20,
-                                                                      width: 50,
-                                                                      color: Colors
-                                                                          .amber,
-                                                                      child:
-                                                                          Text(
-                                                                        'Sold',
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'SF',
-                                                                            color:
-                                                                                Colors.white,
-                                                                            fontWeight: FontWeight.bold),
-                                                                      ),
-                                                                    ))
-                                                                : Container(),
-                                                          ],
-                                                        ),
-                                                        new Align(
-                                                            alignment: Alignment
-                                                                .centerLeft,
-                                                            child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .all(
-                                                                        5.0),
-                                                                child: new Column(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .center,
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Column(
+                                                                        CachedNetworkImage(
+                                                                      imageUrl:
+                                                                          Itemimage[
+                                                                              index],
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      placeholder: (context,
+                                                                              url) =>
+                                                                          SpinKitChasingDots(
+                                                                              color: Colors.deepOrange),
+                                                                      errorWidget: (context,
+                                                                              url,
+                                                                              error) =>
+                                                                          Icon(Icons
+                                                                              .error),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Itemsold[index] ==
+                                                                        true
+                                                                    ? Align(
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .topRight,
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              20,
+                                                                          width:
+                                                                              50,
+                                                                          color:
+                                                                              Colors.amber,
+                                                                          child:
+                                                                              Text(
+                                                                            'Sold',
+                                                                            textAlign:
+                                                                                TextAlign.center,
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'SF',
+                                                                                color: Colors.white,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          ),
+                                                                        ))
+                                                                    : Container(),
+                                                              ],
+                                                            ),
+                                                            new Align(
+                                                                alignment: Alignment
+                                                                    .centerLeft,
+                                                                child: Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            5.0),
+                                                                    child: new Column(
                                                                         mainAxisAlignment:
-                                                                            MainAxisAlignment.start,
+                                                                            MainAxisAlignment
+                                                                                .start,
                                                                         crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
+                                                                            CrossAxisAlignment
+                                                                                .center,
                                                                         children: <
                                                                             Widget>[
-                                                                          Text(
-                                                                            Itemname[index],
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontFamily: 'SF',
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.w600,
-                                                                            ),
-                                                                            textAlign:
-                                                                                TextAlign.left,
-                                                                          ),
-                                                                          SizedBox(
-                                                                              height: 3.0),
-                                                                          Container(
-                                                                            child:
-                                                                                Text(
-                                                                              Itemcategory[index],
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'SF',
-                                                                                fontSize: 14,
-                                                                                fontWeight: FontWeight.w300,
+                                                                          Column(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.start,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: <Widget>[
+                                                                              Text(
+                                                                                Itemname[index],
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'SF',
+                                                                                  fontSize: 16,
+                                                                                  fontWeight: FontWeight.w600,
+                                                                                ),
+                                                                                textAlign: TextAlign.left,
                                                                               ),
-                                                                              textAlign: TextAlign.left,
-                                                                            ),
-                                                                          ),
-                                                                          SizedBox(
-                                                                              height: 3.0),
-                                                                          Container(
-                                                                            child:
-                                                                                Text(
-                                                                              currency + ' ' + Itemprice[index].toString(),
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'SF',
-                                                                                fontSize: 14,
-                                                                                fontWeight: FontWeight.w400,
+                                                                              SizedBox(height: 3.0),
+                                                                              Container(
+                                                                                child: Text(
+                                                                                  Itemcategory[index],
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'SF',
+                                                                                    fontSize: 14,
+                                                                                    fontWeight: FontWeight.w300,
+                                                                                  ),
+                                                                                  textAlign: TextAlign.left,
+                                                                                ),
                                                                               ),
-                                                                              textAlign: TextAlign.left,
-                                                                            ),
+                                                                              SizedBox(height: 3.0),
+                                                                              Container(
+                                                                                child: Text(
+                                                                                  currency + ' ' + Itemprice[index].toString(),
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'SF',
+                                                                                    fontSize: 14,
+                                                                                    fontWeight: FontWeight.w400,
+                                                                                  ),
+                                                                                  textAlign: TextAlign.left,
+                                                                                ),
+                                                                              ),
+                                                                            ],
                                                                           ),
-                                                                        ],
-                                                                      ),
-                                                                    ])))
-                                                      ],
-                                                    ),
-                                                  )));
+                                                                        ])))
+                                                          ],
+                                                        ),
+                                                      ))));
                                         },
                                       )))
                               : Expanded(
