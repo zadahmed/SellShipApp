@@ -37,7 +37,6 @@ import 'package:location/location.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sticky_headers/sticky_headers.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);

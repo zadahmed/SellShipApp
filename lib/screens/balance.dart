@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/models/withdrawals.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class Balance extends StatefulWidget {
   @override
@@ -20,6 +22,45 @@ class _BalanceState extends State<Balance> {
     // TODO: implement initState
     super.initState();
     getBalance();
+    getDetails();
+  }
+
+  List<Withdrawals> withdrawllist = List<Withdrawals>();
+
+  getDetails() async {
+    userid = await storage.read(key: 'userid');
+
+    var countr = await storage.read(key: 'country');
+    if (countr.toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+      });
+    } else if (countr.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = '\$';
+      });
+    }
+
+    var url = 'https://sellship.co/api/withdrawalhistory/' + userid;
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (int i = 0; i < jsonbody.length; i++) {
+      var date = jsonbody[i]['date']['\$date'];
+      DateTime dates = new DateTime.fromMillisecondsSinceEpoch(date);
+      final f = new DateFormat('yyyy-MM-dd hh:mm');
+      var s = f.format(dates);
+
+      Withdrawals withd = Withdrawals(
+        withdrawalid: jsonbody[i]['_id']['\$oid'],
+        date: s.toString(),
+        amount: jsonbody[i]['withdrawrequested'],
+        completed: jsonbody[i]['completed'],
+      );
+      withdrawllist.add(withd);
+    }
   }
 
   var userid;
@@ -152,6 +193,37 @@ class _BalanceState extends State<Balance> {
                       ),
                     ),
                   ),
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Withdrawal History',
+                    style: TextStyle(
+                        fontFamily: 'SF',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              Container(
+                height: 300,
+                child: ListView.builder(
+                  itemCount: withdrawllist.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                        title: Text('${withdrawllist[index].withdrawalid}'),
+                        trailing: Text(withdrawllist[index].amount.toString()),
+                        subtitle: Text(withdrawllist[index].date),
+                        leading: withdrawllist[index].completed == true
+                            ? Text('Completed')
+                            : Text('Pending'));
+                  },
                 ),
               )
             ])));

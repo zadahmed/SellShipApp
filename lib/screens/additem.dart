@@ -87,7 +87,8 @@ class _AddItemState extends State<AddItem> {
   bool shippingcheckbox = false;
 
   void readstorage() async {
-    var countr = await storage.read(key: 'locationcountry');
+    var countr = await storage.read(key: 'country');
+
     if (countr.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
@@ -97,18 +98,24 @@ class _AddItemState extends State<AddItem> {
         currency = 'USD';
       });
     }
+
     userid = await storage.read(key: 'userid');
 
     Location _location = new Location();
 
     var location = await _location.getLocation();
-    var positio =
-        LatLng(location.latitude.toDouble(), location.longitude.toDouble());
-    print(userid);
-    setState(() {
-      loading = false;
-      position = positio;
-    });
+    if (location == null) {
+      _location.requestPermission();
+      readstorage();
+    } else {
+      var positio =
+          LatLng(location.latitude.toDouble(), location.longitude.toDouble());
+      print(userid);
+      setState(() {
+        loading = false;
+        position = positio;
+      });
+    }
   }
 
   File _image;

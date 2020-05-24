@@ -291,8 +291,20 @@ class _CheckoutState extends State<Checkout> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text(item.name),
-                          Text(offer.toString() + ' ' + currency)
+                          Text(
+                            item.name,
+                            style: TextStyle(
+                                fontFamily: 'SF',
+                                fontSize: 16,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            offer.toString() + ' ' + currency,
+                            style: TextStyle(
+                                fontFamily: 'SF',
+                                fontSize: 16,
+                                color: Colors.black),
+                          )
                         ],
                       ),
                       SizedBox(
@@ -301,8 +313,20 @@ class _CheckoutState extends State<Checkout> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('Platform Fees'),
-                          Text(fees.toString() + ' ' + currency)
+                          Text(
+                            'Processing Fees',
+                            style: TextStyle(
+                                fontFamily: 'SF',
+                                fontSize: 16,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            fees.toString() + ' ' + currency,
+                            style: TextStyle(
+                                fontFamily: 'SF',
+                                fontSize: 16,
+                                color: Colors.black),
+                          )
                         ],
                       ),
                       SizedBox(
@@ -311,8 +335,20 @@ class _CheckoutState extends State<Checkout> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('Total'),
-                          Text(totalpayable.toString() + ' ' + currency)
+                          Text(
+                            'Total',
+                            style: TextStyle(
+                                fontFamily: 'SF',
+                                fontSize: 16,
+                                color: Colors.black),
+                          ),
+                          Text(
+                            totalpayable.toString() + ' ' + currency,
+                            style: TextStyle(
+                                fontFamily: 'SF',
+                                fontSize: 16,
+                                color: Colors.black),
+                          )
                         ],
                       ),
                     ],

@@ -4,6 +4,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -26,6 +27,7 @@ class _OrderDetailState extends State<OrderDetail> {
   void initState() {
     super.initState();
     setState(() {
+      loading = true;
       item = widget.item;
       messageid = widget.messageid;
     });
@@ -50,7 +52,30 @@ class _OrderDetailState extends State<OrderDetail> {
         currency = '\$';
       });
     }
+
+    var url = 'https://sellship.co/api/transactionhistory/' + messageid;
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+    setState(() {
+      itemprice = jsonbody['offer'];
+      totalpaid = jsonbody['totalpayable'];
+      date = jsonbody['date']['\$date'];
+      itemfees = jsonbody['fees'];
+      buyerid = jsonbody['senderid'];
+      buyername = jsonbody['buyername'];
+      loading = false;
+    });
   }
+
+  var itemprice;
+  var totalpaid;
+  var buyerid;
+  var itemfees;
+  var date;
+  var buyername;
+  bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -65,135 +90,301 @@ class _OrderDetailState extends State<OrderDetail> {
           backgroundColor: Colors.white,
         ),
         body: SingleChildScrollView(
-            child: Column(children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Item Information',
-                style: TextStyle(
-                    fontFamily: 'SF',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-          ),
-          Padding(
-              padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-              child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Details(
-                                itemid: item.itemid,
-                              )),
-                    );
-                  },
-                  child: Container(
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade300,
-                            offset: Offset(0.0, 1.0), //(x,y)
-                            blurRadius: 6.0,
-                          ),
-                        ],
-                        color: Colors.white,
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          item.name,
+            child: loading == false
+                ? Column(children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Item Information',
                           style: TextStyle(
                               fontFamily: 'SF',
                               fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w800),
+                              fontWeight: FontWeight.w700),
                         ),
-                        leading: Container(
+                      ),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                        child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Details(
+                                          itemid: item.itemid,
+                                        )),
+                              );
+                            },
+                            child: Container(
+                                height: 70,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      offset: Offset(0.0, 1.0), //(x,y)
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                ),
+                                child: ListTile(
+                                  title: Text(
+                                    item.name,
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w800),
+                                  ),
+                                  leading: Container(
+                                    height: 70,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: item.image,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    item.category,
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 14,
+                                        color: Colors.deepOrange,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  trailing: Text(
+                                    currency + ' ' + item.price.toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 14,
+                                        color: Colors.deepOrange,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )))),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Seller Information',
+                          style: TextStyle(
+                              fontFamily: 'SF',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: InkWell(
+                        child: Container(
                           height: 70,
-                          width: 70,
+                          width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: CachedNetworkImage(
-                              imageUrl: item.image,
-                              fit: BoxFit.cover,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            color: Colors.white,
+                          ),
+                          child: Center(
+                            child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UserItems(
+                                          userid: item.userid,
+                                          username: item.username)),
+                                );
+                              },
+                              dense: true,
+                              leading: Icon(FontAwesome.user_circle),
+                              title: Text(
+                                item.username,
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 16,
+                                    color: Colors.black),
+                              ),
                             ),
                           ),
                         ),
-                        subtitle: Text(
-                          item.category,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Buyer Information',
                           style: TextStyle(
                               fontFamily: 'SF',
-                              fontSize: 14,
-                              color: Colors.deepOrange,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
                         ),
-                        trailing: Text(
-                          currency + ' ' + item.price.toString(),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: InkWell(
+                        child: Container(
+                          height: 70,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            color: Colors.white,
+                          ),
+                          child: Center(
+                            child: ListTile(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => UserItems(
+                                          userid: buyerid,
+                                          username: buyername)),
+                                );
+                              },
+                              dense: true,
+                              leading: Icon(FontAwesome.user_circle),
+                              title: Text(
+                                buyername,
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 16,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Transaction Details',
                           style: TextStyle(
                               fontFamily: 'SF',
-                              fontSize: 14,
-                              color: Colors.deepOrange,
-                              fontWeight: FontWeight.bold),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
                         ),
-                      )))),
-          Padding(
-            padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Seller Information',
-                style: TextStyle(
-                    fontFamily: 'SF',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-            child: InkWell(
-              child: Container(
-                height: 70,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade300,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 6.0,
+                      ),
                     ),
-                  ],
-                  color: Colors.white,
-                ),
-                child: Center(
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UserItems(
-                                userid: item.userid, username: item.username)),
-                      );
-                    },
-                    dense: true,
-                    leading: Icon(FontAwesome.user_circle),
-                    title: Text(
-                      item.username,
-                      style: TextStyle(
-                          fontFamily: 'SF', fontSize: 16, color: Colors.black),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ])));
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: 10, bottom: 10, top: 20, right: 10),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  item.name,
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  itemprice.toString() + ' ' + currency,
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Processing Fees',
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  itemfees.toString() + ' ' + currency,
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Total',
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  totalpaid.toString() + ' ' + currency,
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Transaction Status',
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                ),
+                                Text(
+                                  'Paid',
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                )
+                              ],
+                            ),
+                          ],
+                        )),
+                  ])
+                : Center(child: CupertinoActivityIndicator())));
   }
 }
