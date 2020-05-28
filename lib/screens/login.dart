@@ -6,6 +6,7 @@ import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/termscondition.dart';
+import 'package:SellShip/support.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -981,31 +982,32 @@ class _LoginPageState extends State<LoginPage>
                                   },
                                 ))
                             : Container(),
-//                        Container(
-//                          color: Colors.white,
-//                          child: ListTile(
-//                            leading: Icon(
-//                              Feather.help_circle,
-//                              color: Colors.deepOrange,
-//                            ),
-//                            trailing: Icon(
-//                              Feather.arrow_right,
-//                              size: 16,
-//                              color: Colors.deepOrange,
-//                            ),
-//                            title: Text(
-//                              'Help and Support',
-//                              style: TextStyle(
-//                                fontFamily: 'SF',
-//                                fontSize: 16.0,
-//                              ),
-//                            ),
-//                            onTap: () {
-//                              // Update the state of the app.
-//                              // ...
-//                            },
-//                          ),
-//                        ),
+                        userid != null
+                            ? Container(
+                                color: Colors.white,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Support(email: email)),
+                                    );
+                                  },
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.help_outline,
+                                      color: Colors.deepOrange,
+                                    ),
+                                    trailing: Icon(
+                                      Feather.arrow_right,
+                                      size: 16,
+                                      color: Colors.deepOrange,
+                                    ),
+                                    title: Text('Help & Support'),
+                                  ),
+                                ))
+                            : Container(),
                         Container(
                           color: Colors.white,
                           child: ListTile(

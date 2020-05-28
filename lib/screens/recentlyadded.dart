@@ -1681,7 +1681,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                               ),
                               Expanded(
                                   child: Image.asset(
-                                'assets/little_theologians_4x.jpg',
+                                'assets/little_theologians_4x.png',
                                 fit: BoxFit.cover,
                               ))
                             ],

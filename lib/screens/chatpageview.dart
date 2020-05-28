@@ -354,7 +354,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                               child: TextField(
                                 cursorColor: Color(0xFF979797),
                                 controller: offercontroller,
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.numberWithOptions(),
                                 textCapitalization: TextCapitalization.words,
                                 decoration: InputDecoration(
                                     labelText: "Offer Price",

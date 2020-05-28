@@ -61,6 +61,9 @@ class _BalanceState extends State<Balance> {
       );
       withdrawllist.add(withd);
     }
+    setState(() {
+      withdrawllist = withdrawllist;
+    });
   }
 
   var userid;
@@ -126,6 +129,8 @@ class _BalanceState extends State<Balance> {
     }
   }
 
+  TextEditingController paypalcontroller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -151,16 +156,34 @@ class _BalanceState extends State<Balance> {
                   child: Card(
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Text('Balance'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Balance',
+                        style: TextStyle(
+                          fontFamily: 'SF',
+                          fontSize: 16,
+                        ),
+                      ),
                       SizedBox(
                         height: 5,
                       ),
-                      Text(currency + ' ' + balance.toString())
+                      Text(
+                        currency + ' ' + balance.toString(),
+                        style: TextStyle(
+                          fontFamily: 'SF',
+                          fontSize: 16,
+                        ),
+                      ),
                     ],
                   )),
                 ),
+              ),
+              SizedBox(
+                height: 5,
               ),
               InkWell(
                 onTap: () {
@@ -199,7 +222,114 @@ class _BalanceState extends State<Balance> {
                 height: 5,
               ),
               Padding(
-                padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                padding: EdgeInsets.only(left: 20, bottom: 10, top: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Payment Details',
+                    style: TextStyle(
+                        fontFamily: 'SF',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+              ),
+              ExpansionTile(
+                title: Text(
+                  'Paypal',
+                  style: TextStyle(
+                    fontFamily: 'SF',
+                    fontSize: 16,
+                  ),
+                ),
+                leading: Icon(FontAwesome5Brands.paypal),
+                children: <Widget>[
+                  ListTile(
+                    title: Container(
+                        width: 200,
+                        padding: EdgeInsets.only(),
+                        child: Center(
+                          child: TextField(
+                            cursorColor: Color(0xFF979797),
+                            controller: paypalcontroller,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                                labelText: "Paypal Email",
+                                alignLabelWithHint: true,
+                                labelStyle: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                ),
+                                focusColor: Colors.black,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                )),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                  color: Colors.grey.shade300,
+                                ))),
+                          ),
+                        )),
+                    trailing: InkWell(
+                      onTap: () async {
+                        var url = 'https://sellship.co/api/paypalemail/' +
+                            userid +
+                            '/' +
+                            paypalcontroller.text.trim().toLowerCase();
+
+                        final response = await http.get(url);
+                        print(response.body);
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 48,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16.0),
+                            ),
+                            border:
+                                Border.all(color: Colors.red.withOpacity(0.2)),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Save',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: 'SF',
+                                  fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 20, bottom: 10, top: 20),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -217,12 +347,44 @@ class _BalanceState extends State<Balance> {
                   itemCount: withdrawllist.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                        title: Text('${withdrawllist[index].withdrawalid}'),
-                        trailing: Text(withdrawllist[index].amount.toString()),
-                        subtitle: Text(withdrawllist[index].date),
+                        title: Text(
+                          '${withdrawllist[index].withdrawalid}',
+                          style: TextStyle(
+                            fontFamily: 'SF',
+                            fontSize: 16,
+                          ),
+                        ),
+                        trailing: Text(
+                          currency +
+                              ' ' +
+                              withdrawllist[index].amount.toString(),
+                          style: TextStyle(
+                            fontFamily: 'SF',
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: Text(
+                          withdrawllist[index].date,
+                          style: TextStyle(
+                            fontFamily: 'SF',
+                            fontSize: 16,
+                          ),
+                        ),
                         leading: withdrawllist[index].completed == true
-                            ? Text('Completed')
-                            : Text('Pending'));
+                            ? Text(
+                                'Completed',
+                                style: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                ),
+                              )
+                            : Text(
+                                'Pending',
+                                style: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                ),
+                              ));
                   },
                 ),
               )

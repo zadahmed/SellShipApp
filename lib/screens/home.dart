@@ -113,6 +113,43 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  _getmoreRecentData() async {
+    setState(() {
+      limit = limit + 10;
+      skip = skip + 10;
+    });
+
+    var url = 'https://sellship.co/api/recentitems/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+
+      setState(() {
+        itemsgrid = itemsgrid;
+      });
+    } else {
+      print(response.statusCode);
+    }
+  }
+
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
     var url = 'https://sellship.co/api/recentitems/' +
         country +
@@ -158,6 +195,14 @@ class _HomeScreenState extends State<HomeScreen> {
       limit = 10;
     });
 
+    _scrollController
+      ..addListener(() {
+        var triggerFetchMoreSize = _scrollController.position.maxScrollExtent;
+
+        if (_scrollController.position.pixels == triggerFetchMoreSize) {
+          _getmoreRecentData();
+        }
+      });
     readstorage();
   }
 
@@ -378,7 +423,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     );
                                   },
                                   child: Icon(
-                                    SimpleLineIcons.paper_plane,
+                                    Feather.message_square,
                                     color: Colors.deepOrange,
                                     size: 24,
                                   ),
@@ -686,496 +731,39 @@ class _HomeScreenState extends State<HomeScreen> {
                         SizedBox(
                           height: 5,
                         ),
-                        Container(
-                          height: 560,
-                          width: MediaQuery.of(context).size.width,
-                          child: Column(
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => CategoryScreen()),
-                                  );
-                                },
-                                child: Container(
-                                  height: 100,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Image.asset(
-                                          'assets/homeshow/clothes.jpeg',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(bottom: 10),
-                                          child: Container(
-                                              height: 40,
-                                              width: 180,
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Text('#PRELOVED',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily: 'SF',
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w800,
-                                                        color: Colors.black)),
-                                              )),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 10, top: 10, bottom: 5),
+                                child: Text('Recently Added',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.black)),
                               ),
-                              Container(
-                                height: 450,
-                                child: GridView.count(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1.4,
-                                  children: <Widget>[
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  WomenFashion()),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Container(
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  child: Image.asset(
-                                                    'assets/homeshow/ladies.jpeg',
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  child: Container(
-                                                      height: 30,
-                                                      width: 100,
-                                                      color: Colors.white,
-                                                      child: Center(
-                                                        child: Text('Women',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'SF',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color: Colors
-                                                                    .black)),
-                                                      )),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  MensFashion()),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  child: Image.asset(
-                                                    'assets/homeshow/men.jpeg',
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  child: Container(
-                                                      height: 30,
-                                                      width: 100,
-                                                      color: Colors.white,
-                                                      child: Center(
-                                                        child: Text('Men',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'SF',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color: Colors
-                                                                    .black)),
-                                                      )),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => SubCategory(
-                                                  sub: 'Women',
-                                                  category:
-                                                      'Fashion & Accessories',
-                                                  subcategory: "Bags")),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  child: Image.asset(
-                                                    'assets/homeshow/bag.jpeg',
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  child: Container(
-                                                      height: 30,
-                                                      width: 100,
-                                                      color: Colors.white,
-                                                      child: Center(
-                                                        child: Text('Bags',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'SF',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color: Colors
-                                                                    .black)),
-                                                      )),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CategoryScreen(
-                                                      selectedcategory: 6)),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  child: Image.asset(
-                                                    'assets/Books.jpeg',
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  child: Container(
-                                                      height: 30,
-                                                      width: 100,
-                                                      color: Colors.white,
-                                                      child: Center(
-                                                        child: Text('Books',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'SF',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color: Colors
-                                                                    .black)),
-                                                      )),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => CategoryDetail(
-                                                  category: 'Electronics',
-                                                  subcategory:
-                                                      'Computers,PCs & Laptops')),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  child: Image.asset(
-                                                    'assets/laptops.jpeg',
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  child: Container(
-                                                      height: 30,
-                                                      width: 100,
-                                                      color: Colors.white,
-                                                      child: Center(
-                                                        child: Text(
-                                                            'Laptop & PCs',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'SF',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color: Colors
-                                                                    .black)),
-                                                      )),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => CategoryDetail(
-                                                  category: 'Electronics',
-                                                  subcategory:
-                                                      'Phones & Accessories')),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                height: MediaQuery.of(context)
-                                                    .size
-                                                    .height,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  child: Image.asset(
-                                                    'assets/phones.jpeg',
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  child: Container(
-                                                      height: 30,
-                                                      width: 100,
-                                                      color: Colors.white,
-                                                      child: Center(
-                                                        child: Text('Phones',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'SF',
-                                                                fontSize: 16,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color: Colors
-                                                                    .black)),
-                                                      )),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, top: 10, bottom: 5),
-                            child: Text('Recently Added',
-                                style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.black)),
-                          ),
-                        ]),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      right: 20, top: 10, bottom: 10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RecentlyAdded()),
+                                      );
+                                    },
+                                    child: Text('View All',
+                                        style: TextStyle(
+                                            fontFamily: 'SF',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black)),
+                                  )),
+                            ]),
                         itemsgrid.isNotEmpty
                             ? Flexible(
                                 child: MediaQuery.removePadding(
@@ -1391,53 +979,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     Expanded(
                                         child: Image.asset(
-                                      'assets/little_theologians_4x.jpg',
-                                      fit: BoxFit.cover,
+                                      'assets/little_theologians_4x.png',
+                                      fit: BoxFit.fitWidth,
                                     ))
                                   ],
                                 )),
                         SizedBox(
                           height: 5,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RecentlyAdded()),
-                              );
-                            },
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: Colors.deepOrange,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10.0),
-                                ),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Colors.deepOrange.withOpacity(0.4),
-                                      offset: const Offset(1.1, 1.1),
-                                      blurRadius: 10.0),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'SHOW MORE',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 16,
-                                    letterSpacing: 0.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
                         ),
                         SizedBox(
                           height: 5,

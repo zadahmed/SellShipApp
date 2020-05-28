@@ -424,7 +424,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                             ),
                             Expanded(
                                 child: Image.asset(
-                              'assets/little_theologians_4x.jpg',
+                              'assets/little_theologians_4x.png',
                               fit: BoxFit.cover,
                             ))
                           ],

@@ -103,7 +103,7 @@ class _DetailsState extends State<Details> {
                               child: TextField(
                                 cursorColor: Color(0xFF979797),
                                 controller: offercontroller,
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.numberWithOptions(),
                                 textCapitalization: TextCapitalization.words,
                                 decoration: InputDecoration(
                                     labelText: "Offer Price",
@@ -748,126 +748,118 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                             ),
-                            ExpansionTile(
-                              title: Text('Item Details'),
-                              leading: Icon(Icons.textsms),
-                              children: <Widget>[
-                                ListTile(
-                                  dense: true,
-                                  leading: Icon(Icons.category),
-                                  title: Text(
-                                    newItem.category,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
+                            ListTile(
+                              dense: true,
+                              leading: Icon(Icons.category),
+                              title: Text(
+                                newItem.category,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              dense: true,
+                              leading: Icon(Icons.hourglass_full),
+                              title: Text(
+                                newItem.condition.toString(),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              dense: true,
+                              leading: Icon(FontAwesome.tag),
+                              title: Text(
+                                newItem.brand.toString(),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            newItem.size != null
+                                ? ListTile(
+                                    dense: true,
+                                    leading: Icon(Icons.signal_cellular_null),
+                                    title: Text(
+                                      newItem.size.toString(),
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        color: Colors.blueGrey,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                            ListTile(
+                              dense: true,
+                              leading: Icon(Icons.location_on),
+                              title: Text(
+                                newItem.city.toString(),
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10, bottom: 10, top: 10),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Description',
+                                  style: TextStyle(
                                       fontFamily: 'SF',
                                       fontSize: 16,
-                                      color: Colors.blueGrey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
+                                      fontWeight: FontWeight.w700),
                                 ),
-                                ListTile(
-                                  dense: true,
-                                  leading: Icon(Icons.hourglass_full),
-                                  title: Text(
-                                    newItem.condition.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'SF',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                ListTile(
-                                  dense: true,
-                                  leading: Icon(FontAwesome.tag),
-                                  title: Text(
-                                    newItem.brand.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'SF',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                newItem.size != null
-                                    ? ListTile(
-                                        dense: true,
-                                        leading:
-                                            Icon(Icons.signal_cellular_null),
-                                        title: Text(
-                                          newItem.size.toString(),
-                                          textAlign: TextAlign.left,
+                              ),
+                            ),
+                            Container(
+                              height: 150,
+                              width: MediaQuery.of(context).size.width - 10,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: new SingleChildScrollView(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Text(
+                                          newItem.description,
+                                          textAlign: TextAlign.justify,
                                           style: TextStyle(
                                             fontFamily: 'SF',
                                             fontSize: 16,
-                                            color: Colors.blueGrey,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      )
-                                    : Container(),
-                                ListTile(
-                                  dense: true,
-                                  leading: Icon(Icons.location_on),
-                                  title: Text(
-                                    newItem.city.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'SF',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 10, bottom: 10, top: 10),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Description',
-                                      style: TextStyle(
-                                          fontFamily: 'SF',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 150,
-                                  width: MediaQuery.of(context).size.width - 10,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 1,
-                                        child: new SingleChildScrollView(
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 10, right: 10),
-                                            child: Text(
-                                              newItem.description,
-                                              textAlign: TextAlign.justify,
-                                              style: TextStyle(
-                                                fontFamily: 'SF',
-                                                fontSize: 16,
-                                              ),
-                                            ),
                                           ),
                                         ),
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             Platform.isIOS == true
                                 ? Container(
@@ -903,7 +895,7 @@ class _DetailsState extends State<Details> {
                               ),
                             ),
                             Container(
-                              height: 260,
+                              height: 100,
                               decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
@@ -919,7 +911,7 @@ class _DetailsState extends State<Details> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Container(
-                                    height: 200,
+                                    height: 100,
                                     width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(6),
@@ -983,7 +975,7 @@ class _DetailsState extends State<Details> {
                               ],
                             ),
                             SizedBox(
-                              height: 20,
+                              height: 100,
                             ),
                           ],
                         )

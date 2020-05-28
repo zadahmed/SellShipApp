@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/useritems.dart';
+import 'package:app_review/app_review.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _OrderDetailState extends State<OrderDetail> {
   @override
   void initState() {
     super.initState();
+
     setState(() {
       loading = true;
       item = widget.item;
