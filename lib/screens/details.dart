@@ -542,7 +542,7 @@ class _DetailsState extends State<Details> {
                             subject:
                                 'Look at this awesome item I found on SellShip!');
                       },
-                      child: Icon(Icons.share)),
+                      child: Icon(Feather.share)),
                 ),
               ],
             ),
@@ -554,75 +554,69 @@ class _DetailsState extends State<Details> {
                     child: ListView(
 //                  padding: EdgeInsets.symmetric(horizontal: 10),
                       children: <Widget>[
-                        Hero(
-                          tag: itemid,
-                          child: Container(
-                            height: 350,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.white,
-                            child: Stack(
-                              children: <Widget>[
-                                PageView.builder(
-                                    itemCount: images.length,
-                                    onPageChanged: (index) {
-                                      setState(() {
-                                        inde = index;
-                                      });
-                                    },
-                                    itemBuilder:
-                                        (BuildContext ctxt, int index) {
-                                      return InkWell(
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                              PageRouteBuilder(
-                                                  opaque: false,
-                                                  pageBuilder: (BuildContext
-                                                              context,
-                                                          _,
-                                                          __) =>
-                                                      ImageDisplay(
-                                                          image:
-                                                              images[index])));
-                                        },
-                                        child: CachedNetworkImage(
-                                          imageUrl: images[index],
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          placeholder: (context, url) =>
-                                              SpinKitChasingDots(
-                                                  color: Colors.deepOrange),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      );
-                                    }),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: images.map((url) {
-                                      inde = images.indexOf(url);
-                                      return Container(
-                                        width: 8.0,
-                                        height: 8.0,
-                                        margin: EdgeInsets.symmetric(
-                                            vertical: 10.0, horizontal: 2.0),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: _current == inde
-                                              ? Colors.deepOrange
-                                              : Colors.white,
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
+                        Container(
+                          height: 350,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.white,
+                          child: Stack(
+                            children: <Widget>[
+                              PageView.builder(
+                                  itemCount: images.length,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      inde = index;
+                                    });
+                                  },
+                                  itemBuilder: (BuildContext ctxt, int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            PageRouteBuilder(
+                                                opaque: false,
+                                                pageBuilder: (BuildContext
+                                                            context,
+                                                        _,
+                                                        __) =>
+                                                    ImageDisplay(
+                                                        image: images[index])));
+                                      },
+                                      child: CachedNetworkImage(
+                                        imageUrl: images[index],
+                                        height:
+                                            MediaQuery.of(context).size.height,
+                                        placeholder: (context, url) =>
+                                            SpinKitChasingDots(
+                                                color: Colors.deepOrange),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                                  }),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: images.map((url) {
+                                    inde = images.indexOf(url);
+                                    return Container(
+                                      width: 8.0,
+                                      height: 8.0,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 2.0),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _current == inde
+                                            ? Colors.deepOrange
+                                            : Colors.white,
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(height: 10),
@@ -998,40 +992,75 @@ class _DetailsState extends State<Details> {
                         children: <Widget>[
                           InkWell(
                             onTap: () async {
-                              var recieverid = newItem.userid;
-                              if (recieverid != userid) {
-                                var itemurl =
-                                    'https://sellship.co/api/createroom/' +
-                                        userid +
-                                        '/' +
-                                        recieverid +
-                                        '/' +
-                                        itemid;
-                                final response = await http.get(itemurl);
-                                var messageinfo = json.decode(response.body);
-                                var messageid = (messageinfo['messageid']);
-                                var recieverfcmtoken =
-                                    (messageinfo['recieverfcmtoken']);
-                                var sendername = (messageinfo['sendername']);
-                                var recipentname =
-                                    (messageinfo['recievername']);
+                              if (userid != null) {
+                                var recieverid = newItem.userid;
+                                if (recieverid != userid) {
+                                  var itemurl =
+                                      'https://sellship.co/api/createroom/' +
+                                          userid +
+                                          '/' +
+                                          recieverid +
+                                          '/' +
+                                          itemid;
+                                  final response = await http.get(itemurl);
+                                  var messageinfo = json.decode(response.body);
+                                  var messageid = (messageinfo['messageid']);
+                                  var recieverfcmtoken =
+                                      (messageinfo['recieverfcmtoken']);
+                                  var sendername = (messageinfo['sendername']);
+                                  var recipentname =
+                                      (messageinfo['recievername']);
 
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatPageView(
-                                      messageid: messageid,
-                                      recipentname: recipentname,
-                                      senderid: userid,
-                                      recipentid: recieverid,
-                                      fcmToken: recieverfcmtoken,
-                                      senderName: sendername,
-                                      itemid: itemid,
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPageView(
+                                        messageid: messageid,
+                                        recipentname: recipentname,
+                                        senderid: userid,
+                                        recipentid: recieverid,
+                                        fcmToken: recieverfcmtoken,
+                                        senderName: sendername,
+                                        itemid: itemid,
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                }
                               } else {
-                                print('Same User');
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AssetGiffyDialog(
+                                          image: Image.asset(
+                                            'assets/oops.gif',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            'Oops!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'You need to login to Chat!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(),
+                                          ),
+                                          onlyOkButton: true,
+                                          entryAnimation:
+                                              EntryAnimation.DEFAULT,
+                                          onOkButtonPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RootScreen(index: 2)),
+                                            );
+                                          },
+                                        ));
                               }
                             },
                             child: Container(

@@ -140,7 +140,7 @@ class _BalanceState extends State<Balance> {
           elevation: 0,
           title: Text(
             'Balance',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black, fontFamily: 'SF'),
           ),
           backgroundColor: Colors.white,
         ),

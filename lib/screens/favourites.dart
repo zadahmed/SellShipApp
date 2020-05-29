@@ -141,7 +141,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                   itemCount: item.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
-                                        padding: EdgeInsets.all(4),
+                                        padding: EdgeInsets.all(10),
                                         child: InkWell(
                                             onTap: () {
                                               Navigator.push(
@@ -154,18 +154,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                               );
                                             },
                                             child: Container(
-                                              decoration: BoxDecoration(
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.grey.shade300,
-                                                    offset: Offset(
-                                                        0.0, 1.0), //(x,y)
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                color: Colors.white,
-                                              ),
-                                              child: new Column(
+                                              child: Column(
                                                 children: <Widget>[
                                                   new Stack(
                                                     children: <Widget>[
@@ -175,19 +164,27 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                 context)
                                                             .size
                                                             .width,
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              item[index].image,
-                                                          fit: BoxFit.cover,
-                                                          placeholder: (context,
-                                                                  url) =>
-                                                              SpinKitChasingDots(
-                                                                  color: Colors
-                                                                      .deepOrange),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                item[index]
+                                                                    .image,
+                                                            fit: BoxFit.cover,
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                SpinKitChasingDots(
+                                                                    color: Colors
+                                                                        .deepOrange),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                          ),
                                                         ),
                                                       ),
                                                       item[index].sold == true
@@ -218,20 +215,19 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                           : Container(),
                                                     ],
                                                   ),
-                                                  new Align(
+                                                  Align(
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Padding(
                                                         padding:
-                                                            const EdgeInsets
-                                                                .all(5.0),
-                                                        child: new Column(
+                                                            EdgeInsets.all(5),
+                                                        child: Column(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .start,
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .center,
+                                                                  .start,
                                                           children: <Widget>[
                                                             Container(
                                                               height: 20,

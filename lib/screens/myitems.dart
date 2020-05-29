@@ -297,8 +297,9 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                           Container(
                                                                         height:
                                                                             30,
-                                                                        width:
-                                                                            80,
+                                                                        width: MediaQuery.of(context).size.width /
+                                                                                4 -
+                                                                            20,
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           color:
@@ -368,8 +369,9 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                           Container(
                                                                         height:
                                                                             30,
-                                                                        width:
-                                                                            80,
+                                                                        width: MediaQuery.of(context).size.width /
+                                                                                4 -
+                                                                            20,
                                                                         decoration:
                                                                             BoxDecoration(
                                                                           color:

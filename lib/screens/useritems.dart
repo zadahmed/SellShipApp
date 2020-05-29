@@ -540,18 +540,6 @@ class _UserItemsState extends State<UserItems> {
                                                                               SizedBox(height: 3.0),
                                                                               Container(
                                                                                 child: Text(
-                                                                                  Itemcategory[index],
-                                                                                  style: TextStyle(
-                                                                                    fontFamily: 'SF',
-                                                                                    fontSize: 14,
-                                                                                    fontWeight: FontWeight.w300,
-                                                                                  ),
-                                                                                  textAlign: TextAlign.left,
-                                                                                ),
-                                                                              ),
-                                                                              SizedBox(height: 3.0),
-                                                                              Container(
-                                                                                child: Text(
                                                                                   currency + ' ' + Itemprice[index].toString(),
                                                                                   style: TextStyle(
                                                                                     fontFamily: 'SF',
