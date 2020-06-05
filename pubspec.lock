@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.1"
+  badges:
+    dependency: "direct main"
+    description:
+      name: badges
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -181,6 +188,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_app_badger:
+    dependency: "direct main"
+    description:
+      name: flutter_app_badger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.2"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -216,6 +230,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0+1"
+  flutter_local_notifications:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.4"
+  flutter_local_notifications_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   flutter_native_admob:
     dependency: "direct main"
     description:
@@ -352,6 +380,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  locally:
+    dependency: "direct main"
+    description:
+      name: locally
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.6+9"
   location:
     dependency: "direct main"
     description:

@@ -1,19 +1,28 @@
 import 'dart:convert';
+import 'package:SellShip/screens/chatpageview.dart';
+import 'package:SellShip/screens/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:locally/locally.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 class FirebaseNotifications {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  Future getNotifications() async {
+  Future getNotifications(BuildContext context) async {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         var title = message['notification']['title'];
         var body = message['notification']['body'];
-        showSimpleNotification(Text(title.toString()),
-            background: Colors.deepOrange, subtitle: Text(body));
+
+        Locally locally = Locally(
+          context: context,
+          payload: 'test',
+          pageRoute: MaterialPageRoute(builder: (context) => Messages()),
+          appIcon: 'mipmap/ic_launcher',
+        );
+        locally.show(title: title, message: body);
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");

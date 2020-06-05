@@ -216,7 +216,7 @@ class _LoginPageState extends State<LoginPage>
 
   var firebasetoken;
   getNotifications() async {
-    var token = await FirebaseNotifications().getNotifications();
+    var token = await FirebaseNotifications().getNotifications(context);
     setState(() {
       firebasetoken = token;
     });

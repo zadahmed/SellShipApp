@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
         getcity();
       });
 
-      var token = await FirebaseNotifications().getNotifications();
+      var token = await FirebaseNotifications().getNotifications(context);
       if (userid != null) {
         print(token + "\n Token was recieved from firebase");
         var url =
