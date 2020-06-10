@@ -37,7 +37,6 @@ class MessagesState extends State<Messages> {
 
     if (messageinfo.isNotEmpty) {
       for (int i = 0; i < messageinfo.length; i++) {
-        print(messageinfo[i]);
         var imageprofile = messageinfo[i]['profilepicture'];
         var itemname = messageinfo[i]['itemname'];
         var itemid = messageinfo[i]['itemid']['\$oid'];
@@ -47,6 +46,7 @@ class MessagesState extends State<Messages> {
         var offe;
         var offerstage;
         var unread;
+        var msgcount;
 
         if (messageinfo[i]['offer'] != null) {
           offe = messageinfo[i]['offer'];
@@ -60,18 +60,16 @@ class MessagesState extends State<Messages> {
           offerstage = null;
         }
 
-        if (messageinfo[i]['unread'] != null) {
-          unread = messageinfo[i]['unread'];
+        if (messageinfo[i]['unread1'] == true) {
+          unread = true;
+        } else if (messageinfo[i]['unread2'] == true) {
+          unread = true;
+        }
 
-          if (messageinfo[i]['lastid'] != null) {
-            if (userid != messageinfo[i]['lastid']) {
-              unread = true;
-            } else {
-              unread = false;
-            }
-          } else {
-            unread = false;
-          }
+        if (messageinfo[i]['msgcount'] != null) {
+          msgcount = messageinfo[i]['msgcount'];
+        } else if (messageinfo[i]['msgcount'] == null) {
+          msgcount = null;
         }
 
         if (messageinfo[i]['date'] != null) {
@@ -90,6 +88,7 @@ class MessagesState extends State<Messages> {
               unread: unread,
               recieveddate: s,
               hiddendate: q,
+              msgcount: msgcount,
               itemname: itemname,
               senderName: messageinfo[i]['user1name'],
               recipentid: messageinfo[i]['user2'],
@@ -105,6 +104,7 @@ class MessagesState extends State<Messages> {
     }
 
     messagesd.sort();
+
     return messagesd;
   }
 
@@ -194,8 +194,16 @@ class MessagesState extends State<Messages> {
                                                         style: TextStyle(
                                                             fontFamily: 'SF',
                                                             fontSize: 13,
-                                                            color:
-                                                                Colors.black),
+                                                            color: Colors.black,
+                                                            fontWeight: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .unread ==
+                                                                    true
+                                                                ? FontWeight
+                                                                    .bold
+                                                                : FontWeight
+                                                                    .normal),
                                                       ),
                                                       Text(
                                                         snapshot.data[index]
@@ -204,9 +212,24 @@ class MessagesState extends State<Messages> {
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(
-                                                          fontFamily: 'SF',
-                                                          fontSize: 11,
-                                                        ),
+                                                            fontFamily: 'SF',
+                                                            fontSize: 11,
+                                                            color: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .unread ==
+                                                                    true
+                                                                ? Colors.black
+                                                                : Colors.grey,
+                                                            fontWeight: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .unread ==
+                                                                    true
+                                                                ? FontWeight
+                                                                    .bold
+                                                                : FontWeight
+                                                                    .normal),
                                                       ),
                                                     ],
                                                   ),
@@ -260,9 +283,17 @@ class MessagesState extends State<Messages> {
                                                         snapshot.data[index]
                                                             .recieveddate,
                                                         style: TextStyle(
-                                                          fontFamily: 'SF',
-                                                          fontSize: 11,
-                                                        ),
+                                                            fontFamily: 'SF',
+                                                            fontSize: 11,
+                                                            fontWeight: snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .unread ==
+                                                                    true
+                                                                ? FontWeight
+                                                                    .bold
+                                                                : FontWeight
+                                                                    .normal),
                                                       ),
                                                       snapshot.data[index]
                                                                   .unread ==
@@ -286,7 +317,10 @@ class MessagesState extends State<Messages> {
                                                                       )),
                                                               child: Center(
                                                                   child: Text(
-                                                                '1',
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .msgcount
+                                                                    .toString(),
                                                                 style: TextStyle(
                                                                     fontSize: 8,
                                                                     fontFamily:

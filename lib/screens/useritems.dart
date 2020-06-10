@@ -390,16 +390,13 @@ class _UserItemsState extends State<UserItems> {
                                   child: MediaQuery.removePadding(
                                       context: context,
                                       removeTop: true,
-                                      child: GridView.builder(
-                                        cacheExtent: double.parse(
-                                            Itemname.length.toString()),
-                                        shrinkWrap: true,
-                                        controller: _scrollController,
-                                        gridDelegate:
-                                            SliverGridDelegateWithFixedCrossAxisCount(
-                                                crossAxisCount: 2,
-                                                childAspectRatio: 0.80),
+                                      child: StaggeredGridView.countBuilder(
+                                        crossAxisCount: 2,
+                                        mainAxisSpacing: 4,
+                                        crossAxisSpacing: 4,
                                         itemCount: Itemname.length,
+                                        shrinkWrap: true,
+                                        physics: NeverScrollableScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           if (index != 0 && index % 4 == 0) {
                                             return Platform.isIOS == true
@@ -555,6 +552,9 @@ class _UserItemsState extends State<UserItems> {
                                                           ],
                                                         ),
                                                       ))));
+                                        },
+                                        staggeredTileBuilder: (int index) {
+                                          return StaggeredTile.fit(1);
                                         },
                                       )))
                               : Expanded(

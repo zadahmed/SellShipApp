@@ -347,8 +347,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   Future<List<Item>> getmorecondition(String condition) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/condition/' +
         country +
@@ -387,8 +387,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   Future<List<Item>> getmorePrice(String minprice, String maxprice) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/price/' +
         country +
@@ -429,8 +429,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   Future<List<Item>> getmorebrands(String brand) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/brand/' +
         country +
@@ -469,8 +469,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   _getmorehighestprice() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var url = 'https://sellship.co/api/highestprice/' +
         country +
@@ -501,8 +501,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   _getmorelowestprice() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var url = 'https://sellship.co/api/lowestprice/' +
         country +
@@ -533,8 +533,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   _getmorebelowhundred() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var url = 'https://sellship.co/api/belowhundred/' +
         country +
@@ -569,8 +569,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   _getmoreRecentData() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var url = 'https://sellship.co/api/recentitems/' +
         country +
@@ -610,7 +610,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
     setState(() {
       skip = 0;
-      limit = 10;
+      limit = 20;
       loading = true;
     });
 
@@ -649,8 +649,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   _getmoreData() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var url = 'https://sellship.co/api/getitems/' +
         country +
@@ -796,7 +796,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
     if (texte.isEmpty) {
       setState(() {
         skip = 0;
-        limit = 10;
+        limit = 20;
         fetchItems(skip, limit);
       });
     } else {
@@ -940,7 +940,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                               _selectedFilter =
                                                   'Recently Added';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -964,7 +964,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             setState(() {
                                               _selectedFilter = 'Near me';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -988,7 +988,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             setState(() {
                                               _selectedFilter = 'Below 100';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -1012,7 +1012,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             setState(() {
                                               _selectedFilter = 'Lowest Price';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -1036,7 +1036,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             setState(() {
                                               _selectedFilter = 'Highest Price';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -1105,7 +1105,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                             brand =
                                                                 brands[index];
                                                             skip = 0;
-                                                            limit = 10;
+                                                            limit = 20;
                                                             loading = true;
                                                           });
                                                           itemsgrid.clear();
@@ -1180,7 +1180,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                   condition =
                                                                       _selectedCondition;
                                                                   skip = 0;
-                                                                  limit = 10;
+                                                                  limit = 20;
                                                                   loading =
                                                                       true;
                                                                 });
@@ -1385,7 +1385,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                           maxpricecontroller
                                                               .text;
                                                       skip = 0;
-                                                      limit = 10;
+                                                      limit = 20;
                                                       loading = true;
                                                     });
                                                     itemsgrid.clear();

@@ -53,7 +53,7 @@ class _SearchState extends State<Search> {
 
     setState(() {
       skip = 0;
-      limit = 10;
+      limit = 20;
       text = widget.text;
       searchcontroller.text = text;
       loading = true;
@@ -70,8 +70,8 @@ class _SearchState extends State<Search> {
 
   _getmoreData() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var url = 'https://sellship.co/api/searchitems/' +
         country +

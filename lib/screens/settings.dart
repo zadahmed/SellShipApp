@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/balance.dart';
+import 'package:SellShip/screens/changecountry.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
@@ -237,6 +238,33 @@ class _SettingsState extends State<Settings> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => PrivacyPolicy()),
+                  );
+                },
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(
+                  Feather.flag,
+                  color: Colors.deepOrange,
+                ),
+                trailing: Icon(
+                  Feather.arrow_right,
+                  size: 16,
+                  color: Colors.deepOrange,
+                ),
+                title: Text(
+                  'Change Country',
+                  style: TextStyle(
+                    fontFamily: 'SF',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChangeCountry()),
                   );
                 },
               ),

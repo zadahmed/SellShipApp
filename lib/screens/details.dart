@@ -6,6 +6,7 @@ import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
@@ -13,11 +14,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/useritems.dart';
 import 'package:share/share.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
 class Details extends StatefulWidget {
@@ -42,6 +45,9 @@ class _DetailsState extends State<Details> {
   final _controller = NativeAdmobController();
   final scaffoldState = GlobalKey<ScaffoldState>();
   bool sold;
+
+  bool upDirection = true, flag = true;
+
   @override
   void initState() {
     super.initState();
@@ -277,9 +283,16 @@ class _DetailsState extends State<Details> {
             ));
   }
 
-  Set<Marker> _markers = Set();
+  Set<Circle> _circles = Set();
 
   GoogleMapController controller;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
 
   void mapCreated(GoogleMapController controlle) {
     setState(() {
@@ -326,7 +339,7 @@ class _DetailsState extends State<Details> {
   }
 
   List<String> images = [];
-  DateTime dateuploaded;
+  String dateuploaded;
 
   fetchItem() async {
     var country = await storage.read(key: 'country');
@@ -377,18 +390,21 @@ class _DetailsState extends State<Details> {
 
     var q = Map<String, dynamic>.from(jsonbody[0]['dateuploaded']);
     print(q);
+    DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+    dateuploaded = timeago.format(dateuploade);
     setState(() {
-      dateuploaded = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      dateuploaded = dateuploaded;
+
       position = LatLng(
           double.parse(newItem.latitude), double.parse(newItem.longitude));
-      _markers.add(Marker(
-        markerId: MarkerId(position.toString()),
-        position: position,
-        infoWindow: InfoWindow(
-          title: newItem.name,
-        ),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-      ));
+      _circles.add(Circle(
+          circleId: CircleId(itemid),
+          center: LatLng(
+              double.parse(newItem.latitude), double.parse(newItem.longitude)),
+          radius: 250,
+          fillColor: Colors.lightBlueAccent.withOpacity(0.5),
+          strokeWidth: 3,
+          strokeColor: Colors.lightBlueAccent));
       loading = false;
     });
 
@@ -512,6 +528,8 @@ class _DetailsState extends State<Details> {
     return dynamicUrl.toString();
   }
 
+  ScrollController _scrollController = ScrollController();
+
   int inde;
   @override
   Widget build(BuildContext context) {
@@ -519,18 +537,23 @@ class _DetailsState extends State<Details> {
         ? Scaffold(
             backgroundColor: Colors.white,
             key: _scaffoldKey,
-            extendBodyBehindAppBar: true,
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.transparent,
+              backgroundColor: Colors.white,
               leading: InkWell(
                 onTap: () {
                   Navigator.pop(context);
                 },
                 child: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: Colors.deepOrange,
                 ),
+              ),
+              title: Text(
+                newItem.name,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    fontFamily: 'SF', fontSize: 18, color: Colors.black),
               ),
               actions: <Widget>[
                 Padding(
@@ -542,7 +565,10 @@ class _DetailsState extends State<Details> {
                             subject:
                                 'Look at this awesome item I found on SellShip!');
                       },
-                      child: Icon(Feather.share)),
+                      child: Icon(
+                        Feather.share,
+                        color: Colors.deepOrange,
+                      )),
                 ),
               ],
             ),
@@ -552,6 +578,7 @@ class _DetailsState extends State<Details> {
                     removeTop: true,
                     context: context,
                     child: ListView(
+                      controller: _scrollController,
 //                  padding: EdgeInsets.symmetric(horizontal: 10),
                       children: <Widget>[
                         Container(
@@ -563,6 +590,7 @@ class _DetailsState extends State<Details> {
                               PageView.builder(
                                   itemCount: images.length,
                                   onPageChanged: (index) {
+                                    print(index);
                                     setState(() {
                                       inde = index;
                                     });
@@ -600,7 +628,7 @@ class _DetailsState extends State<Details> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: images.map((url) {
-                                    inde = images.indexOf(url);
+                                    _current = images.indexOf(url);
                                     return Container(
                                       width: 8.0,
                                       height: 8.0,
@@ -629,8 +657,7 @@ class _DetailsState extends State<Details> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontFamily: 'SF',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
                                 ),
                               ),
                               trailing: Container(
@@ -696,18 +723,49 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                             ),
-                            ListTile(
-                              dense: true,
-                              leading: Icon(FontAwesome.money),
-                              title: Text(
-                                currency + ' ' + newItem.price.toString(),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'SF',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: 15, bottom: 10, top: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  currency + ' ' + newItem.price.toString(),
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: 15, bottom: 10, top: 5),
+                              child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.access_time,
+                                        size: 15,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        'Uploaded $dateuploaded',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'SF',
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
                             ),
                             ListTile(
                               onTap: () {
@@ -800,20 +858,6 @@ class _DetailsState extends State<Details> {
                                     ),
                                   )
                                 : Container(),
-                            ListTile(
-                              dense: true,
-                              leading: Icon(Icons.location_on),
-                              title: Text(
-                                newItem.city.toString(),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'SF',
-                                  fontSize: 16,
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
                             Padding(
                               padding: EdgeInsets.only(
                                   left: 10, bottom: 10, top: 10),
@@ -878,18 +922,31 @@ class _DetailsState extends State<Details> {
                               padding:
                                   EdgeInsets.only(left: 10, bottom: 10, top: 5),
                               child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Item Location',
-                                  style: TextStyle(
-                                      fontFamily: 'SF',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.location_on,
+                                        size: 15,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        newItem.city.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'SF',
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  )),
                             ),
                             Container(
-                              height: 100,
+                              height: 200,
                               decoration: BoxDecoration(
                                   boxShadow: [
                                     BoxShadow(
@@ -905,18 +962,18 @@ class _DetailsState extends State<Details> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Container(
-                                    height: 100,
+                                    height: 200,
                                     width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: GoogleMap(
                                       initialCameraPosition: CameraPosition(
-                                          target: position,
-                                          zoom: 18.0,
-                                          bearing: 70),
+                                        target: position,
+                                        zoom: 15.0,
+                                      ),
                                       onMapCreated: mapCreated,
-                                      markers: _markers,
+                                      circles: _circles,
                                       onTap: (latLng) async {
                                         final String googleMapsUrl =
                                             "comgooglemaps://?center=${position.latitude},${position.longitude}";
@@ -943,30 +1000,19 @@ class _DetailsState extends State<Details> {
                             SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'Uploaded on ',
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: 10, bottom: 10, top: 5),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Location is approximated to protect the user',
                                   style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w300,
-                                  ),
+                                      fontFamily: 'SF',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w300),
                                 ),
-                                Text(
-                                  dateuploaded.toString(),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                             SizedBox(
                               height: 100,
@@ -981,7 +1027,7 @@ class _DetailsState extends State<Details> {
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: newItem.sold == false
                 ? AnimatedOpacity(
-                    duration: const Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 5),
                     opacity: 1,
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -1163,7 +1209,7 @@ class _DetailsState extends State<Details> {
                     ),
                   )
                 : AnimatedOpacity(
-                    duration: const Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 5),
                     opacity: 1,
                     child: Padding(
                       padding: const EdgeInsets.only(

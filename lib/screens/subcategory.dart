@@ -57,8 +57,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   _getmoreData() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     country = await storage.read(key: 'country');
 
@@ -426,8 +426,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   Future<List<Item>> getmorecondition(String condition) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/subcategory/condition/' +
         country +
@@ -470,8 +470,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   Future<List<Item>> getmorePrice(String minprice, String maxprice) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/subcategory/price/' +
         country +
@@ -516,8 +516,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   Future<List<Item>> getmorebrands(String brand) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/subcategory/brand/' +
         country +
@@ -647,8 +647,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   _getmorehighestprice() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/subcategories/highestprice/' +
@@ -688,8 +688,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   _getmorelowestprice() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/subcategories/lowestprice/' +
@@ -729,8 +729,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   _getmorebelowhundred() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/subcategories/belowhundred/' +
@@ -770,8 +770,8 @@ class _SubCategoryState extends State<SubCategory> {
 
   _getmoreRecentData() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/subcategories/recent/' +
@@ -823,7 +823,7 @@ class _SubCategoryState extends State<SubCategory> {
   void initState() {
     setState(() {
       skip = 0;
-      limit = 10;
+      limit = 20;
       subcategory = widget.subcategory;
       category = widget.category;
       sub = widget.sub;
@@ -951,7 +951,7 @@ class _SubCategoryState extends State<SubCategory> {
                                               _selectedFilter =
                                                   'Recently Added';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -975,7 +975,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             setState(() {
                                               _selectedFilter = 'Near me';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -999,7 +999,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             setState(() {
                                               _selectedFilter = 'Below 100';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -1023,7 +1023,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             setState(() {
                                               _selectedFilter = 'Lowest Price';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -1047,7 +1047,7 @@ class _SubCategoryState extends State<SubCategory> {
                                             setState(() {
                                               _selectedFilter = 'Highest Price';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -1119,7 +1119,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                             brand =
                                                                 brands[index];
                                                             skip = 0;
-                                                            limit = 10;
+                                                            limit = 20;
                                                             loading = true;
                                                           });
                                                           itemsgrid.clear();
@@ -1190,7 +1190,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                                   condition =
                                                                       _selectedCondition;
                                                                   skip = 0;
-                                                                  limit = 10;
+                                                                  limit = 20;
                                                                   loading =
                                                                       true;
                                                                 });
@@ -1395,7 +1395,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                           maxpricecontroller
                                                               .text;
                                                       skip = 0;
-                                                      limit = 10;
+                                                      limit = 20;
                                                       loading = true;
                                                     });
                                                     itemsgrid.clear();

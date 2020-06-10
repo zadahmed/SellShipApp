@@ -50,8 +50,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   _getmoreData() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/categories/' +
@@ -392,8 +392,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   Future<List<Item>> getmorecondition(String condition) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/category/condition/' +
         country +
@@ -434,8 +434,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   Future<List<Item>> getmorePrice(String minprice, String maxprice) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/category/price/' +
         country +
@@ -478,8 +478,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   Future<List<Item>> getmorebrands(String brand) async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
     var categoryurl = 'https://sellship.co/api/filter/category/brand/' +
         country +
@@ -592,8 +592,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   _getmorehighestprice() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/categories/highestprice/' +
@@ -633,8 +633,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   _getmorelowestprice() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/categories/lowestprice/' +
@@ -674,8 +674,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   _getmorebelowhundred() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/categories/belowhundred/' +
@@ -715,8 +715,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
 
   _getmoreRecentData() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/categories/recent/' +
@@ -768,7 +768,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   void initState() {
     setState(() {
       skip = 0;
-      limit = 10;
+      limit = 20;
       category = widget.category;
       subcategory = widget.subcategory;
       loading = true;
@@ -895,7 +895,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                               _selectedFilter =
                                                   'Recently Added';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -919,7 +919,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             setState(() {
                                               _selectedFilter = 'Near me';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -943,7 +943,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             setState(() {
                                               _selectedFilter = 'Below 100';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -967,7 +967,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             setState(() {
                                               _selectedFilter = 'Lowest Price';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -991,7 +991,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                             setState(() {
                                               _selectedFilter = 'Highest Price';
                                               skip = 0;
-                                              limit = 10;
+                                              limit = 20;
                                               loading = true;
                                             });
                                             itemsgrid.clear();
@@ -1063,7 +1063,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                             brand =
                                                                 brands[index];
                                                             skip = 0;
-                                                            limit = 10;
+                                                            limit = 20;
                                                             loading = true;
                                                           });
                                                           itemsgrid.clear();
@@ -1134,7 +1134,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                   condition =
                                                                       _selectedCondition;
                                                                   skip = 0;
-                                                                  limit = 10;
+                                                                  limit = 20;
                                                                   loading =
                                                                       true;
                                                                 });
@@ -1339,7 +1339,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                           maxpricecontroller
                                                               .text;
                                                       skip = 0;
-                                                      limit = 10;
+                                                      limit = 20;
                                                       loading = true;
                                                     });
                                                     itemsgrid.clear();
@@ -1558,23 +1558,6 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                                height: 5.0),
-                                                            Container(
-                                                              child: Text(
-                                                                itemsgrid[index]
-                                                                    .category,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'SF',
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w300,
-                                                                ),
                                                               ),
                                                             ),
                                                             SizedBox(

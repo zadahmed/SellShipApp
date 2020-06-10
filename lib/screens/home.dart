@@ -3,24 +3,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
-import 'package:SellShip/screens/boysfashion.dart';
 import 'package:SellShip/screens/categories.dart';
-import 'package:SellShip/screens/categorydetail.dart';
-import 'package:SellShip/screens/favourites.dart';
-import 'package:SellShip/screens/girlsfashion.dart';
-import 'package:SellShip/screens/menfashion.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/nearme.dart';
 import 'package:SellShip/screens/recentlyadded.dart';
-import 'package:SellShip/screens/subcategory.dart';
-import 'package:SellShip/screens/womenfashion.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
@@ -31,13 +24,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/search.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -116,8 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _getmoreRecentData() async {
     setState(() {
-      limit = limit + 10;
-      skip = skip + 10;
+      limit = limit + 20;
+      skip = skip + 20;
     });
 
     var url = 'https://sellship.co/api/recentitems/' +
@@ -193,7 +184,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       skip = 0;
-      limit = 10;
+      limit = 20;
+      notifbadge = false;
     });
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
@@ -293,7 +285,37 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String city;
 
+  getnotification() async {
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://sellship.co/api/getnotification/' + userid;
+    print(url);
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var notificationinfo = json.decode(response.body);
+      var notif = notificationinfo['notification'];
+      if (notif <= 0) {
+        setState(() {
+          notifcount = notif;
+          notifbadge = false;
+        });
+        FlutterAppBadger.removeBadge();
+      } else {
+        setState(() {
+          notifcount = notif;
+          notifbadge = true;
+        });
+        FlutterAppBadger.updateBadgeCount(notif);
+      }
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  var notifcount;
+  var notifbadge;
+
   void readstorage() async {
+    getnotification();
     var countr = await storage.read(key: 'country');
     if (countr.toLowerCase() == 'united arab emirates') {
       setState(() {
@@ -312,19 +334,13 @@ class _HomeScreenState extends State<HomeScreen> {
     _getLocation();
   }
 
-  var images = [
-    'assets/fashion.png',
-    'assets/laptop.png',
-    'assets/sports.png',
-  ];
-
   TextEditingController searchcontroller = new TextEditingController();
 
   onSearch(String texte) async {
     if (texte.isEmpty) {
       setState(() {
         skip = 0;
-        limit = 10;
+        limit = 20;
         fetchRecentlyAdded(skip, limit);
       });
     } else {
@@ -336,109 +352,110 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<List<Item>> getItemsSearch(String text) async {
+    List<Item> items = [];
+
+    var url = 'https://sellship.co/api/searchresults/' + country + '/' + text;
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+      print(jsonbody);
+    }
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldState,
-        appBar: PreferredSize(
-            preferredSize: Size(double.infinity, 125),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 125,
-              child: Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 5),
-                  child: Column(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Messages()),
+                );
+              },
+              child: Icon(
+                Feather.bell,
+                color: Colors.deepOrange,
+                size: 24,
+              ),
+            ),
+          ),
+          title: Container(
+              height: 45,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+                    offset: Offset(0.0, 1.0), //(x,y)
+                    blurRadius: 6.0,
+                  ),
+                ],
+              ),
+              child: Padding(
+                  padding: EdgeInsets.only(bottom: 5),
+                  child: Row(
                     children: <Widget>[
-                      Container(
-                        height: 30,
-                        width: 120,
-                        child: Image.asset(
-                          'assets/logotransparent.png',
-                          fit: BoxFit.cover,
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Icon(
+                          Feather.search,
+                          size: 24,
+                          color: Colors.deepOrange,
                         ),
                       ),
-                      SizedBox(
-                        height: 5,
+                      Expanded(
+                        child: TextField(
+                          controller: searchcontroller,
+                          onSubmitted: onSearch,
+                          decoration: InputDecoration(
+                              hintText: 'Search SellShip',
+                              hintStyle: TextStyle(
+                                fontFamily: 'SF',
+                                fontSize: 16,
+                              ),
+                              border: InputBorder.none),
+                        ),
                       ),
-                      Padding(
-                          padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Expanded(
-                                  child: Container(
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: Offset(0.0, 1.0), //(x,y)
-                                            blurRadius: 6.0,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Padding(
-                                          padding: EdgeInsets.only(bottom: 5),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: Icon(
-                                                  Feather.search,
-                                                  size: 24,
-                                                  color: Colors.deepOrange,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: TextField(
-                                                  controller: searchcontroller,
-                                                  onSubmitted: onSearch,
-                                                  decoration: InputDecoration(
-                                                      hintText:
-                                                          'What are you looking for today?',
-                                                      hintStyle: TextStyle(
-                                                        fontFamily: 'SF',
-                                                        fontSize: 16,
-                                                      ),
-                                                      border: InputBorder.none),
-                                                ),
-                                              ),
-                                            ],
-                                          )))),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              CircleAvatar(
-                                backgroundColor: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Messages()),
-                                    );
-                                  },
-                                  child: Icon(
-                                    Feather.message_square,
-                                    color: Colors.deepOrange,
-                                    size: 24,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 6,
-                              ),
-                            ],
-                          )),
                     ],
-                  )),
-            )),
+                  ))),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Badge(
+                showBadge: notifbadge,
+                position: BadgePosition.topRight(top: 2),
+                animationType: BadgeAnimationType.slide,
+                badgeContent: Text(
+                  notifcount.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Messages()),
+                    );
+                  },
+                  child: Icon(
+                    Feather.message_square,
+                    color: Colors.deepOrange,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
         body: GestureDetector(onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         }, child: LayoutBuilder(builder:
@@ -771,21 +788,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: MediaQuery.removePadding(
                                     context: context,
                                     removeTop: true,
-                                    child: GridView.builder(
-                                      cacheExtent: double.parse(
-                                          itemsgrid.length.toString()),
+                                    child: StaggeredGridView.countBuilder(
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 4,
+                                      crossAxisSpacing: 4,
+                                      itemCount: itemsgrid.length + 1,
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              childAspectRatio: 0.80),
-                                      itemCount: itemsgrid.length,
                                       itemBuilder: (context, index) {
                                         if (index != 0 && index % 8 == 0) {
                                           return Platform.isIOS == true
                                               ? Container(
-                                                  height: 330,
+                                                  height: 150,
                                                   padding: EdgeInsets.all(10),
                                                   margin: EdgeInsets.only(
                                                       bottom: 20.0),
@@ -795,7 +809,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                 )
                                               : Container(
-                                                  height: 330,
+                                                  height: 150,
                                                   padding: EdgeInsets.all(10),
                                                   margin: EdgeInsets.only(
                                                       bottom: 20.0),
@@ -804,6 +818,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     controller: _controller,
                                                   ),
                                                 );
+                                        }
+
+                                        if (index == itemsgrid.length) {
+                                          return Center(
+                                              child: Container(
+                                            child: SpinKitThreeBounce(
+                                              color: Colors.deepOrange,
+                                              size: 20,
+                                            ),
+                                          ));
                                         }
 
                                         return Padding(
@@ -826,7 +850,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       new Stack(
                                                         children: <Widget>[
                                                           Container(
-                                                            height: 150,
+                                                            height: 180,
                                                             width:
                                                                 MediaQuery.of(
                                                                         context)
@@ -967,6 +991,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     ],
                                                   ),
                                                 )));
+                                      },
+                                      staggeredTileBuilder: (int index) {
+                                        if (index != 0 &&
+                                            index == itemsgrid.length) {
+                                          return StaggeredTile.count(2, 0.1);
+                                        } else {
+                                          return StaggeredTile.fit(1);
+                                        }
                                       },
                                     )))
                             : Container(

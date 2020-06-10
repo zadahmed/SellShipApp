@@ -61,6 +61,8 @@ dependencies:
   badges: 1.1.1
   flutter_app_badger: 1.1.2
   locally: 0.2.6+9
+  timeago: 2.0.26
+  jiffy: 3.0.1
 
 
 

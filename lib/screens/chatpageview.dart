@@ -131,8 +131,10 @@ class _ChatPageViewState extends State<ChatPageView> {
   }
 
   Future<List> getRemoteMessages() async {
-    var url = 'https://sellship.co/api/getmessages/' +
+    var url = 'https://sellship.co/api/getmessagesuser/' +
         messageid +
+        '/' +
+        userid +
         '/' +
         skip.toString();
     final response = await http.get(url);
