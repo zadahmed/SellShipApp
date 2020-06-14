@@ -74,8 +74,8 @@ class _RootScreenState extends State<RootScreen> {
             type: BottomNavigationBarType.fixed,
             selectedItemColor: Colors.deepOrange,
             unselectedItemColor: Colors.grey[400],
-            showSelectedLabels: false, // <-- HERE
-            showUnselectedLabels: false, //
+            selectedFontSize: 12,
+            unselectedFontSize: 12,
             currentIndex: _currentPage,
             onTap: (i) {
               setState(() {
@@ -86,22 +86,37 @@ class _RootScreenState extends State<RootScreen> {
               BottomNavigationBarItem(
                   icon: Icon(
                     FontAwesome.home,
-                    size: 25,
+                    size: 23,
                   ),
-                  title: Text('')),
+                  title: Text('Explore',
+                      style: TextStyle(
+                          fontFamily: 'SF',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black))),
               BottomNavigationBarItem(
                   icon: Icon(
                     FontAwesome.plus_square,
                     color: Colors.deepOrange,
-                    size: 35,
+                    size: 23,
                   ),
-                  title: Text('')),
+                  title: Text('Sell',
+                      style: TextStyle(
+                          fontFamily: 'SF',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black))),
               BottomNavigationBarItem(
                   icon: Icon(
                     Feather.user,
-                    size: 25,
+                    size: 23,
                   ),
-                  title: Text('')),
+                  title: Text('Profile',
+                      style: TextStyle(
+                          fontFamily: 'SF',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black))),
             ],
           ),
           body: _pages[_currentPage],

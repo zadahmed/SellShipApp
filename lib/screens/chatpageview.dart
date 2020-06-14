@@ -141,7 +141,6 @@ class _ChatPageViewState extends State<ChatPageView> {
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      print(jsonResponse);
       return jsonResponse;
     }
     return [];
@@ -459,7 +458,7 @@ class _ChatPageViewState extends State<ChatPageView> {
           '/' +
           userid +
           '/' +
-          recipentid;
+          senderid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
         print('Success');
@@ -478,7 +477,7 @@ class _ChatPageViewState extends State<ChatPageView> {
           '/' +
           userid +
           '/' +
-          recipentid;
+          senderid;
       final response = await http.get(url);
       print(response.statusCode);
       if (response.statusCode == 200) {

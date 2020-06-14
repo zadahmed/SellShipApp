@@ -27,7 +27,7 @@ List<Categories> categories = [
     title: 'Electronics',
     id: 0,
     icon: Feather.tv,
-    image: 'assets/tv.jpg',
+    image: 'assets/categories/tv.png',
     subCat: [
       SubCategories(
           id: 0,
@@ -77,7 +77,7 @@ List<Categories> categories = [
     title: 'Fashion & Accessories',
     id: 1,
     icon: Feather.shopping_bag,
-    image: 'assets/couple.jpeg',
+    image: 'assets/categories/beach-shirt.png',
     subCat: [
       SubCategories(id: 0, title: "Women", image: 'assets/fashion/women.jpeg'),
       SubCategories(id: 1, title: "Men", image: 'assets/fashion/men.jpg'),
@@ -90,7 +90,7 @@ List<Categories> categories = [
     title: 'Beauty',
     id: 2,
     icon: Feather.eye,
-    image: 'assets/couple.jpeg',
+    image: 'assets/categories/804.png',
     subCat: [
       SubCategories(
           id: 0, title: "Fragrance", image: 'assets/beauty/fragrance.jpeg'),
@@ -123,7 +123,7 @@ List<Categories> categories = [
     title: 'Home & Garden',
     id: 3,
     icon: Feather.home,
-    image: 'assets/home.jpg',
+    image: 'assets/categories/cabinet.png',
     subCat: [
       SubCategories(id: 0, title: "Bedding", image: 'assets/home/bedding.jpeg'),
       SubCategories(id: 1, title: "Bath", image: 'assets/home/bath.jpeg'),
@@ -150,7 +150,7 @@ List<Categories> categories = [
   Categories(
     title: 'Baby & Child',
     id: 4,
-    image: 'assets/baby.png',
+    image: 'assets/categories/baby-sock.png',
     icon: FontAwesomeIcons.babyCarriage,
     subCat: [
       SubCategories(id: 0, title: "Kids toys", image: 'assets/baby/toy.jpeg'),
@@ -173,7 +173,7 @@ List<Categories> categories = [
   Categories(
     title: 'Sport & Leisure',
     id: 5,
-    image: 'assets/sport.jpeg',
+    image: 'assets/categories/basketball.png',
     icon: FontAwesomeIcons.footballBall,
     subCat: [
       SubCategories(
@@ -199,7 +199,7 @@ List<Categories> categories = [
   Categories(
     title: 'Books',
     id: 6,
-    image: 'assets/books.jpeg',
+    image: 'assets/categories/books.png',
     icon: Feather.book_open,
     subCat: [
       SubCategories(
@@ -246,7 +246,7 @@ List<Categories> categories = [
     title: 'Motors',
     id: 7,
     icon: FontAwesomeIcons.car,
-    image: 'assets/car.jpg',
+    image: 'assets/categories/car.png',
     subCat: [
       SubCategories(id: 0, title: "Used Cars", image: 'assets/motor/car.jpeg'),
       SubCategories(
@@ -268,7 +268,7 @@ List<Categories> categories = [
     title: 'Property',
     id: 8,
     icon: FontAwesomeIcons.building,
-    image: 'assets/home.jpg',
+    image: 'assets/categories/house.png',
     subCat: [
       SubCategories(
           id: 0,
@@ -290,7 +290,7 @@ List<Categories> categories = [
     title: 'Other',
     id: 10,
     icon: Icons.lightbulb_outline,
-    image: 'assets/tv.jpeg',
+    image: 'assets/categories/tv.png',
     subCat: [
       SubCategories(id: 0, title: "Other", image: 'assets/property/other.jpeg'),
     ],

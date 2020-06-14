@@ -11,12 +11,14 @@ import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/settings.dart';
 import 'package:SellShip/screens/termscondition.dart';
 import 'package:SellShip/support.dart';
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -236,12 +238,42 @@ class _LoginPageState extends State<LoginPage>
     }
   }
 
+  void getnotification() async {
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://sellship.co/api/getnotification/' + userid;
+    print(url);
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var notificationinfo = json.decode(response.body);
+      var notif = notificationinfo['notification'];
+
+      if (notif <= 0) {
+        setState(() {
+          notifcount = notif;
+          notifbadge = false;
+        });
+      } else if (notif > 0) {
+        setState(() {
+          notifcount = notif;
+          notifbadge = true;
+        });
+      }
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  var notifcount;
+  var notifbadge;
+
   @override
   void initState() {
     super.initState();
     getNotifications();
+    getnotification();
     setState(() {
       loading = true;
+      notifbadge = false;
     });
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -621,66 +653,62 @@ class _LoginPageState extends State<LoginPage>
   Widget profile(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        appBar: PreferredSize(
-            preferredSize: Size(double.infinity, 70),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 70,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: Padding(
+            padding: EdgeInsets.all(10),
+            child: InkWell(
+                child: Icon(
+                  Feather.settings,
+                  color: Colors.deepOrange,
                 ),
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: InkWell(
-                            child: Icon(
-                              Feather.settings,
-                              color: Colors.deepOrange,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Settings(
-                                          email: email,
-                                        )),
-                              );
-                            }),
-                      ),
-                      Container(
-                        height: 30,
-                        width: 120,
-                        child: Image.asset(
-                          'assets/logotransparent.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: InkWell(
-                            child: Icon(
-                              Feather.message_square,
-                              color: Colors.deepOrange,
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Messages()),
-                              );
-                            }),
-                      ),
-                    ],
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Settings(
+                              email: email,
+                            )),
+                  );
+                }),
+          ),
+          title: Container(
+            height: 30,
+            width: 120,
+            child: Image.asset(
+              'assets/logotransparent.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Badge(
+                showBadge: notifbadge,
+                position: BadgePosition.topRight(top: 2),
+                animationType: BadgeAnimationType.slide,
+                badgeContent: Text(
+                  notifcount.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Messages()),
+                    );
+                  },
+                  child: Icon(
+                    Feather.message_square,
+                    color: Colors.deepOrange,
+                    size: 24,
                   ),
                 ),
               ),
-            )),
+            ),
+          ],
+        ),
         body: loading == false
             ? Column(children: <Widget>[
                 SizedBox(

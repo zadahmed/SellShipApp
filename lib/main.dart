@@ -26,7 +26,9 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
+    ));
   }
 
   FirebaseAnalytics analytics = FirebaseAnalytics();

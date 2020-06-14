@@ -6,6 +6,7 @@ import 'package:SellShip/global.dart';
 import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/nearme.dart';
+import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/recentlyadded.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -186,9 +187,12 @@ class _HomeScreenState extends State<HomeScreen> {
       skip = 0;
       limit = 20;
       notifbadge = false;
+      notbadge = false;
     });
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
+    ));
     _scrollController
       ..addListener(() {
         var triggerFetchMoreSize = _scrollController.position.maxScrollExtent;
@@ -284,8 +288,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String city;
+  var notcount;
+  bool notbadge;
 
-  getnotification() async {
+  void getnotification() async {
     var userid = await storage.read(key: 'userid');
     var url = 'https://sellship.co/api/getnotification/' + userid;
     print(url);
@@ -293,19 +299,34 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       var notificationinfo = json.decode(response.body);
       var notif = notificationinfo['notification'];
+      var notcoun = notificationinfo['notcount'];
       if (notif <= 0) {
         setState(() {
           notifcount = notif;
           notifbadge = false;
         });
         FlutterAppBadger.removeBadge();
-      } else {
+      } else if (notif > 0) {
         setState(() {
           notifcount = notif;
           notifbadge = true;
         });
-        FlutterAppBadger.updateBadgeCount(notif);
       }
+
+      if (notcoun <= 0) {
+        setState(() {
+          notcount = notcoun;
+          notbadge = false;
+        });
+        FlutterAppBadger.removeBadge();
+      } else if (notcoun > 0) {
+        setState(() {
+          notcount = notcoun;
+          notbadge = true;
+        });
+      }
+
+      FlutterAppBadger.updateBadgeCount(notifcount + notcount);
     } else {
       print(response.statusCode);
     }
@@ -336,34 +357,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   TextEditingController searchcontroller = new TextEditingController();
 
-  onSearch(String texte) async {
-    if (texte.isEmpty) {
-      setState(() {
-        skip = 0;
-        limit = 20;
-        fetchRecentlyAdded(skip, limit);
-      });
-    } else {
-      searchcontroller.clear();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Search(text: texte)),
-      );
-    }
-  }
-
-  Future<List<Item>> getItemsSearch(String text) async {
-    List<Item> items = [];
-
-    var url = 'https://sellship.co/api/searchresults/' + country + '/' + text;
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-      print(jsonbody);
-    }
-    return items;
-  }
+//  onSearch(String texte) async {
+//    if (texte.isEmpty) {
+//      setState(() {
+//        skip = 0;
+//        limit = 20;
+//        fetchRecentlyAdded(skip, limit);
+//      });
+//    } else {
+//      searchcontroller.clear();
+//
+//    }
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -372,13 +377,19 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
-          leading: CircleAvatar(
-            backgroundColor: Colors.transparent,
+          leading: Badge(
+            showBadge: notbadge,
+            position: BadgePosition.topRight(top: 2, right: 3),
+            animationType: BadgeAnimationType.slide,
+            badgeContent: Text(
+              notcount.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
             child: InkWell(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Messages()),
+                  MaterialPageRoute(builder: (context) => NotifcationPage()),
                 );
               },
               child: Icon(
@@ -415,8 +426,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Expanded(
                         child: TextField(
+                          onTap: () {
+                            showSearch(
+                                context: context,
+                                delegate: UserSearchDelegate(country));
+                          },
                           controller: searchcontroller,
-                          onSubmitted: onSearch,
+//                          onSubmitted: onSearch,
                           decoration: InputDecoration(
                               hintText: 'Search SellShip',
                               hintStyle: TextStyle(
@@ -478,7 +494,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: Text('Categories',
                                   style: TextStyle(
                                       fontFamily: 'SF',
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black)),
                             ),
@@ -506,7 +522,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: 75,
+                          height: 85,
                           child: MediaQuery.removePadding(
                             context: context,
                             removeTop: true,
@@ -529,16 +545,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                       child: Container(
                                           width: 100,
-                                          height: 75,
+                                          height: 80,
                                           alignment: Alignment.center,
                                           child: Column(
                                             children: <Widget>[
                                               Container(
                                                 height: 30,
                                                 width: 120,
-                                                child: Icon(
-                                                  categories[i].icon,
-                                                  color: Colors.deepOrange,
+                                                child: Image.asset(
+                                                  categories[i].image,
                                                 ),
                                               ),
                                               SizedBox(
@@ -558,7 +573,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               )
                                             ],
                                             mainAxisAlignment:
-                                                MainAxisAlignment.start,
+                                                MainAxisAlignment.center,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                           )),
@@ -583,7 +598,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       child: Text('Near me',
                                           style: TextStyle(
                                               fontFamily: 'SF',
-                                              fontSize: 20,
+                                              fontSize: 18,
                                               fontWeight: FontWeight.w800,
                                               color: Colors.black)),
                                     ),
@@ -645,7 +660,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           children: <Widget>[
                                                             Container(
                                                               height: 150,
-                                                              width: 200,
+                                                              width: 150,
                                                               child: ClipRRect(
                                                                 borderRadius:
                                                                     BorderRadius
@@ -704,9 +719,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                         fontFamily:
                                                                             'SF',
                                                                         fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight.w800,
+                                                                            14,
                                                                       ),
                                                                       overflow:
                                                                           TextOverflow
@@ -715,7 +728,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   ),
                                                                   SizedBox(
                                                                       height:
-                                                                          5.0),
+                                                                          3.0),
                                                                   Container(
                                                                     child: Text(
                                                                       currency +
@@ -759,7 +772,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text('Recently Added',
                                     style: TextStyle(
                                         fontFamily: 'SF',
-                                        fontSize: 20,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
                               ),
@@ -937,10 +950,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     fontFamily:
                                                                         'SF',
                                                                     fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w800,
+                                                                        14,
                                                                   ),
                                                                   overflow:
                                                                       TextOverflow
@@ -948,7 +958,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 ),
                                                               ),
                                                               SizedBox(
-                                                                  height: 5.0),
+                                                                  height: 3.0),
                                                               currency != null
                                                                   ? Container(
                                                                       child:
@@ -1030,5 +1040,118 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ])));
         })));
+  }
+}
+
+class UserSearchDelegate extends SearchDelegate {
+  final String country;
+
+  UserSearchDelegate(this.country);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return <Widget>[
+      IconButton(
+        tooltip: 'Clear',
+        icon: const Icon((Icons.clear)),
+        onPressed: () {
+          query = '';
+          showSuggestions(context);
+        },
+      )
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    return IconButton(
+      icon: AnimatedIcon(
+          icon: AnimatedIcons.menu_arrow, progress: transitionAnimation),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return StreamBuilder<List>(
+        stream: getItemsSearch(query).asStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            print(snapshot.data.length);
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Icon(Icons.restore),
+                  title: Text(snapshot.data[index]),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            Search(text: snapshot.data[index])),
+                  ),
+                );
+              },
+            );
+          } else {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Loading'),
+                SpinKitChasingDots(
+                  color: Colors.deepOrange,
+                )
+              ],
+            );
+          }
+        });
+  }
+
+  Future<List> getItemsSearch(String text) async {
+    var url = 'https://sellship.co/api/searchresults/' + country + '/' + text;
+
+    final response = await http.get(url);
+
+    List responseJson = json.decode(response.body.toString());
+    return responseJson;
+  }
+
+  List<String> itemsresult = const [];
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return FutureBuilder<List>(
+        future: getItemsSearch(query),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            print(snapshot.data.length);
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Icon(Icons.restore),
+                  title: Text(snapshot.data[index]),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            Search(text: snapshot.data[index])),
+                  ),
+                );
+              },
+            );
+          } else {
+            return Center(
+              child: SpinKitChasingDots(
+                color: Colors.deepOrange,
+              ),
+            );
+          }
+        });
   }
 }
