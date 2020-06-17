@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (country == null) {
       _getLocation();
     } else {
-      var url = 'https://sellship.co/api/getitems/' +
+      var url = 'https://api.sellship.co/api/getitems/' +
           locationcountry +
           '/' +
           0.toString() +
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
       skip = skip + 20;
     });
 
-    var url = 'https://sellship.co/api/recentitems/' +
+    var url = 'https://api.sellship.co/api/recentitems/' +
         country +
         '/' +
         skip.toString() +
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
-    var url = 'https://sellship.co/api/recentitems/' +
+    var url = 'https://api.sellship.co/api/recentitems/' +
         country +
         '/' +
         skip.toString() +
@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (userid != null) {
         print(token + "\n Token was recieved from firebase");
         var url =
-            'https://sellship.co/api/checktokenfcm/' + userid + '/' + token;
+            'https://api.sellship.co/api/checktokenfcm/' + userid + '/' + token;
         print(url);
         final response = await http.get(url);
         if (response.statusCode == 200) {
@@ -293,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getnotification() async {
     var userid = await storage.read(key: 'userid');
-    var url = 'https://sellship.co/api/getnotification/' + userid;
+    var url = 'https://api.sellship.co/api/getnotification/' + userid;
     print(url);
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -1113,7 +1113,8 @@ class UserSearchDelegate extends SearchDelegate {
   }
 
   Future<List> getItemsSearch(String text) async {
-    var url = 'https://sellship.co/api/searchresults/' + country + '/' + text;
+    var url =
+        'https://api.sellship.co/api/searchresults/' + country + '/' + text;
 
     final response = await http.get(url);
 

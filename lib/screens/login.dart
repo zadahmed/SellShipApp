@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage>
             });
         final profile = json.decode(graphResponse.body);
 
-        var url = 'https://sellship.co/api/signup';
+        var url = 'https://api.sellship.co/api/signup';
 
         var name = profile['name'].split(" ");
 
@@ -152,7 +152,7 @@ class _LoginPageState extends State<LoginPage>
               getProfileData();
             });
           } else {
-            var url = 'https://sellship.co/api/login';
+            var url = 'https://api.sellship.co/api/login';
 
             Map<String, String> body = {
               'email': profile['email'],
@@ -224,7 +224,7 @@ class _LoginPageState extends State<LoginPage>
     });
     if (userid != null) {
       print(token + "\n Token was recieved from firebase");
-      var url = 'https://sellship.co/api/checktokenfcm/' +
+      var url = 'https://api.sellship.co/api/checktokenfcm/' +
           userid +
           '/' +
           firebasetoken;
@@ -240,7 +240,7 @@ class _LoginPageState extends State<LoginPage>
 
   void getnotification() async {
     var userid = await storage.read(key: 'userid');
-    var url = 'https://sellship.co/api/getnotification/' + userid;
+    var url = 'https://api.sellship.co/api/getnotification/' + userid;
     print(url);
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -590,7 +590,7 @@ class _LoginPageState extends State<LoginPage>
     var image = await ImagePicker.pickImage(
         source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
 
-    var url = 'https://sellship.co/api/imageupload/' + userid;
+    var url = 'https://api.sellship.co/api/imageupload/' + userid;
     Dio dio = new Dio();
     FormData formData;
     String fileName = image.path.split('/').last;
@@ -615,7 +615,7 @@ class _LoginPageState extends State<LoginPage>
     var image = await ImagePicker.pickImage(
         source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
 
-    var url = 'https://sellship.co/api/imageupload/' + userid;
+    var url = 'https://api.sellship.co/api/imageupload/' + userid;
     Dio dio = new Dio();
     FormData formData;
     String fileName = image.path.split('/').last;
@@ -1182,7 +1182,7 @@ class _LoginPageState extends State<LoginPage>
                                                                             InkWell(
                                                                               onTap: () async {
                                                                                 if (item[index].sold == true) {
-                                                                                  var url = 'https://sellship.co/api/unsold/' + item[index].itemid + '/' + userid;
+                                                                                  var url = 'https://api.sellship.co/api/unsold/' + item[index].itemid + '/' + userid;
                                                                                   print(url);
                                                                                   final response = await http.get(url);
                                                                                   if (response.statusCode == 200) {
@@ -1191,7 +1191,7 @@ class _LoginPageState extends State<LoginPage>
                                                                                   getProfileData();
                                                                                   showInSnackBar('Item is now live!');
                                                                                 } else {
-                                                                                  var url = 'https://sellship.co/api/sold/' + item[index].itemid + '/' + userid;
+                                                                                  var url = 'https://api.sellship.co/api/sold/' + item[index].itemid + '/' + userid;
                                                                                   print(url);
                                                                                   final response = await http.get(url);
                                                                                   if (response.statusCode == 200) {
@@ -1733,7 +1733,7 @@ class _LoginPageState extends State<LoginPage>
           firebasetoken = token;
         });
       });
-      var url = 'https://sellship.co/api/user/' + userid;
+      var url = 'https://api.sellship.co/api/user/' + userid;
       print(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -1784,7 +1784,7 @@ class _LoginPageState extends State<LoginPage>
             });
           }
 
-          var itemurl = 'https://sellship.co/api/useritems/' + userid;
+          var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
           print(itemurl);
           final itemresponse = await http.get(itemurl);
           if (itemresponse.statusCode == 200) {
@@ -1838,7 +1838,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void Login() async {
-    var url = 'https://sellship.co/api/login';
+    var url = 'https://api.sellship.co/api/login';
 
     Map<String, String> body = {
       'email': loginEmailController.text,
@@ -1944,7 +1944,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void Signup() async {
-    var url = 'https://sellship.co/api/signup';
+    var url = 'https://api.sellship.co/api/signup';
 
     Map<String, String> body = {
       'first_name': signupNameController.text,
@@ -2043,7 +2043,7 @@ class _LoginPageState extends State<LoginPage>
     }
 
     if (userid != null) {
-      var url = 'https://sellship.co/api/user/' + userid;
+      var url = 'https://api.sellship.co/api/user/' + userid;
       print(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -2080,7 +2080,7 @@ class _LoginPageState extends State<LoginPage>
         }
 
         if (profilemap != null) {
-          var itemurl = 'https://sellship.co/api/useritems/' + userid;
+          var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
           print(itemurl);
           final itemresponse = await http.get(itemurl);
           if (itemresponse.statusCode == 200) {

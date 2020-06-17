@@ -41,7 +41,7 @@ class _BalanceState extends State<Balance> {
       });
     }
 
-    var url = 'https://sellship.co/api/withdrawalhistory/' + userid;
+    var url = 'https://api.sellship.co/api/withdrawalhistory/' + userid;
 
     final response = await http.get(url);
 
@@ -83,7 +83,7 @@ class _BalanceState extends State<Balance> {
         currency = '\$';
       });
     }
-    var url = 'https://sellship.co/api/getbalance/' + userid;
+    var url = 'https://api.sellship.co/api/getbalance/' + userid;
 
     final response = await http.get(url);
 
@@ -118,7 +118,7 @@ class _BalanceState extends State<Balance> {
 
   withdraw() async {
     userid = await storage.read(key: 'userid');
-    var url = 'https://sellship.co/api/withdraw/' + userid;
+    var url = 'https://api.sellship.co/api/withdraw/' + userid;
 
     final response = await http.get(url);
 
@@ -289,7 +289,7 @@ class _BalanceState extends State<Balance> {
                         )),
                     trailing: InkWell(
                       onTap: () async {
-                        var url = 'https://sellship.co/api/paypalemail/' +
+                        var url = 'https://api.sellship.co/api/paypalemail/' +
                             userid +
                             '/' +
                             paypalcontroller.text.trim().toLowerCase();

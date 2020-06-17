@@ -21,7 +21,7 @@ class _ChangeCountryState extends State<ChangeCountry> {
 
   final storage = new FlutterSecureStorage();
   fetchCountries() async {
-    var url = 'https://sellship.co/api/getcountries';
+    var url = 'https://api.sellship.co/api/getcountries';
     print(url);
     final response = await http.get(url);
     if (response.statusCode == 200) {

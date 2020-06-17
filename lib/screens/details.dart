@@ -150,7 +150,7 @@ class _DetailsState extends State<Details> {
                             var recieverid = newItem.userid;
                             if (recieverid != userid) {
                               var itemurl =
-                                  'https://sellship.co/api/createoffer/' +
+                                  'https://api.sellship.co/api/createoffer/' +
                                       userid +
                                       '/' +
                                       recieverid +
@@ -244,7 +244,7 @@ class _DetailsState extends State<Details> {
                     trailing: InkWell(
                       onTap: () async {
                         var itemurl =
-                            'https://sellship.co/api/report/' + itemid;
+                            'https://api.sellship.co/api/report/' + itemid;
                         final response = await http.get(itemurl);
                         if (response.statusCode == 200) {
                           Navigator.of(context).pop();
@@ -307,7 +307,7 @@ class _DetailsState extends State<Details> {
     userid = await storage.read(key: 'userid');
 
     if (userid != null) {
-      var url = 'https://sellship.co/api/favourites/' + userid;
+      var url = 'https://api.sellship.co/api/favourites/' + userid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
@@ -355,7 +355,7 @@ class _DetailsState extends State<Details> {
       });
     }
 
-    var url = 'https://sellship.co/api/getitem/' + itemid;
+    var url = 'https://api.sellship.co/api/getitem/' + itemid;
     final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
@@ -438,7 +438,7 @@ class _DetailsState extends State<Details> {
     userid = await storage.read(key: 'userid');
     print(userid);
     if (userid != null) {
-      var url = 'https://sellship.co/api/favourite/' + userid;
+      var url = 'https://api.sellship.co/api/favourite/' + userid;
 
       Map<String, String> body = {
         'itemid': itemid,
@@ -510,7 +510,7 @@ class _DetailsState extends State<Details> {
   Future<String> createFirstPostLink(String id) async {
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://sellship.page.link',
-      link: Uri.parse('https://sellship.co/items?id=$id'),
+      link: Uri.parse('https://api.sellship.co/items?id=$id'),
       androidParameters: AndroidParameters(
         packageName: 'com.zad.sellship',
       ),
@@ -1042,7 +1042,7 @@ class _DetailsState extends State<Details> {
                                 var recieverid = newItem.userid;
                                 if (recieverid != userid) {
                                   var itemurl =
-                                      'https://sellship.co/api/createroom/' +
+                                      'https://api.sellship.co/api/createroom/' +
                                           userid +
                                           '/' +
                                           recieverid +

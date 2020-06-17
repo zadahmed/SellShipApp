@@ -55,7 +55,7 @@ class _OrderDetailState extends State<OrderDetail> {
       });
     }
 
-    var url = 'https://sellship.co/api/transactionhistory/' + messageid;
+    var url = 'https://api.sellship.co/api/transactionhistory/' + messageid;
 
     final response = await http.get(url);
 

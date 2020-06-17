@@ -108,7 +108,7 @@ class _ChatPageViewState extends State<ChatPageView> {
     }
 
     print(itemid);
-    var url = 'https://sellship.co/api/getitem/' + itemid;
+    var url = 'https://api.sellship.co/api/getitem/' + itemid;
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
@@ -131,7 +131,7 @@ class _ChatPageViewState extends State<ChatPageView> {
   }
 
   Future<List> getRemoteMessages() async {
-    var url = 'https://sellship.co/api/getmessagesuser/' +
+    var url = 'https://api.sellship.co/api/getmessagesuser/' +
         messageid +
         '/' +
         userid +
@@ -147,7 +147,7 @@ class _ChatPageViewState extends State<ChatPageView> {
   }
 
   changeofferstate() async {
-    var url = 'https://sellship.co/api/getofferstage/' + messageid;
+    var url = 'https://api.sellship.co/api/getofferstage/' + messageid;
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -394,7 +394,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                         trailing: InkWell(
                           onTap: () async {
                             var itemurl =
-                                'https://sellship.co/api/createoffer/' +
+                                'https://api.sellship.co/api/createoffer/' +
                                     senderid +
                                     '/' +
                                     recipentid +
@@ -453,7 +453,7 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   acceptoffer() async {
     if (offerstage != null) {
-      var url = 'https://sellship.co/api/acceptoffer/' +
+      var url = 'https://api.sellship.co/api/acceptoffer/' +
           messageid +
           '/' +
           userid +
@@ -472,7 +472,7 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   canceloffer() async {
     if (offerstage != null) {
-      var url = 'https://sellship.co/api/canceloffer/' +
+      var url = 'https://api.sellship.co/api/canceloffer/' +
           messageid +
           '/' +
           userid +
@@ -864,7 +864,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                       )));
 
                                   var url =
-                                      'https://sellship.co/api/sendmessage/' +
+                                      'https://api.sellship.co/api/sendmessage/' +
                                           userid +
                                           '/' +
                                           recipentid +

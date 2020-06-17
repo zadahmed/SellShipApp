@@ -54,7 +54,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       skip = skip + 20;
     });
 
-    var url = 'https://sellship.co/api/categories/' +
+    var url = 'https://api.sellship.co/api/categories/' +
         category +
         '/' +
         subcategory +
@@ -107,7 +107,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       });
     }
 
-    var url = 'https://sellship.co/api/categories/' +
+    var url = 'https://api.sellship.co/api/categories/' +
         category +
         '/' +
         subcategory +
@@ -149,7 +149,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
-    var url = 'https://sellship.co/api/categories/recent/' +
+    var url = 'https://api.sellship.co/api/categories/recent/' +
         category +
         '/' +
         subcategory +
@@ -191,7 +191,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
-    var url = 'https://sellship.co/api/categories/belowhundred/' +
+    var url = 'https://api.sellship.co/api/categories/belowhundred/' +
         category +
         '/' +
         subcategory +
@@ -233,7 +233,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   Future<List<Item>> fetchHighestPrice(int skip, int limit) async {
-    var url = 'https://sellship.co/api/categories/highestprice/' +
+    var url = 'https://api.sellship.co/api/categories/highestprice/' +
         category +
         '/' +
         subcategory +
@@ -275,7 +275,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   Future<List<Item>> fetchbrands(String brand) async {
-    var categoryurl = 'https://sellship.co/api/filter/category/brand/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/category/brand/' +
         country +
         '/' +
         category +
@@ -313,7 +313,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   Future<List<Item>> fetchCondition(String condition) async {
-    var categoryurl = 'https://sellship.co/api/filter/category/condition/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/category/condition/' +
         country +
         '/' +
         category +
@@ -351,7 +351,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   Future<List<Item>> fetchPrice(String minprice, String maxprice) async {
-    var categoryurl = 'https://sellship.co/api/filter/category/price/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/category/price/' +
         country +
         '/' +
         category +
@@ -395,7 +395,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       limit = limit + 20;
       skip = skip + 20;
     });
-    var categoryurl = 'https://sellship.co/api/filter/category/condition/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/category/condition/' +
         country +
         '/' +
         category +
@@ -437,7 +437,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       limit = limit + 20;
       skip = skip + 20;
     });
-    var categoryurl = 'https://sellship.co/api/filter/category/price/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/category/price/' +
         country +
         '/' +
         category +
@@ -481,7 +481,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       limit = limit + 20;
       skip = skip + 20;
     });
-    var categoryurl = 'https://sellship.co/api/filter/category/brand/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/category/brand/' +
         country +
         '/' +
         category +
@@ -519,7 +519,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   Future<List<Item>> fetchLowestPrice(int skip, int limit) async {
-    var url = 'https://sellship.co/api/categories/lowestprice/' +
+    var url = 'https://api.sellship.co/api/categories/lowestprice/' +
         category +
         '/' +
         subcategory +
@@ -561,7 +561,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   loadbrands() async {
-    var categoryurl = 'https://sellship.co/api/getbrands/' + category;
+    var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
     final categoryresponse = await http.get(categoryurl);
     if (categoryresponse.statusCode == 200) {
       var categoryrespons = json.decode(categoryresponse.body);
@@ -596,7 +596,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       skip = skip + 20;
     });
 
-    var url = 'https://sellship.co/api/categories/highestprice/' +
+    var url = 'https://api.sellship.co/api/categories/highestprice/' +
         category +
         '/' +
         subcategory +
@@ -637,7 +637,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       skip = skip + 20;
     });
 
-    var url = 'https://sellship.co/api/categories/lowestprice/' +
+    var url = 'https://api.sellship.co/api/categories/lowestprice/' +
         category +
         '/' +
         subcategory +
@@ -678,7 +678,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       skip = skip + 20;
     });
 
-    var url = 'https://sellship.co/api/categories/belowhundred/' +
+    var url = 'https://api.sellship.co/api/categories/belowhundred/' +
         category +
         '/' +
         subcategory +
@@ -719,7 +719,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       skip = skip + 20;
     });
 
-    var url = 'https://sellship.co/api/categories/recent/' +
+    var url = 'https://api.sellship.co/api/categories/recent/' +
         category +
         '/' +
         subcategory +

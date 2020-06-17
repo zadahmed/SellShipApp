@@ -914,7 +914,7 @@ class _AddItemState extends State<AddItem> {
                                               if (_selectedCategory ==
                                                   'Electronics') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -963,7 +963,7 @@ class _AddItemState extends State<AddItem> {
                                               } else if (_selectedCategory ==
                                                   'Fashion & Accessories') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -1007,7 +1007,7 @@ class _AddItemState extends State<AddItem> {
                                               } else if (_selectedCategory ==
                                                   'Beauty') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -1055,7 +1055,7 @@ class _AddItemState extends State<AddItem> {
                                               } else if (_selectedCategory ==
                                                   'Home & Garden') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -1103,7 +1103,7 @@ class _AddItemState extends State<AddItem> {
                                               } else if (_selectedCategory ==
                                                   'Baby & Child') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -1148,7 +1148,7 @@ class _AddItemState extends State<AddItem> {
                                               } else if (_selectedCategory ==
                                                   'Sport & Leisure') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -1197,7 +1197,7 @@ class _AddItemState extends State<AddItem> {
                                               } else if (_selectedCategory ==
                                                   'Books') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -1252,7 +1252,7 @@ class _AddItemState extends State<AddItem> {
                                               } else if (_selectedCategory ==
                                                   'Motors') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -1298,7 +1298,7 @@ class _AddItemState extends State<AddItem> {
                                               } else if (_selectedCategory ==
                                                   'Property') {
                                                 var categoryurl =
-                                                    'https://sellship.co/api/getbrands/' +
+                                                    'https://api.sellship.co/api/getbrands/' +
                                                         _selectedCategory;
                                                 final categoryresponse =
                                                     await http.get(categoryurl);
@@ -2531,7 +2531,7 @@ class _AddItemState extends State<AddItem> {
         bottomNavigationBar: userid != null
             ? InkWell(
                 onTap: () async {
-                  var userurl = 'https://sellship.co/api/user/' + userid;
+                  var userurl = 'https://api.sellship.co/api/user/' + userid;
                   final userresponse = await http.get(userurl);
                   if (userresponse.statusCode == 200) {
                     var userrespons = json.decode(userresponse.body);
@@ -2582,7 +2582,7 @@ class _AddItemState extends State<AddItem> {
                           );
                         });
 
-                    var url = 'https://sellship.co/api/additem';
+                    var url = 'https://api.sellship.co/api/additem';
 
                     Dio dio = new Dio();
                     FormData formData;

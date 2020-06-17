@@ -32,7 +32,7 @@ class EditProfileState extends State<EditProfile>
     userid = await storage.read(key: 'userid');
     print(userid);
     if (userid != null) {
-      var url = 'https://sellship.co/api/user/' + userid;
+      var url = 'https://api.sellship.co/api/user/' + userid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);
@@ -323,7 +323,7 @@ class EditProfileState extends State<EditProfile>
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () async {
-                  var url = 'https://sellship.co/api/updateuser/' + userid;
+                  var url = 'https://api.sellship.co/api/updateuser/' + userid;
 
                   Map<String, String> body = {
                     'first_name': firstnamecontr.text,

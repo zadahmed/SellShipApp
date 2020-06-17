@@ -39,7 +39,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
     }
     print(userid);
     if (userid != null) {
-      var url = 'https://sellship.co/api/favourites/' + userid;
+      var url = 'https://api.sellship.co/api/favourites/' + userid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {

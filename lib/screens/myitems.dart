@@ -332,7 +332,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                           () async {
                                                                         if (item[index].sold ==
                                                                             true) {
-                                                                          var url = 'https://sellship.co/api/unsold/' +
+                                                                          var url = 'https://api.sellship.co/api/unsold/' +
                                                                               item[index].itemid +
                                                                               '/' +
                                                                               userid;
@@ -348,7 +348,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                           showInSnackBar(
                                                                               'Item is now live!');
                                                                         } else {
-                                                                          var url = 'https://sellship.co/api/sold/' +
+                                                                          var url = 'https://api.sellship.co/api/sold/' +
                                                                               item[index].itemid +
                                                                               '/' +
                                                                               userid;
@@ -515,7 +515,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
     }
 
     if (userid != null) {
-      var url = 'https://sellship.co/api/user/' + userid;
+      var url = 'https://api.sellship.co/api/user/' + userid;
       print(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -552,7 +552,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
         }
 
         if (profilemap != null) {
-          var itemurl = 'https://sellship.co/api/useritems/' + userid;
+          var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
           print(itemurl);
           final itemresponse = await http.get(itemurl);
           if (itemresponse.statusCode == 200) {

@@ -62,7 +62,7 @@ class _NearMeState extends State<NearMe> {
 
   Future<List<Item>> fetchItems(int skip, int limit) async {
     print(country);
-    var url = 'https://sellship.co/api/getitems/' +
+    var url = 'https://api.sellship.co/api/getitems/' +
         country +
         '/' +
         skip.toString() +
@@ -100,7 +100,7 @@ class _NearMeState extends State<NearMe> {
     if (country == null) {
       _getLocation();
     } else {
-      var url = 'https://sellship.co/api/recentitems/' +
+      var url = 'https://api.sellship.co/api/recentitems/' +
           country +
           '/' +
           skip.toString() +
@@ -137,7 +137,7 @@ class _NearMeState extends State<NearMe> {
     if (country == null) {
       _getLocation();
     } else {
-      var url = 'https://sellship.co/api/belowhundred/' +
+      var url = 'https://api.sellship.co/api/belowhundred/' +
           country +
           '/' +
           skip.toString() +
@@ -171,7 +171,7 @@ class _NearMeState extends State<NearMe> {
     if (country == null) {
       _getLocation();
     } else {
-      var url = 'https://sellship.co/api/highestprice/' +
+      var url = 'https://api.sellship.co/api/highestprice/' +
           country +
           '/' +
           skip.toString() +
@@ -205,7 +205,7 @@ class _NearMeState extends State<NearMe> {
     if (country == null) {
       _getLocation();
     } else {
-      var url = 'https://sellship.co/api/lowestprice/' +
+      var url = 'https://api.sellship.co/api/lowestprice/' +
           country +
           '/' +
           skip.toString() +
@@ -237,7 +237,7 @@ class _NearMeState extends State<NearMe> {
   }
 
   Future<List<Item>> fetchbrands(String brand) async {
-    var categoryurl = 'https://sellship.co/api/filter/brand/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/brand/' +
         country +
         '/' +
         brand +
@@ -273,7 +273,7 @@ class _NearMeState extends State<NearMe> {
   }
 
   Future<List<Item>> fetchCondition(String condition) async {
-    var categoryurl = 'https://sellship.co/api/filter/condition/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/condition/' +
         country +
         '/' +
         condition +
@@ -309,7 +309,7 @@ class _NearMeState extends State<NearMe> {
   }
 
   Future<List<Item>> fetchPrice(String minprice, String maxprice) async {
-    var categoryurl = 'https://sellship.co/api/filter/price/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/price/' +
         country +
         '/' +
         minprice +
@@ -351,7 +351,7 @@ class _NearMeState extends State<NearMe> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var categoryurl = 'https://sellship.co/api/filter/condition/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/condition/' +
         country +
         '/' +
         condition +
@@ -391,7 +391,7 @@ class _NearMeState extends State<NearMe> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var categoryurl = 'https://sellship.co/api/filter/price/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/price/' +
         country +
         '/' +
         minprice +
@@ -433,7 +433,7 @@ class _NearMeState extends State<NearMe> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var categoryurl = 'https://sellship.co/api/filter/brand/' +
+    var categoryurl = 'https://api.sellship.co/api/filter/brand/' +
         country +
         '/' +
         brand +
@@ -473,7 +473,7 @@ class _NearMeState extends State<NearMe> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var url = 'https://sellship.co/api/highestprice/' +
+    var url = 'https://api.sellship.co/api/highestprice/' +
         country +
         '/' +
         skip.toString() +
@@ -505,7 +505,7 @@ class _NearMeState extends State<NearMe> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var url = 'https://sellship.co/api/lowestprice/' +
+    var url = 'https://api.sellship.co/api/lowestprice/' +
         country +
         '/' +
         skip.toString() +
@@ -537,7 +537,7 @@ class _NearMeState extends State<NearMe> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var url = 'https://sellship.co/api/belowhundred/' +
+    var url = 'https://api.sellship.co/api/belowhundred/' +
         country +
         '/' +
         skip.toString() +
@@ -573,7 +573,7 @@ class _NearMeState extends State<NearMe> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var url = 'https://sellship.co/api/recentitems/' +
+    var url = 'https://api.sellship.co/api/recentitems/' +
         country +
         '/' +
         skip.toString() +
@@ -653,7 +653,7 @@ class _NearMeState extends State<NearMe> {
       limit = limit + 10;
       skip = skip + 10;
     });
-    var url = 'https://sellship.co/api/getitems/' +
+    var url = 'https://api.sellship.co/api/getitems/' +
         country +
         '/' +
         skip.toString() +
@@ -735,7 +735,7 @@ class _NearMeState extends State<NearMe> {
   }
 
   loadbrands() async {
-    var categoryurl = 'https://sellship.co/api/getallbrands';
+    var categoryurl = 'https://api.sellship.co/api/getallbrands';
     final categoryresponse = await http.get(categoryurl);
     if (categoryresponse.statusCode == 200) {
       var categoryrespons = json.decode(categoryresponse.body);

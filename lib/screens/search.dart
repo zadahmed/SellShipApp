@@ -73,7 +73,7 @@ class _SearchState extends State<Search> {
       limit = limit + 20;
       skip = skip + 20;
     });
-    var url = 'https://sellship.co/api/searchitems/' +
+    var url = 'https://api.sellship.co/api/searchitems/' +
         country +
         '/' +
         text.toString().toLowerCase().trim() +
@@ -135,7 +135,7 @@ class _SearchState extends State<Search> {
   TextEditingController searchcontroller = new TextEditingController();
 
   onSearch() async {
-    var url = 'https://sellship.co/api/searchitems/' +
+    var url = 'https://api.sellship.co/api/searchitems/' +
         country +
         '/' +
         text.toString().toLowerCase().trim() +

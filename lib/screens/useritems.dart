@@ -80,7 +80,7 @@ class _UserItemsState extends State<UserItems> {
     }
     print(userid);
     if (userid != null) {
-      var url = 'https://sellship.co/api/user/' + userid;
+      var url = 'https://api.sellship.co/api/user/' + userid;
       print(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -88,7 +88,7 @@ class _UserItemsState extends State<UserItems> {
         Map<String, dynamic> profilemap = respons;
         print(profilemap);
 
-        var itemurl = 'https://sellship.co/api/useritems/' + userid;
+        var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
         print(itemurl);
         final itemresponse = await http.get(itemurl);
         if (itemresponse.statusCode == 200) {
@@ -324,7 +324,7 @@ class _UserItemsState extends State<UserItems> {
                                     var user1 =
                                         await storage.read(key: 'userid');
                                     var followurl =
-                                        'https://sellship.co/api/follow/' +
+                                        'https://api.sellship.co/api/follow/' +
                                             user1 +
                                             '/' +
                                             userid;
@@ -342,7 +342,7 @@ class _UserItemsState extends State<UserItems> {
                                     var user1 =
                                         await storage.read(key: 'userid');
                                     var followurl =
-                                        'https://sellship.co/api/follow/' +
+                                        'https://api.sellship.co/api/follow/' +
                                             user1 +
                                             '/' +
                                             userid;

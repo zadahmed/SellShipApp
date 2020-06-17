@@ -57,7 +57,7 @@ class EditItemState extends State<EditItem>
   File image;
 
   void getProfileData() async {
-    var url = 'https://sellship.co/api/getitem/' + itemid;
+    var url = 'https://api.sellship.co/api/getitem/' + itemid;
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var respons = json.decode(response.body);
@@ -365,7 +365,7 @@ class EditItemState extends State<EditItem>
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () async {
-                  var url = 'https://sellship.co/api/updateitem/' + itemid;
+                  var url = 'https://api.sellship.co/api/updateitem/' + itemid;
 
                   Dio dio = new Dio();
                   var response;
@@ -447,7 +447,7 @@ class EditItemState extends State<EditItem>
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () async {
-                  var url = 'https://sellship.co/api/deleteitem/' +
+                  var url = 'https://api.sellship.co/api/deleteitem/' +
                       itemid +
                       "/" +
                       userid;

@@ -132,7 +132,7 @@ class _CheckoutState extends State<Checkout> {
                         card: stripeCard);
                     await dialog.hide();
                     if (response.success == true) {
-                      var messageurl = 'https://sellship.co/api/payment/' +
+                      var messageurl = 'https://api.sellship.co/api/payment/' +
                           messageid +
                           '/' +
                           item.itemid +

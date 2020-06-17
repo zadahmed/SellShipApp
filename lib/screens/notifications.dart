@@ -41,7 +41,7 @@ class _NotifcationPageState extends State<NotifcationPage> {
   refreshnotification() async {
     userid = await storage.read(key: 'userid');
     if (userid != null) {
-      var messageurl = 'https://sellship.co/api/getnotifications/' + userid;
+      var messageurl = 'https://api.sellship.co/api/getnotifications/' + userid;
       final response = await http.get(messageurl);
 
       if (response.statusCode == 200) {
@@ -114,7 +114,7 @@ class _NotifcationPageState extends State<NotifcationPage> {
                 userid = await storage.read(key: 'userid');
                 if (userid != null) {
                   var messageurl =
-                      'https://sellship.co/api/getnotifications/' + userid;
+                      'https://api.sellship.co/api/getnotifications/' + userid;
                   final response = await http.get(messageurl);
 
                   if (response.statusCode == 200) {

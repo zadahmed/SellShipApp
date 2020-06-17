@@ -31,7 +31,7 @@ class MessagesState extends State<Messages> {
     userid = await storage.read(key: 'userid');
 
     var messageurl =
-        'https://sellship.co/api/messagedetail/' + userid.toString();
+        'https://api.sellship.co/api/messagedetail/' + userid.toString();
     final responsemessage = await http.get(messageurl);
 
     var messageinfo = json.decode(responsemessage.body);
