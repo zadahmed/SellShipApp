@@ -290,6 +290,11 @@ class _SettingsState extends State<Settings> {
                         setState(() {
                           userid = null;
                         });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RootScreen(index: 2)),
+                        );
                       },
                     ))
                 : Container()

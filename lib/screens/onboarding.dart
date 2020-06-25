@@ -1,8 +1,9 @@
-import 'package:SellShip/screens/starterscreen.dart';
+import 'package:SellShip/controllers/FadeAnimations.dart';
+import 'package:SellShip/screens/loginpage.dart';
+import 'package:SellShip/screens/signuppage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -10,7 +11,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final int _numPages = 3;
+  final int _numPages = 2;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
 
@@ -40,20 +41,51 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget OnBoarding(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: Container(
-          decoration: BoxDecoration(color: Colors.white),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 30.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Container(
+          height: 30,
+          width: 125,
+          child: Image.asset(
+            'assets/logotransparent.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        actions: <Widget>[
+          MaterialButton(
+            color: Colors.white,
+            elevation: 0,
+            child: Text('Skip',
+                style: TextStyle(
+                    fontFamily: 'SF',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrange)),
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setBool('seen', true);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RootScreen()));
+            },
+          )
+        ],
+      ),
+      body: Container(
+        color: Colors.white,
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            FadeAnimation(
+                1,
                 Container(
-                  height: 540.0,
+                  height: MediaQuery.of(context).size.height / 2,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
                     controller: _pageController,
@@ -63,163 +95,132 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       });
                     },
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(40.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Center(
-                              child: Image(
-                                image: AssetImage(
-                                  'assets/onboard1.png',
-                                ),
-                                height: 300.0,
-                                width: 300.0,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Center(
+                            child: Image(
+                              image: AssetImage(
+                                'assets/onboard1.png',
                               ),
+                              fit: BoxFit.cover,
+                              height: MediaQuery.of(context).size.height / 3,
+                              width: 300.0,
                             ),
-                            SizedBox(height: 30.0),
-                            Text(
-                                'Buying something? Find the best items near you in less than a minute!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.deepOrange)),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Text(
+                              'Buying something? Find the best items near you in less than a minute!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.deepOrange)),
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(40.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Center(
-                              child: Image(
-                                image: AssetImage(
-                                  'assets/onboard2.png',
-                                ),
-                                height: 300.0,
-                                width: 300.0,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Center(
+                            child: Image(
+                              image: AssetImage(
+                                'assets/onboard2.png',
                               ),
+                              fit: BoxFit.cover,
+                              height: MediaQuery.of(context).size.height / 3,
+                              width: 300.0,
                             ),
-                            SizedBox(height: 30.0),
-                            Text(
-                                'Selling Something ? List your item on SellShip within seconds!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.deepOrange)),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(40.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Center(
-                              child: Image(
-                                image: AssetImage(
-                                  'assets/logotransparent.png',
-                                ),
-                                height: 300.0,
-                                width: 300.0,
-                              ),
-                            ),
-                            SizedBox(height: 30.0),
-                            Text(
-                                'Experience a new way of friendship through selling!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.deepOrange)),
-                          ],
-                        ),
+                          ),
+                          SizedBox(height: 20.0),
+                          Text(
+                              'Selling Something ? List your item on SellShip within seconds!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontFamily: 'SF',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.deepOrange)),
+                        ],
                       ),
                     ],
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: _buildPageIndicator(),
-                ),
-                _currentPage != _numPages - 1
-                    ? Expanded(
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: FlatButton(
-                            onPressed: () {
-                              _pageController.nextPage(
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.ease,
-                              );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                Text(
-                                  'Next',
-                                  style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.deepOrange,
-                                    fontSize: 22.0,
-                                  ),
-                                ),
-                                SizedBox(width: 10.0),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.deepOrange,
-                                  size: 30.0,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : Text(''),
-              ],
+                )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _buildPageIndicator(),
             ),
-          ),
+            Column(
+              children: <Widget>[
+                FadeAnimation(
+                    1.5,
+                    MaterialButton(
+                      minWidth: double.infinity,
+                      height: 60,
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        prefs.setBool('seen', true);
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Login()));
+                      },
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.circular(50)),
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 16),
+                      ),
+                    )),
+                SizedBox(
+                  height: 15,
+                ),
+                FadeAnimation(
+                    1.6,
+                    Container(
+                      padding: EdgeInsets.only(top: 3, left: 3),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border(
+                            bottom: BorderSide(color: Colors.black),
+                            top: BorderSide(color: Colors.black),
+                            left: BorderSide(color: Colors.black),
+                            right: BorderSide(color: Colors.black),
+                          )),
+                      child: MaterialButton(
+                        minWidth: double.infinity,
+                        height: 60,
+                        onPressed: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.setBool('seen', true);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUpPage()));
+                        },
+                        color: Colors.deepOrangeAccent,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50)),
+                        child: Text(
+                          "Sign up",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 16),
+                        ),
+                      ),
+                    ))
+              ],
+            )
+          ],
         ),
       ),
-      bottomSheet: _currentPage == _numPages - 1
-          ? Container(
-              height: 80.0,
-              width: double.infinity,
-              color: Colors.deepOrange,
-              child: GestureDetector(
-                onTap: () async {
-//                  await storage.write(key: 'firsttime', value: 'true');
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StarterPage()),
-                  );
-                },
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 30.0),
-                    child: Text(
-                      'Get started',
-                      style: TextStyle(
-                        fontFamily: 'SF',
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-          : Text(''),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return OnBoarding(context);
   }
 }

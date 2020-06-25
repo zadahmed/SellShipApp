@@ -30,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/search.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -175,6 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   LatLng position;
+  bool loading;
 //  String city;
 
   final storage = new FlutterSecureStorage();
@@ -186,6 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       skip = 0;
       limit = 20;
+      loading = true;
       notifbadge = false;
       notbadge = false;
     });
@@ -1012,26 +1015,78 @@ class _HomeScreenState extends State<HomeScreen> {
                                       },
                                     )))
                             : Container(
-                                height: MediaQuery.of(context).size.height,
-                                width: MediaQuery.of(context).size.width,
-                                child: Column(
-                                  children: <Widget>[
-                                    Center(
-                                      child: Text(
-                                          'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: 'SF',
-                                            fontSize: 16,
-                                          )),
-                                    ),
-                                    Expanded(
-                                        child: Image.asset(
-                                      'assets/little_theologians_4x.png',
-                                      fit: BoxFit.fitWidth,
-                                    ))
-                                  ],
-                                )),
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 16.0),
+                                child: Shimmer.fromColors(
+                                  baseColor: Colors.grey[300],
+                                  highlightColor: Colors.grey[100],
+                                  child: Column(
+                                    children: [0, 1, 2, 3, 4, 5, 6]
+                                        .map((_) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: 48.0,
+                                                    height: 48.0,
+                                                    color: Colors.white,
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 8.0),
+                                                  ),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 8.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical:
+                                                                      2.0),
+                                                        ),
+                                                        Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 8.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical:
+                                                                      2.0),
+                                                        ),
+                                                        Container(
+                                                          width: 40.0,
+                                                          height: 8.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
                         SizedBox(
                           height: 5,
                         ),
@@ -1098,16 +1153,7 @@ class UserSearchDelegate extends SearchDelegate {
               },
             );
           } else {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Loading'),
-                SpinKitChasingDots(
-                  color: Colors.deepOrange,
-                )
-              ],
-            );
+            return Container();
           }
         });
   }
@@ -1147,11 +1193,7 @@ class UserSearchDelegate extends SearchDelegate {
               },
             );
           } else {
-            return Center(
-              child: SpinKitChasingDots(
-                color: Colors.deepOrange,
-              ),
-            );
+            return Container();
           }
         });
   }

@@ -57,9 +57,11 @@ dependencies:
   flutter_credit_card: 0.1.3
   progress_dialog: 1.2.2
   flutter_email_sender: 3.0.1
+  simple_animations: 2.2.1
   app_review: 1.1.2
   badges: 1.1.1
   flutter_app_badger: 1.1.2
+  flutter_signin_button: ^1.0.0
   locally: 0.2.6+9
   timeago: 2.0.26
   jiffy: 3.0.1

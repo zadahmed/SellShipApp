@@ -185,7 +185,39 @@ class _DetailsState extends State<Details> {
                                 ),
                               );
                             } else {
-                              print('Same User');
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AssetGiffyDialog(
+                                        image: Image.asset(
+                                          'assets/oops.gif',
+                                          fit: BoxFit.cover,
+                                        ),
+                                        title: Text(
+                                          'Oops!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 22.0,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        description: Text(
+                                          'You can\'t send a message to yourself!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(),
+                                        ),
+                                        onlyOkButton: true,
+                                        entryAnimation: EntryAnimation.DEFAULT,
+                                        onOkButtonPressed: () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop('dialog');
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RootScreen(index: 2)),
+                                          );
+                                        },
+                                      ));
                             }
                           },
                           child: Container(

@@ -99,7 +99,7 @@ class SplashState extends State<Splash> {
   void initState() {
     super.initState();
 
-    new Timer(new Duration(milliseconds: 200), () {
+    new Timer(new Duration(milliseconds: 10), () {
       if (mounted) {
         handleDynamicLinks();
         navigatetoscreen();
@@ -113,7 +113,7 @@ class SplashState extends State<Splash> {
     return new Scaffold(
       body: new Center(
         child: new Container(
-            color: Colors.deepOrange,
+            color: Color.fromRGBO(255, 140, 0, 0),
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Column(

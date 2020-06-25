@@ -61,11 +61,21 @@ class MessagesState extends State<Messages> {
           offerstage = null;
         }
 
-        if (messageinfo[i]['unread1'] == true) {
-          unread = true;
-        } else if (messageinfo[i]['unread2'] == true) {
-          unread = true;
+        if (messageinfo[i]['lastid'] != null) {
+          var lastid = messageinfo[i]['lastid'];
+
+          if (messageinfo[i]['unread'] == true) {
+            if (lastid == userid) {
+              unread = false;
+            } else {
+              unread = true;
+            }
+          } else {
+            unread = false;
+          }
         }
+        print('ssss');
+        print(unread);
 
         if (messageinfo[i]['msgcount'] != null) {
           msgcount = messageinfo[i]['msgcount'];
@@ -129,10 +139,10 @@ class MessagesState extends State<Messages> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.deepOrange,
+          backgroundColor: Colors.white,
           elevation: 0,
           iconTheme: IconThemeData(
-            color: Colors.white,
+            color: Colors.deepOrange,
           ),
           centerTitle: true,
           title: Text(
@@ -140,7 +150,7 @@ class MessagesState extends State<Messages> {
             style: TextStyle(
                 fontFamily: 'SF',
                 fontSize: 16,
-                color: Colors.white,
+                color: Colors.deepOrange,
                 fontWeight: FontWeight.w800),
           ),
         ),
@@ -274,15 +284,29 @@ class MessagesState extends State<Messages> {
                                                           Radius.circular(23.0),
                                                         )),
                                                     child: Center(
-                                                        child: Text(
-                                                      messagesd[index]
-                                                          .msgcount
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontSize: 8,
-                                                          fontFamily: 'SF',
-                                                          color: Colors.white),
-                                                    )),
+                                                        child: messagesd[index]
+                                                                    .msgcount !=
+                                                                null
+                                                            ? Text(
+                                                                messagesd[index]
+                                                                    .msgcount
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    fontSize: 8,
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    color: Colors
+                                                                        .white),
+                                                              )
+                                                            : Text(
+                                                                '0',
+                                                                style: TextStyle(
+                                                                    fontSize: 8,
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    color: Colors
+                                                                        .white),
+                                                              )),
                                                   )
                                                 : SizedBox()
                                           ],
