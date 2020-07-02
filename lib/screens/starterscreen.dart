@@ -1,3 +1,4 @@
+import 'package:SellShip/screens/onboarding.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -78,7 +79,7 @@ class _StarterPageState extends State<StarterPage>
                             .whenComplete(() => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => RootScreen()),
+                                      builder: (context) => OnboardingScreen()),
                                 ));
                       },
                       child: Container(
@@ -114,7 +115,7 @@ class _StarterPageState extends State<StarterPage>
                             .whenComplete(() => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => RootScreen()),
+                                      builder: (context) => OnboardingScreen()),
                                 ));
                       },
                       child: Container(

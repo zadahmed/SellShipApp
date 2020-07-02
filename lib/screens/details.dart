@@ -185,6 +185,7 @@ class _DetailsState extends State<Details> {
                                 ),
                               );
                             } else {
+                              Navigator.of(context).pop();
                               showDialog(
                                   context: context,
                                   builder: (_) => AssetGiffyDialog(

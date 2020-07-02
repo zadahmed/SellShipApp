@@ -640,9 +640,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     itemCount: nearmeitemsgrid.length,
                                     shrinkWrap: true,
                                     itemBuilder: (ctx, i) {
-                                      return Row(
-                                        children: <Widget>[
-                                          Padding(
+                                      return Container(
+                                          width: 160,
+                                          child: Padding(
                                               padding: EdgeInsets.all(10),
                                               child: InkWell(
                                                   onTap: () {
@@ -758,9 +758,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             ))
                                                       ],
                                                     ),
-                                                  ))),
-                                        ],
-                                      );
+                                                  ))));
                                     }))
                             : Container(),
                         SizedBox(
@@ -1031,55 +1029,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
-                                                    width: 48.0,
-                                                    height: 48.0,
-                                                    color: Colors.white,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                    .size
+                                                                    .width /
+                                                                2 -
+                                                            30,
+                                                    height: 150.0,
                                                   ),
                                                   Padding(
                                                     padding: const EdgeInsets
                                                             .symmetric(
                                                         horizontal: 8.0),
                                                   ),
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Container(
-                                                          width:
-                                                              double.infinity,
-                                                          height: 8.0,
-                                                          color: Colors.white,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical:
-                                                                      2.0),
-                                                        ),
-                                                        Container(
-                                                          width:
-                                                              double.infinity,
-                                                          height: 8.0,
-                                                          color: Colors.white,
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  vertical:
-                                                                      2.0),
-                                                        ),
-                                                        Container(
-                                                          width: 40.0,
-                                                          height: 8.0,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ],
+                                                  Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                    .size
+                                                                    .width /
+                                                                2 -
+                                                            30,
+                                                    height: 150.0,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                     ),
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ))

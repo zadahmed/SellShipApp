@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:SellShip/screens/rootscreen.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -31,7 +32,10 @@ class _ChangeCountryState extends State<ChangeCountry> {
           ListTile(
             onTap: () async {
               await storage.write(key: 'country', value: s[i]);
-              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RootScreen(index: 0)),
+              );
             },
             title: Text(s[i]),
           ),

@@ -13,12 +13,8 @@ import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:SellShip/screens/rootscreen.dart';
-import 'package:location/location.dart';
-import 'package:search_map_place/search_map_place.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:intl/intl.dart';
 
 class NotifcationPage extends StatefulWidget {
   NotifcationPage({Key key}) : super(key: key);
@@ -26,8 +22,20 @@ class NotifcationPage extends StatefulWidget {
   _NotifcationPageState createState() => _NotifcationPageState();
 }
 
+class Notifications {
+  final String message;
+  final String date;
+  final bool unread;
+
+  Notifications({
+    this.message,
+    this.date,
+    this.unread,
+  });
+}
+
 class _NotifcationPageState extends State<NotifcationPage> {
-  List<dynamic> notifs = List<String>();
+  List<Notifications> notifs = List<Notifications>();
 
   final storage = new FlutterSecureStorage();
   var userid;
@@ -38,6 +46,8 @@ class _NotifcationPageState extends State<NotifcationPage> {
     refreshnotification();
   }
 
+  List<Notifications> notificationlist = List<Notifications>();
+
   refreshnotification() async {
     userid = await storage.read(key: 'userid');
     if (userid != null) {
@@ -47,12 +57,76 @@ class _NotifcationPageState extends State<NotifcationPage> {
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
 
+        print(jsonResponse);
+
+        for (int i = 0; i < jsonResponse.length; i++) {
+          var date = jsonResponse[i]['date']['\$date'];
+          DateTime dates = new DateTime.fromMillisecondsSinceEpoch(date);
+          final f = new DateFormat('dd-MM-yyyy hh:mm');
+          var s = f.format(dates);
+
+          Notifications withd = Notifications(
+            message: jsonResponse[i]['message'],
+            date: s.toString(),
+            unread: jsonResponse[i]['unread'],
+          );
+          notificationlist.add(withd);
+        }
+
+        Iterable inReverse = notificationlist.reversed;
+        List<Notifications> jsoninreverse = inReverse.toList();
+
         setState(() {
-          notifs = jsonResponse;
+          notifs = jsoninreverse;
         });
       }
     } else {
-      notifs = [];
+      setState(() {
+        notifs = [];
+      });
+    }
+    return notifs;
+  }
+
+  refresh() async {
+    notifs.clear();
+    notificationlist.clear();
+    userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      var messageurl =
+          'https://api.sellship.co/api/getnotificationsrefresh/' + userid;
+      final response = await http.get(messageurl);
+
+      if (response.statusCode == 200) {
+        List jsonResponse = json.decode(response.body);
+
+        for (int i = 0; i < jsonResponse.length; i++) {
+          var date = jsonResponse[i]['date']['\$date'];
+          DateTime dates = new DateTime.fromMillisecondsSinceEpoch(date);
+          final f = new DateFormat('yyyy-MM-dd hh:mm');
+          var s = f.format(dates);
+
+          Notifications withd = Notifications(
+            message: jsonResponse[i]['message'],
+            date: s.toString(),
+            unread: jsonResponse[i]['unread'],
+          );
+          notificationlist.add(withd);
+        }
+
+        Iterable inReverse = notificationlist.reversed;
+        List<Notifications> jsoninreverse = inReverse.toList();
+
+        notifs.clear();
+
+        setState(() {
+          notifs = jsoninreverse;
+        });
+      }
+    } else {
+      setState(() {
+        notifs = [];
+      });
     }
     return notifs;
   }
@@ -65,7 +139,10 @@ class _NotifcationPageState extends State<NotifcationPage> {
         backgroundColor: Colors.white,
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => RootScreen(index: 0)),
+            );
           },
           child: Icon(
             Icons.arrow_back_ios,
@@ -87,45 +164,57 @@ class _NotifcationPageState extends State<NotifcationPage> {
                         child: Padding(
                             padding: EdgeInsets.all(5),
                             child: ListTile(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Messages()),
-                                  );
-                                },
-                                leading: Icon(
-                                  FontAwesome5.smile_beam,
-                                  color: Colors.deepOrange,
-                                ),
-                                trailing: Icon(
-                                  Feather.arrow_right,
-                                  color: Colors.deepOrange,
-                                ),
-                                title: Text(
-                                  notifs[index].toString(),
-                                  style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 14,
-                                  ),
-                                ))));
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Messages()),
+                                );
+                              },
+                              leading: Icon(
+                                FontAwesome5.smile_beam,
+                                color: Colors.deepOrange,
+                              ),
+                              trailing: Icon(
+                                Feather.arrow_right,
+                                color: Colors.deepOrange,
+                              ),
+                              title: notifs[index].unread == false
+                                  ? Text(
+                                      notifs[index].message,
+                                      style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 14,
+                                      ),
+                                    )
+                                  : Text(
+                                      notifs[index].message,
+                                      style: TextStyle(
+                                          fontFamily: 'SF',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                              subtitle: Padding(
+                                  padding: EdgeInsets.only(top: 5),
+                                  child: notifs[index].unread == false
+                                      ? Text(
+                                          notifs[index].date,
+                                          style: TextStyle(
+                                            fontFamily: 'SF',
+                                            fontSize: 10,
+                                          ),
+                                        )
+                                      : Text(
+                                          notifs[index].date,
+                                          style: TextStyle(
+                                              fontFamily: 'SF',
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold),
+                                        )),
+                            )));
                   }),
               onRefresh: () async {
-                userid = await storage.read(key: 'userid');
-                if (userid != null) {
-                  var messageurl =
-                      'https://api.sellship.co/api/getnotifications/' + userid;
-                  final response = await http.get(messageurl);
-
-                  if (response.statusCode == 200) {
-                    List jsonResponse = json.decode(response.body);
-
-                    notifs = jsonResponse;
-                  }
-                } else {
-                  notifs = [];
-                }
-                return notifs;
+                refresh();
               },
             )
           : Column(
@@ -151,40 +240,6 @@ class _NotifcationPageState extends State<NotifcationPage> {
                 ))
               ],
             ),
-
-//      RefreshIndicator(
-//        onRefresh: refreshnotfication,
-//        child: ListView.builder(
-//            itemCount: notifs.length,
-//            itemBuilder: (BuildContext ctxt, int index) {
-//              return new Card(
-//                  child: Padding(
-//                      padding: EdgeInsets.all(5),
-//                      child: ListTile(
-//                          onTap: () {
-//                            Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                  builder: (context) => Messages()),
-//                            );
-//                          },
-//                          leading: Icon(
-//                            FontAwesome5.smile_beam,
-//                            color: Colors.deepOrange,
-//                          ),
-//                          trailing: Icon(
-//                            Feather.arrow_right,
-//                            color: Colors.deepOrange,
-//                          ),
-//                          title: Text(
-//                            notifs[index].toString(),
-//                            style: TextStyle(
-//                              fontFamily: 'SF',
-//                              fontSize: 14,
-//                            ),
-//                          ))));
-//            }),
-//      ),
     );
   }
 }

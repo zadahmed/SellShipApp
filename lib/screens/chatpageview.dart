@@ -77,6 +77,7 @@ class _ChatPageViewState extends State<ChatPageView> {
 
     changeofferstate();
     getItem();
+
     _scrollController
       ..addListener(() {
         if (_scrollController.position.atEdge) {
@@ -793,6 +794,9 @@ class _ChatPageViewState extends State<ChatPageView> {
                       child: TextField(
                         maxLines: 20,
                         controller: _text,
+                        autocorrect: true,
+                        enableSuggestions: true,
+                        textCapitalization: TextCapitalization.sentences,
                         style: TextStyle(fontFamily: 'SF', fontSize: 16),
                         decoration: InputDecoration(
                             // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),

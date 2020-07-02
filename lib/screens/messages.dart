@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:SellShip/models/messages.dart';
 import 'package:SellShip/screens/chatpageview.dart';
+import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/test.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -64,23 +65,20 @@ class MessagesState extends State<Messages> {
         if (messageinfo[i]['lastid'] != null) {
           var lastid = messageinfo[i]['lastid'];
 
-          if (messageinfo[i]['unread'] == true) {
-            if (lastid == userid) {
-              unread = false;
-            } else {
-              unread = true;
-            }
-          } else {
+          if (lastid == userid) {
             unread = false;
+          } else if (lastid != userid) {
+            if (messageinfo[i]['unread'] == true) {
+              unread = true;
+              if (messageinfo[i]['msgcount'] != null) {
+                msgcount = messageinfo[i]['msgcount'];
+              } else if (messageinfo[i]['msgcount'] == null) {
+                msgcount = null;
+              }
+            } else {
+              unread = false;
+            }
           }
-        }
-        print('ssss');
-        print(unread);
-
-        if (messageinfo[i]['msgcount'] != null) {
-          msgcount = messageinfo[i]['msgcount'];
-        } else if (messageinfo[i]['msgcount'] == null) {
-          msgcount = null;
         }
 
         if (messageinfo[i]['date'] != null) {
@@ -116,10 +114,14 @@ class MessagesState extends State<Messages> {
 
     messagesd.sort();
 
-    setState(() {
-      messagesd = messagesd;
+    if (mounted) {
+      setState(() {
+        messagesd = messagesd;
+        loading = false;
+      });
+    } else {
       loading = false;
-    });
+    }
 
     return messagesd;
   }
@@ -141,6 +143,18 @@ class MessagesState extends State<Messages> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          leading: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => RootScreen(index: 0)),
+              );
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.deepOrange,
+            ),
+          ),
           iconTheme: IconThemeData(
             color: Colors.deepOrange,
           ),
@@ -274,39 +288,23 @@ class MessagesState extends State<Messages> {
                                                     margin:
                                                         const EdgeInsets.only(
                                                             top: 5.0),
-                                                    height: 15,
-                                                    width: 15,
+                                                    height: 10,
+                                                    width: 10,
                                                     decoration: BoxDecoration(
                                                         color: Colors
                                                             .deepOrangeAccent,
                                                         borderRadius:
                                                             BorderRadius.all(
-                                                          Radius.circular(23.0),
+                                                          Radius.circular(20.0),
                                                         )),
                                                     child: Center(
-                                                        child: messagesd[index]
-                                                                    .msgcount !=
-                                                                null
-                                                            ? Text(
-                                                                messagesd[index]
-                                                                    .msgcount
-                                                                    .toString(),
-                                                                style: TextStyle(
-                                                                    fontSize: 8,
-                                                                    fontFamily:
-                                                                        'SF',
-                                                                    color: Colors
-                                                                        .white),
-                                                              )
-                                                            : Text(
-                                                                '0',
-                                                                style: TextStyle(
-                                                                    fontSize: 8,
-                                                                    fontFamily:
-                                                                        'SF',
-                                                                    color: Colors
-                                                                        .white),
-                                                              )),
+                                                        child: Text(
+                                                      '',
+                                                      style: TextStyle(
+                                                          fontSize: 8,
+                                                          fontFamily: 'SF',
+                                                          color: Colors.white),
+                                                    )),
                                                   )
                                                 : SizedBox()
                                           ],

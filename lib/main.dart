@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/starterscreen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -60,7 +61,7 @@ class SplashState extends State<Splash> {
           new MaterialPageRoute(builder: (context) => new RootScreen()));
     } else {
       Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new OnboardingScreen()));
+          new MaterialPageRoute(builder: (context) => new StarterPage()));
     }
   }
 
