@@ -60,8 +60,11 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                   category: profilemap[i]['category']);
               ites.add(ite);
             }
+
+            Iterable inReverse = ites.reversed;
+            List<Item> jsoninreverse = inReverse.toList();
             setState(() {
-              item = ites;
+              item = jsoninreverse;
               loading = false;
             });
           } else {
@@ -108,13 +111,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   ScrollController _scrollController = ScrollController();
   Widget favourites(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Favourites️",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          backgroundColor: Colors.deepOrange,
-        ),
+        backgroundColor: Colors.white,
         body: loading == false
             ? Padding(
                 padding: const EdgeInsets.all(15.0),
@@ -340,7 +337,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                 child: Shimmer.fromColors(
                   baseColor: Colors.grey[300],
                   highlightColor: Colors.grey[100],
-                  child: Column(
+                  child: ListView(
                     children: [0, 1, 2, 3, 4, 5, 6]
                         .map((_) => Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
@@ -408,17 +405,6 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   Widget emptyfavourites(BuildContext context) {
     return loading == false
         ? Scaffold(
-            appBar: AppBar(
-              title: Text(
-                "Favourites",
-                style: TextStyle(
-                    fontFamily: 'SF',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              backgroundColor: Colors.deepOrange,
-            ),
             backgroundColor: Colors.white,
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

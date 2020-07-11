@@ -49,7 +49,6 @@ dependencies:
   firebase_messaging: ^6.0.13
   carousel_slider: 2.0.0
   alphabet_list_scroll_view: 1.0.6
-  overlay_support: 1.0.3
   firebase_dynamic_links: 0.5.0+11
   provider: 4.1.1
   share: 0.6.4+2
@@ -66,6 +65,7 @@ dependencies:
   timeago: 2.0.26
   jiffy: 3.0.1
   flutter_easyrefresh: 2.1.1
+
 
 
 
@@ -130,6 +130,7 @@ flutter:
     - assets/boys/
     - assets/girls/
     - assets/categories/
+    - verified.png
 
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg

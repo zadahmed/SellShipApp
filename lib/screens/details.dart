@@ -1285,6 +1285,35 @@ class _DetailsState extends State<Details> {
                     ),
                   ))
         : Scaffold(
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.white,
+              leading: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.deepOrange,
+                ),
+              ),
+              actions: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(right: 10, bottom: 5),
+                  child: InkWell(
+                      onTap: () async {
+                        var s = await createFirstPostLink(itemid);
+                        Share.share('Check out what I found $s',
+                            subject:
+                                'Look at this awesome item I found on SellShip!');
+                      },
+                      child: Icon(
+                        Feather.share,
+                        color: Colors.deepOrange,
+                      )),
+                ),
+              ],
+            ),
             backgroundColor: Colors.white,
             body: Center(
               child: SpinKitChasingDots(

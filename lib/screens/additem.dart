@@ -239,7 +239,7 @@ class _AddItemState extends State<AddItem> {
                                 ),
                               ],
                             ),
-                            height: 360,
+                            height: 250,
                             child: Column(
                               children: <Widget>[
                                 SizedBox(
@@ -260,7 +260,7 @@ class _AddItemState extends State<AddItem> {
                                   ),
                                 ),
                                 Container(
-                                  height: 300,
+                                  height: 200,
                                   child: Scrollbar(
                                     child: ListView(
                                       scrollDirection: Axis.horizontal,
@@ -329,8 +329,8 @@ class _AddItemState extends State<AddItem> {
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10)),
-                                              height: 250,
-                                              width: 250,
+                                              height: 200,
+                                              width: 200,
                                               child: _image == null
                                                   ? Icon(Icons.add)
                                                   : ClipRRect(
@@ -414,8 +414,8 @@ class _AddItemState extends State<AddItem> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10)),
-                                                    height: 250,
-                                                    width: 250,
+                                                    height: 200,
+                                                    width: 200,
                                                     child: _image2 == null
                                                         ? Icon(Icons.add)
                                                         : ClipRRect(
@@ -501,8 +501,8 @@ class _AddItemState extends State<AddItem> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10)),
-                                                    height: 250,
-                                                    width: 250,
+                                                    height: 200,
+                                                    width: 200,
                                                     child: _image3 == null
                                                         ? Icon(Icons.add)
                                                         : ClipRRect(
@@ -588,8 +588,8 @@ class _AddItemState extends State<AddItem> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10)),
-                                                    height: 250,
-                                                    width: 250,
+                                                    height: 200,
+                                                    width: 200,
                                                     child: _image4 == null
                                                         ? Icon(Icons.add)
                                                         : ClipRRect(
@@ -675,8 +675,8 @@ class _AddItemState extends State<AddItem> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10)),
-                                                    height: 250,
-                                                    width: 250,
+                                                    height: 200,
+                                                    width: 200,
                                                     child: _image5 == null
                                                         ? Icon(Icons.add)
                                                         : ClipRRect(
@@ -762,8 +762,8 @@ class _AddItemState extends State<AddItem> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10)),
-                                                    height: 250,
-                                                    width: 250,
+                                                    height: 200,
+                                                    width: 200,
                                                     child: _image6 == null
                                                         ? Icon(Icons.add)
                                                         : ClipRRect(

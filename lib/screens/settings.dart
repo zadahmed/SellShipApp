@@ -136,35 +136,6 @@ class _SettingsState extends State<Settings> {
             userid != null
                 ? Container(
                     color: Colors.white,
-                    child: ListTile(
-                      leading: Icon(
-                        Feather.heart,
-                        color: Colors.deepOrange,
-                      ),
-                      trailing: Icon(
-                        Feather.arrow_right,
-                        size: 16,
-                        color: Colors.deepOrange,
-                      ),
-                      title: Text(
-                        'Favourites',
-                        style: TextStyle(
-                          fontFamily: 'SF',
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FavouritesScreen()),
-                        );
-                      },
-                    ))
-                : Container(),
-            userid != null
-                ? Container(
-                    color: Colors.white,
                     child: InkWell(
                       onTap: () {
                         Navigator.push(

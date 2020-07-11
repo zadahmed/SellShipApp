@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:locally/locally.dart';
-import 'package:overlay_support/overlay_support.dart';
 
 class FirebaseNotifications {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();

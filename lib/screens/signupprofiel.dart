@@ -424,7 +424,7 @@ class _SignUpProfilePageState extends State<SignUpProfilePage> {
           setState(() {
             userid = jsondata['id'];
           });
-          Navigator.of(context, rootNavigator: true).pop('dialog');
+
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => RootScreen()));
         } else {
