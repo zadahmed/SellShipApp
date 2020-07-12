@@ -16,6 +16,8 @@ import 'package:SellShip/screens/signuppage.dart';
 import 'package:SellShip/screens/signupprofiel.dart';
 import 'package:SellShip/screens/termscondition.dart';
 import 'package:SellShip/support.dart';
+import 'package:SellShip/verification/verifyemail.dart';
+import 'package:SellShip/verification/verifyphone.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
@@ -157,6 +159,7 @@ class _LoginPageState extends State<LoginPage>
   }
 
   var profilepicture;
+  var confirmedemail;
 
   var followers;
   var itemssold;
@@ -483,46 +486,163 @@ class _LoginPageState extends State<LoginPage>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        CircleAvatar(
-                                          child: Icon(
-                                            Feather.mail,
-                                            color: Colors.white,
-                                          ),
-                                          backgroundColor: Colors.deepOrange,
-                                        ),
-                                        SizedBox(height: 10.0),
-                                        Text(
-                                          'Verify Email',
-                                          style: TextStyle(
-                                              fontFamily: 'SF', fontSize: 14),
-                                        ),
-                                      ],
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => VerifyEmail(
+                                                    email: email,
+                                                    userid: userid,
+                                                  )),
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          confirmedemail == true
+                                              ? Badge(
+                                                  showBadge: true,
+                                                  badgeColor:
+                                                      Colors.deepOrangeAccent,
+                                                  position:
+                                                      BadgePosition.topRight(),
+                                                  animationType:
+                                                      BadgeAnimationType.slide,
+                                                  badgeContent: Icon(
+                                                    Feather.check_circle,
+                                                    size: 16,
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 0.2,
+                                                            color: Colors.grey),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: CircleAvatar(
+                                                        child: Icon(
+                                                          Feather.mail,
+                                                          color:
+                                                              Colors.deepOrange,
+                                                        ),
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                      )))
+                                              : Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    child: Icon(
+                                                      Feather.mail,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                ),
+                                          SizedBox(height: 10.0),
+                                          confirmedemail == false
+                                              ? Text(
+                                                  'Verify Email',
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 14),
+                                                )
+                                              : Text(
+                                                  'Email Verified',
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 14),
+                                                )
+                                        ],
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 10,
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        CircleAvatar(
-                                          child: Icon(
-                                            Feather.phone,
-                                            color: Colors.white,
-                                          ),
-                                          backgroundColor: Colors.deepOrange,
-                                        ),
-                                        SizedBox(height: 10.0),
-                                        Text(
-                                          'Verify Phone',
-                                          style: TextStyle(
-                                              fontFamily: 'SF', fontSize: 14),
-                                        ),
-                                      ],
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => VerifyPhone(
+                                                    userid: userid,
+                                                  )),
+                                        );
+                                      },
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          confirmedphone == true
+                                              ? Badge(
+                                                  showBadge: true,
+                                                  badgeColor:
+                                                      Colors.deepOrangeAccent,
+                                                  position:
+                                                      BadgePosition.topRight(),
+                                                  animationType:
+                                                      BadgeAnimationType.slide,
+                                                  badgeContent: Icon(
+                                                    Feather.check_circle,
+                                                    size: 16,
+                                                    color: Colors.white,
+                                                  ),
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 0.2,
+                                                            color: Colors.grey),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: CircleAvatar(
+                                                        child: Icon(
+                                                          Feather.phone,
+                                                          color:
+                                                              Colors.deepOrange,
+                                                        ),
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                      )))
+                                              : Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    child: Icon(
+                                                      Feather.phone,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                ),
+                                          SizedBox(height: 10.0),
+                                          confirmedphone == false
+                                              ? Text(
+                                                  'Verify Phone',
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 14),
+                                                )
+                                              : Text(
+                                                  'Phone Verified',
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 14),
+                                                )
+                                        ],
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 10,
@@ -1177,12 +1297,15 @@ class _LoginPageState extends State<LoginPage>
 
   var numberphone;
 
+  bool confirmedphone;
+
   var firstname;
   var lastname;
   var email;
   var phonenumber;
 
   List<Item> item = List<Item>();
+
   void getProfileData() async {
     userid = await storage.read(key: 'userid');
     var country = await storage.read(key: 'country');
@@ -1239,6 +1362,20 @@ class _LoginPageState extends State<LoginPage>
           profilepic = null;
         }
 
+        var confirmedemai = profilemap['confirmedemail'];
+        if (confirmedemai != null) {
+          print(confirmedemai);
+        } else {
+          confirmedemai = false;
+        }
+
+        var confirmedphon = profilemap['confirmedphone'];
+        if (confirmedphon != null) {
+          print(confirmedphon);
+        } else {
+          confirmedphon = false;
+        }
+
         if (profilemap != null) {
           if (mounted) {
             setState(() {
@@ -1250,6 +1387,8 @@ class _LoginPageState extends State<LoginPage>
               following = followin.length;
               followers = follower.length;
               itemssold = sol.length;
+              confirmedemail = confirmedemai;
+              confirmedphone = confirmedphon;
               profilepicture = profilepic;
             });
           }

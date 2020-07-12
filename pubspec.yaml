@@ -65,6 +65,8 @@ dependencies:
   timeago: 2.0.26
   jiffy: 3.0.1
   flutter_easyrefresh: 2.1.1
+  flutter_sticky_header: "^0.4.2"
+  firebase_auth: 0.16.1
 
 
 

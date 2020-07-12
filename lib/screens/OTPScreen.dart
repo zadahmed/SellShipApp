@@ -1,0 +1,331 @@
+import 'package:SellShip/screens/otpinput.dart';
+import 'package:SellShip/screens/rootscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+
+class OTPScreen extends StatefulWidget {
+  final String phonenumber;
+  final String userid;
+  OTPScreen({Key key, this.phonenumber, this.userid}) : super(key: key);
+
+  @override
+  _OTPScreenState createState() => _OTPScreenState();
+}
+
+class _OTPScreenState extends State<OTPScreen> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  TextEditingController _pinEditingController = TextEditingController();
+
+  PinDecoration _pinDecoration =
+      UnderlineDecoration(enteredColor: Colors.black, hintText: '000000');
+
+  bool isCodeSent = false;
+  String _verificationId;
+
+  String userid;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      userid = widget.userid;
+    });
+    print(widget.phonenumber);
+    _onVerifyCode();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      key: _scaffoldKey,
+      appBar: AppBar(
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back_ios)),
+        iconTheme: IconThemeData(color: Colors.deepOrange),
+        elevation: 0,
+        title: Text(
+          'Verify Details',
+          style: TextStyle(
+              color: Colors.deepOrange,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'SF'),
+        ),
+        backgroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 16.0, bottom: 16, top: 4),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "OTP sent to ${widget.phonenumber}",
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: PinInputTextField(
+                pinLength: 6,
+                decoration: _pinDecoration,
+                controller: _pinEditingController,
+                autoFocus: true,
+                textInputAction: TextInputAction.done,
+                onSubmit: (pin) {
+                  if (pin.length == 6) {
+                    _onFormSubmitted();
+                  } else {
+                    showInSnackBar("Invalid OTP");
+                  }
+                },
+              ),
+            ),
+            Padding(
+                padding: EdgeInsets.all(10),
+                child: InkWell(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 48,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              Colors.deepOrangeAccent,
+                              Colors.deepOrange
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color(0xFF9DA3B4).withOpacity(0.1),
+                              blurRadius: 65.0,
+                              offset: Offset(0.0, 15.0))
+                        ]),
+                    child: Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.phone,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "Enter OTP",
+                          style: TextStyle(
+                              fontFamily: 'SF',
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    )),
+                  ),
+                  onTap: () {
+                    _onFormSubmitted();
+                  },
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'SF',
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
+  void _onVerifyCode() async {
+    setState(() {
+      isCodeSent = true;
+    });
+    final PhoneVerificationCompleted verificationCompleted =
+        (AuthCredential phoneAuthCredential) {
+      _firebaseAuth
+          .signInWithCredential(phoneAuthCredential)
+          .then((AuthResult value) {
+        if (value.user != null) {
+        } else {
+          showInSnackBar("Error validating OTP, try again");
+        }
+      }).catchError((error) {
+        showInSnackBar(
+          "Try again in sometime",
+        );
+      });
+    };
+    final PhoneVerificationFailed verificationFailed =
+        (AuthException authException) {
+      showInSnackBar(authException.message);
+      setState(() {
+        isCodeSent = false;
+      });
+    };
+
+    final PhoneCodeSent codeSent =
+        (String verificationId, [int forceResendingToken]) async {
+      _verificationId = verificationId;
+      setState(() {
+        _verificationId = verificationId;
+      });
+    };
+    final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationId) {
+      _verificationId = verificationId;
+      setState(() {
+        _verificationId = verificationId;
+      });
+    };
+
+    await _firebaseAuth.verifyPhoneNumber(
+        phoneNumber: "${widget.phonenumber}",
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+  }
+
+  void _onFormSubmitted() async {
+    AuthCredential _authCredential = PhoneAuthProvider.getCredential(
+        verificationId: _verificationId, smsCode: _pinEditingController.text);
+
+    _firebaseAuth
+        .signInWithCredential(_authCredential)
+        .then((AuthResult value) async {
+      if (value.user != null) {
+        print(value.user.phoneNumber);
+
+        var url = 'https://api.sellship.co/verify/phone/' +
+            userid +
+            '/' +
+            value.user.phoneNumber;
+
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                  contentPadding: EdgeInsets.only(top: 10.0),
+                  content: Container(
+                    width: 300.0,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Center(
+                          child: Icon(
+                            Feather.check,
+                            color: Colors.deepOrange,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'Your phone number has been verified successfully.',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: "SF",
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black54),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5.0,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true)
+                                .pop('dialog');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RootScreen(index: 2)),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.deepOrange,
+                              borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(32.0),
+                                  bottomRight: Radius.circular(32.0)),
+                            ),
+                            child: Text(
+                              "Close",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontFamily: "SF",
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        } else {
+          showInSnackBar(
+            "Error validating OTP, try again",
+          );
+        }
+      } else {
+        showInSnackBar(
+          "Error validating OTP, try again",
+        );
+      }
+    }).catchError((error) {
+      showInSnackBar("Something went wrong. $error");
+    });
+  }
+}
