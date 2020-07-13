@@ -1173,7 +1173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding:
                                   EdgeInsets.only(left: 10, top: 10, bottom: 5),
-                              child: Text('Recently Added',
+                              child: Text(_FilterLoad,
                                   style: TextStyle(
                                       fontFamily: 'SF',
                                       fontSize: 18,
@@ -1210,77 +1210,253 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               itemsgrid.isNotEmpty
-                  ? SliverGrid(
-                      gridDelegate: gridtoggle == true
-                          ? SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, childAspectRatio: 0.7)
-                          : SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 1, childAspectRatio: 1),
-                      delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                        if (index != 0 && index % 8 == 0) {
-                          return Platform.isIOS == true
-                              ? Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Container(
-                                    height: 300,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 0.2, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(bottom: 20.0),
-                                    child: NativeAdmob(
-                                      adUnitID: _iosadUnitID,
-                                      controller: _controller,
-                                    ),
-                                  ))
-                              : Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Container(
-                                    height: 300,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 0.2, color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    padding: EdgeInsets.all(10),
-                                    margin: EdgeInsets.only(bottom: 20.0),
-                                    child: NativeAdmob(
-                                      adUnitID: _androidadUnitID,
-                                      controller: _controller,
-                                    ),
-                                  ));
-                        }
-                        return new Padding(
-                            padding: EdgeInsets.all(10),
-                            child: InkWell(
+                  ? (gridtoggle == true
+                      ? SliverGrid(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 0.72,
+                            mainAxisSpacing: 1.0,
+                            crossAxisSpacing: 1.0,
+                            crossAxisCount: 2,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                            if (index != 0 && index % 8 == 0) {
+                              return Platform.isIOS == true
+                                  ? Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Container(
+                                        height: 300,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 0.2, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
+                                        child: NativeAdmob(
+                                          adUnitID: _iosadUnitID,
+                                          controller: _controller,
+                                        ),
+                                      ))
+                                  : Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Container(
+                                        height: 300,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 0.2, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
+                                        child: NativeAdmob(
+                                          adUnitID: _androidadUnitID,
+                                          controller: _controller,
+                                        ),
+                                      ));
+                            }
+                            return new Padding(
+                                padding: EdgeInsets.all(10),
+                                child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                Details(
+                                                    itemid: itemsgrid[index]
+                                                        .itemid),
+                                            transitionsBuilder: (context,
+                                                animation,
+                                                secondaryAnimation,
+                                                child) {
+                                              var begin = Offset(0.0, 1.0);
+                                              var end = Offset.zero;
+                                              var curve = Curves.ease;
+
+                                              var tween = Tween(
+                                                      begin: begin, end: end)
+                                                  .chain(
+                                                      CurveTween(curve: curve));
+
+                                              return SlideTransition(
+                                                position:
+                                                    animation.drive(tween),
+                                                child: child,
+                                              );
+                                            },
+                                          ));
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 0.2, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          new Stack(
+                                            children: <Widget>[
+                                              Container(
+                                                height: 180,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  child: CachedNetworkImage(
+                                                    fadeInDuration: Duration(
+                                                        microseconds: 10),
+                                                    imageUrl:
+                                                        itemsgrid[index].image,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        SpinKitChasingDots(
+                                                            color: Colors
+                                                                .deepOrange),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  ),
+                                                ),
+                                              ),
+                                              itemsgrid[index].sold == true
+                                                  ? Align(
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 50,
+                                                        color: Colors.amber,
+                                                        child: Text(
+                                                          'Sold',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontFamily: 'SF',
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ))
+                                                  : Container(),
+                                            ],
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Container(
+                                                    height: 20,
+                                                    child: Text(
+                                                      itemsgrid[index].name,
+                                                      style: TextStyle(
+                                                        fontFamily: 'SF',
+                                                        fontSize: 14,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 3.0),
+                                                  currency != null
+                                                      ? Container(
+                                                          child: Text(
+                                                            currency +
+                                                                ' ' +
+                                                                itemsgrid[index]
+                                                                    .price
+                                                                    .toString(),
+                                                            style: TextStyle(
+                                                              fontFamily: 'SF',
+                                                              fontSize: 16,
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Container(
+                                                          child: Text(
+                                                            itemsgrid[index]
+                                                                .price
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                              fontFamily: 'SF',
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                            ),
+                                                          ),
+                                                        )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )));
+                          }, childCount: itemsgrid.length),
+                        )
+                      : SliverList(delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            if (index != 0 && index % 8 == 0) {
+                              return Platform.isIOS == true
+                                  ? Container(
+                                      height: 300,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 0.2, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      padding: EdgeInsets.all(10),
+                                      margin: EdgeInsets.only(bottom: 20.0),
+                                      child: NativeAdmob(
+                                        adUnitID: _iosadUnitID,
+                                        controller: _controller,
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 300,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 0.2, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      padding: EdgeInsets.all(10),
+                                      margin: EdgeInsets.only(bottom: 20.0),
+                                      child: NativeAdmob(
+                                        adUnitID: _androidadUnitID,
+                                        controller: _controller,
+                                      ),
+                                    );
+                            }
+                            return InkWell(
                                 onTap: () {
                                   Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            Details(
-                                                itemid:
-                                                    itemsgrid[index].itemid),
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          var begin = Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
-
-                                          var tween = Tween(
-                                                  begin: begin, end: end)
-                                              .chain(CurveTween(curve: curve));
-
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ));
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Details(
+                                            sold: itemsgrid[index].sold,
+                                            itemid: itemsgrid[index].itemid)),
+                                  );
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -1292,55 +1468,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                     children: <Widget>[
                                       new Stack(
                                         children: <Widget>[
-                                          gridtoggle == true
-                                              ? Container(
-                                                  height: 180,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl: itemsgrid[index]
-                                                          .image,
-                                                      fit: BoxFit.cover,
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          SpinKitChasingDots(
-                                                              color: Colors
-                                                                  .deepOrange),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          Icon(Icons.error),
-                                                    ),
-                                                  ),
-                                                )
-                                              : Container(
-                                                  height: 300,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl: itemsgrid[index]
-                                                          .image,
-                                                      fit: BoxFit.cover,
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          SpinKitChasingDots(
-                                                              color: Colors
-                                                                  .deepOrange),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          Icon(Icons.error),
-                                                    ),
-                                                  ),
-                                                ),
+                                          Container(
+                                            height: 300,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: ClipRRect(
+                                              child: CachedNetworkImage(
+                                                fadeInDuration:
+                                                    Duration(microseconds: 10),
+                                                imageUrl:
+                                                    itemsgrid[index].image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitChasingDots(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
                                           itemsgrid[index].sold == true
                                               ? Align(
                                                   alignment: Alignment.topRight,
@@ -1362,69 +1511,63 @@ class _HomeScreenState extends State<HomeScreen> {
                                               : Container(),
                                         ],
                                       ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Container(
-                                                height: 20,
-                                                child: Text(
-                                                  itemsgrid[index].name,
-                                                  style: TextStyle(
-                                                    fontFamily: 'SF',
-                                                    fontSize: 14,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                              SizedBox(height: 3.0),
-                                              currency != null
-                                                  ? Container(
-                                                      child: Text(
-                                                        currency +
-                                                            ' ' +
-                                                            itemsgrid[index]
-                                                                .price
-                                                                .toString(),
-                                                        style: TextStyle(
-                                                          fontFamily: 'SF',
-                                                          fontSize: 16,
-                                                          color:
-                                                              Colors.deepOrange,
-                                                          fontWeight:
-                                                              FontWeight.w800,
+                                      new Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: new Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          itemsgrid[index].name,
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF',
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.left,
                                                         ),
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      child: Text(
-                                                        itemsgrid[index]
-                                                            .price
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                          fontFamily: 'SF',
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w800,
+                                                        SizedBox(height: 3.0),
+                                                        Container(
+                                                          child: Text(
+                                                            currency +
+                                                                ' ' +
+                                                                itemsgrid[index]
+                                                                    .price
+                                                                    .toString(),
+                                                            style: TextStyle(
+                                                              fontFamily: 'SF',
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                            ),
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                                      ],
+                                                    ),
+                                                  ])))
                                     ],
                                   ),
-                                )));
-                      }, childCount: itemsgrid.length),
-                    )
+                                ));
+                          },
+                        )))
                   : SliverToBoxAdapter(
                       child: Container(
                       height: MediaQuery.of(context).size.height,
@@ -1531,6 +1674,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       setState(() {
                         _selectedFilter = "Recently Added";
+                        _FilterLoad = "Recently Added";
                         skip = 0;
                         limit = 20;
                         loading = true;
