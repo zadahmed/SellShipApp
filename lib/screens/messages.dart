@@ -115,11 +115,13 @@ class MessagesState extends State<Messages> {
     messagesd.sort();
 
     if (mounted) {
+      print(messagesd);
       setState(() {
         messagesd = messagesd;
         loading = false;
       });
     } else {
+      messagesd = messagesd;
       loading = false;
     }
 
@@ -169,8 +171,6 @@ class MessagesState extends State<Messages> {
           ),
         ),
         body: EasyRefresh(
-          enableControlFinishLoad: true,
-          bottomBouncing: false,
           child: loading == false
               ? ListView.builder(
                   cacheExtent: double.parse(messagesd.length.toString()),

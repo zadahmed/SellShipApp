@@ -8,6 +8,7 @@ import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/nearme.dart';
 import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/recentlyadded.dart';
+import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,7 +48,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Item> itemsgrid = [];
 
-  List<Item> nearmeitemsgrid = [];
   var skip;
   var limit;
 
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
           '/' +
           0.toString() +
           '/' +
-          15.toString();
+          20.toString();
 
       final response = await http.post(url, body: {
         'latitude': position.latitude.toString(),
@@ -84,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       if (response.statusCode == 200) {
         var jsonbody = json.decode(response.body);
-        nearmeitemsgrid.clear();
+        itemsgrid.clear();
         for (var i = 0; i < jsonbody.length; i++) {
           Item item = Item(
             itemid: jsonbody[i]['_id']['\$oid'],
@@ -94,34 +94,33 @@ class _HomeScreenState extends State<HomeScreen> {
             category: jsonbody[i]['category'],
             sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
           );
-          nearmeitemsgrid.add(item);
+          itemsgrid.add(item);
         }
       }
 
-      if (nearmeitemsgrid != null) {
+      if (itemsgrid != null) {
         setState(() {
-          nearmeitemsgrid = nearmeitemsgrid;
+          itemsgrid = itemsgrid;
+          loading = false;
         });
       } else {
         setState(() {
-          nearmeitemsgrid = [];
+          itemsgrid = [];
+          loading = false;
         });
       }
 
-      print(nearmeitemsgrid.length);
-      return nearmeitemsgrid;
+      return itemsgrid;
     }
   }
 
   refresh() async {
     setState(() {
-      nearmeitemsgrid.clear();
       itemsgrid.clear();
       skip = 0;
       limit = 20;
     });
 
-    fetchItems(skip, limit);
     fetchRecentlyAdded(skip, limit);
   }
 
@@ -154,11 +153,510 @@ class _HomeScreenState extends State<HomeScreen> {
         itemsgrid.add(item);
       }
 
-      setState(() {
-        itemsgrid = itemsgrid;
-      });
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
     } else {
       print(response.statusCode);
+    }
+  }
+
+  Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
+    if (country == null) {
+      _getLocation();
+    } else {
+      var url = 'https://api.sellship.co/api/belowhundred/' +
+          country +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
+
+      final response = await http.get(url);
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    }
+  }
+
+  Future<List<Item>> fetchHighestPrice(int skip, int limit) async {
+    if (country == null) {
+      _getLocation();
+    } else {
+      var url = 'https://api.sellship.co/api/highestprice/' +
+          country +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
+      final response = await http.get(url);
+
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    }
+  }
+
+  Future<List<Item>> fetchLowestPrice(int skip, int limit) async {
+    if (country == null) {
+      _getLocation();
+    } else {
+      var url = 'https://api.sellship.co/api/lowestprice/' +
+          country +
+          '/' +
+          skip.toString() +
+          '/' +
+          limit.toString();
+
+      final response = await http.get(url);
+
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    }
+  }
+
+  Future<List<Item>> fetchbrands(String brand) async {
+    var categoryurl = 'https://api.sellship.co/api/filter/brand/' +
+        country +
+        '/' +
+        brand +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> fetchCondition(String condition) async {
+    var categoryurl = 'https://api.sellship.co/api/filter/condition/' +
+        country +
+        '/' +
+        condition +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> fetchPrice(String minprice, String maxprice) async {
+    var categoryurl = 'https://api.sellship.co/api/filter/price/' +
+        country +
+        '/' +
+        minprice +
+        '/' +
+        maxprice +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> getmorecondition(String condition) async {
+    setState(() {
+      limit = limit + 20;
+      skip = skip + 20;
+    });
+    var categoryurl = 'https://api.sellship.co/api/filter/condition/' +
+        country +
+        '/' +
+        condition +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> getmorePrice(String minprice, String maxprice) async {
+    setState(() {
+      limit = limit + 20;
+      skip = skip + 20;
+    });
+    var categoryurl = 'https://api.sellship.co/api/filter/price/' +
+        country +
+        '/' +
+        minprice +
+        '/' +
+        maxprice +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> getmorebrands(String brand) async {
+    setState(() {
+      limit = limit + 20;
+      skip = skip + 20;
+    });
+    var categoryurl = 'https://api.sellship.co/api/filter/brand/' +
+        country +
+        '/' +
+        brand +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          name: jsonbody[i]['name'],
+          image: jsonbody[i]['image'],
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  _getmorehighestprice() async {
+    setState(() {
+      limit = limit + 20;
+      skip = skip + 20;
+    });
+    var url = 'https://api.sellship.co/api/highestprice/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+  }
+
+  _getmorelowestprice() async {
+    setState(() {
+      limit = limit + 20;
+      skip = skip + 20;
+    });
+    var url = 'https://api.sellship.co/api/lowestprice/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+  }
+
+  _getmorebelowhundred() async {
+    setState(() {
+      limit = limit + 20;
+      skip = skip + 20;
+    });
+    var url = 'https://api.sellship.co/api/belowhundred/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+
+      itemsgrid.add(item);
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+    if (itemsgrid == itemsgrid) {
+      print('No New Items');
     }
   }
 
@@ -226,6 +724,51 @@ class _HomeScreenState extends State<HomeScreen> {
     readstorage();
   }
 
+  List<String> conditions = [
+    'New with tags',
+    'New, but no tags',
+    'Like new',
+    'Very Good, a bit worn',
+    'Good, some flaws visible in pictures'
+  ];
+
+  String _selectedCondition;
+
+  _getmoreData() async {
+    setState(() {
+      limit = limit + 20;
+      skip = skip + 20;
+    });
+    var url = 'https://api.sellship.co/api/getitems/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        name: jsonbody[i]['name'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'],
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
+    }
+    setState(() {
+      itemsgrid = itemsgrid;
+    });
+  }
+
   _getLocation() async {
     Location _location = new Location();
     var location;
@@ -275,7 +818,7 @@ class _HomeScreenState extends State<HomeScreen> {
       print(e);
       Location().requestPermission();
       setState(() {
-        nearmeitemsgrid = [];
+        loading = false;
       });
     }
   }
@@ -308,7 +851,7 @@ class _HomeScreenState extends State<HomeScreen> {
       city = cit;
       locationcountry = countryy;
     });
-    fetchItems(skip, limit);
+//    fetchItems(skip, limit);
   }
 
   String city;
@@ -379,20 +922,9 @@ class _HomeScreenState extends State<HomeScreen> {
     _getLocation();
   }
 
+  TextEditingController minpricecontroller = new TextEditingController();
+  TextEditingController maxpricecontroller = new TextEditingController();
   TextEditingController searchcontroller = new TextEditingController();
-
-//  onSearch(String texte) async {
-//    if (texte.isEmpty) {
-//      setState(() {
-//        skip = 0;
-//        limit = 20;
-//        fetchRecentlyAdded(skip, limit);
-//      });
-//    } else {
-//      searchcontroller.clear();
-//
-//    }
-//  }
 
   var crossaxiscount = 2;
 
@@ -665,12 +1197,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     },
                                     child: gridtoggle == true
                                         ? Icon(
-                                            Icons.grid_on,
-                                            size: 18,
+                                            Icons.list,
+                                            size: 20,
                                             color: Colors.deepOrange,
                                           )
-                                        : Icon(Icons.list,
-                                            size: 18,
+                                        : Icon(Icons.grid_on,
+                                            size: 20,
                                             color: Colors.deepOrange))),
                           ]),
                     ],
@@ -691,7 +1223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ? Padding(
                                   padding: EdgeInsets.all(10),
                                   child: Container(
-                                    height: 150,
+                                    height: 300,
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           width: 0.2, color: Colors.grey),
@@ -707,7 +1239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               : Padding(
                                   padding: EdgeInsets.all(10),
                                   child: Container(
-                                    height: 150,
+                                    height: 300,
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           width: 0.2, color: Colors.grey),
@@ -955,12 +1487,29 @@ class _HomeScreenState extends State<HomeScreen> {
               refresh();
             },
             onLoad: () async {
-              _getmoreRecentData();
+              if (_FilterLoad == 'Near me') {
+                _getmoreData();
+              } else if (_FilterLoad == 'Recently Added') {
+                _getmoreRecentData();
+              } else if (_FilterLoad == 'Below 100') {
+                _getmorebelowhundred();
+              } else if (_FilterLoad == 'Lowest Price') {
+                _getmorelowestprice();
+              } else if (_FilterLoad == 'Highest Price') {
+                _getmorehighestprice();
+              } else if (_FilterLoad == 'Brand') {
+                getmorebrands(brand);
+              } else if (_FilterLoad == 'Price') {
+                getmorePrice(minprice, maxprice);
+              } else if (_FilterLoad == 'Condition') {
+                getmorecondition(condition);
+              }
             },
           )),
         ));
   }
 
+  String _FilterLoad = "Recently Added";
   String _selectedFilter = "Recently Added";
 
   Widget filtersort(BuildContext context) {
@@ -979,6 +1528,17 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollDirection: Axis.horizontal,
               children: <Widget>[
                 InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedFilter = "Recently Added";
+                        skip = 0;
+                        limit = 20;
+                        loading = true;
+                      });
+                      itemsgrid.clear();
+
+                      fetchRecentlyAdded(skip, limit);
+                    },
                     child: _selectedFilter == "Recently Added"
                         ? Container(
                             height: 30,
@@ -1018,13 +1578,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 5,
                 ),
                 InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedFilter = "Near Me";
+                        _FilterLoad = "Near Me";
+                        skip = 0;
+                        limit = 20;
+                        loading = true;
+                      });
+                      itemsgrid.clear();
+
+                      fetchItems(skip, limit);
+                    },
                     child: _selectedFilter == "Near Me"
                         ? Container(
                             height: 30,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.deepOrangeAccent),
-                            width: 60,
+                            width: 70,
                             child: Center(
                               child: Text(
                                 'Near Me',
@@ -1042,7 +1614,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Border.all(width: 0.2, color: Colors.grey),
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.white),
-                            width: 60,
+                            width: 70,
                             child: Center(
                               child: Text(
                                 'Near Me',
@@ -1057,13 +1629,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 5,
                 ),
                 InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedFilter = "Below 100";
+                        _FilterLoad = "Below 100";
+                        skip = 0;
+                        limit = 20;
+                        loading = true;
+                      });
+                      itemsgrid.clear();
+
+                      fetchbelowhundred(skip, limit);
+                    },
                     child: _selectedFilter == "Below 100"
                         ? Container(
                             height: 30,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.deepOrangeAccent),
-                            width: 60,
+                            width: 80,
                             child: Center(
                               child: Text(
                                 'Below 100',
@@ -1081,7 +1665,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Border.all(width: 0.2, color: Colors.grey),
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.white),
-                            width: 60,
+                            width: 80,
                             child: Center(
                               child: Text(
                                 'Below 100',
@@ -1132,539 +1716,95 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                     onTap: () {
-//              scaffoldState.currentState
-//                  .showBottomSheet((context) {
-//                return Container(
-//                  height: MediaQuery.of(context).size.height,
-//                  width: MediaQuery.of(context).size.width,
-//                  child: Padding(
-//                    padding: const EdgeInsets.all(1.0),
-//                    child: Column(
-//                      mainAxisAlignment:
-//                      MainAxisAlignment.start,
-//                      crossAxisAlignment:
-//                      CrossAxisAlignment.start,
-//                      children: [
-//                        ListTile(
-//                          title: Text(
-//                            'Sort',
-//                            style: TextStyle(
-//                                fontFamily: 'SF',
-//                                fontSize: 16,
-//                                fontWeight: FontWeight.w800,
-//                                color: Colors.black),
-//                          ),
-//                        ),
-//                        InkWell(
-//                          child: ListTile(
-//                            title: Text(
-//                              'New',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w400,
-//                                  color: Colors.black),
-//                            ),
-//                          ),
-//                          onTap: () {
-//                            setState(() {
-//                              _selectedFilter =
-//                              'Recently Added';
-//                              skip = 0;
-//                              limit = 20;
-//                              loading = true;
-//                            });
-//                            itemsgrid.clear();
-//                            Navigator.of(context).pop();
-//
-//                            fetchRecentlyAdded(skip, limit);
-//                          },
-//                        ),
-//                        InkWell(
-//                          child: ListTile(
-//                            title: Text(
-//                              'Near me',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w400,
-//                                  color: Colors.black),
-//                            ),
-//                          ),
-//                          onTap: () {
-//                            setState(() {
-//                              _selectedFilter = 'Near me';
-//                              skip = 0;
-//                              limit = 20;
-//                              loading = true;
-//                            });
-//                            itemsgrid.clear();
-//                            Navigator.of(context).pop();
-//
-//                            fetchItems(skip, limit);
-//                          },
-//                        ),
-//                        InkWell(
-//                          child: ListTile(
-//                            title: Text(
-//                              'Below 100',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w400,
-//                                  color: Colors.black),
-//                            ),
-//                          ),
-//                          onTap: () {
-//                            setState(() {
-//                              _selectedFilter = 'Below 100';
-//                              skip = 0;
-//                              limit = 20;
-//                              loading = true;
-//                            });
-//                            itemsgrid.clear();
-//                            Navigator.of(context).pop();
-//
-//                            fetchbelowhundred(skip, limit);
-//                          },
-//                        ),
-//                        InkWell(
-//                          child: ListTile(
-//                            title: Text(
-//                              'Price Low to High',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w400,
-//                                  color: Colors.black),
-//                            ),
-//                          ),
-//                          onTap: () {
-//                            setState(() {
-//                              _selectedFilter = 'Lowest Price';
-//                              skip = 0;
-//                              limit = 20;
-//                              loading = true;
-//                            });
-//                            itemsgrid.clear();
-//                            Navigator.of(context).pop();
-//
-//                            fetchLowestPrice(skip, limit);
-//                          },
-//                        ),
-//                        InkWell(
-//                          child: ListTile(
-//                            title: Text(
-//                              'Price High to Low',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w400,
-//                                  color: Colors.black),
-//                            ),
-//                          ),
-//                          onTap: () {
-//                            setState(() {
-//                              _selectedFilter = 'Highest Price';
-//                              skip = 0;
-//                              limit = 20;
-//                              loading = true;
-//                            });
-//                            itemsgrid.clear();
-//                            Navigator.of(context).pop();
-//
-//                            fetchHighestPrice(skip, limit);
-//                          },
-//                        ),
-//                      ],
-//                    ),
-//                  ),
-//                );
-//              });
-//            },
+                      scaffoldState.currentState.showBottomSheet((context) {
+                        return Container(
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 0.2, color: Colors.grey),
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white),
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Feather.chevron_down),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Sort',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        color: Colors.deepOrange),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                ListTile(
+                                  title: Text(
+                                    'Price Low to High',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Sort';
+                                      _FilterLoad = "Lowest Price";
+                                      skip = 0;
+                                      limit = 20;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    Navigator.of(context).pop();
+
+                                    fetchLowestPrice(skip, limit);
+                                  },
+                                ),
+                                ListTile(
+                                  title: Text(
+                                    'Price High to Low',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Sort';
+                                      _FilterLoad = "Highest Price";
+                                      skip = 0;
+                                      limit = 20;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    Navigator.of(context).pop();
+
+                                    fetchHighestPrice(skip, limit);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
                     }),
                 SizedBox(
                   width: 5,
                 ),
                 InkWell(
                     onTap: () {
-//              scaffoldState.currentState
-//                  .showBottomSheet((context) {
-//                return Container(
-//                  height: MediaQuery.of(context).size.height,
-//                  width: MediaQuery.of(context).size.width,
-//                  child: Padding(
-//                    padding: const EdgeInsets.all(1.0),
-//                    child: SingleChildScrollView(
-//                      child: Column(
-//                        mainAxisAlignment:
-//                        MainAxisAlignment.start,
-//                        crossAxisAlignment:
-//                        CrossAxisAlignment.start,
-//                        children: [
-//                          ListTile(
-//                            title: Text(
-//                              'Filter',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w800,
-//                                  color: Colors.black),
-//                            ),
-//                          ),
-//                          ExpansionTile(
-//                            title: Text(
-//                              'Brand',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w400,
-//                                  color: Colors.black),
-//                            ),
-//                            children: <Widget>[
-//                              Container(
-//                                  height: 500,
-//                                  child: ListView.builder(
-//                                    itemCount: brands.length,
-//                                    itemBuilder:
-//                                        (context, index) {
-//                                      return InkWell(
-//                                        onTap: () async {
-//                                          setState(() {
-//                                            _selectedFilter =
-//                                            'Brands';
-//                                            brand =
-//                                            brands[index];
-//                                            skip = 0;
-//                                            limit = 20;
-//                                            loading = true;
-//                                          });
-//                                          itemsgrid.clear();
-//                                          Navigator.of(context)
-//                                              .pop();
-//
-//                                          fetchbrands(
-//                                              brands[index]);
-//                                        },
-//                                        child: ListTile(
-//                                          title: brands[
-//                                          index] !=
-//                                              null
-//                                              ? Text(
-//                                              brands[index])
-//                                              : Text('sd'),
-//                                        ),
-//                                      );
-//                                    },
-//                                  ))
-//                            ],
-//                          ),
-//                          ExpansionTile(
-//                            title: Text(
-//                              'Condition',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w400,
-//                                  color: Colors.black),
-//                            ),
-//                            children: <Widget>[
-//                              Padding(
-//                                padding: EdgeInsets.only(
-//                                    left: 30, right: 30),
-//                                child: Container(
-//                                    width:
-//                                    MediaQuery.of(context)
-//                                        .size
-//                                        .width,
-//                                    child: Center(
-//                                        child: Align(
-//                                            alignment: Alignment
-//                                                .center,
-//                                            child:
-//                                            DropdownButton<
-//                                                String>(
-//                                              value:
-//                                              _selectedCondition,
-//                                              hint: Text(
-//                                                  'Please choose the condition of your Item'), // No
-//                                              icon: Icon(Icons
-//                                                  .keyboard_arrow_down),
-//                                              iconSize: 20,
-//                                              elevation: 1,
-//                                              isExpanded: true,
-//                                              style: TextStyle(
-//                                                fontFamily:
-//                                                'SF',
-//                                                fontSize: 16,
-//                                              ),
-//                                              onChanged: (String
-//                                              newValue) {
-//                                                setState(() {
-//                                                  _selectedCondition =
-//                                                      newValue;
-//                                                });
-//
-//                                                setState(() {
-//                                                  _selectedFilter =
-//                                                  'Condition';
-//                                                  condition =
-//                                                      _selectedCondition;
-//                                                  skip = 0;
-//                                                  limit = 20;
-//                                                  loading =
-//                                                  true;
-//                                                });
-//                                                itemsgrid
-//                                                    .clear();
-//                                                Navigator.of(
-//                                                    context)
-//                                                    .pop();
-//
-//                                                fetchCondition(
-//                                                    _selectedCondition);
-//                                              },
-//                                              items: conditions.map<
-//                                                  DropdownMenuItem<
-//                                                      String>>((String
-//                                              value) {
-//                                                return DropdownMenuItem<
-//                                                    String>(
-//                                                  value: value,
-//                                                  child: Text(
-//                                                    value,
-//                                                    textAlign:
-//                                                    TextAlign
-//                                                        .center,
-//                                                    style: TextStyle(
-//                                                        fontFamily:
-//                                                        'SF',
-//                                                        fontSize:
-//                                                        16,
-//                                                        color: Colors
-//                                                            .black),
-//                                                  ),
-//                                                );
-//                                              }).toList(),
-//                                            )))),
-//                              ),
-//                            ],
-//                          ),
-//                          ExpansionTile(
-//                            title: Text(
-//                              'Price',
-//                              style: TextStyle(
-//                                  fontFamily: 'SF',
-//                                  fontSize: 16,
-//                                  fontWeight: FontWeight.w400,
-//                                  color: Colors.black),
-//                            ),
-//                            children: <Widget>[
-//                              Container(
-//                                  height: 130,
-//                                  decoration: BoxDecoration(
-//                                    color: Colors.white,
-//                                    boxShadow: [
-//                                      BoxShadow(
-//                                        color: Colors
-//                                            .grey.shade300,
-//                                        offset: Offset(
-//                                            0.0, 1.0), //(x,y)
-//                                        blurRadius: 6.0,
-//                                      ),
-//                                    ],
-//                                  ),
-//                                  child: Column(
-//                                    mainAxisAlignment:
-//                                    MainAxisAlignment
-//                                        .spaceEvenly,
-//                                    children: <Widget>[
-//                                      Center(
-//                                          child: ListTile(
-//                                              title: Text(
-//                                                'Minimum Price',
-//                                                style:
-//                                                TextStyle(
-//                                                  fontFamily:
-//                                                  'SF',
-//                                                  fontSize: 16,
-//                                                ),
-//                                              ),
-//                                              trailing:
-//                                              Container(
-//                                                  width:
-//                                                  200,
-//                                                  padding:
-//                                                  EdgeInsets
-//                                                      .only(),
-//                                                  child:
-//                                                  Center(
-//                                                    child:
-//                                                    TextField(
-//                                                      cursorColor:
-//                                                      Color(0xFF979797),
-//                                                      controller:
-//                                                      minpricecontroller,
-//                                                      keyboardType:
-//                                                      TextInputType.numberWithOptions(),
-//                                                      decoration: InputDecoration(
-//                                                          labelText: "Price " + currency,
-//                                                          alignLabelWithHint: true,
-//                                                          labelStyle: TextStyle(
-//                                                            fontFamily: 'SF',
-//                                                            fontSize: 16,
-//                                                          ),
-//                                                          focusColor: Colors.black,
-//                                                          enabledBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          border: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          focusedErrorBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          disabledBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          errorBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          focusedBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              ))),
-//                                                    ),
-//                                                  )))),
-//                                      Center(
-//                                          child: ListTile(
-//                                              title: Text(
-//                                                'Maximum Price',
-//                                                style:
-//                                                TextStyle(
-//                                                  fontFamily:
-//                                                  'SF',
-//                                                  fontSize: 16,
-//                                                ),
-//                                              ),
-//                                              trailing:
-//                                              Container(
-//                                                  width:
-//                                                  200,
-//                                                  padding:
-//                                                  EdgeInsets
-//                                                      .only(),
-//                                                  child:
-//                                                  Center(
-//                                                    child:
-//                                                    TextField(
-//                                                      cursorColor:
-//                                                      Color(0xFF979797),
-//                                                      controller:
-//                                                      maxpricecontroller,
-//                                                      keyboardType:
-//                                                      TextInputType.numberWithOptions(),
-//                                                      decoration: InputDecoration(
-//                                                          labelText: "Price " + currency,
-//                                                          alignLabelWithHint: true,
-//                                                          labelStyle: TextStyle(
-//                                                            fontFamily: 'SF',
-//                                                            fontSize: 16,
-//                                                          ),
-//                                                          focusColor: Colors.black,
-//                                                          enabledBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          border: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          focusedErrorBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          disabledBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          errorBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              )),
-//                                                          focusedBorder: OutlineInputBorder(
-//                                                              borderSide: BorderSide(
-//                                                                color: Colors.grey.shade300,
-//                                                              ))),
-//                                                    ),
-//                                                  ))))
-//                                    ],
-//                                  )),
-//                              InkWell(
-//                                  onTap: () async {
-//                                    setState(() {
-//                                      _selectedFilter = 'Price';
-//                                      minprice =
-//                                          minpricecontroller
-//                                              .text;
-//                                      maxprice =
-//                                          maxpricecontroller
-//                                              .text;
-//                                      skip = 0;
-//                                      limit = 20;
-//                                      loading = true;
-//                                    });
-//                                    itemsgrid.clear();
-//                                    Navigator.of(context).pop();
-//
-//                                    fetchPrice(
-//                                        minpricecontroller.text,
-//                                        maxpricecontroller
-//                                            .text);
-//                                  },
-//                                  child: Container(
-//                                    height: 50,
-//                                    color: Colors.deepOrange,
-//                                    width:
-//                                    MediaQuery.of(context)
-//                                        .size
-//                                        .width,
-//                                    child: Center(
-//                                      child: Text(
-//                                        'Filter',
-//                                        style: TextStyle(
-//                                            fontFamily: 'SF',
-//                                            fontSize: 16,
-//                                            fontWeight:
-//                                            FontWeight.w400,
-//                                            color:
-//                                            Colors.white),
-//                                      ),
-//                                    ),
-//                                  ))
-//                            ],
-//                          ),
-////                                          ExpansionTile(
-////                                            title: Text(
-////                                              'Delivery',
-////                                              style: TextStyle(
-////                                                  fontFamily: 'SF',
-////                                                  fontSize: 16,
-////                                                  fontWeight: FontWeight.w400,
-////                                                  color: Colors.black),
-////                                            ),
-////                                          ),
-//                        ],
-//                      ),
-//                    ),
-//                  ),
-//                );
-//              });
+                      loadbrands();
                     },
                     child: _selectedFilter == "Brand"
                         ? Container(
@@ -1705,13 +1845,85 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 5,
                 ),
                 InkWell(
+                    onTap: () {
+                      scaffoldState.currentState.showBottomSheet((context) {
+                        return Container(
+                          height: 500,
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(Feather.chevron_down),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'Conditions',
+                                      style: TextStyle(
+                                          fontFamily: 'SF',
+                                          fontSize: 16,
+                                          color: Colors.deepOrange),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Container(
+                                      height: 450,
+                                      child: ListView.builder(
+                                        primary: false,
+                                        shrinkWrap: true,
+                                        itemCount: conditions.length,
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              setState(() {
+                                                _selectedCondition =
+                                                    conditions[index];
+                                              });
+
+                                              setState(() {
+                                                _selectedFilter = 'Condition';
+                                                _FilterLoad = "Condition";
+                                                condition = _selectedCondition;
+                                                skip = 0;
+                                                limit = 20;
+                                                loading = true;
+                                              });
+                                              itemsgrid.clear();
+                                              Navigator.of(context).pop();
+
+                                              fetchCondition(
+                                                  _selectedCondition);
+                                            },
+                                            child: ListTile(
+                                              title: conditions[index] != null
+                                                  ? Text(conditions[index])
+                                                  : Text('sd'),
+                                            ),
+                                          );
+                                        },
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      });
+                    },
                     child: _selectedFilter == "Condition"
                         ? Container(
                             height: 30,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.deepOrangeAccent),
-                            width: 60,
+                            width: 80,
                             child: Center(
                               child: Text(
                                 'Condition',
@@ -1729,7 +1941,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Border.all(width: 0.2, color: Colors.grey),
                                 borderRadius: BorderRadius.circular(15),
                                 color: Colors.white),
-                            width: 60,
+                            width: 80,
                             child: Center(
                               child: Text(
                                 'Condition',
@@ -1744,6 +1956,214 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 5,
                 ),
                 InkWell(
+                    onTap: () {
+                      scaffoldState.currentState.showBottomSheet((context) {
+                        return Container(
+                            height: 300,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Feather.chevron_down),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Price',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        color: Colors.deepOrange),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Center(
+                                    child: ListTile(
+                                        title: Text(
+                                          'Minimum Price',
+                                          style: TextStyle(
+                                            fontFamily: 'SF',
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        trailing: Container(
+                                            width: 200,
+                                            padding: EdgeInsets.only(),
+                                            child: Center(
+                                              child: TextField(
+                                                cursorColor: Color(0xFF979797),
+                                                controller: minpricecontroller,
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(),
+                                                decoration: InputDecoration(
+                                                    labelText:
+                                                        "Price " + currency,
+                                                    alignLabelWithHint: true,
+                                                    labelStyle: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 16,
+                                                    ),
+                                                    focusColor: Colors.black,
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    border: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedErrorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    disabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    errorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    ))),
+                                              ),
+                                            )))),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Center(
+                                    child: ListTile(
+                                        title: Text(
+                                          'Maximum Price',
+                                          style: TextStyle(
+                                            fontFamily: 'SF',
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        trailing: Container(
+                                            width: 200,
+                                            padding: EdgeInsets.only(),
+                                            child: Center(
+                                              child: TextField(
+                                                cursorColor: Color(0xFF979797),
+                                                controller: maxpricecontroller,
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(),
+                                                decoration: InputDecoration(
+                                                    labelText:
+                                                        "Price " + currency,
+                                                    alignLabelWithHint: true,
+                                                    labelStyle: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 16,
+                                                    ),
+                                                    focusColor: Colors.black,
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    border: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedErrorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    disabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    errorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    ))),
+                                              ),
+                                            )))),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                InkWell(
+                                    onTap: () async {
+                                      setState(() {
+                                        _selectedFilter = 'Price';
+                                        _FilterLoad = "Price";
+                                        minprice = minpricecontroller.text;
+                                        maxprice = maxpricecontroller.text;
+                                        skip = 0;
+                                        limit = 20;
+                                        loading = true;
+                                      });
+                                      itemsgrid.clear();
+                                      Navigator.of(context).pop();
+
+                                      fetchPrice(minpricecontroller.text,
+                                          maxpricecontroller.text);
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: Colors.deepOrangeAccent),
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Center(
+                                        child: Text(
+                                          'Filter',
+                                          style: TextStyle(
+                                              fontFamily: 'SF',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ))
+                              ],
+                            ));
+                      });
+                    },
                     child: _selectedFilter == "Price"
                         ? Container(
                             height: 30,
@@ -1783,6 +2203,87 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ));
+  }
+
+  List<String> brands = List<String>();
+
+  TextEditingController searchcontrollerr = TextEditingController();
+
+  loadbrands() async {
+    brands.clear();
+    var categoryurl = 'https://api.sellship.co/api/getallbrands';
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var categoryrespons = json.decode(categoryresponse.body);
+      print(categoryrespons);
+      for (int i = 0; i < categoryrespons.length; i++) {
+        brands.add(categoryrespons[i]);
+      }
+      setState(() {
+        brands = brands;
+      });
+    } else {
+      print(categoryresponse.statusCode);
+    }
+
+    scaffoldState.currentState.showBottomSheet((context) {
+      return Container(
+        height: 500,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Feather.chevron_down),
+              SizedBox(
+                height: 2,
+              ),
+              Center(
+                child: Text(
+                  'Brand',
+                  style: TextStyle(
+                      fontFamily: 'SF', fontSize: 16, color: Colors.deepOrange),
+                ),
+              ),
+              Flexible(
+//                  height: 600,
+                  child: AlphabetListScrollView(
+                showPreview: true,
+                strList: brands,
+                indexedHeight: (i) {
+                  return 40;
+                },
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () async {
+                      setState(() {
+                        _selectedFilter = 'Brand';
+                        _FilterLoad = "Brand";
+                        brand = brands[index];
+                        skip = 0;
+                        limit = 20;
+                        loading = true;
+                      });
+                      itemsgrid.clear();
+                      Navigator.of(context).pop();
+
+                      fetchbrands(brands[index]);
+                    },
+                    child: ListTile(
+                      title: brands[index] != null
+                          ? Text(brands[index])
+                          : Text('sd'),
+                    ),
+                  );
+                },
+              ))
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
 
@@ -1890,7 +2391,7 @@ class UserSearchDelegate extends SearchDelegate {
         : ListView(
             children: <Widget>[
               ListTile(
-                title: Text('dss'),
+                title: Text(''),
               )
             ],
           );

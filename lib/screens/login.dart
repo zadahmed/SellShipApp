@@ -728,14 +728,40 @@ class _LoginPageState extends State<LoginPage>
                                                 fontSize: 16,
                                               )),
                                         ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
                                         Expanded(
                                             child: Image.asset(
                                           'assets/little_theologians_4x.png',
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fitWidth,
                                         ))
                                       ],
                                     )),
-                              new Text("This is chat Tab View"),
+                              Expanded(
+                                  child: Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Center(
+                                    child: Text('View your orders here!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontFamily: 'SF',
+                                          fontSize: 16,
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Expanded(
+                                      child: Image.asset(
+                                    'assets/onboard1.png',
+                                    fit: BoxFit.fitWidth,
+                                  ))
+                                ],
+                              )),
                               FavouritesScreen()
                             ],
                             controller: _tabController,
