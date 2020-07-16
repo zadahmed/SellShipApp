@@ -428,7 +428,6 @@ class _SignUpProfilePageState extends State<SignUpProfilePage> {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => RootScreen()));
         } else {
-          Navigator.of(context, rootNavigator: true).pop('dialog');
           showDialog(
               context: context,
               builder: (_) => AssetGiffyDialog(
@@ -450,11 +449,11 @@ class _SignUpProfilePageState extends State<SignUpProfilePage> {
                     entryAnimation: EntryAnimation.DEFAULT,
                     onOkButtonPressed: () {
                       Navigator.of(context, rootNavigator: true).pop('dialog');
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
                     },
                   ));
         }
       } else {
-        Navigator.of(context, rootNavigator: true).pop('dialog');
         showDialog(
             context: context,
             builder: (_) => AssetGiffyDialog(
@@ -475,6 +474,7 @@ class _SignUpProfilePageState extends State<SignUpProfilePage> {
                   onlyOkButton: true,
                   entryAnimation: EntryAnimation.DEFAULT,
                   onOkButtonPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
                     Navigator.of(context, rootNavigator: true).pop('dialog');
                   },
                 ));

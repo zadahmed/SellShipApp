@@ -515,344 +515,349 @@ class _AddItemLocationState extends State<AddItemLocation> {
                   ),
                 ),
               ),
-        bottomNavigationBar: InkWell(
-          onTap: () async {
-            var userurl = 'https://api.sellship.co/api/user/' + userid;
-            final userresponse = await http.get(userurl);
-            if (userresponse.statusCode == 200) {
-              var userrespons = json.decode(userresponse.body);
-              var profilemap = userrespons;
-              print(profilemap);
-              if (mounted) {
-                setState(() {
-                  firstname = profilemap['first_name'];
-                  phonenumber = profilemap['phonenumber'];
-                  email = profilemap['email'];
-                });
-              }
-            }
+        bottomNavigationBar: Padding(
+            padding: EdgeInsets.all(10),
+            child: InkWell(
+              onTap: () async {
+                var userurl = 'https://api.sellship.co/api/user/' + userid;
+                final userresponse = await http.get(userurl);
+                if (userresponse.statusCode == 200) {
+                  var userrespons = json.decode(userresponse.body);
+                  var profilemap = userrespons;
+                  print(profilemap);
+                  if (mounted) {
+                    setState(() {
+                      firstname = profilemap['first_name'];
+                      phonenumber = profilemap['phonenumber'];
+                      email = profilemap['email'];
+                    });
+                  }
+                }
 
-            if (meetupcheckbox == false && shippingcheckbox == false) {
-              showInSnackBar('Please choose a checkbox for delivery method!');
-            } else if (city == null) {
-              showInSnackBar('Please choose the location of your item!');
-            } else {
-              showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (BuildContext context) {
-                    return Dialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(20.0)), //this right here
-                      child: Container(
-                        height: 100,
-                        child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child:
-                                SpinKitChasingDots(color: Colors.deepOrange)),
-                      ),
-                    );
-                  });
-
-              var url = 'https://api.sellship.co/api/additem';
-
-              Dio dio = new Dio();
-              FormData formData;
-              if (_image != null) {
-                String fileName = _image.path.split('/').last;
-                formData = FormData.fromMap({
-                  'name': itemname,
-                  'price': price,
-                  'originalprice': '',
-                  'category': _selectedCategory,
-                  'subcategory': _selectedsubCategory,
-                  'subsubcategory': _selectedsubsubCategory,
-                  'latitude': _lastMapPosition.latitude,
-                  'longitude': _lastMapPosition.longitude,
-                  'description': description,
-                  'meetup': meetupcheckbox,
-                  'shipping': shippingcheckbox,
-                  'city': city.trim(),
-                  'country': country.trim(),
-                  'condition': _selectedCondition,
-                  'brand': _selectedbrand,
-                  'size': size,
-                  'userid': userid,
-                  'username': firstname,
-                  'useremail': email,
-                  'usernumber': phonenumber,
-                  'date_uploaded': DateTime.now().toString(),
-                  'image': await MultipartFile.fromFile(_image.path,
-                      filename: fileName)
-                });
-              }
-              if (_image != null && _image2 != null) {
-                String fileName = _image.path.split('/').last;
-                String fileName2 = _image2.path.split('/').last;
-                formData = FormData.fromMap({
-                  'name': itemname,
-                  'price': price,
-                  'originalprice': '',
-                  'category': _selectedCategory,
-                  'subcategory': _selectedsubCategory,
-                  'subsubcategory': _selectedsubsubCategory,
-                  'latitude': _lastMapPosition.latitude,
-                  'longitude': _lastMapPosition.longitude,
-                  'meetup': meetupcheckbox,
-                  'shipping': shippingcheckbox,
-                  'description': description,
-                  'city': city.trim(),
-                  'condition': _selectedCondition,
-                  'userid': userid,
-                  'brand': _selectedbrand,
-                  'size': size,
-                  'country': country.trim(),
-                  'username': firstname,
-                  'useremail': email,
-                  'usernumber': phonenumber,
-                  'date_uploaded': DateTime.now().toString(),
-                  'image': await MultipartFile.fromFile(_image.path,
-                      filename: fileName),
-                  'image2': await MultipartFile.fromFile(_image2.path,
-                      filename: fileName2),
-                });
-              }
-              if (_image != null && _image2 != null && _image3 != null) {
-                String fileName = _image.path.split('/').last;
-                String fileName2 = _image2.path.split('/').last;
-                String fileName3 = _image3.path.split('/').last;
-
-                formData = FormData.fromMap({
-                  'name': itemname,
-                  'price': price,
-                  'category': _selectedCategory,
-                  'originalprice': '',
-                  'subcategory': _selectedsubCategory,
-                  'subsubcategory': _selectedsubsubCategory,
-                  'latitude': _lastMapPosition.latitude,
-                  'longitude': _lastMapPosition.longitude,
-                  'description': description,
-                  'city': city.trim(),
-                  'condition': _selectedCondition,
-                  'meetup': meetupcheckbox,
-                  'shipping': shippingcheckbox,
-                  'brand': _selectedbrand,
-                  'size': size,
-                  'userid': userid,
-                  'country': country.trim(),
-                  'username': firstname,
-                  'useremail': email,
-                  'usernumber': phonenumber,
-                  'date_uploaded': DateTime.now().toString(),
-                  'image': await MultipartFile.fromFile(_image.path,
-                      filename: fileName),
-                  'image2': await MultipartFile.fromFile(_image2.path,
-                      filename: fileName2),
-                  'image3': await MultipartFile.fromFile(_image3.path,
-                      filename: fileName3),
-                });
-              }
-              if (_image != null &&
-                  _image2 != null &&
-                  _image3 != null &&
-                  _image4 != null) {
-                String fileName = _image.path.split('/').last;
-                String fileName2 = _image2.path.split('/').last;
-                String fileName3 = _image3.path.split('/').last;
-                String fileName4 = _image4.path.split('/').last;
-
-                formData = FormData.fromMap({
-                  'name': itemname,
-                  'price': price,
-                  'category': _selectedCategory,
-                  'originalprice': '',
-                  'subcategory': _selectedsubCategory,
-                  'subsubcategory': _selectedsubsubCategory,
-                  'latitude': _lastMapPosition.latitude,
-                  'longitude': _lastMapPosition.longitude,
-                  'description': description,
-                  'city': city.trim(),
-                  'userid': userid,
-                  'condition': _selectedCondition,
-                  'meetup': meetupcheckbox,
-                  'shipping': shippingcheckbox,
-                  'brand': _selectedbrand,
-                  'size': size,
-                  'country': country.trim(),
-                  'username': firstname,
-                  'useremail': email,
-                  'usernumber': phonenumber,
-                  'date_uploaded': DateTime.now().toString(),
-                  'image': await MultipartFile.fromFile(_image.path,
-                      filename: fileName),
-                  'image2': await MultipartFile.fromFile(_image2.path,
-                      filename: fileName2),
-                  'image3': await MultipartFile.fromFile(_image3.path,
-                      filename: fileName3),
-                  'image4': await MultipartFile.fromFile(_image4.path,
-                      filename: fileName4),
-                });
-              }
-              if (_image != null &&
-                  _image2 != null &&
-                  _image3 != null &&
-                  _image4 != null &&
-                  _image5 != null) {
-                String fileName = _image.path.split('/').last;
-                String fileName2 = _image2.path.split('/').last;
-                String fileName3 = _image3.path.split('/').last;
-                String fileName4 = _image4.path.split('/').last;
-                String fileName5 = _image5.path.split('/').last;
-
-                formData = FormData.fromMap({
-                  'name': itemname,
-                  'price': price,
-                  'category': _selectedCategory,
-                  'originalprice': '',
-                  'subcategory': _selectedsubCategory,
-                  'subsubcategory': _selectedsubsubCategory,
-                  'latitude': _lastMapPosition.latitude,
-                  'longitude': _lastMapPosition.longitude,
-                  'description': description,
-                  'city': city.trim(),
-                  'country': country.trim(),
-                  'brand': _selectedbrand,
-                  'size': size,
-                  'condition': _selectedCondition,
-                  'meetup': meetupcheckbox,
-                  'shipping': shippingcheckbox,
-                  'userid': userid,
-                  'username': firstname,
-                  'useremail': email,
-                  'usernumber': phonenumber,
-                  'date_uploaded': DateTime.now().toString(),
-                  'image': await MultipartFile.fromFile(_image.path,
-                      filename: fileName),
-                  'image2': await MultipartFile.fromFile(_image2.path,
-                      filename: fileName2),
-                  'image3': await MultipartFile.fromFile(_image3.path,
-                      filename: fileName3),
-                  'image4': await MultipartFile.fromFile(_image4.path,
-                      filename: fileName4),
-                  'image5': await MultipartFile.fromFile(_image5.path,
-                      filename: fileName5),
-                });
-              }
-              if (_image != null &&
-                  _image2 != null &&
-                  _image3 != null &&
-                  _image4 != null &&
-                  _image5 != null &&
-                  _image6 != null) {
-                String fileName = _image.path.split('/').last;
-                String fileName2 = _image2.path.split('/').last;
-                String fileName3 = _image3.path.split('/').last;
-                String fileName4 = _image4.path.split('/').last;
-                String fileName5 = _image5.path.split('/').last;
-                String fileName6 = _image6.path.split('/').last;
-                formData = FormData.fromMap({
-                  'name': itemname,
-                  'price': price,
-                  'category': _selectedCategory,
-                  'originalprice': '',
-                  'subcategory': _selectedsubCategory,
-                  'subsubcategory': _selectedsubsubCategory,
-                  'latitude': _lastMapPosition.latitude,
-                  'longitude': _lastMapPosition.longitude,
-                  'description': description,
-                  'city': city.trim(),
-                  'userid': userid,
-                  'country': country.trim(),
-                  'username': firstname,
-                  'meetup': meetupcheckbox,
-                  'shipping': shippingcheckbox,
-                  'brand': _selectedbrand,
-                  'size': size,
-                  'condition': _selectedCondition,
-                  'useremail': email,
-                  'usernumber': phonenumber,
-                  'date_uploaded': DateTime.now().toString(),
-                  'image': await MultipartFile.fromFile(_image.path,
-                      filename: fileName),
-                  'image2': await MultipartFile.fromFile(_image2.path,
-                      filename: fileName2),
-                  'image3': await MultipartFile.fromFile(_image3.path,
-                      filename: fileName3),
-                  'image4': await MultipartFile.fromFile(_image4.path,
-                      filename: fileName4),
-                  'image5': await MultipartFile.fromFile(_image5.path,
-                      filename: fileName5),
-                  'image6': await MultipartFile.fromFile(_image6.path,
-                      filename: fileName6),
-                });
-              }
-
-              var response = await dio.post(url, data: formData);
-
-              if (response.statusCode == 200) {
-                showDialog(
-                    context: context,
-                    builder: (_) => AssetGiffyDialog(
-                          image: Image.asset(
-                            'assets/yay.gif',
-                            fit: BoxFit.cover,
+                if (meetupcheckbox == false && shippingcheckbox == false) {
+                  showInSnackBar(
+                      'Please choose a checkbox for delivery method!');
+                } else if (city == null) {
+                  showInSnackBar('Please choose the location of your item!');
+                } else {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  20.0)), //this right here
+                          child: Container(
+                            height: 100,
+                            child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: SpinKitChasingDots(
+                                    color: Colors.deepOrange)),
                           ),
-                          title: Text(
-                            'Hooray!',
-                            style: TextStyle(
-                                fontSize: 22.0, fontWeight: FontWeight.w600),
-                          ),
-                          description: Text(
-                            'Your Item\'s Uploaded',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(),
-                          ),
-                          onlyOkButton: true,
-                          entryAnimation: EntryAnimation.DEFAULT,
-                          onOkButtonPressed: () {
-                            Navigator.of(context, rootNavigator: true)
-                                .pop('dialog');
-                            Navigator.of(context, rootNavigator: true)
-                                .pop('dialog');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RootScreen()),
-                            );
-                          },
-                        ));
-              } else {
-                showInSnackBar('Looks like something went wrong!');
-              }
-            }
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 48,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.deepOrangeAccent, Colors.deepOrange],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight),
-                boxShadow: [
-                  BoxShadow(
-                      color: Color(0xFF9DA3B4).withOpacity(0.1),
-                      blurRadius: 65.0,
-                      offset: Offset(0.0, 15.0))
-                ]),
-            child: Center(
-              child: Text(
-                "Add an Item",
-                style: TextStyle(
-                    fontFamily: 'SF',
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+                        );
+                      });
+
+                  var url = 'https://api.sellship.co/api/additem';
+
+                  Dio dio = new Dio();
+                  FormData formData;
+                  if (_image != null) {
+                    String fileName = _image.path.split('/').last;
+                    formData = FormData.fromMap({
+                      'name': itemname,
+                      'price': price,
+                      'originalprice': '',
+                      'category': _selectedCategory,
+                      'subcategory': _selectedsubCategory,
+                      'subsubcategory': _selectedsubsubCategory,
+                      'latitude': _lastMapPosition.latitude,
+                      'longitude': _lastMapPosition.longitude,
+                      'description': description,
+                      'meetup': meetupcheckbox,
+                      'shipping': shippingcheckbox,
+                      'city': city.trim(),
+                      'country': country.trim(),
+                      'condition': _selectedCondition,
+                      'brand': _selectedbrand,
+                      'size': size,
+                      'userid': userid,
+                      'username': firstname,
+                      'useremail': email,
+                      'usernumber': phonenumber,
+                      'date_uploaded': DateTime.now().toString(),
+                      'image': await MultipartFile.fromFile(_image.path,
+                          filename: fileName)
+                    });
+                  }
+                  if (_image != null && _image2 != null) {
+                    String fileName = _image.path.split('/').last;
+                    String fileName2 = _image2.path.split('/').last;
+                    formData = FormData.fromMap({
+                      'name': itemname,
+                      'price': price,
+                      'originalprice': '',
+                      'category': _selectedCategory,
+                      'subcategory': _selectedsubCategory,
+                      'subsubcategory': _selectedsubsubCategory,
+                      'latitude': _lastMapPosition.latitude,
+                      'longitude': _lastMapPosition.longitude,
+                      'meetup': meetupcheckbox,
+                      'shipping': shippingcheckbox,
+                      'description': description,
+                      'city': city.trim(),
+                      'condition': _selectedCondition,
+                      'userid': userid,
+                      'brand': _selectedbrand,
+                      'size': size,
+                      'country': country.trim(),
+                      'username': firstname,
+                      'useremail': email,
+                      'usernumber': phonenumber,
+                      'date_uploaded': DateTime.now().toString(),
+                      'image': await MultipartFile.fromFile(_image.path,
+                          filename: fileName),
+                      'image2': await MultipartFile.fromFile(_image2.path,
+                          filename: fileName2),
+                    });
+                  }
+                  if (_image != null && _image2 != null && _image3 != null) {
+                    String fileName = _image.path.split('/').last;
+                    String fileName2 = _image2.path.split('/').last;
+                    String fileName3 = _image3.path.split('/').last;
+
+                    formData = FormData.fromMap({
+                      'name': itemname,
+                      'price': price,
+                      'category': _selectedCategory,
+                      'originalprice': '',
+                      'subcategory': _selectedsubCategory,
+                      'subsubcategory': _selectedsubsubCategory,
+                      'latitude': _lastMapPosition.latitude,
+                      'longitude': _lastMapPosition.longitude,
+                      'description': description,
+                      'city': city.trim(),
+                      'condition': _selectedCondition,
+                      'meetup': meetupcheckbox,
+                      'shipping': shippingcheckbox,
+                      'brand': _selectedbrand,
+                      'size': size,
+                      'userid': userid,
+                      'country': country.trim(),
+                      'username': firstname,
+                      'useremail': email,
+                      'usernumber': phonenumber,
+                      'date_uploaded': DateTime.now().toString(),
+                      'image': await MultipartFile.fromFile(_image.path,
+                          filename: fileName),
+                      'image2': await MultipartFile.fromFile(_image2.path,
+                          filename: fileName2),
+                      'image3': await MultipartFile.fromFile(_image3.path,
+                          filename: fileName3),
+                    });
+                  }
+                  if (_image != null &&
+                      _image2 != null &&
+                      _image3 != null &&
+                      _image4 != null) {
+                    String fileName = _image.path.split('/').last;
+                    String fileName2 = _image2.path.split('/').last;
+                    String fileName3 = _image3.path.split('/').last;
+                    String fileName4 = _image4.path.split('/').last;
+
+                    formData = FormData.fromMap({
+                      'name': itemname,
+                      'price': price,
+                      'category': _selectedCategory,
+                      'originalprice': '',
+                      'subcategory': _selectedsubCategory,
+                      'subsubcategory': _selectedsubsubCategory,
+                      'latitude': _lastMapPosition.latitude,
+                      'longitude': _lastMapPosition.longitude,
+                      'description': description,
+                      'city': city.trim(),
+                      'userid': userid,
+                      'condition': _selectedCondition,
+                      'meetup': meetupcheckbox,
+                      'shipping': shippingcheckbox,
+                      'brand': _selectedbrand,
+                      'size': size,
+                      'country': country.trim(),
+                      'username': firstname,
+                      'useremail': email,
+                      'usernumber': phonenumber,
+                      'date_uploaded': DateTime.now().toString(),
+                      'image': await MultipartFile.fromFile(_image.path,
+                          filename: fileName),
+                      'image2': await MultipartFile.fromFile(_image2.path,
+                          filename: fileName2),
+                      'image3': await MultipartFile.fromFile(_image3.path,
+                          filename: fileName3),
+                      'image4': await MultipartFile.fromFile(_image4.path,
+                          filename: fileName4),
+                    });
+                  }
+                  if (_image != null &&
+                      _image2 != null &&
+                      _image3 != null &&
+                      _image4 != null &&
+                      _image5 != null) {
+                    String fileName = _image.path.split('/').last;
+                    String fileName2 = _image2.path.split('/').last;
+                    String fileName3 = _image3.path.split('/').last;
+                    String fileName4 = _image4.path.split('/').last;
+                    String fileName5 = _image5.path.split('/').last;
+
+                    formData = FormData.fromMap({
+                      'name': itemname,
+                      'price': price,
+                      'category': _selectedCategory,
+                      'originalprice': '',
+                      'subcategory': _selectedsubCategory,
+                      'subsubcategory': _selectedsubsubCategory,
+                      'latitude': _lastMapPosition.latitude,
+                      'longitude': _lastMapPosition.longitude,
+                      'description': description,
+                      'city': city.trim(),
+                      'country': country.trim(),
+                      'brand': _selectedbrand,
+                      'size': size,
+                      'condition': _selectedCondition,
+                      'meetup': meetupcheckbox,
+                      'shipping': shippingcheckbox,
+                      'userid': userid,
+                      'username': firstname,
+                      'useremail': email,
+                      'usernumber': phonenumber,
+                      'date_uploaded': DateTime.now().toString(),
+                      'image': await MultipartFile.fromFile(_image.path,
+                          filename: fileName),
+                      'image2': await MultipartFile.fromFile(_image2.path,
+                          filename: fileName2),
+                      'image3': await MultipartFile.fromFile(_image3.path,
+                          filename: fileName3),
+                      'image4': await MultipartFile.fromFile(_image4.path,
+                          filename: fileName4),
+                      'image5': await MultipartFile.fromFile(_image5.path,
+                          filename: fileName5),
+                    });
+                  }
+                  if (_image != null &&
+                      _image2 != null &&
+                      _image3 != null &&
+                      _image4 != null &&
+                      _image5 != null &&
+                      _image6 != null) {
+                    String fileName = _image.path.split('/').last;
+                    String fileName2 = _image2.path.split('/').last;
+                    String fileName3 = _image3.path.split('/').last;
+                    String fileName4 = _image4.path.split('/').last;
+                    String fileName5 = _image5.path.split('/').last;
+                    String fileName6 = _image6.path.split('/').last;
+                    formData = FormData.fromMap({
+                      'name': itemname,
+                      'price': price,
+                      'category': _selectedCategory,
+                      'originalprice': '',
+                      'subcategory': _selectedsubCategory,
+                      'subsubcategory': _selectedsubsubCategory,
+                      'latitude': _lastMapPosition.latitude,
+                      'longitude': _lastMapPosition.longitude,
+                      'description': description,
+                      'city': city.trim(),
+                      'userid': userid,
+                      'country': country.trim(),
+                      'username': firstname,
+                      'meetup': meetupcheckbox,
+                      'shipping': shippingcheckbox,
+                      'brand': _selectedbrand,
+                      'size': size,
+                      'condition': _selectedCondition,
+                      'useremail': email,
+                      'usernumber': phonenumber,
+                      'date_uploaded': DateTime.now().toString(),
+                      'image': await MultipartFile.fromFile(_image.path,
+                          filename: fileName),
+                      'image2': await MultipartFile.fromFile(_image2.path,
+                          filename: fileName2),
+                      'image3': await MultipartFile.fromFile(_image3.path,
+                          filename: fileName3),
+                      'image4': await MultipartFile.fromFile(_image4.path,
+                          filename: fileName4),
+                      'image5': await MultipartFile.fromFile(_image5.path,
+                          filename: fileName5),
+                      'image6': await MultipartFile.fromFile(_image6.path,
+                          filename: fileName6),
+                    });
+                  }
+
+                  var response = await dio.post(url, data: formData);
+
+                  if (response.statusCode == 200) {
+                    showDialog(
+                        context: context,
+                        builder: (_) => AssetGiffyDialog(
+                              image: Image.asset(
+                                'assets/yay.gif',
+                                fit: BoxFit.cover,
+                              ),
+                              title: Text(
+                                'Hooray!',
+                                style: TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              description: Text(
+                                'Your Item\'s Uploaded',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(),
+                              ),
+                              onlyOkButton: true,
+                              entryAnimation: EntryAnimation.DEFAULT,
+                              onOkButtonPressed: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop('dialog');
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop('dialog');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RootScreen()),
+                                );
+                              },
+                            ));
+                  } else {
+                    showInSnackBar('Looks like something went wrong!');
+                  }
+                }
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 48,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.deepOrangeAccent, Colors.deepOrange],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Color(0xFF9DA3B4).withOpacity(0.1),
+                          blurRadius: 65.0,
+                          offset: Offset(0.0, 15.0))
+                    ]),
+                child: Center(
+                  child: Text(
+                    "Add an Item",
+                    style: TextStyle(
+                        fontFamily: 'SF',
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ));
+            )));
   }
 
   final Geolocator geolocator = Geolocator();

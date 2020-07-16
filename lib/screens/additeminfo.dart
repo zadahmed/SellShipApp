@@ -1260,88 +1260,97 @@ class _AddItemInfoState extends State<AddItemInfo> {
               ),
             )),
         bottomNavigationBar: userid != null
-            ? InkWell(
-                onTap: () async {
-                  if (businessdescriptionController.text.isEmpty) {
-                    businessdescriptionController.text = '';
-                  }
-
-                  if (_selectedCategory == null) {
-                    showInSnackBar('Please choose a category for your item!');
-                  } else if (_selectedCondition == null) {
-                    showInSnackBar('Please choose the condition of your item!');
-                  } else if (_selectedbrand == null) {
-                    showInSnackBar('Please choose the brand for your item!');
-                  } else {
-                    String brand;
-                    if (businessbrandcontroller != null) {
-                      String brandcontrollertext =
-                          businessbrandcontroller.text.trim();
-                      if (brandcontrollertext.isNotEmpty) {
-                        brand = businessbrandcontroller.text;
-                      } else if (_selectedbrand.isNotEmpty) {
-                        brand = _selectedbrand;
-                      }
-                    } else if (businessbrandcontroller == null) {
-                      showInSnackBar('Please choose a brand for your item!');
+            ? Padding(
+                padding: EdgeInsets.all(10),
+                child: InkWell(
+                  onTap: () async {
+                    if (businessdescriptionController.text.isEmpty) {
+                      businessdescriptionController.text = '';
                     }
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddItemLocation(
-                                image: _image,
-                                image2: _image2,
-                                image3: _image3,
-                                image4: _image4,
-                                image5: _image5,
-                                price: price,
-                                brand: brand,
-                                category: _selectedCategory,
-                                subcategory: _selectedsubCategory == null
-                                    ? ''
-                                    : _selectedsubCategory,
-                                subsubcategory: _selectedsubsubCategory == null
-                                    ? ''
-                                    : _selectedsubsubCategory,
-                                size: businessizecontroller.text == null
-                                    ? ''
-                                    : businessizecontroller.text,
-                                condition: _selectedCondition,
-                                description: businessdescriptionController.text,
-                                userid: userid,
-                                image6: _image6,
-                                itemname: itemname,
-                              )),
-                    );
-                  }
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 20,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [Colors.deepOrangeAccent, Colors.deepOrange],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color(0xFF9DA3B4).withOpacity(0.1),
-                            blurRadius: 65.0,
-                            offset: Offset(0.0, 15.0))
-                      ]),
-                  child: Center(
-                    child: Text(
-                      "Next ( Delivery Information )",
-                      style: TextStyle(
-                          fontFamily: 'SF',
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                    if (_selectedCategory == null) {
+                      showInSnackBar('Please choose a category for your item!');
+                    } else if (_selectedCondition == null) {
+                      showInSnackBar(
+                          'Please choose the condition of your item!');
+                    } else if (_selectedbrand == null) {
+                      showInSnackBar('Please choose the brand for your item!');
+                    } else {
+                      String brand;
+                      if (businessbrandcontroller != null) {
+                        String brandcontrollertext =
+                            businessbrandcontroller.text.trim();
+                        if (brandcontrollertext.isNotEmpty) {
+                          brand = businessbrandcontroller.text;
+                        } else if (_selectedbrand.isNotEmpty) {
+                          brand = _selectedbrand;
+                        }
+                      } else if (businessbrandcontroller == null) {
+                        showInSnackBar('Please choose a brand for your item!');
+                      }
+
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddItemLocation(
+                                  image: _image,
+                                  image2: _image2,
+                                  image3: _image3,
+                                  image4: _image4,
+                                  image5: _image5,
+                                  price: price,
+                                  brand: brand,
+                                  category: _selectedCategory,
+                                  subcategory: _selectedsubCategory == null
+                                      ? ''
+                                      : _selectedsubCategory,
+                                  subsubcategory:
+                                      _selectedsubsubCategory == null
+                                          ? ''
+                                          : _selectedsubsubCategory,
+                                  size: businessizecontroller.text == null
+                                      ? ''
+                                      : businessizecontroller.text,
+                                  condition: _selectedCondition,
+                                  description:
+                                      businessdescriptionController.text,
+                                  userid: userid,
+                                  image6: _image6,
+                                  itemname: itemname,
+                                )),
+                      );
+                    }
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 20,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              Colors.deepOrangeAccent,
+                              Colors.deepOrange
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color(0xFF9DA3B4).withOpacity(0.1),
+                              blurRadius: 65.0,
+                              offset: Offset(0.0, 15.0))
+                        ]),
+                    child: Center(
+                      child: Text(
+                        "Next ( Delivery Information )",
+                        style: TextStyle(
+                            fontFamily: 'SF',
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
-              )
+                ))
             : Text(''));
   }
 

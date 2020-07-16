@@ -14,6 +14,7 @@ class Item {
   final int likes;
   final String city;
   final String useremail;
+  final String date;
   final String latitude;
   final String longitude;
   final String usernumber;
@@ -31,6 +32,7 @@ class Item {
       this.name,
       this.image,
       this.image1,
+      this.date,
       this.image2,
       this.image3,
       this.image4,

@@ -32,7 +32,16 @@
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="signinwithapple" />
+                <data android:path="callback" />
+            </intent-filter>
         </activity>
+
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4"
             />

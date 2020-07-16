@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
@@ -12,6 +13,7 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginProfile extends StatefulWidget {
   LoginProfile({Key key}) : super(key: key);
@@ -346,6 +348,142 @@ class _LoginProfileState extends State<LoginProfile> {
                           style:
                               TextStyle(fontSize: 15, color: Colors.grey[700]),
                         )),
+                    Platform.isIOS
+                        ? FadeAnimation(
+                            1.2,
+                            Container(
+                              width: 250,
+                              child: SignInWithAppleButton(
+                                onPressed: () async {
+                                  final credential = await SignInWithApple
+                                      .getAppleIDCredential(
+                                    scopes: [
+                                      AppleIDAuthorizationScopes.email,
+                                      AppleIDAuthorizationScopes.fullName,
+                                    ],
+                                    webAuthenticationOptions:
+                                        WebAuthenticationOptions(
+                                      clientId: 'com.zad.sellshipsignin',
+                                      redirectUri: Uri.parse(
+                                        'https://flawless-absorbed-marjoram.glitch.me/callbacks/sign_in_with_apple',
+                                      ),
+                                    ),
+                                  );
+
+                                  if (credential.email != null &&
+                                      credential.givenName != null) {
+                                    var url =
+                                        'https://api.sellship.co/api/signup';
+
+                                    Map<String, String> body = {
+                                      'first_name': credential.givenName,
+                                      'last_name': credential.familyName,
+                                      'email': credential.email,
+                                      'phonenumber': '000',
+                                      'password': credential.authorizationCode,
+                                      'fcmtoken': '000',
+                                    };
+
+                                    final response =
+                                        await http.post(url, body: body);
+
+                                    if (response.statusCode == 200) {
+                                      var jsondata = json.decode(response.body);
+                                      print(jsondata);
+                                      if (jsondata['id'] != null) {
+                                        await storage.write(
+                                            key: 'userid',
+                                            value: jsondata['id']);
+
+                                        setState(() {
+                                          userid = jsondata['id'];
+                                        });
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RootScreen()));
+                                      } else {
+                                        var id = jsondata['status']['id'];
+                                        await storage.write(
+                                            key: 'userid', value: id);
+
+                                        setState(() {
+                                          userid = id;
+                                        });
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RootScreen()));
+                                      }
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => AssetGiffyDialog(
+                                                image: Image.asset(
+                                                  'assets/oops.gif',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                title: Text(
+                                                  'Oops!',
+                                                  style: TextStyle(
+                                                      fontSize: 22.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                description: Text(
+                                                  'Looks like something went wrong!',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(),
+                                                ),
+                                                onlyOkButton: true,
+                                                entryAnimation:
+                                                    EntryAnimation.DEFAULT,
+                                                onOkButtonPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                },
+                                              ));
+                                    }
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AssetGiffyDialog(
+                                              image: Image.asset(
+                                                'assets/oops.gif',
+                                                fit: BoxFit.cover,
+                                              ),
+                                              title: Text(
+                                                'Oops!',
+                                                style: TextStyle(
+                                                    fontSize: 22.0,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              description: Text(
+                                                'Looks like something went wrong!',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(),
+                                              ),
+                                              onlyOkButton: true,
+                                              entryAnimation:
+                                                  EntryAnimation.DEFAULT,
+                                              onOkButtonPressed: () {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop('dialog');
+                                              },
+                                            ));
+                                  }
+                                },
+                              ),
+                            ),
+                          )
+                        : Container(),
                     FadeAnimation(
                         1.2,
                         SignInButton(

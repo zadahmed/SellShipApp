@@ -425,7 +425,6 @@ class _SignUpPageState extends State<SignUpPage> {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => RootScreen()));
         } else {
-          Navigator.of(context, rootNavigator: true).pop('dialog');
           showDialog(
               context: context,
               builder: (_) => AssetGiffyDialog(
@@ -447,11 +446,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     entryAnimation: EntryAnimation.DEFAULT,
                     onOkButtonPressed: () {
                       Navigator.of(context, rootNavigator: true).pop('dialog');
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
                     },
                   ));
         }
       } else {
-        Navigator.of(context, rootNavigator: true).pop('dialog');
         showDialog(
             context: context,
             builder: (_) => AssetGiffyDialog(
@@ -472,6 +471,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   onlyOkButton: true,
                   entryAnimation: EntryAnimation.DEFAULT,
                   onOkButtonPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
                     Navigator.of(context, rootNavigator: true).pop('dialog');
                   },
                 ));

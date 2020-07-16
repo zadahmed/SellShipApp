@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/nearme.dart';
@@ -86,9 +87,19 @@ class _HomeScreenState extends State<HomeScreen> {
         var jsonbody = json.decode(response.body);
         itemsgrid.clear();
         for (var i = 0; i < jsonbody.length; i++) {
+          var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+          DateTime dateuploade =
+              DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+          var dateuploaded = timeago.format(dateuploade);
           Item item = Item(
             itemid: jsonbody[i]['_id']['\$oid'],
+            date: dateuploaded,
             name: jsonbody[i]['name'],
+            condition: jsonbody[i]['condition'] == null
+                ? 'Like New'
+                : jsonbody[i]['condition'],
+            username: jsonbody[i]['username'],
             image: jsonbody[i]['image'],
             price: jsonbody[i]['price'].toString(),
             category: jsonbody[i]['category'],
@@ -142,9 +153,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(response.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -184,9 +204,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(response.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -225,9 +254,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(response.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -267,9 +305,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(response.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -308,9 +355,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -351,9 +407,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -396,9 +461,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -443,9 +517,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -492,9 +575,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -539,9 +631,18 @@ class _HomeScreenState extends State<HomeScreen> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -577,9 +678,18 @@ class _HomeScreenState extends State<HomeScreen> {
     var jsonbody = json.decode(response.body);
 
     for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
       Item item = Item(
         itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
         name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
@@ -609,9 +719,18 @@ class _HomeScreenState extends State<HomeScreen> {
     var jsonbody = json.decode(response.body);
 
     for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
       Item item = Item(
         itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
         name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
@@ -641,9 +760,18 @@ class _HomeScreenState extends State<HomeScreen> {
     var jsonbody = json.decode(response.body);
 
     for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
       Item item = Item(
         itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
         name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
@@ -673,9 +801,18 @@ class _HomeScreenState extends State<HomeScreen> {
     var jsonbody = json.decode(response.body);
 
     for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
       Item item = Item(
         itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
         name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
@@ -754,11 +891,20 @@ class _HomeScreenState extends State<HomeScreen> {
     var jsonbody = json.decode(response.body);
 
     for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
       Item item = Item(
         itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
         name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
-        price: jsonbody[i]['price'],
+        price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
       );
@@ -1511,6 +1657,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               : Container(),
                                         ],
                                       ),
+                                      SizedBox(height: 2.0),
                                       new Align(
                                           alignment: Alignment.centerLeft,
                                           child: Padding(
@@ -1522,24 +1669,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
-                                                    Column(
+                                                    Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
-                                                              .start,
+                                                              .spaceBetween,
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: <Widget>[
-                                                        Text(
-                                                          itemsgrid[index].name,
-                                                          style: TextStyle(
-                                                            fontFamily: 'SF',
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w600,
+                                                        Flexible(
+                                                          child: Text(
+                                                            itemsgrid[index]
+                                                                .name,
+                                                            style: TextStyle(
+                                                              fontFamily: 'SF',
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+//                                                            overflow:
+//                                                                TextOverflow
+//                                                                    .ellipsis,
+                                                            textAlign:
+                                                                TextAlign.left,
                                                           ),
-                                                          textAlign:
-                                                              TextAlign.left,
                                                         ),
                                                         SizedBox(height: 3.0),
                                                         Container(
@@ -1551,10 +1705,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                     .toString(),
                                                             style: TextStyle(
                                                               fontFamily: 'SF',
-                                                              fontSize: 14,
+                                                              fontSize: 17,
+                                                              color: Colors
+                                                                  .deepOrange,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w400,
+                                                                      .w700,
                                                             ),
                                                             textAlign:
                                                                 TextAlign.left,
@@ -1562,7 +1718,43 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                  ])))
+                                                    SizedBox(
+                                                      height: 1,
+                                                    ),
+                                                    Align(
+                                                        alignment: Alignment
+                                                            .centerLeft,
+                                                        child: Row(
+                                                          children: <Widget>[
+                                                            Icon(
+                                                              Icons.access_time,
+                                                              size: 12,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            Text(
+                                                              'Uploaded ${itemsgrid[index].date}',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'SF',
+                                                                fontSize: 12,
+                                                                color:
+                                                                    Colors.grey,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        )),
+                                                  ]))),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
                                     ],
                                   ),
                                 ));
