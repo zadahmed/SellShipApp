@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -60,14 +61,15 @@ class _NotifcationPageState extends State<NotifcationPage> {
         print(jsonResponse);
 
         for (int i = 0; i < jsonResponse.length; i++) {
-          var date = jsonResponse[i]['date']['\$date'];
-          DateTime dates = new DateTime.fromMillisecondsSinceEpoch(date);
-          final f = new DateFormat('dd-MM-yyyy hh:mm');
-          var s = f.format(dates);
+          var q = Map<String, dynamic>.from(jsonResponse[i]['date']);
+
+          DateTime dateuploade =
+              DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+          var dateuploaded = timeago.format(dateuploade);
 
           Notifications withd = Notifications(
             message: jsonResponse[i]['message'],
-            date: s.toString(),
+            date: dateuploaded,
             unread: jsonResponse[i]['unread'],
           );
           notificationlist.add(withd);
@@ -171,10 +173,6 @@ class _NotifcationPageState extends State<NotifcationPage> {
                                       builder: (context) => Messages()),
                                 );
                               },
-                              leading: Icon(
-                                FontAwesome5.smile_beam,
-                                color: Colors.deepOrange,
-                              ),
                               trailing: Icon(
                                 Feather.arrow_right,
                                 color: Colors.deepOrange,

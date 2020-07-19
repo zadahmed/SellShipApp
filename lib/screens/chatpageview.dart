@@ -9,6 +9,7 @@ import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -491,424 +492,424 @@ class _ChatPageViewState extends State<ChatPageView> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget chatView(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size(double.infinity, offer == null ? 180 : 210),
-          child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: offer == null ? 180 : 220,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
-                    height: 90,
+        body: CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          pinned: true,
+          backgroundColor: Colors.white,
+          title: Text(
+            recipentname,
+            style: TextStyle(
+                fontFamily: 'SF',
+                fontSize: 16,
+                color: Colors.deepOrange,
+                fontWeight: FontWeight.w600),
+          ),
+          leading: Padding(
+            padding: EdgeInsets.all(10),
+            child: InkWell(
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.deepOrange,
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                }),
+          ),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: InkWell(
+                  child: Icon(
+                    Feather.user,
                     color: Colors.deepOrange,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: InkWell(
-                              child: Icon(
-                                Icons.arrow_back_ios,
-                                color: Colors.white,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).pop();
-                              }),
-                        ),
-                        Text(
-                          recipentname,
-                          style: TextStyle(
-                              fontFamily: 'SF',
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: InkWell(
-                              child: Icon(
-                                Feather.user,
-                                color: Colors.white,
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserItems(
-                                          userid: itemselling.userid,
-                                          username: itemselling.username)),
-                                );
-                              }),
-                        ),
-                      ],
-                    ),
                   ),
-                  itemselling != null
-                      ? Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(itemid: itemselling.itemid)),
-                                );
-                              },
-                              child: Container(
-                                  height: 70,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Colors.white,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UserItems(
+                              userid: itemselling.userid,
+                              username: itemselling.username)),
+                    );
+                  }),
+            ),
+          ],
+          expandedHeight: offer != null ? 170.0 : 125,
+          flexibleSpace: FlexibleSpaceBar(
+            collapseMode: CollapseMode.parallax,
+            centerTitle: true,
+            background: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                itemselling != null
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                        child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Details(itemid: itemselling.itemid)),
+                              );
+                            },
+                            child: Container(
+                                height: 70,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      offset: Offset(0.0, 1.0), //(x,y)
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: ListTile(
+                                  title: Text(
+                                    itemselling.name,
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w800),
                                   ),
-                                  child: ListTile(
-                                    title: Text(
-                                      itemselling.name,
-                                      style: TextStyle(
-                                          fontFamily: 'SF',
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w800),
+                                  leading: Container(
+                                    height: 70,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: CachedNetworkImage(
+                                        imageUrl: itemselling.image,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                    leading: Container(
-                                      height: 70,
-                                      width: 70,
+                                  ),
+                                  subtitle: Text(
+                                    currency +
+                                        ' ' +
+                                        itemselling.price.toString(),
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        color: Colors.deepOrange,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ))))
+                    : Container(),
+                offer != null
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            top: 5, left: 10, right: 10, bottom: 5),
+                        child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Details(itemid: itemselling.itemid)),
+                              );
+                            },
+                            child: Container(
+                                height: 30,
+                                color: Colors.white,
+                                width: MediaQuery.of(context).size.width,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      height: 30,
+                                      width: MediaQuery.of(context).size.width -
+                                          130,
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: CachedNetworkImage(
-                                          imageUrl: itemselling.image,
-                                          fit: BoxFit.cover,
-                                        ),
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
                                       ),
+                                      child: Padding(
+                                          padding:
+                                              EdgeInsets.only(left: 10, top: 5),
+                                          child: currency != null
+                                              ? Text(
+                                                  'Offer Price ' +
+                                                      currency +
+                                                      ' ' +
+                                                      offer.toString(),
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 16,
+                                                      color: Colors.deepOrange,
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                )
+                                              : Container()),
                                     ),
-                                    subtitle: Text(
-                                      currency +
-                                          ' ' +
-                                          itemselling.price.toString(),
-                                      style: TextStyle(
-                                          fontFamily: 'SF',
-                                          fontSize: 16,
-                                          color: Colors.deepOrange,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ))))
-                      : Container(),
-                  offer != null
-                      ? Padding(
-                          padding: EdgeInsets.only(
-                              top: 5, left: 10, right: 10, bottom: 10),
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          Details(itemid: itemselling.itemid)),
-                                );
-                              },
-                              child: Container(
-                                  height: 30,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        height: 30,
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                130,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 10, top: 5),
-                                            child: currency != null
-                                                ? Text(
-                                                    'Offer Price ' +
-                                                        currency +
-                                                        ' ' +
-                                                        offer.toString(),
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                        fontFamily: 'SF',
-                                                        fontSize: 16,
-                                                        color:
-                                                            Colors.deepOrange,
-                                                        fontWeight:
-                                                            FontWeight.w400),
-                                                  )
-                                                : Container()),
-                                      ),
-                                      InkWell(
-                                          onTap: () {
-                                            if (offerstage == 0) {
-                                              if (userid == recipentid) {
-                                                acceptoffer();
-                                              } else {
-                                                showMe(context);
-                                              }
-                                            } else if (offerstage == 1) {
-                                              if (userid == recipentid) {
-                                                canceloffer();
-                                              } else {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Checkout(
-                                                              messageid:
-                                                                  messageid,
-                                                              offer: offer,
-                                                              item:
-                                                                  itemselling)),
-                                                );
-                                              }
-                                            } else if (offerstage == 2) {
+                                    InkWell(
+                                        onTap: () {
+                                          if (offerstage == 0) {
+                                            if (userid == recipentid) {
+                                              acceptoffer();
+                                            } else {
+                                              showMe(context);
+                                            }
+                                          } else if (offerstage == 1) {
+                                            if (userid == recipentid) {
+                                              canceloffer();
+                                            } else {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        OrderDetail(
+                                                        Checkout(
                                                             messageid:
                                                                 messageid,
+                                                            offer: offer,
                                                             item: itemselling)),
                                               );
                                             }
-                                          },
-                                          child: offerstring != null
-                                              ? Container(
-                                                  height: 30,
-                                                  width: 100,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        Colors.deepOrangeAccent,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors
-                                                            .deepOrangeAccent
-                                                            .shade200,
-                                                        offset: Offset(
-                                                            0.0, 1.0), //(x,y)
-                                                        blurRadius: 6.0,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      userid == recipentid
-                                                          ? offeruserstring
-                                                          : offerstring,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontFamily: 'SF',
-                                                          fontSize: 16,
-                                                          color: Colors.white),
+                                          } else if (offerstage == 2) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderDetail(
+                                                          messageid: messageid,
+                                                          item: itemselling)),
+                                            );
+                                          }
+                                        },
+                                        child: offerstring != null
+                                            ? Container(
+                                                height: 30,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      Colors.deepOrangeAccent,
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors
+                                                          .deepOrangeAccent
+                                                          .shade200,
+                                                      offset: Offset(
+                                                          0.0, 1.0), //(x,y)
+                                                      blurRadius: 6.0,
                                                     ),
+                                                  ],
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    userid == recipentid
+                                                        ? offeruserstring
+                                                        : offerstring,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'SF',
+                                                        fontSize: 16,
+                                                        color: Colors.white),
                                                   ),
-                                                )
-                                              : Container())
-                                    ],
-                                  ))))
-                      : Container()
-                ],
-              ))),
-      body: SafeArea(
-        child: Container(
-          child: Stack(
-            fit: StackFit.loose,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: StreamBuilder(
-                          stream: getMessages(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return SingleChildScrollView(
-                                  controller: _scrollController,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: snapshot.data,
-                                  ));
-                            } else if (snapshot.hasError) {
-                              return SingleChildScrollView(
-                                  controller: _scrollController,
-                                  child: Container());
-                            } else {
-                              return Container(
-                                height: 100,
-                                child: SpinKitChasingDots(
-                                    color: Colors.deepOrange),
-                              );
-                            }
-                          }),
-                    ),
-                  ),
-
-                  Divider(height: 0, color: Colors.black26),
-
-                  Container(
-                    color: Colors.white,
-                    height: 50,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: TextField(
-                        maxLines: 20,
-                        controller: _text,
-                        autocorrect: true,
-                        enableSuggestions: true,
-                        textCapitalization: TextCapitalization.sentences,
-                        style: TextStyle(fontFamily: 'SF', fontSize: 16),
-                        decoration: InputDecoration(
-                            // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            suffixIcon: Padding(
-                              padding: EdgeInsets.all(5),
-                              child: InkWell(
-                                child: CircleAvatar(
-                                  child: Icon(
-                                    Feather.send,
-                                    size: 20,
-                                    color: Colors.white,
-                                  ),
-                                  backgroundColor: Colors.deepOrange,
-                                ),
-                                onTap: () async {
-                                  var x = _text.text;
-                                  _text.clear();
-                                  var date = DateTime.now();
-                                  final f = new DateFormat('hh:mm');
-                                  var s = f.format(date);
-                                  childList.add(Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 8.0,
-                                          left: 8.0,
-                                          top: 4.0,
-                                          bottom: 4.0),
-                                      child: Container(
-                                        alignment: Alignment.centerRight,
-                                        child: Container(
-                                          constraints: BoxConstraints(
-                                              maxWidth: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  3 /
-                                                  4),
-                                          padding: EdgeInsets.all(12.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.deepOrange,
-                                            borderRadius:
-                                                BorderRadius.circular(25.0),
-                                          ),
-                                          child: Stack(children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 8.0,
-                                                  left: 8.0,
-                                                  top: 8.0,
-                                                  bottom: 15.0),
-                                              child: Text(x,
-                                                  style: TextStyle(
-                                                      fontFamily: 'SF',
-                                                      fontSize: 14,
-                                                      color: Colors.white)),
-                                            ),
-                                            Positioned(
-                                              bottom: 1,
-                                              right: 10,
-                                              child: Text(
-                                                s,
-                                                style: TextStyle(
-                                                    fontFamily: 'SF',
-                                                    fontSize: 10,
-                                                    color: Colors.white
-                                                        .withOpacity(0.6)),
-                                              ),
-                                            )
-                                          ]),
-                                        ),
-                                      )));
-
-                                  var url =
-                                      'https://api.sellship.co/api/sendmessage/' +
-                                          userid +
-                                          '/' +
-                                          recipentid +
-                                          '/' +
-                                          messageid;
-                                  if (x.isNotEmpty) {
-                                    final response = await http.post(url,
-                                        body: {
-                                          'message': x,
-                                          'time': DateTime.now().toString()
-                                        });
-                                    if (response.statusCode == 200) {
-                                      print('ok');
-                                    } else {
-                                      print(response.statusCode);
-                                      print(response.body);
-                                    }
-
-                                    Timer(Duration(microseconds: 1), () {
-                                      _scrollController.jumpTo(_scrollController
-                                          .position.maxScrollExtent);
-                                    });
-                                  }
-                                },
-                              ),
-                            ),
-                            border: InputBorder.none,
-                            hintText: "Enter your message",
-                            hintStyle:
-                                TextStyle(fontFamily: 'SF', fontSize: 16)),
-                      ),
-                    ),
-                  ),
-                  // ),
-                ],
-              ),
-            ],
+                                                ),
+                                              )
+                                            : Container())
+                                  ],
+                                ))))
+                    : Container()
+              ],
+            ),
           ),
         ),
-      ),
-    );
+        SliverFillRemaining(
+          child: Container(
+            color: Colors.white,
+            child: Stack(
+              fit: StackFit.loose,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Flexible(
+                      fit: FlexFit.tight,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: StreamBuilder(
+                            stream: getMessages(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return SingleChildScrollView(
+                                    controller: _scrollController,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: snapshot.data,
+                                    ));
+                              } else if (snapshot.hasError) {
+                                return SingleChildScrollView(
+                                    controller: _scrollController,
+                                    child: Container());
+                              } else {
+                                return Container(
+                                  height: 100,
+                                  child: SpinKitChasingDots(
+                                      color: Colors.deepOrange),
+                                );
+                              }
+                            }),
+                      ),
+                    ),
+
+                    Divider(height: 0, color: Colors.black26),
+
+                    Container(
+                      color: Colors.white,
+                      height: 50,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: TextField(
+                          maxLines: 20,
+                          controller: _text,
+                          autocorrect: true,
+                          enableSuggestions: true,
+                          textCapitalization: TextCapitalization.sentences,
+                          style: TextStyle(fontFamily: 'SF', fontSize: 16),
+                          decoration: InputDecoration(
+                              // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                              suffixIcon: Padding(
+                                padding: EdgeInsets.all(5),
+                                child: InkWell(
+                                  child: CircleAvatar(
+                                    child: Icon(
+                                      Feather.send,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ),
+                                    backgroundColor: Colors.deepOrange,
+                                  ),
+                                  onTap: () async {
+                                    var x = _text.text;
+                                    _text.clear();
+                                    var date = DateTime.now();
+                                    final f = new DateFormat('hh:mm');
+                                    var s = f.format(date);
+                                    childList.add(Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 8.0,
+                                            left: 8.0,
+                                            top: 4.0,
+                                            bottom: 4.0),
+                                        child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    3 /
+                                                    4),
+                                            padding: EdgeInsets.all(12.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.deepOrange,
+                                              borderRadius:
+                                                  BorderRadius.circular(25.0),
+                                            ),
+                                            child: Stack(children: <Widget>[
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0,
+                                                    left: 8.0,
+                                                    top: 8.0,
+                                                    bottom: 15.0),
+                                                child: Text(x,
+                                                    style: TextStyle(
+                                                        fontFamily: 'SF',
+                                                        fontSize: 14,
+                                                        color: Colors.white)),
+                                              ),
+                                              Positioned(
+                                                bottom: 1,
+                                                right: 10,
+                                                child: Text(
+                                                  s,
+                                                  style: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 10,
+                                                      color: Colors.white
+                                                          .withOpacity(0.6)),
+                                                ),
+                                              )
+                                            ]),
+                                          ),
+                                        )));
+
+                                    var url =
+                                        'https://api.sellship.co/api/sendmessage/' +
+                                            userid +
+                                            '/' +
+                                            recipentid +
+                                            '/' +
+                                            messageid;
+                                    if (x.isNotEmpty) {
+                                      final response = await http.post(url,
+                                          body: {
+                                            'message': x,
+                                            'time': DateTime.now().toString()
+                                          });
+                                      if (response.statusCode == 200) {
+                                        print('ok');
+                                      } else {
+                                        print(response.statusCode);
+                                        print(response.body);
+                                      }
+
+                                      Timer(Duration(microseconds: 1), () {
+                                        _scrollController.jumpTo(
+                                            _scrollController
+                                                .position.maxScrollExtent);
+                                      });
+                                    }
+                                  },
+                                ),
+                              ),
+                              border: InputBorder.none,
+                              hintText: "Enter your message",
+                              hintStyle:
+                                  TextStyle(fontFamily: 'SF', fontSize: 16)),
+                        ),
+                      ),
+                    ),
+                    // ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return chatView(context);
   }
 }

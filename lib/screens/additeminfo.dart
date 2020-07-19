@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/screens/additemlocation.dart';
+import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -196,6 +197,8 @@ class _AddItemInfoState extends State<AddItemInfo> {
       },
     );
   }
+
+  var brand;
 
   @override
   Widget build(BuildContext context) {
@@ -1044,55 +1047,122 @@ class _AddItemInfoState extends State<AddItemInfo> {
                               ),
                               child: Center(
                                   child: ListTile(
-                                title: Text(
-                                  'Brand',
-                                  style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                trailing: Container(
-                                    width: 200,
-                                    padding: EdgeInsets.only(),
-                                    child: Center(
-                                        child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: DropdownButton<String>(
-                                              value: _selectedbrand,
-                                              hint: Text('Item brand'), // No
-                                              icon: Icon(
-                                                  Icons.keyboard_arrow_down),
-                                              iconSize: 20,
-                                              elevation: 10,
-                                              isExpanded: true,
-                                              style: TextStyle(
-                                                fontFamily: 'SF',
-                                                fontSize: 16,
-                                              ),
-                                              onChanged: (String newValue) {
-                                                setState(() {
-                                                  _selectedbrand = newValue;
-                                                });
-                                              },
-                                              items: brands.map<
-                                                      DropdownMenuItem<String>>(
-                                                  (String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Text(
-                                                    value,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily: 'SF',
-                                                        fontSize: 16,
-                                                        color: Colors.black),
+                                      title: Text(
+                                        'Brand',
+                                        style: TextStyle(
+                                          fontFamily: 'SF',
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      trailing: Container(
+                                        width: 250,
+                                        padding: EdgeInsets.only(),
+                                        child: Center(
+                                            child: InkWell(
+                                          onTap: () {
+                                            _scaffoldKey.currentState
+                                                .showBottomSheet((context) {
+                                              return Container(
+                                                height: 500,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(1.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Icon(
+                                                          Feather.chevron_down),
+                                                      SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      Center(
+                                                        child: Text(
+                                                          'Brand',
+                                                          style: TextStyle(
+                                                              fontFamily: 'SF',
+                                                              fontSize: 16,
+                                                              color: Colors
+                                                                  .deepOrange),
+                                                        ),
+                                                      ),
+                                                      Flexible(
+//                  height: 600,
+                                                          child:
+                                                              AlphabetListScrollView(
+                                                        showPreview: true,
+                                                        strList: brands,
+                                                        indexedHeight: (i) {
+                                                          return 40;
+                                                        },
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return InkWell(
+                                                            onTap: () async {
+                                                              setState(() {
+                                                                brand = brands[
+                                                                    index];
+                                                              });
+
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: ListTile(
+                                                              title: brands[
+                                                                          index] !=
+                                                                      null
+                                                                  ? Text(brands[
+                                                                      index])
+                                                                  : Text('sd'),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ))
+                                                    ],
                                                   ),
-                                                );
-                                              }).toList(),
-                                            )))),
-                              )))
+                                                ),
+                                              );
+                                            });
+                                          },
+                                          child: brand != null
+                                              ? Flex(
+                                                  direction: Axis.horizontal,
+                                                  children: [
+                                                      Flexible(
+                                                          child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: <Widget>[
+                                                          Text(brand),
+                                                          Icon(Icons
+                                                              .arrow_drop_down)
+                                                        ],
+                                                      ))
+                                                    ])
+                                              : Container(
+                                                  width: 120,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: <Widget>[
+                                                      Text('Choose Brand'),
+                                                      Icon(
+                                                          Icons.arrow_drop_down)
+                                                    ],
+                                                  )),
+                                        )),
+                                      ))))
                           : Container(),
-                      _selectedbrand == 'Other'
+                      brand == 'Other'
                           ? Container(
                               height: 80,
                               decoration: BoxDecoration(
@@ -1273,17 +1343,17 @@ class _AddItemInfoState extends State<AddItemInfo> {
                     } else if (_selectedCondition == null) {
                       showInSnackBar(
                           'Please choose the condition of your item!');
-                    } else if (_selectedbrand == null) {
+                    } else if (brand == null) {
                       showInSnackBar('Please choose the brand for your item!');
                     } else {
-                      String brand;
+                      String bran;
                       if (businessbrandcontroller != null) {
                         String brandcontrollertext =
                             businessbrandcontroller.text.trim();
                         if (brandcontrollertext.isNotEmpty) {
-                          brand = businessbrandcontroller.text;
-                        } else if (_selectedbrand.isNotEmpty) {
-                          brand = _selectedbrand;
+                          bran = businessbrandcontroller.text;
+                        } else if (brand != null) {
+                          bran = brand;
                         }
                       } else if (businessbrandcontroller == null) {
                         showInSnackBar('Please choose a brand for your item!');
@@ -1299,7 +1369,7 @@ class _AddItemInfoState extends State<AddItemInfo> {
                                   image4: _image4,
                                   image5: _image5,
                                   price: price,
-                                  brand: brand,
+                                  brand: bran,
                                   category: _selectedCategory,
                                   subcategory: _selectedsubCategory == null
                                       ? ''

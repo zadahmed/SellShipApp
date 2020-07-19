@@ -519,6 +519,23 @@ class _AddItemLocationState extends State<AddItemLocation> {
             padding: EdgeInsets.all(10),
             child: InkWell(
               onTap: () async {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(20.0)), //this right here
+                        child: Container(
+                          height: 100,
+                          child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child:
+                                  SpinKitChasingDots(color: Colors.deepOrange)),
+                        ),
+                      );
+                    });
                 var userurl = 'https://api.sellship.co/api/user/' + userid;
                 final userresponse = await http.get(userurl);
                 if (userresponse.statusCode == 200) {
@@ -535,29 +552,13 @@ class _AddItemLocationState extends State<AddItemLocation> {
                 }
 
                 if (meetupcheckbox == false && shippingcheckbox == false) {
+                  Navigator.of(context, rootNavigator: true).pop('dialog');
                   showInSnackBar(
                       'Please choose a checkbox for delivery method!');
                 } else if (city == null) {
+                  Navigator.of(context, rootNavigator: true).pop('dialog');
                   showInSnackBar('Please choose the location of your item!');
                 } else {
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return Dialog(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  20.0)), //this right here
-                          child: Container(
-                            height: 100,
-                            child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: SpinKitChasingDots(
-                                    color: Colors.deepOrange)),
-                          ),
-                        );
-                      });
-
                   var url = 'https://api.sellship.co/api/additem';
 
                   Dio dio = new Dio();

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:SellShip/models/messages.dart';
 import 'package:SellShip/screens/chatpageview.dart';
@@ -22,6 +23,7 @@ class Messages extends StatefulWidget {
 }
 
 class MessagesState extends State<Messages> {
+  Timer timer;
   var userid;
   final storage = new FlutterSecureStorage();
 
@@ -115,7 +117,6 @@ class MessagesState extends State<Messages> {
     messagesd.sort();
 
     if (mounted) {
-      print(messagesd);
       setState(() {
         messagesd = messagesd;
         loading = false;
@@ -135,7 +136,17 @@ class MessagesState extends State<Messages> {
     setState(() {
       loading = true;
     });
-    getMessages();
+    getmsg();
+  }
+
+  getmsg() {
+    timer = Timer.periodic(Duration(seconds: 2), (Timer t) => getMessages());
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -147,6 +158,7 @@ class MessagesState extends State<Messages> {
           elevation: 0,
           leading: InkWell(
             onTap: () {
+              dispose();
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => RootScreen(index: 0)),

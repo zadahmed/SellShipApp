@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
       skip = 0;
       limit = 20;
     });
-
+    getnotification();
     fetchRecentlyAdded(skip, limit);
   }
 
@@ -1026,6 +1026,8 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
 
+      print(notifcount);
+
       if (notcoun <= 0) {
         setState(() {
           notcount = notcoun;
@@ -1038,6 +1040,8 @@ class _HomeScreenState extends State<HomeScreen> {
           notbadge = true;
         });
       }
+
+      print(notcount);
 
       FlutterAppBadger.updateBadgeCount(notifcount + notcount);
     } else {
@@ -1360,7 +1364,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? SliverGrid(
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 0.72,
+                            childAspectRatio: 0.71,
                             mainAxisSpacing: 1.0,
                             crossAxisSpacing: 1.0,
                             crossAxisCount: 2,
@@ -1373,14 +1377,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                       padding: EdgeInsets.all(10),
                                       child: Container(
                                         height: 300,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 0.2, color: Colors.grey),
                                           borderRadius:
                                               BorderRadius.circular(15),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
                                         ),
-                                        padding: EdgeInsets.all(10),
-                                        margin: EdgeInsets.only(bottom: 20.0),
                                         child: NativeAdmob(
                                           adUnitID: _iosadUnitID,
                                           controller: _controller,
@@ -1390,14 +1402,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                       padding: EdgeInsets.all(10),
                                       child: Container(
                                         height: 300,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 0.2, color: Colors.grey),
                                           borderRadius:
                                               BorderRadius.circular(15),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
                                         ),
-                                        padding: EdgeInsets.all(10),
-                                        margin: EdgeInsets.only(bottom: 20.0),
                                         child: NativeAdmob(
                                           adUnitID: _androidadUnitID,
                                           controller: _controller,
@@ -1442,6 +1462,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                         border: Border.all(
                                             width: 0.2, color: Colors.grey),
                                         borderRadius: BorderRadius.circular(15),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
                                       ),
                                       child: Column(
                                         children: <Widget>[
@@ -1454,7 +1482,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     .width,
                                                 child: ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.circular(15),
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(15),
+                                                    topRight:
+                                                        Radius.circular(15),
+                                                  ),
                                                   child: CachedNetworkImage(
                                                     fadeInDuration: Duration(
                                                         microseconds: 10),
@@ -1499,7 +1532,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: Padding(
-                                              padding: EdgeInsets.all(5),
+                                              padding: EdgeInsets.all(10),
                                               child: Column(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
@@ -1512,7 +1545,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       itemsgrid[index].name,
                                                       style: TextStyle(
                                                         fontFamily: 'SF',
-                                                        fontSize: 14,
+                                                        fontSize: 16,
                                                       ),
                                                       overflow:
                                                           TextOverflow.ellipsis,
@@ -1561,38 +1594,61 @@ class _HomeScreenState extends State<HomeScreen> {
                                     )));
                           }, childCount: itemsgrid.length),
                         )
-                      : SliverList(delegate: SliverChildBuilderDelegate(
-                          (context, index) {
+                      : SliverList(
+                          delegate:
+                              SliverChildBuilderDelegate((context, index) {
                             if (index != 0 && index % 8 == 0) {
                               return Platform.isIOS == true
-                                  ? Container(
-                                      height: 300,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 0.2, color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      padding: EdgeInsets.all(10),
-                                      margin: EdgeInsets.only(bottom: 20.0),
-                                      child: NativeAdmob(
-                                        adUnitID: _iosadUnitID,
-                                        controller: _controller,
-                                      ),
-                                    )
-                                  : Container(
-                                      height: 300,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 0.2, color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      padding: EdgeInsets.all(10),
-                                      margin: EdgeInsets.only(bottom: 20.0),
-                                      child: NativeAdmob(
-                                        adUnitID: _androidadUnitID,
-                                        controller: _controller,
-                                      ),
-                                    );
+                                  ? Padding(
+                                      padding: EdgeInsets.all(15),
+                                      child: Container(
+                                        height: 350,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 0.2, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: NativeAdmob(
+                                          adUnitID: _iosadUnitID,
+                                          controller: _controller,
+                                        ),
+                                      ))
+                                  : Padding(
+                                      padding: EdgeInsets.all(15),
+                                      child: Container(
+                                        height: 350,
+                                        padding: EdgeInsets.all(10),
+                                        margin: EdgeInsets.only(bottom: 20.0),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 0.2, color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: NativeAdmob(
+                                          adUnitID: _androidadUnitID,
+                                          controller: _controller,
+                                        ),
+                                      ));
                             }
                             return InkWell(
                                 onTap: () {
@@ -1604,162 +1660,195 @@ class _HomeScreenState extends State<HomeScreen> {
                                             itemid: itemsgrid[index].itemid)),
                                   );
                                 },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.2, color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      new Stack(
-                                        children: <Widget>[
-                                          Container(
-                                            height: 300,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: ClipRRect(
-                                              child: CachedNetworkImage(
-                                                fadeInDuration:
-                                                    Duration(microseconds: 10),
-                                                imageUrl:
-                                                    itemsgrid[index].image,
-                                                fit: BoxFit.cover,
-                                                placeholder: (context, url) =>
-                                                    SpinKitChasingDots(
-                                                        color:
-                                                            Colors.deepOrange),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                              ),
-                                            ),
+                                child: Padding(
+                                    padding: EdgeInsets.all(15),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 0.2, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
                                           ),
-                                          itemsgrid[index].sold == true
-                                              ? Align(
-                                                  alignment: Alignment.topRight,
-                                                  child: Container(
-                                                    height: 20,
-                                                    width: 50,
-                                                    color: Colors.amber,
-                                                    child: Text(
-                                                      'Sold',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontFamily: 'SF',
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ))
-                                              : Container(),
                                         ],
                                       ),
-                                      SizedBox(height: 2.0),
-                                      new Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: new Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Flexible(
-                                                          child: Text(
-                                                            itemsgrid[index]
-                                                                .name,
-                                                            style: TextStyle(
+                                      child: Column(
+                                        children: <Widget>[
+                                          new Stack(
+                                            children: <Widget>[
+                                              Container(
+                                                height: 400,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(15),
+                                                    topRight:
+                                                        Radius.circular(15),
+                                                  ),
+                                                  child: CachedNetworkImage(
+                                                    fadeInDuration: Duration(
+                                                        microseconds: 10),
+                                                    imageUrl:
+                                                        itemsgrid[index].image,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        SpinKitChasingDots(
+                                                            color: Colors
+                                                                .deepOrange),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  ),
+                                                ),
+                                              ),
+                                              itemsgrid[index].sold == true
+                                                  ? Align(
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      child: Container(
+                                                        height: 20,
+                                                        width: 50,
+                                                        color: Colors.amber,
+                                                        child: Text(
+                                                          'Sold',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
                                                               fontFamily: 'SF',
-                                                              fontSize: 15,
+                                                              color:
+                                                                  Colors.white,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .w600,
-                                                            ),
+                                                                      .bold),
+                                                        ),
+                                                      ))
+                                                  : Container(),
+                                            ],
+                                          ),
+                                          SizedBox(height: 2.0),
+                                          new Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: new Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Flexible(
+                                                              child: Text(
+                                                                itemsgrid[index]
+                                                                    .name,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'SF',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
 //                                                            overflow:
 //                                                                TextOverflow
 //                                                                    .ellipsis,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 3.0),
-                                                        Container(
-                                                          child: Text(
-                                                            currency +
-                                                                ' ' +
-                                                                itemsgrid[index]
-                                                                    .price
-                                                                    .toString(),
-                                                            style: TextStyle(
-                                                              fontFamily: 'SF',
-                                                              fontSize: 17,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                              ),
                                                             ),
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 1,
-                                                    ),
-                                                    Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Row(
-                                                          children: <Widget>[
-                                                            Icon(
-                                                              Icons.access_time,
-                                                              size: 12,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            Text(
-                                                              'Uploaded ${itemsgrid[index].date}',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'SF',
-                                                                fontSize: 12,
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
+                                                            Container(
+                                                              child: Text(
+                                                                currency +
+                                                                    ' ' +
+                                                                    itemsgrid[
+                                                                            index]
+                                                                        .price
+                                                                        .toString(),
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'SF',
+                                                                  fontSize: 17,
+                                                                  color: Colors
+                                                                      .deepOrange,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700,
+                                                                ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
                                                               ),
                                                             ),
                                                           ],
-                                                        )),
-                                                  ]))),
-                                      SizedBox(
-                                        height: 5,
+                                                        ),
+                                                        SizedBox(
+                                                          height: 1,
+                                                        ),
+                                                        Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Row(
+                                                              children: <
+                                                                  Widget>[
+                                                                Icon(
+                                                                  Icons
+                                                                      .access_time,
+                                                                  size: 12,
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                Text(
+                                                                  'Uploaded ${itemsgrid[index].date}',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    fontSize:
+                                                                        12,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )),
+                                                      ]))),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ));
-                          },
-                        )))
+                                    )));
+                          }, childCount: itemsgrid.length),
+                        ))
                   : SliverToBoxAdapter(
                       child: Container(
                       height: MediaQuery.of(context).size.height,
