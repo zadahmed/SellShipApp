@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
+import 'package:SellShip/screens/comments.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/messages.dart';
@@ -55,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+
     super.dispose();
   }
 
@@ -101,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 : jsonbody[i]['condition'],
             username: jsonbody[i]['username'],
             image: jsonbody[i]['image'],
+            userid: jsonbody[i]['userid'],
             price: jsonbody[i]['price'].toString(),
             category: jsonbody[i]['category'],
             sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -166,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
               : jsonbody[i]['condition'],
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
+          userid: jsonbody[i]['userid'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -814,6 +818,7 @@ class _HomeScreenState extends State<HomeScreen> {
             : jsonbody[i]['condition'],
         username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
+        userid: jsonbody[i]['userid'],
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -850,14 +855,7 @@ class _HomeScreenState extends State<HomeScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
     ));
-    _scrollController
-      ..addListener(() {
-        var triggerFetchMoreSize = _scrollController.position.maxScrollExtent;
 
-        if (_scrollController.position.pixels == triggerFetchMoreSize) {
-          _getmoreRecentData();
-        }
-      });
     readstorage();
   }
 
@@ -1002,6 +1000,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String city;
   var notcount;
+
+  PersistentBottomSheetController bottomsheetcontroller;
+
   bool notbadge;
 
   void getnotification() async {
@@ -1738,8 +1739,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                           new Align(
                                               alignment: Alignment.centerLeft,
                                               child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      10.0),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0,
+                                                          right: 10.0,
+                                                          bottom: 10.0,
+                                                          top: 5),
                                                   child: new Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -1748,6 +1753,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: <Widget>[
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            InkWell(
+                                                              child: Icon(
+                                                                  Feather
+                                                                      .heart),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          CommentsPage(
+                                                                              itemid: itemsgrid[index].itemid)),
+                                                                );
+                                                              },
+                                                              child: Icon(Feather
+                                                                  .message_circle),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
                                                         Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
@@ -1804,7 +1843,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           ],
                                                         ),
                                                         SizedBox(
-                                                          height: 1,
+                                                          height: 2,
                                                         ),
                                                         Align(
                                                             alignment: Alignment

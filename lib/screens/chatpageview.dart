@@ -780,120 +780,125 @@ class _ChatPageViewState extends State<ChatPageView> {
 
                     Divider(height: 0, color: Colors.black26),
 
-                    Container(
-                      color: Colors.white,
-                      height: 50,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: TextField(
-                          maxLines: 20,
-                          controller: _text,
-                          autocorrect: true,
-                          enableSuggestions: true,
-                          textCapitalization: TextCapitalization.sentences,
-                          style: TextStyle(fontFamily: 'SF', fontSize: 16),
-                          decoration: InputDecoration(
-                              // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-                              suffixIcon: Padding(
-                                padding: EdgeInsets.all(5),
-                                child: InkWell(
-                                  child: CircleAvatar(
-                                    child: Icon(
-                                      Feather.send,
-                                      size: 20,
-                                      color: Colors.white,
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 5),
+                      child: Container(
+                        color: Colors.white,
+                        height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: TextField(
+                            maxLines: 20,
+                            controller: _text,
+                            autocorrect: true,
+                            enableSuggestions: true,
+                            textCapitalization: TextCapitalization.sentences,
+                            style: TextStyle(fontFamily: 'SF', fontSize: 16),
+                            decoration: InputDecoration(
+                                // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: InkWell(
+                                    child: CircleAvatar(
+                                      child: Icon(
+                                        Feather.send,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ),
+                                      backgroundColor: Colors.deepOrange,
                                     ),
-                                    backgroundColor: Colors.deepOrange,
-                                  ),
-                                  onTap: () async {
-                                    var x = _text.text;
-                                    _text.clear();
-                                    var date = DateTime.now();
-                                    final f = new DateFormat('hh:mm');
-                                    var s = f.format(date);
-                                    childList.add(Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 8.0,
-                                            left: 8.0,
-                                            top: 4.0,
-                                            bottom: 4.0),
-                                        child: Container(
-                                          alignment: Alignment.centerRight,
+                                    onTap: () async {
+                                      var x = _text.text;
+                                      _text.clear();
+                                      var date = DateTime.now();
+                                      final f = new DateFormat('hh:mm');
+                                      var s = f.format(date);
+                                      childList.add(Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 8.0,
+                                              left: 8.0,
+                                              top: 4.0,
+                                              bottom: 4.0),
                                           child: Container(
-                                            constraints: BoxConstraints(
-                                                maxWidth: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    3 /
-                                                    4),
-                                            padding: EdgeInsets.all(12.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.deepOrange,
-                                              borderRadius:
-                                                  BorderRadius.circular(25.0),
-                                            ),
-                                            child: Stack(children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0,
-                                                    left: 8.0,
-                                                    top: 8.0,
-                                                    bottom: 15.0),
-                                                child: Text(x,
+                                            alignment: Alignment.centerRight,
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                  maxWidth:
+                                                      MediaQuery.of(context)
+                                                              .size
+                                                              .width *
+                                                          3 /
+                                                          4),
+                                              padding: EdgeInsets.all(12.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.deepOrange,
+                                                borderRadius:
+                                                    BorderRadius.circular(25.0),
+                                              ),
+                                              child: Stack(children: <Widget>[
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8.0,
+                                                          left: 8.0,
+                                                          top: 8.0,
+                                                          bottom: 15.0),
+                                                  child: Text(x,
+                                                      style: TextStyle(
+                                                          fontFamily: 'SF',
+                                                          fontSize: 14,
+                                                          color: Colors.white)),
+                                                ),
+                                                Positioned(
+                                                  bottom: 1,
+                                                  right: 10,
+                                                  child: Text(
+                                                    s,
                                                     style: TextStyle(
                                                         fontFamily: 'SF',
-                                                        fontSize: 14,
-                                                        color: Colors.white)),
-                                              ),
-                                              Positioned(
-                                                bottom: 1,
-                                                right: 10,
-                                                child: Text(
-                                                  s,
-                                                  style: TextStyle(
-                                                      fontFamily: 'SF',
-                                                      fontSize: 10,
-                                                      color: Colors.white
-                                                          .withOpacity(0.6)),
-                                                ),
-                                              )
-                                            ]),
-                                          ),
-                                        )));
+                                                        fontSize: 10,
+                                                        color: Colors.white
+                                                            .withOpacity(0.6)),
+                                                  ),
+                                                )
+                                              ]),
+                                            ),
+                                          )));
 
-                                    var url =
-                                        'https://api.sellship.co/api/sendmessage/' +
-                                            userid +
-                                            '/' +
-                                            recipentid +
-                                            '/' +
-                                            messageid;
-                                    if (x.isNotEmpty) {
-                                      final response = await http.post(url,
-                                          body: {
-                                            'message': x,
-                                            'time': DateTime.now().toString()
-                                          });
-                                      if (response.statusCode == 200) {
-                                        print('ok');
-                                      } else {
-                                        print(response.statusCode);
-                                        print(response.body);
+                                      var url =
+                                          'https://api.sellship.co/api/sendmessage/' +
+                                              userid +
+                                              '/' +
+                                              recipentid +
+                                              '/' +
+                                              messageid;
+                                      if (x.isNotEmpty) {
+                                        final response = await http.post(url,
+                                            body: {
+                                              'message': x,
+                                              'time': DateTime.now().toString()
+                                            });
+                                        if (response.statusCode == 200) {
+                                          print('ok');
+                                        } else {
+                                          print(response.statusCode);
+                                          print(response.body);
+                                        }
+
+                                        Timer(Duration(microseconds: 1), () {
+                                          _scrollController.jumpTo(
+                                              _scrollController
+                                                  .position.maxScrollExtent);
+                                        });
                                       }
-
-                                      Timer(Duration(microseconds: 1), () {
-                                        _scrollController.jumpTo(
-                                            _scrollController
-                                                .position.maxScrollExtent);
-                                      });
-                                    }
-                                  },
+                                    },
+                                  ),
                                 ),
-                              ),
-                              border: InputBorder.none,
-                              hintText: "Enter your message",
-                              hintStyle:
-                                  TextStyle(fontFamily: 'SF', fontSize: 16)),
+                                border: InputBorder.none,
+                                hintText: "Enter your message",
+                                hintStyle:
+                                    TextStyle(fontFamily: 'SF', fontSize: 16)),
+                          ),
                         ),
                       ),
                     ),
