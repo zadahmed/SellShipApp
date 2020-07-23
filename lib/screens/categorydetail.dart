@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:timeago/timeago.dart' as timeago;
+import 'package:SellShip/screens/comments.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -70,9 +72,17 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(response.body);
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
@@ -124,9 +134,17 @@ class _CategoryDetailState extends State<CategoryDetail> {
       itemsgrid.clear();
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
@@ -166,9 +184,17 @@ class _CategoryDetailState extends State<CategoryDetail> {
       itemsgrid.clear();
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
@@ -208,9 +234,17 @@ class _CategoryDetailState extends State<CategoryDetail> {
       itemsgrid.clear();
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
@@ -250,9 +284,17 @@ class _CategoryDetailState extends State<CategoryDetail> {
       itemsgrid.clear();
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
@@ -291,9 +333,18 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -329,9 +380,18 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -369,9 +429,18 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -411,9 +480,18 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -455,9 +533,18 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -497,9 +584,18 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(categoryresponse.body);
 
       for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
           name: jsonbody[i]['name'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -536,13 +632,21 @@ class _CategoryDetailState extends State<CategoryDetail> {
       itemsgrid.clear();
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -561,6 +665,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   }
 
   loadbrands() async {
+    brands.clear();
     var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
     final categoryresponse = await http.get(categoryurl);
     if (categoryresponse.statusCode == 200) {
@@ -575,6 +680,65 @@ class _CategoryDetailState extends State<CategoryDetail> {
     } else {
       print(categoryresponse.statusCode);
     }
+
+    scaffoldState.currentState.showBottomSheet((context) {
+      return Container(
+        height: 500,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.all(1.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(Feather.chevron_down),
+              SizedBox(
+                height: 2,
+              ),
+              Center(
+                child: Text(
+                  'Brand',
+                  style: TextStyle(
+                      fontFamily: 'SF', fontSize: 16, color: Colors.deepOrange),
+                ),
+              ),
+              Flexible(
+//                  height: 600,
+                  child: AlphabetListScrollView(
+                showPreview: true,
+                strList: brands,
+                indexedHeight: (i) {
+                  return 40;
+                },
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () async {
+                      setState(() {
+                        _selectedFilter = 'Brand';
+                        _FilterLoad = "Brand";
+                        brand = brands[index];
+                        skip = 0;
+                        limit = 20;
+                        loading = true;
+                      });
+                      itemsgrid.clear();
+                      Navigator.of(context).pop();
+
+                      fetchbrands(brands[index]);
+                    },
+                    child: ListTile(
+                      title: brands[index] != null
+                          ? Text(brands[index])
+                          : Text('sd'),
+                    ),
+                  );
+                },
+              ))
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   List<String> brands = List<String>();
@@ -612,13 +776,21 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(response.body);
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -653,13 +825,21 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(response.body);
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -694,13 +874,21 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(response.body);
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -712,6 +900,42 @@ class _CategoryDetailState extends State<CategoryDetail> {
       print(response.statusCode);
     }
   }
+
+  getfavourites() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/favourites/' + userid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        if (response.body != 'Empty') {
+          var respons = json.decode(response.body);
+          var profilemap = respons;
+          List<String> ites = List<String>();
+
+          if (profilemap != null) {
+            for (var i = 0; i < profilemap.length; i++) {
+              ites.add(profilemap[i]['_id']['\$oid']);
+            }
+
+            Iterable inReverse = ites.reversed;
+            List<String> jsoninreverse = inReverse.toList();
+            setState(() {
+              favourites = jsoninreverse;
+            });
+          } else {
+            favourites = [];
+          }
+        }
+      }
+    } else {
+      setState(() {
+        favourites = [];
+      });
+    }
+    print(favourites);
+  }
+
+  List<String> favourites;
 
   _getmoreRecentData() async {
     setState(() {
@@ -735,13 +959,21 @@ class _CategoryDetailState extends State<CategoryDetail> {
       var jsonbody = json.decode(response.body);
 
       for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
           itemid: jsondata['_id']['\$oid'],
           name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
           image: jsondata['image'],
           price: jsondata['price'].toString(),
           category: jsondata['category'],
-          sold: jsonbody['sold'] == null ? false : jsonbody['sold'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
         );
         itemsgrid.add(item);
       }
@@ -773,7 +1005,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
       subcategory = widget.subcategory;
       loading = true;
     });
-    loadbrands();
+
+    getfavourites();
     fetchItems(skip, limit);
     _scrollController
       ..addListener(() {
@@ -802,750 +1035,1173 @@ class _CategoryDetailState extends State<CategoryDetail> {
     super.initState();
   }
 
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    scaffoldState.currentState?.removeCurrentSnackBar();
+    scaffoldState.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'SF',
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
+  String _FilterLoad = "Recently Added";
+  String _selectedFilter = "Recently Added";
+
+  Widget filtersort(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.only(
+          left: 10,
+          right: 10,
+        ),
+        child: Container(
+          height: 30,
+          color: Colors.white,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: EdgeInsets.only(top: 2, bottom: 2),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: <Widget>[
+                InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedFilter = "Recently Added";
+                        _FilterLoad = "Recently Added";
+                        skip = 0;
+                        limit = 20;
+                        loading = true;
+                      });
+                      itemsgrid.clear();
+
+                      fetchRecentlyAdded(skip, limit);
+                    },
+                    child: _selectedFilter == "Recently Added"
+                        ? Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.deepOrangeAccent),
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                'New',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                'New',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.deepOrange),
+                              ),
+                            ),
+                          )),
+                SizedBox(
+                  width: 5,
+                ),
+                InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedFilter = "Near Me";
+                        _FilterLoad = "Near Me";
+                        skip = 0;
+                        limit = 20;
+                        loading = true;
+                      });
+                      itemsgrid.clear();
+
+                      fetchItems(skip, limit);
+                    },
+                    child: _selectedFilter == "Near Me"
+                        ? Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.deepOrangeAccent),
+                            width: 70,
+                            child: Center(
+                              child: Text(
+                                'Near Me',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            width: 70,
+                            child: Center(
+                              child: Text(
+                                'Near Me',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.deepOrange),
+                              ),
+                            ),
+                          )),
+                SizedBox(
+                  width: 5,
+                ),
+                InkWell(
+                    onTap: () {
+                      setState(() {
+                        _selectedFilter = "Below 100";
+                        _FilterLoad = "Below 100";
+                        skip = 0;
+                        limit = 20;
+                        loading = true;
+                      });
+                      itemsgrid.clear();
+
+                      fetchbelowhundred(skip, limit);
+                    },
+                    child: _selectedFilter == "Below 100"
+                        ? Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.deepOrangeAccent),
+                            width: 80,
+                            child: Center(
+                              child: Text(
+                                'Below 100',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            width: 80,
+                            child: Center(
+                              child: Text(
+                                'Below 100',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.deepOrange),
+                              ),
+                            ),
+                          )),
+                SizedBox(
+                  width: 5,
+                ),
+                InkWell(
+                    child: _selectedFilter == "Sort"
+                        ? Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.deepOrangeAccent),
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                'Sort',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                'Sort',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.deepOrange),
+                              ),
+                            ),
+                          ),
+                    onTap: () {
+                      scaffoldState.currentState.showBottomSheet((context) {
+                        return Container(
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 0.2, color: Colors.grey),
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white),
+                          height: 200,
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Feather.chevron_down),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Sort',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        color: Colors.deepOrange),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                ListTile(
+                                  title: Text(
+                                    'Price Low to High',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Sort';
+                                      _FilterLoad = "Lowest Price";
+                                      skip = 0;
+                                      limit = 20;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    Navigator.of(context).pop();
+
+                                    fetchLowestPrice(skip, limit);
+                                  },
+                                ),
+                                ListTile(
+                                  title: Text(
+                                    'Price High to Low',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = 'Sort';
+                                      _FilterLoad = "Highest Price";
+                                      skip = 0;
+                                      limit = 20;
+                                      loading = true;
+                                    });
+                                    itemsgrid.clear();
+                                    Navigator.of(context).pop();
+
+                                    fetchHighestPrice(skip, limit);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                    }),
+                SizedBox(
+                  width: 5,
+                ),
+                InkWell(
+                    onTap: () {
+                      loadbrands();
+                    },
+                    child: _selectedFilter == "Brand"
+                        ? Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.deepOrangeAccent),
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                'Brand',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                'Brand',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.deepOrange),
+                              ),
+                            ),
+                          )),
+                SizedBox(
+                  width: 5,
+                ),
+                InkWell(
+                    onTap: () {
+                      scaffoldState.currentState.showBottomSheet((context) {
+                        return Container(
+                          height: 500,
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(Feather.chevron_down),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'Conditions',
+                                      style: TextStyle(
+                                          fontFamily: 'SF',
+                                          fontSize: 16,
+                                          color: Colors.deepOrange),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Container(
+                                      height: 450,
+                                      child: ListView.builder(
+                                        primary: false,
+                                        shrinkWrap: true,
+                                        itemCount: conditions.length,
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              setState(() {
+                                                _selectedCondition =
+                                                    conditions[index];
+                                              });
+
+                                              setState(() {
+                                                _selectedFilter = 'Condition';
+                                                _FilterLoad = "Condition";
+                                                condition = _selectedCondition;
+                                                skip = 0;
+                                                limit = 20;
+                                                loading = true;
+                                              });
+                                              itemsgrid.clear();
+                                              Navigator.of(context).pop();
+
+                                              fetchCondition(
+                                                  _selectedCondition);
+                                            },
+                                            child: ListTile(
+                                              title: conditions[index] != null
+                                                  ? Text(conditions[index])
+                                                  : Text('sd'),
+                                            ),
+                                          );
+                                        },
+                                      ))
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      });
+                    },
+                    child: _selectedFilter == "Condition"
+                        ? Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.deepOrangeAccent),
+                            width: 80,
+                            child: Center(
+                              child: Text(
+                                'Condition',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            width: 80,
+                            child: Center(
+                              child: Text(
+                                'Condition',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.deepOrange),
+                              ),
+                            ),
+                          )),
+                SizedBox(
+                  width: 5,
+                ),
+                InkWell(
+                    onTap: () {
+                      scaffoldState.currentState.showBottomSheet((context) {
+                        return Container(
+                            height: 300,
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Feather.chevron_down),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Price',
+                                    style: TextStyle(
+                                        fontFamily: 'SF',
+                                        fontSize: 16,
+                                        color: Colors.deepOrange),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Center(
+                                    child: ListTile(
+                                        title: Text(
+                                          'Minimum Price',
+                                          style: TextStyle(
+                                            fontFamily: 'SF',
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        trailing: Container(
+                                            width: 200,
+                                            padding: EdgeInsets.only(),
+                                            child: Center(
+                                              child: TextField(
+                                                cursorColor: Color(0xFF979797),
+                                                controller: minpricecontroller,
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(),
+                                                decoration: InputDecoration(
+                                                    labelText:
+                                                        "Price " + currency,
+                                                    alignLabelWithHint: true,
+                                                    labelStyle: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 16,
+                                                    ),
+                                                    focusColor: Colors.black,
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    border: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedErrorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    disabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    errorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    ))),
+                                              ),
+                                            )))),
+                                SizedBox(
+                                  height: 2,
+                                ),
+                                Center(
+                                    child: ListTile(
+                                        title: Text(
+                                          'Maximum Price',
+                                          style: TextStyle(
+                                            fontFamily: 'SF',
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        trailing: Container(
+                                            width: 200,
+                                            padding: EdgeInsets.only(),
+                                            child: Center(
+                                              child: TextField(
+                                                cursorColor: Color(0xFF979797),
+                                                controller: maxpricecontroller,
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(),
+                                                decoration: InputDecoration(
+                                                    labelText:
+                                                        "Price " + currency,
+                                                    alignLabelWithHint: true,
+                                                    labelStyle: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 16,
+                                                    ),
+                                                    focusColor: Colors.black,
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    border: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedErrorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    disabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    errorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    ))),
+                                              ),
+                                            )))),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                InkWell(
+                                    onTap: () async {
+                                      setState(() {
+                                        _selectedFilter = 'Price';
+                                        _FilterLoad = "Price";
+                                        minprice = minpricecontroller.text;
+                                        maxprice = maxpricecontroller.text;
+                                        skip = 0;
+                                        limit = 20;
+                                        loading = true;
+                                      });
+                                      itemsgrid.clear();
+                                      Navigator.of(context).pop();
+
+                                      fetchPrice(minpricecontroller.text,
+                                          maxpricecontroller.text);
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: Colors.deepOrangeAccent),
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Center(
+                                        child: Text(
+                                          'Filter',
+                                          style: TextStyle(
+                                              fontFamily: 'SF',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ))
+                              ],
+                            ));
+                      });
+                    },
+                    child: _selectedFilter == "Price"
+                        ? Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.deepOrangeAccent),
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                'Price',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            height: 30,
+                            decoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 0.2, color: Colors.grey),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            width: 60,
+                            child: Center(
+                              child: Text(
+                                'Price',
+                                style: TextStyle(
+                                    fontFamily: 'SF',
+                                    fontSize: 14,
+                                    color: Colors.deepOrange),
+                              ),
+                            ),
+                          )),
+              ],
+            ),
+          ),
+        ));
+  }
+
   bool loading;
+  bool gridtoggle;
 
   ScrollController _scrollController = ScrollController();
   final scaffoldState = GlobalKey<ScaffoldState>();
-  String _selectedFilter = 'Near me';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldState,
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Colors.deepOrange,
-          title: Text(
-            subcategory.toUpperCase(),
-            style: TextStyle(
-                fontFamily: 'SF',
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.w800),
-          ),
-        ),
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
           },
           child: loading == false
-              ? SafeArea(
-                  child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      height: 40,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          InkWell(
-                            child: Container(
-                              height: 40,
-                              width: MediaQuery.of(context).size.width / 2 - 10,
-                              child: Center(
-                                child: Text(
-                                  'SORT',
-                                  style: TextStyle(
-                                      fontFamily: 'SF',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              scaffoldState.currentState
-                                  .showBottomSheet((context) {
-                                return Container(
-                                  height: MediaQuery.of(context).size.height,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(1.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ListTile(
-                                          title: Text(
-                                            'Sort',
-                                            style: TextStyle(
-                                                fontFamily: 'SF',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w800,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          child: ListTile(
-                                            title: Text(
-                                              'New',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedFilter =
-                                                  'Recently Added';
-                                              skip = 0;
-                                              limit = 20;
-                                              loading = true;
-                                            });
-                                            itemsgrid.clear();
-                                            Navigator.of(context).pop();
-
-                                            fetchRecentlyAdded(skip, limit);
-                                          },
-                                        ),
-                                        InkWell(
-                                          child: ListTile(
-                                            title: Text(
-                                              'Near me',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedFilter = 'Near me';
-                                              skip = 0;
-                                              limit = 20;
-                                              loading = true;
-                                            });
-                                            itemsgrid.clear();
-                                            Navigator.of(context).pop();
-
-                                            fetchItems(skip, limit);
-                                          },
-                                        ),
-                                        InkWell(
-                                          child: ListTile(
-                                            title: Text(
-                                              'Below 100',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedFilter = 'Below 100';
-                                              skip = 0;
-                                              limit = 20;
-                                              loading = true;
-                                            });
-                                            itemsgrid.clear();
-                                            Navigator.of(context).pop();
-
-                                            fetchbelowhundred(skip, limit);
-                                          },
-                                        ),
-                                        InkWell(
-                                          child: ListTile(
-                                            title: Text(
-                                              'Price Low to High',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedFilter = 'Lowest Price';
-                                              skip = 0;
-                                              limit = 20;
-                                              loading = true;
-                                            });
-                                            itemsgrid.clear();
-                                            Navigator.of(context).pop();
-
-                                            fetchLowestPrice(skip, limit);
-                                          },
-                                        ),
-                                        InkWell(
-                                          child: ListTile(
-                                            title: Text(
-                                              'Price High to Low',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          onTap: () {
-                                            setState(() {
-                                              _selectedFilter = 'Highest Price';
-                                              skip = 0;
-                                              limit = 20;
-                                              loading = true;
-                                            });
-                                            itemsgrid.clear();
-                                            Navigator.of(context).pop();
-
-                                            fetchHighestPrice(skip, limit);
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
-                            },
-                          ),
-                          Container(
-                              height: 40,
-                              child: VerticalDivider(color: Colors.black)),
-                          InkWell(
-                            onTap: () {
-                              scaffoldState.currentState
-                                  .showBottomSheet((context) {
-                                return Container(
-                                  height: MediaQuery.of(context).size.height,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(1.0),
-                                    child: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          ListTile(
-                                            title: Text(
-                                              'Filter',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                          ExpansionTile(
-                                            title: Text(
-                                              'Brand',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                            children: <Widget>[
-                                              Container(
-                                                  height: 500,
-                                                  child: AlphabetListScrollView(
-                                                    strList: brands,
-                                                    indexedHeight: (i) {
-                                                      return 40;
-                                                    },
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      return InkWell(
-                                                        onTap: () async {
-                                                          setState(() {
-                                                            _selectedFilter =
-                                                                'Brands';
-                                                            brand =
-                                                                brands[index];
-                                                            skip = 0;
-                                                            limit = 20;
-                                                            loading = true;
-                                                          });
-                                                          itemsgrid.clear();
-                                                          Navigator.of(context)
-                                                              .pop();
-
-                                                          fetchbrands(
-                                                              brands[index]);
-                                                        },
-                                                        child: ListTile(
-                                                          title: Text(
-                                                              brands[index]),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ))
-                                            ],
-                                          ),
-                                          ExpansionTile(
-                                            title: Text(
-                                              'Condition',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 30, right: 30),
-                                                child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: Center(
-                                                        child: Align(
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child:
-                                                                DropdownButton<
-                                                                    String>(
-                                                              value:
-                                                                  _selectedCondition,
-                                                              hint: Text(
-                                                                  'Please choose the condition of your Item'), // No
-                                                              icon: Icon(Icons
-                                                                  .keyboard_arrow_down),
-                                                              iconSize: 20,
-                                                              elevation: 1,
-                                                              isExpanded: true,
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'SF',
-                                                                fontSize: 16,
-                                                              ),
-                                                              onChanged: (String
-                                                                  newValue) {
-                                                                setState(() {
-                                                                  _selectedCondition =
-                                                                      newValue;
-                                                                });
-
-                                                                setState(() {
-                                                                  _selectedFilter =
-                                                                      'Condition';
-                                                                  condition =
-                                                                      _selectedCondition;
-                                                                  skip = 0;
-                                                                  limit = 20;
-                                                                  loading =
-                                                                      true;
-                                                                });
-                                                                itemsgrid
-                                                                    .clear();
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-
-                                                                fetchCondition(
-                                                                    _selectedCondition);
-                                                              },
-                                                              items: conditions.map<
-                                                                  DropdownMenuItem<
-                                                                      String>>((String
-                                                                  value) {
-                                                                return DropdownMenuItem<
-                                                                    String>(
-                                                                  value: value,
-                                                                  child: Text(
-                                                                    value,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'SF',
-                                                                        fontSize:
-                                                                            16,
-                                                                        color: Colors
-                                                                            .black),
-                                                                  ),
-                                                                );
-                                                              }).toList(),
-                                                            )))),
-                                              ),
-                                            ],
-                                          ),
-                                          ExpansionTile(
-                                            title: Text(
-                                              'Price',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black),
-                                            ),
-                                            children: <Widget>[
-                                              Container(
-                                                  height: 130,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors
-                                                            .grey.shade300,
-                                                        offset: Offset(
-                                                            0.0, 1.0), //(x,y)
-                                                        blurRadius: 6.0,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: <Widget>[
-                                                      Center(
-                                                          child: ListTile(
-                                                              title: Text(
-                                                                'Minimum Price',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'SF',
-                                                                  fontSize: 16,
-                                                                ),
-                                                              ),
-                                                              trailing:
-                                                                  Container(
-                                                                      width:
-                                                                          200,
-                                                                      padding:
-                                                                          EdgeInsets
-                                                                              .only(),
-                                                                      child:
-                                                                          Center(
-                                                                        child:
-                                                                            TextField(
-                                                                          cursorColor:
-                                                                              Color(0xFF979797),
-                                                                          controller:
-                                                                              minpricecontroller,
-                                                                          keyboardType:
-                                                                              TextInputType.numberWithOptions(),
-                                                                          decoration: InputDecoration(
-                                                                              labelText: "Price " + currency,
-                                                                              alignLabelWithHint: true,
-                                                                              labelStyle: TextStyle(
-                                                                                fontFamily: 'SF',
-                                                                                fontSize: 16,
-                                                                              ),
-                                                                              focusColor: Colors.black,
-                                                                              enabledBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              border: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              focusedErrorBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              disabledBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              errorBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              focusedBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              ))),
-                                                                        ),
-                                                                      )))),
-                                                      Center(
-                                                          child: ListTile(
-                                                              title: Text(
-                                                                'Maximum Price',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'SF',
-                                                                  fontSize: 16,
-                                                                ),
-                                                              ),
-                                                              trailing:
-                                                                  Container(
-                                                                      width:
-                                                                          200,
-                                                                      padding:
-                                                                          EdgeInsets
-                                                                              .only(),
-                                                                      child:
-                                                                          Center(
-                                                                        child:
-                                                                            TextField(
-                                                                          cursorColor:
-                                                                              Color(0xFF979797),
-                                                                          controller:
-                                                                              maxpricecontroller,
-                                                                          keyboardType:
-                                                                              TextInputType.numberWithOptions(),
-                                                                          decoration: InputDecoration(
-                                                                              labelText: "Price " + currency,
-                                                                              alignLabelWithHint: true,
-                                                                              labelStyle: TextStyle(
-                                                                                fontFamily: 'SF',
-                                                                                fontSize: 16,
-                                                                              ),
-                                                                              focusColor: Colors.black,
-                                                                              enabledBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              border: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              focusedErrorBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              disabledBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              errorBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              )),
-                                                                              focusedBorder: OutlineInputBorder(
-                                                                                  borderSide: BorderSide(
-                                                                                color: Colors.grey.shade300,
-                                                                              ))),
-                                                                        ),
-                                                                      ))))
-                                                    ],
-                                                  )),
-                                              InkWell(
-                                                  onTap: () async {
-                                                    setState(() {
-                                                      _selectedFilter = 'Price';
-                                                      minprice =
-                                                          minpricecontroller
-                                                              .text;
-                                                      maxprice =
-                                                          maxpricecontroller
-                                                              .text;
-                                                      skip = 0;
-                                                      limit = 20;
-                                                      loading = true;
-                                                    });
-                                                    itemsgrid.clear();
-                                                    Navigator.of(context).pop();
-
-                                                    fetchPrice(
-                                                        minpricecontroller.text,
-                                                        maxpricecontroller
-                                                            .text);
-                                                  },
-                                                  child: Container(
-                                                    height: 50,
-                                                    color: Colors.deepOrange,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Filter',
-                                                        style: TextStyle(
-                                                            fontFamily: 'SF',
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ),
-                                                  ))
-                                            ],
-                                          ),
-//                                          ExpansionTile(
-//                                            title: Text(
-//                                              'Delivery',
-//                                              style: TextStyle(
-//                                                  fontFamily: 'SF',
-//                                                  fontSize: 16,
-//                                                  fontWeight: FontWeight.w400,
-//                                                  color: Colors.black),
-//                                            ),
-//                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              });
-                            },
-                            child: Container(
-                              height: 40,
-                              width: MediaQuery.of(context).size.width / 2 - 10,
-                              child: Center(
-                                child: Text(
-                                  'FILTER',
-                                  style: TextStyle(
-                                      fontFamily: 'SF',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
+              ? CustomScrollView(
+                  slivers: <Widget>[
+                    SliverAppBar(
+                      snap: false,
+                      floating: true,
+                      pinned: true,
+                      iconTheme: IconThemeData(color: Colors.deepPurple),
+                      backgroundColor: Colors.white,
+                      title: Text(
+                        subcategory.toUpperCase(),
+                        style: TextStyle(
+                            fontFamily: 'SF',
+                            fontSize: 16,
+                            color: Colors.deepOrange,
+                            fontWeight: FontWeight.w800),
+                      ),
+                      expandedHeight: 100.0,
+                      flexibleSpace: FlexibleSpaceBar(
+                        collapseMode: CollapseMode.pin,
+                        centerTitle: true,
+                        background: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                                margin: EdgeInsets.only(top: 60.0),
+                                child: filtersort(context)),
+                          ],
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      height: 5,
+                    SliverToBoxAdapter(
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: 10, top: 10, bottom: 5),
+                              child: Text(subcategory,
+                                  style: TextStyle(
+                                      fontFamily: 'SF',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.black)),
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    right: 20, top: 10, bottom: 10),
+                                child: InkWell(
+                                    onTap: () {
+                                      if (gridtoggle == true) {
+                                        setState(() {
+                                          gridtoggle = false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          gridtoggle = true;
+                                        });
+                                      }
+                                    },
+                                    child: gridtoggle == true
+                                        ? Icon(
+                                            Icons.list,
+                                            size: 20,
+                                            color: Colors.deepOrange,
+                                          )
+                                        : Icon(Icons.grid_on,
+                                            size: 20,
+                                            color: Colors.deepOrange))),
+                          ]),
                     ),
                     itemsgrid.isNotEmpty
-                        ? Flexible(
-                            child: MediaQuery.removePadding(
-                                context: context,
-                                removeTop: true,
-                                child: GridView.builder(
-                                  cacheExtent:
-                                      double.parse(itemsgrid.length.toString()),
-                                  shrinkWrap: true,
-                                  controller: _scrollController,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          childAspectRatio: 0.80),
-                                  itemCount: itemsgrid.length,
-                                  itemBuilder: (context, index) {
-                                    if (index != 0 && index % 8 == 0) {
-                                      return Platform.isIOS == true
-                                          ? Container(
-                                              height: 330,
+                        ? (gridtoggle == true
+                            ? SliverGrid(
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  childAspectRatio: 0.64,
+                                  mainAxisSpacing: 1.0,
+                                  crossAxisSpacing: 1.0,
+                                  crossAxisCount: 2,
+                                ),
+                                delegate: SliverChildBuilderDelegate(
+                                    (BuildContext context, int index) {
+                                  if (index != 0 && index % 8 == 0) {
+                                    return Platform.isIOS == true
+                                        ? Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: Container(
+                                              height: 300,
                                               padding: EdgeInsets.all(10),
                                               margin:
                                                   EdgeInsets.only(bottom: 20.0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.grey),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade300,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 6.0,
+                                                  ),
+                                                ],
+                                              ),
                                               child: NativeAdmob(
                                                 adUnitID: _iosadUnitID,
                                                 controller: _controller,
                                               ),
-                                            )
-                                          : Container(
-                                              height: 330,
+                                            ))
+                                        : Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: Container(
+                                              height: 300,
                                               padding: EdgeInsets.all(10),
                                               margin:
                                                   EdgeInsets.only(bottom: 20.0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.grey),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade300,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 6.0,
+                                                  ),
+                                                ],
+                                              ),
                                               child: NativeAdmob(
                                                 adUnitID: _androidadUnitID,
                                                 controller: _controller,
                                               ),
-                                            );
-                                    }
-
-                                    return Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: InkWell(
-                                            onTap: () {
-                                              Navigator.push(
+                                            ));
+                                  }
+                                  return new Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
                                                 context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Details(
-                                                            itemid:
-                                                                itemsgrid[index]
-                                                                    .itemid)),
-                                              );
-                                            },
-                                            child: Container(
-                                              child: Column(
-                                                children: <Widget>[
-                                                  new Stack(
-                                                    children: <Widget>[
-                                                      Container(
-                                                        height: 150,
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          child:
-                                                              CachedNetworkImage(
-                                                            imageUrl:
-                                                                itemsgrid[index]
-                                                                    .image,
-                                                            fit: BoxFit.cover,
-                                                            placeholder: (context,
-                                                                    url) =>
-                                                                SpinKitChasingDots(
-                                                                    color: Colors
-                                                                        .deepOrange),
-                                                            errorWidget:
-                                                                (context, url,
-                                                                        error) =>
-                                                                    Icon(Icons
-                                                                        .error),
-                                                          ),
+                                                PageRouteBuilder(
+                                                  pageBuilder: (context,
+                                                          animation,
+                                                          secondaryAnimation) =>
+                                                      Details(
+                                                          itemid:
+                                                              itemsgrid[index]
+                                                                  .itemid),
+                                                  transitionsBuilder: (context,
+                                                      animation,
+                                                      secondaryAnimation,
+                                                      child) {
+                                                    var begin =
+                                                        Offset(0.0, 1.0);
+                                                    var end = Offset.zero;
+                                                    var curve = Curves.ease;
+
+                                                    var tween = Tween(
+                                                            begin: begin,
+                                                            end: end)
+                                                        .chain(CurveTween(
+                                                            curve: curve));
+
+                                                    return SlideTransition(
+                                                      position: animation
+                                                          .drive(tween),
+                                                      child: child,
+                                                    );
+                                                  },
+                                                ));
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 0.2,
+                                                  color: Colors.grey),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade300,
+                                                  offset:
+                                                      Offset(0.0, 1.0), //(x,y)
+                                                  blurRadius: 6.0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Column(
+                                              children: <Widget>[
+                                                new Stack(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      height: 180,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  15),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  15),
+                                                        ),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          fadeInDuration:
+                                                              Duration(
+                                                                  microseconds:
+                                                                      10),
+                                                          imageUrl:
+                                                              itemsgrid[index]
+                                                                  .image,
+                                                          fit: BoxFit.cover,
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              SpinKitChasingDots(
+                                                                  color: Colors
+                                                                      .deepOrange),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              Icon(Icons.error),
                                                         ),
                                                       ),
-                                                      itemsgrid[index].sold ==
-                                                              true
-                                                          ? Align(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .topRight,
-                                                              child: Container(
-                                                                height: 20,
-                                                                width: 50,
-                                                                color: Colors
-                                                                    .amber,
-                                                                child: Text(
-                                                                  'Sold',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          'SF',
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                              ))
-                                                          : Container(),
-                                                    ],
-                                                  ),
-                                                  Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(5),
-                                                        child: Column(
+                                                    ),
+                                                    itemsgrid[index].sold ==
+                                                            true
+                                                        ? Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: Container(
+                                                              height: 20,
+                                                              width: 50,
+                                                              color:
+                                                                  Colors.amber,
+                                                              child: Text(
+                                                                'Sold',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ))
+                                                        : Container(),
+                                                  ],
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.all(10),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .start,
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .start,
+                                                                  .center,
                                                           children: <Widget>[
-                                                            Container(
-                                                              height: 20,
+                                                            favourites != null
+                                                                ? favourites.contains(
+                                                                        itemsgrid[index]
+                                                                            .itemid)
+                                                                    ? InkWell(
+                                                                        onTap:
+                                                                            () async {
+                                                                          var userid =
+                                                                              await storage.read(key: 'userid');
+
+                                                                          if (userid !=
+                                                                              null) {
+                                                                            var url =
+                                                                                'https://api.sellship.co/api/favourite/' + userid;
+
+                                                                            Map<String, String>
+                                                                                body =
+                                                                                {
+                                                                              'itemid': itemsgrid[index].itemid,
+                                                                            };
+
+                                                                            final response =
+                                                                                await http.post(url, body: body);
+
+                                                                            if (response.statusCode ==
+                                                                                200) {
+                                                                              var jsondata = json.decode(response.body);
+
+                                                                              favourites.clear();
+                                                                              for (int i = 0; i < jsondata.length; i++) {
+                                                                                favourites.add(jsondata[i]['_id']['\$oid']);
+                                                                              }
+                                                                              setState(() {
+                                                                                favourites = favourites;
+                                                                              });
+                                                                            } else {
+                                                                              print(response.statusCode);
+                                                                            }
+                                                                          } else {
+                                                                            showInSnackBar('Please Login to use Favourites');
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            Icon(
+                                                                          FontAwesome
+                                                                              .heart,
+                                                                          color:
+                                                                              Colors.deepPurple,
+                                                                        ),
+                                                                      )
+                                                                    : InkWell(
+                                                                        onTap:
+                                                                            () async {
+                                                                          var userid =
+                                                                              await storage.read(key: 'userid');
+
+                                                                          if (userid !=
+                                                                              null) {
+                                                                            var url =
+                                                                                'https://api.sellship.co/api/favourite/' + userid;
+
+                                                                            Map<String, String>
+                                                                                body =
+                                                                                {
+                                                                              'itemid': itemsgrid[index].itemid,
+                                                                            };
+
+                                                                            final response =
+                                                                                await http.post(url, body: body);
+
+                                                                            if (response.statusCode ==
+                                                                                200) {
+                                                                              var jsondata = json.decode(response.body);
+
+                                                                              favourites.clear();
+                                                                              for (int i = 0; i < jsondata.length; i++) {
+                                                                                favourites.add(jsondata[i]['_id']['\$oid']);
+                                                                              }
+                                                                              setState(() {
+                                                                                favourites = favourites;
+                                                                              });
+                                                                            } else {
+                                                                              print(response.statusCode);
+                                                                            }
+                                                                          } else {
+                                                                            showInSnackBar('Please Login to use Favourites');
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            Icon(
+                                                                          Feather
+                                                                              .heart,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                      )
+                                                                : Icon(
+                                                                    Feather
+                                                                        .heart,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            Text(
+                                                              itemsgrid[index]
+                                                                  .likes
+                                                                  .toString(),
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'SF',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          CommentsPage(
+                                                                              itemid: itemsgrid[index].itemid)),
+                                                                );
+                                                              },
+                                                              child: Icon(Feather
+                                                                  .message_circle),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          CommentsPage(
+                                                                              itemid: itemsgrid[index].itemid)),
+                                                                );
+                                                              },
                                                               child: Text(
                                                                 itemsgrid[index]
-                                                                    .name,
+                                                                    .comments
+                                                                    .toString(),
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
@@ -1553,17 +2209,489 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w800,
+                                                                          .w600,
                                                                 ),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
                                                               ),
                                                             ),
-                                                            SizedBox(
-                                                                height: 5.0),
-                                                            currency != null
-                                                                ? Container(
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Container(
+                                                          height: 20,
+                                                          child: Text(
+                                                            itemsgrid[index]
+                                                                .name,
+                                                            style: TextStyle(
+                                                              fontFamily: 'SF',
+                                                              fontSize: 16,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 3.0),
+                                                        currency != null
+                                                            ? Container(
+                                                                child: Text(
+                                                                  currency +
+                                                                      ' ' +
+                                                                      itemsgrid[
+                                                                              index]
+                                                                          .price
+                                                                          .toString(),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .deepOrange,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : Container(
+                                                                child: Text(
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .price
+                                                                      .toString(),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )));
+                                }, childCount: itemsgrid.length),
+                              )
+                            : SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                    (context, index) {
+                                  if (index != 0 && index % 8 == 0) {
+                                    return Platform.isIOS == true
+                                        ? Padding(
+                                            padding: EdgeInsets.all(15),
+                                            child: Container(
+                                              height: 350,
+                                              padding: EdgeInsets.all(10),
+                                              margin:
+                                                  EdgeInsets.only(bottom: 20.0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.grey),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade300,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 6.0,
+                                                  ),
+                                                ],
+                                              ),
+                                              child: NativeAdmob(
+                                                adUnitID: _iosadUnitID,
+                                                controller: _controller,
+                                              ),
+                                            ))
+                                        : Padding(
+                                            padding: EdgeInsets.all(15),
+                                            child: Container(
+                                              height: 350,
+                                              padding: EdgeInsets.all(10),
+                                              margin:
+                                                  EdgeInsets.only(bottom: 20.0),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.grey),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade300,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 6.0,
+                                                  ),
+                                                ],
+                                              ),
+                                              child: NativeAdmob(
+                                                adUnitID: _androidadUnitID,
+                                                controller: _controller,
+                                              ),
+                                            ));
+                                  }
+                                  return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Details(
+                                                  sold: itemsgrid[index].sold,
+                                                  itemid:
+                                                      itemsgrid[index].itemid)),
+                                        );
+                                      },
+                                      onDoubleTap: () async {
+                                        var userid =
+                                            await storage.read(key: 'userid');
+
+                                        if (userid != null) {
+                                          var url =
+                                              'https://api.sellship.co/api/favourite/' +
+                                                  userid;
+
+                                          Map<String, String> body = {
+                                            'itemid': itemsgrid[index].itemid,
+                                          };
+
+                                          final response =
+                                              await http.post(url, body: body);
+
+                                          if (response.statusCode == 200) {
+                                            var jsondata =
+                                                json.decode(response.body);
+                                            var favs = jsondata['favourites'];
+                                            favourites.clear();
+                                            for (int i = 0;
+                                                i < favs.length;
+                                                i++) {
+                                              favourites.add(favs[i]['\$oid']);
+                                            }
+                                            setState(() {
+                                              favourites = favourites;
+                                            });
+                                          } else {
+                                            print(response.statusCode);
+                                          }
+                                        } else {
+                                          showInSnackBar(
+                                              'Please Login to use Favourites');
+                                        }
+                                      },
+                                      child: Padding(
+                                          padding: EdgeInsets.all(15),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 0.2,
+                                                  color: Colors.grey),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade300,
+                                                  offset:
+                                                      Offset(0.0, 1.0), //(x,y)
+                                                  blurRadius: 6.0,
+                                                ),
+                                              ],
+                                            ),
+                                            child: Column(
+                                              children: <Widget>[
+                                                new Stack(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      height: 400,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  15),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  15),
+                                                        ),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          fadeInDuration:
+                                                              Duration(
+                                                                  microseconds:
+                                                                      10),
+                                                          imageUrl:
+                                                              itemsgrid[index]
+                                                                  .image,
+                                                          fit: BoxFit.cover,
+                                                          placeholder: (context,
+                                                                  url) =>
+                                                              SpinKitChasingDots(
+                                                                  color: Colors
+                                                                      .deepOrange),
+                                                          errorWidget: (context,
+                                                                  url, error) =>
+                                                              Icon(Icons.error),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    itemsgrid[index].sold ==
+                                                            true
+                                                        ? Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: Container(
+                                                              height: 20,
+                                                              width: 50,
+                                                              color:
+                                                                  Colors.amber,
+                                                              child: Text(
+                                                                'Sold',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ))
+                                                        : Container(),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 2.0),
+                                                new Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 10.0,
+                                                                right: 10.0,
+                                                                bottom: 10.0,
+                                                                top: 5),
+                                                        child: new Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: <Widget>[
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: <
+                                                                    Widget>[
+                                                                  favourites !=
+                                                                          null
+                                                                      ? favourites
+                                                                              .contains(itemsgrid[index].itemid)
+                                                                          ? InkWell(
+                                                                              onTap: () async {
+                                                                                var userid = await storage.read(key: 'userid');
+
+                                                                                if (userid != null) {
+                                                                                  var url = 'https://api.sellship.co/api/favourite/' + userid;
+
+                                                                                  Map<String, String> body = {
+                                                                                    'itemid': itemsgrid[index].itemid,
+                                                                                  };
+
+                                                                                  final response = await http.post(url, body: body);
+
+                                                                                  if (response.statusCode == 200) {
+                                                                                    var jsondata = json.decode(response.body);
+
+                                                                                    favourites.clear();
+                                                                                    for (int i = 0; i < jsondata.length; i++) {
+                                                                                      favourites.add(jsondata[i]['_id']['\$oid']);
+                                                                                    }
+                                                                                    setState(() {
+                                                                                      favourites = favourites;
+                                                                                    });
+                                                                                  } else {
+                                                                                    print(response.statusCode);
+                                                                                  }
+                                                                                } else {
+                                                                                  showInSnackBar('Please Login to use Favourites');
+                                                                                }
+                                                                              },
+                                                                              child: Icon(
+                                                                                FontAwesome.heart,
+                                                                                color: Colors.deepPurple,
+                                                                              ),
+                                                                            )
+                                                                          : InkWell(
+                                                                              onTap: () async {
+                                                                                var userid = await storage.read(key: 'userid');
+
+                                                                                if (userid != null) {
+                                                                                  var url = 'https://api.sellship.co/api/favourite/' + userid;
+
+                                                                                  Map<String, String> body = {
+                                                                                    'itemid': itemsgrid[index].itemid,
+                                                                                  };
+
+                                                                                  final response = await http.post(url, body: body);
+
+                                                                                  if (response.statusCode == 200) {
+                                                                                    var jsondata = json.decode(response.body);
+
+                                                                                    favourites.clear();
+                                                                                    for (int i = 0; i < jsondata.length; i++) {
+                                                                                      favourites.add(jsondata[i]['_id']['\$oid']);
+                                                                                    }
+                                                                                    setState(() {
+                                                                                      favourites = favourites;
+                                                                                    });
+                                                                                  } else {
+                                                                                    print(response.statusCode);
+                                                                                  }
+                                                                                } else {
+                                                                                  showInSnackBar('Please Login to use Favourites');
+                                                                                }
+                                                                              },
+                                                                              child: Icon(
+                                                                                Feather.heart,
+                                                                                color: Colors.black,
+                                                                              ),
+                                                                            )
+                                                                      : Icon(
+                                                                          Feather
+                                                                              .heart,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  Text(
+                                                                    itemsgrid[index]
+                                                                            .likes
+                                                                            .toString() +
+                                                                        ' likes',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'SF',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 10,
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                CommentsPage(itemid: itemsgrid[index].itemid)),
+                                                                      );
+                                                                    },
+                                                                    child: Icon(
+                                                                        Feather
+                                                                            .message_circle),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 5,
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                CommentsPage(itemid: itemsgrid[index].itemid)),
+                                                                      );
+                                                                    },
+                                                                    child: Text(
+                                                                      itemsgrid[index]
+                                                                              .comments
+                                                                              .toString() +
+                                                                          ' comments',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'SF',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Flexible(
+                                                                    child: Text(
+                                                                      itemsgrid[
+                                                                              index]
+                                                                          .name,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'SF',
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w600,
+                                                                      ),
+//                                                            overflow:
+//                                                                TextOverflow
+//                                                                    .ellipsis,
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left,
+                                                                    ),
+                                                                  ),
+                                                                  Container(
                                                                     child: Text(
                                                                       currency +
                                                                           ' ' +
@@ -1575,58 +2703,128 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                         fontFamily:
                                                                             'SF',
                                                                         fontSize:
-                                                                            16,
+                                                                            17,
+                                                                        color: Colors
+                                                                            .deepOrange,
                                                                         fontWeight:
-                                                                            FontWeight.w800,
+                                                                            FontWeight.w700,
                                                                       ),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .left,
                                                                     ),
-                                                                  )
-                                                                : Container(
-                                                                    child: Text(
-                                                                      itemsgrid[
-                                                                              index]
-                                                                          .price
-                                                                          .toString(),
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontFamily:
-                                                                            'SF',
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight.w800,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              SizedBox(
+                                                                height: 2,
+                                                              ),
+                                                              Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Row(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Icon(
+                                                                        Icons
+                                                                            .access_time,
+                                                                        size:
+                                                                            12,
                                                                       ),
-                                                                    ),
-                                                                  )
-                                                          ],
-                                                        ),
-                                                      )),
-                                                ],
-                                              ),
-                                            )));
-                                  },
-                                )))
-                        : Expanded(
-                            child: Column(
-                            children: <Widget>[
-                              Center(
-                                child: Text(
-                                    'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'SF',
-                                      fontSize: 16,
-                                    )),
-                              ),
-                              Expanded(
-                                  child: Image.asset(
-                                'assets/little_theologians_4x.png',
-                                fit: BoxFit.cover,
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5,
+                                                                      ),
+                                                                      Text(
+                                                                        'Uploaded ${itemsgrid[index].date}',
+                                                                        textAlign:
+                                                                            TextAlign.left,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontFamily:
+                                                                              'SF',
+                                                                          fontSize:
+                                                                              12,
+                                                                          color:
+                                                                              Colors.grey,
+                                                                          fontWeight:
+                                                                              FontWeight.w300,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )),
+                                                            ]))),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                              ],
+                                            ),
+                                          )));
+                                }, childCount: itemsgrid.length),
                               ))
-                            ],
-                          )),
+                        : SliverToBoxAdapter(
+                            child: Container(
+                            height: MediaQuery.of(context).size.height,
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 16.0),
+                              child: Shimmer.fromColors(
+                                baseColor: Colors.grey[300],
+                                highlightColor: Colors.grey[100],
+                                child: ListView(
+                                  children: [0, 1, 2, 3, 4, 5, 6]
+                                      .map((_) => Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  width: MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          2 -
+                                                      30,
+                                                  height: 150.0,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 8.0),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          2 -
+                                                      30,
+                                                  height: 150.0,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ))
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+                          ))
                   ],
-                ))
+                )
               : Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(

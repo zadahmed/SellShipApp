@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/screens/comments.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -53,6 +55,12 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                   itemid: profilemap[i]['_id']['\$oid'],
                   name: profilemap[i]['name'],
                   image: profilemap[i]['image'],
+                  likes: profilemap[i]['likes'] == null
+                      ? 0
+                      : profilemap[i]['likes'],
+                  comments: profilemap[i]['comments'] == null
+                      ? 0
+                      : profilemap[i]['comments'].length,
                   price: profilemap[i]['price'].toString(),
                   sold: profilemap[i]['sold'] == null
                       ? false
@@ -90,6 +98,24 @@ class FavouritesScreenState extends State<FavouritesScreen> {
     }
   }
 
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    scaffoldState.currentState?.removeCurrentSnackBar();
+    scaffoldState.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'SF',
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
   var loading;
   var empty;
 
@@ -108,13 +134,15 @@ class FavouritesScreenState extends State<FavouritesScreen> {
     super.didChangeDependencies();
   }
 
+  final scaffoldState = GlobalKey<ScaffoldState>();
+
   ScrollController _scrollController = ScrollController();
   Widget favourites(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
         body: loading == false
             ? Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -134,7 +162,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
-                                          childAspectRatio: 0.65),
+                                          childAspectRatio: 0.55),
                                   itemCount: item.length,
                                   itemBuilder: (context, index) {
                                     return Padding(
@@ -151,12 +179,28 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                               );
                                             },
                                             child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.grey),
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade300,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 6.0,
+                                                  ),
+                                                ],
+                                              ),
                                               child: Column(
                                                 children: <Widget>[
                                                   new Stack(
                                                     children: <Widget>[
                                                       Container(
-                                                        height: 150,
+                                                        height: 180,
                                                         width: MediaQuery.of(
                                                                 context)
                                                             .size
@@ -226,6 +270,156 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: <Widget>[
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: <
+                                                                  Widget>[
+                                                                InkWell(
+                                                                  onTap:
+                                                                      () async {
+                                                                    var userid =
+                                                                        await storage.read(
+                                                                            key:
+                                                                                'userid');
+
+                                                                    if (userid !=
+                                                                        null) {
+                                                                      var url =
+                                                                          'https://api.sellship.co/api/favourite/' +
+                                                                              userid;
+
+                                                                      Map<String,
+                                                                              String>
+                                                                          body =
+                                                                          {
+                                                                        'itemid':
+                                                                            item[index].itemid,
+                                                                      };
+
+                                                                      final response = await http.post(
+                                                                          url,
+                                                                          body:
+                                                                              body);
+
+                                                                      if (response
+                                                                              .statusCode ==
+                                                                          200) {
+                                                                        var jsondata =
+                                                                            json.decode(response.body);
+
+                                                                        item.clear();
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < jsondata.length;
+                                                                            i++) {
+                                                                          Item ite = Item(
+                                                                              itemid: jsondata[i]['_id']['\$oid'],
+                                                                              name: jsondata[i]['name'],
+                                                                              image: jsondata[i]['image'],
+                                                                              likes: jsondata[i]['likes'] == null ? 0 : jsondata[i]['likes'],
+                                                                              comments: jsondata[i]['comments'] == null ? 0 : jsondata[i]['comments'].length,
+                                                                              price: jsondata[i]['price'].toString(),
+                                                                              sold: jsondata[i]['sold'] == null ? false : jsondata[i]['sold'],
+                                                                              category: jsondata[i]['category']);
+                                                                          item.add(
+                                                                              ite);
+                                                                        }
+                                                                        setState(
+                                                                            () {
+                                                                          item =
+                                                                              item;
+                                                                        });
+                                                                      } else {
+                                                                        print(response
+                                                                            .statusCode);
+                                                                      }
+                                                                    } else {
+                                                                      showInSnackBar(
+                                                                          'Please Login to use Favourites');
+                                                                    }
+                                                                  },
+                                                                  child: Icon(
+                                                                    FontAwesome
+                                                                        .heart,
+                                                                    color: Colors
+                                                                        .deepPurple,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                Text(
+                                                                  item[index]
+                                                                          .likes
+                                                                          .toString() +
+                                                                      ' likes',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'SF',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              CommentsPage(itemid: item[index].itemid)),
+                                                                    );
+                                                                  },
+                                                                  child: Icon(
+                                                                      Feather
+                                                                          .message_circle),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                InkWell(
+                                                                  onTap: () {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              CommentsPage(itemid: item[index].itemid)),
+                                                                    );
+                                                                  },
+                                                                  child: Text(
+                                                                    item[index]
+                                                                        .comments
+                                                                        .toString(),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'SF',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
                                                             Container(
                                                               height: 20,
                                                               child: Text(
@@ -278,6 +472,8 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                             'SF',
                                                                         fontSize:
                                                                             16,
+                                                                        color: Colors
+                                                                            .deepOrange,
                                                                         fontWeight:
                                                                             FontWeight.w800,
                                                                       ),
@@ -294,6 +490,8 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                             'SF',
                                                                         fontSize:
                                                                             16,
+                                                                        color: Colors
+                                                                            .deepOrange,
                                                                         fontWeight:
                                                                             FontWeight.w800,
                                                                       ),
@@ -323,7 +521,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                               Expanded(
                                   child: Image.asset(
                                 'assets/favourites.png',
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fitWidth,
                               ))
                             ],
                           )),

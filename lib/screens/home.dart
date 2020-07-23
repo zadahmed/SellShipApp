@@ -103,6 +103,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 : jsonbody[i]['condition'],
             username: jsonbody[i]['username'],
             image: jsonbody[i]['image'],
+            likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+            comments: jsonbody[i]['comments'] == null
+                ? 0
+                : jsonbody[i]['comments'].length,
             userid: jsonbody[i]['userid'],
             price: jsonbody[i]['price'].toString(),
             category: jsonbody[i]['category'],
@@ -135,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
       limit = 20;
     });
     getnotification();
+    getfavourites();
     fetchRecentlyAdded(skip, limit);
   }
 
@@ -170,6 +175,10 @@ class _HomeScreenState extends State<HomeScreen> {
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           userid: jsonbody[i]['userid'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -192,6 +201,42 @@ class _HomeScreenState extends State<HomeScreen> {
       print(response.statusCode);
     }
   }
+
+  getfavourites() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/favourites/' + userid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        if (response.body != 'Empty') {
+          var respons = json.decode(response.body);
+          var profilemap = respons;
+          List<String> ites = List<String>();
+
+          if (profilemap != null) {
+            for (var i = 0; i < profilemap.length; i++) {
+              ites.add(profilemap[i]['_id']['\$oid']);
+            }
+
+            Iterable inReverse = ites.reversed;
+            List<String> jsoninreverse = inReverse.toList();
+            setState(() {
+              favourites = jsoninreverse;
+            });
+          } else {
+            favourites = [];
+          }
+        }
+      }
+    } else {
+      setState(() {
+        favourites = [];
+      });
+    }
+    print(favourites);
+  }
+
+  List<String> favourites;
 
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
     if (country == null) {
@@ -221,6 +266,10 @@ class _HomeScreenState extends State<HomeScreen> {
               : jsonbody[i]['condition'],
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -270,6 +319,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ? 'Like New'
               : jsonbody[i]['condition'],
           username: jsonbody[i]['username'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
@@ -320,6 +373,10 @@ class _HomeScreenState extends State<HomeScreen> {
           condition: jsonbody[i]['condition'] == null
               ? 'Like New'
               : jsonbody[i]['condition'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
@@ -372,6 +429,10 @@ class _HomeScreenState extends State<HomeScreen> {
               : jsonbody[i]['condition'],
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -424,6 +485,10 @@ class _HomeScreenState extends State<HomeScreen> {
               : jsonbody[i]['condition'],
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -478,6 +543,10 @@ class _HomeScreenState extends State<HomeScreen> {
               : jsonbody[i]['condition'],
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -532,6 +601,10 @@ class _HomeScreenState extends State<HomeScreen> {
           condition: jsonbody[i]['condition'] == null
               ? 'Like New'
               : jsonbody[i]['condition'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
           price: jsonbody[i]['price'].toString(),
@@ -592,6 +665,10 @@ class _HomeScreenState extends State<HomeScreen> {
               : jsonbody[i]['condition'],
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -648,6 +725,10 @@ class _HomeScreenState extends State<HomeScreen> {
               : jsonbody[i]['condition'],
           username: jsonbody[i]['username'],
           image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
           price: jsonbody[i]['price'].toString(),
           category: jsonbody[i]['category'],
           sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -663,6 +744,24 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       print(categoryresponse.statusCode);
     }
+  }
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    scaffoldState.currentState?.removeCurrentSnackBar();
+    scaffoldState.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'SF',
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
   }
 
   _getmorehighestprice() async {
@@ -695,6 +794,10 @@ class _HomeScreenState extends State<HomeScreen> {
             : jsonbody[i]['condition'],
         username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -736,6 +839,10 @@ class _HomeScreenState extends State<HomeScreen> {
             : jsonbody[i]['condition'],
         username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -777,6 +884,10 @@ class _HomeScreenState extends State<HomeScreen> {
             : jsonbody[i]['condition'],
         username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -819,6 +930,10 @@ class _HomeScreenState extends State<HomeScreen> {
         username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
         userid: jsonbody[i]['userid'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -902,6 +1017,10 @@ class _HomeScreenState extends State<HomeScreen> {
             : jsonbody[i]['condition'],
         username: jsonbody[i]['username'],
         image: jsonbody[i]['image'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
         price: jsonbody[i]['price'].toString(),
         category: jsonbody[i]['category'],
         sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
@@ -1055,6 +1174,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void readstorage() async {
     getnotification();
+    getfavourites();
     var countr = await storage.read(key: 'country');
     if (countr.toLowerCase() == 'united arab emirates') {
       setState(() {
@@ -1365,7 +1485,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? SliverGrid(
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 0.71,
+                            childAspectRatio: 0.64,
                             mainAxisSpacing: 1.0,
                             crossAxisSpacing: 1.0,
                             crossAxisCount: 2,
@@ -1540,6 +1660,213 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: <Widget>[
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: <Widget>[
+                                                      favourites != null
+                                                          ? favourites.contains(
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .itemid)
+                                                              ? InkWell(
+                                                                  onTap:
+                                                                      () async {
+                                                                    var userid =
+                                                                        await storage.read(
+                                                                            key:
+                                                                                'userid');
+
+                                                                    if (userid !=
+                                                                        null) {
+                                                                      var url =
+                                                                          'https://api.sellship.co/api/favourite/' +
+                                                                              userid;
+
+                                                                      Map<String,
+                                                                              String>
+                                                                          body =
+                                                                          {
+                                                                        'itemid':
+                                                                            itemsgrid[index].itemid,
+                                                                      };
+
+                                                                      final response = await http.post(
+                                                                          url,
+                                                                          body:
+                                                                              body);
+
+                                                                      if (response
+                                                                              .statusCode ==
+                                                                          200) {
+                                                                        var jsondata =
+                                                                            json.decode(response.body);
+
+                                                                        favourites
+                                                                            .clear();
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < jsondata.length;
+                                                                            i++) {
+                                                                          favourites.add(jsondata[i]['_id']
+                                                                              [
+                                                                              '\$oid']);
+                                                                        }
+                                                                        setState(
+                                                                            () {
+                                                                          favourites =
+                                                                              favourites;
+                                                                        });
+                                                                      } else {
+                                                                        print(response
+                                                                            .statusCode);
+                                                                      }
+                                                                    } else {
+                                                                      showInSnackBar(
+                                                                          'Please Login to use Favourites');
+                                                                    }
+                                                                  },
+                                                                  child: Icon(
+                                                                    FontAwesome
+                                                                        .heart,
+                                                                    color: Colors
+                                                                        .deepPurple,
+                                                                  ),
+                                                                )
+                                                              : InkWell(
+                                                                  onTap:
+                                                                      () async {
+                                                                    var userid =
+                                                                        await storage.read(
+                                                                            key:
+                                                                                'userid');
+
+                                                                    if (userid !=
+                                                                        null) {
+                                                                      var url =
+                                                                          'https://api.sellship.co/api/favourite/' +
+                                                                              userid;
+
+                                                                      Map<String,
+                                                                              String>
+                                                                          body =
+                                                                          {
+                                                                        'itemid':
+                                                                            itemsgrid[index].itemid,
+                                                                      };
+
+                                                                      final response = await http.post(
+                                                                          url,
+                                                                          body:
+                                                                              body);
+
+                                                                      if (response
+                                                                              .statusCode ==
+                                                                          200) {
+                                                                        var jsondata =
+                                                                            json.decode(response.body);
+
+                                                                        favourites
+                                                                            .clear();
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < jsondata.length;
+                                                                            i++) {
+                                                                          favourites.add(jsondata[i]['_id']
+                                                                              [
+                                                                              '\$oid']);
+                                                                        }
+                                                                        setState(
+                                                                            () {
+                                                                          favourites =
+                                                                              favourites;
+                                                                        });
+                                                                      } else {
+                                                                        print(response
+                                                                            .statusCode);
+                                                                      }
+                                                                    } else {
+                                                                      showInSnackBar(
+                                                                          'Please Login to use Favourites');
+                                                                    }
+                                                                  },
+                                                                  child: Icon(
+                                                                    Feather
+                                                                        .heart,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                                )
+                                                          : Icon(
+                                                              Feather.heart,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        itemsgrid[index]
+                                                            .likes
+                                                            .toString(),
+                                                        style: TextStyle(
+                                                          fontFamily: 'SF',
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    CommentsPage(
+                                                                        itemid:
+                                                                            itemsgrid[index].itemid)),
+                                                          );
+                                                        },
+                                                        child: Icon(Feather
+                                                            .message_circle),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (context) =>
+                                                                    CommentsPage(
+                                                                        itemid:
+                                                                            itemsgrid[index].itemid)),
+                                                          );
+                                                        },
+                                                        child: Text(
+                                                          itemsgrid[index]
+                                                              .comments
+                                                              .toString(),
+                                                          style: TextStyle(
+                                                            fontFamily: 'SF',
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
                                                   Container(
                                                     height: 20,
                                                     child: Text(
@@ -1661,6 +1988,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                             itemid: itemsgrid[index].itemid)),
                                   );
                                 },
+                                onDoubleTap: () async {
+                                  var userid =
+                                      await storage.read(key: 'userid');
+
+                                  if (userid != null) {
+                                    var url =
+                                        'https://api.sellship.co/api/favourite/' +
+                                            userid;
+
+                                    Map<String, String> body = {
+                                      'itemid': itemsgrid[index].itemid,
+                                    };
+
+                                    final response =
+                                        await http.post(url, body: body);
+
+                                    if (response.statusCode == 200) {
+                                      var jsondata = json.decode(response.body);
+                                      var favs = jsondata['favourites'];
+                                      favourites.clear();
+                                      for (int i = 0; i < favs.length; i++) {
+                                        favourites.add(favs[i]['\$oid']);
+                                      }
+                                      setState(() {
+                                        favourites = favourites;
+                                      });
+                                    } else {
+                                      print(response.statusCode);
+                                    }
+                                  } else {
+                                    showInSnackBar(
+                                        'Please Login to use Favourites');
+                                  }
+                                },
                                 child: Padding(
                                     padding: EdgeInsets.all(15),
                                     child: Container(
@@ -1759,12 +2120,126 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   .start,
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
-                                                                  .start,
+                                                                  .center,
                                                           children: <Widget>[
-                                                            InkWell(
-                                                              child: Icon(
-                                                                  Feather
-                                                                      .heart),
+                                                            favourites != null
+                                                                ? favourites.contains(
+                                                                        itemsgrid[index]
+                                                                            .itemid)
+                                                                    ? InkWell(
+                                                                        onTap:
+                                                                            () async {
+                                                                          var userid =
+                                                                              await storage.read(key: 'userid');
+
+                                                                          if (userid !=
+                                                                              null) {
+                                                                            var url =
+                                                                                'https://api.sellship.co/api/favourite/' + userid;
+
+                                                                            Map<String, String>
+                                                                                body =
+                                                                                {
+                                                                              'itemid': itemsgrid[index].itemid,
+                                                                            };
+
+                                                                            final response =
+                                                                                await http.post(url, body: body);
+
+                                                                            if (response.statusCode ==
+                                                                                200) {
+                                                                              var jsondata = json.decode(response.body);
+
+                                                                              favourites.clear();
+                                                                              for (int i = 0; i < jsondata.length; i++) {
+                                                                                favourites.add(jsondata[i]['_id']['\$oid']);
+                                                                              }
+                                                                              setState(() {
+                                                                                favourites = favourites;
+                                                                              });
+                                                                            } else {
+                                                                              print(response.statusCode);
+                                                                            }
+                                                                          } else {
+                                                                            showInSnackBar('Please Login to use Favourites');
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            Icon(
+                                                                          FontAwesome
+                                                                              .heart,
+                                                                          color:
+                                                                              Colors.deepPurple,
+                                                                        ),
+                                                                      )
+                                                                    : InkWell(
+                                                                        onTap:
+                                                                            () async {
+                                                                          var userid =
+                                                                              await storage.read(key: 'userid');
+
+                                                                          if (userid !=
+                                                                              null) {
+                                                                            var url =
+                                                                                'https://api.sellship.co/api/favourite/' + userid;
+
+                                                                            Map<String, String>
+                                                                                body =
+                                                                                {
+                                                                              'itemid': itemsgrid[index].itemid,
+                                                                            };
+
+                                                                            final response =
+                                                                                await http.post(url, body: body);
+
+                                                                            if (response.statusCode ==
+                                                                                200) {
+                                                                              var jsondata = json.decode(response.body);
+
+                                                                              favourites.clear();
+                                                                              for (int i = 0; i < jsondata.length; i++) {
+                                                                                favourites.add(jsondata[i]['_id']['\$oid']);
+                                                                              }
+                                                                              setState(() {
+                                                                                favourites = favourites;
+                                                                              });
+                                                                            } else {
+                                                                              print(response.statusCode);
+                                                                            }
+                                                                          } else {
+                                                                            showInSnackBar('Please Login to use Favourites');
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            Icon(
+                                                                          Feather
+                                                                              .heart,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                      )
+                                                                : Icon(
+                                                                    Feather
+                                                                        .heart,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            Text(
+                                                              itemsgrid[index]
+                                                                      .likes
+                                                                      .toString() +
+                                                                  ' likes',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'SF',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
                                                             ),
                                                             SizedBox(
                                                               width: 10,
@@ -1781,7 +2256,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                                               },
                                                               child: Icon(Feather
                                                                   .message_circle),
-                                                            )
+                                                            ),
+                                                            SizedBox(
+                                                              width: 5,
+                                                            ),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          CommentsPage(
+                                                                              itemid: itemsgrid[index].itemid)),
+                                                                );
+                                                              },
+                                                              child: Text(
+                                                                itemsgrid[index]
+                                                                        .comments
+                                                                        .toString() +
+                                                                    ' comments',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'SF',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                            ),
                                                           ],
                                                         ),
                                                         SizedBox(

@@ -94,6 +94,24 @@ class _CommentsPageState extends State<CommentsPage> {
     }
   }
 
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    commentState.currentState?.removeCurrentSnackBar();
+    commentState.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'SF',
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,52 +231,59 @@ class _CommentsPageState extends State<CommentsPage> {
         bottomNavigationBar: Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Container(
-            color: Colors.white,
-            height: 50,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: TextField(
-                maxLines: 20,
-                controller: commentcontroller,
-                autocorrect: true,
-                enableSuggestions: true,
-                textCapitalization: TextCapitalization.sentences,
-                style: TextStyle(fontFamily: 'SF', fontSize: 16),
-                decoration: InputDecoration(
-                    // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    suffixIcon: Padding(
-                      padding: EdgeInsets.all(5),
-                      child: InkWell(
-                        child: CircleAvatar(
-                          child: Icon(
-                            Feather.message_circle,
-                            size: 20,
-                            color: Colors.white,
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: Container(
+              color: Colors.white,
+              height: 50,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: TextField(
+                  maxLines: 20,
+                  controller: commentcontroller,
+                  autocorrect: true,
+                  enableSuggestions: true,
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(fontFamily: 'SF', fontSize: 16),
+                  decoration: InputDecoration(
+                      // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      suffixIcon: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: InkWell(
+                          child: CircleAvatar(
+                            child: Icon(
+                              Feather.message_circle,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                            backgroundColor: Colors.deepOrange,
                           ),
-                          backgroundColor: Colors.deepOrange,
+                          onTap: () async {
+                            var url =
+                                'https://api.sellship.co/api/comment/' + itemid;
+                            var userid = await storage.read(key: 'userid');
+                            if (userid != null) {
+                              final response = await http.post(url, body: {
+                                'userid': userid,
+                                'comment': commentcontroller.text
+                              });
+                              commentcontroller.clear();
+                              if (response.statusCode == 200) {
+                                print(response.body);
+                                loadcomments();
+                              } else {
+                                print(response.statusCode);
+                              }
+                            } else {
+                              showInSnackBar('Please Login to Comment');
+                            }
+                          },
                         ),
-                        onTap: () async {
-                          var url =
-                              'https://api.sellship.co/api/comment/' + itemid;
-                          var userid = await storage.read(key: 'userid');
-                          final response = await http.post(url, body: {
-                            'userid': userid,
-                            'comment': commentcontroller.text
-                          });
-                          commentcontroller.clear();
-                          if (response.statusCode == 200) {
-                            print(response.body);
-                            loadcomments();
-                          } else {
-                            print(response.statusCode);
-                          }
-                        },
                       ),
-                    ),
-                    border: InputBorder.none,
-                    hintText: "Enter your comment",
-                    hintStyle: TextStyle(fontFamily: 'SF', fontSize: 16)),
+                      border: InputBorder.none,
+                      hintText: "Enter your comment",
+                      hintStyle: TextStyle(fontFamily: 'SF', fontSize: 16)),
+                ),
               ),
             ),
           ),

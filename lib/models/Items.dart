@@ -12,6 +12,7 @@ class Item {
   final String userid;
   final String username;
   final int likes;
+  final int comments;
   final String city;
   final String useremail;
   final String date;
@@ -36,6 +37,7 @@ class Item {
       this.image2,
       this.image3,
       this.image4,
+      this.comments,
       this.image5,
       this.likes,
       this.description,
