@@ -121,9 +121,6 @@ class _AddItemState extends State<AddItem> {
   String _selectedbrand;
   List<String> _subcategories;
 
-  var price;
-  var itemname;
-
   List<String> _subsubcategory;
 
   List<String> brands = List<String>();
@@ -1021,7 +1018,7 @@ class _AddItemState extends State<AddItem> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 10, bottom: 10, top: 10),
+                                      left: 15, bottom: 10, top: 10),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -2227,7 +2224,7 @@ class _AddItemState extends State<AddItem> {
                                 ),
                                 Padding(
                                   padding:
-                                      EdgeInsets.only(left: 10, bottom: 15),
+                                      EdgeInsets.only(left: 15, bottom: 15),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -2252,137 +2249,164 @@ class _AddItemState extends State<AddItem> {
                                   ),
                                   child: Padding(
                                     padding: EdgeInsets.only(
-                                        top: 10, bottom: 15, left: 10),
+                                        top: 10,
+                                        bottom: 15,
+                                        left: 15,
+                                        right: 15),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: ListTile(
-                                        title: Text('Price'),
-                                        trailing: Container(
-                                          child: TextField(
-                                            cursorColor: Color(0xFF979797),
-                                            controller: businesspricecontroller,
-                                            onEditingComplete: () {
-                                              if (int.parse(
-                                                      businesspricecontroller
-                                                          .text) <
-                                                  20) {
-                                                fees = 2.0;
-                                              } else {
-                                                fees = 0.10 *
-                                                    int.parse(
-                                                        businesspricecontroller
-                                                            .text);
-                                                if (fees > 200.0) {
-                                                  fees = 200;
-                                                }
-                                              }
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text('Price'),
+                                            Container(
+                                              child: TextField(
+                                                cursorColor: Color(0xFF979797),
+                                                controller:
+                                                    businesspricecontroller,
+                                                onEditingComplete: () {
+                                                  if (int.parse(
+                                                          businesspricecontroller
+                                                              .text) <
+                                                      20) {
+                                                    fees = 2.0;
+                                                  } else {
+                                                    fees = 0.10 *
+                                                        int.parse(
+                                                            businesspricecontroller
+                                                                .text);
+                                                    if (fees > 200.0) {
+                                                      fees = 200;
+                                                    }
+                                                  }
 
-                                              totalpayable = double.parse(
-                                                      businesspricecontroller
-                                                          .text) -
-                                                  fees;
-                                              setState(() {
-                                                totalpayable = totalpayable;
-                                                fees = fees;
-                                              });
-                                            },
-                                            keyboardType: TextInputType
-                                                .numberWithOptions(),
-                                            decoration: InputDecoration(
-                                                labelText: "Price " + currency,
-                                                alignLabelWithHint: true,
-                                                labelStyle: TextStyle(
-                                                  fontFamily: 'SF',
-                                                  fontSize: 16,
-                                                ),
-                                                focusColor: Colors.black,
-                                                enabledBorder:
-                                                    OutlineInputBorder(
+                                                  totalpayable = double.parse(
+                                                          businesspricecontroller
+                                                              .text) -
+                                                      fees;
+                                                  setState(() {
+                                                    totalpayable = totalpayable;
+                                                    fees = fees;
+                                                  });
+                                                },
+                                                keyboardType: TextInputType
+                                                    .numberWithOptions(),
+                                                decoration: InputDecoration(
+                                                    labelText:
+                                                        "Price " + currency,
+                                                    alignLabelWithHint: true,
+                                                    labelStyle: TextStyle(
+                                                      fontFamily: 'SF',
+                                                      fontSize: 16,
+                                                    ),
+                                                    focusColor: Colors.black,
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    border: OutlineInputBorder(
                                                         borderSide: BorderSide(
-                                                  color: Colors.grey.shade300,
-                                                )),
-                                                border: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                  color: Colors.grey.shade300,
-                                                )),
-                                                focusedErrorBorder:
-                                                    OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                  color: Colors.grey.shade300,
-                                                )),
-                                                disabledBorder:
-                                                    OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                  color: Colors.grey.shade300,
-                                                )),
-                                                errorBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                  color: Colors.grey.shade300,
-                                                )),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                  color: Colors.grey.shade300,
-                                                ))),
-                                          ),
-                                          width: 100,
-                                        ),
-                                      ),
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedErrorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    disabledBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    errorBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    )),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                    ))),
+                                              ),
+                                              width: 100,
+                                            ),
+                                          ]),
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 10, bottom: 15, left: 10),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: ListTile(
-                                            title: Text('Selling fee (10%)'),
-                                            trailing: Text(currency +
-                                                ' ' +
-                                                fees.toString()))),
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 10, bottom: 15, left: 10),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: ListTile(
-                                            title: Text('You earn'),
-                                            trailing: Text(currency +
-                                                ' ' +
-                                                totalpayable.toString()))),
-                                  ),
-                                ),
+                                fees != null
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 15,
+                                              left: 15,
+                                              right: 15),
+                                          child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text('Selling fee (10%)'),
+                                                  Text(currency +
+                                                      ' ' +
+                                                      fees.toString())
+                                                ],
+                                              )),
+                                        ),
+                                      )
+                                    : Container(),
+                                fees != null
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 15,
+                                              left: 15,
+                                              right: 15),
+                                          child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text('You earn'),
+                                                  Text(currency +
+                                                      ' ' +
+                                                      totalpayable.toString())
+                                                ],
+                                              )),
+                                        ))
+                                    : Container(),
                                 SizedBox(
                                   height: 10.0,
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 10, bottom: 10, top: 5),
+                                      left: 15, bottom: 10, top: 5),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
@@ -2435,7 +2459,7 @@ class _AddItemState extends State<AddItem> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                    left: 10,
+                                    left: 15,
                                     bottom: 10,
                                   ),
                                   child: Align(
@@ -2551,16 +2575,6 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 5.0,
                                 ),
-                                Text(
-                                  "Thank you for helping us grow!",
-                                  style: TextStyle(
-                                    fontFamily: 'SF',
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5.0,
-                                ),
                               ],
                             ),
                           )
@@ -2662,25 +2676,382 @@ class _AddItemState extends State<AddItem> {
                   } else if (businessnameController.text.isEmpty) {
                     showInSnackBar(
                         'Oops looks like your missing a title for your item!');
+                  } else if (_selectedCategory == null) {
+                    showInSnackBar('Please choose a category for your item!');
+                  } else if (_selectedsubCategory == null) {
+                    showInSnackBar(
+                        'Please choose a sub category for your item!');
+                  } else if (_selectedCondition == null) {
+                    showInSnackBar('Please choose the condition of your item!');
                   } else if (businesspricecontroller.text.isEmpty) {
                     showInSnackBar(
                         'Oops looks like your missing a price for your item!');
+                  } else if (businessizecontroller == null &&
+                      _selectedCategory == 'Fashion & Accessories') {
+                    showInSnackBar('Please choose the size for your item!');
+                  } else if (meetupcheckbox == false &&
+                      shippingcheckbox == false) {
+                    showInSnackBar('Please choose a delivery method!');
+                  } else if (city == null || country == null) {
+                    showInSnackBar(
+                        'Please choose the location of your item on the map!');
                   } else {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddItemInfo(
-                                image: _image,
-                                image2: _image2,
-                                image3: _image3,
-                                image4: _image4,
-                                image5: _image5,
-                                price: businesspricecontroller.text.trim(),
-                                userid: userid,
-                                image6: _image6,
-                                itemname: businessnameController.text.trim(),
-                              )),
-                    );
+                    if (businessdescriptionController.text.isEmpty) {
+                      businessdescriptionController.text = '';
+                    }
+
+                    String bran;
+                    if (businessbrandcontroller != null) {
+                      String brandcontrollertext =
+                          businessbrandcontroller.text.trim();
+                      if (brandcontrollertext.isNotEmpty) {
+                        bran = businessbrandcontroller.text;
+                      } else if (brand != null) {
+                        bran = brand;
+                      }
+                    } else if (businessbrandcontroller == null) {
+                      showInSnackBar('Please choose a brand for your item!');
+                    }
+
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    20.0)), //this right here
+                            child: Container(
+                              height: 100,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: SpinKitChasingDots(
+                                      color: Colors.deepOrange)),
+                            ),
+                          );
+                        });
+                    var userurl = 'https://api.sellship.co/api/user/' + userid;
+                    final userresponse = await http.get(userurl);
+                    if (userresponse.statusCode == 200) {
+                      var userrespons = json.decode(userresponse.body);
+                      var profilemap = userrespons;
+                      print(profilemap);
+                      if (mounted) {
+                        setState(() {
+                          firstname = profilemap['first_name'];
+                          phonenumber = profilemap['phonenumber'];
+                          email = profilemap['email'];
+                        });
+                      }
+                    }
+
+                    if (meetupcheckbox == false && shippingcheckbox == false) {
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                      showInSnackBar(
+                          'Please choose a checkbox for delivery method!');
+                    } else if (city == null) {
+                      Navigator.of(context, rootNavigator: true).pop('dialog');
+                      showInSnackBar(
+                          'Please choose the location of your item!');
+                    } else {
+                      var url = 'https://api.sellship.co/api/additem';
+
+                      Dio dio = new Dio();
+                      FormData formData;
+                      if (_image != null) {
+                        String fileName = _image.path.split('/').last;
+                        formData = FormData.fromMap({
+                          'name': businessnameController.text,
+                          'price': businesspricecontroller.text,
+                          'originalprice': '',
+                          'category': _selectedCategory,
+                          'subcategory': _selectedsubCategory,
+                          'subsubcategory': _selectedsubsubCategory == null
+                              ? ''
+                              : _selectedsubsubCategory,
+                          'latitude': _lastMapPosition.latitude,
+                          'longitude': _lastMapPosition.longitude,
+                          'description': businessdescriptionController.text,
+                          'meetup': meetupcheckbox,
+                          'shipping': shippingcheckbox,
+                          'city': city.trim(),
+                          'country': country.trim(),
+                          'condition': _selectedCondition,
+                          'brand': bran,
+                          'size': businessizecontroller.text == null
+                              ? ''
+                              : businessizecontroller.text,
+                          'userid': userid,
+                          'username': firstname,
+                          'useremail': email,
+                          'usernumber': phonenumber,
+                          'date_uploaded': DateTime.now().toString(),
+                          'image': await MultipartFile.fromFile(_image.path,
+                              filename: fileName)
+                        });
+                      }
+                      if (_image != null && _image2 != null) {
+                        String fileName = _image.path.split('/').last;
+                        String fileName2 = _image2.path.split('/').last;
+                        formData = FormData.fromMap({
+                          'name': businessnameController.text,
+                          'price': businesspricecontroller.text,
+                          'originalprice': '',
+                          'category': _selectedCategory,
+                          'subcategory': _selectedsubCategory,
+                          'subsubcategory': _selectedsubsubCategory == null
+                              ? ''
+                              : _selectedsubsubCategory,
+                          'latitude': _lastMapPosition.latitude,
+                          'longitude': _lastMapPosition.longitude,
+                          'meetup': meetupcheckbox,
+                          'shipping': shippingcheckbox,
+                          'description': businessdescriptionController.text,
+                          'city': city.trim(),
+                          'condition': _selectedCondition,
+                          'userid': userid,
+                          'brand': bran,
+                          'size': businessizecontroller.text == null
+                              ? ''
+                              : businessizecontroller.text,
+                          'country': country.trim(),
+                          'username': firstname,
+                          'useremail': email,
+                          'usernumber': phonenumber,
+                          'date_uploaded': DateTime.now().toString(),
+                          'image': await MultipartFile.fromFile(_image.path,
+                              filename: fileName),
+                          'image2': await MultipartFile.fromFile(_image2.path,
+                              filename: fileName2),
+                        });
+                      }
+                      if (_image != null &&
+                          _image2 != null &&
+                          _image3 != null) {
+                        String fileName = _image.path.split('/').last;
+                        String fileName2 = _image2.path.split('/').last;
+                        String fileName3 = _image3.path.split('/').last;
+
+                        formData = FormData.fromMap({
+                          'name': businessnameController.text,
+                          'price': businesspricecontroller.text,
+                          'category': _selectedCategory,
+                          'originalprice': '',
+                          'subcategory': _selectedsubCategory,
+                          'subsubcategory': _selectedsubsubCategory == null
+                              ? ''
+                              : _selectedsubsubCategory,
+                          'latitude': _lastMapPosition.latitude,
+                          'longitude': _lastMapPosition.longitude,
+                          'description': businessdescriptionController.text,
+                          'city': city.trim(),
+                          'condition': _selectedCondition,
+                          'meetup': meetupcheckbox,
+                          'shipping': shippingcheckbox,
+                          'brand': bran,
+                          'size': businessizecontroller.text == null
+                              ? ''
+                              : businessizecontroller.text,
+                          'userid': userid,
+                          'country': country.trim(),
+                          'username': firstname,
+                          'useremail': email,
+                          'usernumber': phonenumber,
+                          'date_uploaded': DateTime.now().toString(),
+                          'image': await MultipartFile.fromFile(_image.path,
+                              filename: fileName),
+                          'image2': await MultipartFile.fromFile(_image2.path,
+                              filename: fileName2),
+                          'image3': await MultipartFile.fromFile(_image3.path,
+                              filename: fileName3),
+                        });
+                      }
+                      if (_image != null &&
+                          _image2 != null &&
+                          _image3 != null &&
+                          _image4 != null) {
+                        String fileName = _image.path.split('/').last;
+                        String fileName2 = _image2.path.split('/').last;
+                        String fileName3 = _image3.path.split('/').last;
+                        String fileName4 = _image4.path.split('/').last;
+
+                        formData = FormData.fromMap({
+                          'name': businessnameController.text,
+                          'price': businesspricecontroller.text,
+                          'category': _selectedCategory,
+                          'originalprice': '',
+                          'subcategory': _selectedsubCategory,
+                          'subsubcategory': _selectedsubsubCategory == null
+                              ? ''
+                              : _selectedsubsubCategory,
+                          'latitude': _lastMapPosition.latitude,
+                          'longitude': _lastMapPosition.longitude,
+                          'description': businessdescriptionController.text,
+                          'city': city.trim(),
+                          'userid': userid,
+                          'condition': _selectedCondition,
+                          'meetup': meetupcheckbox,
+                          'shipping': shippingcheckbox,
+                          'brand': bran,
+                          'size': businessizecontroller.text == null
+                              ? ''
+                              : businessizecontroller.text,
+                          'country': country.trim(),
+                          'username': firstname,
+                          'useremail': email,
+                          'usernumber': phonenumber,
+                          'date_uploaded': DateTime.now().toString(),
+                          'image': await MultipartFile.fromFile(_image.path,
+                              filename: fileName),
+                          'image2': await MultipartFile.fromFile(_image2.path,
+                              filename: fileName2),
+                          'image3': await MultipartFile.fromFile(_image3.path,
+                              filename: fileName3),
+                          'image4': await MultipartFile.fromFile(_image4.path,
+                              filename: fileName4),
+                        });
+                      }
+                      if (_image != null &&
+                          _image2 != null &&
+                          _image3 != null &&
+                          _image4 != null &&
+                          _image5 != null) {
+                        String fileName = _image.path.split('/').last;
+                        String fileName2 = _image2.path.split('/').last;
+                        String fileName3 = _image3.path.split('/').last;
+                        String fileName4 = _image4.path.split('/').last;
+                        String fileName5 = _image5.path.split('/').last;
+
+                        formData = FormData.fromMap({
+                          'name': businessnameController.text,
+                          'price': businesspricecontroller.text,
+                          'category': _selectedCategory,
+                          'originalprice': '',
+                          'subcategory': _selectedsubCategory,
+                          'subsubcategory': _selectedsubsubCategory == null
+                              ? ''
+                              : _selectedsubsubCategory,
+                          'latitude': _lastMapPosition.latitude,
+                          'longitude': _lastMapPosition.longitude,
+                          'description': businessdescriptionController.text,
+                          'city': city.trim(),
+                          'country': country.trim(),
+                          'brand': bran,
+                          'size': businessizecontroller.text == null
+                              ? ''
+                              : businessizecontroller.text,
+                          'condition': _selectedCondition,
+                          'meetup': meetupcheckbox,
+                          'shipping': shippingcheckbox,
+                          'userid': userid,
+                          'username': firstname,
+                          'useremail': email,
+                          'usernumber': phonenumber,
+                          'date_uploaded': DateTime.now().toString(),
+                          'image': await MultipartFile.fromFile(_image.path,
+                              filename: fileName),
+                          'image2': await MultipartFile.fromFile(_image2.path,
+                              filename: fileName2),
+                          'image3': await MultipartFile.fromFile(_image3.path,
+                              filename: fileName3),
+                          'image4': await MultipartFile.fromFile(_image4.path,
+                              filename: fileName4),
+                          'image5': await MultipartFile.fromFile(_image5.path,
+                              filename: fileName5),
+                        });
+                      }
+                      if (_image != null &&
+                          _image2 != null &&
+                          _image3 != null &&
+                          _image4 != null &&
+                          _image5 != null &&
+                          _image6 != null) {
+                        String fileName = _image.path.split('/').last;
+                        String fileName2 = _image2.path.split('/').last;
+                        String fileName3 = _image3.path.split('/').last;
+                        String fileName4 = _image4.path.split('/').last;
+                        String fileName5 = _image5.path.split('/').last;
+                        String fileName6 = _image6.path.split('/').last;
+                        formData = FormData.fromMap({
+                          'name': businessnameController.text,
+                          'price': businesspricecontroller.text,
+                          'category': _selectedCategory,
+                          'originalprice': '',
+                          'subcategory': _selectedsubCategory,
+                          'subsubcategory': _selectedsubsubCategory == null
+                              ? ''
+                              : _selectedsubsubCategory,
+                          'latitude': _lastMapPosition.latitude,
+                          'longitude': _lastMapPosition.longitude,
+                          'description': businessdescriptionController.text,
+                          'city': city.trim(),
+                          'userid': userid,
+                          'country': country.trim(),
+                          'username': firstname,
+                          'meetup': meetupcheckbox,
+                          'shipping': shippingcheckbox,
+                          'brand': bran,
+                          'size': businessizecontroller.text == null
+                              ? ''
+                              : businessizecontroller.text,
+                          'condition': _selectedCondition,
+                          'useremail': email,
+                          'usernumber': phonenumber,
+                          'date_uploaded': DateTime.now().toString(),
+                          'image': await MultipartFile.fromFile(_image.path,
+                              filename: fileName),
+                          'image2': await MultipartFile.fromFile(_image2.path,
+                              filename: fileName2),
+                          'image3': await MultipartFile.fromFile(_image3.path,
+                              filename: fileName3),
+                          'image4': await MultipartFile.fromFile(_image4.path,
+                              filename: fileName4),
+                          'image5': await MultipartFile.fromFile(_image5.path,
+                              filename: fileName5),
+                          'image6': await MultipartFile.fromFile(_image6.path,
+                              filename: fileName6),
+                        });
+                      }
+
+                      var response = await dio.post(url, data: formData);
+
+                      if (response.statusCode == 200) {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AssetGiffyDialog(
+                                  image: Image.asset(
+                                    'assets/yay.gif',
+                                    fit: BoxFit.cover,
+                                  ),
+                                  title: Text(
+                                    'Hooray!',
+                                    style: TextStyle(
+                                        fontSize: 22.0,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  description: Text(
+                                    'Your Item\'s Uploaded',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(),
+                                  ),
+                                  onlyOkButton: true,
+                                  entryAnimation: EntryAnimation.DEFAULT,
+                                  onOkButtonPressed: () {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RootScreen()),
+                                    );
+                                  },
+                                ));
+                      } else {
+                        showInSnackBar('Looks like something went wrong!');
+                      }
+                    }
                   }
                 },
                 child: Container(

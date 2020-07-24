@@ -138,7 +138,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                         Padding(
                                           padding: EdgeInsets.all(10),
                                           child: Text(
-                                            'We have send a verification email to the email address provided. Please confirm your email using the link given in the email.',
+                                            'We have send a verification email to the email address provided. Please confirm your email using the link given in the email. ( Make sure to check your junk/spam too! )',
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 fontFamily: "SF",

@@ -53,7 +53,7 @@ class _CheckoutState extends State<Checkout> {
     if (int.parse(offer) < 20) {
       fees = 2.0;
     } else {
-      fees = 0.10 * int.parse(offer);
+      fees = 0.05 * int.parse(offer);
       if (fees > 200.0) {
         fees = 200;
       }
@@ -314,7 +314,7 @@ class _CheckoutState extends State<Checkout> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text(
-                            'Processing Fees',
+                            'Buyer Protection',
                             style: TextStyle(
                                 fontFamily: 'SF',
                                 fontSize: 16,

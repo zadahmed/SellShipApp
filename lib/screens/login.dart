@@ -10,6 +10,7 @@ import 'package:SellShip/screens/loginpage.dart';
 import 'package:SellShip/screens/loginprofile.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/myitems.dart';
+import 'package:SellShip/screens/orders.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/settings.dart';
@@ -94,7 +95,6 @@ class _LoginPageState extends State<LoginPage>
       firebasetoken = token;
     });
     if (userid != null) {
-
       var url = 'https://api.sellship.co/api/checktokenfcm/' +
           userid +
           '/' +
@@ -224,7 +224,6 @@ class _LoginPageState extends State<LoginPage>
         favourites = [];
       });
     }
-
   }
 
   List<String> favourites;
@@ -812,30 +811,7 @@ class _LoginPageState extends State<LoginPage>
                                 ))
                               ],
                             )),
-                      Container(
-                          child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Center(
-                            child: Text('View your orders here!',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'SF',
-                                  fontSize: 16,
-                                )),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Expanded(
-                              child: Image.asset(
-                            'assets/onboard1.png',
-                            fit: BoxFit.fitWidth,
-                          ))
-                        ],
-                      )),
+                      OrdersScreen(),
                       FavouritesScreen()
                     ],
                     controller: _tabController,
@@ -1460,7 +1436,6 @@ class _LoginPageState extends State<LoginPage>
                                                             '/' +
                                                             userid;
 
-
                                                     final response =
                                                         await http.get(url);
                                                     if (response.statusCode ==
@@ -1741,28 +1716,24 @@ class _LoginPageState extends State<LoginPage>
         var follower = profilemap['follower'];
 
         if (follower != null) {
-
         } else {
           follower = [];
         }
 
         var followin = profilemap['following'];
         if (followin != null) {
-
         } else {
           followin = [];
         }
 
         var sol = profilemap['sold'];
         if (sol != null) {
-
         } else {
           sol = [];
         }
 
         var profilepic = profilemap['profilepicture'];
         if (profilepic != null) {
-
         } else {
           profilepic = null;
         }

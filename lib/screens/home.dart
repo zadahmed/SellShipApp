@@ -1555,8 +1555,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             pageBuilder: (context, animation,
                                                     secondaryAnimation) =>
                                                 Details(
-                                                    itemid: itemsgrid[index]
-                                                        .itemid),
+                                              itemid: itemsgrid[index].itemid,
+                                              sold: itemsgrid[index].sold,
+                                            ),
                                             transitionsBuilder: (context,
                                                 animation,
                                                 secondaryAnimation,
@@ -1981,12 +1982,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             return InkWell(
                                 onTap: () {
                                   Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Details(
-                                            sold: itemsgrid[index].sold,
-                                            itemid: itemsgrid[index].itemid)),
-                                  );
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            Details(
+                                          itemid: itemsgrid[index].itemid,
+                                          sold: itemsgrid[index].sold,
+                                        ),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          var begin = Offset(0.0, 1.0);
+                                          var end = Offset.zero;
+                                          var curve = Curves.ease;
+
+                                          var tween = Tween(
+                                                  begin: begin, end: end)
+                                              .chain(CurveTween(curve: curve));
+
+                                          return SlideTransition(
+                                            position: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        },
+                                      ));
                                 },
                                 onDoubleTap: () async {
                                   var userid =
