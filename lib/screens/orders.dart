@@ -182,11 +182,11 @@ class OrdersScreenState extends State<OrdersScreen>
       slivers: <Widget>[
         SliverAppBar(
           pinned: true,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.deepPurpleAccent,
           title: TabBar(
             controller: _tabController,
-            labelColor: Colors.deepPurple,
-            indicatorColor: Colors.deepPurpleAccent,
+            labelColor: Colors.white,
+            indicatorColor: Colors.white,
             labelStyle: TextStyle(
               fontFamily: 'Helvetica',
               fontSize: 14.0,
@@ -195,14 +195,14 @@ class OrdersScreenState extends State<OrdersScreen>
               Tab(
                 icon: Icon(
                   Icons.receipt,
-                  color: Colors.deepPurpleAccent,
+                  color: Colors.white,
                 ),
                 text: 'Bought',
               ),
               Tab(
                 icon: Icon(
                   Icons.monetization_on,
-                  color: Colors.deepPurpleAccent,
+                  color: Colors.white,
                 ),
                 text: 'Sold',
               ),

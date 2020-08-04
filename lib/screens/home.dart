@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/screens/comments.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/messages.dart';
@@ -1207,6 +1208,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
+            FocusScope.of(context).requestFocus(new FocusNode());
           },
           child: SafeArea(
               child: EasyRefresh.custom(
@@ -1720,11 +1722,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                             () {
                                                                           favourites =
                                                                               favourites;
+                                                                          itemsgrid[index].likes =
+                                                                              itemsgrid[index].likes - 1;
                                                                         });
-                                                                        itemsgrid[index]
-                                                                            .likes = itemsgrid[index]
-                                                                                .likes -
-                                                                            1;
                                                                       } else {
                                                                         print(response
                                                                             .statusCode);
@@ -3375,7 +3375,6 @@ class UserSearchDelegate extends SearchDelegate {
         stream: getItemsSearch(query).asStream(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data.length);
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (context, index) {

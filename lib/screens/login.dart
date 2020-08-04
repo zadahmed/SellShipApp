@@ -313,7 +313,7 @@ class _LoginPageState extends State<LoginPage>
                         position: BadgePosition.topRight(top: 2),
                         animationType: BadgeAnimationType.slide,
                         badgeContent: Text(
-                          notifcount.toString(),
+                          '',
                           style: TextStyle(color: Colors.white),
                         ),
                         child: InkWell(
@@ -450,7 +450,7 @@ class _LoginPageState extends State<LoginPage>
                                       ],
                                     ),
                                     SizedBox(
-                                      width: 10,
+                                      width: 15,
                                     ),
                                     Column(
                                       mainAxisAlignment:
@@ -466,7 +466,7 @@ class _LoginPageState extends State<LoginPage>
                                         ),
                                         SizedBox(height: 10.0),
                                         Text(
-                                          'Items Sold',
+                                          'Sold',
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontFamily: 'Helvetica',
@@ -475,7 +475,7 @@ class _LoginPageState extends State<LoginPage>
                                       ],
                                     ),
                                     SizedBox(
-                                      width: 10,
+                                      width: 15,
                                     ),
                                     Column(
                                       mainAxisAlignment:
@@ -491,7 +491,7 @@ class _LoginPageState extends State<LoginPage>
                                         ),
                                         SizedBox(height: 10.0),
                                         Text(
-                                          'Following',
+                                          'Likes',
                                           style: TextStyle(
                                               fontSize: 14,
                                               fontFamily: 'Helvetica',
@@ -541,7 +541,7 @@ class _LoginPageState extends State<LoginPage>
                           verified == false
                               ? Padding(
                                   padding: EdgeInsets.only(
-                                      top: 10, left: 30, right: 30, bottom: 10),
+                                      top: 10, left: 20, right: 20, bottom: 10),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -745,43 +745,58 @@ class _LoginPageState extends State<LoginPage>
                               : Container(child: Text('Verified')),
                         ]))),
                 SliverAppBar(
-                  backgroundColor: Colors.deepPurpleAccent,
+                  backgroundColor: Colors.white,
                   pinned: true,
-                  title: TabBar(
-                    labelColor: Colors.white,
-                    labelStyle: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 14.0,
+                  title: DefaultTabController(
+                    length: 3,
+                    child: TabBar(
+                      controller: _tabController,
+                      labelStyle: tabTextStyle,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicator: CircleTabIndicator(
+                          color: Colors.deepOrangeAccent, radius: 2),
+                      isScrollable: true,
+                      labelColor: Colors.deepOrangeAccent,
+                      tabs: [
+                        new Tab(
+                          icon: const Icon(
+                            Feather.clipboard,
+                            size: 23,
+                            color: Colors.deepOrangeAccent,
+                          ),
+                          text: 'My Items',
+                        ),
+                        new Tab(
+                          icon: const Icon(
+                            Feather.shopping_bag,
+                            size: 23,
+                            color: Colors.deepOrangeAccent,
+                          ),
+                          text: 'My Orders',
+                        ),
+                        new Tab(
+                          icon: const Icon(
+                            Feather.heart,
+                            size: 23,
+                            color: Colors.deepOrangeAccent,
+                          ),
+                          text: 'Favourites',
+                        ),
+                      ],
                     ),
-                    indicatorColor: Colors.white,
-                    controller: _tabController,
-                    tabs: [
-                      new Tab(
-                        icon: const Icon(
-                          Feather.clipboard,
-                          size: 23,
-                          color: Colors.white,
-                        ),
-                        text: 'My Items',
-                      ),
-                      new Tab(
-                        icon: const Icon(
-                          Feather.shopping_bag,
-                          size: 23,
-                          color: Colors.white,
-                        ),
-                        text: 'My Orders',
-                      ),
-                      new Tab(
-                        icon: const Icon(
-                          Feather.heart,
-                          size: 23,
-                          color: Colors.white,
-                        ),
-                        text: 'Favourites',
-                      ),
-                    ],
                   ),
+
+//
+//                  TabBar(
+//                    labelColor: Colors.white,
+//                    labelStyle: TextStyle(
+//                      fontFamily: 'Helvetica',
+//                      fontSize: 14.0,
+//                    ),
+//                    indicatorColor: Colors.white,
+//                    controller: _tabController,
+//                    tabs:
+//                  ),
                 ),
                 SliverFillRemaining(
                   child: TabBarView(
@@ -1600,7 +1615,7 @@ class _LoginPageState extends State<LoginPage>
           follower = [];
         }
 
-        var followin = profilemap['following'];
+        var followin = profilemap['likes'];
         if (followin != null) {
           print(followin);
         } else {
@@ -1643,7 +1658,7 @@ class _LoginPageState extends State<LoginPage>
               phonenumber = profilemap['phonenumber'];
               email = profilemap['email'];
               loading = false;
-              following = followin.length;
+              following = followin;
               followers = follower.length;
               itemssold = sol.length;
               confirmedemail = confirmedemai;
@@ -1735,7 +1750,7 @@ class _LoginPageState extends State<LoginPage>
           follower = [];
         }
 
-        var followin = profilemap['following'];
+        var followin = profilemap['likes'];
         if (followin != null) {
         } else {
           followin = [];
@@ -1807,4 +1822,59 @@ class _LoginPageState extends State<LoginPage>
       });
     }
   }
+}
+
+class CircleTabIndicator extends Decoration {
+  final BoxPainter _painter;
+
+  CircleTabIndicator({@required Color color, @required double radius})
+      : _painter = _CirclePainter(color, radius);
+
+  @override
+  BoxPainter createBoxPainter([onChanged]) => _painter;
+}
+
+class _CirclePainter extends BoxPainter {
+  final Paint _paint;
+  final double radius;
+
+  _CirclePainter(Color color, this.radius)
+      : _paint = Paint()
+          ..color = color
+          ..isAntiAlias = true;
+
+  @override
+  void paint(Canvas canvas, Offset offset, ImageConfiguration cfg) {
+    final Offset circleOffset =
+        offset + Offset(cfg.size.width / 2, cfg.size.height - radius);
+    canvas.drawCircle(circleOffset, radius, _paint);
+  }
+}
+
+const tabTextStyle = const TextStyle(
+    fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black);
+
+class CustomShapeClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final Path path = Path();
+    path.lineTo(0.0, size.height);
+
+    var firstEndPoint = Offset(size.width * .5, size.height - 30.0);
+    var firstControlpoint = Offset(size.width * 0.25, size.height - 50.0);
+    path.quadraticBezierTo(firstControlpoint.dx, firstControlpoint.dy,
+        firstEndPoint.dx, firstEndPoint.dy);
+
+    var secondEndPoint = Offset(size.width, size.height - 80.0);
+    var secondControlPoint = Offset(size.width * .75, size.height - 10);
+    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
+        secondEndPoint.dx, secondEndPoint.dy);
+
+    path.lineTo(size.width, 0.0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper oldClipper) => true;
 }

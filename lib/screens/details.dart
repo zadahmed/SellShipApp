@@ -56,9 +56,8 @@ class _DetailsState extends State<Details> {
     setState(() {
       loading = true;
       itemid = widget.itemid;
-      heartColor = Colors.grey;
+
       sold = widget.sold;
-      heartIcon = FontAwesome5.heart;
     });
     fetchItem();
     getfavourites();
@@ -79,10 +78,6 @@ class _DetailsState extends State<Details> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-//                  Padding(
-//                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-//                    child: Text('Enter your address'),
-//                  ),
                   Padding(
                     padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
                     child: Align(
@@ -168,7 +163,6 @@ class _DetailsState extends State<Details> {
                               var recipentname = (messageinfo['recievername']);
                               var offer = messageinfo['offer'];
                               var offerstage = messageinfo['offerstage'];
-                              Navigator.of(context).pop();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -337,8 +331,7 @@ class _DetailsState extends State<Details> {
   bool favourited;
 
   getfavourites() async {
-    userid = await storage.read(key: 'userid');
-
+    var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
       final response = await http.get(url);
@@ -346,28 +339,29 @@ class _DetailsState extends State<Details> {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
           var profilemap = respons;
+          List<String> ites = List<String>();
+
           if (profilemap != null) {
             for (var i = 0; i < profilemap.length; i++) {
-              var favouriteitem = profilemap[i]['_id']['\$oid'];
-
-              if (favouriteitem == itemid) {
-                print('sds');
-                setState(() {
-                  favourited = true;
-                  heartColor = Colors.deepOrange;
-                  heartIcon = FontAwesome.heart;
-                });
-              } else {
-                setState(() {
-                  favourited = false;
-                  heartColor = Colors.grey;
-                  heartIcon = FontAwesome5.heart;
-                });
-              }
+              ites.add(profilemap[i]['_id']['\$oid']);
             }
+
+            if (ites.contains(newItem.itemid)) {
+              setState(() {
+                favourited = true;
+              });
+            } else {
+              favourited = false;
+            }
+          } else {
+            favourited = false;
           }
         }
       }
+    } else {
+      setState(() {
+        favourited = false;
+      });
     }
   }
 
@@ -469,36 +463,30 @@ class _DetailsState extends State<Details> {
   var userid;
 
   void favouriteItem() async {
-    userid = await storage.read(key: 'userid');
-    print(userid);
+    var userid = await storage.read(key: 'userid');
+
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourite/' + userid;
 
       Map<String, String> body = {
-        'itemid': itemid,
+        'itemid': newItem.itemid,
       };
 
       final response = await http.post(url, body: body);
 
       if (response.statusCode == 200) {
         var jsondata = json.decode(response.body);
-        var favs = jsondata['favourites'];
-        if (favs != null) {
-          for (int i = 0; i < favs.length; i++) {
-            if (favs[i]['\$oid'] == itemid) {
-              setState(() {
-                favourited = true;
-                heartColor = Colors.deepOrange;
-                heartIcon = FontAwesome.heart;
-              });
-            } else {
-              setState(() {
-                favourited = false;
-                heartColor = Colors.grey;
-                heartIcon = FontAwesome5.heart;
-              });
-            }
-          }
+
+        if (jsondata.contains(newItem.itemid)) {
+          setState(() {
+            newItem.likes = newItem.likes + 1;
+            favourited = true;
+          });
+        } else {
+          setState(() {
+            newItem.likes = newItem.likes - 1;
+            favourited = false;
+          });
         }
       } else {
         print(response.statusCode);
@@ -536,9 +524,6 @@ class _DetailsState extends State<Details> {
     }
     return null;
   }
-
-  Color heartColor;
-  IconData heartIcon;
 
   int _current = 0;
   Future<String> createFirstPostLink(String id) async {
@@ -701,11 +686,7 @@ class _DetailsState extends State<Details> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
-                                    InkWell(
-                                      onTap: () {
-                                        favouriteItem();
-                                      },
-                                      child: Container(
+                                    Container(
                                         height: 30,
                                         width: 30,
                                         decoration: BoxDecoration(
@@ -720,13 +701,87 @@ class _DetailsState extends State<Details> {
                                           borderRadius:
                                               BorderRadius.circular(20),
                                         ),
-                                        child: Icon(
-                                          heartIcon,
-                                          color: heartColor,
-                                          size: 17,
-                                        ),
-                                      ),
-                                    ),
+                                        child: favourited == true
+                                            ? InkWell(
+                                                onTap: () async {
+                                                  var userid = await storage
+                                                      .read(key: 'userid');
+
+                                                  if (userid != null) {
+                                                    var url =
+                                                        'https://api.sellship.co/api/favourite/' +
+                                                            userid;
+
+                                                    Map<String, String> body = {
+                                                      'itemid': newItem.itemid,
+                                                    };
+
+                                                    final response = await http
+                                                        .post(url, body: body);
+
+                                                    if (response.statusCode ==
+                                                        200) {
+                                                      setState(() {
+                                                        newItem.likes =
+                                                            newItem.likes - 1;
+                                                        favourited = false;
+                                                      });
+                                                    } else {
+                                                      print(
+                                                          response.statusCode);
+                                                    }
+                                                  } else {
+                                                    showInSnackBar(
+                                                        'Please Login to use Favourites');
+                                                  }
+                                                },
+                                                child: Icon(
+                                                  FontAwesome.heart,
+                                                  color: Colors.deepPurple,
+                                                ),
+                                              )
+                                            : InkWell(
+                                                onTap: () async {
+                                                  var userid = await storage
+                                                      .read(key: 'userid');
+
+                                                  if (userid != null) {
+                                                    var url =
+                                                        'https://api.sellship.co/api/favourite/' +
+                                                            userid;
+
+                                                    Map<String, String> body = {
+                                                      'itemid': newItem.itemid,
+                                                    };
+
+                                                    final response = await http
+                                                        .post(url, body: body);
+
+                                                    if (response.statusCode ==
+                                                        200) {
+                                                      var jsondata =
+                                                          json.decode(
+                                                              response.body);
+
+                                                      setState(() {
+                                                        newItem.likes =
+                                                            newItem.likes + 1;
+                                                        favourited = true;
+                                                      });
+                                                    } else {
+                                                      print(
+                                                          response.statusCode);
+                                                    }
+                                                  } else {
+                                                    showInSnackBar(
+                                                        'Please Login to use Favourites');
+                                                  }
+                                                },
+                                                child: Icon(
+                                                  Feather.heart,
+                                                  color: Colors.black,
+                                                ),
+                                              )),
                                     InkWell(
                                       onTap: () {
                                         reportitem(context);

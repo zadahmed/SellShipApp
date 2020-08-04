@@ -141,11 +141,6 @@ class MessagesState extends State<Messages> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
@@ -174,6 +169,27 @@ class MessagesState extends State<Messages> {
                 color: Colors.deepOrange,
                 fontWeight: FontWeight.w800),
           ),
+          actions: <Widget>[
+            Padding(
+                padding: EdgeInsets.all(20),
+                child: InkWell(
+                  onTap: () async {
+                    var messageurl =
+                        'https://api.sellship.co/api/clearnotification/' +
+                            userid.toString();
+                    final responsemessage = await http.get(messageurl);
+                    print(responsemessage.statusCode);
+                  },
+                  child: Text(
+                    'Clear',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 14,
+                        color: Colors.deepOrangeAccent,
+                        fontWeight: FontWeight.w400),
+                  ),
+                )),
+          ],
         ),
         body: EasyRefresh(
           child: loading == false
