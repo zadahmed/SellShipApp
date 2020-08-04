@@ -102,7 +102,7 @@ class _CommentsPageState extends State<CommentsPage> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'SF',
+          fontFamily: 'Helvetica',
           fontSize: 16,
           color: Colors.white,
         ),
@@ -121,7 +121,7 @@ class _CommentsPageState extends State<CommentsPage> {
           title: Text(
             'Comments',
             style: TextStyle(
-                fontFamily: 'SF',
+                fontFamily: 'Helvetica',
                 fontSize: 16,
                 color: Colors.deepOrange,
                 fontWeight: FontWeight.w600),
@@ -180,21 +180,21 @@ class _CommentsPageState extends State<CommentsPage> {
                                 title: Text(
                                   commentslist[index].message,
                                   style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                   ),
                                 ),
                                 subtitle: Text(
                                   commentslist[index].username,
                                   style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 12,
                                   ),
                                 ),
                                 trailing: Text(
                                   commentslist[index].date,
                                   style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                   ),
                                 ),
@@ -215,7 +215,7 @@ class _CommentsPageState extends State<CommentsPage> {
                         'No comments here ',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontFamily: 'SF',
+                          fontFamily: 'Helvetica',
                           fontSize: 16,
                         ),
                       ),
@@ -244,45 +244,48 @@ class _CommentsPageState extends State<CommentsPage> {
                   autocorrect: true,
                   enableSuggestions: true,
                   textCapitalization: TextCapitalization.sentences,
-                  style: TextStyle(fontFamily: 'SF', fontSize: 16),
+                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
                   decoration: InputDecoration(
                       // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
                       suffixIcon: Padding(
                         padding: EdgeInsets.all(5),
                         child: InkWell(
-                          child: CircleAvatar(
-                            child: Icon(
-                              Feather.message_circle,
-                              size: 20,
-                              color: Colors.white,
+                            child: CircleAvatar(
+                              child: Icon(
+                                Feather.message_circle,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                              backgroundColor: Colors.deepOrange,
                             ),
-                            backgroundColor: Colors.deepOrange,
-                          ),
-                          onTap: () async {
-                            var url =
-                                'https://api.sellship.co/api/comment/' + itemid;
-                            var userid = await storage.read(key: 'userid');
-                            if (userid != null) {
-                              final response = await http.post(url, body: {
-                                'userid': userid,
-                                'comment': commentcontroller.text
-                              });
-                              commentcontroller.clear();
-                              if (response.statusCode == 200) {
-                                print(response.body);
-                                loadcomments();
-                              } else {
-                                print(response.statusCode);
+                            onTap: () async {
+                              if (commentcontroller.text.isNotEmpty) {
+                                var url =
+                                    'https://api.sellship.co/api/comment/' +
+                                        itemid;
+                                var userid = await storage.read(key: 'userid');
+                                if (userid != null) {
+                                  final response = await http.post(url, body: {
+                                    'userid': userid,
+                                    'comment': commentcontroller.text
+                                  });
+                                  commentcontroller.clear();
+                                  if (response.statusCode == 200) {
+                                    print(response.body);
+                                    loadcomments();
+                                  } else {
+                                    print(response.statusCode);
+                                  }
+                                } else {
+                                  showInSnackBar('Please Login to Comment');
+                                }
                               }
-                            } else {
-                              showInSnackBar('Please Login to Comment');
-                            }
-                          },
-                        ),
+                            }),
                       ),
                       border: InputBorder.none,
                       hintText: "Enter your comment",
-                      hintStyle: TextStyle(fontFamily: 'SF', fontSize: 16)),
+                      hintStyle:
+                          TextStyle(fontFamily: 'Helvetica', fontSize: 16)),
                 ),
               ),
             ),

@@ -699,7 +699,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 child: Text(
                   'Brand',
                   style: TextStyle(
-                      fontFamily: 'SF', fontSize: 16, color: Colors.deepOrange),
+                      fontFamily: 'Helvetica',
+                      fontSize: 16,
+                      color: Colors.deepOrange),
                 ),
               ),
               Flexible(
@@ -1043,7 +1045,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'SF',
+          fontFamily: 'Helvetica',
           fontSize: 16,
           color: Colors.white,
         ),
@@ -1095,7 +1097,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'New',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.white),
                               ),
@@ -1113,7 +1115,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'New',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.deepOrange),
                               ),
@@ -1146,7 +1148,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Near Me',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.white),
                               ),
@@ -1164,7 +1166,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Near Me',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.deepOrange),
                               ),
@@ -1197,7 +1199,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Below 100',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.white),
                               ),
@@ -1215,7 +1217,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Below 100',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.deepOrange),
                               ),
@@ -1236,7 +1238,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Sort',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.white),
                               ),
@@ -1254,7 +1256,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Sort',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.deepOrange),
                               ),
@@ -1284,7 +1286,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   child: Text(
                                     'Sort',
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         color: Colors.deepOrange),
                                   ),
@@ -1296,7 +1298,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   title: Text(
                                     'Price Low to High',
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w400,
                                         color: Colors.black),
@@ -1319,7 +1321,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   title: Text(
                                     'Price High to Low',
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w400,
                                         color: Colors.black),
@@ -1362,7 +1364,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Brand',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.white),
                               ),
@@ -1380,7 +1382,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Brand',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.deepOrange),
                               ),
@@ -1411,7 +1413,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                     child: Text(
                                       'Conditions',
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                           color: Colors.deepOrange),
                                     ),
@@ -1473,7 +1475,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Condition',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.white),
                               ),
@@ -1491,7 +1493,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Condition',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.deepOrange),
                               ),
@@ -1518,7 +1520,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   child: Text(
                                     'Price',
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         color: Colors.deepOrange),
                                   ),
@@ -1531,7 +1533,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         title: Text(
                                           'Minimum Price',
                                           style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                           ),
                                         ),
@@ -1549,7 +1551,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                         "Price " + currency,
                                                     alignLabelWithHint: true,
                                                     labelStyle: TextStyle(
-                                                      fontFamily: 'SF',
+                                                      fontFamily: 'Helvetica',
                                                       fontSize: 16,
                                                     ),
                                                     focusColor: Colors.black,
@@ -1603,7 +1605,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         title: Text(
                                           'Maximum Price',
                                           style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                           ),
                                         ),
@@ -1621,7 +1623,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                         "Price " + currency,
                                                     alignLabelWithHint: true,
                                                     labelStyle: TextStyle(
-                                                      fontFamily: 'SF',
+                                                      fontFamily: 'Helvetica',
                                                       fontSize: 16,
                                                     ),
                                                     focusColor: Colors.black,
@@ -1698,7 +1700,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         child: Text(
                                           'Filter',
                                           style: TextStyle(
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               fontSize: 16,
                                               fontWeight: FontWeight.w400,
                                               color: Colors.white),
@@ -1720,7 +1722,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Price',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.white),
                               ),
@@ -1738,7 +1740,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               child: Text(
                                 'Price',
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 14,
                                     color: Colors.deepOrange),
                               ),
@@ -1776,7 +1778,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                       title: Text(
                         subcategory.toUpperCase(),
                         style: TextStyle(
-                            fontFamily: 'SF',
+                            fontFamily: 'Helvetica',
                             fontSize: 16,
                             color: Colors.deepOrange,
                             fontWeight: FontWeight.w800),
@@ -1805,7 +1807,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   EdgeInsets.only(left: 10, top: 10, bottom: 5),
                               child: Text(subcategory,
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 18,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black)),
@@ -1841,7 +1843,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                             ? SliverGrid(
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 0.64,
+                                  childAspectRatio: 0.62,
                                   mainAxisSpacing: 1.0,
                                   crossAxisSpacing: 1.0,
                                   crossAxisCount: 2,
@@ -2019,7 +2021,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                         .center,
                                                                 style: TextStyle(
                                                                     fontFamily:
-                                                                        'SF',
+                                                                        'Helvetica',
                                                                     color: Colors
                                                                         .white,
                                                                     fontWeight:
@@ -2085,6 +2087,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                               }
                                                                               setState(() {
                                                                                 favourites = favourites;
+                                                                                itemsgrid[index].likes = itemsgrid[index].likes - 1;
                                                                               });
                                                                             } else {
                                                                               print(response.statusCode);
@@ -2131,6 +2134,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                               }
                                                                               setState(() {
                                                                                 favourites = favourites;
+                                                                                itemsgrid[index].likes = itemsgrid[index].likes + 1;
                                                                               });
                                                                             } else {
                                                                               print(response.statusCode);
@@ -2162,7 +2166,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                   .toString(),
                                                               style: TextStyle(
                                                                 fontFamily:
-                                                                    'SF',
+                                                                    'Helvetica',
                                                                 fontSize: 16,
                                                                 fontWeight:
                                                                     FontWeight
@@ -2205,7 +2209,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -2224,7 +2228,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                             itemsgrid[index]
                                                                 .name,
                                                             style: TextStyle(
-                                                              fontFamily: 'SF',
+                                                              fontFamily:
+                                                                  'Helvetica',
                                                               fontSize: 16,
                                                             ),
                                                             overflow:
@@ -2245,7 +2250,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                   style:
                                                                       TextStyle(
                                                                     fontFamily:
-                                                                        'SF',
+                                                                        'Helvetica',
                                                                     fontSize:
                                                                         16,
                                                                     color: Colors
@@ -2265,7 +2270,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                   style:
                                                                       TextStyle(
                                                                     fontFamily:
-                                                                        'SF',
+                                                                        'Helvetica',
                                                                     fontSize:
                                                                         16,
                                                                     fontWeight:
@@ -2357,40 +2362,85 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                         );
                                       },
                                       onDoubleTap: () async {
-                                        var userid =
-                                            await storage.read(key: 'userid');
+                                        if (favourites.contains(
+                                            itemsgrid[index].itemid)) {
+                                          var userid =
+                                              await storage.read(key: 'userid');
 
-                                        if (userid != null) {
-                                          var url =
-                                              'https://api.sellship.co/api/favourite/' +
-                                                  userid;
+                                          if (userid != null) {
+                                            var url =
+                                                'https://api.sellship.co/api/favourite/' +
+                                                    userid;
 
-                                          Map<String, String> body = {
-                                            'itemid': itemsgrid[index].itemid,
-                                          };
+                                            Map<String, String> body = {
+                                              'itemid': itemsgrid[index].itemid,
+                                            };
 
-                                          final response =
-                                              await http.post(url, body: body);
+                                            final response = await http
+                                                .post(url, body: body);
 
-                                          if (response.statusCode == 200) {
-                                            var jsondata =
-                                                json.decode(response.body);
-                                            var favs = jsondata['favourites'];
-                                            favourites.clear();
-                                            for (int i = 0;
-                                                i < favs.length;
-                                                i++) {
-                                              favourites.add(favs[i]['\$oid']);
+                                            if (response.statusCode == 200) {
+                                              var jsondata =
+                                                  json.decode(response.body);
+
+                                              favourites.clear();
+                                              for (int i = 0;
+                                                  i < jsondata.length;
+                                                  i++) {
+                                                favourites.add(jsondata[i]
+                                                    ['_id']['\$oid']);
+                                              }
+                                              setState(() {
+                                                favourites = favourites;
+                                                itemsgrid[index].likes =
+                                                    itemsgrid[index].likes - 1;
+                                              });
+                                            } else {
+                                              print(response.statusCode);
                                             }
-                                            setState(() {
-                                              favourites = favourites;
-                                            });
                                           } else {
-                                            print(response.statusCode);
+                                            showInSnackBar(
+                                                'Please Login to use Favourites');
                                           }
                                         } else {
-                                          showInSnackBar(
-                                              'Please Login to use Favourites');
+                                          var userid =
+                                              await storage.read(key: 'userid');
+
+                                          if (userid != null) {
+                                            var url =
+                                                'https://api.sellship.co/api/favourite/' +
+                                                    userid;
+
+                                            Map<String, String> body = {
+                                              'itemid': itemsgrid[index].itemid,
+                                            };
+
+                                            final response = await http
+                                                .post(url, body: body);
+
+                                            if (response.statusCode == 200) {
+                                              var jsondata =
+                                                  json.decode(response.body);
+
+                                              favourites.clear();
+                                              for (int i = 0;
+                                                  i < jsondata.length;
+                                                  i++) {
+                                                favourites.add(jsondata[i]
+                                                    ['_id']['\$oid']);
+                                              }
+                                              setState(() {
+                                                favourites = favourites;
+                                                itemsgrid[index].likes =
+                                                    itemsgrid[index].likes + 1;
+                                              });
+                                            } else {
+                                              print(response.statusCode);
+                                            }
+                                          } else {
+                                            showInSnackBar(
+                                                'Please Login to use Favourites');
+                                          }
                                         }
                                       },
                                       child: Padding(
@@ -2470,7 +2520,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                         .center,
                                                                 style: TextStyle(
                                                                     fontFamily:
-                                                                        'SF',
+                                                                        'Helvetica',
                                                                     color: Colors
                                                                         .white,
                                                                     fontWeight:
@@ -2536,6 +2586,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                                     }
                                                                                     setState(() {
                                                                                       favourites = favourites;
+                                                                                      itemsgrid[index].likes = itemsgrid[index].likes - 1;
                                                                                     });
                                                                                   } else {
                                                                                     print(response.statusCode);
@@ -2571,6 +2622,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                                     }
                                                                                     setState(() {
                                                                                       favourites = favourites;
+                                                                                      itemsgrid[index].likes = itemsgrid[index].likes + 1;
                                                                                     });
                                                                                   } else {
                                                                                     print(response.statusCode);
@@ -2601,7 +2653,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                     style:
                                                                         TextStyle(
                                                                       fontFamily:
-                                                                          'SF',
+                                                                          'Helvetica',
                                                                       fontSize:
                                                                           16,
                                                                       fontWeight:
@@ -2647,7 +2699,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -2677,7 +2729,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -2701,7 +2753,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             17,
                                                                         color: Colors
@@ -2743,7 +2795,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                                                         style:
                                                                             TextStyle(
                                                                           fontFamily:
-                                                                              'SF',
+                                                                              'Helvetica',
                                                                           fontSize:
                                                                               12,
                                                                           color:

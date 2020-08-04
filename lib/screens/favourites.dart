@@ -106,7 +106,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'SF',
+          fontFamily: 'Helvetica',
           fontSize: 16,
           color: Colors.white,
         ),
@@ -245,7 +245,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                           .center,
                                                                   style: TextStyle(
                                                                       fontFamily:
-                                                                          'SF',
+                                                                          'Helvetica',
                                                                       color: Colors
                                                                           .white,
                                                                       fontWeight:
@@ -361,7 +361,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                   style:
                                                                       TextStyle(
                                                                     fontFamily:
-                                                                        'SF',
+                                                                        'Helvetica',
                                                                     fontSize:
                                                                         16,
                                                                     fontWeight:
@@ -406,7 +406,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                     style:
                                                                         TextStyle(
                                                                       fontFamily:
-                                                                          'SF',
+                                                                          'Helvetica',
                                                                       fontSize:
                                                                           16,
                                                                       fontWeight:
@@ -428,7 +428,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -448,7 +448,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
@@ -469,7 +469,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         color: Colors
@@ -487,7 +487,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         color: Colors
@@ -614,7 +614,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                   child: Text('View your favourite\'s here ',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 16,
                       )),
                 ),
@@ -641,7 +641,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                     Text(
                       'Loading',
                       style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 16,
                       ),
                     ),

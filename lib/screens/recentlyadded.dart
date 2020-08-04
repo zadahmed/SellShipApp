@@ -820,7 +820,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
           backgroundColor: Colors.deepOrange,
           title: Text(
             'Recently Added',
-            style: TextStyle(fontFamily: 'SF', fontSize: 20),
+            style: TextStyle(fontFamily: 'Helvetica', fontSize: 20),
           ),
           elevation: 0,
         ),
@@ -869,7 +869,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                   hintText:
                                                       'What are you looking for today?',
                                                   hintStyle: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                   border: InputBorder.none),
@@ -893,7 +893,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                 child: Text(
                                   'SORT',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -918,7 +918,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                           title: Text(
                                             'Sort',
                                             style: TextStyle(
-                                                fontFamily: 'SF',
+                                                fontFamily: 'Helvetica',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w800,
                                                 color: Colors.black),
@@ -929,7 +929,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'New',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -954,7 +954,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Near me',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -978,7 +978,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Below 100',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1002,7 +1002,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Price Low to High',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1026,7 +1026,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Price High to Low',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1075,7 +1075,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Filter',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.black),
@@ -1085,7 +1085,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Brand',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1132,7 +1132,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Condition',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1164,7 +1164,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                               isExpanded: true,
                                                               style: TextStyle(
                                                                 fontFamily:
-                                                                    'SF',
+                                                                    'Helvetica',
                                                                 fontSize: 16,
                                                               ),
                                                               onChanged: (String
@@ -1207,7 +1207,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                             .center,
                                                                     style: TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         color: Colors
@@ -1223,7 +1223,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                             title: Text(
                                               'Price',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1255,7 +1255,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1280,7 +1280,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'SF',
+                                                                                fontFamily: 'Helvetica',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1317,7 +1317,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1342,7 +1342,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'SF',
+                                                                                fontFamily: 'Helvetica',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1407,7 +1407,8 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                       child: Text(
                                                         'Filter',
                                                         style: TextStyle(
-                                                            fontFamily: 'SF',
+                                                            fontFamily:
+                                                                'Helvetica',
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w400,
@@ -1422,7 +1423,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 //                                            title: Text(
 //                                              'Delivery',
 //                                              style: TextStyle(
-//                                                  fontFamily: 'SF',
+//                                                  fontFamily: 'Helvetica',
 //                                                  fontSize: 16,
 //                                                  fontWeight: FontWeight.w400,
 //                                                  color: Colors.black),
@@ -1442,7 +1443,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                 child: Text(
                                   'FILTER',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -1561,7 +1562,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                           .center,
                                                                   style: TextStyle(
                                                                       fontFamily:
-                                                                          'SF',
+                                                                          'Helvetica',
                                                                       color: Colors
                                                                           .white,
                                                                       fontWeight:
@@ -1597,7 +1598,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -1624,7 +1625,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -1641,7 +1642,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -1665,7 +1666,7 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
                                     'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                     )),
                               ),

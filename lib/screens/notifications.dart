@@ -141,10 +141,7 @@ class _NotifcationPageState extends State<NotifcationPage> {
         backgroundColor: Colors.white,
         leading: InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RootScreen(index: 0)),
-            );
+            Navigator.pop(context);
           },
           child: Icon(
             Icons.arrow_back_ios,
@@ -154,7 +151,8 @@ class _NotifcationPageState extends State<NotifcationPage> {
         title: Text(
           'Notifications',
           textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: 'SF', fontSize: 18, color: Colors.black),
+          style: TextStyle(
+              fontFamily: 'Helvetica', fontSize: 18, color: Colors.black),
         ),
       ),
       body: notifs.isNotEmpty
@@ -181,14 +179,14 @@ class _NotifcationPageState extends State<NotifcationPage> {
                                   ? Text(
                                       notifs[index].message,
                                       style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 14,
                                       ),
                                     )
                                   : Text(
                                       notifs[index].message,
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -198,14 +196,14 @@ class _NotifcationPageState extends State<NotifcationPage> {
                                       ? Text(
                                           notifs[index].date,
                                           style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 10,
                                           ),
                                         )
                                       : Text(
                                           notifs[index].date,
                                           style: TextStyle(
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold),
                                         )),
@@ -226,7 +224,7 @@ class _NotifcationPageState extends State<NotifcationPage> {
                     'View your Notifications here ',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'SF',
+                      fontFamily: 'Helvetica',
                       fontSize: 16,
                     ),
                   ),

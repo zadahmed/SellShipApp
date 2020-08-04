@@ -53,7 +53,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
           style: TextStyle(
               color: Colors.deepOrange,
               fontWeight: FontWeight.bold,
-              fontFamily: 'SF'),
+              fontFamily: 'Helvetica'),
         ),
         backgroundColor: Colors.white,
       ),
@@ -225,7 +225,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             Text(
                               "Send Verification Email",
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),

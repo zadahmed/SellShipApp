@@ -61,7 +61,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
             style: TextStyle(
                 color: Colors.deepOrange,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'SF'),
+                fontFamily: 'Helvetica'),
           ),
           backgroundColor: Colors.white,
         ),
@@ -142,7 +142,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                         Text(
                           "Verify Phone",
                           style: TextStyle(
-                              fontFamily: 'SF',
+                              fontFamily: 'Helvetica',
                               fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.bold),

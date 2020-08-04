@@ -493,7 +493,8 @@ class _SignUpProfilePageState extends State<SignUpProfilePage> {
       content: new Text(
         value,
         textAlign: TextAlign.center,
-        style: TextStyle(fontFamily: 'SF', fontSize: 16, color: Colors.white),
+        style: TextStyle(
+            fontFamily: 'Helvetica', fontSize: 16, color: Colors.white),
       ),
       backgroundColor: Colors.amber,
       duration: Duration(seconds: 3),

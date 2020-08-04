@@ -24,7 +24,7 @@ class _BoysFashionState extends State<BoysFashion> {
         title: Text(
           'Boys Fashion',
           style: TextStyle(
-              fontFamily: 'SF',
+              fontFamily: 'Helvetica',
               fontSize: 16,
               color: Colors.black,
               fontWeight: FontWeight.w800),
@@ -76,7 +76,7 @@ class _BoysFashionState extends State<BoysFashion> {
                                 child: Text('Hats',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -126,7 +126,7 @@ class _BoysFashionState extends State<BoysFashion> {
                                 child: Text('Hoodies & Sweatshirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -176,7 +176,7 @@ class _BoysFashionState extends State<BoysFashion> {
                                 child: Text('Nightwear & Loungewear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -226,7 +226,7 @@ class _BoysFashionState extends State<BoysFashion> {
                                 child: Text('Bottoms',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -276,7 +276,7 @@ class _BoysFashionState extends State<BoysFashion> {
                                 child: Text('Shirts & T-Shirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -326,7 +326,7 @@ class _BoysFashionState extends State<BoysFashion> {
                                 child: Text('Socks',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -376,7 +376,7 @@ class _BoysFashionState extends State<BoysFashion> {
                                 child: Text('Tops',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),

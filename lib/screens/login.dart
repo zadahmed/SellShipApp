@@ -60,7 +60,8 @@ class _LoginPageState extends State<LoginPage>
       content: new Text(
         value,
         textAlign: TextAlign.center,
-        style: TextStyle(fontFamily: 'SF', fontSize: 16, color: Colors.white),
+        style: TextStyle(
+            fontFamily: 'Helvetica', fontSize: 16, color: Colors.white),
       ),
       backgroundColor: Colors.amber,
       duration: Duration(seconds: 3),
@@ -435,7 +436,7 @@ class _LoginPageState extends State<LoginPage>
                                               ? '0'
                                               : followers.toString(),
                                           style: TextStyle(
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(height: 10.0),
@@ -443,7 +444,7 @@ class _LoginPageState extends State<LoginPage>
                                           'Followers',
                                           style: TextStyle(
                                               fontSize: 14,
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               color: Colors.black),
                                         )
                                       ],
@@ -460,7 +461,7 @@ class _LoginPageState extends State<LoginPage>
                                               ? '0'
                                               : itemssold.toString(),
                                           style: TextStyle(
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(height: 10.0),
@@ -468,7 +469,7 @@ class _LoginPageState extends State<LoginPage>
                                           'Items Sold',
                                           style: TextStyle(
                                               fontSize: 14,
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               color: Colors.black),
                                         )
                                       ],
@@ -485,7 +486,7 @@ class _LoginPageState extends State<LoginPage>
                                               ? '0'
                                               : following.toString(),
                                           style: TextStyle(
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(height: 10.0),
@@ -493,7 +494,7 @@ class _LoginPageState extends State<LoginPage>
                                           'Following',
                                           style: TextStyle(
                                               fontSize: 14,
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               color: Colors.black),
                                         )
                                       ],
@@ -512,7 +513,7 @@ class _LoginPageState extends State<LoginPage>
                                 child: Text(
                                   firstname + ' ' + lastname,
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16.0,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -528,7 +529,7 @@ class _LoginPageState extends State<LoginPage>
                                 child: Text(
                                   'Verify your information to sell faster',
                                   style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 16.0,
                                   ),
                                 ),
@@ -617,13 +618,13 @@ class _LoginPageState extends State<LoginPage>
                                                 ? Text(
                                                     'Verify Email',
                                                     style: TextStyle(
-                                                        fontFamily: 'SF',
+                                                        fontFamily: 'Helvetica',
                                                         fontSize: 14),
                                                   )
                                                 : Text(
                                                     'Email Verified',
                                                     style: TextStyle(
-                                                        fontFamily: 'SF',
+                                                        fontFamily: 'Helvetica',
                                                         fontSize: 14),
                                                   )
                                           ],
@@ -703,13 +704,13 @@ class _LoginPageState extends State<LoginPage>
                                                 ? Text(
                                                     'Verify Phone',
                                                     style: TextStyle(
-                                                        fontFamily: 'SF',
+                                                        fontFamily: 'Helvetica',
                                                         fontSize: 14),
                                                   )
                                                 : Text(
                                                     'Phone Verified',
                                                     style: TextStyle(
-                                                        fontFamily: 'SF',
+                                                        fontFamily: 'Helvetica',
                                                         fontSize: 14),
                                                   )
                                           ],
@@ -733,7 +734,8 @@ class _LoginPageState extends State<LoginPage>
                                           Text(
                                             'Connect Facebook',
                                             style: TextStyle(
-                                                fontFamily: 'SF', fontSize: 14),
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14),
                                           ),
                                         ],
                                       ),
@@ -743,22 +745,22 @@ class _LoginPageState extends State<LoginPage>
                               : Container(child: Text('Verified')),
                         ]))),
                 SliverAppBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.deepPurpleAccent,
                   pinned: true,
                   title: TabBar(
-                    labelColor: Colors.black,
+                    labelColor: Colors.white,
                     labelStyle: TextStyle(
-                      fontFamily: 'SF',
+                      fontFamily: 'Helvetica',
                       fontSize: 14.0,
                     ),
-                    indicatorColor: Colors.deepOrange,
+                    indicatorColor: Colors.white,
                     controller: _tabController,
                     tabs: [
                       new Tab(
                         icon: const Icon(
                           Feather.clipboard,
                           size: 23,
-                          color: Colors.deepOrange,
+                          color: Colors.white,
                         ),
                         text: 'My Items',
                       ),
@@ -766,7 +768,7 @@ class _LoginPageState extends State<LoginPage>
                         icon: const Icon(
                           Feather.shopping_bag,
                           size: 23,
-                          color: Colors.deepOrange,
+                          color: Colors.white,
                         ),
                         text: 'My Orders',
                       ),
@@ -774,7 +776,7 @@ class _LoginPageState extends State<LoginPage>
                         icon: const Icon(
                           Feather.heart,
                           size: 23,
-                          color: Colors.deepOrange,
+                          color: Colors.white,
                         ),
                         text: 'Favourites',
                       ),
@@ -797,7 +799,7 @@ class _LoginPageState extends State<LoginPage>
                                       'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                       )),
                                 ),
@@ -897,7 +899,7 @@ class _LoginPageState extends State<LoginPage>
         color: Colors.white,
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -905,7 +907,7 @@ class _LoginPageState extends State<LoginPage>
             FadeAnimation(
                 1,
                 Container(
-                  height: MediaQuery.of(context).size.height / 2.5,
+                  height: MediaQuery.of(context).size.height / 2.4,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
                     controller: _pageControllerlogin,
@@ -932,7 +934,7 @@ class _LoginPageState extends State<LoginPage>
                               'Buying something? Find the best items near you in less than a minute!',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.deepOrange)),
@@ -955,7 +957,7 @@ class _LoginPageState extends State<LoginPage>
                               'Selling Something ? List your item on SellShip within seconds!',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.deepOrange)),
@@ -1049,7 +1051,7 @@ class _LoginPageState extends State<LoginPage>
           ),
           SliverGrid(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, childAspectRatio: 0.60),
+                crossAxisCount: 2, childAspectRatio: 0.58),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Padding(
@@ -1059,8 +1061,9 @@ class _LoginPageState extends State<LoginPage>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    Details(itemid: item[index].itemid)),
+                              builder: (context) =>
+                                  Details(itemid: item[index].itemid),
+                            ),
                           );
                         },
                         child: Container(
@@ -1107,7 +1110,7 @@ class _LoginPageState extends State<LoginPage>
                                               'Sold',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1182,6 +1185,11 @@ class _LoginPageState extends State<LoginPage>
                                                               setState(() {
                                                                 favourites =
                                                                     favourites;
+                                                                item[index]
+                                                                        .likes =
+                                                                    item[index]
+                                                                            .likes -
+                                                                        1;
                                                               });
                                                             } else {
                                                               print(response
@@ -1244,6 +1252,11 @@ class _LoginPageState extends State<LoginPage>
                                                                         '\$oid']);
                                                               }
                                                               setState(() {
+                                                                item[index]
+                                                                        .likes =
+                                                                    item[index]
+                                                                            .likes +
+                                                                        1;
                                                                 favourites =
                                                                     favourites;
                                                               });
@@ -1271,7 +1284,7 @@ class _LoginPageState extends State<LoginPage>
                                             Text(
                                               item[index].likes.toString(),
                                               style: TextStyle(
-                                                fontFamily: 'SF',
+                                                fontFamily: 'Helvetica',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600,
                                               ),
@@ -1312,7 +1325,7 @@ class _LoginPageState extends State<LoginPage>
                                               child: Text(
                                                 item[index].comments.toString(),
                                                 style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -1326,7 +1339,7 @@ class _LoginPageState extends State<LoginPage>
                                           child: Text(
                                             item[index].name,
                                             style: TextStyle(
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               fontSize: 16,
                                               fontWeight: FontWeight.w800,
                                             ),
@@ -1338,7 +1351,7 @@ class _LoginPageState extends State<LoginPage>
                                           child: Text(
                                             item[index].category,
                                             style: TextStyle(
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               fontSize: 14,
                                               fontWeight: FontWeight.w300,
                                             ),
@@ -1354,7 +1367,7 @@ class _LoginPageState extends State<LoginPage>
                                                           .price
                                                           .toString(),
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                     color: Colors.deepOrange,
                                                     fontWeight: FontWeight.w800,
@@ -1365,7 +1378,7 @@ class _LoginPageState extends State<LoginPage>
                                                 child: Text(
                                                   item[index].price.toString(),
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                     color: Colors.deepOrange,
                                                     fontWeight: FontWeight.w800,
@@ -1419,7 +1432,8 @@ class _LoginPageState extends State<LoginPage>
                                                     child: Text(
                                                       'Edit',
                                                       style: TextStyle(
-                                                          fontFamily: 'SF',
+                                                          fontFamily:
+                                                              'Helvetica',
                                                           fontSize: 14,
                                                           color: Colors.white),
                                                     ),
@@ -1491,7 +1505,8 @@ class _LoginPageState extends State<LoginPage>
                                                           ? 'Mark Sold'
                                                           : 'Mark Live',
                                                       style: TextStyle(
-                                                          fontFamily: 'SF',
+                                                          fontFamily:
+                                                              'Helvetica',
                                                           fontSize: 14,
                                                           color: Colors.white),
                                                     ),

@@ -24,7 +24,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
         title: Text(
           'Girls Fashion',
           style: TextStyle(
-              fontFamily: 'SF',
+              fontFamily: 'Helvetica',
               fontSize: 16,
               color: Colors.black,
               fontWeight: FontWeight.w800),
@@ -76,7 +76,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Bags',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -126,7 +126,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Bottoms',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -176,7 +176,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Dresses',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -226,7 +226,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Hats',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -276,7 +276,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Accessories',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -326,7 +326,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Jumpsuits',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -376,7 +376,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Nightwear & Loungewear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -426,7 +426,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Socks',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -476,7 +476,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Hoodies & Sweatshirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -526,7 +526,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Swimwear & Beachwear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -576,7 +576,7 @@ class _GirlsFashionState extends State<GirlsFashion> {
                                 child: Text('Tops and Tees',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),

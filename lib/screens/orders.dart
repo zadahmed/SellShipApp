@@ -143,7 +143,7 @@ class OrdersScreenState extends State<OrdersScreen>
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'SF',
+          fontFamily: 'Helvetica',
           fontSize: 16,
           color: Colors.white,
         ),
@@ -178,556 +178,532 @@ class OrdersScreenState extends State<OrdersScreen>
   ScrollController _scrollController = ScrollController();
   Widget orders(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
-        title: TabBar(
-          controller: _tabController,
-          tabs: [
-            Tab(
-              icon: Icon(
-                Icons.receipt,
-                color: Colors.white,
-              ),
-              text: 'Bought',
+        body: CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          pinned: true,
+          backgroundColor: Colors.white,
+          title: TabBar(
+            controller: _tabController,
+            labelColor: Colors.deepPurple,
+            indicatorColor: Colors.deepPurpleAccent,
+            labelStyle: TextStyle(
+              fontFamily: 'Helvetica',
+              fontSize: 14.0,
             ),
-            Tab(
-              icon: Icon(
-                Icons.monetization_on,
-                color: Colors.white,
+            tabs: [
+              Tab(
+                icon: Icon(
+                  Icons.receipt,
+                  color: Colors.deepPurpleAccent,
+                ),
+                text: 'Bought',
               ),
-              text: 'Sold',
-            ),
-          ],
+              Tab(
+                icon: Icon(
+                  Icons.monetization_on,
+                  color: Colors.deepPurpleAccent,
+                ),
+                text: 'Sold',
+              ),
+            ],
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          loading == false
-              ? Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 15,
-                      ),
-                      item.isNotEmpty
-                          ? Flexible(
-                              child: MediaQuery.removePadding(
-                                  context: context,
-                                  removeTop: true,
-                                  child: ListView.builder(
-                                    cacheExtent:
-                                        double.parse(item.length.toString()),
-                                    shrinkWrap: true,
-                                    controller: _scrollController,
-                                    itemCount: item.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Details(
-                                                              itemid:
-                                                                  item[index]
+        SliverFillRemaining(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              loading == false
+                  ? Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 15,
+                          ),
+                          item.isNotEmpty
+                              ? Flexible(
+                                  child: MediaQuery.removePadding(
+                                      context: context,
+                                      removeTop: true,
+                                      child: ListView.builder(
+                                        cacheExtent: double.parse(
+                                            item.length.toString()),
+                                        shrinkWrap: true,
+                                        controller: _scrollController,
+                                        itemCount: item.length,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Details(
+                                                                  itemid: item[
+                                                                          index]
                                                                       .itemid)),
-                                                );
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: Colors.grey),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                      offset: Offset(
-                                                          0.0, 1.0), //(x,y)
-                                                      blurRadius: 6.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Column(
-                                                  children: <Widget>[
-                                                    new Stack(
-                                                      children: <Widget>[
-                                                        Container(
-                                                          height: 180,
-                                                          width: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl:
-                                                                  item[index]
-                                                                      .image,
-                                                              fit: BoxFit.cover,
-                                                              placeholder: (context,
-                                                                      url) =>
-                                                                  SpinKitChasingDots(
-                                                                      color: Colors
-                                                                          .deepOrange),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Icon(Icons
-                                                                      .error),
-                                                            ),
-                                                          ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: Colors.grey),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      color: Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          offset: Offset(
+                                                              0.0, 1.0), //(x,y)
+                                                          blurRadius: 6.0,
                                                         ),
                                                       ],
                                                     ),
-                                                    Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Row(
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        new Stack(
+                                                          children: <Widget>[
+                                                            Container(
+                                                              height: 180,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl: item[
+                                                                          index]
+                                                                      .image,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      SpinKitChasingDots(
+                                                                          color:
+                                                                              Colors.deepOrange),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(10),
+                                                              child: Column(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
-                                                                        .spaceBetween,
+                                                                        .start,
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
-                                                                        .center,
+                                                                        .start,
                                                                 children: <
                                                                     Widget>[
-                                                                  Container(
-                                                                      child:
-                                                                          Column(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Text(
-                                                                        item[index]
-                                                                            .name,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontFamily:
-                                                                              'SF',
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.w800,
-                                                                        ),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                      Text(
-                                                                        'Bought for ' +
-                                                                            currency +
-                                                                            item[index].subcategory,
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'SF',
-                                                                            fontSize:
-                                                                                16,
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                            color: Colors.deepOrange),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                      Text(
-                                                                        item[index]
-                                                                            .date,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontFamily:
-                                                                              'SF',
-                                                                          fontSize:
-                                                                              14,
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                    ],
+                                                                  Row(
                                                                     mainAxisAlignment:
                                                                         MainAxisAlignment
-                                                                            .start,
+                                                                            .spaceBetween,
                                                                     crossAxisAlignment:
                                                                         CrossAxisAlignment
-                                                                            .start,
-                                                                  )),
-                                                                  InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator
-                                                                            .push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => OrderDetail(messageid: item[index].description, item: item[index])),
-                                                                        );
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            30,
-                                                                        width:
-                                                                            100,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              Colors.deepPurpleAccent,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(15),
-                                                                          boxShadow: [
-                                                                            BoxShadow(
-                                                                              color: Colors.deepPurpleAccent.shade200,
-                                                                              offset: Offset(0.0, 1.0), //(x,y)
-                                                                              blurRadius: 6.0,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        child:
-                                                                            Center(
+                                                                            .center,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Container(
                                                                           child:
-                                                                              Text(
-                                                                            'View Order',
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                            style: TextStyle(
-                                                                                fontFamily: 'SF',
-                                                                                fontSize: 16,
-                                                                                color: Colors.white),
+                                                                              Column(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          Text(
+                                                                            item[index].name,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.w800,
+                                                                            ),
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
                                                                           ),
-                                                                        ),
+                                                                          Text(
+                                                                            'Bought for ' +
+                                                                                currency +
+                                                                                item[index].subcategory,
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Helvetica',
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.w800,
+                                                                                color: Colors.deepOrange),
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                          ),
+                                                                          Text(
+                                                                            item[index].date,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 14,
+                                                                              color: Colors.grey,
+                                                                            ),
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                          ),
+                                                                        ],
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
                                                                       )),
+                                                                      InkWell(
+                                                                          onTap:
+                                                                              () {
+                                                                            Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => OrderDetail(messageid: item[index].description, item: item[index])),
+                                                                            );
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                30,
+                                                                            width:
+                                                                                100,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: Colors.deepPurpleAccent,
+                                                                              borderRadius: BorderRadius.circular(15),
+                                                                              boxShadow: [
+                                                                                BoxShadow(
+                                                                                  color: Colors.deepPurpleAccent.shade200,
+                                                                                  offset: Offset(0.0, 1.0), //(x,y)
+                                                                                  blurRadius: 6.0,
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            child:
+                                                                                Center(
+                                                                              child: Text(
+                                                                                'View Order',
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white),
+                                                                              ),
+                                                                            ),
+                                                                          )),
+                                                                    ],
+                                                                  )
                                                                 ],
-                                                              )
-                                                            ],
-                                                          ),
-                                                        )),
-                                                  ],
-                                                ),
-                                              )));
-                                    },
-                                  )))
-                          : Expanded(
-                              child: Column(
-                              children: <Widget>[
-                                Center(
-                                  child: Text(
-                                    'View your bought items here!',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ),
-                                Expanded(
-                                    child: Image.asset(
-                                  'assets/onboard2.png',
-                                  fit: BoxFit.fitWidth,
-                                ))
-                              ],
-                            )),
-                    ],
-                  ),
-                )
-              : Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 16.0),
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300],
-                    highlightColor: Colors.grey[100],
-                    child: ListView(
-                      children: [0, 1, 2, 3, 4, 5, 6]
-                          .map((_) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 48.0,
-                                      height: 48.0,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
+                                                              ),
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  )));
+                                        },
+                                      )))
+                              : Expanded(
+                                  child: Column(
+                                  children: <Widget>[
+                                    Center(
+                                      child: Text(
+                                        'View your bought items here!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontSize: 20),
+                                      ),
                                     ),
                                     Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: double.infinity,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2.0),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2.0),
-                                          ),
-                                          Container(
-                                            width: 40.0,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                        child: Image.asset(
+                                      'assets/onboard2.png',
+                                      fit: BoxFit.fitWidth,
+                                    ))
                                   ],
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
-          loading == false
-              ? Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 15,
+                                )),
+                        ],
                       ),
-                      sellingitem.isNotEmpty
-                          ? Flexible(
-                              child: MediaQuery.removePadding(
-                                  context: context,
-                                  removeTop: true,
-                                  child: ListView.builder(
-                                    cacheExtent: double.parse(
-                                        sellingitem.length.toString()),
-                                    shrinkWrap: true,
-                                    controller: _scrollController,
-                                    itemCount: sellingitem.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Details(
-                                                              itemid:
-                                                                  sellingitem[
+                    )
+                  : Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 16.0),
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.grey[100],
+                        child: ListView(
+                          children: [0, 1, 2, 3, 4, 5, 6]
+                              .map((_) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 48.0,
+                                          height: 48.0,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: double.infinity,
+                                                height: 8.0,
+                                                color: Colors.white,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 2.0),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 8.0,
+                                                color: Colors.white,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 2.0),
+                                              ),
+                                              Container(
+                                                width: 40.0,
+                                                height: 8.0,
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                    ),
+              loading == false
+                  ? Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 15,
+                          ),
+                          sellingitem.isNotEmpty
+                              ? Flexible(
+                                  child: MediaQuery.removePadding(
+                                      context: context,
+                                      removeTop: true,
+                                      child: ListView.builder(
+                                        cacheExtent: double.parse(
+                                            sellingitem.length.toString()),
+                                        shrinkWrap: true,
+                                        controller: _scrollController,
+                                        itemCount: sellingitem.length,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                              padding: EdgeInsets.all(10),
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              Details(
+                                                                  itemid: sellingitem[
                                                                           index]
                                                                       .itemid)),
-                                                );
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: Colors.grey),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                      offset: Offset(
-                                                          0.0, 1.0), //(x,y)
-                                                      blurRadius: 6.0,
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Column(
-                                                  children: <Widget>[
-                                                    new Stack(
-                                                      children: <Widget>[
-                                                        Container(
-                                                          height: 180,
-                                                          width: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width,
-                                                          child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl:
-                                                                  sellingitem[
-                                                                          index]
-                                                                      .image,
-                                                              fit: BoxFit.cover,
-                                                              placeholder: (context,
-                                                                      url) =>
-                                                                  SpinKitChasingDots(
-                                                                      color: Colors
-                                                                          .deepOrange),
-                                                              errorWidget: (context,
-                                                                      url,
-                                                                      error) =>
-                                                                  Icon(Icons
-                                                                      .error),
-                                                            ),
-                                                          ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: Colors.grey),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15),
+                                                      color: Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          offset: Offset(
+                                                              0.0, 1.0), //(x,y)
+                                                          blurRadius: 6.0,
                                                         ),
                                                       ],
                                                     ),
-                                                    Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: <Widget>[
-                                                              Row(
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        new Stack(
+                                                          children: <Widget>[
+                                                            Container(
+                                                              height: 180,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15),
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      sellingitem[
+                                                                              index]
+                                                                          .image,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      SpinKitChasingDots(
+                                                                          color:
+                                                                              Colors.deepOrange),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(10),
+                                                              child: Column(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
-                                                                        .spaceBetween,
+                                                                        .start,
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment
-                                                                        .center,
+                                                                        .start,
                                                                 children: <
                                                                     Widget>[
-                                                                  Container(
-                                                                      child:
-                                                                          Column(
-                                                                    children: <
-                                                                        Widget>[
-                                                                      Text(
-                                                                        sellingitem[index]
-                                                                            .name,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontFamily:
-                                                                              'SF',
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.w800,
-                                                                        ),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                      Text(
-                                                                        'Sold for ' +
-                                                                            currency +
-                                                                            sellingitem[index].subcategory,
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'SF',
-                                                                            fontSize:
-                                                                                16,
-                                                                            fontWeight:
-                                                                                FontWeight.w800,
-                                                                            color: Colors.deepOrange),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                      Text(
-                                                                        sellingitem[index]
-                                                                            .date,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontFamily:
-                                                                              'SF',
-                                                                          fontSize:
-                                                                              14,
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                      ),
-                                                                    ],
+                                                                  Row(
                                                                     mainAxisAlignment:
                                                                         MainAxisAlignment
-                                                                            .start,
+                                                                            .spaceBetween,
                                                                     crossAxisAlignment:
                                                                         CrossAxisAlignment
-                                                                            .start,
-                                                                  )),
-                                                                  InkWell(
-                                                                      onTap:
-                                                                          () {
-                                                                        Navigator
-                                                                            .push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => OrderDetail(messageid: sellingitem[index].description, item: sellingitem[index])),
-                                                                        );
-                                                                      },
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            30,
-                                                                        width:
-                                                                            100,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              Colors.deepPurpleAccent,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(15),
-                                                                          boxShadow: [
-                                                                            BoxShadow(
-                                                                              color: Colors.deepPurpleAccent.shade200,
-                                                                              offset: Offset(0.0, 1.0), //(x,y)
-                                                                              blurRadius: 6.0,
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                        child:
-                                                                            Center(
+                                                                            .center,
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Container(
                                                                           child:
-                                                                              Text(
-                                                                            'View Order',
-                                                                            textAlign:
-                                                                                TextAlign.center,
-                                                                            style: TextStyle(
-                                                                                fontFamily: 'SF',
-                                                                                fontSize: 16,
-                                                                                color: Colors.white),
+                                                                              Column(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          Text(
+                                                                            sellingitem[index].name,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.w800,
+                                                                            ),
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
                                                                           ),
-                                                                        ),
+                                                                          Text(
+                                                                            'Sold for ' +
+                                                                                currency +
+                                                                                sellingitem[index].subcategory,
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Helvetica',
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.w800,
+                                                                                color: Colors.deepOrange),
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                          ),
+                                                                          Text(
+                                                                            sellingitem[index].date,
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 14,
+                                                                              color: Colors.grey,
+                                                                            ),
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                          ),
+                                                                        ],
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
                                                                       )),
-                                                                ],
-                                                              )
+                                                                      InkWell(
+                                                                          onTap:
+                                                                              () {
+                                                                            Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => OrderDetail(messageid: sellingitem[index].description, item: sellingitem[index])),
+                                                                            );
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                30,
+                                                                            width:
+                                                                                100,
+                                                                            decoration:
+                                                                                BoxDecoration(
+                                                                              color: Colors.deepPurpleAccent,
+                                                                              borderRadius: BorderRadius.circular(15),
+                                                                              boxShadow: [
+                                                                                BoxShadow(
+                                                                                  color: Colors.deepPurpleAccent.shade200,
+                                                                                  offset: Offset(0.0, 1.0), //(x,y)
+                                                                                  blurRadius: 6.0,
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            child:
+                                                                                Center(
+                                                                              child: Text(
+                                                                                'View Order',
+                                                                                textAlign: TextAlign.center,
+                                                                                style: TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white),
+                                                                              ),
+                                                                            ),
+                                                                          )),
+                                                                    ],
+                                                                  )
 
 //                                                                  Container(
 //                                                                    child: Text(
@@ -736,7 +712,7 @@ class OrdersScreenState extends State<OrdersScreen>
 //                                                                      style:
 //                                                                          TextStyle(
 //                                                                        fontFamily:
-//                                                                            'SF',
+//                                                                            'Helvetica',
 //                                                                        fontSize:
 //                                                                            14,
 //                                                                        fontWeight:
@@ -757,7 +733,7 @@ class OrdersScreenState extends State<OrdersScreen>
 //                                                                                item[index].price.toString(),
 //                                                                            style:
 //                                                                                TextStyle(
-//                                                                              fontFamily: 'SF',
+//                                                                              fontFamily: 'Helvetica',
 //                                                                              fontSize: 16,
 //                                                                              color: Colors.deepOrange,
 //                                                                              fontWeight: FontWeight.w800,
@@ -770,7 +746,7 @@ class OrdersScreenState extends State<OrdersScreen>
 //                                                                            item[index].price.toString(),
 //                                                                            style:
 //                                                                                TextStyle(
-//                                                                              fontFamily: 'SF',
+//                                                                              fontFamily: 'Helvetica',
 //                                                                              fontSize: 16,
 //                                                                              color: Colors.deepOrange,
 //                                                                              fontWeight: FontWeight.w800,
@@ -780,98 +756,103 @@ class OrdersScreenState extends State<OrdersScreen>
 //                                                                  SizedBox(
 //                                                                    height: 10,
 //                                                                  ),
-                                                            ],
-                                                          ),
-                                                        )),
-                                                  ],
-                                                ),
-                                              )));
-                                    },
-                                  )))
-                          : Expanded(
-                              child: Column(
-                              children: <Widget>[
-                                Center(
-                                  child: Text(
-                                    'View your sold items here!',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ),
-                                Expanded(
-                                    child: Image.asset(
-                                  'assets/onboard1.png',
-                                  fit: BoxFit.fitWidth,
-                                ))
-                              ],
-                            )),
-                    ],
-                  ),
-                )
-              : Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 16.0),
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300],
-                    highlightColor: Colors.grey[100],
-                    child: ListView(
-                      children: [0, 1, 2, 3, 4, 5, 6]
-                          .map((_) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 48.0,
-                                      height: 48.0,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
+                                                                ],
+                                                              ),
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  )));
+                                        },
+                                      )))
+                              : Expanded(
+                                  child: Column(
+                                  children: <Widget>[
+                                    Center(
+                                      child: Text(
+                                        'View your sold items here!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontSize: 20),
+                                      ),
                                     ),
                                     Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: double.infinity,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2.0),
-                                          ),
-                                          Container(
-                                            width: double.infinity,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2.0),
-                                          ),
-                                          Container(
-                                            width: 40.0,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                        child: Image.asset(
+                                      'assets/onboard1.png',
+                                      fit: BoxFit.fitWidth,
+                                    ))
                                   ],
-                                ),
-                              ))
-                          .toList(),
+                                )),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 16.0),
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300],
+                        highlightColor: Colors.grey[100],
+                        child: ListView(
+                          children: [0, 1, 2, 3, 4, 5, 6]
+                              .map((_) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 48.0,
+                                          height: 48.0,
+                                          color: Colors.white,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                width: double.infinity,
+                                                height: 8.0,
+                                                color: Colors.white,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 2.0),
+                                              ),
+                                              Container(
+                                                width: double.infinity,
+                                                height: 8.0,
+                                                color: Colors.white,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 2.0),
+                                              ),
+                                              Container(
+                                                width: 40.0,
+                                                height: 8.0,
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-        ],
-      ),
-    );
+            ],
+          ),
+        )
+      ],
+    ));
   }
 
   String getBannerAdUnitId() {
@@ -897,7 +878,7 @@ class OrdersScreenState extends State<OrdersScreen>
                   child: Text('View your order\'s here ',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 16,
                       )),
                 ),
@@ -924,7 +905,7 @@ class OrdersScreenState extends State<OrdersScreen>
                     Text(
                       'Loading',
                       style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 16,
                       ),
                     ),

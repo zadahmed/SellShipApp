@@ -60,7 +60,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             elevation: 0,
             child: Text('Skip',
                 style: TextStyle(
-                    fontFamily: 'SF',
+                    fontFamily: 'Helvetica',
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.deepOrange)),
@@ -113,7 +113,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               'Buying something? Find the best items near you in less than a minute!',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.deepOrange)),
@@ -137,7 +137,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               'Selling Something ? List your item on SellShip within seconds!',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.deepOrange)),

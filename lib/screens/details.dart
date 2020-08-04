@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/chatpageview.dart';
+import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -89,7 +90,7 @@ class _DetailsState extends State<Details> {
                       child: Text(
                         'Make an Offer',
                         style: TextStyle(
-                            fontFamily: 'SF',
+                            fontFamily: 'Helvetica',
                             fontSize: 16,
                             fontWeight: FontWeight.w700),
                       ),
@@ -115,7 +116,7 @@ class _DetailsState extends State<Details> {
                                     labelText: "Offer Price",
                                     alignLabelWithHint: true,
                                     labelStyle: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                     ),
                                     focusColor: Colors.black,
@@ -185,7 +186,6 @@ class _DetailsState extends State<Details> {
                                 ),
                               );
                             } else {
-                              Navigator.of(context).pop();
                               showDialog(
                                   context: context,
                                   builder: (_) => AssetGiffyDialog(
@@ -215,7 +215,7 @@ class _DetailsState extends State<Details> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    RootScreen(index: 2)),
+                                                    RootScreen(index: 0)),
                                           );
                                         },
                                       ));
@@ -239,7 +239,7 @@ class _DetailsState extends State<Details> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16),
                                 ),
                               ),
@@ -270,7 +270,7 @@ class _DetailsState extends State<Details> {
                     title: Text(
                       'Report this Item?',
                       style: TextStyle(
-                          fontFamily: 'SF',
+                          fontFamily: 'Helvetica',
                           fontSize: 16,
                           fontWeight: FontWeight.w700),
                     ),
@@ -303,7 +303,7 @@ class _DetailsState extends State<Details> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16),
                             ),
                           ),
@@ -395,6 +395,7 @@ class _DetailsState extends State<Details> {
     print(jsonbody);
     newItem = Item(
         name: jsonbody[0]['name'],
+        itemid: jsonbody[0]['_id']['\$oid'].toString(),
         price: jsonbody[0]['price'].toString(),
         description: jsonbody[0]['description'],
         category: jsonbody[0]['category'],
@@ -517,7 +518,7 @@ class _DetailsState extends State<Details> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'SF',
+          fontFamily: 'Helvetica',
           fontSize: 16,
           color: Colors.white,
         ),
@@ -586,7 +587,7 @@ class _DetailsState extends State<Details> {
                 newItem.name,
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    fontFamily: 'SF', fontSize: 18, color: Colors.black),
+                    fontFamily: 'Helvetica', fontSize: 18, color: Colors.black),
               ),
               actions: <Widget>[
                 Padding(
@@ -689,7 +690,7 @@ class _DetailsState extends State<Details> {
                                 newItem.name,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 20,
                                 ),
                               ),
@@ -765,7 +766,7 @@ class _DetailsState extends State<Details> {
                                   currency + ' ' + newItem.price.toString(),
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 16,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -791,7 +792,7 @@ class _DetailsState extends State<Details> {
                                         'Uploaded $dateuploaded',
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 14,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w300,
@@ -815,7 +816,7 @@ class _DetailsState extends State<Details> {
                               title: Text(
                                 newItem.username,
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 16,
                                     color: Colors.black),
                               ),
@@ -827,7 +828,7 @@ class _DetailsState extends State<Details> {
                                 newItem.likes.toString() + ' Likes',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -840,7 +841,7 @@ class _DetailsState extends State<Details> {
                                 newItem.category,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   color: Colors.blueGrey,
                                   fontWeight: FontWeight.w500,
@@ -854,7 +855,7 @@ class _DetailsState extends State<Details> {
                                 newItem.condition.toString(),
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   color: Colors.blueGrey,
                                   fontWeight: FontWeight.w500,
@@ -868,7 +869,7 @@ class _DetailsState extends State<Details> {
                                 newItem.brand.toString(),
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   color: Colors.blueGrey,
                                   fontWeight: FontWeight.w500,
@@ -883,7 +884,7 @@ class _DetailsState extends State<Details> {
                                       newItem.size.toString(),
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         color: Colors.blueGrey,
                                         fontWeight: FontWeight.w500,
@@ -899,7 +900,7 @@ class _DetailsState extends State<Details> {
                                 child: Text(
                                   'Description',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700),
                                 ),
@@ -922,7 +923,7 @@ class _DetailsState extends State<Details> {
                                           newItem.description,
                                           textAlign: TextAlign.justify,
                                           style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                           ),
                                         ),
@@ -969,7 +970,7 @@ class _DetailsState extends State<Details> {
                                         newItem.city.toString(),
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                           color: Colors.black,
                                           fontWeight: FontWeight.w500,
@@ -1041,7 +1042,7 @@ class _DetailsState extends State<Details> {
                                 child: Text(
                                   'Location is approximated to protect the user',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 12,
                                       fontWeight: FontWeight.w300),
                                 ),
@@ -1066,7 +1067,7 @@ class _DetailsState extends State<Details> {
                       padding: const EdgeInsets.only(
                           left: 16, bottom: 16, right: 16),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           InkWell(
@@ -1147,12 +1148,13 @@ class _DetailsState extends State<Details> {
                               height: 48,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.amber,
+                                  color: Colors.deepPurple,
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(16.0),
                                   ),
                                   border: Border.all(
-                                      color: Colors.amber.withOpacity(0.2)),
+                                      color:
+                                          Colors.deepPurple.withOpacity(0.2)),
                                 ),
                                 child: Icon(
                                   Icons.chat_bubble,
@@ -1162,14 +1164,102 @@ class _DetailsState extends State<Details> {
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 16,
+                          InkWell(
+                            onTap: () {
+                              if (userid != null) {
+                                showMe(context);
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AssetGiffyDialog(
+                                          image: Image.asset(
+                                            'assets/oops.gif',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            'Oops!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'You need to login to create an offer!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(),
+                                          ),
+                                          onlyOkButton: true,
+                                          entryAnimation:
+                                              EntryAnimation.DEFAULT,
+                                          onOkButtonPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RootScreen(index: 2)),
+                                            );
+                                          },
+                                        ));
+                              }
+                            },
+                            child: Container(
+                              height: 48,
+                              width: 150,
+                              decoration: BoxDecoration(
+                                color: Colors.deepPurple,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(16.0),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.deepPurple.withOpacity(0.4),
+                                      offset: const Offset(1.1, 1.1),
+                                      blurRadius: 10.0),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Make an Offer',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    letterSpacing: 0.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                if (userid != null) {
-                                  showMe(context);
+                          InkWell(
+                            onTap: () async {
+                              if (userid != null) {
+                                var recieverid = newItem.userid;
+                                if (recieverid != userid) {
+                                  var itemurl =
+                                      'https://api.sellship.co/api/createroom/' +
+                                          userid +
+                                          '/' +
+                                          recieverid +
+                                          '/' +
+                                          itemid;
+                                  final response = await http.get(itemurl);
+                                  var messageinfo = json.decode(response.body);
+                                  var messageid = (messageinfo['messageid']);
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Checkout(
+                                        messageid: messageid,
+                                        item: newItem,
+                                        offer: newItem.price,
+                                      ),
+                                    ),
+                                  );
                                 } else {
                                   showDialog(
                                       context: context,
@@ -1186,7 +1276,7 @@ class _DetailsState extends State<Details> {
                                                   fontWeight: FontWeight.w600),
                                             ),
                                             description: Text(
-                                              'You need to login to create an offer!',
+                                              'You can\'t send a message to yourself!',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(),
                                             ),
@@ -1206,32 +1296,67 @@ class _DetailsState extends State<Details> {
                                             },
                                           ));
                                 }
-                              },
-                              child: Container(
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  color: Colors.deepOrange,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0),
-                                  ),
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                        color:
-                                            Colors.deepOrange.withOpacity(0.4),
-                                        offset: const Offset(1.1, 1.1),
-                                        blurRadius: 10.0),
-                                  ],
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AssetGiffyDialog(
+                                          image: Image.asset(
+                                            'assets/oops.gif',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            'Oops!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'You need to login to create an offer!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(),
+                                          ),
+                                          onlyOkButton: true,
+                                          entryAnimation:
+                                              EntryAnimation.DEFAULT,
+                                          onOkButtonPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RootScreen(index: 2)),
+                                            );
+                                          },
+                                        ));
+                              }
+                            },
+                            child: Container(
+                              height: 48,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.deepOrange,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(16.0),
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    'Make an Offer',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      letterSpacing: 0.0,
-                                      color: Colors.white,
-                                    ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.deepOrange.withOpacity(0.4),
+                                      offset: const Offset(1.1, 1.1),
+                                      blurRadius: 10.0),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Buy Now',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    letterSpacing: 0.0,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -1338,7 +1463,7 @@ class ImageDisplayState extends State<ImageDisplay> {
         title: Text(
           'Pictures',
           style: TextStyle(
-            fontFamily: 'SF',
+            fontFamily: 'Helvetica',
             fontSize: 16,
           ),
         ),

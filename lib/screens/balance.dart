@@ -107,7 +107,7 @@ class _BalanceState extends State<Balance> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'SF',
+          fontFamily: 'Helvetica',
           fontSize: 16,
         ),
       ),
@@ -140,7 +140,7 @@ class _BalanceState extends State<Balance> {
           elevation: 0,
           title: Text(
             'Balance',
-            style: TextStyle(color: Colors.black, fontFamily: 'SF'),
+            style: TextStyle(color: Colors.black, fontFamily: 'Helvetica'),
           ),
           backgroundColor: Colors.white,
         ),
@@ -164,7 +164,7 @@ class _BalanceState extends State<Balance> {
                       Text(
                         'Balance',
                         style: TextStyle(
-                          fontFamily: 'SF',
+                          fontFamily: 'Helvetica',
                           fontSize: 16,
                         ),
                       ),
@@ -174,7 +174,7 @@ class _BalanceState extends State<Balance> {
                       Text(
                         currency + ' ' + balance.toString(),
                         style: TextStyle(
-                          fontFamily: 'SF',
+                          fontFamily: 'Helvetica',
                           fontSize: 16,
                         ),
                       ),
@@ -228,7 +228,7 @@ class _BalanceState extends State<Balance> {
                   child: Text(
                     'Payment Details',
                     style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 16,
                         fontWeight: FontWeight.w700),
                   ),
@@ -238,7 +238,7 @@ class _BalanceState extends State<Balance> {
                 title: Text(
                   'Paypal',
                   style: TextStyle(
-                    fontFamily: 'SF',
+                    fontFamily: 'Helvetica',
                     fontSize: 16,
                   ),
                 ),
@@ -257,7 +257,7 @@ class _BalanceState extends State<Balance> {
                                 labelText: "Paypal Email",
                                 alignLabelWithHint: true,
                                 labelStyle: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                 ),
                                 focusColor: Colors.black,
@@ -315,7 +315,7 @@ class _BalanceState extends State<Balance> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16),
                             ),
                           ),
@@ -335,7 +335,7 @@ class _BalanceState extends State<Balance> {
                   child: Text(
                     'Withdrawal History',
                     style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 16,
                         fontWeight: FontWeight.w700),
                   ),
@@ -350,7 +350,7 @@ class _BalanceState extends State<Balance> {
                         title: Text(
                           '${withdrawllist[index].withdrawalid}',
                           style: TextStyle(
-                            fontFamily: 'SF',
+                            fontFamily: 'Helvetica',
                             fontSize: 16,
                           ),
                         ),
@@ -359,14 +359,14 @@ class _BalanceState extends State<Balance> {
                               ' ' +
                               withdrawllist[index].amount.toString(),
                           style: TextStyle(
-                            fontFamily: 'SF',
+                            fontFamily: 'Helvetica',
                             fontSize: 16,
                           ),
                         ),
                         subtitle: Text(
                           withdrawllist[index].date,
                           style: TextStyle(
-                            fontFamily: 'SF',
+                            fontFamily: 'Helvetica',
                             fontSize: 16,
                           ),
                         ),
@@ -374,14 +374,14 @@ class _BalanceState extends State<Balance> {
                             ? Text(
                                 'Completed',
                                 style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                 ),
                               )
                             : Text(
                                 'Pending',
                                 style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                 ),
                               ));

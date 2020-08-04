@@ -101,7 +101,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         child: Text(
                           'Item Information',
                           style: TextStyle(
-                              fontFamily: 'SF',
+                              fontFamily: 'Helvetica',
                               fontSize: 16,
                               fontWeight: FontWeight.w700),
                         ),
@@ -136,7 +136,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                   title: Text(
                                     item.name,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w800),
@@ -158,7 +158,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                   subtitle: Text(
                                     item.category,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 14,
                                         color: Colors.deepOrange,
                                         fontWeight: FontWeight.bold),
@@ -166,7 +166,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                   trailing: Text(
                                     currency + ' ' + item.price.toString(),
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 14,
                                         color: Colors.deepOrange,
                                         fontWeight: FontWeight.bold),
@@ -179,7 +179,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         child: Text(
                           'Seller Information',
                           style: TextStyle(
-                              fontFamily: 'SF',
+                              fontFamily: 'Helvetica',
                               fontSize: 16,
                               fontWeight: FontWeight.w700),
                         ),
@@ -217,7 +217,7 @@ class _OrderDetailState extends State<OrderDetail> {
                               title: Text(
                                 item.username,
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 16,
                                     color: Colors.black),
                               ),
@@ -233,7 +233,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         child: Text(
                           'Buyer Information',
                           style: TextStyle(
-                              fontFamily: 'SF',
+                              fontFamily: 'Helvetica',
                               fontSize: 16,
                               fontWeight: FontWeight.w700),
                         ),
@@ -271,7 +271,7 @@ class _OrderDetailState extends State<OrderDetail> {
                               title: Text(
                                 buyername,
                                 style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 16,
                                     color: Colors.black),
                               ),
@@ -287,7 +287,7 @@ class _OrderDetailState extends State<OrderDetail> {
                         child: Text(
                           'Transaction Details',
                           style: TextStyle(
-                              fontFamily: 'SF',
+                              fontFamily: 'Helvetica',
                               fontSize: 16,
                               fontWeight: FontWeight.w700),
                         ),
@@ -304,14 +304,14 @@ class _OrderDetailState extends State<OrderDetail> {
                                 Text(
                                   item.name,
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       color: Colors.black),
                                 ),
                                 Text(
                                   itemprice.toString() + ' ' + currency,
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       color: Colors.black),
                                 )
@@ -326,14 +326,14 @@ class _OrderDetailState extends State<OrderDetail> {
                                 Text(
                                   'Processing Fees',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       color: Colors.black),
                                 ),
                                 Text(
                                   itemfees.toString() + ' ' + currency,
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       color: Colors.black),
                                 )
@@ -348,14 +348,14 @@ class _OrderDetailState extends State<OrderDetail> {
                                 Text(
                                   'Total',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       color: Colors.black),
                                 ),
                                 Text(
                                   totalpaid.toString() + ' ' + currency,
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       color: Colors.black),
                                 )
@@ -370,14 +370,14 @@ class _OrderDetailState extends State<OrderDetail> {
                                 Text(
                                   'Transaction Status',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       color: Colors.black),
                                 ),
                                 Text(
                                   'Paid',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black),

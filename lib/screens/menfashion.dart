@@ -24,7 +24,7 @@ class _MensFashionState extends State<MensFashion> {
         title: Text(
           'Mens Fashion',
           style: TextStyle(
-              fontFamily: 'SF',
+              fontFamily: 'Helvetica',
               fontSize: 16,
               color: Colors.black,
               fontWeight: FontWeight.w800),
@@ -76,7 +76,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Shoes & Boots',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -126,7 +126,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Activewear & Sportswear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -176,7 +176,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Polo Shirts & T- Shirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -226,7 +226,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Shirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -276,7 +276,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Sneakers',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -326,7 +326,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Loafers & slip-ons',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -376,7 +376,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Formal shoes',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -426,7 +426,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Sports shoes',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -476,7 +476,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Bags & Wallet',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -526,7 +526,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Coats & Jackets',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -576,7 +576,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Jumpers & Cardigans',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -626,7 +626,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Trousers',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -676,7 +676,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Hair accessories',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -726,7 +726,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Belts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -776,7 +776,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Eyewear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -826,7 +826,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Sunglasses',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -876,7 +876,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Nightwear & Loungewear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -926,7 +926,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Hoodies & Sweatshirts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -976,7 +976,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Jeans',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1026,7 +1026,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Suits & Blazers',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1076,7 +1076,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Swimwear & Beachwear',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1126,7 +1126,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Shorts',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),
@@ -1176,7 +1176,7 @@ class _MensFashionState extends State<MensFashion> {
                                 child: Text('Others',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.black)),

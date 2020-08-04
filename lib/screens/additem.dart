@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
-import 'package:SellShip/screens/additeminfo.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -343,7 +342,7 @@ class _AddItemState extends State<AddItem> {
             child: Text(
               "Add an Item",
               style: TextStyle(
-                fontFamily: 'SF',
+                fontFamily: 'Helvetica',
                 fontSize: 20,
                 color: Colors.deepOrange,
                 fontWeight: FontWeight.w700,
@@ -388,7 +387,7 @@ class _AddItemState extends State<AddItem> {
                                       child: Text(
                                         'Images',
                                         style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700),
                                       ),
@@ -983,7 +982,7 @@ class _AddItemState extends State<AddItem> {
                                     decoration: InputDecoration(
                                         labelText: "Title",
                                         labelStyle: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                         ),
                                         focusColor: Colors.black,
@@ -1024,7 +1023,7 @@ class _AddItemState extends State<AddItem> {
                                     child: Text(
                                       'Product Detail',
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -1048,7 +1047,7 @@ class _AddItemState extends State<AddItem> {
                                     title: Text(
                                       'Category',
                                       style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -1062,7 +1061,7 @@ class _AddItemState extends State<AddItem> {
                                             hint: Text(
                                               'Choose a category',
                                               style: TextStyle(
-                                                fontFamily: 'SF',
+                                                fontFamily: 'Helvetica',
                                                 fontSize: 16,
                                               ),
                                             ), // Not necessary for Option 1
@@ -1507,7 +1506,7 @@ class _AddItemState extends State<AddItem> {
                                                 child: new Text(
                                                   location,
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -1530,7 +1529,7 @@ class _AddItemState extends State<AddItem> {
                                           title: Text(
                                             'Sub Category',
                                             style: TextStyle(
-                                              fontFamily: 'SF',
+                                              fontFamily: 'Helvetica',
                                               fontSize: 16,
                                             ),
                                           ),
@@ -1545,7 +1544,7 @@ class _AddItemState extends State<AddItem> {
                                                   hint: Text(
                                                     'Choose a sub category',
                                                     style: TextStyle(
-                                                      fontFamily: 'SF',
+                                                      fontFamily: 'Helvetica',
                                                       fontSize: 16,
                                                     ),
                                                   ), // Not necessary for Option 1
@@ -1679,7 +1678,8 @@ class _AddItemState extends State<AddItem> {
                                                       child: new Text(
                                                         location,
                                                         style: TextStyle(
-                                                          fontFamily: 'SF',
+                                                          fontFamily:
+                                                              'Helvetica',
                                                           fontSize: 16,
                                                         ),
                                                       ),
@@ -1716,7 +1716,7 @@ class _AddItemState extends State<AddItem> {
                                                 hint: Text(
                                                   'Please choose a sub category',
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                 ), // Not necessary for Option 1
@@ -1733,7 +1733,7 @@ class _AddItemState extends State<AddItem> {
                                                     child: new Text(
                                                       location,
                                                       style: TextStyle(
-                                                        fontFamily: 'SF',
+                                                        fontFamily: 'Helvetica',
                                                         fontSize: 16,
                                                       ),
                                                     ),
@@ -1756,7 +1756,7 @@ class _AddItemState extends State<AddItem> {
                                     title: Text(
                                       'Condition',
                                       style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                       ),
                                     ),
@@ -1777,7 +1777,7 @@ class _AddItemState extends State<AddItem> {
                                                   elevation: 10,
                                                   isExpanded: true,
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                   onChanged: (String newValue) {
@@ -1798,7 +1798,8 @@ class _AddItemState extends State<AddItem> {
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
-                                                            fontFamily: 'SF',
+                                                            fontFamily:
+                                                                'Helvetica',
                                                             fontSize: 16,
                                                             color:
                                                                 Colors.black),
@@ -1835,7 +1836,7 @@ class _AddItemState extends State<AddItem> {
                                         labelText: "Description (optional)",
                                         alignLabelWithHint: true,
                                         labelStyle: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                         ),
                                         focusColor: Colors.black,
@@ -1886,7 +1887,7 @@ class _AddItemState extends State<AddItem> {
                                                 title: Text(
                                                   'Brand',
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -1927,7 +1928,7 @@ class _AddItemState extends State<AddItem> {
                                                                     'Brand',
                                                                     style: TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         color: Colors
@@ -2030,7 +2031,7 @@ class _AddItemState extends State<AddItem> {
                                                 title: Text(
                                                   'Other Brand Name',
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -2057,7 +2058,7 @@ class _AddItemState extends State<AddItem> {
                                                                 labelStyle:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                 ),
                                                                 focusColor:
@@ -2135,7 +2136,7 @@ class _AddItemState extends State<AddItem> {
                                                 title: Text(
                                                   'Size',
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -2159,7 +2160,7 @@ class _AddItemState extends State<AddItem> {
                                                                 labelStyle:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                 ),
                                                                 focusColor:
@@ -2230,7 +2231,7 @@ class _AddItemState extends State<AddItem> {
                                     child: Text(
                                       'Price',
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -2265,7 +2266,7 @@ class _AddItemState extends State<AddItem> {
                                                 cursorColor: Color(0xFF979797),
                                                 controller:
                                                     businesspricecontroller,
-                                                onEditingComplete: () {
+                                                onChanged: (text) {
                                                   if (int.parse(
                                                           businesspricecontroller
                                                               .text) <
@@ -2297,7 +2298,7 @@ class _AddItemState extends State<AddItem> {
                                                         "Price " + currency,
                                                     alignLabelWithHint: true,
                                                     labelStyle: TextStyle(
-                                                      fontFamily: 'SF',
+                                                      fontFamily: 'Helvetica',
                                                       fontSize: 16,
                                                     ),
                                                     focusColor: Colors.black,
@@ -2412,7 +2413,7 @@ class _AddItemState extends State<AddItem> {
                                     child: Text(
                                       'Delivery Method',
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -2467,7 +2468,7 @@ class _AddItemState extends State<AddItem> {
                                     child: Text(
                                       'Item Location',
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700),
                                     ),
@@ -2494,7 +2495,7 @@ class _AddItemState extends State<AddItem> {
                                         'Press on the map to choose the Item\'s location',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 16,
                                         ),
                                       ),
@@ -2505,7 +2506,7 @@ class _AddItemState extends State<AddItem> {
                                         children: <Widget>[
                                           position != null
                                               ? Container(
-                                                  height: 355,
+                                                  height: 350,
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -2534,7 +2535,7 @@ class _AddItemState extends State<AddItem> {
                                               : Text(
                                                   'Oops! Something went wrong. \n Please try again',
                                                   style: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                 ),
@@ -2573,7 +2574,7 @@ class _AddItemState extends State<AddItem> {
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 5.0,
+                                  height: 60.0,
                                 ),
                               ],
                             ),
@@ -2593,7 +2594,7 @@ class _AddItemState extends State<AddItem> {
                                 'Look\'s like you need to \n login to Add an Item️',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                 ),
                               ),
@@ -2668,7 +2669,8 @@ class _AddItemState extends State<AddItem> {
                   ),
                 ),
               ),
-        bottomNavigationBar: userid != null
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: userid != null
             ? InkWell(
                 onTap: () async {
                   if (_image == null) {
@@ -3062,6 +3064,7 @@ class _AddItemState extends State<AddItem> {
                           colors: [Colors.deepOrangeAccent, Colors.deepOrange],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight),
+                      borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
                             color: Color(0xFF9DA3B4).withOpacity(0.1),
@@ -3070,9 +3073,9 @@ class _AddItemState extends State<AddItem> {
                       ]),
                   child: Center(
                     child: Text(
-                      "Add an Item",
+                      "Upload Item",
                       style: TextStyle(
-                          fontFamily: 'SF',
+                          fontFamily: 'Helvetica',
                           fontSize: 16,
                           color: Colors.white,
                           fontWeight: FontWeight.bold),
@@ -3093,7 +3096,7 @@ class _AddItemState extends State<AddItem> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'SF',
+          fontFamily: 'Helvetica',
           fontSize: 16,
         ),
       ),

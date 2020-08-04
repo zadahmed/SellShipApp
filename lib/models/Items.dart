@@ -11,7 +11,7 @@ class Item {
   final String price;
   final String userid;
   final String username;
-  final int likes;
+  int likes;
   final int comments;
   final String city;
   final String useremail;

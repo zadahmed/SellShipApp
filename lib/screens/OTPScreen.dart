@@ -55,7 +55,7 @@ class _OTPScreenState extends State<OTPScreen> {
           style: TextStyle(
               color: Colors.deepOrange,
               fontWeight: FontWeight.bold,
-              fontFamily: 'SF'),
+              fontFamily: 'Helvetica'),
         ),
         backgroundColor: Colors.white,
       ),
@@ -137,7 +137,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         Text(
                           "Enter OTP",
                           style: TextStyle(
-                              fontFamily: 'SF',
+                              fontFamily: 'Helvetica',
                               fontSize: 16,
                               color: Colors.white,
                               fontWeight: FontWeight.bold),
@@ -165,7 +165,7 @@ class _OTPScreenState extends State<OTPScreen> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'SF',
+          fontFamily: 'Helvetica',
           fontSize: 16,
           color: Colors.white,
         ),

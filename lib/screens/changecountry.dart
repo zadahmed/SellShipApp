@@ -77,7 +77,7 @@ class _ChangeCountryState extends State<ChangeCountry> {
         title: const Text(
           'Change Country',
           style: TextStyle(
-              fontFamily: 'SF',
+              fontFamily: 'Helvetica',
               fontSize: 16,
               color: Colors.black,
               fontWeight: FontWeight.w600),

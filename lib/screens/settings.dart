@@ -61,10 +61,7 @@ class _SettingsState extends State<Settings> {
         appBar: AppBar(
           leading: InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RootScreen(index: 2)),
-                );
+                Navigator.pop(context);
               },
               child: Icon(Icons.arrow_back_ios)),
           iconTheme: IconThemeData(color: Colors.deepOrange),
@@ -74,7 +71,7 @@ class _SettingsState extends State<Settings> {
             style: TextStyle(
                 color: Colors.deepOrange,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'SF'),
+                fontFamily: 'Helvetica'),
           ),
           backgroundColor: Colors.white,
         ),
@@ -120,7 +117,7 @@ class _SettingsState extends State<Settings> {
                       title: Text(
                         'Edit Profile',
                         style: TextStyle(
-                          fontFamily: 'SF',
+                          fontFamily: 'Helvetica',
                           fontSize: 16.0,
                         ),
                       ),
@@ -173,7 +170,7 @@ class _SettingsState extends State<Settings> {
                 title: Text(
                   'Terms and Conditions',
                   style: TextStyle(
-                    fontFamily: 'SF',
+                    fontFamily: 'Helvetica',
                     fontSize: 16.0,
                   ),
                 ),
@@ -201,7 +198,7 @@ class _SettingsState extends State<Settings> {
                 title: Text(
                   'Privacy Policy',
                   style: TextStyle(
-                    fontFamily: 'SF',
+                    fontFamily: 'Helvetica',
                     fontSize: 16.0,
                   ),
                 ),
@@ -228,7 +225,7 @@ class _SettingsState extends State<Settings> {
                 title: Text(
                   'Change Country',
                   style: TextStyle(
-                    fontFamily: 'SF',
+                    fontFamily: 'Helvetica',
                     fontSize: 16.0,
                   ),
                 ),
@@ -252,7 +249,7 @@ class _SettingsState extends State<Settings> {
                       title: Text(
                         'Log out',
                         style: TextStyle(
-                          fontFamily: 'SF',
+                          fontFamily: 'Helvetica',
                           fontSize: 16.0,
                         ),
                       ),

@@ -23,7 +23,6 @@ class Messages extends StatefulWidget {
 }
 
 class MessagesState extends State<Messages> {
-  Timer timer;
   var userid;
   final storage = new FlutterSecureStorage();
 
@@ -133,19 +132,16 @@ class MessagesState extends State<Messages> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      loading = true;
-    });
-    getmsg();
-  }
-
-  getmsg() {
-    timer = Timer.periodic(Duration(seconds: 2), (Timer t) => getMessages());
+    if (mounted) {
+      setState(() {
+        loading = true;
+      });
+    }
+    getMessages();
   }
 
   @override
   void dispose() {
-    timer.cancel();
     super.dispose();
   }
 
@@ -159,10 +155,7 @@ class MessagesState extends State<Messages> {
           leading: InkWell(
             onTap: () {
               dispose();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RootScreen(index: 0)),
-              );
+              Navigator.pop(context);
             },
             child: Icon(
               Icons.arrow_back_ios,
@@ -176,7 +169,7 @@ class MessagesState extends State<Messages> {
           title: Text(
             'CHATS',
             style: TextStyle(
-                fontFamily: 'SF',
+                fontFamily: 'Helvetica',
                 fontSize: 16,
                 color: Colors.deepOrange,
                 fontWeight: FontWeight.w800),
@@ -203,7 +196,7 @@ class MessagesState extends State<Messages> {
                                           messagesd[index].itemname,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                           ),
                                         ),
@@ -219,7 +212,7 @@ class MessagesState extends State<Messages> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 13,
                                                   color: Colors.black,
                                                   fontWeight:
@@ -233,7 +226,7 @@ class MessagesState extends State<Messages> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 11,
                                                   color:
                                                       messagesd[index].unread ==
@@ -287,7 +280,7 @@ class MessagesState extends State<Messages> {
                                             Text(
                                               messagesd[index].recieveddate,
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 11,
                                                   fontWeight:
                                                       messagesd[index].unread ==
@@ -314,7 +307,8 @@ class MessagesState extends State<Messages> {
                                                       '',
                                                       style: TextStyle(
                                                           fontSize: 8,
-                                                          fontFamily: 'SF',
+                                                          fontFamily:
+                                                              'Helvetica',
                                                           color: Colors.white),
                                                     )),
                                                   )
@@ -418,7 +412,7 @@ class MessagesState extends State<Messages> {
                                   'View your Messages here ',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 16,
                                   ),
                                 ),

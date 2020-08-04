@@ -70,8 +70,8 @@ class EditProfileState extends State<EditProfile>
           backgroundColor: Colors.white,
           title: Text(
             'Edit Profile',
-            style:
-                TextStyle(fontFamily: 'SF', fontSize: 20, color: Colors.black),
+            style: TextStyle(
+                fontFamily: 'Helvetica', fontSize: 20, color: Colors.black),
           ),
           leading: IconButton(
             icon: Icon(
@@ -113,7 +113,7 @@ class EditProfileState extends State<EditProfile>
                                       new Text(
                                         'Parsonal Information',
                                         style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -143,7 +143,7 @@ class EditProfileState extends State<EditProfile>
                                       new Text(
                                         'First Name',
                                         style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -182,7 +182,7 @@ class EditProfileState extends State<EditProfile>
                                       new Text(
                                         'Last Name',
                                         style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -221,7 +221,7 @@ class EditProfileState extends State<EditProfile>
                                       new Text(
                                         'Email ID',
                                         style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -258,7 +258,7 @@ class EditProfileState extends State<EditProfile>
                                       new Text(
                                         'Mobile',
                                         style: TextStyle(
-                                            fontFamily: 'SF',
+                                            fontFamily: 'Helvetica',
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -316,7 +316,7 @@ class EditProfileState extends State<EditProfile>
                 child: new Text(
                   "Save",
                   style: TextStyle(
-                    fontFamily: 'SF',
+                    fontFamily: 'Helvetica',
                     fontSize: 16,
                   ),
                 ),
@@ -359,7 +359,7 @@ class EditProfileState extends State<EditProfile>
                 child: new Text(
                   "Cancel",
                   style: TextStyle(
-                    fontFamily: 'SF',
+                    fontFamily: 'Helvetica',
                     fontSize: 16,
                   ),
                 ),
@@ -388,7 +388,9 @@ class EditProfileState extends State<EditProfile>
         Text(
           'Edit',
           style: TextStyle(
-              fontFamily: 'SF', fontSize: 16, fontWeight: FontWeight.bold),
+              fontFamily: 'Helvetica',
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
         ),
         SizedBox(
           width: 5,

@@ -200,7 +200,7 @@ class _UserItemsState extends State<UserItems> {
         title: Text(
           '$username'.toUpperCase(),
           textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: 'SF', fontSize: 16),
+          style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
         ),
       ),
       body: loading == false
@@ -241,7 +241,7 @@ class _UserItemsState extends State<UserItems> {
                           Text(
                             firstname + ' ' + lastname,
                             style: TextStyle(
-                                fontFamily: 'SF',
+                                fontFamily: 'Helvetica',
                                 fontSize: 20.0,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -260,14 +260,15 @@ class _UserItemsState extends State<UserItems> {
                                           ? '0'
                                           : followers.toString(),
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 5.0),
                                     Text(
                                       'FOLLOWERS',
                                       style: TextStyle(
-                                          fontFamily: 'SF', color: Colors.grey),
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.grey),
                                     )
                                   ],
                                 ),
@@ -279,14 +280,15 @@ class _UserItemsState extends State<UserItems> {
                                           ? '0'
                                           : itemssold.toString(),
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 5.0),
                                     Text(
                                       'ITEMS SOLD',
                                       style: TextStyle(
-                                          fontFamily: 'SF', color: Colors.grey),
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.grey),
                                     )
                                   ],
                                 ),
@@ -298,14 +300,15 @@ class _UserItemsState extends State<UserItems> {
                                           ? '0'
                                           : following.toString(),
                                       style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(height: 5.0),
                                     Text(
                                       'FOLLOWING',
                                       style: TextStyle(
-                                          fontFamily: 'SF', color: Colors.grey),
+                                          fontFamily: 'Helvetica',
+                                          color: Colors.grey),
                                     )
                                   ],
                                 )
@@ -363,7 +366,7 @@ class _UserItemsState extends State<UserItems> {
                                   child: Text(
                                     follow == true ? 'FOLLOWING' : 'FOLLOW',
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold),
@@ -377,7 +380,7 @@ class _UserItemsState extends State<UserItems> {
                             child: Text(
                               '$firstname\'s Items',
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -495,7 +498,7 @@ class _UserItemsState extends State<UserItems> {
                                                                             textAlign:
                                                                                 TextAlign.center,
                                                                             style: TextStyle(
-                                                                                fontFamily: 'SF',
+                                                                                fontFamily: 'Helvetica',
                                                                                 color: Colors.white,
                                                                                 fontWeight: FontWeight.bold),
                                                                           ),
@@ -528,7 +531,7 @@ class _UserItemsState extends State<UserItems> {
                                                                               Text(
                                                                                 Itemname[index],
                                                                                 style: TextStyle(
-                                                                                  fontFamily: 'SF',
+                                                                                  fontFamily: 'Helvetica',
                                                                                   fontSize: 16,
                                                                                   fontWeight: FontWeight.w600,
                                                                                 ),
@@ -539,7 +542,7 @@ class _UserItemsState extends State<UserItems> {
                                                                                 child: Text(
                                                                                   currency + ' ' + Itemprice[index].toString(),
                                                                                   style: TextStyle(
-                                                                                    fontFamily: 'SF',
+                                                                                    fontFamily: 'Helvetica',
                                                                                     fontSize: 14,
                                                                                     fontWeight: FontWeight.w400,
                                                                                   ),
@@ -565,7 +568,7 @@ class _UserItemsState extends State<UserItems> {
                                         'Go ahead Add an Item \n and start selling!',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontFamily: 'SF',
+                                          fontFamily: 'Helvetica',
                                           fontSize: 20,
                                         ),
                                       ),

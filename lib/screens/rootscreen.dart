@@ -74,8 +74,8 @@ class _RootScreenState extends State<RootScreen> {
             type: BottomNavigationBarType.fixed,
             selectedItemColor: Colors.deepOrange,
             unselectedItemColor: Colors.grey[400],
-            selectedFontSize: 12,
-            unselectedFontSize: 12,
+            selectedFontSize: 5,
+            unselectedFontSize: 5,
             currentIndex: _currentPage,
             onTap: (i) {
               setState(() {
@@ -85,36 +85,36 @@ class _RootScreenState extends State<RootScreen> {
             items: [
               BottomNavigationBarItem(
                   icon: Icon(
-                    FontAwesome.home,
-                    size: 23,
+                    Feather.home,
+                    size: 26,
                   ),
-                  title: Text('Explore',
+                  title: Text('',
                       style: TextStyle(
-                          fontFamily: 'SF',
-                          fontSize: 12,
+                          fontFamily: 'Helvetica',
+                          fontSize: 5,
                           fontWeight: FontWeight.w400,
                           color: Colors.black))),
               BottomNavigationBarItem(
                   icon: Icon(
                     FontAwesome.plus_square,
                     color: Colors.deepOrange,
-                    size: 23,
+                    size: 30,
                   ),
-                  title: Text('Sell',
+                  title: Text('',
                       style: TextStyle(
-                          fontFamily: 'SF',
-                          fontSize: 12,
+                          fontFamily: 'Helvetica',
+                          fontSize: 5,
                           fontWeight: FontWeight.w400,
                           color: Colors.black))),
               BottomNavigationBarItem(
                   icon: Icon(
                     Feather.user,
-                    size: 23,
+                    size: 26,
                   ),
-                  title: Text('Profile',
+                  title: Text('',
                       style: TextStyle(
-                          fontFamily: 'SF',
-                          fontSize: 12,
+                          fontFamily: 'Helvetica',
+                          fontSize: 5,
                           fontWeight: FontWeight.w400,
                           color: Colors.black))),
             ],

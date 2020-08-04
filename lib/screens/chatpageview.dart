@@ -231,7 +231,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                           child: Text(
                             jsonResponse[i]['message'],
                             style: TextStyle(
-                                fontFamily: 'SF',
+                                fontFamily: 'Helvetica',
                                 fontSize: 16,
                                 color: Colors.white),
                           ),
@@ -243,7 +243,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                       child: Text(
                         s,
                         style: TextStyle(
-                            fontFamily: 'SF',
+                            fontFamily: 'Helvetica',
                             fontSize: 12,
                             color: Colors.black),
                       ),
@@ -285,7 +285,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                           padding: const EdgeInsets.only(right: 2.0, left: 2.0),
                           child: Text(jsonResponse[i]['message'],
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   color: Colors.black)),
                         ),
@@ -296,7 +296,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                       child: Text(
                         s,
                         style: TextStyle(
-                            fontFamily: 'SF',
+                            fontFamily: 'Helvetica',
                             fontSize: 12,
                             color: Colors.black.withOpacity(0.6)),
                       ),
@@ -337,7 +337,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                       child: Text(
                         'Make an Offer',
                         style: TextStyle(
-                            fontFamily: 'SF',
+                            fontFamily: 'Helvetica',
                             fontSize: 16,
                             fontWeight: FontWeight.w700),
                       ),
@@ -363,7 +363,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                     labelText: "Offer Price",
                                     alignLabelWithHint: true,
                                     labelStyle: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                     ),
                                     focusColor: Colors.black,
@@ -431,7 +431,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16),
                                 ),
                               ),
@@ -502,7 +502,7 @@ class _ChatPageViewState extends State<ChatPageView> {
           title: Text(
             recipentname,
             style: TextStyle(
-                fontFamily: 'SF',
+                fontFamily: 'Helvetica',
                 fontSize: 16,
                 color: Colors.deepOrange,
                 fontWeight: FontWeight.w600),
@@ -575,7 +575,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   title: Text(
                                     itemselling.name,
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w800),
@@ -599,7 +599,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                         ' ' +
                                         itemselling.price.toString(),
                                     style: TextStyle(
-                                        fontFamily: 'SF',
+                                        fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         color: Colors.deepOrange,
                                         fontWeight: FontWeight.bold),
@@ -654,7 +654,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                       offer.toString(),
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
-                                                      fontFamily: 'SF',
+                                                      fontFamily: 'Helvetica',
                                                       fontSize: 16,
                                                       color: Colors.deepOrange,
                                                       fontWeight:
@@ -723,7 +723,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                         : offerstring,
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        fontFamily: 'SF',
+                                                        fontFamily: 'Helvetica',
                                                         fontSize: 16,
                                                         color: Colors.white),
                                                   ),
@@ -793,7 +793,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                             autocorrect: true,
                             enableSuggestions: true,
                             textCapitalization: TextCapitalization.sentences,
-                            style: TextStyle(fontFamily: 'SF', fontSize: 16),
+                            style: TextStyle(
+                                fontFamily: 'Helvetica', fontSize: 16),
                             decoration: InputDecoration(
                                 // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
                                 suffixIcon: Padding(
@@ -845,7 +846,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                           bottom: 15.0),
                                                   child: Text(x,
                                                       style: TextStyle(
-                                                          fontFamily: 'SF',
+                                                          fontFamily:
+                                                              'Helvetica',
                                                           fontSize: 14,
                                                           color: Colors.white)),
                                                 ),
@@ -855,7 +857,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                   child: Text(
                                                     s,
                                                     style: TextStyle(
-                                                        fontFamily: 'SF',
+                                                        fontFamily: 'Helvetica',
                                                         fontSize: 10,
                                                         color: Colors.white
                                                             .withOpacity(0.6)),
@@ -882,7 +884,6 @@ class _ChatPageViewState extends State<ChatPageView> {
                                           print('ok');
                                         } else {
                                           print(response.statusCode);
-                                          print(response.body);
                                         }
 
                                         Timer(Duration(microseconds: 1), () {
@@ -896,8 +897,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 ),
                                 border: InputBorder.none,
                                 hintText: "Enter your message",
-                                hintStyle:
-                                    TextStyle(fontFamily: 'SF', fontSize: 16)),
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Helvetica', fontSize: 16)),
                           ),
                         ),
                       ),

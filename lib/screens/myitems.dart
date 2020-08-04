@@ -46,7 +46,8 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
       content: new Text(
         value,
         textAlign: TextAlign.center,
-        style: TextStyle(fontFamily: 'SF', fontSize: 16, color: Colors.white),
+        style: TextStyle(
+            fontFamily: 'Helvetica', fontSize: 16, color: Colors.white),
       ),
       backgroundColor: Colors.amber,
       duration: Duration(seconds: 3),
@@ -63,7 +64,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
           title: Text(
             'MY ITEMS',
             style: TextStyle(
-                fontFamily: 'SF',
+                fontFamily: 'Helvetica',
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.w800),
@@ -80,7 +81,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                     child: Text(
                       '${item.length} Items',
                       style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 14,
                       ),
                     ),
@@ -171,7 +172,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                             .center,
                                                                     style: TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         color: Colors
                                                                             .white,
                                                                         fontWeight:
@@ -204,7 +205,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                   style:
                                                                       TextStyle(
                                                                     fontFamily:
-                                                                        'SF',
+                                                                        'Helvetica',
                                                                     fontSize:
                                                                         16,
                                                                     fontWeight:
@@ -225,7 +226,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                   style:
                                                                       TextStyle(
                                                                     fontFamily:
-                                                                        'SF',
+                                                                        'Helvetica',
                                                                     fontSize:
                                                                         14,
                                                                     fontWeight:
@@ -246,7 +247,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                         style:
                                                                             TextStyle(
                                                                           fontFamily:
-                                                                              'SF',
+                                                                              'Helvetica',
                                                                           fontSize:
                                                                               16,
                                                                           fontWeight:
@@ -263,7 +264,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                         style:
                                                                             TextStyle(
                                                                           fontFamily:
-                                                                              'SF',
+                                                                              'Helvetica',
                                                                           fontSize:
                                                                               16,
                                                                           fontWeight:
@@ -320,7 +321,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                               Text(
                                                                             'Edit',
                                                                             style: TextStyle(
-                                                                                fontFamily: 'SF',
+                                                                                fontFamily: 'Helvetica',
                                                                                 fontSize: 14,
                                                                                 color: Colors.white),
                                                                           ),
@@ -394,7 +395,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                                 ? 'Mark Sold'
                                                                                 : 'Mark Live',
                                                                             style: TextStyle(
-                                                                                fontFamily: 'SF',
+                                                                                fontFamily: 'Helvetica',
                                                                                 fontSize: 14,
                                                                                 color: Colors.white),
                                                                           ),
@@ -420,7 +421,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                   'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'SF',
+                                    fontFamily: 'Helvetica',
                                     fontSize: 16,
                                   )),
                             ),

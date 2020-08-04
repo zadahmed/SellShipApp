@@ -795,7 +795,7 @@ class _NearMeState extends State<NearMe> {
           backgroundColor: Colors.deepOrange,
           title: Text(
             'Near Me',
-            style: TextStyle(fontFamily: 'SF', fontSize: 20),
+            style: TextStyle(fontFamily: 'Helvetica', fontSize: 20),
           ),
           elevation: 0,
         ),
@@ -844,7 +844,7 @@ class _NearMeState extends State<NearMe> {
                                                   hintText:
                                                       'What are you looking for today?',
                                                   hintStyle: TextStyle(
-                                                    fontFamily: 'SF',
+                                                    fontFamily: 'Helvetica',
                                                     fontSize: 16,
                                                   ),
                                                   border: InputBorder.none),
@@ -868,7 +868,7 @@ class _NearMeState extends State<NearMe> {
                                 child: Text(
                                   'SORT',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -893,7 +893,7 @@ class _NearMeState extends State<NearMe> {
                                           title: Text(
                                             'Sort',
                                             style: TextStyle(
-                                                fontFamily: 'SF',
+                                                fontFamily: 'Helvetica',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w800,
                                                 color: Colors.black),
@@ -904,7 +904,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'New',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -929,7 +929,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'Near me',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -953,7 +953,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'Below 100',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -977,7 +977,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'Price Low to High',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1001,7 +1001,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'Price High to Low',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1050,7 +1050,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'Filter',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.black),
@@ -1060,7 +1060,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'Brand',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1106,7 +1106,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'Condition',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1138,7 +1138,7 @@ class _NearMeState extends State<NearMe> {
                                                               isExpanded: true,
                                                               style: TextStyle(
                                                                 fontFamily:
-                                                                    'SF',
+                                                                    'Helvetica',
                                                                 fontSize: 16,
                                                               ),
                                                               onChanged: (String
@@ -1181,7 +1181,7 @@ class _NearMeState extends State<NearMe> {
                                                                             .center,
                                                                     style: TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         color: Colors
@@ -1197,7 +1197,7 @@ class _NearMeState extends State<NearMe> {
                                             title: Text(
                                               'Price',
                                               style: TextStyle(
-                                                  fontFamily: 'SF',
+                                                  fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w400,
                                                   color: Colors.black),
@@ -1229,7 +1229,7 @@ class _NearMeState extends State<NearMe> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1254,7 +1254,7 @@ class _NearMeState extends State<NearMe> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'SF',
+                                                                                fontFamily: 'Helvetica',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1291,7 +1291,7 @@ class _NearMeState extends State<NearMe> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                 ),
                                                               ),
@@ -1316,7 +1316,7 @@ class _NearMeState extends State<NearMe> {
                                                                               labelText: "Price " + currency,
                                                                               alignLabelWithHint: true,
                                                                               labelStyle: TextStyle(
-                                                                                fontFamily: 'SF',
+                                                                                fontFamily: 'Helvetica',
                                                                                 fontSize: 16,
                                                                               ),
                                                                               focusColor: Colors.black,
@@ -1381,7 +1381,8 @@ class _NearMeState extends State<NearMe> {
                                                       child: Text(
                                                         'Filter',
                                                         style: TextStyle(
-                                                            fontFamily: 'SF',
+                                                            fontFamily:
+                                                                'Helvetica',
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w400,
@@ -1396,7 +1397,7 @@ class _NearMeState extends State<NearMe> {
 //                                            title: Text(
 //                                              'Delivery',
 //                                              style: TextStyle(
-//                                                  fontFamily: 'SF',
+//                                                  fontFamily: 'Helvetica',
 //                                                  fontSize: 16,
 //                                                  fontWeight: FontWeight.w400,
 //                                                  color: Colors.black),
@@ -1416,7 +1417,7 @@ class _NearMeState extends State<NearMe> {
                                 child: Text(
                                   'FILTER',
                                   style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                       fontWeight: FontWeight.w800,
                                       color: Colors.black),
@@ -1532,7 +1533,7 @@ class _NearMeState extends State<NearMe> {
                                                                           .center,
                                                                   style: TextStyle(
                                                                       fontFamily:
-                                                                          'SF',
+                                                                          'Helvetica',
                                                                       color: Colors
                                                                           .white,
                                                                       fontWeight:
@@ -1565,7 +1566,7 @@ class _NearMeState extends State<NearMe> {
                                                                 style:
                                                                     TextStyle(
                                                                   fontFamily:
-                                                                      'SF',
+                                                                      'Helvetica',
                                                                   fontSize: 16,
                                                                   fontWeight:
                                                                       FontWeight
@@ -1589,7 +1590,7 @@ class _NearMeState extends State<NearMe> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -1606,7 +1607,7 @@ class _NearMeState extends State<NearMe> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontFamily:
-                                                                            'SF',
+                                                                            'Helvetica',
                                                                         fontSize:
                                                                             16,
                                                                         fontWeight:
@@ -1630,7 +1631,7 @@ class _NearMeState extends State<NearMe> {
                                     'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontFamily: 'SF',
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
                                     )),
                               ),

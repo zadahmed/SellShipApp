@@ -34,7 +34,7 @@ class _CheckoutState extends State<Checkout> {
   @override
   void initState() {
     super.initState();
-
+    getcurrency();
     StripeService.init();
 
     setState(() {
@@ -43,7 +43,6 @@ class _CheckoutState extends State<Checkout> {
       offer = widget.offer;
     });
     calculatefees();
-    getcurrency();
   }
 
   var fees;
@@ -97,7 +96,7 @@ class _CheckoutState extends State<Checkout> {
           title: Text(
             'CHECKOUT',
             style: TextStyle(
-                fontFamily: 'SF',
+                fontFamily: 'Helvetica',
                 fontSize: 16,
                 color: Colors.white,
                 fontWeight: FontWeight.w800),
@@ -244,7 +243,7 @@ class _CheckoutState extends State<Checkout> {
                             title: Text(
                               item.name,
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 16,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w800),
@@ -264,7 +263,7 @@ class _CheckoutState extends State<Checkout> {
                             subtitle: Text(
                               item.price.toString() + ' ' + currency,
                               style: TextStyle(
-                                  fontFamily: 'SF',
+                                  fontFamily: 'Helvetica',
                                   fontSize: 14,
                                   color: Colors.deepOrange,
                                   fontWeight: FontWeight.bold),
@@ -277,7 +276,7 @@ class _CheckoutState extends State<Checkout> {
                   child: Text(
                     'Total Amount',
                     style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 16,
                         fontWeight: FontWeight.w700),
                   ),
@@ -294,14 +293,14 @@ class _CheckoutState extends State<Checkout> {
                           Text(
                             item.name,
                             style: TextStyle(
-                                fontFamily: 'SF',
+                                fontFamily: 'Helvetica',
                                 fontSize: 16,
                                 color: Colors.black),
                           ),
                           Text(
                             offer.toString() + ' ' + currency,
                             style: TextStyle(
-                                fontFamily: 'SF',
+                                fontFamily: 'Helvetica',
                                 fontSize: 16,
                                 color: Colors.black),
                           )
@@ -316,14 +315,14 @@ class _CheckoutState extends State<Checkout> {
                           Text(
                             'Buyer Protection',
                             style: TextStyle(
-                                fontFamily: 'SF',
+                                fontFamily: 'Helvetica',
                                 fontSize: 16,
                                 color: Colors.black),
                           ),
                           Text(
                             fees.toString() + ' ' + currency,
                             style: TextStyle(
-                                fontFamily: 'SF',
+                                fontFamily: 'Helvetica',
                                 fontSize: 16,
                                 color: Colors.black),
                           )
@@ -338,14 +337,14 @@ class _CheckoutState extends State<Checkout> {
                           Text(
                             'Total',
                             style: TextStyle(
-                                fontFamily: 'SF',
+                                fontFamily: 'Helvetica',
                                 fontSize: 16,
                                 color: Colors.black),
                           ),
                           Text(
                             totalpayable.toString() + ' ' + currency,
                             style: TextStyle(
-                                fontFamily: 'SF',
+                                fontFamily: 'Helvetica',
                                 fontSize: 16,
                                 color: Colors.black),
                           )
@@ -360,7 +359,7 @@ class _CheckoutState extends State<Checkout> {
                   child: Text(
                     'Payment',
                     style: TextStyle(
-                        fontFamily: 'SF',
+                        fontFamily: 'Helvetica',
                         fontSize: 16,
                         fontWeight: FontWeight.w700),
                   ),

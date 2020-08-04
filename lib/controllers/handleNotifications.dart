@@ -27,9 +27,29 @@ class FirebaseNotifications {
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
+        var title = message['notification']['title'];
+        var body = message['notification']['body'];
+
+        Locally locally = Locally(
+          context: context,
+          payload: 'test',
+          pageRoute: MaterialPageRoute(builder: (context) => Messages()),
+          appIcon: 'mipmap/ic_launcher',
+        );
+        locally.show(title: title, message: body);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
+        var title = message['notification']['title'];
+        var body = message['notification']['body'];
+
+        Locally locally = Locally(
+          context: context,
+          payload: 'test',
+          pageRoute: MaterialPageRoute(builder: (context) => Messages()),
+          appIcon: 'mipmap/ic_launcher',
+        );
+        locally.show(title: title, message: body);
       },
     );
     await _firebaseMessaging.requestNotificationPermissions(
