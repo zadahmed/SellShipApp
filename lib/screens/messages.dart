@@ -28,7 +28,7 @@ class MessagesState extends State<Messages> {
 
   List<ChatMessages> messagesd = List<ChatMessages>();
 
-  Future<List<ChatMessages>> getMessages() async {
+  getMessages() async {
     messagesd.clear();
     userid = await storage.read(key: 'userid');
 
@@ -124,8 +124,6 @@ class MessagesState extends State<Messages> {
       messagesd = messagesd;
       loading = false;
     }
-
-    return messagesd;
   }
 
   bool loading;

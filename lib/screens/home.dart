@@ -3403,6 +3403,7 @@ class UserSearchDelegate extends SearchDelegate {
     final response = await http.get(url);
 
     List responseJson = json.decode(response.body.toString());
+    responseJson.add(text);
     return responseJson;
   }
 
