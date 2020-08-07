@@ -1488,9 +1488,9 @@ class _LoginPageState extends State<LoginPage>
                                                       print(response.body);
                                                     }
                                                     getProfileData();
+                                                    showInSnackBar(
+                                                        'Item has been marked sold!');
                                                   }
-                                                  showInSnackBar(
-                                                      'Item has been marked sold!');
                                                 },
                                                 child: Container(
                                                   height: 30,
@@ -1619,7 +1619,7 @@ class _LoginPageState extends State<LoginPage>
         if (followin != null) {
           print(followin);
         } else {
-          followin = [];
+          followin = 0;
         }
 
         var sol = profilemap['sold'];
@@ -1753,7 +1753,7 @@ class _LoginPageState extends State<LoginPage>
         var followin = profilemap['likes'];
         if (followin != null) {
         } else {
-          followin = [];
+          followin = 0;
         }
 
         var sol = profilemap['sold'];

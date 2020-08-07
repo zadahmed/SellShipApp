@@ -144,6 +144,7 @@ class _CheckoutState extends State<Checkout> {
                       final response = await http.get(messageurl);
 
                       if (response.statusCode == 200) {
+                        print('dsc');
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
