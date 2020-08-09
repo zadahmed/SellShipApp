@@ -1127,46 +1127,48 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getnotification() async {
     var userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/getnotification/' + userid;
-    print(url);
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var notificationinfo = json.decode(response.body);
-      var notif = notificationinfo['notification'];
-      var notcoun = notificationinfo['notcount'];
-      if (notif <= 0) {
-        setState(() {
-          notifcount = notif;
-          notifbadge = false;
-        });
-        FlutterAppBadger.removeBadge();
-      } else if (notif > 0) {
-        setState(() {
-          notifcount = notif;
-          notifbadge = true;
-        });
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/getnotification/' + userid;
+      print(url);
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var notificationinfo = json.decode(response.body);
+        var notif = notificationinfo['notification'];
+        var notcoun = notificationinfo['notcount'];
+        if (notif <= 0) {
+          setState(() {
+            notifcount = notif;
+            notifbadge = false;
+          });
+          FlutterAppBadger.removeBadge();
+        } else if (notif > 0) {
+          setState(() {
+            notifcount = notif;
+            notifbadge = true;
+          });
+        }
+
+        print(notifcount);
+
+        if (notcoun <= 0) {
+          setState(() {
+            notcount = notcoun;
+            notbadge = false;
+          });
+          FlutterAppBadger.removeBadge();
+        } else if (notcoun > 0) {
+          setState(() {
+            notcount = notcoun;
+            notbadge = true;
+          });
+        }
+
+        print(notcount);
+
+        FlutterAppBadger.updateBadgeCount(notifcount + notcount);
+      } else {
+        print(response.statusCode);
       }
-
-      print(notifcount);
-
-      if (notcoun <= 0) {
-        setState(() {
-          notcount = notcoun;
-          notbadge = false;
-        });
-        FlutterAppBadger.removeBadge();
-      } else if (notcoun > 0) {
-        setState(() {
-          notcount = notcoun;
-          notbadge = true;
-        });
-      }
-
-      print(notcount);
-
-      FlutterAppBadger.updateBadgeCount(notifcount + notcount);
-    } else {
-      print(response.statusCode);
     }
   }
 
@@ -1551,34 +1553,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: InkWell(
                                     onTap: () {
                                       Navigator.push(
-                                          context,
-                                          PageRouteBuilder(
-                                            pageBuilder: (context, animation,
-                                                    secondaryAnimation) =>
-                                                Details(
-                                              itemid: itemsgrid[index].itemid,
-                                              sold: itemsgrid[index].sold,
-                                            ),
-                                            transitionsBuilder: (context,
-                                                animation,
-                                                secondaryAnimation,
-                                                child) {
-                                              var begin = Offset(0.0, 1.0);
-                                              var end = Offset.zero;
-                                              var curve = Curves.ease;
-
-                                              var tween = Tween(
-                                                      begin: begin, end: end)
-                                                  .chain(
-                                                      CurveTween(curve: curve));
-
-                                              return SlideTransition(
-                                                position:
-                                                    animation.drive(tween),
-                                                child: child,
-                                              );
-                                            },
-                                          ));
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                  itemid:
+                                                      itemsgrid[index].itemid,
+                                                  sold: itemsgrid[index].sold,
+                                                )),
+                                      );
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -1992,30 +1974,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             return InkWell(
                                 onTap: () {
                                   Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            Details(
-                                          itemid: itemsgrid[index].itemid,
-                                          sold: itemsgrid[index].sold,
-                                        ),
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          var begin = Offset(0.0, 1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
-
-                                          var tween = Tween(
-                                                  begin: begin, end: end)
-                                              .chain(CurveTween(curve: curve));
-
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ));
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Details(
+                                              itemid: itemsgrid[index].itemid,
+                                              sold: itemsgrid[index].sold,
+                                            )),
+                                  );
                                 },
                                 onDoubleTap: () async {
                                   if (favourites

@@ -95,6 +95,7 @@ class _LoginPageState extends State<LoginPage>
     setState(() {
       firebasetoken = token;
     });
+
     if (userid != null) {
       var url = 'https://api.sellship.co/api/checktokenfcm/' +
           userid +
@@ -111,27 +112,29 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void getnotification() async {
-    var userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/getnotification/' + userid;
+    if (userid != null) {
+      var userid = await storage.read(key: 'userid');
+      var url = 'https://api.sellship.co/api/getnotification/' + userid;
 
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var notificationinfo = json.decode(response.body);
-      var notif = notificationinfo['notification'];
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var notificationinfo = json.decode(response.body);
+        var notif = notificationinfo['notification'];
 
-      if (notif <= 0) {
-        setState(() {
-          notifcount = notif;
-          notifbadge = false;
-        });
-      } else if (notif > 0) {
-        setState(() {
-          notifcount = notif;
-          notifbadge = true;
-        });
+        if (notif <= 0) {
+          setState(() {
+            notifcount = notif;
+            notifbadge = false;
+          });
+        } else if (notif > 0) {
+          setState(() {
+            notifcount = notif;
+            notifbadge = true;
+          });
+        }
+      } else {
+        print(response.statusCode);
       }
-    } else {
-      print(response.statusCode);
     }
   }
 

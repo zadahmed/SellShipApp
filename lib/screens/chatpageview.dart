@@ -5,14 +5,21 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/orderdetail.dart';
+import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
+import 'package:flutter_easyrefresh/ball_pulse_header.dart';
+import 'package:flutter_easyrefresh/bezier_circle_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_easyrefresh/material_header.dart';
+import 'package:flutter_easyrefresh/phoenix_header.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -78,17 +85,6 @@ class _ChatPageViewState extends State<ChatPageView> {
 
     changeofferstate();
     getItem();
-
-    _scrollController
-      ..addListener(() {
-        if (_scrollController.position.atEdge) {
-          if (_scrollController.position.pixels == 0) {
-            setState(() {
-              skip = skip + 10;
-            });
-          }
-        }
-      });
   }
 
   var currency;
@@ -109,7 +105,6 @@ class _ChatPageViewState extends State<ChatPageView> {
       });
     }
 
-    print(itemid);
     var url = 'https://api.sellship.co/api/getitem/' + itemid;
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -129,7 +124,6 @@ class _ChatPageViewState extends State<ChatPageView> {
         itemselling = item;
       });
     }
-    print(itemselling.name);
   }
 
   Future<List> getRemoteMessages() async {
@@ -324,126 +318,258 @@ class _ChatPageViewState extends State<ChatPageView> {
         backgroundColor: Colors.white,
         context: context,
         isScrollControlled: true,
-        builder: (context) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Make an Offer',
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
+        builder: (context) => StatefulBuilder(
+                builder: (BuildContext context, StateSetter updateState) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Make an Offer',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                      child: ListTile(
-                        title: Container(
-                            width: 200,
-                            padding: EdgeInsets.only(),
-                            child: Center(
-                              child: TextField(
-                                cursorColor: Color(0xFF979797),
-                                controller: offercontroller,
-                                keyboardType: TextInputType.numberWithOptions(),
-                                textCapitalization: TextCapitalization.words,
-                                decoration: InputDecoration(
-                                    labelText: "Offer Price",
-                                    alignLabelWithHint: true,
-                                    labelStyle: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                    ),
-                                    focusColor: Colors.black,
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                    )),
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                    )),
-                                    focusedErrorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                    )),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                    )),
-                                    errorBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                    )),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                      color: Colors.grey.shade300,
-                                    ))),
+                    allowedoffer.isNotEmpty
+                        ? Padding(
+                            padding:
+                                EdgeInsets.only(left: 15, bottom: 5, top: 5),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                allowedoffer,
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 14,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w700),
                               ),
-                            )),
-                        trailing: InkWell(
-                          onTap: () async {
-                            var itemurl =
-                                'https://api.sellship.co/api/createoffer/' +
-                                    senderid +
-                                    '/' +
-                                    recipentid +
-                                    '/' +
-                                    itemid +
-                                    '/' +
-                                    offercontroller.text.trim();
-                            final response = await http.get(itemurl);
-                            var messageinfo = json.decode(response.body);
-
-                            setState(() {
-                              offer = messageinfo['offer'];
-                            });
-                            Navigator.of(context).pop();
-                            print(offer);
-                          },
-                          child: Container(
-                            width: 100,
-                            height: 48,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(16.0),
-                                ),
-                                border: Border.all(
-                                    color: Colors.red.withOpacity(0.2)),
-                              ),
+                            ),
+                          )
+                        : Container(),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: ListTile(
+                          title: Container(
+                              width: 200,
+                              padding: EdgeInsets.only(),
                               child: Center(
-                                child: Text(
-                                  'Make Offer',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16),
+                                child: TextField(
+                                  cursorColor: Color(0xFF979797),
+                                  controller: offercontroller,
+                                  onChanged: (text) {
+                                    if (text.isNotEmpty) {
+                                      var offer = double.parse(text);
+                                      var minoffer =
+                                          double.parse(itemselling.price) *
+                                              0.50;
+                                      minoffer =
+                                          double.parse(itemselling.price) -
+                                              minoffer;
+
+                                      if (offer < minoffer) {
+                                        updateState(() {
+                                          allowedoffer =
+                                              'The offer is too low compared to the selling price';
+                                        });
+                                      } else {
+                                        updateState(() {
+                                          allowedoffer = '';
+                                        });
+                                      }
+                                    } else {
+                                      updateState(() {
+                                        allowedoffer = '';
+                                      });
+                                    }
+                                  },
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(),
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: InputDecoration(
+                                      labelText: "Offer Price",
+                                      alignLabelWithHint: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                      ),
+                                      focusColor: Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      ))),
+                                ),
+                              )),
+                          trailing: InkWell(
+                            onTap: () async {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (_) => new AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))),
+                                        content: Builder(
+                                          builder: (context) {
+                                            return Container(
+                                                height: 50,
+                                                width: 50,
+                                                child: SpinKitChasingDots(
+                                                  color: Colors.deepOrange,
+                                                ));
+                                          },
+                                        ),
+                                      ));
+                              var recieverid = itemselling.userid;
+                              if (recieverid != userid) {
+                                var itemurl =
+                                    'https://api.sellship.co/api/createoffer/' +
+                                        userid +
+                                        '/' +
+                                        recieverid +
+                                        '/' +
+                                        itemid +
+                                        '/' +
+                                        offercontroller.text.trim();
+
+                                final response = await http.get(itemurl);
+
+                                if (response.statusCode == 200) {
+                                  var messageinfo = json.decode(response.body);
+                                  var messageid = (messageinfo['messageid']);
+                                  var recieverfcmtoken =
+                                      (messageinfo['recieverfcmtoken']);
+                                  var sendername = (messageinfo['sendername']);
+                                  var recipentname =
+                                      (messageinfo['recievername']);
+                                  var offer = messageinfo['offer'];
+                                  var offerstage = messageinfo['offerstage'];
+                                  Navigator.pop(context);
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPageView(
+                                        messageid: messageid,
+                                        recipentname: recipentname,
+                                        senderid: userid,
+                                        offer: offer,
+                                        offerstage: offerstage,
+                                        recipentid: recieverid,
+                                        fcmToken: recieverfcmtoken,
+                                        senderName: sendername,
+                                        itemid: itemid,
+                                      ),
+                                    ),
+                                  );
+                                } else {}
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AssetGiffyDialog(
+                                          image: Image.asset(
+                                            'assets/oops.gif',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            'Oops!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'You can\'t send an offer to yourself!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(),
+                                          ),
+                                          onlyOkButton: true,
+                                          entryAnimation:
+                                              EntryAnimation.DEFAULT,
+                                          onOkButtonPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RootScreen(index: 0)),
+                                            );
+                                          },
+                                        ));
+                              }
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 48,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: allowedoffer.isEmpty
+                                      ? Colors.red
+                                      : Colors.grey,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(16.0),
+                                  ),
+                                  border: Border.all(
+                                      color: Colors.red.withOpacity(0.2)),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Make Offer',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      )),
-                  SizedBox(height: 20),
-                ],
-              ),
-            ));
+                        )),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              );
+            }));
   }
+
+  String allowedoffer = '';
 
   int offerstage;
   String offerstring;
@@ -552,7 +678,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                         itemselling != null
                             ? Padding(
                                 padding: EdgeInsets.only(
-                                    left: 10, right: 10, top: 10),
+                                    left: 10, right: 10, top: 10, bottom: 5),
                                 child: InkWell(
                                     onTap: () {
                                       Navigator.push(
@@ -617,7 +743,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                         offer != null
                             ? Padding(
                                 padding: EdgeInsets.only(
-                                    top: 5, left: 10, right: 10, bottom: 5),
+                                    top: 5, left: 10, right: 10, bottom: 10),
                                 child: InkWell(
                                     onTap: () {
                                       Navigator.push(
@@ -782,15 +908,25 @@ class _ChatPageViewState extends State<ChatPageView> {
                                     stream: getMessages(),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData) {
-                                        return SingleChildScrollView(
-                                            controller: _scrollController,
-                                            child: Column(
+                                        return EasyRefresh(
+                                            header: BezierCircleHeader(
+                                                color: Colors.deepPurple,
+                                                backgroundColor: Colors.white,
+                                                enableHapticFeedback: true),
+                                            scrollController: _scrollController,
+                                            onRefresh: () async {
+                                              setState(() {
+                                                skip = skip + 10;
+                                              });
+                                            },
+                                            child: SingleChildScrollView(
+                                                child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: snapshot.data,
-                                            ));
+                                            )));
                                       } else if (snapshot.hasError) {
                                         return SingleChildScrollView(
                                             controller: _scrollController,

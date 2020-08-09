@@ -36,6 +36,8 @@ class _AddItemState extends State<AddItem> {
   }
 
   var currency;
+  var metric;
+
   getuser() async {
     var countr = await storage.read(key: 'country');
 
@@ -43,11 +45,19 @@ class _AddItemState extends State<AddItem> {
       setState(() {
         currency = 'AED';
         loading = true;
+        metric = 'Kg';
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = 'USD';
         loading = true;
+        metric = 'lbs';
+      });
+    } else {
+      setState(() {
+        currency = 'USD';
+        loading = true;
+        metric = 'lbs';
       });
     }
     userid = await storage.read(key: 'userid');
@@ -110,7 +120,15 @@ class _AddItemState extends State<AddItem> {
     'New, but no tags',
     'Like new',
     'Very Good, a bit worn',
-    'Good, some flaws visible in pictures'
+    'Good, some flaws visible'
+  ];
+
+  List<IconData> conditionicons = [
+    Feather.tag,
+    Feather.box,
+    Feather.award,
+    Icons.new_releases,
+    Feather.eye,
   ];
 
   String _selectedCondition = 'Like new';
@@ -119,6 +137,12 @@ class _AddItemState extends State<AddItem> {
   String _selectedsubsubCategory;
   String _selectedbrand;
   List<String> _subcategories;
+
+  List<String> weights = ['2', '5', '10', '20', '50', '100'];
+
+  int _selectedweight = -1;
+
+  int _selectedcondition = -1;
 
   List<String> _subsubcategory;
 
@@ -328,6 +352,8 @@ class _AddItemState extends State<AddItem> {
     businesspricecontroller.dispose();
     super.dispose();
   }
+
+  int itemweight;
 
   bool loading;
 
@@ -1748,65 +1774,110 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 10.0,
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 15,
+                                    bottom: 10,
                                   ),
-                                  child: ListTile(
-                                    title: Text(
-                                      'Condition',
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Item Condition',
                                       style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                      ),
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
                                     ),
-                                    trailing: Container(
-                                        width: 200,
-                                        padding: EdgeInsets.only(),
-                                        child: Center(
-                                            child: Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: DropdownButton<String>(
-                                                  value: _selectedCondition,
-                                                  hint: Text(
-                                                      'Please choose the condition of your Item'), // No
-                                                  icon: Icon(Icons
-                                                      .keyboard_arrow_down),
-                                                  iconSize: 20,
-                                                  elevation: 10,
-                                                  isExpanded: true,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                  ),
-                                                  onChanged: (String newValue) {
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 15,
+                                    bottom: 10,
+                                  ),
+                                  child: Container(
+                                    height: 100,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: conditions.length,
+                                        itemBuilder: (BuildContext context,
+                                            int position) {
+                                          return Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: InkWell(
+                                                  onTap: () {
                                                     setState(() {
+                                                      _selectedcondition =
+                                                          position;
                                                       _selectedCondition =
-                                                          newValue;
+                                                          conditions[position];
                                                     });
                                                   },
-                                                  items: conditions.map<
-                                                          DropdownMenuItem<
-                                                              String>>(
-                                                      (String value) {
-                                                    return DropdownMenuItem<
-                                                        String>(
-                                                      value: value,
-                                                      child: Text(
-                                                        value,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 16,
-                                                            color:
-                                                                Colors.black),
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 0.2,
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        color: _selectedcondition ==
+                                                                position
+                                                            ? Colors
+                                                                .deepPurpleAccent
+                                                            : Colors.white,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                            offset: Offset(0.0,
+                                                                1.0), //(x,y)
+                                                            blurRadius: 6.0,
+                                                          ),
+                                                        ],
                                                       ),
-                                                    );
-                                                  }).toList(),
-                                                )))),
+                                                      height: 100,
+                                                      width: 90,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            conditionicons[
+                                                                position],
+                                                            size: 30,
+                                                            color: _selectedcondition ==
+                                                                    position
+                                                                ? Colors.white
+                                                                : Colors
+                                                                    .deepPurpleAccent,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Text(
+                                                            conditions[
+                                                                position],
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 14,
+                                                              color: _selectedcondition ==
+                                                                      position
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .deepPurpleAccent,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ))));
+                                        }),
                                   ),
                                 ),
                                 SizedBox(
@@ -1869,7 +1940,7 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                brands.isNotEmpty || brands != null
+                                brands.isNotEmpty && brands != null
                                     ? Container(
                                         height: 80,
                                         decoration: BoxDecoration(
@@ -1990,14 +2061,23 @@ class _AddItemState extends State<AddItem> {
                                                                           .spaceBetween,
                                                                   children: <
                                                                       Widget>[
-                                                                    Text(brand),
+                                                                    Text(
+                                                                      brand,
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            16,
+                                                                      ),
+                                                                    ),
                                                                     Icon(Icons
                                                                         .arrow_drop_down)
                                                                   ],
                                                                 ))
                                                               ])
                                                         : Container(
-                                                            width: 120,
+                                                            width: 140,
                                                             child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
@@ -2005,7 +2085,15 @@ class _AddItemState extends State<AddItem> {
                                                               children: <
                                                                   Widget>[
                                                                 Text(
-                                                                    'Choose Brand'),
+                                                                  'Choose Brand',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        16,
+                                                                  ),
+                                                                ),
                                                                 Icon(Icons
                                                                     .arrow_drop_down)
                                                               ],
@@ -2260,7 +2348,11 @@ class _AddItemState extends State<AddItem> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
-                                            Text('Price'),
+                                            Text('Price',
+                                                style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                )),
                                             Container(
                                               child: TextField(
                                                 cursorColor: Color(0xFF979797),
@@ -2367,7 +2459,11 @@ class _AddItemState extends State<AddItem> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: <Widget>[
-                                                  Text('Selling fee (10%)'),
+                                                  Text('Selling fee (10%)',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                      )),
                                                   Text(currency +
                                                       ' ' +
                                                       fees.toString())
@@ -2394,7 +2490,11 @@ class _AddItemState extends State<AddItem> {
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: <Widget>[
-                                                  Text('You earn'),
+                                                  Text('You earn',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                      )),
                                                   Text(currency +
                                                       ' ' +
                                                       totalpayable.toString())
@@ -2433,7 +2533,11 @@ class _AddItemState extends State<AddItem> {
                                     ),
                                     child: Column(children: <Widget>[
                                       CheckboxListTile(
-                                        title: const Text('Meetup'),
+                                        title: const Text('Meetup',
+                                            style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                            )),
                                         value: meetupcheckbox,
                                         onChanged: (bool value) {
                                           setState(() {
@@ -2444,7 +2548,13 @@ class _AddItemState extends State<AddItem> {
                                             const Icon(FontAwesome.handshake_o),
                                       ),
                                       CheckboxListTile(
-                                        title: const Text('Shipping Included'),
+                                        title: const Text(
+                                          'Shipping',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                          ),
+                                        ),
                                         value: shippingcheckbox,
                                         onChanged: (bool value) {
                                           setState(() {
@@ -2457,6 +2567,112 @@ class _AddItemState extends State<AddItem> {
                                     ])),
                                 SizedBox(
                                   height: 10,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 15,
+                                    bottom: 10,
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Item Weight',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 15,
+                                    bottom: 10,
+                                  ),
+                                  child: Container(
+                                    height: 80,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: weights.length,
+                                        itemBuilder: (BuildContext context,
+                                            int position) {
+                                          return Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _selectedweight =
+                                                          position;
+                                                      itemweight = int.parse(
+                                                          weights[position]);
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 0.2,
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15),
+                                                        color: _selectedweight ==
+                                                                position
+                                                            ? Colors
+                                                                .deepPurpleAccent
+                                                            : Colors.white,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors
+                                                                .grey.shade300,
+                                                            offset: Offset(0.0,
+                                                                1.0), //(x,y)
+                                                            blurRadius: 6.0,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      height: 80,
+                                                      width: 90,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(
+                                                            Feather.box,
+                                                            size: 30,
+                                                            color: _selectedweight ==
+                                                                    position
+                                                                ? Colors.white
+                                                                : Colors
+                                                                    .deepPurpleAccent,
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Text(
+                                                            'Upto ' +
+                                                                weights[
+                                                                    position] +
+                                                                ' ' +
+                                                                metric,
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 14,
+                                                              color: _selectedweight ==
+                                                                      position
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .deepPurpleAccent,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ))));
+                                        }),
+                                  ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -2694,6 +2910,8 @@ class _AddItemState extends State<AddItem> {
                   } else if (meetupcheckbox == false &&
                       shippingcheckbox == false) {
                     showInSnackBar('Please choose a delivery method!');
+                  } else if (_selectedweight == -1) {
+                    showInSnackBar('Please choose the weight of your item');
                   } else if (city == null || country == null) {
                     showInSnackBar(
                         'Please choose the location of your item on the map!');
@@ -2787,6 +3005,8 @@ class _AddItemState extends State<AddItem> {
                           'username': firstname,
                           'useremail': email,
                           'usernumber': phonenumber,
+                          'weight': itemweight,
+                          'weightmetric': metric,
                           'date_uploaded': DateTime.now().toString(),
                           'image': await MultipartFile.fromFile(_image.path,
                               filename: fileName)
@@ -2820,6 +3040,8 @@ class _AddItemState extends State<AddItem> {
                           'username': firstname,
                           'useremail': email,
                           'usernumber': phonenumber,
+                          'weight': itemweight,
+                          'weightmetric': metric,
                           'date_uploaded': DateTime.now().toString(),
                           'image': await MultipartFile.fromFile(_image.path,
                               filename: fileName),
@@ -2859,6 +3081,8 @@ class _AddItemState extends State<AddItem> {
                           'username': firstname,
                           'useremail': email,
                           'usernumber': phonenumber,
+                          'weight': itemweight,
+                          'weightmetric': metric,
                           'date_uploaded': DateTime.now().toString(),
                           'image': await MultipartFile.fromFile(_image.path,
                               filename: fileName),
@@ -2902,6 +3126,8 @@ class _AddItemState extends State<AddItem> {
                           'username': firstname,
                           'useremail': email,
                           'usernumber': phonenumber,
+                          'weight': itemweight,
+                          'weightmetric': metric,
                           'date_uploaded': DateTime.now().toString(),
                           'image': await MultipartFile.fromFile(_image.path,
                               filename: fileName),
@@ -2949,6 +3175,8 @@ class _AddItemState extends State<AddItem> {
                           'username': firstname,
                           'useremail': email,
                           'usernumber': phonenumber,
+                          'weight': itemweight,
+                          'weightmetric': metric,
                           'date_uploaded': DateTime.now().toString(),
                           'image': await MultipartFile.fromFile(_image.path,
                               filename: fileName),
@@ -2999,6 +3227,8 @@ class _AddItemState extends State<AddItem> {
                           'condition': _selectedCondition,
                           'useremail': email,
                           'usernumber': phonenumber,
+                          'weight': itemweight,
+                          'weightmetric': metric,
                           'date_uploaded': DateTime.now().toString(),
                           'image': await MultipartFile.fromFile(_image.path,
                               filename: fileName),

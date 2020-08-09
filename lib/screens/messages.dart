@@ -32,97 +32,104 @@ class MessagesState extends State<Messages> {
     messagesd.clear();
     userid = await storage.read(key: 'userid');
 
-    var messageurl =
-        'https://api.sellship.co/api/messagedetail/' + userid.toString();
-    final responsemessage = await http.get(messageurl);
+    if (userid != null) {
+      var messageurl =
+          'https://api.sellship.co/api/messagedetail/' + userid.toString();
+      final responsemessage = await http.get(messageurl);
 
-    var messageinfo = json.decode(responsemessage.body);
+      var messageinfo = json.decode(responsemessage.body);
 
-    if (messageinfo.isNotEmpty) {
-      for (int i = 0; i < messageinfo.length; i++) {
-        var imageprofile = messageinfo[i]['profilepicture'];
-        var itemname = messageinfo[i]['itemname'];
-        var itemid = messageinfo[i]['itemid']['\$oid'];
-        final f = new DateFormat('hh:mm');
-        final t = new DateFormat('yyyy-MM-dd hh:mm');
+      if (messageinfo.isNotEmpty) {
+        for (int i = 0; i < messageinfo.length; i++) {
+          var imageprofile = messageinfo[i]['profilepicture'];
+          var itemname = messageinfo[i]['itemname'];
+          var itemid = messageinfo[i]['itemid']['\$oid'];
+          final f = new DateFormat('hh:mm');
+          final t = new DateFormat('yyyy-MM-dd hh:mm');
 
-        var offe;
-        var offerstage;
-        var unread;
-        var msgcount;
+          var offe;
+          var offerstage;
+          var unread;
+          var msgcount;
 
-        if (messageinfo[i]['offer'] != null) {
-          offe = messageinfo[i]['offer'];
-        } else if (messageinfo[i]['offer'] == null) {
-          offe = null;
-        }
+          if (messageinfo[i]['offer'] != null) {
+            offe = messageinfo[i]['offer'];
+          } else if (messageinfo[i]['offer'] == null) {
+            offe = null;
+          }
 
-        if (messageinfo[i]['offerstage'] != null) {
-          offerstage = messageinfo[i]['offerstage'];
-        } else if (messageinfo[i]['offerstage'] == null) {
-          offerstage = null;
-        }
+          if (messageinfo[i]['offerstage'] != null) {
+            offerstage = messageinfo[i]['offerstage'];
+          } else if (messageinfo[i]['offerstage'] == null) {
+            offerstage = null;
+          }
 
-        if (messageinfo[i]['lastid'] != null) {
-          var lastid = messageinfo[i]['lastid'];
+          if (messageinfo[i]['lastid'] != null) {
+            var lastid = messageinfo[i]['lastid'];
 
-          if (lastid == userid) {
-            unread = false;
-          } else if (lastid != userid) {
-            if (messageinfo[i]['unread'] == true) {
-              unread = true;
-              if (messageinfo[i]['msgcount'] != null) {
-                msgcount = messageinfo[i]['msgcount'];
-              } else if (messageinfo[i]['msgcount'] == null) {
-                msgcount = null;
-              }
-            } else {
+            if (lastid == userid) {
               unread = false;
+            } else if (lastid != userid) {
+              if (messageinfo[i]['unread'] == true) {
+                unread = true;
+                if (messageinfo[i]['msgcount'] != null) {
+                  msgcount = messageinfo[i]['msgcount'];
+                } else if (messageinfo[i]['msgcount'] == null) {
+                  msgcount = null;
+                }
+              } else {
+                unread = false;
+              }
             }
           }
+
+          if (messageinfo[i]['date'] != null) {
+            DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+                messageinfo[i]['date']['\$date']);
+            var s = f.format(date);
+            var q = t.format(date);
+
+            ChatMessages msg = ChatMessages(
+                messageid: messageinfo[i]['msgid'],
+                peoplemessaged: messageinfo[i]['user2name'],
+                senderid: messageinfo[i]['user1'],
+                offer: offe,
+                offerstage: offerstage,
+                lastrecieved: messageinfo[i]['lastrecieved'],
+                unread: unread,
+                recieveddate: s,
+                hiddendate: q,
+                msgcount: msgcount,
+                itemname: itemname,
+                senderName: messageinfo[i]['user1name'],
+                recipentid: messageinfo[i]['user2'],
+                profilepicture: imageprofile,
+                itemid: itemid,
+                fcmtokenreciever: messageinfo[i]['fcmtokenreciever']);
+
+            messagesd.add(msg);
+          }
         }
-
-        if (messageinfo[i]['date'] != null) {
-          DateTime date = new DateTime.fromMillisecondsSinceEpoch(
-              messageinfo[i]['date']['\$date']);
-          var s = f.format(date);
-          var q = t.format(date);
-
-          ChatMessages msg = ChatMessages(
-              messageid: messageinfo[i]['msgid'],
-              peoplemessaged: messageinfo[i]['user2name'],
-              senderid: messageinfo[i]['user1'],
-              offer: offe,
-              offerstage: offerstage,
-              lastrecieved: messageinfo[i]['lastrecieved'],
-              unread: unread,
-              recieveddate: s,
-              hiddendate: q,
-              msgcount: msgcount,
-              itemname: itemname,
-              senderName: messageinfo[i]['user1name'],
-              recipentid: messageinfo[i]['user2'],
-              profilepicture: imageprofile,
-              itemid: itemid,
-              fcmtokenreciever: messageinfo[i]['fcmtokenreciever']);
-
-          messagesd.add(msg);
-        }
+      } else {
+        messagesd = [];
       }
-    } else {
-      messagesd = [];
-    }
 
-    messagesd.sort();
+      messagesd.sort();
 
-    if (mounted) {
-      setState(() {
+      if (mounted) {
+        setState(() {
+          messagesd = messagesd;
+          loading = false;
+        });
+      } else {
         messagesd = messagesd;
         loading = false;
-      });
+      }
     } else {
-      messagesd = messagesd;
-      loading = false;
+      setState(() {
+        messagesd = [];
+        loading = false;
+      });
     }
   }
 
@@ -147,7 +154,6 @@ class MessagesState extends State<Messages> {
           elevation: 0,
           leading: InkWell(
             onTap: () {
-              dispose();
               Navigator.pop(context);
             },
             child: Icon(
@@ -189,14 +195,14 @@ class MessagesState extends State<Messages> {
                 )),
           ],
         ),
-        body: EasyRefresh(
-          child: loading == false
-              ? ListView.builder(
-                  cacheExtent: double.parse(messagesd.length.toString()),
-                  itemCount: messagesd.length,
-                  itemBuilder: (BuildContext ctxt, int index) {
-                    return messagesd.isNotEmpty
-                        ? Slidable(
+        body: messagesd.isNotEmpty
+            ? EasyRefresh(
+                child: loading == false
+                    ? ListView.builder(
+                        cacheExtent: double.parse(messagesd.length.toString()),
+                        itemCount: messagesd.length,
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          return Slidable(
                             actionPane: SlidableDrawerActionPane(),
                             actionExtentRatio: 0.25,
                             child: Column(
@@ -414,95 +420,97 @@ class MessagesState extends State<Messages> {
                                 onTap: () {},
                               ),
                             ],
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Center(
-                                child: Text(
-                                  'View your Messages here ',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                  child: Image.asset(
-                                'assets/messages.png',
-                                fit: BoxFit.fitWidth,
-                              ))
-                            ],
                           );
-                  })
-              : Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 16.0),
-                  child: Shimmer.fromColors(
-                    baseColor: Colors.grey[300],
-                    highlightColor: Colors.grey[100],
-                    child: Column(
-                      children: [0, 1, 2, 3, 4, 5, 6]
-                          .map((_) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 48.0,
-                                      height: 48.0,
-                                      color: Colors.white,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                    ),
-                                    Expanded(
-                                      child: Column(
+                        })
+                    : Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 16.0),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey[300],
+                          highlightColor: Colors.grey[100],
+                          child: Column(
+                            children: [0, 1, 2, 3, 4, 5, 6]
+                                .map((_) => Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 8.0),
+                                      child: Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Container(
-                                            width: double.infinity,
-                                            height: 8.0,
+                                            width: 48.0,
+                                            height: 48.0,
                                             color: Colors.white,
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 2.0),
+                                                horizontal: 8.0),
                                           ),
-                                          Container(
-                                            width: double.infinity,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2.0),
-                                          ),
-                                          Container(
-                                            width: 40.0,
-                                            height: 8.0,
-                                            color: Colors.white,
-                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 8.0,
+                                                  color: Colors.white,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 2.0),
+                                                ),
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 8.0,
+                                                  color: Colors.white,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 2.0),
+                                                ),
+                                                Container(
+                                                  width: 40.0,
+                                                  height: 8.0,
+                                                  color: Colors.white,
+                                                ),
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ))
-                          .toList(),
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                onRefresh: () async {
+                  getMessages();
+                },
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                    child: Text(
+                      'View your Messages here ',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 16,
+                      ),
                     ),
                   ),
-                ),
-          onRefresh: () async {
-            getMessages();
-          },
-        ));
+                  Expanded(
+                      child: Image.asset(
+                    'assets/messages.png',
+                    fit: BoxFit.fitWidth,
+                  ))
+                ],
+              ));
   }
 }
