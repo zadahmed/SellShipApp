@@ -143,6 +143,44 @@ class _LoginPageState extends State<LoginPage>
 
   bool verified;
 
+  final facebookLogin = FacebookLogin();
+
+  verifyFB() async {
+    final result = await facebookLogin.logIn(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        final token = result.accessToken.token;
+        final graphResponse = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
+
+        final profile = json.decode(graphResponse.body);
+        var email = profile['email'];
+        var url = 'https://api.sellship.co/verify/fb/' + userid + '/' + email;
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          setState(() {
+            confirmedfb = true;
+          });
+          Navigator.of(context, rootNavigator: true).pop('dialog');
+        } else {
+          setState(() {
+            confirmedfb = false;
+          });
+          Navigator.of(context, rootNavigator: true).pop('dialog');
+        }
+
+        break;
+
+      case FacebookLoginStatus.cancelledByUser:
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        break;
+      case FacebookLoginStatus.error:
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -166,6 +204,7 @@ class _LoginPageState extends State<LoginPage>
   var profilepicture;
   var confirmedemail;
 
+  bool confirmedfb;
   var followers;
   var itemssold;
   var following;
@@ -275,279 +314,446 @@ class _LoginPageState extends State<LoginPage>
 
   Widget signedinprofile(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: Padding(
+          padding: EdgeInsets.all(10),
+          child: InkWell(
+              child: Icon(
+                Feather.settings,
+                color: Colors.deepOrange,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Settings(
+                            email: email,
+                          )),
+                );
+              }),
+        ),
+        title: Container(
+          height: 30,
+          width: 120,
+          child: Image.asset(
+            'assets/logotransparent.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Badge(
+              showBadge: notifbadge,
+              position: BadgePosition.topRight(top: 2),
+              animationType: BadgeAnimationType.slide,
+              badgeContent: Text(
+                '',
+                style: TextStyle(color: Colors.white),
+              ),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Messages()),
+                  );
+                },
+                child: Icon(
+                  Feather.message_square,
+                  color: Colors.deepOrange,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       key: _scaffoldKey,
       body: loading == false
-          ? CustomScrollView(
-              controller: _scrollController,
-              slivers: <Widget>[
-                SliverAppBar(
-                  elevation: 0,
-                  backgroundColor: Colors.white,
-                  leading: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: InkWell(
-                        child: Icon(
-                          Feather.settings,
-                          color: Colors.deepOrange,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Settings(
-                                      email: email,
-                                    )),
-                          );
-                        }),
-                  ),
-                  title: Container(
-                    height: 30,
-                    width: 120,
-                    child: Image.asset(
-                      'assets/logotransparent.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  actions: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Badge(
-                        showBadge: notifbadge,
-                        position: BadgePosition.topRight(top: 2),
-                        animationType: BadgeAnimationType.slide,
-                        badgeContent: Text(
-                          '',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Messages()),
-                            );
-                          },
-                          child: Icon(
-                            Feather.message_square,
-                            color: Colors.deepOrange,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SliverToBoxAdapter(
-                    child: Container(
-                        color: Colors.white,
-                        width: double.infinity,
+          ? DefaultTabController(
+              length: 2,
+              child: NestedScrollView(
+                  headerSliverBuilder: (context, _) {
+                    return [
+                      SliverToBoxAdapter(
+                          child: Container(
+                              color: Colors.white,
+                              width: double.infinity,
 //                  height: MediaQuery.of(context).size.height,
-                        child: Column(children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              GestureDetector(
-                                onTap: () {
-                                  final action = CupertinoActionSheet(
-                                    message: Text(
-                                      "Upload an Image",
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                    actions: <Widget>[
-                                      CupertinoActionSheetAction(
-                                        child: Text("Upload from Camera",
-                                            style: TextStyle(
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.normal)),
-                                        isDefaultAction: true,
-                                        onPressed: () {
-                                          getImageCamera();
-                                        },
-                                      ),
-                                      CupertinoActionSheetAction(
-                                        child: Text("Upload from Gallery",
-                                            style: TextStyle(
-                                                fontSize: 15.0,
-                                                fontWeight: FontWeight.normal)),
-                                        isDefaultAction: true,
-                                        onPressed: () {
-                                          getImageGallery();
-                                        },
-                                      )
-                                    ],
-                                    cancelButton: CupertinoActionSheetAction(
-                                      child: Text("Cancel",
-                                          style: TextStyle(
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.normal)),
-                                      isDestructiveAction: true,
-                                      onPressed: () {
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop();
-                                      },
-                                    ),
-                                  );
-                                  showCupertinoModalPopup(
-                                      context: context,
-                                      builder: (context) => action);
-                                },
-                                child: Container(
-                                  height: 80,
-                                  width: 80,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(40)),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
-                                    child: profilepicture == null
-                                        ? Image.asset(
-                                            'assets/personplaceholder.png',
-                                            fit: BoxFit.fitWidth,
-                                          )
-                                        : CachedNetworkImage(
-                                            imageUrl: profilepicture,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                SpinKitChasingDots(
-                                                    color: Colors.deepOrange),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                          ),
-                                  ),
+                              child: Column(children: <Widget>[
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 10, left: 30, right: 30, bottom: 10),
-                                child: Row(
+                                Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
                                       children: <Widget>[
-                                        Text(
-                                          followers == null
-                                              ? '0'
-                                              : followers.toString(),
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontWeight: FontWeight.bold),
+                                        GestureDetector(
+                                          onTap: () {
+                                            final action = CupertinoActionSheet(
+                                              message: Text(
+                                                "Upload an Image",
+                                                style: TextStyle(
+                                                    fontSize: 15.0,
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                              actions: <Widget>[
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Camera",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageCamera();
+                                                  },
+                                                ),
+                                                CupertinoActionSheetAction(
+                                                  child: Text(
+                                                      "Upload from Gallery",
+                                                      style: TextStyle(
+                                                          fontSize: 15.0,
+                                                          fontWeight: FontWeight
+                                                              .normal)),
+                                                  isDefaultAction: true,
+                                                  onPressed: () {
+                                                    getImageGallery();
+                                                  },
+                                                )
+                                              ],
+                                              cancelButton:
+                                                  CupertinoActionSheetAction(
+                                                child: Text("Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                                isDestructiveAction: true,
+                                                onPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop();
+                                                },
+                                              ),
+                                            );
+                                            showCupertinoModalPopup(
+                                                context: context,
+                                                builder: (context) => action);
+                                          },
+                                          child: Container(
+                                            height: 80,
+                                            width: 80,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(40)),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(40),
+                                              child: profilepicture == null
+                                                  ? Image.asset(
+                                                      'assets/personplaceholder.png',
+                                                      fit: BoxFit.fitWidth,
+                                                    )
+                                                  : CachedNetworkImage(
+                                                      imageUrl: profilepicture,
+                                                      fit: BoxFit.cover,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          SpinKitChasingDots(
+                                                              color: Colors
+                                                                  .deepOrange),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    ),
+                                            ),
+                                          ),
                                         ),
-                                        SizedBox(height: 10.0),
-                                        Text(
-                                          'Followers',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontFamily: 'Helvetica',
-                                              color: Colors.black),
-                                        )
+                                        Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: Text(
+                                            firstname + ' ' + lastname,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                    SizedBox(
-                                      width: 15,
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 10,
+                                          left: 20,
+                                          right: 20,
+                                          bottom: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                itemssold == null
+                                                    ? '0'
+                                                    : itemssold.toString(),
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(height: 10.0),
+                                              Text(
+                                                'Sold',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: 'Helvetica',
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                following == null
+                                                    ? '0'
+                                                    : following.toString(),
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(height: 10.0),
+                                              Text(
+                                                'Likes',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: 'Helvetica',
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                followers == null
+                                                    ? '0'
+                                                    : followers.toString(),
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              SizedBox(height: 10.0),
+                                              Text(
+                                                'Followers',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: 'Helvetica',
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          itemssold == null
-                                              ? '0'
-                                              : itemssold.toString(),
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(height: 10.0),
-                                        Text(
-                                          'Sold',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontFamily: 'Helvetica',
-                                              color: Colors.black),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          following == null
-                                              ? '0'
-                                              : following.toString(),
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(height: 10.0),
-                                        Text(
-                                          'Likes',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              fontFamily: 'Helvetica',
-                                              color: Colors.black),
-                                        )
-                                      ],
-                                    )
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 15.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Text(
-                                  firstname + ' ' + lastname,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold),
+                                SizedBox(height: 6.0),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Container(
+                                          height: 40,
+                                          width: 120,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 0.2, color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset:
+                                                    Offset(0.0, 0.8), //(x,y)
+                                                blurRadius: 6.0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Center(
+                                              child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(Icons.edit,
+                                                  color: Colors.deepPurple),
+                                              Text(
+                                                'Edit Profile',
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                    color: Colors.deepPurple,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          )),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditProfile()),
+                                        );
+                                      },
+                                      enableFeedback: true,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Container(
+                                          height: 40,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 0.2, color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset:
+                                                    Offset(0.0, 0.8), //(x,y)
+                                                blurRadius: 6.0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Center(
+                                              child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(Icons.attach_money,
+                                                  color: Colors.deepPurple),
+                                              Text(
+                                                'Balance',
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                    color: Colors.deepPurple,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          )),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => Balance()),
+                                        );
+                                      },
+                                      enableFeedback: true,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Container(
+                                          height: 40,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 0.2, color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            color: Colors.white,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset:
+                                                    Offset(0.0, 0.8), //(x,y)
+                                                blurRadius: 6.0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Center(
+                                              child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(Icons.stars,
+                                                  color: Colors.deepPurple),
+                                              Text(
+                                                'Reviews',
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                    color: Colors.deepPurple,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          )),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Balance()), // Change to Reviews
+                                        );
+                                      },
+                                      enableFeedback: true,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 6.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Text(
-                                  'Verify your information to sell faster',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 2.0),
-                          SizedBox(height: 4.0),
-                          verified == false
-                              ? Padding(
+                                SizedBox(height: 5.0),
+                                Padding(
                                   padding: EdgeInsets.only(
                                       top: 10, left: 20, right: 20, bottom: 10),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       InkWell(
                                         onTap: () {
@@ -561,45 +767,21 @@ class _LoginPageState extends State<LoginPage>
                                                     )),
                                           );
                                         },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            confirmedemail == true
-                                                ? Badge(
-                                                    showBadge: true,
-                                                    badgeColor:
-                                                        Colors.deepOrangeAccent,
-                                                    position: BadgePosition
-                                                        .topRight(),
-                                                    animationType:
-                                                        BadgeAnimationType
-                                                            .slide,
-                                                    badgeContent: Icon(
-                                                      Feather.check_circle,
-                                                      size: 16,
-                                                      color: Colors.white,
-                                                    ),
-                                                    child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              width: 0.2,
-                                                              color:
-                                                                  Colors.grey),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child: CircleAvatar(
-                                                          child: Icon(
-                                                            Feather.mail,
-                                                            color: Colors
-                                                                .deepOrange,
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                        )))
-                                                : Container(
+                                        child: confirmedemail == true
+                                            ? Badge(
+                                                showBadge: true,
+                                                badgeColor:
+                                                    Colors.deepOrangeAccent,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.check_circle,
+                                                  size: 16,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
                                                     decoration: BoxDecoration(
                                                       border: Border.all(
                                                           width: 0.2,
@@ -614,24 +796,36 @@ class _LoginPageState extends State<LoginPage>
                                                       ),
                                                       backgroundColor:
                                                           Colors.white,
-                                                    ),
+                                                    )))
+                                            : Badge(
+                                                showBadge: true,
+                                                badgeColor: Colors.grey,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.question,
+                                                  size: 14,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle,
                                                   ),
-                                            SizedBox(height: 10.0),
-                                            confirmedemail == false
-                                                ? Text(
-                                                    'Verify Email',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 14),
-                                                  )
-                                                : Text(
-                                                    'Email Verified',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 14),
-                                                  )
-                                          ],
-                                        ),
+                                                  child: CircleAvatar(
+                                                    child: Icon(
+                                                      Feather.mail,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                ),
+                                              ),
                                       ),
                                       SizedBox(
                                         width: 10,
@@ -647,45 +841,21 @@ class _LoginPageState extends State<LoginPage>
                                                     )),
                                           );
                                         },
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            confirmedphone == true
-                                                ? Badge(
-                                                    showBadge: true,
-                                                    badgeColor:
-                                                        Colors.deepOrangeAccent,
-                                                    position: BadgePosition
-                                                        .topRight(),
-                                                    animationType:
-                                                        BadgeAnimationType
-                                                            .slide,
-                                                    badgeContent: Icon(
-                                                      Feather.check_circle,
-                                                      size: 16,
-                                                      color: Colors.white,
-                                                    ),
-                                                    child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              width: 0.2,
-                                                              color:
-                                                                  Colors.grey),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child: CircleAvatar(
-                                                          child: Icon(
-                                                            Feather.phone,
-                                                            color: Colors
-                                                                .deepOrange,
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                        )))
-                                                : Container(
+                                        child: confirmedphone == true
+                                            ? Badge(
+                                                showBadge: true,
+                                                badgeColor:
+                                                    Colors.deepOrangeAccent,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.check_circle,
+                                                  size: 16,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
                                                     decoration: BoxDecoration(
                                                       border: Border.all(
                                                           width: 0.2,
@@ -700,145 +870,216 @@ class _LoginPageState extends State<LoginPage>
                                                       ),
                                                       backgroundColor:
                                                           Colors.white,
-                                                    ),
+                                                    )))
+                                            : Badge(
+                                                showBadge: true,
+                                                badgeColor: Colors.grey,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.question,
+                                                  size: 14,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle,
                                                   ),
-                                            SizedBox(height: 10.0),
-                                            confirmedphone == false
-                                                ? Text(
-                                                    'Verify Phone',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 14),
-                                                  )
-                                                : Text(
-                                                    'Phone Verified',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 14),
-                                                  )
-                                          ],
-                                        ),
+                                                  child: CircleAvatar(
+                                                    child: Icon(
+                                                      Feather.phone,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                ),
+                                              ),
                                       ),
                                       SizedBox(
                                         width: 10,
                                       ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          CircleAvatar(
-                                            child: Icon(
-                                              Feather.facebook,
-                                              color: Colors.white,
-                                            ),
-                                            backgroundColor: Colors.blue,
-                                          ),
-                                          SizedBox(height: 10.0),
-                                          Text(
-                                            'Connect Facebook',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14),
-                                          ),
-                                        ],
+                                      InkWell(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (_) => new AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10.0))),
+                                                    content: Builder(
+                                                      builder: (context) {
+                                                        return Container(
+                                                            height: 50,
+                                                            width: 50,
+                                                            child:
+                                                                SpinKitChasingDots(
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            ));
+                                                      },
+                                                    ),
+                                                  ));
+                                          verifyFB();
+                                        },
+                                        child: confirmedfb == true
+                                            ? Badge(
+                                                showBadge: true,
+                                                badgeColor: Colors.deepOrange,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.check_circle,
+                                                  size: 14,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color:
+                                                            Colors.deepOrange),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    child: Icon(
+                                                      Feather.facebook,
+                                                      color: Colors.white,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.blueAccent,
+                                                  ),
+                                                ),
+                                              )
+                                            : Badge(
+                                                showBadge: true,
+                                                badgeColor: Colors.grey,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.question,
+                                                  size: 14,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    child: Icon(
+                                                      Feather.facebook,
+                                                      color: Colors.blueAccent,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                ),
+                                              ),
                                       ),
                                     ],
                                   ),
                                 )
-                              : Container(child: Text('Verified')),
-                        ]))),
-                SliverAppBar(
-                  backgroundColor: Colors.white,
-                  pinned: true,
-                  title: DefaultTabController(
-                    length: 3,
-                    child: TabBar(
-                      controller: _tabController,
-                      labelStyle: tabTextStyle,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: CircleTabIndicator(
-                          color: Colors.deepOrangeAccent, radius: 2),
-                      isScrollable: true,
-                      labelColor: Colors.deepOrangeAccent,
-                      tabs: [
-                        new Tab(
-                          icon: const Icon(
-                            Feather.clipboard,
-                            size: 23,
-                            color: Colors.deepOrangeAccent,
-                          ),
-                          text: 'My Items',
-                        ),
-                        new Tab(
-                          icon: const Icon(
-                            Feather.shopping_bag,
-                            size: 23,
-                            color: Colors.deepOrangeAccent,
-                          ),
-                          text: 'My Orders',
-                        ),
-                        new Tab(
-                          icon: const Icon(
-                            Feather.heart,
-                            size: 23,
-                            color: Colors.deepOrangeAccent,
-                          ),
-                          text: 'Favourites',
-                        ),
-                      ],
-                    ),
-                  ),
-
-//
-//                  TabBar(
-//                    labelColor: Colors.white,
-//                    labelStyle: TextStyle(
-//                      fontFamily: 'Helvetica',
-//                      fontSize: 14.0,
-//                    ),
-//                    indicatorColor: Colors.white,
-//                    controller: _tabController,
-//                    tabs:
-//                  ),
-                ),
-                SliverFillRemaining(
-                  child: TabBarView(
-                    children: [
-                      item.isNotEmpty
-                          ? myitems(context)
-                          : Container(
-                              child: Column(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 10,
+                              ]))),
+                    ];
+                  },
+                  // You tab view goes here
+                  body: Column(
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.white,
+                        child: Padding(
+                          child: TabBar(
+                            controller: _tabController,
+                            labelStyle: tabTextStyle,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            indicator: CircleTabIndicator(
+                                color: Colors.deepOrangeAccent, radius: 2),
+                            isScrollable: true,
+                            labelColor: Colors.deepOrangeAccent,
+                            tabs: [
+                              new Tab(
+                                icon: const Icon(
+                                  Feather.clipboard,
+                                  size: 23,
+                                  color: Colors.deepOrangeAccent,
                                 ),
-                                Center(
-                                  child: Text(
-                                      'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                      )),
+                                text: 'My Items',
+                              ),
+                              new Tab(
+                                icon: const Icon(
+                                  Feather.shopping_bag,
+                                  size: 23,
+                                  color: Colors.deepOrangeAccent,
                                 ),
-                                SizedBox(
-                                  height: 5,
+                                text: 'My Orders',
+                              ),
+                              new Tab(
+                                icon: const Icon(
+                                  Feather.heart,
+                                  size: 23,
+                                  color: Colors.deepOrangeAccent,
                                 ),
-                                Expanded(
-                                    child: Image.asset(
-                                  'assets/little_theologians_4x.png',
-                                  fit: BoxFit.fitWidth,
-                                ))
-                              ],
-                            )),
-                      OrdersScreen(),
-                      FavouritesScreen()
+                                text: 'Favourites',
+                              ),
+                            ],
+                          ),
+                          padding: EdgeInsets.only(left: 20),
+                        ),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            item.isNotEmpty
+                                ? myitems(context)
+                                : Container(
+                                    child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Center(
+                                        child: Text(
+                                            'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Expanded(
+                                          child: Image.asset(
+                                        'assets/little_theologians_4x.png',
+                                        fit: BoxFit.fitWidth,
+                                      ))
+                                    ],
+                                  )),
+                            OrdersScreen(),
+                            FavouritesScreen()
+                          ],
+                          controller: _tabController,
+                        ),
+                      )
                     ],
-                    controller: _tabController,
-                  ),
-                )
-              ],
-            )
+                  )))
           : Container(
               width: double.infinity,
               padding:
@@ -1156,6 +1397,7 @@ class _LoginPageState extends State<LoginPage>
                                                 ? favourites.contains(
                                                         item[index].itemid)
                                                     ? InkWell(
+                                                        enableFeedback: true,
                                                         onTap: () async {
                                                           var userid =
                                                               await storage.read(
@@ -1225,6 +1467,7 @@ class _LoginPageState extends State<LoginPage>
                                                         ),
                                                       )
                                                     : InkWell(
+                                                        enableFeedback: true,
                                                         onTap: () async {
                                                           var userid =
                                                               await storage.read(
@@ -1311,6 +1554,7 @@ class _LoginPageState extends State<LoginPage>
                                               width: 10,
                                             ),
                                             InkWell(
+                                              enableFeedback: true,
                                               onTap: () {
                                                 Navigator.push(
                                                   context,
@@ -1329,6 +1573,7 @@ class _LoginPageState extends State<LoginPage>
                                               width: 5,
                                             ),
                                             InkWell(
+                                              enableFeedback: true,
                                               onTap: () {
                                                 Navigator.push(
                                                   context,
@@ -1653,6 +1898,13 @@ class _LoginPageState extends State<LoginPage>
           confirmedphon = false;
         }
 
+        var confirmedf = profilemap['confirmedfb'];
+        if (confirmedf != null) {
+          print(confirmedf);
+        } else {
+          confirmedf = false;
+        }
+
         if (profilemap != null) {
           if (mounted) {
             setState(() {
@@ -1664,6 +1916,7 @@ class _LoginPageState extends State<LoginPage>
               following = followin;
               followers = follower.length;
               itemssold = sol.length;
+              confirmedfb = confirmedf;
               confirmedemail = confirmedemai;
               confirmedphone = confirmedphon;
               profilepicture = profilepic;

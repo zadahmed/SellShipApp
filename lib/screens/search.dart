@@ -310,7 +310,7 @@ class _SearchState extends State<Search> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                  margin: EdgeInsets.only(top: 65.0),
+                                  margin: EdgeInsets.only(top: 75.0),
                                   child: filtersort(context)),
                             ],
                           ),
@@ -556,19 +556,14 @@ class _SearchState extends State<Search> {
                                                                                 'itemid': itemsgrid[index].itemid,
                                                                               };
 
+                                                                              favourites.remove(itemsgrid[index].itemid);
+                                                                              setState(() {
+                                                                                favourites = favourites;
+                                                                                itemsgrid[index].likes = itemsgrid[index].likes - 1;
+                                                                              });
                                                                               final response = await http.post(url, body: body);
 
                                                                               if (response.statusCode == 200) {
-                                                                                var jsondata = json.decode(response.body);
-
-                                                                                favourites.clear();
-                                                                                for (int i = 0; i < jsondata.length; i++) {
-                                                                                  favourites.add(jsondata[i]['_id']['\$oid']);
-                                                                                }
-                                                                                setState(() {
-                                                                                  favourites = favourites;
-                                                                                  itemsgrid[index].likes = itemsgrid[index].likes - 1;
-                                                                                });
                                                                               } else {
                                                                                 print(response.statusCode);
                                                                               }
@@ -597,19 +592,14 @@ class _SearchState extends State<Search> {
                                                                                 'itemid': itemsgrid[index].itemid,
                                                                               };
 
+                                                                              favourites.add(itemsgrid[index].itemid);
+                                                                              setState(() {
+                                                                                favourites = favourites;
+                                                                                itemsgrid[index].likes = itemsgrid[index].likes + 1;
+                                                                              });
                                                                               final response = await http.post(url, body: body);
 
                                                                               if (response.statusCode == 200) {
-                                                                                var jsondata = json.decode(response.body);
-
-                                                                                favourites.clear();
-                                                                                for (int i = 0; i < jsondata.length; i++) {
-                                                                                  favourites.add(jsondata[i]['_id']['\$oid']);
-                                                                                }
-                                                                                setState(() {
-                                                                                  favourites = favourites;
-                                                                                  itemsgrid[index].likes = itemsgrid[index].likes + 1;
-                                                                                });
                                                                               } else {
                                                                                 print(response.statusCode);
                                                                               }
@@ -1061,19 +1051,14 @@ class _SearchState extends State<Search> {
                                                                                       'itemid': itemsgrid[index].itemid,
                                                                                     };
 
+                                                                                    favourites.remove(itemsgrid[index].itemid);
+                                                                                    setState(() {
+                                                                                      favourites = favourites;
+                                                                                      itemsgrid[index].likes = itemsgrid[index].likes - 1;
+                                                                                    });
                                                                                     final response = await http.post(url, body: body);
 
                                                                                     if (response.statusCode == 200) {
-                                                                                      var jsondata = json.decode(response.body);
-
-                                                                                      favourites.clear();
-                                                                                      for (int i = 0; i < jsondata.length; i++) {
-                                                                                        favourites.add(jsondata[i]['_id']['\$oid']);
-                                                                                      }
-                                                                                      setState(() {
-                                                                                        favourites = favourites;
-                                                                                        itemsgrid[index].likes = itemsgrid[index].likes - 1;
-                                                                                      });
                                                                                     } else {
                                                                                       print(response.statusCode);
                                                                                     }
@@ -1097,19 +1082,14 @@ class _SearchState extends State<Search> {
                                                                                       'itemid': itemsgrid[index].itemid,
                                                                                     };
 
+                                                                                    favourites.add(itemsgrid[index].itemid);
+                                                                                    setState(() {
+                                                                                      favourites = favourites;
+                                                                                      itemsgrid[index].likes = itemsgrid[index].likes + 1;
+                                                                                    });
                                                                                     final response = await http.post(url, body: body);
 
                                                                                     if (response.statusCode == 200) {
-                                                                                      var jsondata = json.decode(response.body);
-
-                                                                                      favourites.clear();
-                                                                                      for (int i = 0; i < jsondata.length; i++) {
-                                                                                        favourites.add(jsondata[i]['_id']['\$oid']);
-                                                                                      }
-                                                                                      setState(() {
-                                                                                        favourites = favourites;
-                                                                                        itemsgrid[index].likes = itemsgrid[index].likes + 1;
-                                                                                      });
                                                                                     } else {
                                                                                       print(response.statusCode);
                                                                                     }

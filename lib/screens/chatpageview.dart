@@ -469,33 +469,16 @@ class _ChatPageViewState extends State<ChatPageView> {
 
                                 if (response.statusCode == 200) {
                                   var messageinfo = json.decode(response.body);
-                                  var messageid = (messageinfo['messageid']);
-                                  var recieverfcmtoken =
-                                      (messageinfo['recieverfcmtoken']);
-                                  var sendername = (messageinfo['sendername']);
-                                  var recipentname =
-                                      (messageinfo['recievername']);
-                                  var offer = messageinfo['offer'];
-                                  var offerstage = messageinfo['offerstage'];
+
+                                  (messageinfo['recievername']);
+                                  var offers = messageinfo['offer'];
+
                                   Navigator.pop(context);
                                   Navigator.of(context, rootNavigator: true)
                                       .pop('dialog');
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatPageView(
-                                        messageid: messageid,
-                                        recipentname: recipentname,
-                                        senderid: userid,
-                                        offer: offer,
-                                        offerstage: offerstage,
-                                        recipentid: recieverid,
-                                        fcmToken: recieverfcmtoken,
-                                        senderName: sendername,
-                                        itemid: itemid,
-                                      ),
-                                    ),
-                                  );
+                                  setState(() {
+                                    offer = offers;
+                                  });
                                 } else {}
                               } else {
                                 showDialog(

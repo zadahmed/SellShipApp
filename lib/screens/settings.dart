@@ -84,59 +84,6 @@ class _SettingsState extends State<Settings> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Balance()),
-                        );
-                      },
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.attach_money,
-                          color: Colors.deepOrange,
-                        ),
-                        trailing: Icon(
-                          Feather.arrow_right,
-                          size: 16,
-                          color: Colors.deepOrange,
-                        ),
-                        title: Text('Balance'),
-                      ),
-                    ))
-                : Container(),
-            userid != null
-                ? Container(
-                    color: Colors.white,
-                    child: ListTile(
-                      leading: Icon(
-                        Feather.edit_3,
-                        color: Colors.deepOrange,
-                      ),
-                      trailing: Icon(
-                        Feather.arrow_right,
-                        size: 16,
-                        color: Colors.deepOrange,
-                      ),
-                      title: Text(
-                        'Edit Profile',
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditProfile()),
-                        );
-                      },
-                    ))
-                : Container(),
-            userid != null
-                ? Container(
-                    color: Colors.white,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
                           MaterialPageRoute(
                               builder: (context) => Support(email: email)),
                         );

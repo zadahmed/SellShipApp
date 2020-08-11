@@ -44,7 +44,7 @@ class OrdersScreenState extends State<OrdersScreen>
         currency = '\$';
       });
     }
-    print(userid);
+
     if (userid != null) {
       var url = 'https://api.sellship.co/api/getorders/' + userid;
       final response = await http.get(url);
@@ -121,6 +121,9 @@ class OrdersScreenState extends State<OrdersScreen>
             empty = true;
           });
         }
+
+        print(sellingitem);
+        print(item);
       } else {
         setState(() {
           empty = true;
@@ -161,10 +164,9 @@ class OrdersScreenState extends State<OrdersScreen>
     super.initState();
     setState(() {
       loading = true;
-      empty = false;
     });
-    _tabController = new TabController(length: 2, vsync: this);
     getorders();
+    _tabController = new TabController(length: 2, vsync: this);
   }
 
   @override
@@ -177,16 +179,19 @@ class OrdersScreenState extends State<OrdersScreen>
 
   ScrollController _scrollController = ScrollController();
   Widget orders(BuildContext context) {
-    return Scaffold(
-        body: CustomScrollView(
+    return CustomScrollView(
       slivers: <Widget>[
+        SliverToBoxAdapter(
+          child: Divider(),
+        ),
         SliverAppBar(
           pinned: true,
-          backgroundColor: Colors.deepPurpleAccent,
+          elevation: 1,
+          backgroundColor: Colors.white,
           title: TabBar(
             controller: _tabController,
-            labelColor: Colors.white,
-            indicatorColor: Colors.white,
+            labelColor: Colors.deepPurple,
+            indicatorColor: Colors.deepPurple,
             labelStyle: TextStyle(
               fontFamily: 'Helvetica',
               fontSize: 14.0,
@@ -195,14 +200,14 @@ class OrdersScreenState extends State<OrdersScreen>
               Tab(
                 icon: Icon(
                   Icons.receipt,
-                  color: Colors.white,
+                  color: Colors.deepPurple,
                 ),
                 text: 'Bought',
               ),
               Tab(
                 icon: Icon(
                   Icons.monetization_on,
-                  color: Colors.white,
+                  color: Colors.deepPurple,
                 ),
                 text: 'Sold',
               ),
@@ -704,58 +709,6 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                           )),
                                                                     ],
                                                                   )
-
-//                                                                  Container(
-//                                                                    child: Text(
-//                                                                      item[index]
-//                                                                          .category,
-//                                                                      style:
-//                                                                          TextStyle(
-//                                                                        fontFamily:
-//                                                                            'Helvetica',
-//                                                                        fontSize:
-//                                                                            14,
-//                                                                        fontWeight:
-//                                                                            FontWeight.w300,
-//                                                                      ),
-//                                                                    ),
-//                                                                  ),
-//                                                                  SizedBox(
-//                                                                      height:
-//                                                                          5.0),
-//                                                                  currency !=
-//                                                                          null
-//                                                                      ? Container(
-//                                                                          child:
-//                                                                              Text(
-//                                                                            currency +
-//                                                                                ' ' +
-//                                                                                item[index].price.toString(),
-//                                                                            style:
-//                                                                                TextStyle(
-//                                                                              fontFamily: 'Helvetica',
-//                                                                              fontSize: 16,
-//                                                                              color: Colors.deepOrange,
-//                                                                              fontWeight: FontWeight.w800,
-//                                                                            ),
-//                                                                          ),
-//                                                                        )
-//                                                                      : Container(
-//                                                                          child:
-//                                                                              Text(
-//                                                                            item[index].price.toString(),
-//                                                                            style:
-//                                                                                TextStyle(
-//                                                                              fontFamily: 'Helvetica',
-//                                                                              fontSize: 16,
-//                                                                              color: Colors.deepOrange,
-//                                                                              fontWeight: FontWeight.w800,
-//                                                                            ),
-//                                                                          ),
-//                                                                        ),
-//                                                                  SizedBox(
-//                                                                    height: 10,
-//                                                                  ),
                                                                 ],
                                                               ),
                                                             )),
@@ -852,7 +805,7 @@ class OrdersScreenState extends State<OrdersScreen>
           ),
         )
       ],
-    ));
+    );
   }
 
   String getBannerAdUnitId() {
@@ -865,30 +818,27 @@ class OrdersScreenState extends State<OrdersScreen>
   }
 
   Widget emptyorders(BuildContext context) {
-    return loading == false
-        ? Scaffold(
-            backgroundColor: Colors.white,
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 15,
-                ),
-                Center(
-                  child: Text('View your order\'s here ',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 16,
-                      )),
-                ),
-                Expanded(
-                    child: Image.asset(
-                  'assets/onboard1.png',
-                  fit: BoxFit.fitWidth,
-                ))
-              ],
-            ),
+    return empty == true
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 15,
+              ),
+              Center(
+                child: Text('View your order\'s here ',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 16,
+                    )),
+              ),
+              Expanded(
+                  child: Image.asset(
+                'assets/onboard1.png',
+                fit: BoxFit.fitWidth,
+              ))
+            ],
           )
         : Dialog(
             shape: RoundedRectangleBorder(
@@ -922,6 +872,6 @@ class OrdersScreenState extends State<OrdersScreen>
 
   @override
   Widget build(BuildContext context) {
-    return empty == false ? orders(context) : emptyorders(context);
+    return Scaffold(body: orders(context));
   }
 }
