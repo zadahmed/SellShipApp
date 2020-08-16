@@ -1,5 +1,6 @@
 import 'package:SellShip/models/Items.dart';
-import 'package:SellShip/screens/orderdetail.dart';
+
+import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,10 @@ class _PaymentDoneState extends State<PaymentDone> {
           elevation: 0,
           title: Text(
             'Purchase Successful',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(
+                color: Colors.deepOrange,
+                fontFamily: 'Helvetica',
+                fontSize: 16),
           ),
           backgroundColor: Colors.white,
         ),
@@ -46,15 +50,20 @@ class _PaymentDoneState extends State<PaymentDone> {
               height: 300,
               width: MediaQuery.of(context).size.width - 20,
               child: Image.asset(
-                'assets/yay.gif',
-                fit: BoxFit.cover,
+                'assets/143.png',
+                fit: BoxFit.fitHeight,
               )),
           SizedBox(
             height: 10,
           ),
           Text(
-            'Your item is on its way! Speak to the seller to discuss delivery methods',
+            'Hooray! Your item is on its way!\nLook out for the Postman!',
             textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.deepPurple,
+                fontFamily: 'Helvetica',
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
           ),
           SizedBox(
             height: 10,

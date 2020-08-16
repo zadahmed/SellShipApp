@@ -25,6 +25,7 @@ class Item {
   final String subsubcategory;
   final double distance;
   final String brand;
+  final int weight;
   final bool sold;
   final String size;
 
@@ -34,6 +35,7 @@ class Item {
       this.image,
       this.image1,
       this.date,
+      this.weight,
       this.image2,
       this.image3,
       this.image4,

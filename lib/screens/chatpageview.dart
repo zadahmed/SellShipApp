@@ -4,7 +4,7 @@ import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/details.dart';
-import 'package:SellShip/screens/orderdetail.dart';
+import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';

@@ -68,6 +68,8 @@ dependencies:
   flutter_easyrefresh: 2.1.1
   flutter_sticky_header: "^0.4.2"
   firebase_auth: 0.16.1
+  smooth_star_rating: 1.1.1
+
 
 
 
@@ -115,6 +117,7 @@ flutter:
     - Books.jpeg
     - laptops.jpeg
     - phones.jpeg
+    - 143.png
     - logotransparent.png
     - assets/electronics/
     - assets/beauty/

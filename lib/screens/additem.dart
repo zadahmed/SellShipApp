@@ -208,9 +208,6 @@ class _AddItemState extends State<AddItem> {
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  var fees;
-  var totalpayable;
-
   Future getImageCamera4() async {
     var image = await ImagePicker.pickImage(
         source: ImageSource.camera, maxHeight: 600, maxWidth: 600);
@@ -2358,31 +2355,6 @@ class _AddItemState extends State<AddItem> {
                                                 cursorColor: Color(0xFF979797),
                                                 controller:
                                                     businesspricecontroller,
-                                                onChanged: (text) {
-                                                  if (int.parse(
-                                                          businesspricecontroller
-                                                              .text) <
-                                                      20) {
-                                                    fees = 2.0;
-                                                  } else {
-                                                    fees = 0.10 *
-                                                        int.parse(
-                                                            businesspricecontroller
-                                                                .text);
-                                                    if (fees > 200.0) {
-                                                      fees = 200;
-                                                    }
-                                                  }
-
-                                                  totalpayable = double.parse(
-                                                          businesspricecontroller
-                                                              .text) -
-                                                      fees;
-                                                  setState(() {
-                                                    totalpayable = totalpayable;
-                                                    fees = fees;
-                                                  });
-                                                },
                                                 keyboardType: TextInputType
                                                     .numberWithOptions(),
                                                 decoration: InputDecoration(
@@ -2441,67 +2413,6 @@ class _AddItemState extends State<AddItem> {
                                     ),
                                   ),
                                 ),
-                                fees != null
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 10,
-                                              bottom: 15,
-                                              left: 15,
-                                              right: 15),
-                                          child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Text('Selling fee (10%)',
-                                                      style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 16,
-                                                      )),
-                                                  Text(currency +
-                                                      ' ' +
-                                                      fees.toString())
-                                                ],
-                                              )),
-                                        ),
-                                      )
-                                    : Container(),
-                                fees != null
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 10,
-                                              bottom: 15,
-                                              left: 15,
-                                              right: 15),
-                                          child: Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Text('You earn',
-                                                      style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 16,
-                                                      )),
-                                                  Text(currency +
-                                                      ' ' +
-                                                      totalpayable.toString())
-                                                ],
-                                              )),
-                                        ))
-                                    : Container(),
                                 SizedBox(
                                   height: 10.0,
                                 ),
@@ -2568,112 +2479,129 @@ class _AddItemState extends State<AddItem> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 15,
-                                    bottom: 10,
-                                  ),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Item Weight',
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 15,
-                                    bottom: 10,
-                                  ),
-                                  child: Container(
-                                    height: 80,
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: weights.length,
-                                        itemBuilder: (BuildContext context,
-                                            int position) {
-                                          return Padding(
-                                              padding: EdgeInsets.all(5),
-                                              child: InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      _selectedweight =
-                                                          position;
-                                                      itemweight = int.parse(
-                                                          weights[position]);
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            width: 0.2,
-                                                            color: Colors.grey),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(15),
-                                                        color: _selectedweight ==
-                                                                position
-                                                            ? Colors
-                                                                .deepPurpleAccent
-                                                            : Colors.white,
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors
-                                                                .grey.shade300,
-                                                            offset: Offset(0.0,
-                                                                1.0), //(x,y)
-                                                            blurRadius: 6.0,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      height: 80,
-                                                      width: 90,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(
-                                                            Feather.box,
-                                                            size: 30,
-                                                            color: _selectedweight ==
-                                                                    position
-                                                                ? Colors.white
-                                                                : Colors
-                                                                    .deepPurpleAccent,
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Text(
-                                                            'Upto ' +
-                                                                weights[
-                                                                    position] +
-                                                                ' ' +
-                                                                metric,
-                                                            style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 14,
+                                shippingcheckbox == true
+                                    ? Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 10,
+                                        ),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Item Weight',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                                shippingcheckbox == true
+                                    ? Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 10,
+                                        ),
+                                        child: Container(
+                                          height: 80,
+                                          child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: weights.length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int position) {
+                                                return Padding(
+                                                    padding: EdgeInsets.all(5),
+                                                    child: InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            _selectedweight =
+                                                                position;
+                                                            itemweight = int
+                                                                .parse(weights[
+                                                                    position]);
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border: Border.all(
+                                                                  width: 0.2,
+                                                                  color: Colors
+                                                                      .grey),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
                                                               color: _selectedweight ==
                                                                       position
-                                                                  ? Colors.white
+                                                                  ? Colors
+                                                                      .deepPurpleAccent
                                                                   : Colors
-                                                                      .deepPurpleAccent,
+                                                                      .white,
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                  offset: Offset(
+                                                                      0.0,
+                                                                      1.0), //(x,y)
+                                                                  blurRadius:
+                                                                      6.0,
+                                                                ),
+                                                              ],
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ))));
-                                        }),
-                                  ),
-                                ),
+                                                            height: 80,
+                                                            width: 90,
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Icon(
+                                                                  Feather.box,
+                                                                  size: 30,
+                                                                  color: _selectedweight ==
+                                                                          position
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .deepPurpleAccent,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Text(
+                                                                  'Upto ' +
+                                                                      weights[
+                                                                          position] +
+                                                                      ' ' +
+                                                                      metric,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        14,
+                                                                    color: _selectedweight ==
+                                                                            position
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .deepPurpleAccent,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ))));
+                                              }),
+                                        ),
+                                      )
+                                    : Container(),
                                 Padding(
                                   padding: EdgeInsets.only(
                                     left: 15,

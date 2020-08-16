@@ -374,16 +374,20 @@ class _UserItemsState extends State<UserItems> {
                                               ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: Text(
-                                        capitalize(firstname) +
-                                            ' ' +
-                                            capitalize(lastname),
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold),
+                                    Container(
+                                      width: 150,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          capitalize(firstname) +
+                                              ' ' +
+                                              capitalize(lastname),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -419,7 +423,7 @@ class _UserItemsState extends State<UserItems> {
                                         ],
                                       ),
                                       SizedBox(
-                                        width: 30,
+                                        width: 20,
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -445,7 +449,7 @@ class _UserItemsState extends State<UserItems> {
                                         ],
                                       ),
                                       SizedBox(
-                                        width: 30,
+                                        width: 20,
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -1757,464 +1761,24 @@ class _UserItemsState extends State<UserItems> {
                                         )));
                               }, childCount: itemsgrid.length),
                             ))
-                      : SliverToBoxAdapter(
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 16.0),
-                            child: Shimmer.fromColors(
-                              baseColor: Colors.grey[300],
-                              highlightColor: Colors.grey[100],
-                              child: Column(
-                                children: [0, 1, 2, 3, 4, 5, 6]
-                                    .map((_) => Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                width: 48.0,
-                                                height: 48.0,
-                                                color: Colors.white,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 8.0,
-                                                      color: Colors.white,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 2.0),
-                                                    ),
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 8.0,
-                                                      color: Colors.white,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 2.0),
-                                                    ),
-                                                    Container(
-                                                      width: 40.0,
-                                                      height: 8.0,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ))
-                                    .toList(),
+                      : SliverFillRemaining(
+                          child: Column(
+                            children: <Widget>[
+                              Center(
+                                child: Text(
+                                  'Looks like there are no items here!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 14),
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                  child: Image.asset(
+                                'assets/little_theologians_4x.png',
+                                fit: BoxFit.fitWidth,
+                              ))
+                            ],
                           ),
                         ),
-
-//      appBar: AppBar(
-//        backgroundColor: Colors.deepOrange,
-//        title: Text(
-//          '$username'.toUpperCase(),
-//          textAlign: TextAlign.center,
-//          style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
-//        ),
-//      ),
-//      body: loading == false
-//        ? LayoutBuilder(builder:
-//            (BuildContext context, BoxConstraints viewportConstraints) {
-//    return SingleChildScrollView(
-//    controller: _scrollController,
-//    child: ConstrainedBox(
-//    constraints: BoxConstraints(
-//    minHeight: viewportConstraints.maxHeight,
-//    ),
-//    child: Column(
-//    mainAxisSize: MainAxisSize.min,
-//    mainAxisAlignment: MainAxisAlignment.start,
-//    children: <Widget>[
-//    SizedBox(
-//    height: 10,
-//    ),
-//    Container(
-//    height: 100,
-//    width: 100,
-//    decoration: BoxDecoration(
-//    borderRadius: BorderRadius.circular(100)),
-//    child: ClipRRect(
-//    borderRadius: BorderRadius.circular(60),
-//    child: profilepicture == null
-//    ? Image.asset(
-//    'assets/personplaceholder.png',
-//    fit: BoxFit.cover,
-//    )
-//        : Image.network(
-//    profilepicture,
-//    fit: BoxFit.cover,
-//    ),
-//    ),
-//    ),
-//    SizedBox(height: 25.0),
-//    Text(
-//    firstname + ' ' + lastname,
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontSize: 20.0,
-//    fontWeight: FontWeight.bold),
-//    ),
-//    SizedBox(height: 4.0),
-//    Padding(
-//    padding: EdgeInsets.only(
-//    top: 10, left: 30, right: 30, bottom: 10),
-//    child: Row(
-//    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//    children: <Widget>[
-//    Column(
-//    mainAxisAlignment: MainAxisAlignment.center,
-//    children: <Widget>[
-//    Text(
-//    followers == null
-//    ? '0'
-//        : followers.toString(),
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontWeight: FontWeight.bold),
-//    ),
-//    SizedBox(height: 5.0),
-//    Text(
-//    'FOLLOWERS',
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    color: Colors.grey),
-//    )
-//    ],
-//    ),
-//    Column(
-//    mainAxisAlignment: MainAxisAlignment.center,
-//    children: <Widget>[
-//    Text(
-//    itemssold == null
-//    ? '0'
-//        : itemssold.toString(),
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontWeight: FontWeight.bold),
-//    ),
-//    SizedBox(height: 5.0),
-//    Text(
-//    'ITEMS SOLD',
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    color: Colors.grey),
-//    )
-//    ],
-//    ),
-//    Column(
-//    mainAxisAlignment: MainAxisAlignment.center,
-//    children: <Widget>[
-//    Text(
-//    following == null
-//    ? '0'
-//        : following.toString(),
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontWeight: FontWeight.bold),
-//    ),
-//    SizedBox(height: 5.0),
-//    Text(
-//    'FOLLOWING',
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    color: Colors.grey),
-//    )
-//    ],
-//    )
-//    ],
-//    ),
-//    ),
-//    Padding(
-//    padding: EdgeInsets.all(10),
-//    child: Container(
-//    height: 50,
-//    width: 400,
-//    decoration: BoxDecoration(color: Colors.amber),
-//    child: InkWell(
-//    onTap: () async {
-//    if (follow == true) {
-//    var user1 =
-//    await storage.read(key: 'userid');
-//    var followurl =
-//    'https://api.sellship.co/api/follow/' +
-//    user1 +
-//    '/' +
-//    userid;
-//
-//    final followresponse =
-//    await http.get(followurl);
-//    if (followresponse.statusCode == 200) {
-//    print('UnFollowed');
-//    }
-//    setState(() {
-//    follow = false;
-//    followers = followers - 1;
-//    });
-//    } else {
-//    var user1 =
-//    await storage.read(key: 'userid');
-//    var followurl =
-//    'https://api.sellship.co/api/follow/' +
-//    user1 +
-//    '/' +
-//    userid;
-//
-//    final followresponse =
-//    await http.get(followurl);
-//    if (followresponse.statusCode == 200) {
-//    print('Followed');
-//    }
-//
-//    setState(() {
-//    follow = true;
-//    followers = followers + 1;
-//    });
-//    }
-//    },
-//    child: Center(
-//    child: Text(
-//    follow == true ? 'FOLLOWING' : 'FOLLOW',
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontSize: 16,
-//    color: Colors.white,
-//    fontWeight: FontWeight.bold),
-//    ),
-//    ),
-//    ),
-//    ),
-//    ),
-//    Divider(),
-//    Center(
-//    child: Text(
-//    '$firstname\'s Items',
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontSize: 16,
-//    fontWeight: FontWeight.bold),
-//    ),
-//    ),
-//    SizedBox(
-//    height: 10.0,
-//    ),
-//    Itemname.isNotEmpty
-//    ? Flexible(
-//    child: MediaQuery.removePadding(
-//    context: context,
-//    removeTop: true,
-//    child: StaggeredGridView.countBuilder(
-//    crossAxisCount: 2,
-//    mainAxisSpacing: 4,
-//    crossAxisSpacing: 4,
-//    itemCount: Itemname.length,
-//    shrinkWrap: true,
-//    physics: NeverScrollableScrollPhysics(),
-//    itemBuilder: (context, index) {
-//    if (index != 0 && index % 4 == 0) {
-//    return Platform.isIOS == true
-//    ? Container(
-//    height: 330,
-//    padding: EdgeInsets.all(10),
-//    margin: EdgeInsets.only(
-//    bottom: 20.0),
-//    child: NativeAdmob(
-//    adUnitID: _iosadUnitID,
-//    controller: _controller,
-//    ),
-//    )
-//        : Container(
-//    height: 330,
-//    padding: EdgeInsets.all(10),
-//    margin: EdgeInsets.only(
-//    bottom: 20.0),
-//    child: NativeAdmob(
-//    adUnitID:
-//    _androidadUnitID,
-//    controller: _controller,
-//    ),
-//    );
-//    }
-//    return Padding(
-//    padding: EdgeInsets.all(4),
-//    child: InkWell(
-//    onTap: () {
-//    Navigator.push(
-//    context,
-//    MaterialPageRoute(
-//    builder: (context) =>
-//    Details(
-//    sold: Itemsold[
-//    index],
-//    itemid: Itemid[
-//    index])),
-//    );
-//    },
-//    child: Hero(
-//    tag: Itemid[index],
-//    child: Container(
-//    child: Column(
-//    children: <Widget>[
-//    new Stack(
-//    children: <
-//    Widget>[
-//    Container(
-//    height: 150,
-//    width: MediaQuery.of(
-//    context)
-//        .size
-//        .width,
-//    child:
-//    ClipRRect(
-//    borderRadius:
-//    BorderRadius.circular(
-//    15),
-//    child:
-//    CachedNetworkImage(
-//    imageUrl:
-//    Itemimage[
-//    index],
-//    fit: BoxFit
-//        .cover,
-//    placeholder: (context,
-//    url) =>
-//    SpinKitChasingDots(
-//    color: Colors.deepOrange),
-//    errorWidget: (context,
-//    url,
-//    error) =>
-//    Icon(Icons
-//        .error),
-//    ),
-//    ),
-//    ),
-//    Itemsold[index] ==
-//    true
-//    ? Align(
-//    alignment:
-//    Alignment
-//        .topRight,
-//    child:
-//    Container(
-//    height:
-//    20,
-//    width:
-//    50,
-//    color:
-//    Colors.amber,
-//    child:
-//    Text(
-//    'Sold',
-//    textAlign:
-//    TextAlign.center,
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    color: Colors.white,
-//    fontWeight: FontWeight.bold),
-//    ),
-//    ))
-//        : Container(),
-//    ],
-//    ),
-//    new Align(
-//    alignment: Alignment
-//        .centerLeft,
-//    child: Padding(
-//    padding:
-//    const EdgeInsets.all(
-//    5.0),
-//    child: new Column(
-//    mainAxisAlignment:
-//    MainAxisAlignment
-//        .start,
-//    crossAxisAlignment:
-//    CrossAxisAlignment
-//        .center,
-//    children: <
-//    Widget>[
-//    Column(
-//    mainAxisAlignment:
-//    MainAxisAlignment.start,
-//    crossAxisAlignment:
-//    CrossAxisAlignment.start,
-//    children: <Widget>[
-//    Text(
-//    Itemname[index],
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontSize: 16,
-//    fontWeight: FontWeight.w600,
-//    ),
-//    textAlign: TextAlign.left,
-//    ),
-//    SizedBox(height: 3.0),
-//    Container(
-//    child: Text(
-//    currency + ' ' + Itemprice[index].toString(),
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontSize: 14,
-//    fontWeight: FontWeight.w400,
-//    ),
-//    textAlign: TextAlign.left,
-//    ),
-//    ),
-//    ],
-//    ),
-//    ])))
-//    ],
-//    ),
-//    ))));
-//    },
-//    staggeredTileBuilder: (int index) {
-//    return StaggeredTile.fit(1);
-//    },
-//    )))
-//        : Expanded(
-//    child: Column(
-//    children: <Widget>[
-//    Center(
-//    child: Text(
-//    'Go ahead Add an Item \n and start selling!',
-//    textAlign: TextAlign.center,
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontSize: 20,
-//    ),
-//    ),
-//    ),
-//    Expanded(
-//    child: Image.asset(
-//    'assets/items.png',
-//    fit: BoxFit.fitWidth,
-//    ))
-//    ],
-//    )),
-//    ],
-//    )));
-//    })
-//        :
                 ])
               : Container(
                   width: double.infinity,

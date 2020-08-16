@@ -60,7 +60,6 @@ class _DetailsState extends State<Details> {
       sold = widget.sold;
     });
     fetchItem();
-    getfavourites();
   }
 
   TextEditingController offercontroller = TextEditingController();
@@ -530,7 +529,8 @@ class _DetailsState extends State<Details> {
     if (newItem.image5 != null) {
       images.add(newItem.image5);
     }
-    print(images.length);
+
+    getfavourites();
 
     return newItem;
   }

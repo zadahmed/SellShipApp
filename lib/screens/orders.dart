@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/comments.dart';
-import 'package:SellShip/screens/orderdetail.dart';
+import 'package:SellShip/screens/orderbuyer.dart';
+import 'package:SellShip/screens/orderseller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -336,56 +337,46 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                     children: <
                                                                         Widget>[
                                                                       Container(
+                                                                          width:
+                                                                              200,
                                                                           child:
                                                                               Column(
-                                                                        children: <
-                                                                            Widget>[
-                                                                          Text(
-                                                                            item[index].name,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontFamily: 'Helvetica',
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.w800,
-                                                                            ),
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                          ),
-                                                                          Text(
-                                                                            'Bought for ' +
-                                                                                currency +
-                                                                                item[index].subcategory,
-                                                                            style: TextStyle(
-                                                                                fontFamily: 'Helvetica',
-                                                                                fontSize: 16,
-                                                                                fontWeight: FontWeight.w800,
-                                                                                color: Colors.deepOrange),
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                          ),
-                                                                          Text(
-                                                                            item[index].date,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontFamily: 'Helvetica',
-                                                                              fontSize: 14,
-                                                                              color: Colors.grey,
-                                                                            ),
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                          ),
-                                                                        ],
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.start,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                      )),
+                                                                            children: <Widget>[
+                                                                              Text(
+                                                                                item[index].name,
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 16,
+                                                                                  fontWeight: FontWeight.w800,
+                                                                                ),
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
+                                                                              Text(
+                                                                                'Bought for ' + currency + item[index].subcategory,
+                                                                                style: TextStyle(fontFamily: 'Helvetica', fontSize: 16, fontWeight: FontWeight.w800, color: Colors.deepOrange),
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
+                                                                              Text(
+                                                                                item[index].date,
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 14,
+                                                                                  color: Colors.grey,
+                                                                                ),
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
+                                                                            ],
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.start,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                          )),
                                                                       InkWell(
                                                                           onTap:
                                                                               () {
                                                                             Navigator.push(
                                                                               context,
-                                                                              MaterialPageRoute(builder: (context) => OrderDetail(messageid: item[index].description, item: item[index])),
+                                                                              MaterialPageRoute(builder: (context) => OrderBuyer(messageid: item[index].description, item: item[index])),
                                                                             );
                                                                           },
                                                                           child:
