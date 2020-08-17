@@ -123,6 +123,10 @@ class _AddressState extends State<Address> {
 
   Widget newAddress(BuildContext context) {}
 
+  List<String> addresses1list = List<String>();
+  List<String> citylist = List<String>();
+  List<String> statelist = List<String>();
+  List<String> zipcodelist = List<String>();
   List<String> addresseslist = List<String>();
 
   loadaddresses() async {
@@ -134,7 +138,6 @@ class _AddressState extends State<Address> {
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
-      print(jsonbody['addresses']);
       var addresses = jsonbody['addresses'];
 
       for (int i = 0; i < addresses.length; i++) {
@@ -146,6 +149,10 @@ class _AddressState extends State<Address> {
               ' \n' +
               addresses[i]['zip_code'].toString();
           addresseslist.add(address);
+          addresses1list.add(addresses[i]['addrLine1'].join(''));
+          citylist.add(addresses[i]['city']);
+          statelist.add(addresses[i]['state']);
+          zipcodelist.add(addresses[i]['zip_code'].toString());
         } else {
           address = addresses[i]['addrLine1'] +
               ' \n' +
@@ -153,13 +160,19 @@ class _AddressState extends State<Address> {
               ' \n' +
               addresses[i]['zip_code'].toString();
           addresseslist.add(address);
+          addresses1list.add(addresses[i]['addrLine1']);
+          citylist.add(addresses[i]['city']);
+          statelist.add(addresses[i]['state']);
+          zipcodelist.add(addresses[i]['zip_code'].toString());
         }
       }
 
-      print(addresseslist);
-
       setState(() {
         addresseslist = addresseslist;
+        addresses1list = addresses1list;
+        citylist = citylist;
+        statelist = statelist;
+        zipcodelist = zipcodelist;
       });
     } else {
       setState(() {
@@ -232,7 +245,13 @@ class _AddressState extends State<Address> {
                               return ListTile(
                                 leading: Icon(FontAwesome.home),
                                 onTap: () {
-                                  Navigator.pop(context, addresseslist[index]);
+                                  Navigator.of(context).pop({
+                                    'address': addresseslist[index],
+                                    'addrLine1': addresses1list[index],
+                                    'city': citylist[index],
+                                    'state': statelist[index],
+                                    'zip_code': zipcodelist[index]
+                                  });
                                 },
                                 title: Text('${addresseslist[index]}'),
                               );
@@ -674,7 +693,7 @@ class _AddressState extends State<Address> {
                                     ));
                           } else {
                             var addressreturned = jsonbody['response'];
-                            print(jsonbody);
+
                             showDialog(
                                 context: context,
                                 builder: (_) => AssetGiffyDialog(
@@ -697,7 +716,23 @@ class _AddressState extends State<Address> {
                                         Navigator.of(context,
                                                 rootNavigator: true)
                                             .pop('dialog');
-                                        Navigator.pop(context, addressreturned);
+
+                                        Navigator.of(context).pop({
+                                          'address':
+                                              addressreturned['addrLine1'] +
+                                                  ' ' +
+                                                  addressreturned['city'] +
+                                                  ', ' +
+                                                  addressreturned['state'] +
+                                                  ', ' +
+                                                  addressreturned['zip_code'],
+                                          'addrLine1':
+                                              addressreturned['addrLine1'],
+                                          'city': addressreturned['city'],
+                                          'state': addressreturned['state'],
+                                          'zip_code':
+                                              addressreturned['zip_code']
+                                        });
                                       },
                                     ));
                           }

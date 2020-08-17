@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
+import 'package:SellShip/screens/forgotpassword.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/signuppage.dart';
 import 'package:flutter/material.dart';
@@ -334,6 +335,29 @@ class _LoginState extends State<Login> {
                                 "Sign up",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600, fontSize: 14),
+                              ),
+                            ),
+                          ],
+                        )),
+                    FadeAnimation(
+                        1.5,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ForgotPassword()));
+                              },
+                              child: Text(
+                                "Forgot Password?",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                           ],

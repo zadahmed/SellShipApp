@@ -92,7 +92,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
       totalpaid = jsonbody['totalpayable'];
       date = s;
       deliverystage = delstage;
-      newitem = Item(weight: jsonbody['itemobject']['weight']);
+      newitem = Item(weight: int.parse(jsonbody['itemobject']['weight']));
       itemfees = jsonbody['fees'];
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];
@@ -363,7 +363,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
                     height: 5,
                   ),
                   Text(
-                    'Your item has been delivered! Make sure to confirm the item is as described and review your seller! This helps build the SellShip community!',
+                    'Congratulations on recieving your item! Make sure to confirm the item is as described and review your seller! This helps build the SellShip community!',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 14,

@@ -1,4 +1,5 @@
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/screens/orderbuyer.dart';
 
 import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/rootscreen.dart';
@@ -73,7 +74,7 @@ class _PaymentDoneState extends State<PaymentDone> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => OrderDetail(
+                    builder: (context) => OrderBuyer(
                           item: item,
                           messageid: messageid,
                         )),

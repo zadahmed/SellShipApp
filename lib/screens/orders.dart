@@ -619,50 +619,40 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                     children: <
                                                                         Widget>[
                                                                       Container(
+                                                                          width:
+                                                                              200,
                                                                           child:
                                                                               Column(
-                                                                        children: <
-                                                                            Widget>[
-                                                                          Text(
-                                                                            sellingitem[index].name,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontFamily: 'Helvetica',
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.w800,
-                                                                            ),
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                          ),
-                                                                          Text(
-                                                                            'Sold for ' +
-                                                                                currency +
-                                                                                sellingitem[index].subcategory,
-                                                                            style: TextStyle(
-                                                                                fontFamily: 'Helvetica',
-                                                                                fontSize: 16,
-                                                                                fontWeight: FontWeight.w800,
-                                                                                color: Colors.deepOrange),
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                          ),
-                                                                          Text(
-                                                                            sellingitem[index].date,
-                                                                            style:
-                                                                                TextStyle(
-                                                                              fontFamily: 'Helvetica',
-                                                                              fontSize: 14,
-                                                                              color: Colors.grey,
-                                                                            ),
-                                                                            overflow:
-                                                                                TextOverflow.ellipsis,
-                                                                          ),
-                                                                        ],
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.start,
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                      )),
+                                                                            children: <Widget>[
+                                                                              Text(
+                                                                                sellingitem[index].name,
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 16,
+                                                                                  fontWeight: FontWeight.w800,
+                                                                                ),
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
+                                                                              Text(
+                                                                                'Sold for ' + currency + sellingitem[index].subcategory,
+                                                                                style: TextStyle(fontFamily: 'Helvetica', fontSize: 16, fontWeight: FontWeight.w800, color: Colors.deepOrange),
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
+                                                                              Text(
+                                                                                sellingitem[index].date,
+                                                                                style: TextStyle(
+                                                                                  fontFamily: 'Helvetica',
+                                                                                  fontSize: 14,
+                                                                                  color: Colors.grey,
+                                                                                ),
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
+                                                                            ],
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.start,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                          )),
                                                                       InkWell(
                                                                           onTap:
                                                                               () {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/screens/ReviewBuyer.dart';
 import 'package:SellShip/screens/address.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/useritems.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -105,7 +107,7 @@ class _OrderDetailState extends State<OrderDetail> {
       totalpaid = jsonbody['totalpayable'];
       date = s;
       deliverystage = delstage;
-      newitem = Item(weight: jsonbody['itemobject']['weight']);
+      newitem = Item(weight: int.parse(jsonbody['itemobject']['weight']));
       itemfees = jsonbody['fees'];
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];
@@ -148,39 +150,15 @@ class _OrderDetailState extends State<OrderDetail> {
                   addressreturned = true;
                 });
               } else {
-                if (result['addrLine1'] is List) {
-                  setState(() {
-                    addressline1 = result['addrLine1'].join(' ');
-                    city = result['city'];
-                    state = result['state'];
-                    zipcode = result['zip_code'];
+                setState(() {
+                  addressline1 = result['addrLine1'];
+                  city = result['city'];
+                  state = result['state'];
+                  zipcode = result['zip_code'];
 
-                    deliveryaddress = addressline1 +
-                        ' \n' +
-                        city +
-                        ' \,' +
-                        state +
-                        ' \,' +
-                        zipcode;
-                    addressreturned = true;
-                  });
-                } else {
-                  setState(() {
-                    addressline1 = result['addrLine1'];
-                    city = result['city'];
-                    state = result['state'];
-                    zipcode = result['zip_code'];
-
-                    deliveryaddress = addressline1 +
-                        ' \n' +
-                        city +
-                        ' \,' +
-                        state +
-                        ' \,' +
-                        zipcode;
-                    addressreturned = true;
-                  });
-                }
+                  deliveryaddress = result['address'];
+                  addressreturned = true;
+                });
               }
             },
             leading: Text(
@@ -435,6 +413,71 @@ class _OrderDetailState extends State<OrderDetail> {
                   ),
                   Text(
                     'Kick back and relax! your item is on the way to the buyer, once the buyer confirms delivery you may review the buyer and recieve your money!',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (deliverystage == 3) {
+      return Container(
+        height: 230,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade300,
+              offset: Offset(0.0, 1.0), //(x,y)
+              blurRadius: 6.0,
+            ),
+          ],
+          color: Colors.white,
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: Icon(
+                      Feather.clock,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                  ),
+                ]),
+            Container(
+              padding: const EdgeInsets.all(15.0),
+              width: MediaQuery.of(context).size.width * 0.85,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    'Review Buyer',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        color: Colors.deepPurpleAccent,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    'Your item has been delivered! Make sure to review your experience with the buyer! This helps build the SellShip community!',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 14,
@@ -723,6 +766,97 @@ class _OrderDetailState extends State<OrderDetail> {
           ],
         ),
       );
+    } else if (deliverystage == 3) {
+      return Container(
+        height: 70,
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.deepOrange,
+                  child: CircleAvatar(
+                    radius: 19,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.deepOrange,
+                    child: Icon(
+                      Icons.check,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text('Prepare')
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.deepOrange,
+                  child: CircleAvatar(
+                    radius: 19,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.deepOrange,
+                    child: Icon(
+                      Icons.check,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text('Ship')
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.deepOrange,
+                  child: CircleAvatar(
+                    radius: 19,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.deepOrange,
+                    child: Icon(
+                      Icons.check,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text('Delivered')
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.deepOrange,
+                  child: CircleAvatar(
+                    radius: 19,
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.deepOrange,
+                    child: Icon(
+                      Icons.star,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text('Review')
+              ],
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -906,8 +1040,33 @@ class _OrderDetailState extends State<OrderDetail> {
                     InkWell(
                         onTap: () async {
                           if (deliverystage == 0) {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            20.0)), //this right here
+                                    child: Container(
+                                      height: 100,
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: SpinKitChasingDots(
+                                              color: Colors.deepOrange)),
+                                    ),
+                                  );
+                                });
                             var url = 'https://api.sellship.co/api/shipitem/' +
-                                messageid;
+                                messageid +
+                                '/' +
+                                addressline1 +
+                                '/' +
+                                city +
+                                '/' +
+                                state +
+                                '/' +
+                                zipcode;
 
                             final response = await http.get(url);
 
@@ -917,7 +1076,27 @@ class _OrderDetailState extends State<OrderDetail> {
                               deliverystage = jsonbody['deliverystage'];
                               deliveredtext = 'Item Shipped';
                             });
+
+                            Navigator.of(context, rootNavigator: true)
+                                .pop('dialog');
                           } else if (deliverystage == 1) {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            20.0)), //this right here
+                                    child: Container(
+                                      height: 100,
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: SpinKitChasingDots(
+                                              color: Colors.deepOrange)),
+                                    ),
+                                  );
+                                });
                             var url = 'https://api.sellship.co/api/shipped/' +
                                 messageid;
 
@@ -929,6 +1108,17 @@ class _OrderDetailState extends State<OrderDetail> {
                               deliverystage = jsonbody['deliverystage'];
                               deliveredtext = "Waiting for Delivery";
                             });
+                            Navigator.of(context, rootNavigator: true)
+                                .pop('dialog');
+                          } else if (deliverystage == 3) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ReviewBuyer(
+                                        reviewuserid: item.userid,
+                                        messageid: messageid,
+                                      )),
+                            );
                           }
                         },
                         child: Padding(
