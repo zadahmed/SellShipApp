@@ -1,5 +1,6 @@
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/orderbuyer.dart';
+import 'package:SellShip/screens/orderbuyeruae.dart';
 
 import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/rootscreen.dart';
@@ -29,6 +30,8 @@ class _PaymentDoneState extends State<PaymentDone> {
       messageid = widget.messageid;
     });
   }
+
+  final storage = new FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -70,15 +73,28 @@ class _PaymentDoneState extends State<PaymentDone> {
             height: 10,
           ),
           InkWell(
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OrderBuyer(
-                          item: item,
-                          messageid: messageid,
-                        )),
-              );
+            onTap: () async {
+              var countr = await storage.read(key: 'country');
+
+              if (countr.trim().toLowerCase() == 'united arab emirates') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OrderBuyerUAE(
+                            item: item,
+                            messageid: messageid,
+                          )),
+                );
+              } else if (countr.trim().toLowerCase() == 'united states') {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OrderBuyer(
+                            item: item,
+                            messageid: messageid,
+                          )),
+                );
+              }
             },
             child: Padding(
               padding: EdgeInsets.only(left: 10, right: 10),

@@ -61,6 +61,7 @@ class _AddItemState extends State<AddItem> {
       });
     }
     userid = await storage.read(key: 'userid');
+
     setState(() {
       userid = userid;
     });
@@ -85,6 +86,7 @@ class _AddItemState extends State<AddItem> {
     }
   }
 
+  GlobalKey _toolTipKey = GlobalKey();
   LatLng position;
 
   final businessnameController = TextEditingController();
@@ -145,6 +147,9 @@ class _AddItemState extends State<AddItem> {
   int _selectedcondition = -1;
 
   List<String> _subsubcategory;
+
+  var totalpayable;
+  var fees;
 
   List<String> brands = List<String>();
 
@@ -2355,6 +2360,38 @@ class _AddItemState extends State<AddItem> {
                                                 cursorColor: Color(0xFF979797),
                                                 controller:
                                                     businesspricecontroller,
+                                                onChanged: (text) {
+                                                  if (int.parse(
+                                                          businesspricecontroller
+                                                              .text) <
+                                                      20) {
+                                                    if (int.parse(
+                                                            businesspricecontroller
+                                                                .text) <=
+                                                        0) {
+                                                      fees = 0;
+                                                    } else {
+                                                      fees = 2.0;
+                                                    }
+                                                  } else {
+                                                    fees = 0.10 *
+                                                        int.parse(
+                                                            businesspricecontroller
+                                                                .text);
+                                                  }
+
+                                                  totalpayable = double.parse(
+                                                          businesspricecontroller
+                                                              .text) -
+                                                      fees;
+                                                  if (totalpayable <= 0) {
+                                                    totalpayable = 0;
+                                                  }
+                                                  setState(() {
+                                                    totalpayable = totalpayable;
+                                                    fees = fees;
+                                                  });
+                                                },
                                                 keyboardType: TextInputType
                                                     .numberWithOptions(),
                                                 decoration: InputDecoration(
@@ -2413,6 +2450,142 @@ class _AddItemState extends State<AddItem> {
                                     ),
                                   ),
                                 ),
+                                fees != null
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 15,
+                                              left: 15,
+                                              right: 15),
+                                          child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Container(
+                                                    width: 155,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          'Selling fee (10%)',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            final dynamic
+                                                                tooltip =
+                                                                _toolTipKey
+                                                                    .currentState;
+                                                            tooltip
+                                                                .ensureTooltipVisible();
+                                                          },
+                                                          child: Tooltip(
+                                                              key: _toolTipKey,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                boxShadow: <
+                                                                    BoxShadow>[
+                                                                  BoxShadow(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .withOpacity(
+                                                                              0.2),
+                                                                      offset: const Offset(
+                                                                          0.0,
+                                                                          0.6),
+                                                                      blurRadius:
+                                                                          5.0),
+                                                                ],
+                                                              ),
+                                                              textStyle:
+                                                                  TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 12,
+                                                              ),
+                                                              message:
+                                                                  'This helps us offer you 24/7 support, cover the transaction fees and protect you as a seller. Overall improve the SellShip community.',
+                                                              child: Icon(
+                                                                FontAwesome5
+                                                                    .question_circle,
+                                                                size: 15,
+                                                                color:
+                                                                    Colors.grey,
+                                                              )),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    currency +
+                                                        ' ' +
+                                                        fees.toString(),
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  )
+                                                ],
+                                              )),
+                                        ),
+                                      )
+                                    : Container(),
+                                fees != null
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 10,
+                                              bottom: 15,
+                                              left: 15,
+                                              right: 15),
+                                          child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: <Widget>[
+                                                  Text(
+                                                    'You earn',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  ),
+                                                  Text(
+                                                    currency +
+                                                        ' ' +
+                                                        totalpayable.toString(),
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.black),
+                                                  )
+                                                ],
+                                              )),
+                                        ))
+                                    : Container(),
                                 SizedBox(
                                   height: 10.0,
                                 ),

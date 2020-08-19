@@ -4,6 +4,7 @@ import 'package:SellShip/screens/rootscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -150,31 +151,54 @@ class _ReviewBuyerState extends State<ReviewBuyer> {
               ),
               InkWell(
                   onTap: () async {
-                    var review;
-                    if (reviewcontroller.text == null) {
-                      review = '';
+                    if (reviewcontroller.text.isNotEmpty) {
+                      print(';sdcsdcsdcrvdfvisdjnosdjsd');
+                      var userid = await storage.read(key: 'userid');
+                      var url = 'https://api.sellship.co/api/buyerreview/' +
+                          messageid +
+                          '/' +
+                          userid +
+                          '/' +
+                          reviewuser +
+                          '/' +
+                          rating.toString() +
+                          '/' +
+                          reviewcontroller.text;
+
+                      final response = await http.get(url);
+
+                      if (response.statusCode == 200) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RootScreen()),
+                        );
+                      }
                     } else {
-                      review = reviewcontroller.text;
-                    }
-                    var userid = await storage.read(key: 'userid');
-                    var url = 'https://api.sellship.co/api/buyerreview/' +
-                        messageid +
-                        '/' +
-                        userid +
-                        '/' +
-                        reviewuser +
-                        '/' +
-                        rating.toString() +
-                        '/' +
-                        review;
-
-                    final response = await http.get(url);
-
-                    if (response.statusCode == 200) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RootScreen()),
-                      );
+                      showDialog(
+                          context: context,
+                          builder: (_) => AssetGiffyDialog(
+                                image: Image.asset(
+                                  'assets/oops.gif',
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(
+                                  'Oops!',
+                                  style: TextStyle(
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                description: Text(
+                                  'You need to enter a review for your Buyer!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(),
+                                ),
+                                onlyOkButton: true,
+                                entryAnimation: EntryAnimation.DEFAULT,
+                                onOkButtonPressed: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                },
+                              ));
                     }
                   },
                   child: Padding(

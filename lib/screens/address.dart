@@ -720,7 +720,7 @@ class _AddressState extends State<Address> {
                                         Navigator.of(context).pop({
                                           'address':
                                               addressreturned['addrLine1'] +
-                                                  ' ' +
+                                                  ' ,\n' +
                                                   addressreturned['city'] +
                                                   ', ' +
                                                   addressreturned['state'] +

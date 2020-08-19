@@ -22,20 +22,22 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
 
-class Checkout extends StatefulWidget {
+class CheckoutUAE extends StatefulWidget {
   Item item;
   String offer;
   String messageid;
-  Checkout({Key key, this.item, this.messageid, this.offer}) : super(key: key);
+  CheckoutUAE({Key key, this.item, this.messageid, this.offer})
+      : super(key: key);
   @override
-  _CheckoutState createState() => _CheckoutState();
+  _CheckoutUAEState createState() => _CheckoutUAEState();
 }
 
-class _CheckoutState extends State<Checkout> {
+class _CheckoutUAEState extends State<CheckoutUAE> {
   Item item;
   String messageid;
   String offer;
   var cardresult;
+  var country;
   @override
   void initState() {
     super.initState();
@@ -47,21 +49,22 @@ class _CheckoutState extends State<Checkout> {
       item = widget.item;
       offer = widget.offer;
     });
-    calculatefees();
+
+//    calculatefees();
   }
 
   var totalpayable;
 
-  calculatefees() {
-    var rate;
-    if (totalrate != null) {
-      rate = totalrate;
-    } else {
-      rate = 0;
-    }
-
-    totalpayable = double.parse(offer) + double.parse(rate.toString());
-  }
+//  calculatefees() {
+//    var rate;
+//    if (totalrate != null) {
+//      rate = totalrate;
+//    } else {
+//      rate = 0;
+//    }
+//
+//    totalpayable = double.parse(offer) + double.parse(rate.toString());
+//  }
 
   GlobalKey _toolTipKey = GlobalKey();
 
@@ -77,12 +80,14 @@ class _CheckoutState extends State<Checkout> {
         currency = 'AED';
         stripecurrency = 'AED';
         countrycode = 'AE';
+        country = countr;
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
         stripecurrency = 'USD';
         countrycode = 'US';
+        country = countr;
       });
     }
   }
@@ -154,34 +159,7 @@ class _CheckoutState extends State<Checkout> {
                       child: Container(
                         child: InkWell(
                           onTap: () async {
-                            if (deliveryaddress == null) {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => AssetGiffyDialog(
-                                        image: Image.asset(
-                                          'assets/oops.gif',
-                                          fit: BoxFit.cover,
-                                        ),
-                                        title: Text(
-                                          'Oops!',
-                                          style: TextStyle(
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        description: Text(
-                                          'Looks like your missing your delivery address!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(),
-                                        ),
-                                        onlyOkButton: true,
-                                        entryAnimation: EntryAnimation.DEFAULT,
-                                        onOkButtonPressed: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop('dialog');
-                                        },
-                                      ));
-                            } else if (paymentby == null) {
+                            if (paymentby == null) {
                               showDialog(
                                   context: context,
                                   builder: (_) => AssetGiffyDialog(
@@ -224,12 +202,15 @@ class _CheckoutState extends State<Checkout> {
                                           '/' +
                                           cardresult.paymentid.toString() +
                                           '/' +
-                                          totalpayable.toString() +
+                                          offer.toString() +
                                           '/' +
                                           stripecurrency;
                                   final response = await http.get(messageurl);
 
                                   if (response.statusCode == 200) {
+                                    deliveryaddress = 'UAE';
+                                    totalrate = 0;
+                                    totalpayable = offer;
                                     var messageurl =
                                         'https://api.sellship.co/api/payment/' +
                                             messageid +
@@ -298,12 +279,15 @@ class _CheckoutState extends State<Checkout> {
                                           '/' +
                                           cardresult['id'].toString() +
                                           '/' +
-                                          totalpayable.toString() +
+                                          offer.toString() +
                                           '/' +
                                           stripecurrency;
                                   final response = await http.get(messageurl);
 
                                   if (response.statusCode == 200) {
+                                    deliveryaddress = 'UAE';
+                                    totalrate = 0;
+                                    totalpayable = offer;
                                     var messageurl =
                                         'https://api.sellship.co/api/payment/' +
                                             messageid +
@@ -464,7 +448,7 @@ class _CheckoutState extends State<Checkout> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Your seller will ship out the item once the payment has been completed. Don\'t worry, we will only release the payment to the seller, once you confirm that you have recieved the item as listed.',
+                    'Your seller will ship out or meet up for the item once the payment has been completed. Don\'t worry, we will only release the payment to the seller, once you confirm that you have recieved the item as listed.',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 12,
@@ -485,102 +469,102 @@ class _CheckoutState extends State<Checkout> {
                   ),
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        offset: const Offset(0.0, 0.6),
-                        blurRadius: 5.0),
-                  ],
-                ),
-                child: ListTile(
-                    onTap: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Address()),
-                      );
-                      showDialog(
-                          context: context,
-                          barrierDismissible: true,
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20.0)), //this right here
-                              child: Container(
-                                height: 100,
-                                child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: SpinKitChasingDots(
-                                        color: Colors.deepPurpleAccent)),
-                              ),
-                            );
-                          });
-
-                      setState(() {
-                        addressline1 = result['addrLine1'];
-                        city = result['city'];
-                        state = result['state'];
-                        zipcode = result['zip_code'];
-
-                        deliveryaddress = result['addrLine1'] +
-                            ' ,\n' +
-                            result['city'] +
-                            ' ,' +
-                            result['state'] +
-                            ' ,' +
-                            result['zip_code'];
-                        addressreturned = true;
-                      });
-
-                      var userid = await storage.read(key: 'userid');
-                      var ratesurl = 'https://api.sellship.co/api/rates/' +
-                          addressline1 +
-                          '/' +
-                          city +
-                          '/' +
-                          state +
-                          '/' +
-                          zipcode +
-                          '/' +
-                          item.itemid +
-                          '/' +
-                          userid;
-                      final response = await http.get(ratesurl);
-                      var jsonrates = json.decode(response.body);
-
-                      var totalrat = jsonrates['rates']
-                              ['RatingServiceSelectionResponse']
-                          ['RatedShipment']['TotalCharges']['MonetaryValue'];
-                      setState(() {
-                        totalrate = totalrat;
-                      });
-                      calculatefees();
-                      Navigator.of(context, rootNavigator: true).pop('dialog');
-                    },
-                    title: Text(
-                      'Deliver To',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    trailing: addressreturned == false
-                        ? Icon(
-                            Icons.arrow_forward_ios,
-                            size: 10,
-                          )
-                        : Text(
-                            deliveryaddress,
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500),
-                          )),
-              ),
+//              Container(
+//                decoration: BoxDecoration(
+//                  color: Colors.white,
+//                  boxShadow: <BoxShadow>[
+//                    BoxShadow(
+//                        color: Colors.grey.withOpacity(0.2),
+//                        offset: const Offset(0.0, 0.6),
+//                        blurRadius: 5.0),
+//                  ],
+//                ),
+//                child: ListTile(
+//                    onTap: () async {
+//                      final result = await Navigator.push(
+//                        context,
+//                        MaterialPageRoute(builder: (context) => Address()),
+//                      );
+//                      showDialog(
+//                          context: context,
+//                          barrierDismissible: false,
+//                          builder: (BuildContext context) {
+//                            return Dialog(
+//                              shape: RoundedRectangleBorder(
+//                                  borderRadius: BorderRadius.circular(
+//                                      20.0)), //this right here
+//                              child: Container(
+//                                height: 100,
+//                                child: Padding(
+//                                    padding: const EdgeInsets.all(12.0),
+//                                    child: SpinKitChasingDots(
+//                                        color: Colors.deepPurpleAccent)),
+//                              ),
+//                            );
+//                          });
+//
+//                      if (result is String) {
+//                        setState(() {
+//                          deliveryaddress = result;
+//                          addressreturned = true;
+//                        });
+//                      } else {
+//                        setState(() {
+//                          addressline1 = result['addrLine1'];
+//                          city = result['city'];
+//                          state = result['state'];
+//                          zipcode = result['zip_code'];
+//
+//                          deliveryaddress = result['address'];
+//                          addressreturned = true;
+//                        });
+//                      }
+//                      var userid = await storage.read(key: 'userid');
+//                      var ratesurl = 'https://api.sellship.co/api/rates/' +
+//                          addressline1 +
+//                          '/' +
+//                          city +
+//                          '/' +
+//                          state +
+//                          '/' +
+//                          zipcode +
+//                          '/' +
+//                          item.itemid +
+//                          '/' +
+//                          userid;
+//                      final response = await http.get(ratesurl);
+//                      var jsonrates = json.decode(response.body);
+//                      print(jsonrates);
+//
+//                      var totalrat = jsonrates['RatingServiceSelectionResponse']
+//                          ['RatedShipment']['TotalCharges']['MonetaryValue'];
+//                      setState(() {
+//                        totalrate = totalrat;
+//                      });
+//                      calculatefees();
+//                      Navigator.of(context, rootNavigator: true).pop('dialog');
+//                    },
+//                    title: Text(
+//                      'Deliver To',
+//                      style: TextStyle(
+//                          fontFamily: 'Helvetica',
+//                          fontSize: 16,
+//                          fontWeight: FontWeight.w700),
+//                    ),
+//                    trailing: addressreturned == false
+//                        ? Icon(
+//                            Icons.arrow_forward_ios,
+//                            size: 10,
+//                          )
+//                        : Text(
+//                            deliveryaddress,
+//                            textAlign: TextAlign.end,
+//                            style: TextStyle(
+//                                fontFamily: 'Helvetica',
+//                                fontSize: 13,
+//                                fontWeight: FontWeight.w500),
+//                          )),
+//              ),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -673,27 +657,27 @@ class _CheckoutState extends State<Checkout> {
                       SizedBox(
                         height: 5,
                       ),
-                      totalrate != null
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  'Delivery',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                ),
-                                Text(
-                                  totalrate.toString() + ' ' + currency,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                )
-                              ],
-                            )
-                          : Container(),
+//                      totalrate != null
+//                          ? Row(
+//                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                              children: <Widget>[
+//                                Text(
+//                                  'Delivery',
+//                                  style: TextStyle(
+//                                      fontFamily: 'Helvetica',
+//                                      fontSize: 16,
+//                                      color: Colors.black),
+//                                ),
+//                                Text(
+//                                  totalrate.toString() + ' ' + currency,
+//                                  style: TextStyle(
+//                                      fontFamily: 'Helvetica',
+//                                      fontSize: 16,
+//                                      color: Colors.black),
+//                                )
+//                              ],
+//                            )
+//                          : Container(),
                       SizedBox(
                         height: 5,
                       ),
@@ -711,7 +695,7 @@ class _CheckoutState extends State<Checkout> {
                                 color: Colors.black),
                           ),
                           Text(
-                            totalpayable.toStringAsFixed(2) + ' ' + currency,
+                            offer + ' ' + currency,
                             style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 16,

@@ -4,7 +4,10 @@ import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/orderbuyer.dart';
+import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
+import 'package:SellShip/screens/orderselleruae.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -790,7 +793,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                       : Container()),
                                             ),
                                             InkWell(
-                                                onTap: () {
+                                                onTap: () async {
                                                   if (offerstage == 0) {
                                                     if (userid == recipentid) {
                                                       acceptoffer();
@@ -815,16 +818,79 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                       );
                                                     }
                                                   } else if (offerstage == 2) {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OrderDetail(
-                                                                  messageid:
-                                                                      messageid,
-                                                                  item:
-                                                                      itemselling)),
-                                                    );
+                                                    if (userid ==
+                                                        itemselling.userid) {
+                                                      var countr = await storage
+                                                          .read(key: 'country');
+
+                                                      if (countr
+                                                              .trim()
+                                                              .toLowerCase() ==
+                                                          'united arab emirates') {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderDetailUAE(
+                                                                      messageid:
+                                                                          messageid,
+                                                                      item:
+                                                                          itemselling)),
+                                                        );
+                                                      } else if (countr
+                                                              .trim()
+                                                              .toLowerCase() ==
+                                                          'united states') {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderDetail(
+                                                                      messageid:
+                                                                          messageid,
+                                                                      item:
+                                                                          itemselling)),
+                                                        );
+                                                      }
+                                                    } else {
+                                                      var countr = await storage
+                                                          .read(key: 'country');
+
+                                                      if (countr
+                                                              .trim()
+                                                              .toLowerCase() ==
+                                                          'united arab emirates') {
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderBuyerUAE(
+                                                                    item:
+                                                                        itemselling,
+                                                                    messageid:
+                                                                        messageid,
+                                                                  )),
+                                                        );
+                                                      } else if (countr
+                                                              .trim()
+                                                              .toLowerCase() ==
+                                                          'united states') {
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      OrderBuyer(
+                                                                        item:
+                                                                            itemselling,
+                                                                        messageid:
+                                                                            messageid,
+                                                                      )),
+                                                        );
+                                                      }
+                                                    }
                                                   }
                                                 },
                                                 child: offerstring != null

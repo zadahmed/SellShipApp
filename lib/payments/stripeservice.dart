@@ -12,16 +12,16 @@ class StripeTransactionResponse {
 class StripeService {
   static String apiBase = 'https://api.stripe.com/v1';
   static String paymentApiUrl = '${StripeService.apiBase}/payment_intents';
-//  static String secret = 'sk_live_JRQdQRheg4ME1iBmzbcffl3300EqeIa4ub';
-  static String secret = 'sk_test_8GEejxp7HJkrV3cxkAP6P67s00BWNyUWdn';
+  static String secret = 'sk_live_JRQdQRheg4ME1iBmzbcffl3300EqeIa4ub';
+//  static String secret = 'sk_test_8GEejxp7HJkrV3cxkAP6P67s00BWNyUWdn';
   static Map<String, String> headers = {
     'Authorization': 'Bearer ${StripeService.secret}',
     'Content-Type': 'application/x-www-form-urlencoded'
   };
   static init() {
     StripePayment.setOptions(StripeOptions(
-//        publishableKey: "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
-        publishableKey: "pk_test_d6wXVbCGxxASaVxefHuX8Pc000I7qe4dyv",
+        publishableKey: "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
+//        publishableKey: "pk_test_d6wXVbCGxxASaVxefHuX8Pc000I7qe4dyv",
         merchantId: "merchant.com.zad.sellship",
         androidPayMode: 'test'));
   }

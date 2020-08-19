@@ -103,14 +103,15 @@ class _NotifcationPageState extends State<NotifcationPage> {
         List jsonResponse = json.decode(response.body);
 
         for (int i = 0; i < jsonResponse.length; i++) {
-          var date = jsonResponse[i]['date']['\$date'];
-          DateTime dates = new DateTime.fromMillisecondsSinceEpoch(date);
-          final f = new DateFormat('yyyy-MM-dd hh:mm');
-          var s = f.format(dates);
+          var q = Map<String, dynamic>.from(jsonResponse[i]['date']);
+
+          DateTime dateuploade =
+              DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+          var dateuploaded = timeago.format(dateuploade);
 
           Notifications withd = Notifications(
             message: jsonResponse[i]['message'],
-            date: s.toString(),
+            date: dateuploaded,
             unread: jsonResponse[i]['unread'],
           );
           notificationlist.add(withd);

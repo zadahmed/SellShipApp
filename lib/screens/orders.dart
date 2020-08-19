@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/orderbuyer.dart';
+import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
+import 'package:SellShip/screens/orderselleruae.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -373,11 +375,23 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                           )),
                                                                       InkWell(
                                                                           onTap:
-                                                                              () {
-                                                                            Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(builder: (context) => OrderBuyer(messageid: item[index].description, item: item[index])),
-                                                                            );
+                                                                              () async {
+                                                                            var countr =
+                                                                                await storage.read(key: 'country');
+
+                                                                            if (countr.trim().toLowerCase() ==
+                                                                                'united arab emirates') {
+                                                                              Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(builder: (context) => OrderBuyerUAE(messageid: item[index].description, item: item[index])),
+                                                                              );
+                                                                            } else if (countr.trim().toLowerCase() ==
+                                                                                'united states') {
+                                                                              Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(builder: (context) => OrderBuyer(messageid: item[index].description, item: item[index])),
+                                                                              );
+                                                                            }
                                                                           },
                                                                           child:
                                                                               Container(
@@ -655,11 +669,23 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                           )),
                                                                       InkWell(
                                                                           onTap:
-                                                                              () {
-                                                                            Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(builder: (context) => OrderDetail(messageid: sellingitem[index].description, item: sellingitem[index])),
-                                                                            );
+                                                                              () async {
+                                                                            var countr =
+                                                                                await storage.read(key: 'country');
+
+                                                                            if (countr.trim().toLowerCase() ==
+                                                                                'united arab emirates') {
+                                                                              Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(builder: (context) => OrderDetailUAE(messageid: sellingitem[index].description, item: sellingitem[index])),
+                                                                              );
+                                                                            } else if (countr.trim().toLowerCase() ==
+                                                                                'united states') {
+                                                                              Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(builder: (context) => OrderDetail(messageid: sellingitem[index].description, item: sellingitem[index])),
+                                                                              );
+                                                                            }
                                                                           },
                                                                           child:
                                                                               Container(

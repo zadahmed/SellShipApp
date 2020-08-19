@@ -12,6 +12,7 @@ import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/orders.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
+import 'package:SellShip/screens/reviews.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/settings.dart';
 import 'package:SellShip/screens/signuppage.dart';
@@ -740,7 +741,7 @@ class _LoginPageState extends State<LoginPage>
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  Balance()), // Change to Reviews
+                                                  ReviewsPage()), // Change to Reviews
                                         );
                                       },
                                       enableFeedback: true,

@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/checkout.dart';
+import 'package:SellShip/screens/checkoutuae.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +23,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/useritems.dart';
 import 'package:share/share.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -443,17 +446,26 @@ class _DetailsState extends State<Details> {
   List<String> images = [];
   String dateuploaded;
 
+  double reviewrating;
+  bool verifiedfb;
+  bool verifiedphone;
+  bool verifiedemail;
+  var profilepicture;
+
+  var country;
   fetchItem() async {
-    var country = await storage.read(key: 'country');
+    var countr = await storage.read(key: 'country');
     userid = await storage.read(key: 'userid');
 
-    if (country.trim().toLowerCase() == 'united arab emirates') {
+    if (countr.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
+        country = countr;
       });
-    } else if (country.trim().toLowerCase() == 'united states') {
+    } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+        country = countr;
       });
     }
 
@@ -461,7 +473,12 @@ class _DetailsState extends State<Details> {
     final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
-    print(jsonbody);
+
+    var userurl = 'https://api.sellship.co/api/user/' + jsonbody[0]['userid'];
+    final userresponse = await http.get(userurl);
+
+    var userjsonbody = json.decode(userresponse.body);
+
     newItem = Item(
         name: jsonbody[0]['name'],
         itemid: jsonbody[0]['_id']['\$oid'].toString(),
@@ -492,10 +509,23 @@ class _DetailsState extends State<Details> {
         subcategory: jsonbody[0]['subcategory']);
 
     var q = Map<String, dynamic>.from(jsonbody[0]['dateuploaded']);
-    print(q);
+
     DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
     dateuploaded = timeago.format(dateuploade);
+
+    var rating;
+    if (userjsonbody['reviewrating'] == null) {
+      rating = 0.0;
+    } else {
+      rating = userjsonbody['reviewrating'];
+    }
     setState(() {
+      reviewrating = rating;
+      verifiedfb = userjsonbody['confirmedfb'];
+      verifiedphone = userjsonbody['confirmedphone'];
+      verifiedemail = userjsonbody['confirmedemail'];
+      profilepicture = userjsonbody['profilepicture'];
+
       dateuploaded = dateuploaded;
 
       position = LatLng(
@@ -748,20 +778,35 @@ class _DetailsState extends State<Details> {
                             ListTile(
                               dense: true,
                               title: Text(
-                                newItem.name,
+                                currency + ' ' + newItem.price.toString(),
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontFamily: 'Helvetica',
-                                  fontSize: 20,
+                                  fontSize: 30,
+                                  color: Colors.deepOrange,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               trailing: Container(
                                 height: 50,
-                                width: 80,
+                                width: 160,
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
+                                    Text(
+                                      newItem.likes.toString() + ' Likes',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                        color: Colors.deepOrange,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     Container(
                                         height: 30,
                                         width: 30,
@@ -855,9 +900,12 @@ class _DetailsState extends State<Details> {
                                                 },
                                                 child: Icon(
                                                   Feather.heart,
-                                                  color: Colors.black,
+                                                  color: Colors.grey,
                                                 ),
                                               )),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
                                     InkWell(
                                       onTap: () {
                                         reportitem(context);
@@ -894,13 +942,11 @@ class _DetailsState extends State<Details> {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  currency + ' ' + newItem.price.toString(),
+                                  newItem.name,
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: 'Helvetica',
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
                                   ),
                                 ),
                               ),
@@ -932,6 +978,147 @@ class _DetailsState extends State<Details> {
                                     ],
                                   )),
                             ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: 15, bottom: 10, top: 5),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.apps,
+                                      color: Colors.deepPurple,
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      width: 250,
+                                      child: Text(
+                                        newItem.category,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.blueGrey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: 15, bottom: 10, top: 5),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      FontAwesome5.grin_stars,
+                                      color: Colors.deepPurple,
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      width: 250,
+                                      child: Text(
+                                        newItem.condition.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.blueGrey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: 15, bottom: 10, top: 5),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Icon(
+                                      FontAwesome.tag,
+                                      color: Colors.deepPurple,
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Container(
+                                      width: 250,
+                                      child: Text(
+                                        newItem.brand.toString(),
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.blueGrey,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            newItem.size != null
+                                ? Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 15, bottom: 10, top: 5),
+                                    child: Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.signal_cellular_null,
+                                            color: Colors.deepPurple,
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          Container(
+                                            width: 250,
+                                            child: Text(
+                                              newItem.size.toString(),
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                : Container(),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10, bottom: 10, top: 10),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Seller Details',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
                             ListTile(
                               onTap: () {
                                 Navigator.push(
@@ -943,86 +1130,275 @@ class _DetailsState extends State<Details> {
                                 );
                               },
                               dense: true,
-                              leading: Icon(FontAwesome.user_circle),
+                              leading: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: profilepicture != null
+                                        ? CachedNetworkImage(
+                                            imageUrl: profilepicture,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.asset(
+                                            'assets/personplaceholder.png',
+                                            fit: BoxFit.fitWidth,
+                                          )),
+                              ),
                               title: Text(
                                 newItem.username,
                                 style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     fontSize: 16,
-                                    color: Colors.black),
+                                    color: Colors.deepPurple),
                               ),
-                            ),
-                            ListTile(
-                              dense: true,
-                              leading: Icon(FontAwesome.heart),
-                              title: Text(
-                                newItem.likes.toString() + ' Likes',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                              subtitle: Column(children: <Widget>[
+                                SizedBox(
+                                  height: 5,
                                 ),
-                              ),
-                            ),
-                            ListTile(
-                              dense: true,
-                              leading: Icon(Icons.category),
-                              title: Text(
-                                newItem.category,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            ListTile(
-                              dense: true,
-                              leading: Icon(Icons.hourglass_full),
-                              title: Text(
-                                newItem.condition.toString(),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            ListTile(
-                              dense: true,
-                              leading: Icon(FontAwesome.tag),
-                              title: Text(
-                                newItem.brand.toString(),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                            newItem.size != null
-                                ? ListTile(
-                                    dense: true,
-                                    leading: Icon(Icons.signal_cellular_null),
-                                    title: Text(
-                                      newItem.size.toString(),
-                                      textAlign: TextAlign.left,
+                                Row(
+                                  children: <Widget>[
+                                    Text(
+                                      reviewrating.toStringAsFixed(1),
+                                      overflow: TextOverflow.fade,
                                       style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        color: Colors.blueGrey,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
                                     ),
-                                  )
-                                : Container(),
+                                    SmoothStarRating(
+                                        allowHalfRating: true,
+                                        starCount: 5,
+                                        isReadOnly: true,
+                                        rating: reviewrating,
+                                        size: 20.0,
+                                        color: Colors.deepPurple,
+                                        borderColor: Colors.deepPurpleAccent,
+                                        spacing: 0.0),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      InkWell(
+                                        child: verifiedemail == true
+                                            ? Badge(
+                                                showBadge: true,
+                                                badgeColor:
+                                                    Colors.deepOrangeAccent,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.check_circle,
+                                                  size: 10,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: Colors.grey),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: CircleAvatar(
+                                                      radius: 13,
+                                                      child: Icon(
+                                                        Feather.mail,
+                                                        size: 13,
+                                                        color:
+                                                            Colors.deepOrange,
+                                                      ),
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                    )))
+                                            : Badge(
+                                                showBadge: true,
+                                                badgeColor: Colors.grey,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.question,
+                                                  size: 8,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    radius: 13,
+                                                    child: Icon(
+                                                      Feather.mail,
+                                                      size: 13,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      InkWell(
+                                        child: verifiedphone == true
+                                            ? Badge(
+                                                showBadge: true,
+                                                badgeColor:
+                                                    Colors.deepOrangeAccent,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.check_circle,
+                                                  size: 10,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: Colors.grey),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: CircleAvatar(
+                                                      radius: 13,
+                                                      child: Icon(
+                                                        Feather.phone,
+                                                        size: 13,
+                                                        color:
+                                                            Colors.deepOrange,
+                                                      ),
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                    )))
+                                            : Badge(
+                                                showBadge: true,
+                                                badgeColor: Colors.grey,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.question,
+                                                  size: 8,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    radius: 13,
+                                                    child: Icon(
+                                                      Feather.phone,
+                                                      size: 13,
+                                                      color: Colors.deepOrange,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      InkWell(
+                                        child: verifiedfb == true
+                                            ? Badge(
+                                                showBadge: true,
+                                                badgeColor: Colors.deepOrange,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.check_circle,
+                                                  size: 10,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color:
+                                                            Colors.deepOrange),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    radius: 13,
+                                                    child: Icon(
+                                                      Feather.facebook,
+                                                      size: 13,
+                                                      color: Colors.white,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.blueAccent,
+                                                  ),
+                                                ),
+                                              )
+                                            : Badge(
+                                                showBadge: true,
+                                                badgeColor: Colors.grey,
+                                                position:
+                                                    BadgePosition.topRight(),
+                                                animationType:
+                                                    BadgeAnimationType.slide,
+                                                badgeContent: Icon(
+                                                  FontAwesome.question,
+                                                  size: 8,
+                                                  color: Colors.white,
+                                                ),
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: Colors.grey),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: CircleAvatar(
+                                                    radius: 13,
+                                                    child: Icon(
+                                                      Feather.facebook,
+                                                      size: 13,
+                                                      color: Colors.blueAccent,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ]),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 0.0, horizontal: 16.0),
+                            ),
                             Padding(
                               padding: EdgeInsets.only(
                                   left: 10, bottom: 10, top: 10),
@@ -1139,24 +1515,6 @@ class _DetailsState extends State<Details> {
                                       ),
                                       onMapCreated: mapCreated,
                                       circles: _circles,
-                                      onTap: (latLng) async {
-                                        final String googleMapsUrl =
-                                            "comgooglemaps://?center=${position.latitude},${position.longitude}";
-                                        final String appleMapsUrl =
-                                            "https://maps.apple.com/?q=${position.latitude},${position.longitude}";
-
-                                        if (await canLaunch(googleMapsUrl)) {
-                                          await launch(googleMapsUrl,
-                                              forceSafariVC: true,
-                                              forceWebView: true);
-                                        }
-                                        if (await canLaunch(appleMapsUrl)) {
-                                          await launch(appleMapsUrl,
-                                              forceSafariVC: false);
-                                        } else {
-                                          throw "Couldn't launch URL";
-                                        }
-                                      },
                                     ),
                                   ),
                                 ],
@@ -1381,16 +1739,42 @@ class _DetailsState extends State<Details> {
                                   var messageinfo = json.decode(response.body);
                                   var messageid = (messageinfo['messageid']);
 
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Checkout(
-                                        messageid: messageid,
-                                        item: newItem,
-                                        offer: newItem.price,
+                                  print(country);
+                                  if (country.contains('United States')) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Checkout(
+                                          messageid: messageid,
+                                          item: newItem,
+                                          offer: newItem.price,
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                    );
+                                  } else if (country
+                                      .contains('United Arab Emirates')) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CheckoutUAE(
+                                          messageid: messageid,
+                                          item: newItem,
+                                          offer: newItem.price,
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Checkout(
+                                          messageid: messageid,
+                                          item: newItem,
+                                          offer: newItem.price,
+                                        ),
+                                      ),
+                                    );
+                                  }
                                 } else {
                                   showDialog(
                                       context: context,

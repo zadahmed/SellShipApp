@@ -13,21 +13,20 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class OrderDetail extends StatefulWidget {
+class OrderDetailUAE extends StatefulWidget {
   String messageid;
   Item item;
 
-  OrderDetail({Key key, this.messageid, this.item}) : super(key: key);
+  OrderDetailUAE({Key key, this.messageid, this.item}) : super(key: key);
   @override
-  _OrderDetailState createState() => _OrderDetailState();
+  _OrderDetailUAEState createState() => _OrderDetailUAEState();
 }
 
-class _OrderDetailState extends State<OrderDetail> {
+class _OrderDetailUAEState extends State<OrderDetailUAE> {
   Item item;
   String messageid;
   var addressline1;
@@ -59,7 +58,7 @@ class _OrderDetailState extends State<OrderDetail> {
 
   final storage = new FlutterSecureStorage();
 
-  Item newitem = new Item();
+//  Item newitem = new Item();
   var deliveredtext;
   getDetails() async {
     userid = await storage.read(key: 'userid');
@@ -94,7 +93,7 @@ class _OrderDetailState extends State<OrderDetail> {
     }
 
     if (delstage == 0) {
-      deliveredtext = 'Create Label';
+      deliveredtext = 'Item Prepared';
     } else if (delstage == 1) {
       deliveredtext = 'Item Shipped';
     } else if (delstage == 2) {
@@ -103,20 +102,13 @@ class _OrderDetailState extends State<OrderDetail> {
       deliveredtext = 'Review Buyer';
     }
 
-    var trackingno;
-    if (jsonbody['shipping_details'] == null) {
-      trackingno = null;
-    } else {
-      trackingno = jsonbody['shipping_details']['tracking_no'];
-    }
-
     setState(() {
       itemprice = jsonbody['offer'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
-      trackingnumber = trackingno;
+
       deliverystage = delstage;
-      newitem = Item(weight: int.parse(jsonbody['itemobject']['weight']));
+//      newitem = Item(weight: int.parse(jsonbody['itemobject']['weight']));
       itemfees = jsonbody['fees'];
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];
@@ -130,337 +122,337 @@ class _OrderDetailState extends State<OrderDetail> {
   var buyerid;
   var itemfees;
   var date;
-  var trackingnumber;
+
   var buyername;
   bool loading;
 
   int deliverystage;
 
-  Widget shipfrom(BuildContext context) {
-    if (deliverystage == 0) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                offset: const Offset(0.0, 0.6),
-                blurRadius: 5.0),
-          ],
-        ),
-        child: ListTile(
-            onTap: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Address()),
-              );
-
-              if (result is String) {
-                setState(() {
-                  deliveryaddress = result;
-                  addressreturned = true;
-                });
-              } else {
-                setState(() {
-                  addressline1 = result['addrLine1'];
-                  city = result['city'];
-                  state = result['state'];
-                  zipcode = result['zip_code'];
-
-                  deliveryaddress = result['address'];
-                  addressreturned = true;
-                });
-              }
-            },
-            leading: Text(
-              'Ship from',
-              style: TextStyle(
-                  fontFamily: 'Helvetica',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700),
-            ),
-            title: addressreturned == false
-                ? Container()
-                : Text(
-                    deliveryaddress,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500),
-                  ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              size: 10,
-            )),
-      );
-    } else if (deliverystage == 1) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url = 'https://www.ups.com/dropoff/?loc=en_us';
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Shipping Carrier',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                title: Icon(
-                  FontAwesome5Brands.ups,
-                  color: Colors.deepOrange,
-                  size: 35,
-                ),
-                trailing: Container(
-                  height: 48,
-                  width: 160,
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurpleAccent,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.deepPurpleAccent.withOpacity(0.4),
-                          offset: const Offset(1.1, 1.1),
-                          blurRadius: 10.0),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Find Nearby Drop Off',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                        letterSpacing: 0.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ]);
-    } else if (deliverystage == 2) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url = 'https://www.ups.com/dropoff/?loc=en_us';
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Shipping Carrier',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                title: Icon(
-                  FontAwesome5Brands.ups,
-                  color: Colors.deepOrange,
-                  size: 35,
-                ),
-                trailing: Container(
-                  height: 48,
-                  width: 160,
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurpleAccent,
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                          color: Colors.deepPurpleAccent.withOpacity(0.4),
-                          offset: const Offset(1.1, 1.1),
-                          blurRadius: 10.0),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Find Nearby Drop Off',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                        letterSpacing: 0.0,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ]);
-    } else if (deliverystage == 3) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-          ]);
-    }
-  }
+//  Widget shipfrom(BuildContext context) {
+//    if (deliverystage == 0) {
+//      return Container(
+//        decoration: BoxDecoration(
+//          color: Colors.white,
+//          boxShadow: <BoxShadow>[
+//            BoxShadow(
+//                color: Colors.grey.withOpacity(0.2),
+//                offset: const Offset(0.0, 0.6),
+//                blurRadius: 5.0),
+//          ],
+//        ),
+//        child: ListTile(
+//            onTap: () async {
+//              final result = await Navigator.push(
+//                context,
+//                MaterialPageRoute(builder: (context) => Address()),
+//              );
+//
+//              if (result is String) {
+//                setState(() {
+//                  deliveryaddress = result;
+//                  addressreturned = true;
+//                });
+//              } else {
+//                setState(() {
+//                  addressline1 = result['addrLine1'];
+//                  city = result['city'];
+//                  state = result['state'];
+//                  zipcode = result['zip_code'];
+//
+//                  deliveryaddress = result['address'];
+//                  addressreturned = true;
+//                });
+//              }
+//            },
+//            leading: Text(
+//              'Ship from',
+//              style: TextStyle(
+//                  fontFamily: 'Helvetica',
+//                  fontSize: 16,
+//                  fontWeight: FontWeight.w700),
+//            ),
+//            title: addressreturned == false
+//                ? Container()
+//                : Text(
+//                    deliveryaddress,
+//                    textAlign: TextAlign.start,
+//                    style: TextStyle(
+//                        fontFamily: 'Helvetica',
+//                        fontSize: 13,
+//                        fontWeight: FontWeight.w500),
+//                  ),
+//            trailing: Icon(
+//              Icons.arrow_forward_ios,
+//              size: 10,
+//            )),
+//      );
+//    } else if (deliverystage == 1) {
+//      return Column(
+//          mainAxisAlignment: MainAxisAlignment.start,
+//          crossAxisAlignment: CrossAxisAlignment.start,
+//          children: <Widget>[
+//            Container(
+//              decoration: BoxDecoration(
+//                color: Colors.white,
+//                boxShadow: <BoxShadow>[
+//                  BoxShadow(
+//                      color: Colors.grey.withOpacity(0.2),
+//                      offset: const Offset(0.0, 0.6),
+//                      blurRadius: 5.0),
+//                ],
+//              ),
+//              child: ListTile(
+//                onTap: () async {
+//                  var url =
+//                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
+//                          trackingnumber;
+//
+//                  if (await canLaunch(url)) {
+//                    await launch(url);
+//                  } else {
+//                    throw 'Could not launch $url';
+//                  }
+//                },
+//                leading: Text(
+//                  'Tracking Number',
+//                  style: TextStyle(
+//                      fontFamily: 'Helvetica',
+//                      fontSize: 16,
+//                      fontWeight: FontWeight.w700),
+//                ),
+//                trailing: Text(
+//                  trackingnumber,
+//                  textAlign: TextAlign.center,
+//                  style: TextStyle(
+//                    fontWeight: FontWeight.w700,
+//                    fontSize: 14,
+//                    letterSpacing: 0.0,
+//                    color: Colors.deepPurple,
+//                  ),
+//                ),
+//              ),
+//            ),
+//            Container(
+//              decoration: BoxDecoration(
+//                color: Colors.white,
+//                boxShadow: <BoxShadow>[
+//                  BoxShadow(
+//                      color: Colors.grey.withOpacity(0.2),
+//                      offset: const Offset(0.0, 0.6),
+//                      blurRadius: 5.0),
+//                ],
+//              ),
+//              child: ListTile(
+//                onTap: () async {
+//                  var url = 'https://www.ups.com/dropoff/?loc=en_us';
+//
+//                  if (await canLaunch(url)) {
+//                    await launch(url);
+//                  } else {
+//                    throw 'Could not launch $url';
+//                  }
+//                },
+//                leading: Text(
+//                  'Shipping Carrier',
+//                  style: TextStyle(
+//                      fontFamily: 'Helvetica',
+//                      fontSize: 16,
+//                      fontWeight: FontWeight.w700),
+//                ),
+//                title: Icon(
+//                  FontAwesome5Brands.ups,
+//                  color: Colors.deepOrange,
+//                  size: 35,
+//                ),
+//                trailing: Container(
+//                  height: 48,
+//                  width: 160,
+//                  decoration: BoxDecoration(
+//                    color: Colors.deepPurpleAccent,
+//                    borderRadius: const BorderRadius.all(
+//                      Radius.circular(10.0),
+//                    ),
+//                    boxShadow: <BoxShadow>[
+//                      BoxShadow(
+//                          color: Colors.deepPurpleAccent.withOpacity(0.4),
+//                          offset: const Offset(1.1, 1.1),
+//                          blurRadius: 10.0),
+//                    ],
+//                  ),
+//                  child: Center(
+//                    child: Text(
+//                      'Find Nearby Drop Off',
+//                      textAlign: TextAlign.center,
+//                      style: TextStyle(
+//                        fontWeight: FontWeight.w700,
+//                        fontSize: 14,
+//                        letterSpacing: 0.0,
+//                        color: Colors.white,
+//                      ),
+//                    ),
+//                  ),
+//                ),
+//              ),
+//            )
+//          ]);
+//    } else if (deliverystage == 2) {
+//      return Column(
+//          mainAxisAlignment: MainAxisAlignment.start,
+//          crossAxisAlignment: CrossAxisAlignment.start,
+//          children: <Widget>[
+//            Container(
+//              decoration: BoxDecoration(
+//                color: Colors.white,
+//                boxShadow: <BoxShadow>[
+//                  BoxShadow(
+//                      color: Colors.grey.withOpacity(0.2),
+//                      offset: const Offset(0.0, 0.6),
+//                      blurRadius: 5.0),
+//                ],
+//              ),
+//              child: ListTile(
+//                onTap: () async {
+//                  var url =
+//                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
+//                          trackingnumber;
+//
+//                  if (await canLaunch(url)) {
+//                    await launch(url);
+//                  } else {
+//                    throw 'Could not launch $url';
+//                  }
+//                },
+//                leading: Text(
+//                  'Tracking Number',
+//                  style: TextStyle(
+//                      fontFamily: 'Helvetica',
+//                      fontSize: 16,
+//                      fontWeight: FontWeight.w700),
+//                ),
+//                trailing: Text(
+//                  trackingnumber,
+//                  textAlign: TextAlign.center,
+//                  style: TextStyle(
+//                    fontWeight: FontWeight.w700,
+//                    fontSize: 14,
+//                    letterSpacing: 0.0,
+//                    color: Colors.deepPurple,
+//                  ),
+//                ),
+//              ),
+//            ),
+//            Container(
+//              decoration: BoxDecoration(
+//                color: Colors.white,
+//                boxShadow: <BoxShadow>[
+//                  BoxShadow(
+//                      color: Colors.grey.withOpacity(0.2),
+//                      offset: const Offset(0.0, 0.6),
+//                      blurRadius: 5.0),
+//                ],
+//              ),
+//              child: ListTile(
+//                onTap: () async {
+//                  var url = 'https://www.ups.com/dropoff/?loc=en_us';
+//
+//                  if (await canLaunch(url)) {
+//                    await launch(url);
+//                  } else {
+//                    throw 'Could not launch $url';
+//                  }
+//                },
+//                leading: Text(
+//                  'Shipping Carrier',
+//                  style: TextStyle(
+//                      fontFamily: 'Helvetica',
+//                      fontSize: 16,
+//                      fontWeight: FontWeight.w700),
+//                ),
+//                title: Icon(
+//                  FontAwesome5Brands.ups,
+//                  color: Colors.deepOrange,
+//                  size: 35,
+//                ),
+//                trailing: Container(
+//                  height: 48,
+//                  width: 160,
+//                  decoration: BoxDecoration(
+//                    color: Colors.deepPurpleAccent,
+//                    borderRadius: const BorderRadius.all(
+//                      Radius.circular(10.0),
+//                    ),
+//                    boxShadow: <BoxShadow>[
+//                      BoxShadow(
+//                          color: Colors.deepPurpleAccent.withOpacity(0.4),
+//                          offset: const Offset(1.1, 1.1),
+//                          blurRadius: 10.0),
+//                    ],
+//                  ),
+//                  child: Center(
+//                    child: Text(
+//                      'Find Nearby Drop Off',
+//                      textAlign: TextAlign.center,
+//                      style: TextStyle(
+//                        fontWeight: FontWeight.w700,
+//                        fontSize: 14,
+//                        letterSpacing: 0.0,
+//                        color: Colors.white,
+//                      ),
+//                    ),
+//                  ),
+//                ),
+//              ),
+//            )
+//          ]);
+//    } else if (deliverystage == 3) {
+//      return Column(
+//          mainAxisAlignment: MainAxisAlignment.start,
+//          crossAxisAlignment: CrossAxisAlignment.start,
+//          children: <Widget>[
+//            Container(
+//              decoration: BoxDecoration(
+//                color: Colors.white,
+//                boxShadow: <BoxShadow>[
+//                  BoxShadow(
+//                      color: Colors.grey.withOpacity(0.2),
+//                      offset: const Offset(0.0, 0.6),
+//                      blurRadius: 5.0),
+//                ],
+//              ),
+//              child: ListTile(
+//                onTap: () async {
+//                  var url =
+//                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
+//                          trackingnumber;
+//
+//                  if (await canLaunch(url)) {
+//                    await launch(url);
+//                  } else {
+//                    throw 'Could not launch $url';
+//                  }
+//                },
+//                leading: Text(
+//                  'Tracking Number',
+//                  style: TextStyle(
+//                      fontFamily: 'Helvetica',
+//                      fontSize: 16,
+//                      fontWeight: FontWeight.w700),
+//                ),
+//                trailing: Text(
+//                  trackingnumber,
+//                  textAlign: TextAlign.center,
+//                  style: TextStyle(
+//                    fontWeight: FontWeight.w700,
+//                    fontSize: 14,
+//                    letterSpacing: 0.0,
+//                    color: Colors.deepPurple,
+//                  ),
+//                ),
+//              ),
+//            ),
+//          ]);
+//    }
+//  }
 
   Widget deliveryinformation(BuildContext context) {
     if (deliverystage == 0) {
@@ -505,7 +497,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     height: 2,
                   ),
                   Text(
-                    'Prepare and Print',
+                    'Prepare',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         color: Colors.deepPurpleAccent,
@@ -526,17 +518,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     height: 2,
                   ),
                   Text(
-                    '2. Create a shipping label for your item by tapping on \'Create Label\'.The label will be emailed to your registered email',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    '3. Print the label and stick it on a visible side of your box',
+                    '2. Tap on \'Item Prepared\'.The notification will be send to the buyer that the item is ready for pickup or for shipment',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 14,
@@ -590,7 +572,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     height: 2,
                   ),
                   Text(
-                    'Ship the Item',
+                    'Ship or Meetup',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         color: Colors.deepPurpleAccent,
@@ -601,7 +583,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     height: 5,
                   ),
                   Text(
-                    '1. Upon completing preperation of your item, tap on \'Find Nearby Drop Off\' to find your nearest drop off point',
+                    '1. Upon completing preperation of your item, its time to deliver your item!',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 14,
@@ -611,7 +593,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     height: 2,
                   ),
                   Text(
-                    '2. Drop off your item in the nearest drop off point.',
+                    '2. Chat with the buyer or discuss delivery methods and ship it to him, if the offer includes delivery cost.',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 14,
@@ -621,7 +603,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     height: 2,
                   ),
                   Text(
-                    '3. Tap on \'Item Shipped\' once completed to notify the buyer the item has shipped successfully',
+                    '3. Tap on \'Item Shipped\' once completed this process.',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 14,
@@ -812,7 +794,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 SizedBox(
                   height: 5,
                 ),
-                Text('Ship')
+                Text('Ship/Meetup')
               ],
             ),
             Column(
@@ -903,7 +885,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 SizedBox(
                   height: 5,
                 ),
-                Text('Ship')
+                Text('Ship/Meetup')
               ],
             ),
             Column(
@@ -994,7 +976,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 SizedBox(
                   height: 5,
                 ),
-                Text('Ship')
+                Text('Ship/Meetup')
               ],
             ),
             Column(
@@ -1085,7 +1067,7 @@ class _OrderDetailState extends State<OrderDetail> {
                 SizedBox(
                   height: 5,
                 ),
-                Text('Ship')
+                Text('Ship/Meetup')
               ],
             ),
             Column(
@@ -1184,7 +1166,7 @@ class _OrderDetailState extends State<OrderDetail> {
                               );
                             },
                             child: Container(
-                                height: 70,
+                                height: 90,
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -1224,7 +1206,7 @@ class _OrderDetailState extends State<OrderDetail> {
                                     'Purchased on ' + date.toString(),
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         color: Colors.deepOrange,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -1240,7 +1222,7 @@ class _OrderDetailState extends State<OrderDetail> {
                     SizedBox(
                       height: 10,
                     ),
-                    shipfrom(context),
+//                    shipfrom(context),
                     SizedBox(
                       height: 10,
                     ),
@@ -1248,77 +1230,40 @@ class _OrderDetailState extends State<OrderDetail> {
                     InkWell(
                         onTap: () async {
                           if (deliverystage == 0) {
-                            if (addressline1 != null) {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              20.0)), //this right here
-                                      child: Container(
-                                        height: 100,
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: SpinKitChasingDots(
-                                                color: Colors.deepOrange)),
-                                      ),
-                                    );
-                                  });
-                              var url =
-                                  'https://api.sellship.co/api/shipitem/' +
-                                      messageid +
-                                      '/' +
-                                      addressline1 +
-                                      '/' +
-                                      city +
-                                      '/' +
-                                      state +
-                                      '/' +
-                                      zipcode;
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            20.0)), //this right here
+                                    child: Container(
+                                      height: 100,
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: SpinKitChasingDots(
+                                              color: Colors.deepOrange)),
+                                    ),
+                                  );
+                                });
 
-                              final response = await http.get(url);
+                            var url =
+                                'https://api.sellship.co/api/shipitem/uae/' +
+                                    messageid;
 
-                              var jsonbody = json.decode(response.body);
+                            final response = await http.get(url);
 
-                              setState(() {
-                                deliverystage = jsonbody['deliverystage'];
-                                trackingnumber =
-                                    jsonbody['shipping_details']['tracking_no'];
-                                deliveredtext = 'Item Shipped';
-                              });
+                            var jsonbody = json.decode(response.body);
 
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop('dialog');
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => AssetGiffyDialog(
-                                        image: Image.asset(
-                                          'assets/oops.gif',
-                                          fit: BoxFit.cover,
-                                        ),
-                                        title: Text(
-                                          'Oops!',
-                                          style: TextStyle(
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        description: Text(
-                                          'Please enter a valid ship from address!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(),
-                                        ),
-                                        onlyOkButton: true,
-                                        entryAnimation: EntryAnimation.DEFAULT,
-                                        onOkButtonPressed: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop('dialog');
-                                        },
-                                      ));
-                            }
+                            setState(() {
+                              deliverystage = jsonbody['deliverystage'];
+
+                              deliveredtext = 'Item Shipped';
+                            });
+
+                            Navigator.of(context, rootNavigator: true)
+                                .pop('dialog');
                           } else if (deliverystage == 1) {
                             showDialog(
                                 context: context,
@@ -1337,8 +1282,9 @@ class _OrderDetailState extends State<OrderDetail> {
                                     ),
                                   );
                                 });
-                            var url = 'https://api.sellship.co/api/shipped/' +
-                                messageid;
+                            var url =
+                                'https://api.sellship.co/api/shipped/uae/' +
+                                    messageid;
 
                             final response = await http.get(url);
 
@@ -1346,8 +1292,6 @@ class _OrderDetailState extends State<OrderDetail> {
 
                             setState(() {
                               deliverystage = jsonbody['deliverystage'];
-                              trackingnumber =
-                                  jsonbody['shipping_details']['tracking_no'];
                               deliveredtext = "Waiting for Delivery";
                             });
                             Navigator.of(context, rootNavigator: true)
