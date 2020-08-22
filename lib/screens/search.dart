@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'dart:typed_data';
 import 'package:SellShip/screens/comments.dart';
@@ -318,13 +319,15 @@ class _SearchState extends State<Search> {
                       ),
                       itemsgrid.isNotEmpty
                           ? (gridtoggle == true
-                              ? SliverGrid(
+                              ? SliverStaggeredGrid(
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    childAspectRatio: 0.62,
+                                      SliverStaggeredGridDelegateWithFixedCrossAxisCount(
                                     mainAxisSpacing: 1.0,
                                     crossAxisSpacing: 1.0,
                                     crossAxisCount: 2,
+                                    staggeredTileCount: itemsgrid.length,
+                                    staggeredTileBuilder: (index) =>
+                                        new StaggeredTile.fit(1),
                                   ),
                                   delegate: SliverChildBuilderDelegate(
                                       (BuildContext context, int index) {
@@ -342,7 +345,7 @@ class _SearchState extends State<Search> {
                                                       width: 0.2,
                                                       color: Colors.grey),
                                                   borderRadius:
-                                                      BorderRadius.circular(15),
+                                                      BorderRadius.circular(5),
                                                   color: Colors.white,
                                                   boxShadow: [
                                                     BoxShadow(
@@ -371,7 +374,7 @@ class _SearchState extends State<Search> {
                                                       width: 0.2,
                                                       color: Colors.grey),
                                                   borderRadius:
-                                                      BorderRadius.circular(15),
+                                                      BorderRadius.circular(5),
                                                   color: Colors.white,
                                                   boxShadow: [
                                                     BoxShadow(
@@ -433,7 +436,7 @@ class _SearchState extends State<Search> {
                                                     width: 0.2,
                                                     color: Colors.grey),
                                                 borderRadius:
-                                                    BorderRadius.circular(15),
+                                                    BorderRadius.circular(5),
                                                 color: Colors.white,
                                                 boxShadow: [
                                                   BoxShadow(
@@ -459,10 +462,10 @@ class _SearchState extends State<Search> {
                                                               BorderRadius.only(
                                                             topLeft:
                                                                 Radius.circular(
-                                                                    15),
+                                                                    5),
                                                             topRight:
                                                                 Radius.circular(
-                                                                    15),
+                                                                    5),
                                                           ),
                                                           child:
                                                               CachedNetworkImage(
@@ -772,7 +775,7 @@ class _SearchState extends State<Search> {
                                                       width: 0.2,
                                                       color: Colors.grey),
                                                   borderRadius:
-                                                      BorderRadius.circular(15),
+                                                      BorderRadius.circular(5),
                                                   color: Colors.white,
                                                   boxShadow: [
                                                     BoxShadow(
@@ -801,7 +804,7 @@ class _SearchState extends State<Search> {
                                                       width: 0.2,
                                                       color: Colors.grey),
                                                   borderRadius:
-                                                      BorderRadius.circular(15),
+                                                      BorderRadius.circular(5),
                                                   color: Colors.white,
                                                   boxShadow: [
                                                     BoxShadow(
@@ -924,7 +927,7 @@ class _SearchState extends State<Search> {
                                                     width: 0.2,
                                                     color: Colors.grey),
                                                 borderRadius:
-                                                    BorderRadius.circular(15),
+                                                    BorderRadius.circular(5),
                                                 color: Colors.white,
                                                 boxShadow: [
                                                   BoxShadow(
@@ -950,10 +953,10 @@ class _SearchState extends State<Search> {
                                                               BorderRadius.only(
                                                             topLeft:
                                                                 Radius.circular(
-                                                                    15),
+                                                                    5),
                                                             topRight:
                                                                 Radius.circular(
-                                                                    15),
+                                                                    5),
                                                           ),
                                                           child:
                                                               CachedNetworkImage(

@@ -741,13 +741,15 @@ class _UserItemsState extends State<UserItems> {
                           ]))),
                   itemsgrid.isNotEmpty
                       ? (gridtoggle == true
-                          ? SliverGrid(
+                          ? SliverStaggeredGrid(
                               gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio: 0.63,
+                                  SliverStaggeredGridDelegateWithFixedCrossAxisCount(
                                 mainAxisSpacing: 1.0,
                                 crossAxisSpacing: 1.0,
                                 crossAxisCount: 2,
+                                staggeredTileCount: itemsgrid.length,
+                                staggeredTileBuilder: (index) =>
+                                    new StaggeredTile.fit(1),
                               ),
                               delegate: SliverChildBuilderDelegate(
                                   (BuildContext context, int index) {
@@ -765,7 +767,7 @@ class _UserItemsState extends State<UserItems> {
                                                   width: 0.2,
                                                   color: Colors.grey),
                                               borderRadius:
-                                                  BorderRadius.circular(15),
+                                                  BorderRadius.circular(5),
                                               color: Colors.white,
                                               boxShadow: [
                                                 BoxShadow(
@@ -793,7 +795,7 @@ class _UserItemsState extends State<UserItems> {
                                                   width: 0.2,
                                                   color: Colors.grey),
                                               borderRadius:
-                                                  BorderRadius.circular(15),
+                                                  BorderRadius.circular(5),
                                               color: Colors.white,
                                               boxShadow: [
                                                 BoxShadow(
@@ -916,7 +918,7 @@ class _UserItemsState extends State<UserItems> {
                                             border: Border.all(
                                                 width: 0.2, color: Colors.grey),
                                             borderRadius:
-                                                BorderRadius.circular(15),
+                                                BorderRadius.circular(5),
                                             color: Colors.white,
                                             boxShadow: [
                                               BoxShadow(
@@ -941,9 +943,9 @@ class _UserItemsState extends State<UserItems> {
                                                       borderRadius:
                                                           BorderRadius.only(
                                                         topLeft:
-                                                            Radius.circular(15),
+                                                            Radius.circular(5),
                                                         topRight:
-                                                            Radius.circular(15),
+                                                            Radius.circular(5),
                                                       ),
                                                       child: CachedNetworkImage(
                                                         fadeInDuration:
@@ -1262,7 +1264,7 @@ class _UserItemsState extends State<UserItems> {
                                                   width: 0.2,
                                                   color: Colors.grey),
                                               borderRadius:
-                                                  BorderRadius.circular(15),
+                                                  BorderRadius.circular(5),
                                               color: Colors.white,
                                               boxShadow: [
                                                 BoxShadow(
@@ -1290,7 +1292,7 @@ class _UserItemsState extends State<UserItems> {
                                                   width: 0.2,
                                                   color: Colors.grey),
                                               borderRadius:
-                                                  BorderRadius.circular(15),
+                                                  BorderRadius.circular(5),
                                               color: Colors.white,
                                               boxShadow: [
                                                 BoxShadow(
@@ -1408,7 +1410,7 @@ class _UserItemsState extends State<UserItems> {
                                             border: Border.all(
                                                 width: 0.2, color: Colors.grey),
                                             borderRadius:
-                                                BorderRadius.circular(15),
+                                                BorderRadius.circular(5),
                                             color: Colors.white,
                                             boxShadow: [
                                               BoxShadow(
@@ -1433,9 +1435,9 @@ class _UserItemsState extends State<UserItems> {
                                                       borderRadius:
                                                           BorderRadius.only(
                                                         topLeft:
-                                                            Radius.circular(15),
+                                                            Radius.circular(5),
                                                         topRight:
-                                                            Radius.circular(15),
+                                                            Radius.circular(5),
                                                       ),
                                                       child: CachedNetworkImage(
                                                         fadeInDuration:

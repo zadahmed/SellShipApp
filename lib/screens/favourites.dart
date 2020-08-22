@@ -154,17 +154,18 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                             child: MediaQuery.removePadding(
                                 context: context,
                                 removeTop: true,
-                                child: GridView.builder(
-                                  cacheExtent:
-                                      double.parse(item.length.toString()),
-                                  shrinkWrap: true,
-                                  controller: _scrollController,
+                                child: StaggeredGridView.builder(
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          childAspectRatio: 0.55),
-                                  itemCount: item.length,
-                                  itemBuilder: (context, index) {
+                                      SliverStaggeredGridDelegateWithFixedCrossAxisCount(
+                                    mainAxisSpacing: 1.0,
+                                    crossAxisSpacing: 1.0,
+                                    crossAxisCount: 2,
+                                    staggeredTileCount: item.length,
+                                    staggeredTileBuilder: (index) =>
+                                        new StaggeredTile.fit(1),
+                                  ),
+                                  itemBuilder:
+                                      ((BuildContext context, int index) {
                                     return Padding(
                                         padding: EdgeInsets.all(10),
                                         child: InkWell(
@@ -184,7 +185,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                     width: 0.2,
                                                     color: Colors.grey),
                                                 borderRadius:
-                                                    BorderRadius.circular(15),
+                                                    BorderRadius.circular(5),
                                                 color: Colors.white,
                                                 boxShadow: [
                                                   BoxShadow(
@@ -208,7 +209,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                         child: ClipRRect(
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(15),
+                                                                  .circular(5),
                                                           child:
                                                               CachedNetworkImage(
                                                             imageUrl:
@@ -506,7 +507,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                 ],
                                               ),
                                             )));
-                                  },
+                                  }),
                                 )))
                         : Expanded(
                             child: Column(

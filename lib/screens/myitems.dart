@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 
@@ -94,17 +95,18 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                           child: MediaQuery.removePadding(
                               context: context,
                               removeTop: true,
-                              child: GridView.builder(
-                                cacheExtent:
-                                    double.parse(item.length.toString()),
-                                shrinkWrap: true,
-                                controller: _scrollController,
+                              child: StaggeredGridView.builder(
                                 gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: 0.60),
-                                itemCount: item.length,
-                                itemBuilder: (context, index) {
+                                    SliverStaggeredGridDelegateWithFixedCrossAxisCount(
+                                  mainAxisSpacing: 1.0,
+                                  crossAxisSpacing: 1.0,
+                                  crossAxisCount: 2,
+                                  staggeredTileCount: item.length,
+                                  staggeredTileBuilder: (index) =>
+                                      new StaggeredTile.fit(1),
+                                ),
+                                itemBuilder:
+                                    ((BuildContext context, int index) {
                                   return Padding(
                                       padding: EdgeInsets.all(10),
                                       child: InkWell(
@@ -134,7 +136,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        15),
+                                                                        5),
                                                             child:
                                                                 CachedNetworkImage(
                                                               imageUrl:
@@ -411,7 +413,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                   ],
                                                 ),
                                               ))));
-                                },
+                                }),
                               )))
                       : Expanded(
                           child: Column(
