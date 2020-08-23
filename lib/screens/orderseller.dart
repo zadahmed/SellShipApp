@@ -1253,17 +1253,12 @@ class _OrderDetailState extends State<OrderDetail> {
                                   context: context,
                                   barrierDismissible: false,
                                   builder: (BuildContext context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              20.0)), //this right here
-                                      child: Container(
-                                        height: 100,
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: SpinKitChasingDots(
-                                                color: Colors.deepOrange)),
-                                      ),
+                                    return Container(
+                                      height: 100,
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: SpinKitChasingDots(
+                                              color: Colors.deepOrangeAccent)),
                                     );
                                   });
                               var url =
@@ -1324,17 +1319,12 @@ class _OrderDetailState extends State<OrderDetail> {
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (BuildContext context) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            20.0)), //this right here
-                                    child: Container(
-                                      height: 100,
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: SpinKitChasingDots(
-                                              color: Colors.deepOrange)),
-                                    ),
+                                  return Container(
+                                    height: 100,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: SpinKitChasingDots(
+                                            color: Colors.deepOrangeAccent)),
                                   );
                                 });
                             var url = 'https://api.sellship.co/api/shipped/' +

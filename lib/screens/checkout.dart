@@ -503,19 +503,14 @@ class _CheckoutState extends State<Checkout> {
                       );
                       showDialog(
                           context: context,
-                          barrierDismissible: true,
+                          barrierDismissible: false,
                           builder: (BuildContext context) {
-                            return Dialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20.0)), //this right here
-                              child: Container(
-                                height: 100,
-                                child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: SpinKitChasingDots(
-                                        color: Colors.deepPurpleAccent)),
-                              ),
+                            return Container(
+                              height: 100,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: SpinKitChasingDots(
+                                      color: Colors.deepOrangeAccent)),
                             );
                           });
 

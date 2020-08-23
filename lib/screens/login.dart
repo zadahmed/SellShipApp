@@ -13,12 +13,12 @@ import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/orders.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
 import 'package:SellShip/screens/reviews.dart';
+import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/settings.dart';
 import 'package:SellShip/screens/signuppage.dart';
 import 'package:SellShip/screens/signupprofiel.dart';
 import 'package:SellShip/screens/termscondition.dart';
-import 'package:SellShip/support.dart';
 import 'package:SellShip/verification/verifyemail.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:badges/badges.dart';
@@ -32,6 +32,7 @@ import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'dart:convert';
@@ -42,7 +43,9 @@ import 'package:SellShip/screens/editprofile.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class LoginPage extends StatefulWidget {
@@ -271,6 +274,89 @@ class _LoginPageState extends State<LoginPage>
       );
     }
   }
+
+  final facebookLogin = FacebookLogin();
+
+  _loginWithFB() async {
+    final result = await facebookLogin.logIn(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        final token = result.accessToken.token;
+        final graphResponse = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
+
+        final profile = json.decode(graphResponse.body);
+
+        var url = 'https://api.sellship.co/api/signup';
+
+        var name = profile['name'].split(" ");
+
+        Map<String, String> body = {
+          'first_name': name[0],
+          'last_name': name[1],
+          'email': profile['email'],
+          'phonenumber': '00',
+          'password': 'password',
+          'fcmtoken': firebasetoken,
+        };
+
+        final response = await http.post(url, body: body);
+
+        if (response.statusCode == 200) {
+          var jsondata = json.decode(response.body);
+          print(jsondata);
+          if (jsondata['id'] != null) {
+            await storage.write(key: 'userid', value: jsondata['id']);
+            Navigator.of(context, rootNavigator: true).pop('dialog');
+
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => RootScreen()));
+          } else {
+            var url = 'https://api.sellship.co/api/login';
+
+            Map<String, String> body = {
+              'email': profile['email'],
+              'password': 'password',
+              'fcmtoken': firebasetoken,
+            };
+
+            final response = await http.post(url, body: body);
+
+            if (response.statusCode == 200) {
+              var jsondata = json.decode(response.body);
+              print(jsondata);
+              if (jsondata['id'] != null) {
+                await storage.write(key: 'userid', value: jsondata['id']);
+
+                Navigator.of(context, rootNavigator: true).pop('dialog');
+
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RootScreen()));
+              }
+            } else {
+              print(response.statusCode);
+            }
+          }
+        } else {
+          print(response.statusCode);
+        }
+
+        setState(() {
+          loggedin = true;
+        });
+        break;
+
+      case FacebookLoginStatus.cancelledByUser:
+        setState(() => loggedin = false);
+        break;
+      case FacebookLoginStatus.error:
+        setState(() => loggedin = false);
+        break;
+    }
+  }
+
+  var loggedin;
 
   TabController _tabController;
 
@@ -723,15 +809,13 @@ class _LoginPageState extends State<LoginPage>
         color: Colors.white,
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        child: ListView(
           children: <Widget>[
             FadeAnimation(
                 1,
                 Container(
-                  height: MediaQuery.of(context).size.height / 2.4,
+                  height: MediaQuery.of(context).size.height / 2.5,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
                     controller: _pageControllerlogin,
@@ -749,6 +833,7 @@ class _LoginPageState extends State<LoginPage>
                               image: AssetImage(
                                 'assets/onboard1.png',
                               ),
+                              fit: BoxFit.cover,
                               height: MediaQuery.of(context).size.height / 4,
                               width: 300.0,
                             ),
@@ -759,8 +844,7 @@ class _LoginPageState extends State<LoginPage>
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontFamily: 'Helvetica',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
                                   color: Colors.deepOrange)),
                         ],
                       ),
@@ -772,6 +856,7 @@ class _LoginPageState extends State<LoginPage>
                               image: AssetImage(
                                 'assets/onboard2.png',
                               ),
+                              fit: BoxFit.cover,
                               height: MediaQuery.of(context).size.height / 4,
                               width: 300.0,
                             ),
@@ -782,8 +867,7 @@ class _LoginPageState extends State<LoginPage>
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontFamily: 'Helvetica',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
                                   color: Colors.deepOrange)),
                         ],
                       ),
@@ -794,63 +878,294 @@ class _LoginPageState extends State<LoginPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: _buildPageIndicator(),
             ),
+            SizedBox(
+              height: 20,
+            ),
             Column(
               children: <Widget>[
                 FadeAnimation(
-                    1.5,
-                    MaterialButton(
-                      minWidth: double.infinity,
-                      height: 60,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginProfile()));
-                      },
-                      shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.black),
-                          borderRadius: BorderRadius.circular(50)),
-                      child: Text(
-                        "Login",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 18),
-                      ),
-                    )),
-                SizedBox(
-                  height: 15,
-                ),
-                FadeAnimation(
-                    1.6,
-                    Container(
-                      padding: EdgeInsets.only(top: 3, left: 3),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border(
-                            bottom: BorderSide(color: Colors.black),
-                            top: BorderSide(color: Colors.black),
-                            left: BorderSide(color: Colors.black),
-                            right: BorderSide(color: Colors.black),
-                          )),
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        height: 60,
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignUpProfilePage()));
-                        },
-                        color: Colors.deepOrangeAccent,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50)),
-                        child: Text(
-                          "Sign up",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 18),
+                  1.5,
+                  InkWell(
+                    onTap: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.setBool('seen', true);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Login()));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.4),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 10.0),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Login',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.0,
+                              color: Colors.deepPurple,
+                            ),
+                          ),
                         ),
                       ),
-                    ))
+                    ),
+                  ),
+                ),
+                FadeAnimation(
+                  1.5,
+                  InkWell(
+                    onTap: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.setBool('seen', true);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurpleAccent,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.deepPurpleAccent.withOpacity(0.4),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 10.0),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Sign Up',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                FadeAnimation(
+                  1.5,
+                  InkWell(
+                    onTap: () async {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (BuildContext context) {
+                            return Container(
+                              height: 100,
+                              child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: SpinKitChasingDots(
+                                      color: Colors.deepOrangeAccent)),
+                            );
+                          });
+
+                      _loginWithFB();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.4),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 10.0),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Sign in with Facebook',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.0,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Platform.isIOS
+                    ? FadeAnimation(
+                        1.5,
+                        InkWell(
+                          onTap: () async {
+                            final credential =
+                                await SignInWithApple.getAppleIDCredential(
+                              scopes: [
+                                AppleIDAuthorizationScopes.email,
+                                AppleIDAuthorizationScopes.fullName,
+                              ],
+                              webAuthenticationOptions:
+                                  WebAuthenticationOptions(
+                                clientId: 'com.zad.sellshipsignin',
+                                redirectUri: Uri.parse(
+                                  'https://flawless-absorbed-marjoram.glitch.me/callbacks/sign_in_with_apple',
+                                ),
+                              ),
+                            );
+
+                            if (credential.email != null &&
+                                credential.givenName != null) {
+                              var url = 'https://api.sellship.co/api/signup';
+
+                              Map<String, String> body = {
+                                'first_name': credential.givenName,
+                                'last_name': credential.familyName,
+                                'email': credential.email,
+                                'phonenumber': '000',
+                                'password': credential.authorizationCode,
+                                'fcmtoken': '000',
+                              };
+
+                              final response = await http.post(url, body: body);
+
+                              if (response.statusCode == 200) {
+                                var jsondata = json.decode(response.body);
+                                print(jsondata);
+                                if (jsondata['id'] != null) {
+                                  await storage.write(
+                                      key: 'userid', value: jsondata['id']);
+
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RootScreen()));
+                                } else {
+                                  var id = jsondata['status']['id'];
+                                  await storage.write(key: 'userid', value: id);
+
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RootScreen()));
+                                }
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AssetGiffyDialog(
+                                          image: Image.asset(
+                                            'assets/oops.gif',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            'Oops!',
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'Looks like something went wrong!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(),
+                                          ),
+                                          onlyOkButton: true,
+                                          entryAnimation:
+                                              EntryAnimation.DEFAULT,
+                                          onOkButtonPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                          },
+                                        ));
+                              }
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AssetGiffyDialog(
+                                        image: Image.asset(
+                                          'assets/oops.gif',
+                                          fit: BoxFit.cover,
+                                        ),
+                                        title: Text(
+                                          'Oops!',
+                                          style: TextStyle(
+                                              fontSize: 22.0,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        description: Text(
+                                          'Looks like something went wrong!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(),
+                                        ),
+                                        onlyOkButton: true,
+                                        entryAnimation: EntryAnimation.DEFAULT,
+                                        onOkButtonPressed: () {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop('dialog');
+                                        },
+                                      ));
+                            }
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.black.withOpacity(0.4),
+                                      offset: const Offset(1.1, 1.1),
+                                      blurRadius: 10.0),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Sign in with Apple',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    letterSpacing: 0.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container()
               ],
             )
           ],
@@ -873,9 +1188,14 @@ class _LoginPageState extends State<LoginPage>
               child: Center(child: Text('${item.length} Items')),
             ),
           ),
-          SliverGrid(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, childAspectRatio: 0.58),
+          SliverStaggeredGrid(
+            gridDelegate: SliverStaggeredGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: 1.0,
+              crossAxisSpacing: 1.0,
+              crossAxisCount: 2,
+              staggeredTileCount: item.length,
+              staggeredTileBuilder: (index) => new StaggeredTile.fit(1),
+            ),
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Padding(
@@ -893,7 +1213,7 @@ class _LoginPageState extends State<LoginPage>
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(width: 0.2, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(5),
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
@@ -911,7 +1231,7 @@ class _LoginPageState extends State<LoginPage>
                                     height: 150,
                                     width: MediaQuery.of(context).size.width,
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(5),
                                       child: CachedNetworkImage(
                                         imageUrl: item[index].image,
                                         fit: BoxFit.cover,
@@ -925,18 +1245,24 @@ class _LoginPageState extends State<LoginPage>
                                   ),
                                   item[index].sold == true
                                       ? Align(
-                                          alignment: Alignment.topRight,
+                                          alignment: Alignment.center,
                                           child: Container(
-                                            height: 20,
-                                            width: 50,
-                                            color: Colors.amber,
-                                            child: Text(
-                                              'Sold',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                            height: 50,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            color: Colors.deepPurpleAccent
+                                                .withOpacity(0.8),
+                                            child: Center(
+                                              child: Text(
+                                                'Sold',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             ),
                                           ))
                                       : Container(),
@@ -1254,7 +1580,7 @@ class _LoginPageState extends State<LoginPage>
                                                     ],
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            15.0),
+                                                            5.0),
                                                   ),
                                                   child: Center(
                                                     child: Text(
@@ -1313,7 +1639,11 @@ class _LoginPageState extends State<LoginPage>
                                                           4 -
                                                       20,
                                                   decoration: BoxDecoration(
-                                                    color: Colors.amber,
+                                                    color: item[index].sold ==
+                                                            true
+                                                        ? Colors
+                                                            .deepPurpleAccent
+                                                        : Colors.deepOrange,
                                                     boxShadow: [
                                                       BoxShadow(
                                                         color: Colors
@@ -1325,7 +1655,7 @@ class _LoginPageState extends State<LoginPage>
                                                     ],
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            15.0),
+                                                            5.0),
                                                   ),
                                                   child: Center(
                                                     child: Text(
@@ -1412,7 +1742,7 @@ class _LoginPageState extends State<LoginPage>
         setState(() {
           firebasetoken = token;
         });
-        Intercom.sendTokenToIntercom(token);
+//        Intercom.sendTokenToIntercom(token);
       });
       var url = 'https://api.sellship.co/api/user/' + userid;
       print(url);

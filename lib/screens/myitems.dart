@@ -322,7 +322,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                             ),
                                                                           ],
                                                                           borderRadius:
-                                                                              BorderRadius.circular(15.0),
+                                                                              BorderRadius.circular(5.0),
                                                                         ),
                                                                         child:
                                                                             Center(
@@ -394,7 +394,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                             ),
                                                                           ],
                                                                           borderRadius:
-                                                                              BorderRadius.circular(15.0),
+                                                                              BorderRadius.circular(5.0),
                                                                         ),
                                                                         child:
                                                                             Center(

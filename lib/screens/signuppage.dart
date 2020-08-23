@@ -292,52 +292,58 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               FadeAnimation(
                   1.5,
-                  Container(
-                    padding: EdgeInsets.only(top: 3, left: 3),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border(
-                          bottom: BorderSide(color: Colors.black),
-                          top: BorderSide(color: Colors.black),
-                          left: BorderSide(color: Colors.black),
-                          right: BorderSide(color: Colors.black),
-                        )),
-                    child: MaterialButton(
-                      minWidth: double.infinity,
-                      height: 60,
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) => new AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  content: Builder(
-                                    builder: (context) {
-                                      return Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: SpinKitChasingDots(
-                                            color: Colors.deepOrange,
-                                          ));
-                                    },
-                                  ),
-                                ));
-                        Signup();
-                      },
-                      color: Colors.deepOrangeAccent,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                      child: Text(
-                        "Sign up",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontFamily: "SF",
-                            fontSize: 18),
+                  InkWell(
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurpleAccent,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                                color: Colors.deepPurpleAccent.withOpacity(0.4),
+                                offset: const Offset(1.1, 1.1),
+                                blurRadius: 10.0),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Sign Up',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) => new AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                content: Builder(
+                                  builder: (context) {
+                                    return Container(
+                                        height: 50,
+                                        width: 50,
+                                        child: SpinKitChasingDots(
+                                          color: Colors.deepOrange,
+                                        ));
+                                  },
+                                ),
+                              ));
+                      Signup();
+                    },
                   )),
               FadeAnimation(
                   1.6,

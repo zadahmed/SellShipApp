@@ -314,7 +314,8 @@ class _AddItemState extends State<AddItem> {
         _lastMapPosition = point;
       });
       List<Placemark> p = await geolocator.placemarkFromCoordinates(
-          _lastMapPosition.latitude, _lastMapPosition.longitude);
+          _lastMapPosition.latitude, _lastMapPosition.longitude,
+          localeIdentifier: 'en');
       Placemark place = p[0];
       var cit = place.administrativeArea;
       var countr = place.country;
@@ -337,7 +338,8 @@ class _AddItemState extends State<AddItem> {
         print(_lastMapPosition);
       });
       List<Placemark> p = await geolocator.placemarkFromCoordinates(
-          _lastMapPosition.latitude, _lastMapPosition.longitude);
+          _lastMapPosition.latitude, _lastMapPosition.longitude,
+          localeIdentifier: 'en');
       Placemark place = p[0];
       var cit = place.administrativeArea;
       var countr = place.country;
