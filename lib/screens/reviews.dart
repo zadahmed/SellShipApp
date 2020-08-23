@@ -147,25 +147,6 @@ class _ReviewsPageState extends State<ReviewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.deepOrange,
-          ),
-        ),
-        title: Text(
-          'Reviews',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontFamily: 'Helvetica', fontSize: 18, color: Colors.black),
-        ),
-      ),
       body: reviews.isNotEmpty
           ? EasyRefresh(
               child: ListView.builder(

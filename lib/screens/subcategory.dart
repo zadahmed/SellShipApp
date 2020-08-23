@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/screens/home.dart';
+import 'package:SellShip/screens/messages.dart';
+import 'package:badges/badges.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/comments.dart';
@@ -549,6 +553,35 @@ class _SubCategoryState extends State<SubCategory> {
     }
   }
 
+  void getnotification() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/getnotification/' + userid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var notificationinfo = json.decode(response.body);
+        var notif = notificationinfo['notification'];
+        if (notif <= 0) {
+          setState(() {
+            notifcount = notif;
+            notifbadge = false;
+          });
+          FlutterAppBadger.removeBadge();
+        } else if (notif > 0) {
+          setState(() {
+            notifcount = notif;
+            notifbadge = true;
+          });
+        }
+      } else {
+        print(response.statusCode);
+      }
+    }
+  }
+
+  var notifcount = 0;
+  var notifbadge = false;
+
   Future<List<Item>> getmorePrice(String minprice, String maxprice) async {
     setState(() {
       limit = limit + 20;
@@ -1058,7 +1091,7 @@ class _SubCategoryState extends State<SubCategory> {
   String condition;
 
   String subcategory;
-
+  TextEditingController searchcontroller = new TextEditingController();
   @override
   void initState() {
     setState(() {
@@ -1818,12 +1851,13 @@ class _SubCategoryState extends State<SubCategory> {
         ));
   }
 
-  bool gridtoggle;
+  bool gridtoggle = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldState,
+        backgroundColor: Colors.white,
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -1832,20 +1866,57 @@ class _SubCategoryState extends State<SubCategory> {
               ? CustomScrollView(
                   slivers: <Widget>[
                     SliverAppBar(
+                      pinned: false,
                       snap: false,
                       floating: true,
-                      pinned: true,
-                      iconTheme: IconThemeData(color: Colors.deepPurple),
+                      elevation: 0,
                       backgroundColor: Colors.white,
-                      title: Text(
-                        subcategory.toUpperCase(),
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.deepOrange,
-                            fontWeight: FontWeight.w800),
+                      leading: InkWell(
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.deepOrange,
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
                       ),
-                      expandedHeight: 100.0,
+                      title: Container(
+                        height: 30,
+                        width: 120,
+                        child: Image.asset(
+                          'assets/logotransparent.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      actions: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(right: 15),
+                          child: Badge(
+                            showBadge: notifbadge,
+                            position: BadgePosition.topRight(top: 2),
+                            animationType: BadgeAnimationType.slide,
+                            badgeContent: Text(
+                              '',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Messages()),
+                                );
+                              },
+                              child: Icon(
+                                Feather.message_square,
+                                color: Colors.deepOrange,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      expandedHeight: 150.0,
                       flexibleSpace: FlexibleSpaceBar(
                         collapseMode: CollapseMode.pin,
                         centerTitle: true,
@@ -1854,8 +1925,57 @@ class _SubCategoryState extends State<SubCategory> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Container(
-                                margin: EdgeInsets.only(top: 75.0),
-                                child: filtersort(context)),
+                              margin: EdgeInsets.only(
+                                  top: 65.0, left: 15, right: 15, bottom: 10),
+                              child: Container(
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Icon(
+                                          Feather.search,
+                                          size: 24,
+                                          color: Colors.deepOrange,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          onTap: () {
+                                            showSearch(
+                                                context: context,
+                                                delegate: UserSearchDelegate(
+                                                    country));
+                                          },
+                                          controller: searchcontroller,
+                                          decoration: InputDecoration(
+                                              hintText: 'Search SellShip',
+                                              hintStyle: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                              ),
+                                              border: InputBorder.none),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            Container(child: filtersort(context)),
                           ],
                         ),
                       ),
@@ -2072,25 +2192,33 @@ class _SubCategoryState extends State<SubCategory> {
                                                             true
                                                         ? Align(
                                                             alignment: Alignment
-                                                                .topRight,
+                                                                .center,
                                                             child: Container(
-                                                              height: 20,
-                                                              width: 50,
-                                                              color:
-                                                                  Colors.amber,
-                                                              child: Text(
-                                                                'Sold',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        'Helvetica',
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
+                                                              height: 50,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              color: Colors
+                                                                  .deepPurpleAccent
+                                                                  .withOpacity(
+                                                                      0.8),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'Sold',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
                                                               ),
                                                             ))
                                                         : Container(),
@@ -2561,25 +2689,33 @@ class _SubCategoryState extends State<SubCategory> {
                                                             true
                                                         ? Align(
                                                             alignment: Alignment
-                                                                .topRight,
+                                                                .center,
                                                             child: Container(
-                                                              height: 20,
-                                                              width: 50,
-                                                              color:
-                                                                  Colors.amber,
-                                                              child: Text(
-                                                                'Sold',
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        'Helvetica',
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
+                                                              height: 50,
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              color: Colors
+                                                                  .deepPurpleAccent
+                                                                  .withOpacity(
+                                                                      0.8),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'Sold',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
                                                               ),
                                                             ))
                                                         : Container(),

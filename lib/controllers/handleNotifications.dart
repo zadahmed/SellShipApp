@@ -5,15 +5,27 @@ import 'package:SellShip/screens/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:locally/locally.dart';
+import 'package:intercom_flutter/intercom_flutter.dart' show Intercom;
 
 class FirebaseNotifications {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) async {
+    final data = (message['data'] as Map).cast<String, dynamic>();
+
+    if (await Intercom.isIntercomPush(data)) {
+      await Intercom.handlePush(data);
+      return;
+    }
+  }
 
   Future getNotifications(BuildContext context) async {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
+
         var title = message['notification']['title'];
         var body = message['notification']['body'];
 

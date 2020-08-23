@@ -111,26 +111,7 @@ class SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     precacheImage(AssetImage('assets/logo.png'), context);
     return new Scaffold(
-      body: new Center(
-        child: new Container(
-            color: Color.fromRGBO(255, 140, 0, 0),
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 20, left: 10, right: 10),
-                  child: Image.asset('assets/logo.png'),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SpinKitChasingDots(color: Colors.white),
-              ],
-            )),
-      ),
+      backgroundColor: Colors.deepOrange,
     );
   }
 }

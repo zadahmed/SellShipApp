@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
@@ -205,8 +206,23 @@ class _UserItemsState extends State<UserItems> {
           profilepic = null;
         }
 
+        var confirmedf = profilemap['confirmedfb'];
+        if (confirmedf != null) {
+          print(confirmedf);
+        } else {
+          confirmedf = false;
+        }
+
+        var rating;
+        if (profilemap['reviewrating'] == null) {
+          rating = 0.0;
+        } else {
+          rating = profilemap['reviewrating'];
+        }
+
         if (mounted) {
           setState(() {
+            reviewrating = rating;
             firstname = profilemap['first_name'];
             lastname = profilemap['last_name'];
             phonenumber = profilemap['phonenumber'];
@@ -217,6 +233,7 @@ class _UserItemsState extends State<UserItems> {
             confirmedemail = confirmedemai;
             confirmedphone = confirmedphon;
             loading = false;
+            confirmedfb = confirmedf;
             profilepicture = profilepic;
           });
         }
@@ -225,6 +242,9 @@ class _UserItemsState extends State<UserItems> {
       }
     }
   }
+
+  double reviewrating;
+  bool confirmedfb;
 
   void showInSnackBar(String value) {
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -334,302 +354,429 @@ class _UserItemsState extends State<UserItems> {
                       child: Container(
                           color: Colors.white,
                           width: double.infinity,
-//                  height: MediaQuery.of(context).size.height,
                           child: Column(children: <Widget>[
                             SizedBox(
-                              height: 10,
+                              height: 5,
+                            ),
+                            Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: profilepicture == null
+                                    ? Image.asset(
+                                        'assets/personplaceholder.png',
+                                        fit: BoxFit.fitWidth,
+                                      )
+                                    : CachedNetworkImage(
+                                        imageUrl: profilepicture,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            SpinKitChasingDots(
+                                                color: Colors.deepOrange),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Text(
+                                firstname + ' ' + lastname,
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      height: 80,
-                                      width: 80,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(40),
-                                        child: profilepicture == null
-                                            ? Image.asset(
-                                                'assets/personplaceholder.png',
-                                                fit: BoxFit.fill,
-                                              )
-                                            : CachedNetworkImage(
-                                                imageUrl: profilepicture,
-                                                fit: BoxFit.cover,
-                                                placeholder: (context, url) =>
-                                                    SpinKitChasingDots(
-                                                        color:
-                                                            Colors.deepOrange),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                              ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 150,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          capitalize(firstname) +
-                                              ' ' +
-                                              capitalize(lastname),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                SmoothStarRating(
+                                    allowHalfRating: true,
+                                    starCount: 5,
+                                    isReadOnly: true,
+                                    rating: reviewrating,
+                                    size: 20.0,
+                                    color: Colors.deepPurple,
+                                    borderColor: Colors.deepPurpleAccent,
+                                    spacing: 0.0),
+                                SizedBox(
+                                  width: 5,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 10, left: 20, right: 30, bottom: 30),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            itemssold == null
-                                                ? '0'
-                                                : itemssold.toString(),
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(height: 10.0),
-                                          Text(
-                                            'Sold',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.black),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            following == null
-                                                ? '0'
-                                                : following.toString(),
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Helvetica',
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(height: 10.0),
-                                          Text(
-                                            'Likes',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.black),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            followers == null
-                                                ? '0'
-                                                : followers.toString(),
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Helvetica',
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(height: 10.0),
-                                          Text(
-                                            'Followers',
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.black),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                Text(
+                                  reviewrating.toStringAsFixed(1),
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.black),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 6.0),
-                            SizedBox(height: 4.0),
                             Padding(
                               padding: EdgeInsets.only(
-                                  top: 10, left: 20, right: 20, bottom: 10),
+                                  top: 10, left: 20, right: 20, bottom: 5),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      confirmedemail == true
-                                          ? Badge(
-                                              showBadge: true,
-                                              badgeColor:
-                                                  Colors.deepOrangeAccent,
-                                              position:
-                                                  BadgePosition.topRight(),
-                                              animationType:
-                                                  BadgeAnimationType.slide,
-                                              badgeContent: Icon(
-                                                Feather.check_circle,
-                                                size: 16,
-                                                color: Colors.white,
-                                              ),
-                                              child: Container(
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 0.2,
-                                                        color: Colors.grey),
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: CircleAvatar(
-                                                    child: Icon(
-                                                      Feather.mail,
-                                                      color: Colors.deepOrange,
-                                                    ),
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                  )))
-                                          : Badge(
-                                              showBadge: true,
-                                              badgeColor: Colors.grey,
-                                              position:
-                                                  BadgePosition.topRight(),
-                                              animationType:
-                                                  BadgeAnimationType.slide,
-                                              badgeContent: Icon(
-                                                FontAwesome.question,
-                                                size: 14,
-                                                color: Colors.white,
-                                              ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: Colors.grey),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: CircleAvatar(
-                                                  child: Icon(
-                                                    Feather.mail,
-                                                    color: Colors.deepOrange,
-                                                  ),
-                                                  backgroundColor: Colors.white,
-                                                ),
-                                              ),
-                                            ),
+                                      Text(
+                                        itemssold == null
+                                            ? '0'
+                                            : itemssold.toString(),
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Text(
+                                        'Sold',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.blueGrey),
+                                      )
                                     ],
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 20,
                                   ),
                                   Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      confirmedphone == true
-                                          ? Badge(
-                                              showBadge: true,
-                                              badgeColor:
-                                                  Colors.deepOrangeAccent,
-                                              position:
-                                                  BadgePosition.topRight(),
-                                              animationType:
-                                                  BadgeAnimationType.slide,
-                                              badgeContent: Icon(
-                                                Feather.check_circle,
-                                                size: 16,
-                                                color: Colors.white,
-                                              ),
-                                              child: Container(
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 0.2,
-                                                        color: Colors.grey),
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: CircleAvatar(
-                                                    child: Icon(
-                                                      Feather.phone,
-                                                      color: Colors.deepOrange,
-                                                    ),
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                  )))
-                                          : Badge(
-                                              showBadge: true,
-                                              badgeColor: Colors.grey,
-                                              position:
-                                                  BadgePosition.topRight(),
-                                              animationType:
-                                                  BadgeAnimationType.slide,
-                                              badgeContent: Icon(
-                                                FontAwesome.question,
-                                                size: 14,
-                                                color: Colors.white,
-                                              ),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: Colors.grey),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: CircleAvatar(
-                                                  child: Icon(
-                                                    Feather.phone,
-                                                    color: Colors.deepOrange,
-                                                  ),
-                                                  backgroundColor: Colors.white,
-                                                ),
-                                              ),
-                                            ),
+                                      Text(
+                                        following == null
+                                            ? '0'
+                                            : following.toString(),
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Text(
+                                        'Likes',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.blueGrey),
+                                      )
                                     ],
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: 20,
                                   ),
                                   Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      CircleAvatar(
-                                        child: Icon(
-                                          Feather.facebook,
-                                          color: Colors.white,
-                                        ),
-                                        backgroundColor: Colors.blue,
+                                      Text(
+                                        followers == null
+                                            ? '0'
+                                            : followers.toString(),
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Text(
+                                        'Followers',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.blueGrey),
                                       ),
                                     ],
                                   ),
+                                  Container(
+                                      child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 10,
+                                        left: 10,
+                                        right: 10,
+                                        bottom: 10),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              confirmedemail == true
+                                                  ? Badge(
+                                                      showBadge: true,
+                                                      badgeColor:
+                                                          Colors.deepOrange,
+                                                      position: BadgePosition
+                                                          .topRight(),
+                                                      borderRadius: 16,
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      badgeContent: Icon(
+                                                        FontAwesome
+                                                            .check_circle,
+                                                        size: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                          height: 30,
+                                                          width: 30,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                                width: 0.2,
+                                                                color: Colors
+                                                                    .deepOrange),
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          child: CircleAvatar(
+                                                            radius: 16,
+                                                            child: Icon(
+                                                              Feather.mail,
+                                                              size: 16,
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            ),
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                          )))
+                                                  : Badge(
+                                                      showBadge: true,
+                                                      badgeColor: Colors.grey,
+                                                      position: BadgePosition
+                                                          .topRight(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      borderRadius: 16,
+                                                      badgeContent: Icon(
+                                                        FontAwesome.question,
+                                                        size: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                        height: 30,
+                                                        width: 30,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color:
+                                                                  Colors.grey),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          child: Icon(
+                                                            Feather.mail,
+                                                            size: 16,
+                                                            color: Colors
+                                                                .deepOrange,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              confirmedphone == true
+                                                  ? Badge(
+                                                      showBadge: true,
+                                                      badgeColor:
+                                                          Colors.deepOrange,
+                                                      position: BadgePosition
+                                                          .topRight(),
+                                                      borderRadius: 16,
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      badgeContent: Icon(
+                                                        FontAwesome
+                                                            .check_circle,
+                                                        size: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                          height: 30,
+                                                          width: 30,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                                width: 0.2,
+                                                                color: Colors
+                                                                    .deepOrange),
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          child: CircleAvatar(
+                                                            radius: 16,
+                                                            child: Icon(
+                                                              Feather.phone,
+                                                              size: 16,
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            ),
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                          )))
+                                                  : Badge(
+                                                      showBadge: true,
+                                                      badgeColor: Colors.grey,
+                                                      position: BadgePosition
+                                                          .topRight(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      borderRadius: 16,
+                                                      badgeContent: Icon(
+                                                        FontAwesome.question,
+                                                        size: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                        height: 30,
+                                                        width: 30,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color:
+                                                                  Colors.grey),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          child: Icon(
+                                                            Feather.phone,
+                                                            size: 16,
+                                                            color: Colors
+                                                                .deepOrange,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              confirmedfb == true
+                                                  ? Badge(
+                                                      showBadge: true,
+                                                      badgeColor:
+                                                          Colors.deepOrange,
+                                                      position: BadgePosition
+                                                          .topRight(),
+                                                      borderRadius: 16,
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      badgeContent: Icon(
+                                                        FontAwesome
+                                                            .check_circle,
+                                                        size: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                        height: 30,
+                                                        width: 30,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color: Colors
+                                                                  .deepOrange),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          child: Icon(
+                                                            Feather.facebook,
+                                                            color: Colors.white,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.blueAccent,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Badge(
+                                                      showBadge: true,
+                                                      badgeColor: Colors.grey,
+                                                      position: BadgePosition
+                                                          .topRight(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      borderRadius: 16,
+                                                      badgeContent: Icon(
+                                                        FontAwesome.question,
+                                                        size: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                        height: 30,
+                                                        width: 30,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color:
+                                                                  Colors.grey),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 16,
+                                                          child: Icon(
+                                                            Feather.facebook,
+                                                            size: 16,
+                                                            color: Colors
+                                                                .blueAccent,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                            ],
+                                          ),
+                                          Text(
+                                            'Verification',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                fontFamily: 'Helvetica',
+                                                color: Colors.blueGrey),
+                                          )
+                                        ]),
+                                  ))
                                 ],
                               ),
                             ),
@@ -969,25 +1116,34 @@ class _UserItemsState extends State<UserItems> {
                                                   ),
                                                   itemsgrid[index].sold == true
                                                       ? Align(
-                                                          alignment: Alignment
-                                                              .topRight,
+                                                          alignment:
+                                                              Alignment.center,
                                                           child: Container(
-                                                            height: 20,
-                                                            width: 50,
-                                                            color: Colors.amber,
-                                                            child: Text(
-                                                              'Sold',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                            height: 50,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            color: Colors
+                                                                .deepPurpleAccent
+                                                                .withOpacity(
+                                                                    0.8),
+                                                            child: Center(
+                                                              child: Text(
+                                                                'Sold',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
                                                             ),
                                                           ))
                                                       : Container(),
@@ -1461,25 +1617,34 @@ class _UserItemsState extends State<UserItems> {
                                                   ),
                                                   itemsgrid[index].sold == true
                                                       ? Align(
-                                                          alignment: Alignment
-                                                              .topRight,
+                                                          alignment:
+                                                              Alignment.center,
                                                           child: Container(
-                                                            height: 20,
-                                                            width: 50,
-                                                            color: Colors.amber,
-                                                            child: Text(
-                                                              'Sold',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                            height: 50,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            color: Colors
+                                                                .deepPurpleAccent
+                                                                .withOpacity(
+                                                                    0.8),
+                                                            child: Center(
+                                                              child: Text(
+                                                                'Sold',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
                                                             ),
                                                           ))
                                                       : Container(),

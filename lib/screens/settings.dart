@@ -5,10 +5,14 @@ import 'package:SellShip/screens/changecountry.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
+import 'package:SellShip/screens/reviews.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/search.dart';
+
 import 'package:SellShip/screens/termscondition.dart';
-import 'package:SellShip/support.dart';
+
+import 'package:SellShip/verification/verifyemail.dart';
+import 'package:SellShip/verification/verifyphone.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -26,6 +30,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/editprofile.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -45,6 +50,47 @@ class _SettingsState extends State<Settings> {
   void initState() {
     readdetails();
     super.initState();
+  }
+
+  bool verified;
+
+  final facebookLogin = FacebookLogin();
+  bool confirmedfb;
+
+  verifyFB() async {
+    final result = await facebookLogin.logIn(['email']);
+
+    switch (result.status) {
+      case FacebookLoginStatus.loggedIn:
+        final token = result.accessToken.token;
+        final graphResponse = await http.get(
+            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
+
+        final profile = json.decode(graphResponse.body);
+        var email = profile['email'];
+        var url = 'https://api.sellship.co/verify/fb/' + userid + '/' + email;
+        final response = await http.get(url);
+        if (response.statusCode == 200) {
+          setState(() {
+            confirmedfb = true;
+          });
+          Navigator.of(context, rootNavigator: true).pop('dialog');
+        } else {
+          setState(() {
+            confirmedfb = false;
+          });
+          Navigator.of(context, rootNavigator: true).pop('dialog');
+        }
+
+        break;
+
+      case FacebookLoginStatus.cancelledByUser:
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        break;
+      case FacebookLoginStatus.error:
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        break;
+    }
   }
 
   readdetails() async {
@@ -78,15 +124,95 @@ class _SettingsState extends State<Settings> {
         body: ListView(
           children: <Widget>[
             userid != null
+                ? Padding(
+                    padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Account Settings',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
+            userid != null
                 ? Container(
                     color: Colors.white,
-                    child: InkWell(
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.attach_money,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Feather.arrow_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Balance',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Balance()),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.edit,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Feather.arrow_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Edit Profile',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Support(email: email)),
+                              builder: (context) => EditProfile()),
                         );
+                      },
+                    ),
+                  )
+                : Container(),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: InkWell(
+                      onTap: () async {
+                        await Intercom.initialize(
+                          'z4m2b833',
+                          androidApiKey:
+                              'android_sdk-78eb7d5e9dd5f4b508ddeec4b3c54d7491676661',
+                          iosApiKey:
+                              'ios_sdk-2744ef1f27a14461bfda4cb07e8fc44364a38005',
+                        );
+                        await Intercom.registerIdentifiedUser(email: email);
+
+                        Intercom.displayMessenger();
                       },
                       child: ListTile(
                         leading: Icon(
@@ -98,10 +224,164 @@ class _SettingsState extends State<Settings> {
                           size: 16,
                           color: Colors.deepOrange,
                         ),
-                        title: Text('Help & Support'),
+                        title: Text(
+                          'Help & Support',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ))
                 : Container(),
+            Divider(
+              color: Colors.grey,
+              thickness: 0.1,
+            ),
+            userid != null
+                ? Padding(
+                    padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Verification',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.alternate_email,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Feather.arrow_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Verify Email',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VerifyEmail(
+                                    email: email,
+                                    userid: userid,
+                                  )),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.phone,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Feather.arrow_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Verify Phone',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VerifyPhone(
+                                    userid: userid,
+                                  )),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        FontAwesome.facebook,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Feather.arrow_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Verify Facebook',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => new AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  content: Builder(
+                                    builder: (context) {
+                                      return Container(
+                                          height: 50,
+                                          width: 50,
+                                          child: SpinKitChasingDots(
+                                            color: Colors.deepOrange,
+                                          ));
+                                    },
+                                  ),
+                                ));
+                        verifyFB();
+                      },
+                    ),
+                  )
+                : Container(),
+            Divider(
+              color: Colors.grey,
+              thickness: 0.1,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Other Settings',
+                  style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 16,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
             Container(
               color: Colors.white,
               child: ListTile(

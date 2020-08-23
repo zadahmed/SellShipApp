@@ -1252,49 +1252,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 title: Container(
-                    height: 45,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade300,
-                          offset: Offset(0.0, 1.0), //(x,y)
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Icon(
-                            Feather.search,
-                            size: 24,
-                            color: Colors.deepOrange,
-                          ),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            onTap: () {
-                              showSearch(
-                                  context: context,
-                                  delegate: UserSearchDelegate(country));
-                            },
-                            controller: searchcontroller,
-                            decoration: InputDecoration(
-                                hintText: 'Search SellShip',
-                                hintStyle: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                ),
-                                border: InputBorder.none),
-                          ),
-                        ),
-                      ],
-                    )),
+                  height: 30,
+                  width: 120,
+                  child: Image.asset(
+                    'assets/logotransparent.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 actions: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(right: 15),
@@ -1322,7 +1286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ],
-                expandedHeight: 100.0,
+                expandedHeight: 150.0,
                 flexibleSpace: FlexibleSpaceBar(
                   collapseMode: CollapseMode.pin,
                   centerTitle: true,
@@ -1331,8 +1295,55 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                          margin: EdgeInsets.only(top: 60.0),
-                          child: filtersort(context)),
+                        margin: EdgeInsets.only(
+                            top: 40.0, left: 15, right: 15, bottom: 10),
+                        child: Container(
+                            height: 45,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  blurRadius: 6.0,
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.all(5),
+                                  child: Icon(
+                                    Feather.search,
+                                    size: 24,
+                                    color: Colors.deepOrange,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    onTap: () {
+                                      showSearch(
+                                          context: context,
+                                          delegate:
+                                              UserSearchDelegate(country));
+                                    },
+                                    controller: searchcontroller,
+                                    decoration: InputDecoration(
+                                        hintText: 'Search SellShip',
+                                        hintStyle: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                        ),
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      ),
+                      Container(child: filtersort(context)),
                     ],
                   ),
                 ),
@@ -1612,23 +1623,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                             itemsgrid[index].sold == true
                                                 ? Align(
-                                                    alignment:
-                                                        Alignment.topRight,
+                                                    alignment: Alignment.center,
                                                     child: Container(
-                                                      height: 20,
-                                                      width: 50,
-                                                      color: Colors.amber,
-                                                      child: Text(
-                                                        'Sold',
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                      height: 50,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      color: Colors
+                                                          .deepPurpleAccent
+                                                          .withOpacity(0.8),
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Sold',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
                                                       ),
                                                     ))
                                                 : Container(),
@@ -2184,23 +2202,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 itemsgrid[index].sold == true
                                                     ? Align(
                                                         alignment:
-                                                            Alignment.topRight,
+                                                            Alignment.center,
                                                         child: Container(
-                                                          height: 20,
-                                                          width: 50,
-                                                          color: Colors.amber,
-                                                          child: Text(
-                                                            'Sold',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
+                                                          height: 50,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          color: Colors
+                                                              .deepPurpleAccent
+                                                              .withOpacity(0.8),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Sold',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
                                                           ),
                                                         ))
                                                     : Container(),

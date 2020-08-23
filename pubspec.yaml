@@ -69,6 +69,7 @@ dependencies:
   flutter_sticky_header: "^0.4.2"
   firebase_auth: 0.16.1
   smooth_star_rating: 1.1.1
+  intercom_flutter: 2.2.0
 
 
 
@@ -137,6 +138,7 @@ flutter:
     - assets/girls/
     - assets/categories/
     - verified.png
+    - assets/secure.png
 
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg

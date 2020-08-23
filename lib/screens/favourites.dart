@@ -233,25 +233,31 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                           ? Align(
                                                               alignment:
                                                                   Alignment
-                                                                      .topRight,
+                                                                      .center,
                                                               child: Container(
-                                                                height: 20,
-                                                                width: 50,
+                                                                height: 50,
+                                                                width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
                                                                 color: Colors
-                                                                    .amber,
-                                                                child: Text(
-                                                                  'Sold',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
+                                                                    .deepPurpleAccent
+                                                                    .withOpacity(
+                                                                        0.8),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    'Sold',
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
                                                                 ),
                                                               ))
                                                           : Container(),
