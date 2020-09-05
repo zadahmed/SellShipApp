@@ -89,10 +89,20 @@ class MessagesState extends State<Messages> {
             var s = f.format(date);
             var q = t.format(date);
 
+            var sender;
+            var reciever;
+            if (userid == messageinfo[i]['user1']) {
+              sender = userid;
+              reciever = messageinfo[i]['user2'];
+            } else {
+              sender = messageinfo[i]['user2'];
+              reciever = messageinfo[i]['user1'];
+            }
+
             ChatMessages msg = ChatMessages(
                 messageid: messageinfo[i]['msgid'],
                 peoplemessaged: messageinfo[i]['user2name'],
-                senderid: messageinfo[i]['user1'],
+                senderid: sender,
                 offer: offe,
                 offerstage: offerstage,
                 lastrecieved: messageinfo[i]['lastrecieved'],
@@ -102,7 +112,7 @@ class MessagesState extends State<Messages> {
                 msgcount: msgcount,
                 itemname: itemname,
                 senderName: messageinfo[i]['user1name'],
-                recipentid: messageinfo[i]['user2'],
+                recipentid: reciever,
                 profilepicture: imageprofile,
                 itemid: itemid,
                 fcmtokenreciever: messageinfo[i]['fcmtokenreciever']);

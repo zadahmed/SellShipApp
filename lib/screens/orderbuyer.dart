@@ -48,17 +48,28 @@ class _OrderBuyerState extends State<OrderBuyer> {
 
   final storage = new FlutterSecureStorage();
 
+  int cancelled;
+
   getDetails() async {
     userid = await storage.read(key: 'userid');
 
     var countr = await storage.read(key: 'country');
-    if (countr.toLowerCase() == 'united arab emirates') {
+
+    if (countr.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
       });
     }
 
@@ -77,6 +88,13 @@ class _OrderBuyerState extends State<OrderBuyer> {
       delstage = 0;
     } else {
       delstage = jsonbody['deliverystage'];
+    }
+
+    var cancell;
+    if (jsonbody['cancelled'] == null) {
+      cancell = null;
+    } else {
+      cancell = jsonbody['cancelled'];
     }
 
     if (delstage == 0) {
@@ -107,6 +125,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
       itemprice = jsonbody['offer'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
+      cancelled = cancell;
       trackingnumber = track;
       deliverystage = delstage;
       newitem = Item(weight: wight);
@@ -837,118 +856,138 @@ class _OrderBuyerState extends State<OrderBuyer> {
                     SizedBox(
                       height: 10,
                     ),
-                    deliveryinformation(context),
+                    cancelled != null
+                        ? Padding(
+                            padding:
+                                EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Transaction has been cancelled',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          )
+                        : deliveryinformation(context),
                     SizedBox(
                       height: 5,
                     ),
-                    shipfrom(context),
-                    InkWell(
-                        onTap: () async {
-                          if (deliverystage == 2) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) =>
-                                    CupertinoAlertDialog(
-                                      title: new Text(
-                                        "Confirm you have recieved the item",
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      content: new Text(
-                                        "Please confirm if the item has been delivered!",
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      actions: <Widget>[
-                                        CupertinoDialogAction(
-                                          isDefaultAction: true,
-                                          onPressed: () async {
-                                            var url =
-                                                'https://api.sellship.co/api/delivered/' +
-                                                    messageid;
-
-                                            final response =
-                                                await http.get(url);
-
-                                            var jsonbody =
-                                                json.decode(response.body);
-
-                                            setState(() {
-                                              deliverystage =
-                                                  jsonbody['deliverystage'];
-                                              deliveredtext = 'Review Seller';
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text(
-                                            'Yes',
+                    cancelled != null ? Container() : shipfrom(context),
+                    cancelled != null
+                        ? Container()
+                        : InkWell(
+                            onTap: () async {
+                              if (deliverystage == 2) {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) =>
+                                        CupertinoAlertDialog(
+                                          title: new Text(
+                                            "Confirm you have recieved the item",
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w700),
                                           ),
-                                        ),
-                                        CupertinoDialogAction(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text(
-                                            "No",
+                                          content: new Text(
+                                            "Please confirm if the item has been delivered!",
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.w700),
+                                                fontWeight: FontWeight.w400),
                                           ),
-                                        )
-                                      ],
-                                    ));
-                          } else if (deliverystage == 3) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ReviewSeller(
-                                        reviewuserid: item.userid,
-                                        messageid: messageid,
-                                      )),
-                            );
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: Colors.deepPurpleAccent,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10.0),
-                              ),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.deepPurpleAccent
-                                        .withOpacity(0.4),
-                                    offset: const Offset(1.1, 1.1),
-                                    blurRadius: 10.0),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                deliveredtext,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.0,
-                                  color: Colors.white,
+                                          actions: <Widget>[
+                                            CupertinoDialogAction(
+                                              isDefaultAction: true,
+                                              onPressed: () async {
+                                                var url =
+                                                    'https://api.sellship.co/api/delivered/' +
+                                                        messageid;
+
+                                                final response =
+                                                    await http.get(url);
+
+                                                var jsonbody =
+                                                    json.decode(response.body);
+
+                                                setState(() {
+                                                  deliverystage =
+                                                      jsonbody['deliverystage'];
+                                                  deliveredtext =
+                                                      'Review Seller';
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(
+                                                'Yes',
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                            ),
+                                            CupertinoDialogAction(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text(
+                                                "No",
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.w700),
+                                              ),
+                                            )
+                                          ],
+                                        ));
+                              } else if (deliverystage == 3) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ReviewSeller(
+                                            reviewuserid: item.userid,
+                                            messageid: messageid,
+                                          )),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: Colors.deepPurpleAccent,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color: Colors.deepPurpleAccent
+                                            .withOpacity(0.4),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 10.0),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    deliveredtext,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      letterSpacing: 0.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        )),
+                            )),
                     Padding(
                       padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
                       child: Align(
@@ -1052,14 +1091,23 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                       fontSize: 16,
                                       color: Colors.black),
                                 ),
-                                Text(
-                                  'Paid',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black),
-                                )
+                                cancelled != null
+                                    ? Text(
+                                        'Cancelled',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      )
+                                    : Text(
+                                        'Paid',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      )
                               ],
                             ),
                           ],
@@ -1118,7 +1166,92 @@ class _OrderBuyerState extends State<OrderBuyer> {
                           ),
                         ),
                       ),
-                    )
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    deliverystage == 0
+                        ? InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) =>
+                                      CupertinoAlertDialog(
+                                        title: new Text(
+                                          "Cancel this transaction",
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        content: new Text(
+                                          "Are you sure you want to cancel this transaction?",
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoDialogAction(
+                                            isDefaultAction: true,
+                                            onPressed: () async {
+                                              var url =
+                                                  'https://api.sellship.co/api/cancelbuyer/' +
+                                                      messageid;
+
+                                              final response =
+                                                  await http.get(url);
+
+                                              if (response.statusCode == 200) {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: Text(
+                                              'Yes',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                          CupertinoDialogAction(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              "No",
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          )
+                                        ],
+                                      ));
+                            },
+                            child: cancelled != null
+                                ? Container()
+                                : Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 10, bottom: 10, top: 20),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Cancel this transaction',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ))
+                        : Container(),
+                    SizedBox(
+                      height: 5,
+                    ),
                   ])
                 : Center(child: CupertinoActivityIndicator())));
   }

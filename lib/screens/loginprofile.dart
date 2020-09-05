@@ -6,6 +6,7 @@ import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/forgotpassword.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/signuppage.dart';
+import 'package:SellShip/screens/signupprofiel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -272,55 +273,62 @@ class _LoginProfileState extends State<LoginProfile> {
                       ),
                     ),
                     FadeAnimation(
-                        1.4,
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 40),
+                      1.4,
+                      InkWell(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => new AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0))),
+                                    content: Builder(
+                                      builder: (context) {
+                                        return Container(
+                                            height: 50,
+                                            width: 50,
+                                            child: SpinKitChasingDots(
+                                              color: Colors.deepOrange,
+                                            ));
+                                      },
+                                    ),
+                                  ));
+                          Loginfunc();
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.all(5),
                           child: Container(
-                            padding: EdgeInsets.only(top: 3, left: 3),
+                            height: 48,
+                            width: MediaQuery.of(context).size.width / 2 + 100,
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                border: Border(
-                                  bottom: BorderSide(color: Colors.black),
-                                  top: BorderSide(color: Colors.black),
-                                  left: BorderSide(color: Colors.black),
-                                  right: BorderSide(color: Colors.black),
-                                )),
-                            child: MaterialButton(
-                              minWidth: double.infinity,
-                              height: 60,
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (_) => new AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10.0))),
-                                          content: Builder(
-                                            builder: (context) {
-                                              return Container(
-                                                  height: 50,
-                                                  width: 50,
-                                                  child: SpinKitChasingDots(
-                                                    color: Colors.deepOrange,
-                                                  ));
-                                            },
-                                          ),
-                                        ));
-                                Loginfunc();
-                              },
-                              color: Colors.greenAccent,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10.0),
+                              ),
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: Colors.grey.withOpacity(0.4),
+                                    offset: const Offset(1.1, 1.1),
+                                    blurRadius: 10.0),
+                              ],
+                            ),
+                            child: Center(
                               child: Text(
-                                "Login",
+                                'Login',
+                                textAlign: TextAlign.left,
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 18),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  letterSpacing: 0.0,
+                                  color: Colors.deepPurple,
+                                ),
                               ),
                             ),
                           ),
-                        )),
+                        ),
+                      ),
+                    ),
                     FadeAnimation(
                         1.5,
                         Row(
@@ -332,7 +340,8 @@ class _LoginProfileState extends State<LoginProfile> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SignUpPage()));
+                                        builder: (context) =>
+                                            SignUpProfilePage()));
                               },
                               child: Text(
                                 "Sign up",
@@ -364,176 +373,6 @@ class _LoginProfileState extends State<LoginProfile> {
                               ),
                             ),
                           ],
-                        )),
-                    FadeAnimation(
-                        1.2,
-                        Text(
-                          "Or",
-                          style:
-                              TextStyle(fontSize: 15, color: Colors.grey[700]),
-                        )),
-                    Platform.isIOS
-                        ? FadeAnimation(
-                            1.2,
-                            Container(
-                              width: 250,
-                              child: SignInWithAppleButton(
-                                onPressed: () async {
-                                  final credential = await SignInWithApple
-                                      .getAppleIDCredential(
-                                    scopes: [
-                                      AppleIDAuthorizationScopes.email,
-                                      AppleIDAuthorizationScopes.fullName,
-                                    ],
-                                    webAuthenticationOptions:
-                                        WebAuthenticationOptions(
-                                      clientId: 'com.zad.sellshipsignin',
-                                      redirectUri: Uri.parse(
-                                        'https://flawless-absorbed-marjoram.glitch.me/callbacks/sign_in_with_apple',
-                                      ),
-                                    ),
-                                  );
-
-                                  if (credential.email != null &&
-                                      credential.givenName != null) {
-                                    var url =
-                                        'https://api.sellship.co/api/signup';
-
-                                    Map<String, String> body = {
-                                      'first_name': credential.givenName,
-                                      'last_name': credential.familyName,
-                                      'email': credential.email,
-                                      'phonenumber': '000',
-                                      'password': credential.authorizationCode,
-                                      'fcmtoken': '000',
-                                    };
-
-                                    final response =
-                                        await http.post(url, body: body);
-
-                                    if (response.statusCode == 200) {
-                                      var jsondata = json.decode(response.body);
-                                      print(jsondata);
-                                      if (jsondata['id'] != null) {
-                                        await storage.write(
-                                            key: 'userid',
-                                            value: jsondata['id']);
-
-                                        setState(() {
-                                          userid = jsondata['id'];
-                                        });
-
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RootScreen()));
-                                      } else {
-                                        var id = jsondata['status']['id'];
-                                        await storage.write(
-                                            key: 'userid', value: id);
-
-                                        setState(() {
-                                          userid = id;
-                                        });
-
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RootScreen()));
-                                      }
-                                    } else {
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AssetGiffyDialog(
-                                                image: Image.asset(
-                                                  'assets/oops.gif',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                title: Text(
-                                                  'Oops!',
-                                                  style: TextStyle(
-                                                      fontSize: 22.0,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                description: Text(
-                                                  'Looks like something went wrong!',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(),
-                                                ),
-                                                onlyOkButton: true,
-                                                entryAnimation:
-                                                    EntryAnimation.DEFAULT,
-                                                onOkButtonPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                },
-                                              ));
-                                    }
-                                  } else {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => AssetGiffyDialog(
-                                              image: Image.asset(
-                                                'assets/oops.gif',
-                                                fit: BoxFit.cover,
-                                              ),
-                                              title: Text(
-                                                'Oops!',
-                                                style: TextStyle(
-                                                    fontSize: 22.0,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              description: Text(
-                                                'Looks like something went wrong!',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(),
-                                              ),
-                                              onlyOkButton: true,
-                                              entryAnimation:
-                                                  EntryAnimation.DEFAULT,
-                                              onOkButtonPressed: () {
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .pop('dialog');
-                                              },
-                                            ));
-                                  }
-                                },
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    FadeAnimation(
-                        1.2,
-                        SignInButton(
-                          Buttons.Facebook,
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (_) => new AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0))),
-                                      content: Builder(
-                                        builder: (context) {
-                                          return Container(
-                                              height: 50,
-                                              width: 50,
-                                              child: SpinKitChasingDots(
-                                                color: Colors.deepOrange,
-                                              ));
-                                        },
-                                      ),
-                                    ));
-
-                            _loginWithFB();
-                          },
                         )),
                   ],
                 ),

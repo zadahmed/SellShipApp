@@ -30,6 +30,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
   getfavourites() async {
     userid = await storage.read(key: 'userid');
     var country = await storage.read(key: 'country');
+
     if (country.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
@@ -38,7 +39,16 @@ class FavouritesScreenState extends State<FavouritesScreen> {
       setState(() {
         currency = '\$';
       });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+      });
     }
+
     print(userid);
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;

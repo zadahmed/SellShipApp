@@ -55,7 +55,7 @@ class _OrderDetailUAEState extends State<OrderDetailUAE> {
 
   var userid;
   var currency;
-
+  int cancelled;
   final storage = new FlutterSecureStorage();
 
 //  Item newitem = new Item();
@@ -64,13 +64,21 @@ class _OrderDetailUAEState extends State<OrderDetailUAE> {
     userid = await storage.read(key: 'userid');
 
     var countr = await storage.read(key: 'country');
-    if (countr.toLowerCase() == 'united arab emirates') {
+    if (countr.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
       });
     }
 
@@ -92,6 +100,13 @@ class _OrderDetailUAEState extends State<OrderDetailUAE> {
       delstage = jsonbody['deliverystage'];
     }
 
+    var cancell;
+    if (jsonbody['cancelled'] == null) {
+      cancell = null;
+    } else {
+      cancell = jsonbody['cancelled'];
+    }
+
     if (delstage == 0) {
       deliveredtext = 'Item Prepared';
     } else if (delstage == 1) {
@@ -106,7 +121,7 @@ class _OrderDetailUAEState extends State<OrderDetailUAE> {
       itemprice = jsonbody['offer'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
-
+      cancelled = cancell;
       deliverystage = delstage;
 //      newitem = Item(weight: int.parse(jsonbody['itemobject']['weight']));
       itemfees = jsonbody['fees'];
@@ -127,332 +142,6 @@ class _OrderDetailUAEState extends State<OrderDetailUAE> {
   bool loading;
 
   int deliverystage;
-
-//  Widget shipfrom(BuildContext context) {
-//    if (deliverystage == 0) {
-//      return Container(
-//        decoration: BoxDecoration(
-//          color: Colors.white,
-//          boxShadow: <BoxShadow>[
-//            BoxShadow(
-//                color: Colors.grey.withOpacity(0.2),
-//                offset: const Offset(0.0, 0.6),
-//                blurRadius: 5.0),
-//          ],
-//        ),
-//        child: ListTile(
-//            onTap: () async {
-//              final result = await Navigator.push(
-//                context,
-//                MaterialPageRoute(builder: (context) => Address()),
-//              );
-//
-//              if (result is String) {
-//                setState(() {
-//                  deliveryaddress = result;
-//                  addressreturned = true;
-//                });
-//              } else {
-//                setState(() {
-//                  addressline1 = result['addrLine1'];
-//                  city = result['city'];
-//                  state = result['state'];
-//                  zipcode = result['zip_code'];
-//
-//                  deliveryaddress = result['address'];
-//                  addressreturned = true;
-//                });
-//              }
-//            },
-//            leading: Text(
-//              'Ship from',
-//              style: TextStyle(
-//                  fontFamily: 'Helvetica',
-//                  fontSize: 16,
-//                  fontWeight: FontWeight.w700),
-//            ),
-//            title: addressreturned == false
-//                ? Container()
-//                : Text(
-//                    deliveryaddress,
-//                    textAlign: TextAlign.start,
-//                    style: TextStyle(
-//                        fontFamily: 'Helvetica',
-//                        fontSize: 13,
-//                        fontWeight: FontWeight.w500),
-//                  ),
-//            trailing: Icon(
-//              Icons.arrow_forward_ios,
-//              size: 10,
-//            )),
-//      );
-//    } else if (deliverystage == 1) {
-//      return Column(
-//          mainAxisAlignment: MainAxisAlignment.start,
-//          crossAxisAlignment: CrossAxisAlignment.start,
-//          children: <Widget>[
-//            Container(
-//              decoration: BoxDecoration(
-//                color: Colors.white,
-//                boxShadow: <BoxShadow>[
-//                  BoxShadow(
-//                      color: Colors.grey.withOpacity(0.2),
-//                      offset: const Offset(0.0, 0.6),
-//                      blurRadius: 5.0),
-//                ],
-//              ),
-//              child: ListTile(
-//                onTap: () async {
-//                  var url =
-//                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-//                          trackingnumber;
-//
-//                  if (await canLaunch(url)) {
-//                    await launch(url);
-//                  } else {
-//                    throw 'Could not launch $url';
-//                  }
-//                },
-//                leading: Text(
-//                  'Tracking Number',
-//                  style: TextStyle(
-//                      fontFamily: 'Helvetica',
-//                      fontSize: 16,
-//                      fontWeight: FontWeight.w700),
-//                ),
-//                trailing: Text(
-//                  trackingnumber,
-//                  textAlign: TextAlign.center,
-//                  style: TextStyle(
-//                    fontWeight: FontWeight.w700,
-//                    fontSize: 14,
-//                    letterSpacing: 0.0,
-//                    color: Colors.deepPurple,
-//                  ),
-//                ),
-//              ),
-//            ),
-//            Container(
-//              decoration: BoxDecoration(
-//                color: Colors.white,
-//                boxShadow: <BoxShadow>[
-//                  BoxShadow(
-//                      color: Colors.grey.withOpacity(0.2),
-//                      offset: const Offset(0.0, 0.6),
-//                      blurRadius: 5.0),
-//                ],
-//              ),
-//              child: ListTile(
-//                onTap: () async {
-//                  var url = 'https://www.ups.com/dropoff/?loc=en_us';
-//
-//                  if (await canLaunch(url)) {
-//                    await launch(url);
-//                  } else {
-//                    throw 'Could not launch $url';
-//                  }
-//                },
-//                leading: Text(
-//                  'Shipping Carrier',
-//                  style: TextStyle(
-//                      fontFamily: 'Helvetica',
-//                      fontSize: 16,
-//                      fontWeight: FontWeight.w700),
-//                ),
-//                title: Icon(
-//                  FontAwesome5Brands.ups,
-//                  color: Colors.deepOrange,
-//                  size: 35,
-//                ),
-//                trailing: Container(
-//                  height: 48,
-//                  width: 160,
-//                  decoration: BoxDecoration(
-//                    color: Colors.deepPurpleAccent,
-//                    borderRadius: const BorderRadius.all(
-//                      Radius.circular(10.0),
-//                    ),
-//                    boxShadow: <BoxShadow>[
-//                      BoxShadow(
-//                          color: Colors.deepPurpleAccent.withOpacity(0.4),
-//                          offset: const Offset(1.1, 1.1),
-//                          blurRadius: 10.0),
-//                    ],
-//                  ),
-//                  child: Center(
-//                    child: Text(
-//                      'Find Nearby Drop Off',
-//                      textAlign: TextAlign.center,
-//                      style: TextStyle(
-//                        fontWeight: FontWeight.w700,
-//                        fontSize: 14,
-//                        letterSpacing: 0.0,
-//                        color: Colors.white,
-//                      ),
-//                    ),
-//                  ),
-//                ),
-//              ),
-//            )
-//          ]);
-//    } else if (deliverystage == 2) {
-//      return Column(
-//          mainAxisAlignment: MainAxisAlignment.start,
-//          crossAxisAlignment: CrossAxisAlignment.start,
-//          children: <Widget>[
-//            Container(
-//              decoration: BoxDecoration(
-//                color: Colors.white,
-//                boxShadow: <BoxShadow>[
-//                  BoxShadow(
-//                      color: Colors.grey.withOpacity(0.2),
-//                      offset: const Offset(0.0, 0.6),
-//                      blurRadius: 5.0),
-//                ],
-//              ),
-//              child: ListTile(
-//                onTap: () async {
-//                  var url =
-//                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-//                          trackingnumber;
-//
-//                  if (await canLaunch(url)) {
-//                    await launch(url);
-//                  } else {
-//                    throw 'Could not launch $url';
-//                  }
-//                },
-//                leading: Text(
-//                  'Tracking Number',
-//                  style: TextStyle(
-//                      fontFamily: 'Helvetica',
-//                      fontSize: 16,
-//                      fontWeight: FontWeight.w700),
-//                ),
-//                trailing: Text(
-//                  trackingnumber,
-//                  textAlign: TextAlign.center,
-//                  style: TextStyle(
-//                    fontWeight: FontWeight.w700,
-//                    fontSize: 14,
-//                    letterSpacing: 0.0,
-//                    color: Colors.deepPurple,
-//                  ),
-//                ),
-//              ),
-//            ),
-//            Container(
-//              decoration: BoxDecoration(
-//                color: Colors.white,
-//                boxShadow: <BoxShadow>[
-//                  BoxShadow(
-//                      color: Colors.grey.withOpacity(0.2),
-//                      offset: const Offset(0.0, 0.6),
-//                      blurRadius: 5.0),
-//                ],
-//              ),
-//              child: ListTile(
-//                onTap: () async {
-//                  var url = 'https://www.ups.com/dropoff/?loc=en_us';
-//
-//                  if (await canLaunch(url)) {
-//                    await launch(url);
-//                  } else {
-//                    throw 'Could not launch $url';
-//                  }
-//                },
-//                leading: Text(
-//                  'Shipping Carrier',
-//                  style: TextStyle(
-//                      fontFamily: 'Helvetica',
-//                      fontSize: 16,
-//                      fontWeight: FontWeight.w700),
-//                ),
-//                title: Icon(
-//                  FontAwesome5Brands.ups,
-//                  color: Colors.deepOrange,
-//                  size: 35,
-//                ),
-//                trailing: Container(
-//                  height: 48,
-//                  width: 160,
-//                  decoration: BoxDecoration(
-//                    color: Colors.deepPurpleAccent,
-//                    borderRadius: const BorderRadius.all(
-//                      Radius.circular(10.0),
-//                    ),
-//                    boxShadow: <BoxShadow>[
-//                      BoxShadow(
-//                          color: Colors.deepPurpleAccent.withOpacity(0.4),
-//                          offset: const Offset(1.1, 1.1),
-//                          blurRadius: 10.0),
-//                    ],
-//                  ),
-//                  child: Center(
-//                    child: Text(
-//                      'Find Nearby Drop Off',
-//                      textAlign: TextAlign.center,
-//                      style: TextStyle(
-//                        fontWeight: FontWeight.w700,
-//                        fontSize: 14,
-//                        letterSpacing: 0.0,
-//                        color: Colors.white,
-//                      ),
-//                    ),
-//                  ),
-//                ),
-//              ),
-//            )
-//          ]);
-//    } else if (deliverystage == 3) {
-//      return Column(
-//          mainAxisAlignment: MainAxisAlignment.start,
-//          crossAxisAlignment: CrossAxisAlignment.start,
-//          children: <Widget>[
-//            Container(
-//              decoration: BoxDecoration(
-//                color: Colors.white,
-//                boxShadow: <BoxShadow>[
-//                  BoxShadow(
-//                      color: Colors.grey.withOpacity(0.2),
-//                      offset: const Offset(0.0, 0.6),
-//                      blurRadius: 5.0),
-//                ],
-//              ),
-//              child: ListTile(
-//                onTap: () async {
-//                  var url =
-//                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-//                          trackingnumber;
-//
-//                  if (await canLaunch(url)) {
-//                    await launch(url);
-//                  } else {
-//                    throw 'Could not launch $url';
-//                  }
-//                },
-//                leading: Text(
-//                  'Tracking Number',
-//                  style: TextStyle(
-//                      fontFamily: 'Helvetica',
-//                      fontSize: 16,
-//                      fontWeight: FontWeight.w700),
-//                ),
-//                trailing: Text(
-//                  trackingnumber,
-//                  textAlign: TextAlign.center,
-//                  style: TextStyle(
-//                    fontWeight: FontWeight.w700,
-//                    fontSize: 14,
-//                    letterSpacing: 0.0,
-//                    color: Colors.deepPurple,
-//                  ),
-//                ),
-//              ),
-//            ),
-//          ]);
-//    }
-//  }
 
   Widget deliveryinformation(BuildContext context) {
     if (deliverystage == 0) {
@@ -1226,118 +915,137 @@ class _OrderDetailUAEState extends State<OrderDetailUAE> {
                     SizedBox(
                       height: 10,
                     ),
-                    deliveryinformation(context),
-                    InkWell(
-                        onTap: () async {
-                          if (deliverystage == 0) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            20.0)), //this right here
-                                    child: Container(
-                                      height: 100,
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: SpinKitChasingDots(
-                                              color: Colors.deepOrange)),
-                                    ),
-                                  );
-                                });
-
-                            var url =
-                                'https://api.sellship.co/api/shipitem/uae/' +
-                                    messageid;
-
-                            final response = await http.get(url);
-
-                            var jsonbody = json.decode(response.body);
-
-                            setState(() {
-                              deliverystage = jsonbody['deliverystage'];
-
-                              deliveredtext = 'Item Shipped';
-                            });
-
-                            Navigator.of(context, rootNavigator: true)
-                                .pop('dialog');
-                          } else if (deliverystage == 1) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            20.0)), //this right here
-                                    child: Container(
-                                      height: 100,
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: SpinKitChasingDots(
-                                              color: Colors.deepOrange)),
-                                    ),
-                                  );
-                                });
-                            var url =
-                                'https://api.sellship.co/api/shipped/uae/' +
-                                    messageid;
-
-                            final response = await http.get(url);
-
-                            var jsonbody = json.decode(response.body);
-
-                            setState(() {
-                              deliverystage = jsonbody['deliverystage'];
-                              deliveredtext = "Waiting for Delivery";
-                            });
-                            Navigator.of(context, rootNavigator: true)
-                                .pop('dialog');
-                          } else if (deliverystage == 3) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ReviewBuyer(
-                                        reviewuserid: buyerid,
-                                        messageid: messageid,
-                                      )),
-                            );
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: Colors.deepPurpleAccent,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10.0),
-                              ),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.deepPurpleAccent
-                                        .withOpacity(0.4),
-                                    offset: const Offset(1.1, 1.1),
-                                    blurRadius: 10.0),
-                              ],
-                            ),
-                            child: Center(
+                    cancelled != null
+                        ? Padding(
+                            padding:
+                                EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
                               child: Text(
-                                deliveredtext,
-                                textAlign: TextAlign.left,
+                                'Transaction has been cancelled',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.0,
-                                  color: Colors.white,
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          )
+                        : deliveryinformation(context),
+                    cancelled != null
+                        ? Container()
+                        : InkWell(
+                            onTap: () async {
+                              if (deliverystage == 0) {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20.0)), //this right here
+                                        child: Container(
+                                          height: 100,
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: SpinKitChasingDots(
+                                                  color: Colors.deepOrange)),
+                                        ),
+                                      );
+                                    });
+
+                                var url =
+                                    'https://api.sellship.co/api/shipitem/uae/' +
+                                        messageid;
+
+                                final response = await http.get(url);
+
+                                var jsonbody = json.decode(response.body);
+
+                                setState(() {
+                                  deliverystage = jsonbody['deliverystage'];
+
+                                  deliveredtext = 'Item Shipped';
+                                });
+
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop('dialog');
+                              } else if (deliverystage == 1) {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20.0)), //this right here
+                                        child: Container(
+                                          height: 100,
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: SpinKitChasingDots(
+                                                  color: Colors.deepOrange)),
+                                        ),
+                                      );
+                                    });
+                                var url =
+                                    'https://api.sellship.co/api/shipped/uae/' +
+                                        messageid;
+
+                                final response = await http.get(url);
+
+                                var jsonbody = json.decode(response.body);
+
+                                setState(() {
+                                  deliverystage = jsonbody['deliverystage'];
+                                  deliveredtext = "Waiting for Delivery";
+                                });
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop('dialog');
+                              } else if (deliverystage == 3) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ReviewBuyer(
+                                            reviewuserid: buyerid,
+                                            messageid: messageid,
+                                          )),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: Colors.deepPurpleAccent,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color: Colors.deepPurpleAccent
+                                            .withOpacity(0.4),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 10.0),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    deliveredtext,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      letterSpacing: 0.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        )),
+                            )),
                     Padding(
                       padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
                       child: Align(
@@ -1396,6 +1104,88 @@ class _OrderDetailUAEState extends State<OrderDetailUAE> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    deliverystage == 0
+                        ? InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) =>
+                                      CupertinoAlertDialog(
+                                        title: new Text(
+                                          "Cancel this transaction",
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        content: new Text(
+                                          "Are you sure you want to cancel this transaction?",
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoDialogAction(
+                                            isDefaultAction: true,
+                                            onPressed: () async {
+                                              var url =
+                                                  'https://api.sellship.co/api/cancelseller/' +
+                                                      messageid;
+
+                                              final response =
+                                                  await http.get(url);
+
+                                              if (response.statusCode == 200) {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: Text(
+                                              'Yes',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                          CupertinoDialogAction(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              "No",
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          )
+                                        ],
+                                      ));
+                            },
+                            child: cancelled != null
+                                ? Container()
+                                : Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 10, bottom: 10, top: 20),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Cancel this transaction',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ))
+                        : Container()
                   ])
                 : Center(child: CupertinoActivityIndicator())));
   }

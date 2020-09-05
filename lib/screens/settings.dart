@@ -33,6 +33,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:package_info/package_info.dart';
 
 class Settings extends StatefulWidget {
   final String email;
@@ -46,6 +47,7 @@ class _SettingsState extends State<Settings> {
   var userid;
   String email;
   final storage = new FlutterSecureStorage();
+
   @override
   void initState() {
     readdetails();
@@ -95,11 +97,19 @@ class _SettingsState extends State<Settings> {
 
   readdetails() async {
     userid = await storage.read(key: 'userid');
+
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    String versio = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
     setState(() {
       userid = userid;
       email = widget.email;
+      version = versio + buildNumber;
     });
   }
+
+  String version;
 
   @override
   Widget build(BuildContext context) {
@@ -414,6 +424,36 @@ class _SettingsState extends State<Settings> {
               color: Colors.white,
               child: ListTile(
                 leading: Icon(
+                  Icons.insert_drive_file,
+                  color: Colors.deepOrange,
+                ),
+                trailing: Icon(
+                  Feather.arrow_right,
+                  size: 16,
+                  color: Colors.deepOrange,
+                ),
+                title: Text(
+                  'Licenses',
+                  style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  showLicensePage(
+                      context: context,
+                      applicationName: 'SellShip',
+                      applicationIcon: Image.asset(
+                        'assets/logotransparent.png',
+                        scale: 0.5,
+                      ));
+                },
+              ),
+            ),
+            Container(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(
                   Feather.eye,
                   color: Colors.deepOrange,
                 ),
@@ -492,7 +532,21 @@ class _SettingsState extends State<Settings> {
                         );
                       },
                     ))
-                : Container()
+                : Container(),
+            Padding(
+              padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'v' + version,
+                  style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            )
           ],
         ));
   }

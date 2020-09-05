@@ -26,6 +26,16 @@
 				<string>fb212796279954587</string>
 			</array>
 		</dict>
+		 <dict>
+                <key>CFBundleTypeRole</key>
+                <string>Editor</string>
+                <key>CFBundleURLName</key>
+                <string>3ds.stripesdk.io</string>
+                <key>CFBundleURLSchemes</key>
+                <array>
+                    <string>stripesdk</string>
+                </array>
+        </dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>

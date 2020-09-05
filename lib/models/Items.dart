@@ -28,10 +28,12 @@ class Item {
   final int weight;
   final bool sold;
   final String size;
+  final int views;
 
   Item(
       {this.itemid,
       this.name,
+      this.views,
       this.image,
       this.image1,
       this.date,

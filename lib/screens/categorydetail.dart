@@ -120,6 +120,16 @@ class _CategoryDetailState extends State<CategoryDetail> {
         currency = '\$';
         country = country;
       });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+        country = country;
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+        country = country;
+      });
     }
 
     var url = 'https://api.sellship.co/api/categories/' +

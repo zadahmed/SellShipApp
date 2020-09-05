@@ -16,6 +16,7 @@
         android:label="SellShip"
         android:icon="@mipmap/ic_launcher">
         <activity
+
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
@@ -28,6 +29,16 @@
 
             </intent-filter>
 
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="stripesdk"
+                    android:host="3ds.stripesdk.io" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />

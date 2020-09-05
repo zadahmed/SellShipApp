@@ -38,6 +38,7 @@ class OrdersScreenState extends State<OrdersScreen>
   getorders() async {
     userid = await storage.read(key: 'userid');
     var country = await storage.read(key: 'country');
+
     if (country.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
@@ -45,6 +46,14 @@ class OrdersScreenState extends State<OrdersScreen>
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
       });
     }
 
@@ -263,7 +272,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                           color: Colors.grey),
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              15),
+                                                              5),
                                                       color: Colors.white,
                                                       boxShadow: [
                                                         BoxShadow(
@@ -290,7 +299,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                            15),
+                                                                            5),
                                                                 child:
                                                                     CachedNetworkImage(
                                                                   imageUrl: item[
@@ -402,7 +411,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                             decoration:
                                                                                 BoxDecoration(
                                                                               color: Colors.deepPurpleAccent,
-                                                                              borderRadius: BorderRadius.circular(15),
+                                                                              borderRadius: BorderRadius.circular(5),
                                                                               boxShadow: [
                                                                                 BoxShadow(
                                                                                   color: Colors.deepPurpleAccent.shade200,
@@ -556,7 +565,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                           color: Colors.grey),
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              15),
+                                                              5),
                                                       color: Colors.white,
                                                       boxShadow: [
                                                         BoxShadow(
@@ -583,7 +592,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                            15),
+                                                                            5),
                                                                 child:
                                                                     CachedNetworkImage(
                                                                   imageUrl:
@@ -696,7 +705,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                             decoration:
                                                                                 BoxDecoration(
                                                                               color: Colors.deepPurpleAccent,
-                                                                              borderRadius: BorderRadius.circular(15),
+                                                                              borderRadius: BorderRadius.circular(5),
                                                                               boxShadow: [
                                                                                 BoxShadow(
                                                                                   color: Colors.deepPurpleAccent.shade200,

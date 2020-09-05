@@ -913,6 +913,8 @@ class _HomeScreenState extends State<HomeScreen> {
         '/' +
         limit.toString();
 
+    print(url);
+
     final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
@@ -1187,6 +1189,14 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
       });
     }
     setState(() {
@@ -1673,6 +1683,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 itemsgrid[index]
                                                                     .itemid)
                                                             ? InkWell(
+                                                                enableFeedback:
+                                                                    true,
                                                                 onTap:
                                                                     () async {
                                                                   var userid =
@@ -1733,6 +1745,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 ),
                                                               )
                                                             : InkWell(
+                                                                enableFeedback:
+                                                                    true,
                                                                 onTap:
                                                                     () async {
                                                                   var userid =
@@ -1813,6 +1827,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       width: 10,
                                                     ),
                                                     InkWell(
+                                                      enableFeedback: true,
                                                       onTap: () {
                                                         Navigator.push(
                                                           context,

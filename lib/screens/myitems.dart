@@ -514,13 +514,21 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
     userid = await storage.read(key: 'userid');
     var country = await storage.read(key: 'country');
 
-    if (country.toLowerCase() == 'united arab emirates') {
+    if (country.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
       });
     }
 

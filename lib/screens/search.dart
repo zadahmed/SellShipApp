@@ -174,6 +174,14 @@ class _SearchState extends State<Search> {
       setState(() {
         currency = '\$';
       });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+      });
     }
 
     setState(() {
@@ -302,7 +310,7 @@ class _SearchState extends State<Search> {
                               ],
                             )),
                         iconTheme: IconThemeData(color: Colors.black),
-                        expandedHeight: 100.0,
+                        expandedHeight: 90.0,
                         flexibleSpace: FlexibleSpaceBar(
                           collapseMode: CollapseMode.pin,
                           centerTitle: true,
@@ -311,7 +319,7 @@ class _SearchState extends State<Search> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                  margin: EdgeInsets.only(top: 75.0),
+                                  margin: EdgeInsets.only(top: 95.0),
                                   child: filtersort(context)),
                             ],
                           ),

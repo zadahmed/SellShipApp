@@ -79,6 +79,16 @@ class _SubCategoryState extends State<SubCategory> {
         currency = '\$';
         country = country;
       });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+        country = country;
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+        country = country;
+      });
     }
 
     Location _location = new Location();
@@ -1926,7 +1936,7 @@ class _SubCategoryState extends State<SubCategory> {
                           children: <Widget>[
                             Container(
                               margin: EdgeInsets.only(
-                                  top: 65.0, left: 15, right: 15, bottom: 10),
+                                  top: 75.0, left: 15, right: 15, bottom: 10),
                               child: Container(
                                   height: 45,
                                   decoration: BoxDecoration(

@@ -462,6 +462,16 @@ class _DetailsState extends State<Details> {
         currency = '\$';
         country = countr;
       });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+        country = countr;
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+        country = countr;
+      });
     }
 
     var url = 'https://api.sellship.co/api/getitem/' + itemid;
@@ -1964,7 +1974,6 @@ class _DetailsState extends State<Details> {
                                   var messageinfo = json.decode(response.body);
                                   var messageid = (messageinfo['messageid']);
 
-                                  print(country);
                                   if (country.contains('United States')) {
                                     Navigator.push(
                                       context,
@@ -1992,7 +2001,7 @@ class _DetailsState extends State<Details> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => Checkout(
+                                        builder: (context) => CheckoutUAE(
                                           messageid: messageid,
                                           item: newItem,
                                           offer: newItem.price,

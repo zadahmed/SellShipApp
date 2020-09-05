@@ -21,6 +21,7 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
+import 'package:stripe_sdk/stripe_sdk.dart';
 
 class Checkout extends StatefulWidget {
   Item item;
@@ -67,7 +68,7 @@ class _CheckoutState extends State<Checkout> {
 
   var currency;
   var stripecurrency;
-  var countrycode;
+
   final storage = new FlutterSecureStorage();
 
   getcurrency() async {
@@ -76,13 +77,21 @@ class _CheckoutState extends State<Checkout> {
       setState(() {
         currency = 'AED';
         stripecurrency = 'AED';
-        countrycode = 'AE';
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
         stripecurrency = 'USD';
-        countrycode = 'US';
+      });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+        stripecurrency = 'CAD';
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\$';
+        stripecurrency = 'GBP';
       });
     }
   }
@@ -224,72 +233,196 @@ class _CheckoutState extends State<Checkout> {
                                           '/' +
                                           cardresult.paymentid.toString() +
                                           '/' +
-                                          totalpayable.toString() +
+                                          offer.toString() +
                                           '/' +
                                           stripecurrency;
                                   final response = await http.get(messageurl);
 
-                                  if (response.statusCode == 200) {
-                                    var messageurl =
-                                        'https://api.sellship.co/api/payment/' +
-                                            messageid +
-                                            '/' +
-                                            item.itemid +
-                                            '/' +
-                                            offer.toString() +
-                                            '/' +
-                                            totalrate.toString() +
-                                            '/' +
-                                            totalpayable.toString() +
-                                            '/' +
-                                            deliveryaddress +
-                                            '/' +
-                                            cardresult.paymentid.toString();
+                                  var paymentresponse =
+                                      json.decode(response.body);
 
-                                    final response = await http.get(messageurl);
-
-                                    if (response.statusCode == 200) {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => PaymentDone(
-                                                  item: item,
-                                                  messageid: messageid,
-                                                )),
-                                      );
-
+                                  if (paymentresponse['done'] == null) {
+                                    if (paymentresponse['error']['code'] ==
+                                        'card_declined') {
                                       await dialog.hide();
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => AssetGiffyDialog(
+                                                image: Image.asset(
+                                                  'assets/oops.gif',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                title: Text(
+                                                  'Oops!',
+                                                  style: TextStyle(
+                                                      fontSize: 22.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                description: Text(
+                                                  'Looks like your card has been declined! Please try another payment method',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(),
+                                                ),
+                                                onlyOkButton: true,
+                                                entryAnimation:
+                                                    EntryAnimation.DEFAULT,
+                                                onOkButtonPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                },
+                                              ));
+                                    } else if (paymentresponse['error']
+                                            ['code'] ==
+                                        'authentication_required') {
+                                      var clientsecret =
+                                          paymentresponse['error']
+                                                  ['payment_intent']
+                                              ['client_secret'];
+                                      await dialog.hide();
+
+                                      Stripe.init(
+                                          "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
+                                          returnUrlForSca:
+                                              "stripesdk://3ds.stripesdk.io");
+
+                                      final paymentIntent = await Stripe
+                                          .instance
+                                          .confirmPayment(clientsecret,
+                                              paymentMethodId:
+                                                  paymentresponse['error']
+                                                              ['payment_intent']
+                                                          ['charges']['data'][0]
+                                                      ['payment_method']);
+
+                                      if (paymentIntent['status'] ==
+                                          'succeeded') {
+                                        var messageurl =
+                                            'https://api.sellship.co/api/payment/' +
+                                                messageid +
+                                                '/' +
+                                                item.itemid +
+                                                '/' +
+                                                offer.toString() +
+                                                '/' +
+                                                totalrate.toString() +
+                                                '/' +
+                                                totalpayable.toString() +
+                                                '/' +
+                                                deliveryaddress +
+                                                '/' +
+                                                cardresult.paymentid.toString();
+
+                                        final response =
+                                            await http.get(messageurl);
+
+                                        if (response.statusCode == 200) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PaymentDone(
+                                                      item: item,
+                                                      messageid: messageid,
+                                                    )),
+                                          );
+                                        }
+                                      } else {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => AssetGiffyDialog(
+                                                  image: Image.asset(
+                                                    'assets/oops.gif',
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  title: Text(
+                                                    'Oops!',
+                                                    style: TextStyle(
+                                                        fontSize: 22.0,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                  description: Text(
+                                                    'Looks like your card has been declined! Please try another payment method',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(),
+                                                  ),
+                                                  onlyOkButton: true,
+                                                  entryAnimation:
+                                                      EntryAnimation.DEFAULT,
+                                                  onOkButtonPressed: () {
+                                                    Navigator.of(context,
+                                                            rootNavigator: true)
+                                                        .pop('dialog');
+                                                  },
+                                                ));
+                                      }
                                     }
                                   } else {
-                                    await dialog.hide();
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => AssetGiffyDialog(
-                                              image: Image.asset(
-                                                'assets/oops.gif',
-                                                fit: BoxFit.cover,
-                                              ),
-                                              title: Text(
-                                                'Oops!',
-                                                style: TextStyle(
-                                                    fontSize: 22.0,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              description: Text(
-                                                'The transaction failed! Try again!',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(),
-                                              ),
-                                              onlyOkButton: true,
-                                              entryAnimation:
-                                                  EntryAnimation.DEFAULT,
-                                              onOkButtonPressed: () {
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .pop('dialog');
-                                              },
-                                            ));
+                                    if (response.statusCode == 200) {
+                                      var messageurl =
+                                          'https://api.sellship.co/api/payment/' +
+                                              messageid +
+                                              '/' +
+                                              item.itemid +
+                                              '/' +
+                                              offer.toString() +
+                                              '/' +
+                                              totalrate.toString() +
+                                              '/' +
+                                              totalpayable.toString() +
+                                              '/' +
+                                              deliveryaddress +
+                                              '/' +
+                                              cardresult.paymentid.toString();
+
+                                      final response =
+                                          await http.get(messageurl);
+
+                                      if (response.statusCode == 200) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => PaymentDone(
+                                                    item: item,
+                                                    messageid: messageid,
+                                                  )),
+                                        );
+
+                                        await dialog.hide();
+                                      }
+                                    } else {
+                                      await dialog.hide();
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => AssetGiffyDialog(
+                                                image: Image.asset(
+                                                  'assets/oops.gif',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                title: Text(
+                                                  'Oops!',
+                                                  style: TextStyle(
+                                                      fontSize: 22.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                description: Text(
+                                                  'The transaction failed! Try again!',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(),
+                                                ),
+                                                onlyOkButton: true,
+                                                entryAnimation:
+                                                    EntryAnimation.DEFAULT,
+                                                onOkButtonPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                },
+                                              ));
+                                    }
                                   }
                                 } else {
                                   var messageurl =
@@ -303,67 +436,191 @@ class _CheckoutState extends State<Checkout> {
                                           stripecurrency;
                                   final response = await http.get(messageurl);
 
-                                  if (response.statusCode == 200) {
-                                    var messageurl =
-                                        'https://api.sellship.co/api/payment/' +
-                                            messageid +
-                                            '/' +
-                                            item.itemid +
-                                            '/' +
-                                            offer.toString() +
-                                            '/' +
-                                            totalrate.toString() +
-                                            '/' +
-                                            totalpayable.toString() +
-                                            '/' +
-                                            deliveryaddress +
-                                            '/' +
-                                            cardresult['id'].toString();
+                                  var paymentresponse =
+                                      json.decode(response.body);
 
-                                    final response = await http.get(messageurl);
-
-                                    if (response.statusCode == 200) {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => PaymentDone(
-                                                  item: item,
-                                                  messageid: messageid,
-                                                )),
-                                      );
-
+                                  if (paymentresponse['done'] == null) {
+                                    if (paymentresponse['error']['code'] ==
+                                        'card_declined') {
                                       await dialog.hide();
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => AssetGiffyDialog(
+                                                image: Image.asset(
+                                                  'assets/oops.gif',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                title: Text(
+                                                  'Oops!',
+                                                  style: TextStyle(
+                                                      fontSize: 22.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                description: Text(
+                                                  'Looks like your card has been declined! Please try another payment method',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(),
+                                                ),
+                                                onlyOkButton: true,
+                                                entryAnimation:
+                                                    EntryAnimation.DEFAULT,
+                                                onOkButtonPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                },
+                                              ));
+                                    } else if (paymentresponse['error']
+                                            ['code'] ==
+                                        'authentication_required') {
+                                      var clientsecret =
+                                          paymentresponse['error']
+                                                  ['payment_intent']
+                                              ['client_secret'];
+                                      await dialog.hide();
+
+                                      Stripe.init(
+                                          "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
+                                          returnUrlForSca:
+                                              "stripesdk://3ds.stripesdk.io");
+
+                                      final paymentIntent = await Stripe
+                                          .instance
+                                          .confirmPayment(clientsecret,
+                                              paymentMethodId:
+                                                  paymentresponse['error']
+                                                              ['payment_intent']
+                                                          ['charges']['data'][0]
+                                                      ['payment_method']);
+
+                                      if (paymentIntent['status'] ==
+                                          'succeeded') {
+                                        var messageurl =
+                                            'https://api.sellship.co/api/payment/' +
+                                                messageid +
+                                                '/' +
+                                                item.itemid +
+                                                '/' +
+                                                offer.toString() +
+                                                '/' +
+                                                totalrate.toString() +
+                                                '/' +
+                                                totalpayable.toString() +
+                                                '/' +
+                                                deliveryaddress +
+                                                '/' +
+                                                cardresult['id'].toString();
+
+                                        final response =
+                                            await http.get(messageurl);
+
+                                        if (response.statusCode == 200) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PaymentDone(
+                                                      item: item,
+                                                      messageid: messageid,
+                                                    )),
+                                          );
+                                        }
+                                      } else {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => AssetGiffyDialog(
+                                                  image: Image.asset(
+                                                    'assets/oops.gif',
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  title: Text(
+                                                    'Oops!',
+                                                    style: TextStyle(
+                                                        fontSize: 22.0,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                  description: Text(
+                                                    'Looks like your card has been declined! Please try another payment method',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(),
+                                                  ),
+                                                  onlyOkButton: true,
+                                                  entryAnimation:
+                                                      EntryAnimation.DEFAULT,
+                                                  onOkButtonPressed: () {
+                                                    Navigator.of(context,
+                                                            rootNavigator: true)
+                                                        .pop('dialog');
+                                                  },
+                                                ));
+                                      }
                                     }
                                   } else {
-                                    await dialog.hide();
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => AssetGiffyDialog(
-                                              image: Image.asset(
-                                                'assets/oops.gif',
-                                                fit: BoxFit.cover,
-                                              ),
-                                              title: Text(
-                                                'Oops!',
-                                                style: TextStyle(
-                                                    fontSize: 22.0,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              description: Text(
-                                                'The transaction failed! Try again!',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(),
-                                              ),
-                                              onlyOkButton: true,
-                                              entryAnimation:
-                                                  EntryAnimation.DEFAULT,
-                                              onOkButtonPressed: () {
-                                                Navigator.of(context,
-                                                        rootNavigator: true)
-                                                    .pop('dialog');
-                                              },
-                                            ));
+                                    if (response.statusCode == 200) {
+                                      var messageurl =
+                                          'https://api.sellship.co/api/payment/' +
+                                              messageid +
+                                              '/' +
+                                              item.itemid +
+                                              '/' +
+                                              offer.toString() +
+                                              '/' +
+                                              totalrate.toString() +
+                                              '/' +
+                                              totalpayable.toString() +
+                                              '/' +
+                                              deliveryaddress +
+                                              '/' +
+                                              cardresult['id'].toString();
+
+                                      final response =
+                                          await http.get(messageurl);
+
+                                      if (response.statusCode == 200) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => PaymentDone(
+                                                    item: item,
+                                                    messageid: messageid,
+                                                  )),
+                                        );
+
+                                        await dialog.hide();
+                                      }
+                                    } else {
+                                      await dialog.hide();
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => AssetGiffyDialog(
+                                                image: Image.asset(
+                                                  'assets/oops.gif',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                title: Text(
+                                                  'Oops!',
+                                                  style: TextStyle(
+                                                      fontSize: 22.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                description: Text(
+                                                  'The transaction failed! Try again!',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(),
+                                                ),
+                                                onlyOkButton: true,
+                                                entryAnimation:
+                                                    EntryAnimation.DEFAULT,
+                                                onOkButtonPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                },
+                                              ));
+                                    }
                                   }
                                 }
                               }

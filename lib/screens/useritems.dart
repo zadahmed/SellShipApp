@@ -86,6 +86,14 @@ class _UserItemsState extends State<UserItems> {
       setState(() {
         currency = '\$';
       });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+      });
     }
     print(userid);
     if (userid != null) {
@@ -103,9 +111,14 @@ class _UserItemsState extends State<UserItems> {
         if (itemresponse.statusCode == 200) {
           var itemrespons = json.decode(itemresponse.body);
           Map<String, dynamic> itemmap = itemrespons;
-          print(itemmap);
 
           var productmap = itemmap['products'];
+
+          if (productmap == null) {
+            setState(() {
+              itemsgrid = [];
+            });
+          }
 
           for (var i = 0; i < productmap.length; i++) {
             Itemid.add(productmap[i]['_id']['\$oid']);
@@ -173,7 +186,11 @@ class _UserItemsState extends State<UserItems> {
 
         var followin = profilemap['likes'];
         if (followin != null) {
-          print(followin);
+          if (followin <= 0) {
+            followin = 0;
+          } else {
+            followin = profilemap['likes'];
+          }
         } else {
           followin = 0;
         }
@@ -787,7 +804,7 @@ class _UserItemsState extends State<UserItems> {
                                 width: 400,
                                 decoration: BoxDecoration(
                                   color: followcolor,
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: InkWell(
                                   onTap: () async {

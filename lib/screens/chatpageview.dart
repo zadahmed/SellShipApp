@@ -101,10 +101,12 @@ class _ChatPageViewState extends State<ChatPageView> {
     if (countr.toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
+        userid = userid;
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+        userid = userid;
       });
     }
 
@@ -189,7 +191,7 @@ class _ChatPageViewState extends State<ChatPageView> {
     }
 
     for (int i = 0; i < jsonResponse.length; i++) {
-      if (jsonResponse[i]['sender'] == userid) {
+      if (jsonResponse[i]['sender'] == senderid) {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             jsonResponse[i]['date']['\$date']);
@@ -209,15 +211,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                           minWidth: 50),
                       padding: EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.circular(20.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.shade300,
-                            offset: Offset(0.0, 1.0), //(x,y)
-                            blurRadius: 6.0,
-                          ),
-                        ],
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: Stack(children: <Widget>[
                         Padding(
@@ -230,7 +225,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                             style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 16,
-                                color: Colors.white),
+                                color: Colors.black),
                           ),
                         ),
                       ]),
@@ -247,7 +242,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                     ),
                   ],
                 ))));
-      } else if (jsonResponse[i]['reciever'] == recipentid) {
+      } else {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             jsonResponse[i]['date']['\$date']);
@@ -267,16 +262,12 @@ class _ChatPageViewState extends State<ChatPageView> {
                           minWidth: 100),
                       padding: EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20.0),
-                        boxShadow: [
-                          BoxShadow(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15.0),
+                          border: Border.all(
+                            style: BorderStyle.solid,
                             color: Colors.grey.shade300,
-                            offset: Offset(0.0, 1.0), //(x,y)
-                            blurRadius: 6.0,
-                          ),
-                        ],
-                      ),
+                          )),
                       child: Stack(children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(right: 2.0, left: 2.0),
@@ -460,7 +451,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                               if (recieverid != userid) {
                                 var itemurl =
                                     'https://api.sellship.co/api/createoffer/' +
-                                        userid +
+                                        senderid +
                                         '/' +
                                         recieverid +
                                         '/' +
@@ -482,7 +473,11 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   setState(() {
                                     offer = offers;
                                   });
-                                } else {}
+                                } else {
+                                  Navigator.pop(context);
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                }
                               } else {
                                 showDialog(
                                     context: context,
@@ -507,6 +502,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                           entryAnimation:
                                               EntryAnimation.DEFAULT,
                                           onOkButtonPressed: () {
+                                            Navigator.pop(context);
                                             Navigator.of(context,
                                                     rootNavigator: true)
                                                 .pop('dialog');
@@ -570,9 +566,9 @@ class _ChatPageViewState extends State<ChatPageView> {
       var url = 'https://api.sellship.co/api/acceptoffer/' +
           messageid +
           '/' +
-          userid +
+          senderid +
           '/' +
-          senderid;
+          recipentid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
         print('Success');
@@ -589,9 +585,9 @@ class _ChatPageViewState extends State<ChatPageView> {
       var url = 'https://api.sellship.co/api/canceloffer/' +
           messageid +
           '/' +
-          userid +
+          senderid +
           '/' +
-          senderid;
+          recipentid;
       final response = await http.get(url);
       print(response.statusCode);
       if (response.statusCode == 200) {
@@ -647,84 +643,100 @@ class _ChatPageViewState extends State<ChatPageView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => UserItems(
-                                      userid: itemselling.userid,
-                                      username: itemselling.username)),
+                                      userid: recipentid,
+                                      username: recipentname)),
                             );
                           }),
                     ),
                   ],
-                  expandedHeight: offer != null ? 170.0 : 125,
+                  expandedHeight: offer != null ? 170.0 : 160,
                   flexibleSpace: FlexibleSpaceBar(
-                    collapseMode: CollapseMode.parallax,
+                    collapseMode: CollapseMode.pin,
                     centerTitle: true,
                     background: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         itemselling != null
-                            ? Padding(
-                                padding: EdgeInsets.only(
-                                    left: 10, right: 10, top: 10, bottom: 5),
-                                child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Details(
-                                                itemid: itemselling.itemid)),
-                                      );
-                                    },
-                                    child: Container(
-                                        height: 70,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        child: ListTile(
-                                          title: Text(
-                                            itemselling.name,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w800),
-                                          ),
-                                          leading: Container(
-                                            height: 70,
-                                            width: 70,
-                                            decoration: BoxDecoration(
+                            ? Column(
+                                children: <Widget>[
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 10,
+                                          right: 10,
+                                          top: 10,
+                                          bottom: 5),
+                                      child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Details(
+                                                      itemid:
+                                                          itemselling.itemid)),
+                                            );
+                                          },
+                                          child: Container(
+                                              height: 70,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.shade200,
+                                                    offset: Offset(
+                                                        0.0, 1.0), //(x,y)
+                                                    blurRadius: 6.0,
+                                                  ),
+                                                ],
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: CachedNetworkImage(
-                                                imageUrl: itemselling.image,
-                                                fit: BoxFit.cover,
+                                                    BorderRadius.circular(5),
                                               ),
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            currency +
-                                                ' ' +
-                                                itemselling.price.toString(),
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.deepOrange,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ))))
+                                              child: ListTile(
+                                                title: Text(
+                                                  itemselling.name,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                ),
+                                                leading: Container(
+                                                  height: 70,
+                                                  width: 70,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          itemselling.image,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                subtitle: Text(
+                                                  currency +
+                                                      ' ' +
+                                                      itemselling.price
+                                                          .toString(),
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.deepOrange,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              )))),
+                                ],
+                              )
                             : Container(),
                         offer != null
                             ? Padding(
@@ -795,13 +807,15 @@ class _ChatPageViewState extends State<ChatPageView> {
                                             InkWell(
                                                 onTap: () async {
                                                   if (offerstage == 0) {
-                                                    if (userid == recipentid) {
+                                                    if (userid ==
+                                                        itemselling.userid) {
                                                       acceptoffer();
                                                     } else {
                                                       showMe(context);
                                                     }
                                                   } else if (offerstage == 1) {
-                                                    if (userid == recipentid) {
+                                                    if (userid ==
+                                                        itemselling.userid) {
                                                       canceloffer();
                                                     } else {
                                                       Navigator.push(
@@ -851,6 +865,19 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                                       item:
                                                                           itemselling)),
                                                         );
+                                                      } else {
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderBuyerUAE(
+                                                                    item:
+                                                                        itemselling,
+                                                                    messageid:
+                                                                        messageid,
+                                                                  )),
+                                                        );
                                                       }
                                                     } else {
                                                       var countr = await storage
@@ -889,6 +916,19 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                                             messageid,
                                                                       )),
                                                         );
+                                                      } else {
+                                                        Navigator
+                                                            .pushReplacement(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderBuyerUAE(
+                                                                    item:
+                                                                        itemselling,
+                                                                    messageid:
+                                                                        messageid,
+                                                                  )),
+                                                        );
                                                       }
                                                     }
                                                   }
@@ -918,7 +958,9 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                         ),
                                                         child: Center(
                                                           child: Text(
-                                                            userid == recipentid
+                                                            userid ==
+                                                                    itemselling
+                                                                        .userid
                                                                 ? offeruserstring
                                                                 : offerstring,
                                                             textAlign: TextAlign
@@ -935,7 +977,38 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                     : Container())
                                           ],
                                         ))))
-                            : Container()
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                    left: 10, right: 10, bottom: 5),
+                                child: InkWell(
+                                    onTap: () {
+                                      showMe(context);
+                                    },
+                                    child: Container(
+                                      height: 25,
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepOrange,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade200,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Make an Offer',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                      ),
+                                    )))
                       ],
                     ),
                   ),
@@ -960,7 +1033,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                                         return EasyRefresh(
                                             header: BezierCircleHeader(
                                                 color: Colors.deepPurple,
-                                                backgroundColor: Colors.white,
+                                                backgroundColor: Colors
+                                                    .deepPurpleAccent.shade200,
                                                 enableHapticFeedback: true),
                                             scrollController: _scrollController,
                                             onRefresh: () async {
@@ -993,144 +1067,183 @@ class _ChatPageViewState extends State<ChatPageView> {
 
                             Divider(height: 0, color: Colors.black26),
 
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 5),
-                              child: Container(
-                                color: Colors.white,
-                                height: 50,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: TextField(
-                                    maxLines: 20,
-                                    controller: _text,
-                                    autocorrect: true,
-                                    enableSuggestions: true,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica', fontSize: 16),
-                                    decoration: InputDecoration(
-                                        // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-                                        suffixIcon: Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: InkWell(
-                                            child: CircleAvatar(
-                                              child: Icon(
-                                                Feather.send,
-                                                size: 20,
-                                                color: Colors.white,
-                                              ),
-                                              backgroundColor:
-                                                  Colors.deepOrange,
-                                            ),
-                                            onTap: () async {
-                                              var x = _text.text;
-                                              _text.clear();
-                                              var date = DateTime.now();
-                                              final f = new DateFormat('hh:mm');
-                                              var s = f.format(date);
-                                              childList.add(Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 8.0,
-                                                          left: 8.0,
-                                                          top: 4.0,
-                                                          bottom: 4.0),
-                                                  child: Container(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Container(
-                                                      constraints: BoxConstraints(
-                                                          maxWidth: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              3 /
-                                                              4),
-                                                      padding:
-                                                          EdgeInsets.all(12.0),
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            Colors.deepOrange,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(25.0),
+                            Container(
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                border: Border.all(
+                                    color: Colors.grey.shade300, width: 0.5),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 25.0, left: 10, right: 10, top: 10),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(25.0),
+                                    ),
+                                    padding: EdgeInsets.only(left: 15),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: TextField(
+                                            maxLines: null,
+                                            expands: true,
+                                            showCursor: true,
+                                            controller: _text,
+                                            textInputAction:
+                                                TextInputAction.send,
+                                            autocorrect: true,
+                                            enableSuggestions: true,
+                                            textCapitalization:
+                                                TextCapitalization.sentences,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16),
+                                            decoration: InputDecoration(
+                                                // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                suffixIcon: Padding(
+                                                  padding: EdgeInsets.all(5),
+                                                  child: InkWell(
+                                                    child: CircleAvatar(
+                                                      child: Icon(
+                                                        Feather.send,
+                                                        size: 20,
+                                                        color: Colors.white,
                                                       ),
-                                                      child: Stack(children: <
-                                                          Widget>[
-                                                        Padding(
+                                                      backgroundColor:
+                                                          Colors.deepOrange,
+                                                    ),
+                                                    onTap: () async {
+                                                      var x = _text.text;
+                                                      _text.clear();
+                                                      var date = DateTime.now();
+                                                      final f = new DateFormat(
+                                                          'hh:mm');
+                                                      var s = f.format(date);
+                                                      childList.add(Padding(
                                                           padding:
                                                               const EdgeInsets
                                                                       .only(
                                                                   right: 8.0,
                                                                   left: 8.0,
-                                                                  top: 8.0,
-                                                                  bottom: 15.0),
-                                                          child: Text(x,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .white)),
-                                                        ),
-                                                        Positioned(
-                                                          bottom: 1,
-                                                          right: 10,
-                                                          child: Text(
-                                                            s,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 10,
+                                                                  top: 4.0,
+                                                                  bottom: 4.0),
+                                                          child: Container(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            child: Container(
+                                                              constraints: BoxConstraints(
+                                                                  maxWidth: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      3 /
+                                                                      4),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          12.0),
+                                                              decoration:
+                                                                  BoxDecoration(
                                                                 color: Colors
-                                                                    .white
-                                                                    .withOpacity(
-                                                                        0.6)),
-                                                          ),
-                                                        )
-                                                      ]),
-                                                    ),
-                                                  )));
+                                                                    .deepOrange,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            25.0),
+                                                              ),
+                                                              child: Stack(
+                                                                  children: <
+                                                                      Widget>[
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          right:
+                                                                              8.0,
+                                                                          left:
+                                                                              8.0,
+                                                                          top:
+                                                                              8.0,
+                                                                          bottom:
+                                                                              15.0),
+                                                                      child: Text(
+                                                                          x,
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 14,
+                                                                              color: Colors.white)),
+                                                                    ),
+                                                                    Positioned(
+                                                                      bottom: 1,
+                                                                      right: 10,
+                                                                      child:
+                                                                          Text(
+                                                                        s,
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                10,
+                                                                            color:
+                                                                                Colors.white.withOpacity(0.6)),
+                                                                      ),
+                                                                    )
+                                                                  ]),
+                                                            ),
+                                                          )));
 
-                                              var url =
-                                                  'https://api.sellship.co/api/sendmessage/' +
-                                                      userid +
-                                                      '/' +
-                                                      recipentid +
-                                                      '/' +
-                                                      messageid;
-                                              if (x.isNotEmpty) {
-                                                final response = await http
-                                                    .post(url, body: {
-                                                  'message': x,
-                                                  'time':
-                                                      DateTime.now().toString()
-                                                });
-                                                if (response.statusCode ==
-                                                    200) {
-                                                  print('ok');
-                                                } else {
-                                                  print(response.statusCode);
-                                                }
+                                                      var url =
+                                                          'https://api.sellship.co/api/sendmessage/' +
+                                                              senderid +
+                                                              '/' +
+                                                              recipentid +
+                                                              '/' +
+                                                              messageid;
+                                                      if (x.isNotEmpty) {
+                                                        final response =
+                                                            await http.post(url,
+                                                                body: {
+                                                              'message': x,
+                                                              'time': DateTime
+                                                                      .now()
+                                                                  .toString()
+                                                            });
+                                                        if (response
+                                                                .statusCode ==
+                                                            200) {
+                                                          print('ok');
+                                                        } else {
+                                                          print(response
+                                                              .statusCode);
+                                                        }
 
-                                                Timer(Duration(microseconds: 1),
-                                                    () {
-                                                  _scrollController.jumpTo(
-                                                      _scrollController.position
-                                                          .maxScrollExtent);
-                                                });
-                                              }
-                                            },
+                                                        Timer(
+                                                            Duration(
+                                                                microseconds:
+                                                                    1), () {
+                                                          _scrollController.jumpTo(
+                                                              _scrollController
+                                                                  .position
+                                                                  .maxScrollExtent);
+                                                        });
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                border: InputBorder.none,
+                                                hintText: "Enter your message",
+                                                hintStyle: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16)),
                                           ),
                                         ),
-                                        border: InputBorder.none,
-                                        hintText: "Enter your message",
-                                        hintStyle: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16)),
-                                  ),
-                                ),
+                                      ],
+                                    )),
                               ),
                             ),
                             // ),

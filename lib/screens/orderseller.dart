@@ -58,20 +58,28 @@ class _OrderDetailState extends State<OrderDetail> {
   var currency;
 
   final storage = new FlutterSecureStorage();
-
+  int cancelled;
   Item newitem = new Item();
   var deliveredtext;
   getDetails() async {
     userid = await storage.read(key: 'userid');
 
     var countr = await storage.read(key: 'country');
-    if (countr.toLowerCase() == 'united arab emirates') {
+    if (countr.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
       });
     } else if (countr.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
       });
     }
 
@@ -92,6 +100,15 @@ class _OrderDetailState extends State<OrderDetail> {
     } else {
       delstage = jsonbody['deliverystage'];
     }
+
+    var cancell;
+    if (jsonbody['cancelled'] == null) {
+      cancell = null;
+    } else {
+      cancell = jsonbody['cancelled'];
+    }
+
+    print(cancell);
 
     if (delstage == 0) {
       deliveredtext = 'Create Label';
@@ -114,6 +131,7 @@ class _OrderDetailState extends State<OrderDetail> {
       itemprice = jsonbody['offer'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
+      cancelled = cancell;
       trackingnumber = trackingno;
       deliverystage = delstage;
       newitem = Item(weight: int.parse(jsonbody['itemobject']['weight']));
@@ -1240,150 +1258,173 @@ class _OrderDetailState extends State<OrderDetail> {
                     SizedBox(
                       height: 10,
                     ),
-                    shipfrom(context),
+                    cancelled != null ? Container() : shipfrom(context),
                     SizedBox(
                       height: 10,
                     ),
-                    deliveryinformation(context),
-                    InkWell(
-                        onTap: () async {
-                          if (deliverystage == 0) {
-                            if (addressline1 != null) {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return Container(
-                                      height: 100,
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: SpinKitChasingDots(
-                                              color: Colors.deepOrangeAccent)),
-                                    );
-                                  });
-                              var url =
-                                  'https://api.sellship.co/api/shipitem/' +
-                                      messageid +
-                                      '/' +
-                                      addressline1 +
-                                      '/' +
-                                      city +
-                                      '/' +
-                                      state +
-                                      '/' +
-                                      zipcode;
-
-                              final response = await http.get(url);
-
-                              var jsonbody = json.decode(response.body);
-
-                              setState(() {
-                                deliverystage = jsonbody['deliverystage'];
-                                trackingnumber =
-                                    jsonbody['shipping_details']['tracking_no'];
-                                deliveredtext = 'Item Shipped';
-                              });
-
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop('dialog');
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => AssetGiffyDialog(
-                                        image: Image.asset(
-                                          'assets/oops.gif',
-                                          fit: BoxFit.cover,
-                                        ),
-                                        title: Text(
-                                          'Oops!',
-                                          style: TextStyle(
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        description: Text(
-                                          'Please enter a valid ship from address!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(),
-                                        ),
-                                        onlyOkButton: true,
-                                        entryAnimation: EntryAnimation.DEFAULT,
-                                        onOkButtonPressed: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop('dialog');
-                                        },
-                                      ));
-                            }
-                          } else if (deliverystage == 1) {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    height: 100,
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: SpinKitChasingDots(
-                                            color: Colors.deepOrangeAccent)),
-                                  );
-                                });
-                            var url = 'https://api.sellship.co/api/shipped/' +
-                                messageid;
-
-                            final response = await http.get(url);
-
-                            var jsonbody = json.decode(response.body);
-
-                            setState(() {
-                              deliverystage = jsonbody['deliverystage'];
-                              trackingnumber =
-                                  jsonbody['shipping_details']['tracking_no'];
-                              deliveredtext = "Waiting for Delivery";
-                            });
-                            Navigator.of(context, rootNavigator: true)
-                                .pop('dialog');
-                          } else if (deliverystage == 3) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ReviewBuyer(
-                                        reviewuserid: buyerid,
-                                        messageid: messageid,
-                                      )),
-                            );
-                          }
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: Colors.deepPurpleAccent,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10.0),
-                              ),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.deepPurpleAccent
-                                        .withOpacity(0.4),
-                                    offset: const Offset(1.1, 1.1),
-                                    blurRadius: 10.0),
-                              ],
-                            ),
-                            child: Center(
+                    cancelled != null
+                        ? Padding(
+                            padding:
+                                EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
                               child: Text(
-                                deliveredtext,
-                                textAlign: TextAlign.left,
+                                'Transaction has been cancelled',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.0,
-                                  color: Colors.white,
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                          )
+                        : deliveryinformation(context),
+                    cancelled != null
+                        ? Container()
+                        : InkWell(
+                            onTap: () async {
+                              if (deliverystage == 0) {
+                                if (addressline1 != null) {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          height: 100,
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: SpinKitChasingDots(
+                                                  color:
+                                                      Colors.deepOrangeAccent)),
+                                        );
+                                      });
+                                  var url =
+                                      'https://api.sellship.co/api/shipitem/' +
+                                          messageid +
+                                          '/' +
+                                          addressline1 +
+                                          '/' +
+                                          city +
+                                          '/' +
+                                          state +
+                                          '/' +
+                                          zipcode;
+
+                                  final response = await http.get(url);
+
+                                  var jsonbody = json.decode(response.body);
+
+                                  setState(() {
+                                    deliverystage = jsonbody['deliverystage'];
+                                    trackingnumber =
+                                        jsonbody['shipping_details']
+                                            ['tracking_no'];
+                                    deliveredtext = 'Item Shipped';
+                                  });
+
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop('dialog');
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => AssetGiffyDialog(
+                                            image: Image.asset(
+                                              'assets/oops.gif',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            title: Text(
+                                              'Oops!',
+                                              style: TextStyle(
+                                                  fontSize: 22.0,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            description: Text(
+                                              'Please enter a valid ship from address!',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(),
+                                            ),
+                                            onlyOkButton: true,
+                                            entryAnimation:
+                                                EntryAnimation.DEFAULT,
+                                            onOkButtonPressed: () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop('dialog');
+                                            },
+                                          ));
+                                }
+                              } else if (deliverystage == 1) {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        height: 100,
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: SpinKitChasingDots(
+                                                color:
+                                                    Colors.deepOrangeAccent)),
+                                      );
+                                    });
+                                var url =
+                                    'https://api.sellship.co/api/shipped/' +
+                                        messageid;
+
+                                final response = await http.get(url);
+
+                                var jsonbody = json.decode(response.body);
+
+                                setState(() {
+                                  deliverystage = jsonbody['deliverystage'];
+                                  trackingnumber = jsonbody['shipping_details']
+                                      ['tracking_no'];
+                                  deliveredtext = "Waiting for Delivery";
+                                });
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop('dialog');
+                              } else if (deliverystage == 3) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ReviewBuyer(
+                                            reviewuserid: buyerid,
+                                            messageid: messageid,
+                                          )),
+                                );
+                              }
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: Colors.deepPurpleAccent,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color: Colors.deepPurpleAccent
+                                            .withOpacity(0.4),
+                                        offset: const Offset(1.1, 1.1),
+                                        blurRadius: 10.0),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    deliveredtext,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      letterSpacing: 0.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        )),
+                            )),
                     Padding(
                       padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
                       child: Align(
@@ -1441,6 +1482,91 @@ class _OrderDetailState extends State<OrderDetail> {
                           ),
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    deliverystage == 0
+                        ? InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) =>
+                                      CupertinoAlertDialog(
+                                        title: new Text(
+                                          "Cancel this transaction",
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        content: new Text(
+                                          "Are you sure you want to cancel this transaction?",
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400),
+                                        ),
+                                        actions: <Widget>[
+                                          CupertinoDialogAction(
+                                            isDefaultAction: true,
+                                            onPressed: () async {
+                                              var url =
+                                                  'https://api.sellship.co/api/cancelbuyer/' +
+                                                      messageid;
+
+                                              final response =
+                                                  await http.get(url);
+
+                                              if (response.statusCode == 200) {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: Text(
+                                              'Yes',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ),
+                                          CupertinoDialogAction(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              "No",
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          )
+                                        ],
+                                      ));
+                            },
+                            child: cancelled != null
+                                ? Container()
+                                : Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 10, bottom: 10, top: 20),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Cancel this transaction',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ))
+                        : Container(),
+                    SizedBox(
+                      height: 5,
                     ),
                   ])
                 : Center(child: CupertinoActivityIndicator())));

@@ -854,7 +854,7 @@ class _LoginPageState extends State<LoginPage>
                           Center(
                             child: Image(
                               image: AssetImage(
-                                'assets/onboard2.png',
+                                'assets/043.png',
                               ),
                               fit: BoxFit.cover,
                               height: MediaQuery.of(context).size.height / 4,
@@ -890,8 +890,10 @@ class _LoginPageState extends State<LoginPage>
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       prefs.setBool('seen', true);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Login()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginProfile()));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10),
@@ -935,7 +937,7 @@ class _LoginPageState extends State<LoginPage>
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpPage()));
+                              builder: (context) => SignUpProfilePage()));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10),
@@ -1188,330 +1190,307 @@ class _LoginPageState extends State<LoginPage>
               child: Center(child: Text('${item.length} Items')),
             ),
           ),
-          SliverStaggeredGrid(
-            gridDelegate: SliverStaggeredGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: 1.0,
-              crossAxisSpacing: 1.0,
-              crossAxisCount: 2,
-              staggeredTileCount: item.length,
-              staggeredTileBuilder: (index) => new StaggeredTile.fit(1),
-            ),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Padding(
-                    padding: EdgeInsets.all(10),
-                    child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Details(itemid: item[index].itemid),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 0.2, color: Colors.grey),
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade300,
-                                offset: Offset(0.0, 1.0), //(x,y)
-                                blurRadius: 6.0,
-                              ),
-                            ],
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              return Padding(
+                  padding: EdgeInsets.all(10),
+                  child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                Details(itemid: item[index].itemid),
                           ),
-                          child: Column(
-                            children: <Widget>[
-                              new Stack(
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0.2, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              width: MediaQuery.of(context).size.width / 3,
+                              child: Column(
                                 children: <Widget>[
-                                  Container(
-                                    height: 150,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: CachedNetworkImage(
-                                        imageUrl: item[index].image,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            SpinKitChasingDots(
-                                                color: Colors.deepOrange),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
+                                  new Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        height: 150,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: CachedNetworkImage(
+                                            imageUrl: item[index].image,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                SpinKitChasingDots(
+                                                    color: Colors.deepOrange),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      item[index].sold == true
+                                          ? Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                height: 50,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                color: Colors.deepPurpleAccent
+                                                    .withOpacity(0.8),
+                                                child: Center(
+                                                  child: Text(
+                                                    'Sold',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ))
+                                          : Container(),
+                                    ],
                                   ),
-                                  item[index].sold == true
-                                      ? Align(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            height: 50,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            color: Colors.deepPurpleAccent
-                                                .withOpacity(0.8),
-                                            child: Center(
-                                              child: Text(
-                                                'Sold',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ))
-                                      : Container(),
                                 ],
                               ),
-                              new Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: new Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            favourites != null
-                                                ? favourites.contains(
-                                                        item[index].itemid)
-                                                    ? InkWell(
-                                                        enableFeedback: true,
-                                                        onTap: () async {
-                                                          var userid =
-                                                              await storage.read(
-                                                                  key:
-                                                                      'userid');
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: new Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(height: 5.0),
+                                  Container(
+                                    height: 40,
+                                    width: 220,
+                                    child: Text(
+                                      item[index].name,
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                      overflow: TextOverflow.fade,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                      favourites != null
+                                          ? favourites
+                                                  .contains(item[index].itemid)
+                                              ? InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
 
-                                                          if (userid != null) {
-                                                            var url =
-                                                                'https://api.sellship.co/api/favourite/' +
-                                                                    userid;
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
 
-                                                            Map<String, String>
-                                                                body = {
-                                                              'itemid':
-                                                                  item[index]
-                                                                      .itemid,
-                                                            };
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            item[index].itemid,
+                                                      };
 
-                                                            final response =
-                                                                await http.post(
-                                                                    url,
-                                                                    body: body);
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
 
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              var jsondata =
-                                                                  json.decode(
-                                                                      response
-                                                                          .body);
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                        var jsondata =
+                                                            json.decode(
+                                                                response.body);
 
-                                                              favourites
-                                                                  .clear();
-                                                              for (int i = 0;
-                                                                  i <
-                                                                      jsondata
-                                                                          .length;
-                                                                  i++) {
-                                                                favourites.add(
-                                                                    jsondata[i][
-                                                                            '_id']
-                                                                        [
-                                                                        '\$oid']);
-                                                              }
-                                                              setState(() {
-                                                                favourites =
-                                                                    favourites;
-                                                                item[index]
-                                                                        .likes =
-                                                                    item[index]
-                                                                            .likes -
-                                                                        1;
-                                                              });
-                                                            } else {
-                                                              print(response
-                                                                  .statusCode);
-                                                            }
-                                                          } else {
-                                                            showInSnackBar(
-                                                                'Please Login to use Favourites');
-                                                          }
-                                                        },
-                                                        child: Icon(
-                                                          FontAwesome.heart,
-                                                          color:
-                                                              Colors.deepPurple,
-                                                        ),
-                                                      )
-                                                    : InkWell(
-                                                        enableFeedback: true,
-                                                        onTap: () async {
-                                                          var userid =
-                                                              await storage.read(
-                                                                  key:
-                                                                      'userid');
+                                                        favourites.clear();
+                                                        for (int i = 0;
+                                                            i < jsondata.length;
+                                                            i++) {
+                                                          favourites.add(
+                                                              jsondata[i]['_id']
+                                                                  ['\$oid']);
+                                                        }
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          item[index].likes =
+                                                              item[index]
+                                                                      .likes -
+                                                                  1;
+                                                        });
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: Icon(
+                                                    FontAwesome.heart,
+                                                    color: Colors.deepPurple,
+                                                  ),
+                                                )
+                                              : InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
 
-                                                          if (userid != null) {
-                                                            var url =
-                                                                'https://api.sellship.co/api/favourite/' +
-                                                                    userid;
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
 
-                                                            Map<String, String>
-                                                                body = {
-                                                              'itemid':
-                                                                  item[index]
-                                                                      .itemid,
-                                                            };
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            item[index].itemid,
+                                                      };
 
-                                                            final response =
-                                                                await http.post(
-                                                                    url,
-                                                                    body: body);
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
 
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              var jsondata =
-                                                                  json.decode(
-                                                                      response
-                                                                          .body);
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                        var jsondata =
+                                                            json.decode(
+                                                                response.body);
 
-                                                              favourites
-                                                                  .clear();
-                                                              for (int i = 0;
-                                                                  i <
-                                                                      jsondata
-                                                                          .length;
-                                                                  i++) {
-                                                                favourites.add(
-                                                                    jsondata[i][
-                                                                            '_id']
-                                                                        [
-                                                                        '\$oid']);
-                                                              }
-                                                              setState(() {
-                                                                item[index]
-                                                                        .likes =
-                                                                    item[index]
-                                                                            .likes +
-                                                                        1;
-                                                                favourites =
-                                                                    favourites;
-                                                              });
-                                                            } else {
-                                                              print(response
-                                                                  .statusCode);
-                                                            }
-                                                          } else {
-                                                            showInSnackBar(
-                                                                'Please Login to use Favourites');
-                                                          }
-                                                        },
-                                                        child: Icon(
-                                                          Feather.heart,
-                                                          color: Colors.black,
-                                                        ),
-                                                      )
-                                                : Icon(
+                                                        favourites.clear();
+                                                        for (int i = 0;
+                                                            i < jsondata.length;
+                                                            i++) {
+                                                          favourites.add(
+                                                              jsondata[i]['_id']
+                                                                  ['\$oid']);
+                                                        }
+                                                        setState(() {
+                                                          item[index].likes =
+                                                              item[index]
+                                                                      .likes +
+                                                                  1;
+                                                          favourites =
+                                                              favourites;
+                                                        });
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: Icon(
                                                     Feather.heart,
                                                     color: Colors.black,
                                                   ),
-                                            SizedBox(
-                                              width: 5,
+                                                )
+                                          : Icon(
+                                              Feather.heart,
+                                              color: Colors.black,
                                             ),
-                                            Text(
-                                              item[index].likes.toString(),
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            InkWell(
-                                              enableFeedback: true,
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CommentsPage(
-                                                              itemid:
-                                                                  item[index]
-                                                                      .itemid)),
-                                                );
-                                              },
-                                              child:
-                                                  Icon(Feather.message_circle),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            InkWell(
-                                              enableFeedback: true,
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CommentsPage(
-                                                              itemid:
-                                                                  item[index]
-                                                                      .itemid)),
-                                                );
-                                              },
-                                              child: Text(
-                                                item[index].comments.toString(),
-                                                style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        item[index].likes.toString(),
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                        SizedBox(height: 5.0),
-                                        Container(
-                                          height: 20,
-                                          child: Text(
-                                            item[index].name,
-                                            style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      InkWell(
+                                        enableFeedback: true,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CommentsPage(
+                                                        itemid: item[index]
+                                                            .itemid)),
+                                          );
+                                        },
+                                        child: Icon(Feather.message_circle),
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      InkWell(
+                                        enableFeedback: true,
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CommentsPage(
+                                                        itemid: item[index]
+                                                            .itemid)),
+                                          );
+                                        },
+                                        child: Text(
+                                          item[index].comments.toString(),
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
-                                        SizedBox(height: 5.0),
-                                        Container(
-                                          child: Text(
-                                            item[index].category,
-                                            style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 5.0),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5.0),
+                                  Container(
+                                    child: Text(
+                                      item[index].category,
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 5.0),
+                                  Container(
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
                                         currency != null
                                             ? Container(
                                                 child: Text(
@@ -1540,149 +1519,162 @@ class _LoginPageState extends State<LoginPage>
                                                 ),
                                               ),
                                         SizedBox(
-                                          height: 5,
+                                          width: 5,
                                         ),
                                         Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditItem(
-                                                              itemid:
-                                                                  item[index]
-                                                                      .itemid,
-                                                            )),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  height: 30,
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          4 -
-                                                      20,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.deepOrange,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors
-                                                            .grey.shade300,
-                                                        offset: Offset(
-                                                            0.0, 1.0), //(x,y)
-                                                        blurRadius: 6.0,
-                                                      ),
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.0),
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Edit',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 14,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
+                                            child: Row(children: <Widget>[
+                                          Icon(
+                                            Icons.remove_red_eye,
+                                            color: Colors.blueGrey,
+                                            size: 16,
+                                          ),
+                                          SizedBox(
+                                            width: 2,
+                                          ),
+                                          Text(
+                                            item[index].views.toString(),
+                                            style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.blueGrey,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                        ])),
+                                      ])),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditItem(
+                                                        itemid:
+                                                            item[index].itemid,
+                                                      )),
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 30,
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    4 -
+                                                20,
+                                            decoration: BoxDecoration(
+                                              color: Colors.deepOrange,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade300,
+                                                  offset:
+                                                      Offset(0.0, 1.0), //(x,y)
+                                                  blurRadius: 6.0,
                                                 ),
+                                              ],
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'Edit',
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                    color: Colors.white),
                                               ),
-                                              InkWell(
-                                                onTap: () async {
-                                                  if (item[index].sold ==
-                                                      true) {
-                                                    var url =
-                                                        'https://api.sellship.co/api/unsold/' +
-                                                            item[index].itemid +
-                                                            '/' +
-                                                            userid;
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        InkWell(
+                                          onTap: () async {
+                                            if (item[index].sold == true) {
+                                              var url =
+                                                  'https://api.sellship.co/api/unsold/' +
+                                                      item[index].itemid +
+                                                      '/' +
+                                                      userid;
 
-                                                    final response =
-                                                        await http.get(url);
-                                                    if (response.statusCode ==
-                                                        200) {
-                                                      print(response.body);
-                                                    }
-                                                    getProfileData();
-                                                    showInSnackBar(
-                                                        'Item is now live!');
-                                                  } else {
-                                                    var url =
-                                                        'https://api.sellship.co/api/sold/' +
-                                                            item[index].itemid +
-                                                            '/' +
-                                                            userid;
-                                                    print(url);
-                                                    final response =
-                                                        await http.get(url);
-                                                    if (response.statusCode ==
-                                                        200) {
-                                                      print(response.body);
-                                                    }
-                                                    getProfileData();
-                                                    showInSnackBar(
-                                                        'Item has been marked sold!');
-                                                  }
-                                                },
-                                                child: Container(
-                                                  height: 30,
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          4 -
-                                                      20,
-                                                  decoration: BoxDecoration(
-                                                    color: item[index].sold ==
-                                                            true
-                                                        ? Colors
-                                                            .deepPurpleAccent
-                                                        : Colors.deepOrange,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors
-                                                            .grey.shade300,
-                                                        offset: Offset(
-                                                            0.0, 1.0), //(x,y)
-                                                        blurRadius: 6.0,
-                                                      ),
-                                                    ],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.0),
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                      item[index].sold == false
-                                                          ? 'Mark Sold'
-                                                          : 'Mark Live',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 14,
-                                                          color: Colors.white),
-                                                    ),
-                                                  ),
+                                              final response =
+                                                  await http.get(url);
+                                              if (response.statusCode == 200) {
+                                                print(response.body);
+                                              }
+                                              getProfileData();
+                                              showInSnackBar(
+                                                  'Item is now live!');
+                                            } else {
+                                              var url =
+                                                  'https://api.sellship.co/api/sold/' +
+                                                      item[index].itemid +
+                                                      '/' +
+                                                      userid;
+                                              print(url);
+                                              final response =
+                                                  await http.get(url);
+                                              if (response.statusCode == 200) {
+                                                print(response.body);
+                                              }
+                                              getProfileData();
+                                              showInSnackBar(
+                                                  'Item has been marked sold!');
+                                            }
+                                          },
+                                          child: Container(
+                                            height: 30,
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    4 -
+                                                20,
+                                            decoration: BoxDecoration(
+                                              color: item[index].sold == true
+                                                  ? Colors.deepPurpleAccent
+                                                  : Colors.deepOrange,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade300,
+                                                  offset:
+                                                      Offset(0.0, 1.0), //(x,y)
+                                                  blurRadius: 6.0,
                                                 ),
+                                              ],
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                item[index].sold == false
+                                                    ? 'Mark Sold'
+                                                    : 'Mark Live',
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                    color: Colors.white),
                                               ),
-                                            ],
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  )),
-                            ],
-                          ),
-                        )));
-              },
-              childCount: item.length,
-            ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )));
+            }, childCount: item.length),
           )
         ]);
   }
@@ -1727,13 +1719,21 @@ class _LoginPageState extends State<LoginPage>
     userid = await storage.read(key: 'userid');
     var country = await storage.read(key: 'country');
 
-    if (country.toLowerCase() == 'united arab emirates') {
+    if (country.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
       });
     }
 
@@ -1843,6 +1843,9 @@ class _LoginPageState extends State<LoginPage>
                     itemid: productmap[i]['_id']['\$oid'],
                     name: productmap[i]['name'],
                     image: productmap[i]['image'],
+                    views: productmap[i]['views'] == null
+                        ? 0
+                        : productmap[i]['views'],
                     price: productmap[i]['price'].toString(),
                     likes: productmap[i]['likes'] == null
                         ? 0
@@ -1887,13 +1890,21 @@ class _LoginPageState extends State<LoginPage>
     userid = await storage.read(key: 'userid');
     var country = await storage.read(key: 'country');
 
-    if (country.toLowerCase() == 'united arab emirates') {
+    if (country.trim().toLowerCase() == 'united arab emirates') {
       setState(() {
         currency = 'AED';
       });
     } else if (country.trim().toLowerCase() == 'united states') {
       setState(() {
         currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
       });
     }
 
@@ -1948,6 +1959,9 @@ class _LoginPageState extends State<LoginPage>
                     name: productmap[i]['name'],
                     image: productmap[i]['image'],
                     price: productmap[i]['price'].toString(),
+                    views: productmap[i]['views'] == null
+                        ? 0
+                        : productmap[i]['views'],
                     likes: productmap[i]['likes'] == null
                         ? 0
                         : productmap[i]['likes'],
