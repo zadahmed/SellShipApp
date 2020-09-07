@@ -43,6 +43,7 @@ class _LoginProfileState extends State<LoginProfile> {
 
   getNotifications() async {
     var token = await FirebaseNotifications().getNotifications(context);
+
     setState(() {
       firebasetoken = token;
     });
