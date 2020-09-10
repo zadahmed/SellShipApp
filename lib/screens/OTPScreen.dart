@@ -1,9 +1,9 @@
 import 'package:SellShip/screens/otpinput.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:http/http.dart' as http;
 
 class OTPScreen extends StatefulWidget {
   final String phonenumber;
@@ -183,7 +183,7 @@ class _OTPScreenState extends State<OTPScreen> {
         (AuthCredential phoneAuthCredential) {
       _firebaseAuth
           .signInWithCredential(phoneAuthCredential)
-          .then((AuthResult value) {
+          .then((UserCredential value) {
         if (value.user != null) {
         } else {
           showInSnackBar("Error validating OTP, try again");
@@ -195,7 +195,7 @@ class _OTPScreenState extends State<OTPScreen> {
       });
     };
     final PhoneVerificationFailed verificationFailed =
-        (AuthException authException) {
+        (FirebaseAuthException authException) {
       showInSnackBar(authException.message);
       setState(() {
         isCodeSent = false;
@@ -232,7 +232,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
     _firebaseAuth
         .signInWithCredential(_authCredential)
-        .then((AuthResult value) async {
+        .then((UserCredential value) async {
       if (value.user != null) {
         print(value.user.phoneNumber);
 
