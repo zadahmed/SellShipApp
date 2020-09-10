@@ -1,22 +1,20 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
-import 'package:SellShip/screens/addbrans.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
+import 'package:SellShip/screens/rootscreen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:SellShip/screens/rootscreen.dart';
 import 'package:location/location.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:shimmer/shimmer.dart';
@@ -1768,20 +1766,21 @@ class _AddItemState extends State<AddItem> {
                                                 child: Center(
                                                     child: InkWell(
                                                   onTap: () async {
-                                                    final bran =
-                                                        await Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Brands(
-                                                                category:
-                                                                    _selectedCategory,
-                                                              )),
-                                                    );
-
-                                                    print(bran);
+//                                                    final bran =
+//                                                        await Navigator.push(
+//                                                      context,
+//                                                      MaterialPageRoute(
+//                                                          builder: (context) =>
+//                                                          //todo brands page needs to be built??
+//                                                              Brands(
+//                                                                category:
+//                                                                    _selectedCategory,
+//                                                              )),
+//                                                    );
+//
+//                                                    print(bran);
                                                     setState(() {
-                                                      brand = bran;
+                                                      //  brand = bran;
                                                     });
                                                   },
                                                   child: brand != null

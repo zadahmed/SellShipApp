@@ -1,26 +1,18 @@
 import 'dart:convert';
 
 import 'package:SellShip/models/Items.dart';
-import 'package:SellShip/payments/existingcard.dart';
 import 'package:SellShip/payments/stripeservice.dart';
 import 'package:SellShip/screens/addpayment.dart';
 import 'package:SellShip/screens/address.dart';
 import 'package:SellShip/screens/details.dart';
-import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/paymentdone.dart';
-import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/credit_card_form.dart';
-import 'package:flutter_credit_card/credit_card_model.dart';
-import 'package:flutter_credit_card/credit_card_widget.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:progress_dialog/progress_dialog.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 
 class Checkout extends StatefulWidget {
@@ -164,6 +156,7 @@ class _CheckoutState extends State<Checkout> {
                         child: InkWell(
                           onTap: () async {
                             if (deliveryaddress == null) {
+                              //todo this is the same code as below refactor into widget.
                               showDialog(
                                   context: context,
                                   builder: (_) => AssetGiffyDialog(
