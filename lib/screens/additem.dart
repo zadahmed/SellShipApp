@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 import 'package:SellShip/screens/addbrans.dart';
+import 'package:SellShip/screens/addcategory.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -1147,7 +1148,15 @@ class _AddItemState extends State<AddItem> {
                                     ],
                                   ),
                                   child: ListTile(
-                                    onTap: () {},
+                                    onTap: () async {
+                                      final catdetails = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddCategory()),
+                                      );
+                                      print(catdetails);
+                                    },
                                     title: Text(
                                       'Category',
                                       style: TextStyle(
@@ -2602,604 +2611,637 @@ class _AddItemState extends State<AddItem> {
                                 ),
                               ),
                               SizedBox(
-                                height: 60.0,
+                                height: 30.0,
                               ),
                             ],
                           ),
                         ),
                         SliverToBoxAdapter(
                           child: userid != null
-                              ? InkWell(
-                                  onTap: () async {
-                                    if (_image == null) {
-                                      showInSnackBar(
-                                          'Please upload a picture for your item!');
-                                    } else if (businessnameController
-                                        .text.isEmpty) {
-                                      showInSnackBar(
-                                          'Oops looks like your missing a title for your item!');
-                                    } else if (_selectedCategory == null) {
-                                      showInSnackBar(
-                                          'Please choose a category for your item!');
-                                    } else if (_selectedsubCategory == null) {
-                                      showInSnackBar(
-                                          'Please choose a sub category for your item!');
-                                    } else if (_selectedCondition == null) {
-                                      showInSnackBar(
-                                          'Please choose the condition of your item!');
-                                    } else if (businesspricecontroller
-                                        .text.isEmpty) {
-                                      showInSnackBar(
-                                          'Oops looks like your missing a price for your item!');
-                                    } else if (businessizecontroller == null &&
-                                        _selectedCategory ==
-                                            'Fashion & Accessories') {
-                                      showInSnackBar(
-                                          'Please choose the size for your item!');
-                                    } else if (meetupcheckbox == false &&
-                                        shippingcheckbox == false) {
-                                      showInSnackBar(
-                                          'Please choose a delivery method!');
-                                    } else if (shippingcheckbox == true) {
-                                      if (_selectedweight == -1) {
+                              ? Padding(
+                                  child: InkWell(
+                                    onTap: () async {
+                                      if (_image == null) {
                                         showInSnackBar(
-                                            'Please choose the weight of your item');
-                                      }
-                                    } else if (city == null ||
-                                        country == null) {
-                                      showInSnackBar(
-                                          'Please choose the location of your item on the map!');
-                                    } else {
-                                      if (businessdescriptionController
+                                            'Please upload a picture for your item!');
+                                      } else if (businessnameController
                                           .text.isEmpty) {
-                                        businessdescriptionController.text = '';
-                                      }
-
-                                      String bran;
-                                      if (businessbrandcontroller != null) {
-                                        String brandcontrollertext =
-                                            businessbrandcontroller.text.trim();
-                                        if (brandcontrollertext.isNotEmpty) {
-                                          bran = businessbrandcontroller.text;
-                                        } else if (brand != null) {
-                                          bran = brand;
-                                        }
-                                      } else if (businessbrandcontroller ==
-                                          null) {
                                         showInSnackBar(
-                                            'Please choose a brand for your item!');
-                                      }
-
-                                      showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (BuildContext context) {
-                                            return Dialog(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.0)), //this right here
-                                              child: Container(
-                                                height: 100,
-                                                child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            12.0),
-                                                    child: SpinKitChasingDots(
-                                                        color:
-                                                            Colors.deepOrange)),
-                                              ),
-                                            );
-                                          });
-                                      var userurl =
-                                          'https://api.sellship.co/api/user/' +
-                                              userid;
-                                      final userresponse =
-                                          await http.get(userurl);
-                                      if (userresponse.statusCode == 200) {
-                                        var userrespons =
-                                            json.decode(userresponse.body);
-                                        var profilemap = userrespons;
-                                        print(profilemap);
-                                        if (mounted) {
-                                          setState(() {
-                                            firstname =
-                                                profilemap['first_name'];
-                                            phonenumber =
-                                                profilemap['phonenumber'];
-                                            email = profilemap['email'];
-                                          });
-                                        }
-                                      }
-
-                                      if (meetupcheckbox == false &&
+                                            'Oops looks like your missing a title for your item!');
+                                      } else if (_selectedCategory == null) {
+                                        showInSnackBar(
+                                            'Please choose a category for your item!');
+                                      } else if (_selectedsubCategory == null) {
+                                        showInSnackBar(
+                                            'Please choose a sub category for your item!');
+                                      } else if (_selectedCondition == null) {
+                                        showInSnackBar(
+                                            'Please choose the condition of your item!');
+                                      } else if (businesspricecontroller
+                                          .text.isEmpty) {
+                                        showInSnackBar(
+                                            'Oops looks like your missing a price for your item!');
+                                      } else if (businessizecontroller ==
+                                              null &&
+                                          _selectedCategory ==
+                                              'Fashion & Accessories') {
+                                        showInSnackBar(
+                                            'Please choose the size for your item!');
+                                      } else if (meetupcheckbox == false &&
                                           shippingcheckbox == false) {
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop('dialog');
                                         showInSnackBar(
-                                            'Please choose a checkbox for delivery method!');
-                                      } else if (city == null) {
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop('dialog');
-                                        showInSnackBar(
-                                            'Please choose the location of your item!');
-                                      } else {
-                                        var url =
-                                            'https://api.sellship.co/api/additem';
-
-                                        Dio dio = new Dio();
-                                        FormData formData;
-                                        if (_image != null) {
-                                          String fileName =
-                                              _image.path.split('/').last;
-                                          formData = FormData.fromMap({
-                                            'name': businessnameController.text,
-                                            'price':
-                                                businesspricecontroller.text,
-                                            'originalprice': '',
-                                            'category': _selectedCategory,
-                                            'subcategory': _selectedsubCategory,
-                                            'subsubcategory':
-                                                _selectedsubsubCategory == null
-                                                    ? ''
-                                                    : _selectedsubsubCategory,
-                                            'latitude':
-                                                _lastMapPosition.latitude,
-                                            'longitude':
-                                                _lastMapPosition.longitude,
-                                            'description':
-                                                businessdescriptionController
-                                                    .text,
-                                            'meetup': meetupcheckbox,
-                                            'shipping': shippingcheckbox,
-                                            'city': city.trim(),
-                                            'country': country.trim(),
-                                            'condition': _selectedCondition,
-                                            'brand': bran,
-                                            'size': businessizecontroller
-                                                        .text ==
-                                                    null
-                                                ? ''
-                                                : businessizecontroller.text,
-                                            'userid': userid,
-                                            'username': firstname,
-                                            'useremail': email,
-                                            'usernumber': phonenumber,
-                                            'weight': itemweight,
-                                            'weightmetric': metric,
-                                            'date_uploaded':
-                                                DateTime.now().toString(),
-                                            'image':
-                                                await MultipartFile.fromFile(
-                                                    _image.path,
-                                                    filename: fileName)
-                                          });
-                                        }
-                                        if (_image != null && _image2 != null) {
-                                          String fileName =
-                                              _image.path.split('/').last;
-                                          String fileName2 =
-                                              _image2.path.split('/').last;
-                                          formData = FormData.fromMap({
-                                            'name': businessnameController.text,
-                                            'price':
-                                                businesspricecontroller.text,
-                                            'originalprice': '',
-                                            'category': _selectedCategory,
-                                            'subcategory': _selectedsubCategory,
-                                            'subsubcategory':
-                                                _selectedsubsubCategory == null
-                                                    ? ''
-                                                    : _selectedsubsubCategory,
-                                            'latitude':
-                                                _lastMapPosition.latitude,
-                                            'longitude':
-                                                _lastMapPosition.longitude,
-                                            'meetup': meetupcheckbox,
-                                            'shipping': shippingcheckbox,
-                                            'description':
-                                                businessdescriptionController
-                                                    .text,
-                                            'city': city.trim(),
-                                            'condition': _selectedCondition,
-                                            'userid': userid,
-                                            'brand': bran,
-                                            'size': businessizecontroller
-                                                        .text ==
-                                                    null
-                                                ? ''
-                                                : businessizecontroller.text,
-                                            'country': country.trim(),
-                                            'username': firstname,
-                                            'useremail': email,
-                                            'usernumber': phonenumber,
-                                            'weight': itemweight,
-                                            'weightmetric': metric,
-                                            'date_uploaded':
-                                                DateTime.now().toString(),
-                                            'image':
-                                                await MultipartFile.fromFile(
-                                                    _image.path,
-                                                    filename: fileName),
-                                            'image2':
-                                                await MultipartFile.fromFile(
-                                                    _image2.path,
-                                                    filename: fileName2),
-                                          });
-                                        }
-                                        if (_image != null &&
-                                            _image2 != null &&
-                                            _image3 != null) {
-                                          String fileName =
-                                              _image.path.split('/').last;
-                                          String fileName2 =
-                                              _image2.path.split('/').last;
-                                          String fileName3 =
-                                              _image3.path.split('/').last;
-
-                                          formData = FormData.fromMap({
-                                            'name': businessnameController.text,
-                                            'price':
-                                                businesspricecontroller.text,
-                                            'category': _selectedCategory,
-                                            'originalprice': '',
-                                            'subcategory': _selectedsubCategory,
-                                            'subsubcategory':
-                                                _selectedsubsubCategory == null
-                                                    ? ''
-                                                    : _selectedsubsubCategory,
-                                            'latitude':
-                                                _lastMapPosition.latitude,
-                                            'longitude':
-                                                _lastMapPosition.longitude,
-                                            'description':
-                                                businessdescriptionController
-                                                    .text,
-                                            'city': city.trim(),
-                                            'condition': _selectedCondition,
-                                            'meetup': meetupcheckbox,
-                                            'shipping': shippingcheckbox,
-                                            'brand': bran,
-                                            'size': businessizecontroller
-                                                        .text ==
-                                                    null
-                                                ? ''
-                                                : businessizecontroller.text,
-                                            'userid': userid,
-                                            'country': country.trim(),
-                                            'username': firstname,
-                                            'useremail': email,
-                                            'usernumber': phonenumber,
-                                            'weight': itemweight,
-                                            'weightmetric': metric,
-                                            'date_uploaded':
-                                                DateTime.now().toString(),
-                                            'image':
-                                                await MultipartFile.fromFile(
-                                                    _image.path,
-                                                    filename: fileName),
-                                            'image2':
-                                                await MultipartFile.fromFile(
-                                                    _image2.path,
-                                                    filename: fileName2),
-                                            'image3':
-                                                await MultipartFile.fromFile(
-                                                    _image3.path,
-                                                    filename: fileName3),
-                                          });
-                                        }
-                                        if (_image != null &&
-                                            _image2 != null &&
-                                            _image3 != null &&
-                                            _image4 != null) {
-                                          String fileName =
-                                              _image.path.split('/').last;
-                                          String fileName2 =
-                                              _image2.path.split('/').last;
-                                          String fileName3 =
-                                              _image3.path.split('/').last;
-                                          String fileName4 =
-                                              _image4.path.split('/').last;
-
-                                          formData = FormData.fromMap({
-                                            'name': businessnameController.text,
-                                            'price':
-                                                businesspricecontroller.text,
-                                            'category': _selectedCategory,
-                                            'originalprice': '',
-                                            'subcategory': _selectedsubCategory,
-                                            'subsubcategory':
-                                                _selectedsubsubCategory == null
-                                                    ? ''
-                                                    : _selectedsubsubCategory,
-                                            'latitude':
-                                                _lastMapPosition.latitude,
-                                            'longitude':
-                                                _lastMapPosition.longitude,
-                                            'description':
-                                                businessdescriptionController
-                                                    .text,
-                                            'city': city.trim(),
-                                            'userid': userid,
-                                            'condition': _selectedCondition,
-                                            'meetup': meetupcheckbox,
-                                            'shipping': shippingcheckbox,
-                                            'brand': bran,
-                                            'size': businessizecontroller
-                                                        .text ==
-                                                    null
-                                                ? ''
-                                                : businessizecontroller.text,
-                                            'country': country.trim(),
-                                            'username': firstname,
-                                            'useremail': email,
-                                            'usernumber': phonenumber,
-                                            'weight': itemweight,
-                                            'weightmetric': metric,
-                                            'date_uploaded':
-                                                DateTime.now().toString(),
-                                            'image':
-                                                await MultipartFile.fromFile(
-                                                    _image.path,
-                                                    filename: fileName),
-                                            'image2':
-                                                await MultipartFile.fromFile(
-                                                    _image2.path,
-                                                    filename: fileName2),
-                                            'image3':
-                                                await MultipartFile.fromFile(
-                                                    _image3.path,
-                                                    filename: fileName3),
-                                            'image4':
-                                                await MultipartFile.fromFile(
-                                                    _image4.path,
-                                                    filename: fileName4),
-                                          });
-                                        }
-                                        if (_image != null &&
-                                            _image2 != null &&
-                                            _image3 != null &&
-                                            _image4 != null &&
-                                            _image5 != null) {
-                                          String fileName =
-                                              _image.path.split('/').last;
-                                          String fileName2 =
-                                              _image2.path.split('/').last;
-                                          String fileName3 =
-                                              _image3.path.split('/').last;
-                                          String fileName4 =
-                                              _image4.path.split('/').last;
-                                          String fileName5 =
-                                              _image5.path.split('/').last;
-
-                                          formData = FormData.fromMap({
-                                            'name': businessnameController.text,
-                                            'price':
-                                                businesspricecontroller.text,
-                                            'category': _selectedCategory,
-                                            'originalprice': '',
-                                            'subcategory': _selectedsubCategory,
-                                            'subsubcategory':
-                                                _selectedsubsubCategory == null
-                                                    ? ''
-                                                    : _selectedsubsubCategory,
-                                            'latitude':
-                                                _lastMapPosition.latitude,
-                                            'longitude':
-                                                _lastMapPosition.longitude,
-                                            'description':
-                                                businessdescriptionController
-                                                    .text,
-                                            'city': city.trim(),
-                                            'country': country.trim(),
-                                            'brand': bran,
-                                            'size': businessizecontroller
-                                                        .text ==
-                                                    null
-                                                ? ''
-                                                : businessizecontroller.text,
-                                            'condition': _selectedCondition,
-                                            'meetup': meetupcheckbox,
-                                            'shipping': shippingcheckbox,
-                                            'userid': userid,
-                                            'username': firstname,
-                                            'useremail': email,
-                                            'usernumber': phonenumber,
-                                            'weight': itemweight,
-                                            'weightmetric': metric,
-                                            'date_uploaded':
-                                                DateTime.now().toString(),
-                                            'image':
-                                                await MultipartFile.fromFile(
-                                                    _image.path,
-                                                    filename: fileName),
-                                            'image2':
-                                                await MultipartFile.fromFile(
-                                                    _image2.path,
-                                                    filename: fileName2),
-                                            'image3':
-                                                await MultipartFile.fromFile(
-                                                    _image3.path,
-                                                    filename: fileName3),
-                                            'image4':
-                                                await MultipartFile.fromFile(
-                                                    _image4.path,
-                                                    filename: fileName4),
-                                            'image5':
-                                                await MultipartFile.fromFile(
-                                                    _image5.path,
-                                                    filename: fileName5),
-                                          });
-                                        }
-                                        if (_image != null &&
-                                            _image2 != null &&
-                                            _image3 != null &&
-                                            _image4 != null &&
-                                            _image5 != null &&
-                                            _image6 != null) {
-                                          String fileName =
-                                              _image.path.split('/').last;
-                                          String fileName2 =
-                                              _image2.path.split('/').last;
-                                          String fileName3 =
-                                              _image3.path.split('/').last;
-                                          String fileName4 =
-                                              _image4.path.split('/').last;
-                                          String fileName5 =
-                                              _image5.path.split('/').last;
-                                          String fileName6 =
-                                              _image6.path.split('/').last;
-                                          formData = FormData.fromMap({
-                                            'name': businessnameController.text,
-                                            'price':
-                                                businesspricecontroller.text,
-                                            'category': _selectedCategory,
-                                            'originalprice': '',
-                                            'subcategory': _selectedsubCategory,
-                                            'subsubcategory':
-                                                _selectedsubsubCategory == null
-                                                    ? ''
-                                                    : _selectedsubsubCategory,
-                                            'latitude':
-                                                _lastMapPosition.latitude,
-                                            'longitude':
-                                                _lastMapPosition.longitude,
-                                            'description':
-                                                businessdescriptionController
-                                                    .text,
-                                            'city': city.trim(),
-                                            'userid': userid,
-                                            'country': country.trim(),
-                                            'username': firstname,
-                                            'meetup': meetupcheckbox,
-                                            'shipping': shippingcheckbox,
-                                            'brand': bran,
-                                            'size': businessizecontroller
-                                                        .text ==
-                                                    null
-                                                ? ''
-                                                : businessizecontroller.text,
-                                            'condition': _selectedCondition,
-                                            'useremail': email,
-                                            'usernumber': phonenumber,
-                                            'weight': itemweight,
-                                            'weightmetric': metric,
-                                            'date_uploaded':
-                                                DateTime.now().toString(),
-                                            'image':
-                                                await MultipartFile.fromFile(
-                                                    _image.path,
-                                                    filename: fileName),
-                                            'image2':
-                                                await MultipartFile.fromFile(
-                                                    _image2.path,
-                                                    filename: fileName2),
-                                            'image3':
-                                                await MultipartFile.fromFile(
-                                                    _image3.path,
-                                                    filename: fileName3),
-                                            'image4':
-                                                await MultipartFile.fromFile(
-                                                    _image4.path,
-                                                    filename: fileName4),
-                                            'image5':
-                                                await MultipartFile.fromFile(
-                                                    _image5.path,
-                                                    filename: fileName5),
-                                            'image6':
-                                                await MultipartFile.fromFile(
-                                                    _image6.path,
-                                                    filename: fileName6),
-                                          });
-                                        }
-
-                                        var response =
-                                            await dio.post(url, data: formData);
-
-                                        if (response.statusCode == 200) {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) => AssetGiffyDialog(
-                                                    image: Image.asset(
-                                                      'assets/yay.gif',
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                    title: Text(
-                                                      'Hooray!',
-                                                      style: TextStyle(
-                                                          fontSize: 22.0,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                    description: Text(
-                                                      'Your Item\'s Uploaded',
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(),
-                                                    ),
-                                                    onlyOkButton: true,
-                                                    entryAnimation:
-                                                        EntryAnimation.DEFAULT,
-                                                    onOkButtonPressed: () {
-                                                      Navigator.of(context,
-                                                              rootNavigator:
-                                                                  true)
-                                                          .pop('dialog');
-                                                      Navigator.of(context,
-                                                              rootNavigator:
-                                                                  true)
-                                                          .pop('dialog');
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                RootScreen()),
-                                                      );
-                                                    },
-                                                  ));
-                                        } else {
+                                            'Please choose a delivery method!');
+                                      } else if (shippingcheckbox == true) {
+                                        if (_selectedweight == -1) {
                                           showInSnackBar(
-                                              'Looks like something went wrong!');
+                                              'Please choose the weight of your item');
+                                        }
+                                      } else if (city == null ||
+                                          country == null) {
+                                        showInSnackBar(
+                                            'Please choose the location of your item on the map!');
+                                      } else {
+                                        if (businessdescriptionController
+                                            .text.isEmpty) {
+                                          businessdescriptionController.text =
+                                              '';
+                                        }
+
+                                        String bran;
+                                        if (businessbrandcontroller != null) {
+                                          String brandcontrollertext =
+                                              businessbrandcontroller.text
+                                                  .trim();
+                                          if (brandcontrollertext.isNotEmpty) {
+                                            bran = businessbrandcontroller.text;
+                                          } else if (brand != null) {
+                                            bran = brand;
+                                          }
+                                        } else if (businessbrandcontroller ==
+                                            null) {
+                                          showInSnackBar(
+                                              'Please choose a brand for your item!');
+                                        }
+
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return Dialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.0)), //this right here
+                                                child: Container(
+                                                  height: 100,
+                                                  child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              12.0),
+                                                      child: SpinKitChasingDots(
+                                                          color: Colors
+                                                              .deepOrange)),
+                                                ),
+                                              );
+                                            });
+                                        var userurl =
+                                            'https://api.sellship.co/api/user/' +
+                                                userid;
+                                        final userresponse =
+                                            await http.get(userurl);
+                                        if (userresponse.statusCode == 200) {
+                                          var userrespons =
+                                              json.decode(userresponse.body);
+                                          var profilemap = userrespons;
+                                          print(profilemap);
+                                          if (mounted) {
+                                            setState(() {
+                                              firstname =
+                                                  profilemap['first_name'];
+                                              phonenumber =
+                                                  profilemap['phonenumber'];
+                                              email = profilemap['email'];
+                                            });
+                                          }
+                                        }
+
+                                        if (meetupcheckbox == false &&
+                                            shippingcheckbox == false) {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop('dialog');
+                                          showInSnackBar(
+                                              'Please choose a checkbox for delivery method!');
+                                        } else if (city == null) {
+                                          Navigator.of(context,
+                                                  rootNavigator: true)
+                                              .pop('dialog');
+                                          showInSnackBar(
+                                              'Please choose the location of your item!');
+                                        } else {
+                                          var url =
+                                              'https://api.sellship.co/api/additem';
+
+                                          Dio dio = new Dio();
+                                          FormData formData;
+                                          if (_image != null) {
+                                            String fileName =
+                                                _image.path.split('/').last;
+                                            formData = FormData.fromMap({
+                                              'name':
+                                                  businessnameController.text,
+                                              'price':
+                                                  businesspricecontroller.text,
+                                              'originalprice': '',
+                                              'category': _selectedCategory,
+                                              'subcategory':
+                                                  _selectedsubCategory,
+                                              'subsubcategory':
+                                                  _selectedsubsubCategory ==
+                                                          null
+                                                      ? ''
+                                                      : _selectedsubsubCategory,
+                                              'latitude':
+                                                  _lastMapPosition.latitude,
+                                              'longitude':
+                                                  _lastMapPosition.longitude,
+                                              'description':
+                                                  businessdescriptionController
+                                                      .text,
+                                              'meetup': meetupcheckbox,
+                                              'shipping': shippingcheckbox,
+                                              'city': city.trim(),
+                                              'country': country.trim(),
+                                              'condition': _selectedCondition,
+                                              'brand': bran,
+                                              'size': businessizecontroller
+                                                          .text ==
+                                                      null
+                                                  ? ''
+                                                  : businessizecontroller.text,
+                                              'userid': userid,
+                                              'username': firstname,
+                                              'useremail': email,
+                                              'usernumber': phonenumber,
+                                              'weight': itemweight,
+                                              'weightmetric': metric,
+                                              'date_uploaded':
+                                                  DateTime.now().toString(),
+                                              'image':
+                                                  await MultipartFile.fromFile(
+                                                      _image.path,
+                                                      filename: fileName)
+                                            });
+                                          }
+                                          if (_image != null &&
+                                              _image2 != null) {
+                                            String fileName =
+                                                _image.path.split('/').last;
+                                            String fileName2 =
+                                                _image2.path.split('/').last;
+                                            formData = FormData.fromMap({
+                                              'name':
+                                                  businessnameController.text,
+                                              'price':
+                                                  businesspricecontroller.text,
+                                              'originalprice': '',
+                                              'category': _selectedCategory,
+                                              'subcategory':
+                                                  _selectedsubCategory,
+                                              'subsubcategory':
+                                                  _selectedsubsubCategory ==
+                                                          null
+                                                      ? ''
+                                                      : _selectedsubsubCategory,
+                                              'latitude':
+                                                  _lastMapPosition.latitude,
+                                              'longitude':
+                                                  _lastMapPosition.longitude,
+                                              'meetup': meetupcheckbox,
+                                              'shipping': shippingcheckbox,
+                                              'description':
+                                                  businessdescriptionController
+                                                      .text,
+                                              'city': city.trim(),
+                                              'condition': _selectedCondition,
+                                              'userid': userid,
+                                              'brand': bran,
+                                              'size': businessizecontroller
+                                                          .text ==
+                                                      null
+                                                  ? ''
+                                                  : businessizecontroller.text,
+                                              'country': country.trim(),
+                                              'username': firstname,
+                                              'useremail': email,
+                                              'usernumber': phonenumber,
+                                              'weight': itemweight,
+                                              'weightmetric': metric,
+                                              'date_uploaded':
+                                                  DateTime.now().toString(),
+                                              'image':
+                                                  await MultipartFile.fromFile(
+                                                      _image.path,
+                                                      filename: fileName),
+                                              'image2':
+                                                  await MultipartFile.fromFile(
+                                                      _image2.path,
+                                                      filename: fileName2),
+                                            });
+                                          }
+                                          if (_image != null &&
+                                              _image2 != null &&
+                                              _image3 != null) {
+                                            String fileName =
+                                                _image.path.split('/').last;
+                                            String fileName2 =
+                                                _image2.path.split('/').last;
+                                            String fileName3 =
+                                                _image3.path.split('/').last;
+
+                                            formData = FormData.fromMap({
+                                              'name':
+                                                  businessnameController.text,
+                                              'price':
+                                                  businesspricecontroller.text,
+                                              'category': _selectedCategory,
+                                              'originalprice': '',
+                                              'subcategory':
+                                                  _selectedsubCategory,
+                                              'subsubcategory':
+                                                  _selectedsubsubCategory ==
+                                                          null
+                                                      ? ''
+                                                      : _selectedsubsubCategory,
+                                              'latitude':
+                                                  _lastMapPosition.latitude,
+                                              'longitude':
+                                                  _lastMapPosition.longitude,
+                                              'description':
+                                                  businessdescriptionController
+                                                      .text,
+                                              'city': city.trim(),
+                                              'condition': _selectedCondition,
+                                              'meetup': meetupcheckbox,
+                                              'shipping': shippingcheckbox,
+                                              'brand': bran,
+                                              'size': businessizecontroller
+                                                          .text ==
+                                                      null
+                                                  ? ''
+                                                  : businessizecontroller.text,
+                                              'userid': userid,
+                                              'country': country.trim(),
+                                              'username': firstname,
+                                              'useremail': email,
+                                              'usernumber': phonenumber,
+                                              'weight': itemweight,
+                                              'weightmetric': metric,
+                                              'date_uploaded':
+                                                  DateTime.now().toString(),
+                                              'image':
+                                                  await MultipartFile.fromFile(
+                                                      _image.path,
+                                                      filename: fileName),
+                                              'image2':
+                                                  await MultipartFile.fromFile(
+                                                      _image2.path,
+                                                      filename: fileName2),
+                                              'image3':
+                                                  await MultipartFile.fromFile(
+                                                      _image3.path,
+                                                      filename: fileName3),
+                                            });
+                                          }
+                                          if (_image != null &&
+                                              _image2 != null &&
+                                              _image3 != null &&
+                                              _image4 != null) {
+                                            String fileName =
+                                                _image.path.split('/').last;
+                                            String fileName2 =
+                                                _image2.path.split('/').last;
+                                            String fileName3 =
+                                                _image3.path.split('/').last;
+                                            String fileName4 =
+                                                _image4.path.split('/').last;
+
+                                            formData = FormData.fromMap({
+                                              'name':
+                                                  businessnameController.text,
+                                              'price':
+                                                  businesspricecontroller.text,
+                                              'category': _selectedCategory,
+                                              'originalprice': '',
+                                              'subcategory':
+                                                  _selectedsubCategory,
+                                              'subsubcategory':
+                                                  _selectedsubsubCategory ==
+                                                          null
+                                                      ? ''
+                                                      : _selectedsubsubCategory,
+                                              'latitude':
+                                                  _lastMapPosition.latitude,
+                                              'longitude':
+                                                  _lastMapPosition.longitude,
+                                              'description':
+                                                  businessdescriptionController
+                                                      .text,
+                                              'city': city.trim(),
+                                              'userid': userid,
+                                              'condition': _selectedCondition,
+                                              'meetup': meetupcheckbox,
+                                              'shipping': shippingcheckbox,
+                                              'brand': bran,
+                                              'size': businessizecontroller
+                                                          .text ==
+                                                      null
+                                                  ? ''
+                                                  : businessizecontroller.text,
+                                              'country': country.trim(),
+                                              'username': firstname,
+                                              'useremail': email,
+                                              'usernumber': phonenumber,
+                                              'weight': itemweight,
+                                              'weightmetric': metric,
+                                              'date_uploaded':
+                                                  DateTime.now().toString(),
+                                              'image':
+                                                  await MultipartFile.fromFile(
+                                                      _image.path,
+                                                      filename: fileName),
+                                              'image2':
+                                                  await MultipartFile.fromFile(
+                                                      _image2.path,
+                                                      filename: fileName2),
+                                              'image3':
+                                                  await MultipartFile.fromFile(
+                                                      _image3.path,
+                                                      filename: fileName3),
+                                              'image4':
+                                                  await MultipartFile.fromFile(
+                                                      _image4.path,
+                                                      filename: fileName4),
+                                            });
+                                          }
+                                          if (_image != null &&
+                                              _image2 != null &&
+                                              _image3 != null &&
+                                              _image4 != null &&
+                                              _image5 != null) {
+                                            String fileName =
+                                                _image.path.split('/').last;
+                                            String fileName2 =
+                                                _image2.path.split('/').last;
+                                            String fileName3 =
+                                                _image3.path.split('/').last;
+                                            String fileName4 =
+                                                _image4.path.split('/').last;
+                                            String fileName5 =
+                                                _image5.path.split('/').last;
+
+                                            formData = FormData.fromMap({
+                                              'name':
+                                                  businessnameController.text,
+                                              'price':
+                                                  businesspricecontroller.text,
+                                              'category': _selectedCategory,
+                                              'originalprice': '',
+                                              'subcategory':
+                                                  _selectedsubCategory,
+                                              'subsubcategory':
+                                                  _selectedsubsubCategory ==
+                                                          null
+                                                      ? ''
+                                                      : _selectedsubsubCategory,
+                                              'latitude':
+                                                  _lastMapPosition.latitude,
+                                              'longitude':
+                                                  _lastMapPosition.longitude,
+                                              'description':
+                                                  businessdescriptionController
+                                                      .text,
+                                              'city': city.trim(),
+                                              'country': country.trim(),
+                                              'brand': bran,
+                                              'size': businessizecontroller
+                                                          .text ==
+                                                      null
+                                                  ? ''
+                                                  : businessizecontroller.text,
+                                              'condition': _selectedCondition,
+                                              'meetup': meetupcheckbox,
+                                              'shipping': shippingcheckbox,
+                                              'userid': userid,
+                                              'username': firstname,
+                                              'useremail': email,
+                                              'usernumber': phonenumber,
+                                              'weight': itemweight,
+                                              'weightmetric': metric,
+                                              'date_uploaded':
+                                                  DateTime.now().toString(),
+                                              'image':
+                                                  await MultipartFile.fromFile(
+                                                      _image.path,
+                                                      filename: fileName),
+                                              'image2':
+                                                  await MultipartFile.fromFile(
+                                                      _image2.path,
+                                                      filename: fileName2),
+                                              'image3':
+                                                  await MultipartFile.fromFile(
+                                                      _image3.path,
+                                                      filename: fileName3),
+                                              'image4':
+                                                  await MultipartFile.fromFile(
+                                                      _image4.path,
+                                                      filename: fileName4),
+                                              'image5':
+                                                  await MultipartFile.fromFile(
+                                                      _image5.path,
+                                                      filename: fileName5),
+                                            });
+                                          }
+                                          if (_image != null &&
+                                              _image2 != null &&
+                                              _image3 != null &&
+                                              _image4 != null &&
+                                              _image5 != null &&
+                                              _image6 != null) {
+                                            String fileName =
+                                                _image.path.split('/').last;
+                                            String fileName2 =
+                                                _image2.path.split('/').last;
+                                            String fileName3 =
+                                                _image3.path.split('/').last;
+                                            String fileName4 =
+                                                _image4.path.split('/').last;
+                                            String fileName5 =
+                                                _image5.path.split('/').last;
+                                            String fileName6 =
+                                                _image6.path.split('/').last;
+                                            formData = FormData.fromMap({
+                                              'name':
+                                                  businessnameController.text,
+                                              'price':
+                                                  businesspricecontroller.text,
+                                              'category': _selectedCategory,
+                                              'originalprice': '',
+                                              'subcategory':
+                                                  _selectedsubCategory,
+                                              'subsubcategory':
+                                                  _selectedsubsubCategory ==
+                                                          null
+                                                      ? ''
+                                                      : _selectedsubsubCategory,
+                                              'latitude':
+                                                  _lastMapPosition.latitude,
+                                              'longitude':
+                                                  _lastMapPosition.longitude,
+                                              'description':
+                                                  businessdescriptionController
+                                                      .text,
+                                              'city': city.trim(),
+                                              'userid': userid,
+                                              'country': country.trim(),
+                                              'username': firstname,
+                                              'meetup': meetupcheckbox,
+                                              'shipping': shippingcheckbox,
+                                              'brand': bran,
+                                              'size': businessizecontroller
+                                                          .text ==
+                                                      null
+                                                  ? ''
+                                                  : businessizecontroller.text,
+                                              'condition': _selectedCondition,
+                                              'useremail': email,
+                                              'usernumber': phonenumber,
+                                              'weight': itemweight,
+                                              'weightmetric': metric,
+                                              'date_uploaded':
+                                                  DateTime.now().toString(),
+                                              'image':
+                                                  await MultipartFile.fromFile(
+                                                      _image.path,
+                                                      filename: fileName),
+                                              'image2':
+                                                  await MultipartFile.fromFile(
+                                                      _image2.path,
+                                                      filename: fileName2),
+                                              'image3':
+                                                  await MultipartFile.fromFile(
+                                                      _image3.path,
+                                                      filename: fileName3),
+                                              'image4':
+                                                  await MultipartFile.fromFile(
+                                                      _image4.path,
+                                                      filename: fileName4),
+                                              'image5':
+                                                  await MultipartFile.fromFile(
+                                                      _image5.path,
+                                                      filename: fileName5),
+                                              'image6':
+                                                  await MultipartFile.fromFile(
+                                                      _image6.path,
+                                                      filename: fileName6),
+                                            });
+                                          }
+
+                                          var response = await dio.post(url,
+                                              data: formData);
+
+                                          if (response.statusCode == 200) {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    AssetGiffyDialog(
+                                                      image: Image.asset(
+                                                        'assets/yay.gif',
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      title: Text(
+                                                        'Hooray!',
+                                                        style: TextStyle(
+                                                            fontSize: 22.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      description: Text(
+                                                        'Your Item\'s Uploaded',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(),
+                                                      ),
+                                                      onlyOkButton: true,
+                                                      entryAnimation:
+                                                          EntryAnimation
+                                                              .DEFAULT,
+                                                      onOkButtonPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop('dialog');
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop('dialog');
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RootScreen()),
+                                                        );
+                                                      },
+                                                    ));
+                                          } else {
+                                            showInSnackBar(
+                                                'Looks like something went wrong!');
+                                          }
                                         }
                                       }
-                                    }
-                                  },
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width - 20,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                            colors: [
-                                              Colors.deepOrangeAccent,
-                                              Colors.deepOrange
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight),
-                                        borderRadius: BorderRadius.circular(15),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Color(0xFF9DA3B4)
-                                                  .withOpacity(0.1),
-                                              blurRadius: 65.0,
-                                              offset: Offset(0.0, 15.0))
-                                        ]),
-                                    child: Center(
-                                      child: Text(
-                                        "Upload Item",
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width -
+                                          20,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                              colors: [
+                                                Colors.deepOrangeAccent,
+                                                Colors.deepOrange
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Color(0xFF9DA3B4)
+                                                    .withOpacity(0.1),
+                                                blurRadius: 65.0,
+                                                offset: Offset(0.0, 15.0))
+                                          ]),
+                                      child: Center(
+                                        child: Text(
+                                          "Upload Item",
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                   ),
+                                  padding: EdgeInsets.only(left: 10, right: 10),
                                 )
                               : Text(''),
-                        )
+                        ),
+                        SliverToBoxAdapter(
+                            child: SizedBox(
+                          height: 80,
+                        ))
                       ],
                     )
                   : Scaffold(

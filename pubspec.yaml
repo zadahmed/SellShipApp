@@ -75,7 +75,7 @@ dependencies:
   flag: 3.0.1
   stripe_sdk: 3.0.1+1
   package_info: 0.4.3
-  adobe_xd: 1.0.0+1
+  persistent_bottom_nav_bar: 2.0.5
 
 
 
