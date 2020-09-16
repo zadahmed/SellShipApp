@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:SellShip/screens/messages.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:SellShip/screens/additem.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'package:location/location.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/home.dart';
-import 'package:SellShip/screens/login.dart';
+import 'package:SellShip/screens/profile.dart';
 
 class RootScreen extends StatefulWidget {
   int index;
@@ -27,7 +28,6 @@ class _RootScreenState extends State<RootScreen> {
   int _currentPage = 0;
   final List<Widget> _pages = [
     HomeScreen(),
-    AddItem(),
     LoginPage(),
   ];
 
@@ -96,18 +96,6 @@ class _RootScreenState extends State<RootScreen> {
                           color: Colors.black))),
               BottomNavigationBarItem(
                   icon: Icon(
-                    FontAwesome.plus_square,
-                    color: Colors.deepOrange,
-                    size: 30,
-                  ),
-                  title: Text('',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 5,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black))),
-              BottomNavigationBarItem(
-                  icon: Icon(
                     Feather.user,
                     size: 26,
                   ),
@@ -120,6 +108,19 @@ class _RootScreenState extends State<RootScreen> {
             ],
           ),
           body: _pages[_currentPage],
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.deepOrange,
+              child: Icon(Icons.add),
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext bc) {
+                      return AddItem();
+                    },
+                    isScrollControlled: true);
+              }),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
         ));
   }
 }

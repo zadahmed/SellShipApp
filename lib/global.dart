@@ -74,7 +74,7 @@ List<Categories> categories = [
     ],
   ),
   Categories(
-    title: 'Fashion & Accessories',
+    title: 'Women',
     id: 1,
     icon: Feather.shopping_bag,
     image: 'assets/categories/beach-shirt.png',
@@ -87,8 +87,34 @@ List<Categories> categories = [
     ],
   ),
   Categories(
-    title: 'Beauty',
+    title: 'Men',
     id: 2,
+    icon: Feather.shopping_bag,
+    image: 'assets/categories/beach-shirt.png',
+    subCat: [
+      SubCategories(id: 0, title: "Women", image: 'assets/fashion/women.jpeg'),
+      SubCategories(id: 1, title: "Men", image: 'assets/fashion/men.jpg'),
+      SubCategories(id: 2, title: "Girls", image: 'assets/fashion/girl.jpeg'),
+      SubCategories(id: 3, title: "Boys", image: 'assets/fashion/boys.jpg'),
+      SubCategories(id: 4, title: "Unisex", image: 'assets/fashion/unisex.jpg'),
+    ],
+  ),
+  Categories(
+    title: 'Toys',
+    id: 3,
+    icon: Feather.shopping_bag,
+    image: 'assets/categories/beach-shirt.png',
+    subCat: [
+      SubCategories(id: 0, title: "Women", image: 'assets/fashion/women.jpeg'),
+      SubCategories(id: 1, title: "Men", image: 'assets/fashion/men.jpg'),
+      SubCategories(id: 2, title: "Girls", image: 'assets/fashion/girl.jpeg'),
+      SubCategories(id: 3, title: "Boys", image: 'assets/fashion/boys.jpg'),
+      SubCategories(id: 4, title: "Unisex", image: 'assets/fashion/unisex.jpg'),
+    ],
+  ),
+  Categories(
+    title: 'Beauty',
+    id: 4,
     icon: Feather.eye,
     image: 'assets/categories/804.png',
     subCat: [
@@ -120,8 +146,8 @@ List<Categories> categories = [
     ],
   ),
   Categories(
-    title: 'Home & Garden',
-    id: 3,
+    title: 'Home',
+    id: 5,
     icon: Feather.home,
     image: 'assets/categories/cabinet.png',
     subCat: [
@@ -148,8 +174,8 @@ List<Categories> categories = [
     ],
   ),
   Categories(
-    title: 'Baby & Child',
-    id: 4,
+    title: 'Kids',
+    id: 6,
     image: 'assets/categories/baby-sock.png',
     icon: FontAwesomeIcons.babyCarriage,
     subCat: [
@@ -171,8 +197,8 @@ List<Categories> categories = [
     ],
   ),
   Categories(
-    title: 'Sport & Leisure',
-    id: 5,
+    title: 'Sports',
+    id: 7,
     image: 'assets/categories/basketball.png',
     icon: FontAwesomeIcons.footballBall,
     subCat: [
@@ -198,7 +224,7 @@ List<Categories> categories = [
   ),
   Categories(
     title: 'Books',
-    id: 6,
+    id: 8,
     image: 'assets/categories/books.png',
     icon: Feather.book_open,
     subCat: [
@@ -244,7 +270,7 @@ List<Categories> categories = [
   ),
   Categories(
     title: 'Motors',
-    id: 7,
+    id: 9,
     icon: FontAwesomeIcons.car,
     image: 'assets/categories/car.png',
     subCat: [
@@ -266,7 +292,7 @@ List<Categories> categories = [
   ),
   Categories(
     title: 'Property',
-    id: 8,
+    id: 10,
     icon: FontAwesomeIcons.building,
     image: 'assets/categories/house.png',
     subCat: [
@@ -287,8 +313,44 @@ List<Categories> categories = [
     ],
   ),
   Categories(
+    title: 'Vintage',
+    id: 11,
+    icon: Icons.lightbulb_outline,
+    image: 'assets/categories/tv.png',
+    subCat: [
+      SubCategories(id: 0, title: "Other", image: 'assets/property/other.jpeg'),
+    ],
+  ),
+  Categories(
+    title: 'Luxury',
+    id: 12,
+    icon: Icons.lightbulb_outline,
+    image: 'assets/categories/tv.png',
+    subCat: [
+      SubCategories(id: 0, title: "Other", image: 'assets/property/other.jpeg'),
+    ],
+  ),
+  Categories(
+    title: 'Garden',
+    id: 13,
+    icon: Icons.lightbulb_outline,
+    image: 'assets/categories/tv.png',
+    subCat: [
+      SubCategories(id: 0, title: "Other", image: 'assets/property/other.jpeg'),
+    ],
+  ),
+  Categories(
+    title: 'Handmade',
+    id: 14,
+    icon: Icons.lightbulb_outline,
+    image: 'assets/categories/tv.png',
+    subCat: [
+      SubCategories(id: 0, title: "Other", image: 'assets/property/other.jpeg'),
+    ],
+  ),
+  Categories(
     title: 'Other',
-    id: 10,
+    id: 15,
     icon: Icons.lightbulb_outline,
     image: 'assets/categories/tv.png',
     subCat: [

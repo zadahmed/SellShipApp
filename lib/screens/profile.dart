@@ -512,16 +512,21 @@ class _LoginPageState extends State<LoginPage>
                                 SizedBox(
                                   height: 5,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.all(5),
-                                  child: Text(
-                                    firstname + ' ' + lastname,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
+                                firstname != null
+                                    ? Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          firstname + ' ' + lastname,
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )
+                                    : Container(
+                                        child: SpinKitChasingDots(
+                                            color: Colors.deepOrangeAccent),
+                                      ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,

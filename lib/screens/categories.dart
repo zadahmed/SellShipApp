@@ -5,6 +5,7 @@ import 'package:SellShip/screens/womenfashion.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/screens/categorydetail.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class CategoryScreen extends StatefulWidget {
   final int selectedcategory;
@@ -29,27 +30,26 @@ class _CategoryScreenState extends State<CategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.deepOrange,
+          backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            'CATEGORIES',
+            'Categories',
             style: TextStyle(
                 fontFamily: 'Helvetica',
                 fontSize: 16,
-                color: Colors.white,
+                color: Color.fromRGBO(28, 45, 65, 1),
                 fontWeight: FontWeight.w800),
           ),
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(
+            color: Color.fromRGBO(28, 45, 65, 1),
+          ),
         ),
         body: Padding(
-            padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 10.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-                    Widget>[
-              SizedBox(
-                height: 5,
-              ),
-              Expanded(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                Widget>[
+              Container(
+                width: MediaQuery.of(context).size.width * 0.2,
                 child: ListView.builder(
                   key: Key('builder ${_selectedCat.toString()}'),
                   scrollDirection: Axis.vertical,
@@ -57,143 +57,142 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   itemBuilder: (ctx, i) {
                     return Container(
                         width: MediaQuery.of(context).size.width,
-                        child: ExpansionTile(
-                          key: Key(i.toString()),
-                          initiallyExpanded: i == _selectedCat ? true : false,
-                          leading: Icon(
-                            categories[i].icon,
-                            color: Colors.deepOrange,
-                          ),
-                          title: Text(
-                            categories[i].title,
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400),
-                          ),
-                          onExpansionChanged: (changed) {
-                            if (changed == true) {
-                              setState(() {
-                                _selectedCat = i;
-                              });
-                            } else {
-                              setState(() {
-                                _selectedCat = -1;
-                              });
-                            }
-                          },
-                          children: <Widget>[
-                            Container(
-                              height: 300,
-                              child: GridView.builder(
-                                itemCount: categories[i].subCat.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1.1,
+                        child: InkWell(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: 5, left: 5, right: 5),
+                                child: Container(
+                                  height: 50,
+                                  width: 100,
+                                  child: Image.asset(
+                                    categories[i].image,
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
-                                itemBuilder: (ctx, i) {
-                                  return InkWell(
-                                      onTap: () {
-                                        if (categories[_selectedCat]
-                                                .subCat[i]
-                                                .title ==
-                                            'Women') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    WomenFashion()),
-                                          );
-                                        } else if (categories[_selectedCat]
-                                                .subCat[i]
-                                                .title ==
-                                            'Men') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MensFashion()),
-                                          );
-                                        } else if (categories[_selectedCat]
-                                                .subCat[i]
-                                                .title ==
-                                            'Boys') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BoysFashion()),
-                                          );
-                                        } else if (categories[_selectedCat]
-                                                .subCat[i]
-                                                .title ==
-                                            'Girls') {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    GirlsFashion()),
-                                          );
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CategoryDetail(
-                                                        category: categories[
-                                                                _selectedCat]
-                                                            .title,
-                                                        subcategory: categories[
-                                                                _selectedCat]
-                                                            .subCat[i]
-                                                            .title)),
-                                          );
-                                        }
-                                      },
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Container(
-                                            height: 120,
-                                            width: 150,
-                                            color: Colors.white,
-                                            child: Column(
-                                              children: <Widget>[
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  child: Container(
-                                                    height: 90,
-                                                    width: 150,
-                                                    child: Image.asset(
-                                                      categories[_selectedCat]
-                                                          .subCat[i]
-                                                          .image,
-                                                      fit: BoxFit.fitHeight,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  child: Text(
-                                                    "${categories[_selectedCat].subCat[i].title}",
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )));
-                                },
                               ),
-                            )
-                          ],
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  categories[i].title,
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 14,
+                                      color: Color.fromRGBO(28, 45, 65, 1),
+                                      fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Divider()
+                            ],
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _selectedCat = i;
+                            });
+                          },
                         ));
+                  },
+                ),
+              ),
+              Container(
+                color: Color.fromRGBO(229, 233, 242, 1),
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: StaggeredGridView.builder(
+                  itemCount: categories[_selectedCat].subCat.length,
+                  gridDelegate:
+                      SliverStaggeredGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    staggeredTileCount: categories[_selectedCat].subCat.length,
+                    staggeredTileBuilder: (index) => new StaggeredTile.fit(1),
+                  ),
+                  itemBuilder: (ctx, i) {
+                    return InkWell(
+                        onTap: () {
+                          if (categories[_selectedCat].subCat[i].title ==
+                              'Women') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WomenFashion()),
+                            );
+                          } else if (categories[_selectedCat].subCat[i].title ==
+                              'Men') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MensFashion()),
+                            );
+                          } else if (categories[_selectedCat].subCat[i].title ==
+                              'Boys') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BoysFashion()),
+                            );
+                          } else if (categories[_selectedCat].subCat[i].title ==
+                              'Girls') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => GirlsFashion()),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CategoryDetail(
+                                      category: categories[_selectedCat].title,
+                                      subcategory: categories[_selectedCat]
+                                          .subCat[i]
+                                          .title)),
+                            );
+                          }
+                        },
+                        child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Container(
+                              height: 200,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: 10, left: 5, right: 5),
+                                    child: Container(
+                                      height: 90,
+                                      width: 150,
+                                      child: Image.asset(
+                                        categories[_selectedCat]
+                                            .subCat[i]
+                                            .image,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Text(
+                                      "${categories[_selectedCat].subCat[i].title}",
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Color.fromRGBO(28, 45, 65, 1),
+                                          fontWeight: FontWeight.w600),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )));
                   },
                 ),
               )
