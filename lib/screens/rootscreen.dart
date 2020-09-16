@@ -14,7 +14,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/profile.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class RootScreen extends StatefulWidget {
   int index;
@@ -26,46 +25,22 @@ class RootScreen extends StatefulWidget {
 class _RootScreenState extends State<RootScreen> {
   final storage = new FlutterSecureStorage();
 
-  List<Widget> _buildScreens() {
-    return [
-      HomeScreen(),
-      AddItem(),
-      LoginPage(),
-    ];
-  }
+  int _currentPage = 0;
+  final List<Widget> _pages = [
+    HomeScreen(),
+    LoginPage(),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _controller = PersistentTabController(initialIndex: 0);
-
+    setState(() {
+      if (widget.index != null) {
+        _currentPage = widget.index;
+      }
+    });
     this.initDynamicLinks();
   }
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: Icon(Feather.home),
-        activeColor: Colors.deepOrangeAccent,
-        inactiveColor: CupertinoColors.systemGrey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 30,
-        ),
-        activeColor: Colors.deepOrangeAccent,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Feather.user),
-        activeColor: Colors.deepOrangeAccent,
-        inactiveColor: CupertinoColors.systemGrey,
-      ),
-    ];
-  }
-
-  PersistentTabController _controller;
 
   void initDynamicLinks() async {
     final PendingDynamicLinkData data =
@@ -94,36 +69,58 @@ class _RootScreenState extends State<RootScreen> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'SellShip',
-        home: PersistentTabView(
-          controller: _controller,
-          screens: _buildScreens(),
-          items: _navBarsItems(),
-          confineInSafeArea: true,
-          backgroundColor: Colors.white,
-          handleAndroidBackButtonPress: true,
-          resizeToAvoidBottomInset:
-              true, // This needs to be true if you want to move up the screen when keyboard appears.
-          stateManagement: true,
-          hideNavigationBarWhenKeyboardShows:
-              true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument.
-          decoration: NavBarDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            colorBehindNavBar: Colors.white,
+        home: Scaffold(
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.deepOrange,
+            unselectedItemColor: Colors.grey[400],
+            selectedFontSize: 5,
+            unselectedFontSize: 5,
+            currentIndex: _currentPage,
+            onTap: (i) {
+              setState(() {
+                _currentPage = i;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Feather.home,
+                    size: 26,
+                  ),
+                  title: Text('',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 5,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black))),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Feather.user,
+                    size: 26,
+                  ),
+                  title: Text('',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 5,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black))),
+            ],
           ),
-          popAllScreensOnTapOfSelectedTab: true,
-          itemAnimationProperties: ItemAnimationProperties(
-            // Navigation Bar's items animation properties.
-            duration: Duration(milliseconds: 100),
-            curve: Curves.bounceIn,
-          ),
-          screenTransitionAnimation: ScreenTransitionAnimation(
-            // Screen transition animation on change of selected tab.
-            animateTabTransition: true,
-            curve: Curves.bounceIn,
-            duration: Duration(milliseconds: 100),
-          ),
-          navBarStyle: NavBarStyle.style15, // Choose the
-          // nav bar style with this property.
+          body: _pages[_currentPage],
+          floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.deepOrange,
+              child: Icon(Icons.add),
+              onPressed: () {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (BuildContext bc) {
+                      return AddItem();
+                    },
+                    isScrollControlled: true);
+              }),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
         ));
   }
 }

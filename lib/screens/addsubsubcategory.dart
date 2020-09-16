@@ -780,203 +780,785 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
         });
       }
     } else if (category == 'Kids') {
-      // do this next
       if (subcategory == 'Girls Dresses') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Girls 0-24 Months',
+            'Girls 1-4 Years',
+            'Girls 4+',
           ];
         });
       } else if (subcategory == 'Girls One-pieces') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Girls 0-24 Months',
+            'Girls 1-4 Years',
           ];
         });
       } else if (subcategory == 'Girls Tops & T-shirts') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Girls 0-24 Months',
+            'Girls 1-4 Years',
+            'Girls 4+',
           ];
         });
       } else if (subcategory == 'Girls Bottoms') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Girls 0-24 Months',
+            'Girls 1-4 Years',
+            'Girls 4+',
           ];
         });
       } else if (subcategory == 'Girls Shoes') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Girls 0-24 Months',
+            'Girls 1-4 Years',
+            'Girls 4+',
           ];
         });
       } else if (subcategory == 'Girls Accessories') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Girls 0-24 Months',
+            'Girls 1-4 Years',
+            'Girls 4+',
           ];
         });
       } else if (subcategory == 'Boys Tops & T-shirts') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Boys 0-24 Months',
+            'Boys 1-4 Years',
+            'Boys 4+',
           ];
         });
       } else if (subcategory == 'Boys Bottoms') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Boys 0-24 Months',
+            'Boys 1-4 Years',
+            'Boys 4+',
           ];
         });
       } else if (subcategory == 'Boys One-pieces') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Boys 0-24 Months',
+            'Boys 1-4 Years',
           ];
         });
       } else if (subcategory == 'Boys Accessories') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Boys 0-24 Months',
+            'Boys 1-4 Years',
+            'Boys 4+',
           ];
         });
       } else if (subcategory == 'Boys Shoes') {
         setState(() {
           subcategories = [
-            'Autographs',
-            'Dolls',
-            'Figurines',
-            'Glass',
-            'Model Vehicles',
+            'Boys 0-24 Months',
+            'Boys 1-4 Years',
+            'Boys 4+',
           ];
         });
       }
-    } else if (subcategory == 'Books') {
-      setState(() {
-        subcategories = [
-          'Childrens books',
-          'Fiction books',
-          'Comics',
-          'Sports',
-          'Science',
-          'Diet, Health & Fitness',
-          'Business & Finance',
-          'Biogpraphy & Autobiography',
-          'Crime & Mystery',
-          'History',
-          'Cook Books & Food',
-          'Education',
-          'Foreign Language Study',
-          'Travel',
-          'Magazine',
-        ];
-      });
-    } else if (subcategory == 'Motors') {
-      setState(() {
-        subcategories = [
-          'Used Cars',
-          'Motorcycles & Scooters',
-          'Heavy vehicles',
-          'Boats',
-          'Number plates',
-          'Auto accessories',
-          'Car Technology'
-        ];
-      });
-    } else if (subcategory == 'Property') {
-      setState(() {
-        subcategories = [
-          'For Sale \nHouses & Apartment',
-          'For Rent \nHouses & Apartment',
-          'For Rent \nShops & Offices',
-          'Guest Houses',
-        ];
-      });
-    } else if (subcategory == 'Other') {
-      setState(() {
-        subcategories = [
-          'Office Supplies',
-          'Daily & Travel Items',
-          'Musical Instruments',
-          'Pet Supplies',
-        ];
-      });
-    } else if (subcategory == 'Garden') {
-      setState(() {
-        subcategories = [
-          'Office Supplies',
-          'Daily & Travel Items',
-          'Musical Instruments',
-          'Pet Supplies',
-        ];
-      });
-    } else if (subcategory == 'Luxury') {
-      setState(() {
-        subcategories = [
-          'Bags',
-          'Clothing',
-          'Home',
-          'Accessories',
-          'Shoes',
-          'Jewelry'
-        ];
-      });
-    } else if (subcategory == 'Vintage') {
-      setState(() {
-        subcategories = [
-          'Bags & Purses',
-          'Antiques',
-          'Jewelry',
-          'Books',
-          'Electronics',
-          'Accessories',
-          'Serving Pieces',
-          'Supplies',
-          'Clothing',
-          'Houseware'
-        ];
-      });
+    } else if (category == 'Sport & Leisure') {
+      if (subcategory == 'Outdoors') {
+        setState(() {
+          subcategories = [
+            'Bike & Skate',
+            'Boating',
+            'Fishing',
+            'Hiking & Camping',
+            'Indoor/Outdoor Games',
+            'Skateboard',
+            'Snowboard',
+            'Water Sports',
+            'Golf'
+          ];
+        });
+      } else if (subcategory == 'Exercise') {
+        setState(() {
+          subcategories = [
+            'Athletic Training',
+            'Bowling',
+            'Boxing & MMA',
+            'Dance/Ballet',
+            'Fitness Accessories',
+            'Fitness Technology',
+            'Strength Training',
+            'Track & Field',
+            'Yoga & Pilates'
+          ];
+        });
+      } else if (subcategory == 'Fan Shop') {
+        setState(() {
+          subcategories = [
+            'FIFA',
+            'NBA',
+            'NCAA',
+            'NFL',
+            'NHL',
+            'MLB',
+            'Premier League',
+            'La Liga'
+          ];
+        });
+      } else if (subcategory == 'Team Sports') {
+        setState(() {
+          subcategories = [
+            'Badminton',
+            'Baseball & Softball',
+            'Basketball',
+            'Football',
+            'Soccer',
+            'Hockey',
+            'Lacrosse',
+            'Tennis & Racquets',
+            'Volleyball',
+            'Track',
+            'Swimming',
+            'Gymnastics',
+            'Wrestling',
+            'Boxing'
+          ];
+        });
+      } else if (subcategory == 'Apparel') {
+        setState(() {
+          subcategories = ['Accessories', 'Boys', 'Girls', 'Men', 'Women'];
+        });
+      } else if (subcategory == 'Footwear') {
+        setState(() {
+          subcategories = ['Cleats', 'Kids', 'Men', 'Women'];
+        });
+      }
+    } else if (category == 'Handmade') {
+      if (subcategory == 'Accessories') {
+        setState(() {
+          subcategories = [
+            'Charm',
+            'Gloves',
+            'Hair',
+            'Keychain',
+            'Lanyard',
+            'Men',
+            'Patch',
+            'Pin',
+            'Pinback Button',
+            'Scarf'
+          ];
+        });
+      } else if (subcategory == 'Paper Goods') {
+        setState(() {
+          subcategories = [
+            'Calendars',
+            'Cards',
+            'Gift Wrap',
+            'Journals',
+            'Notebooks',
+            'Papermaking',
+            'Scrapbooking',
+            'Stationery',
+            'Stickers'
+          ];
+        });
+      } else if (subcategory == 'Clothing') {
+        setState(() {
+          subcategories = [
+            'Children',
+            'Corsets',
+            'Costume',
+            'Dresses',
+            'Lingerie',
+            'Shirts',
+            'Shoes',
+            'T-Shirts',
+            'Women'
+          ];
+        });
+      } else if (subcategory == 'Bags & Purses') {
+        setState(() {
+          subcategories = [
+            'Backpacks',
+            'Clutches',
+            'Hip Bags',
+            'Laptop Bags',
+            'Messenger Bags',
+            'Pouches',
+            'Purses',
+            'Totes',
+            'Wristlets'
+          ];
+        });
+      } else if (subcategory == 'Jewelry') {
+        setState(() {
+          subcategories = [
+            'Books & Zines',
+            'Clothing',
+            'Jewelry',
+            'Music',
+          ];
+        });
+      } else if (subcategory == 'Music') {
+        setState(() {
+          subcategories = [
+            'Case',
+            'Equipment',
+            'Instruments',
+            'Posters',
+            'Tapes',
+            'Vinyl',
+          ];
+        });
+      } else if (subcategory == 'Art') {
+        setState(() {
+          subcategories = [
+            'Drawings',
+            'Fiber Art',
+            'Illustration',
+            'Mixed Media',
+            'Painting',
+            'Photography',
+            'Print',
+            'Printmaking',
+            'Sculptures'
+          ];
+        });
+      } else if (subcategory == 'Weddings') {
+        setState(() {
+          subcategories = [
+            'Accessories',
+            'Bouqets',
+            'Cake Toppers',
+            'Clothing',
+            'Decorations',
+            'Favors',
+            'Guest Books',
+            'Invitations',
+            'Jewelry'
+          ];
+        });
+      } else if (subcategory == 'Children') {
+        setState(() {
+          subcategories = [
+            'Accessories',
+            'Art',
+            'Baby',
+            'Clothing',
+            'Furniture',
+            'Houseware',
+            'Jewelry',
+            'Toddler',
+            'Toys'
+          ];
+        });
+      } else if (subcategory == 'Gifts') {
+        setState(() {
+          subcategories = [
+            'Readymade Gift Sets',
+            'Anniversary Gifts',
+            'Birthday Gifts',
+            'Celebration Gifts',
+          ];
+        });
+      }
+    } else if (category == 'Books') {
+      if (subcategory == 'Childrens Books') {
+        setState(() {
+          subcategories = [
+            'Early Learning',
+            'Childrens Fiction',
+            'Hobbies & Interests',
+            'Picture Books',
+            'Poetry & Anthologies',
+            'Baby Books',
+            'Young Adult',
+          ];
+        });
+      } else if (subcategory == 'Fiction Books') {
+        setState(() {
+          subcategories = [
+            'Anthologies and Short Stories',
+            'Calendars',
+            'Classics',
+            'Historical Fiction',
+            'Romance',
+            'Poetry, Drama & Literacy',
+          ];
+        });
+      } else if (subcategory == 'Non Fiction Books') {
+        setState(() {
+          subcategories = [
+            'Art, Fashion & Photography',
+            'Astronomy & Space',
+            'Electronics',
+            'Biography',
+            'Business, Finance & Law',
+            'Computing & Internet',
+            'Education',
+            'Entertainment',
+            'Food & Drink',
+            'Health & Lifestyle',
+            'History',
+            'Home & Garden',
+            'Hobbies',
+            'Mind, Body & Spirit',
+            'Language',
+            'Music',
+            'Philosophy',
+            'Politics',
+            'Pets',
+            'Popular Science',
+            'Science, Technology & Medicine',
+            'Spirituality',
+            'Sports',
+            'Travel'
+          ];
+        });
+      } else if (subcategory == 'Crime Books') {
+        setState(() {
+          subcategories = [
+            'Classic Crime',
+            'Historical Crime',
+            'Thrillers',
+            'True Crime',
+          ];
+        });
+      } else if (subcategory == 'Sci-fi & Fantasy Books') {
+        setState(() {
+          subcategories = [
+            'Science Fiction',
+            'Fantasy',
+            'Horror',
+            'Graphic Novels',
+          ];
+        });
+      } else if (subcategory == 'Comics') {
+        setState(() {
+          subcategories = [
+            'Superhero',
+            'Manga',
+            'Humor',
+            'Non-fiction',
+            'Science-Fiction/Fantasy',
+            'Horror',
+          ];
+        });
+      }
+    } else if (category == 'Motors') {
+      if (subcategory == 'Used Cars') {
+        setState(() {
+          subcategories = [
+            'Sedan',
+            'SUV',
+            'Hatchback',
+            'Coupe',
+            'Convertible',
+            'Minivan',
+            'Classic',
+            'Luxury',
+            'Compact',
+            'Van',
+            'Crossover',
+            'Electric',
+            'Hybrid',
+            'Pickup'
+          ];
+        });
+      } else if (subcategory == 'Motorcycles & Scooters') {
+        setState(() {
+          subcategories = [
+            'Standard',
+            'Cruiser',
+            'Sports',
+            'Touring',
+            'Sport Touring',
+            'Dual-Sport',
+            'Scooters',
+            'Off-road',
+            'Utility',
+            'Electric Scooters',
+            'Tricycles',
+          ];
+        });
+      } else if (subcategory == 'Heavy vehicles') {
+        setState(() {
+          subcategories = [
+            'Tractors',
+            'Trucks',
+            'Carriers',
+            'Cranes',
+            'Construction',
+          ];
+        });
+      } else if (subcategory == 'Boats') {
+        setState(() {
+          subcategories = [
+            'Boats',
+            'Motorboats',
+            'Canoes',
+            'Sailboats',
+            'Rafts',
+            'Rowboats',
+            'Yacht',
+            'JetSki'
+          ];
+        });
+      } else if (subcategory == 'Other') {
+        setState(() {
+          subcategories = [
+            'Car accessories',
+            'Number plates',
+            'Car tools',
+            'Parts',
+          ];
+        });
+      }
+    } else if (category == 'Property') {
+      if (subcategory == 'Sale') {
+        setState(() {
+          subcategories = [
+            'Villas',
+            'Apartments',
+            'Townhouses',
+            'Plots',
+            'Buildings',
+            'Offices'
+          ];
+        });
+      } else if (subcategory == 'Rent') {
+        setState(() {
+          subcategories = [
+            'Villas',
+            'Apartments',
+            'Townhouses',
+            'Plots',
+            'Buildings',
+            'Offices'
+          ];
+        });
+      }
+    } else if (category == 'Other') {
+      if (subcategory == 'Office Supplies') {
+        setState(() {
+          subcategories = [
+            'Basic Supplies',
+            'Calendars',
+            'Electronics',
+            'Ink & Toner',
+            'Organization',
+            'Paper',
+            'School Supplies',
+            'Shipping Supplies',
+            'Writing'
+          ];
+        });
+      } else if (subcategory == 'Daily & Travel Items') {
+        setState(() {
+          subcategories = [
+            'Baby & Child Care',
+            'Health Care',
+            'Household Supplies',
+            'Medical Supplies & Equipment',
+            'Personal Care',
+            'Sports Nutrition',
+            'Stationery & Party Supplies',
+          ];
+        });
+      } else if (subcategory == 'Musical Instruments') {
+        setState(() {
+          subcategories = [
+            'Amplifiers & Effects',
+            'Band & Orchestra',
+            'Brass Instruments',
+            'Drums & Percussion',
+            'Guitars',
+            'Instrument Accessories',
+            'Keyboards',
+            'Stringed Instruments',
+            'Wind & Woodwind Instruments'
+          ];
+        });
+      } else if (subcategory == 'Pet Supplies') {
+        setState(() {
+          subcategories = [
+            'Cage',
+            'Cats',
+            'Dogs',
+            'Fish',
+            'Pet Food',
+            'Small Animals',
+          ];
+        });
+      }
+    } else if (category == 'Garden') {
+      if (subcategory == 'Garden Plants') {
+        setState(() {
+          subcategories = [
+            'Climbers and Vines',
+            'Conifers',
+            'Ferns',
+            'Kitchen Garden',
+            'Topiary',
+            'Roses',
+            'Herbaceous and Perennial',
+            'Tropical and Exotic Plants',
+            'Bulbs',
+            'Bonsai',
+            'Fruit Trees',
+            'Patio Plants'
+          ];
+        });
+      } else if (subcategory == 'Pots and Garden Tools') {
+        setState(() {
+          subcategories = [
+            'Vessels',
+            'Pots',
+            'Home Gardening Props',
+            'Other Props',
+          ];
+        });
+      } else if (subcategory == 'Artificial Plants') {
+        setState(() {
+          subcategories = [
+            'Office Plants',
+            'House Plants',
+            'Wall Hanging Plants',
+            'Decoration Plants',
+          ];
+        });
+      } else if (subcategory == 'Other') {
+        setState(() {
+          subcategories = [
+            'Seeds',
+            'Manure',
+            'Other Gardening Accessories & Tools'
+          ];
+        });
+      }
+    } else if (category == 'Luxury') {
+      if (subcategory == 'Bags') {
+        setState(() {
+          subcategories = [
+            'Shoulder Bags',
+            'Totes',
+            'Clutches',
+            'Hobos',
+            'Satchels',
+            'Wallets',
+            'Exotic Bags',
+            'Backpacks',
+            'Breifcases',
+            'Duffel Bags',
+            'Messenger Bags',
+            'Suitcases',
+            'Totes'
+          ];
+        });
+      } else if (subcategory == 'Clothing') {
+        setState(() {
+          subcategories = [
+            'Women Dresses',
+            'Women Tops',
+            'Women Skirts',
+            'Women Coats',
+            'Women Jackets',
+            'Women Pants',
+            'Women Jeans & Denim',
+            'Women Suits',
+            'Women Sweaters',
+            'Men T-Shirts & Polos',
+            'Men Shirts',
+            'Men Jackets',
+            'Men Coats',
+            'Men Pants & Jeans'
+          ];
+        });
+      } else if (subcategory == 'Home') {
+        setState(() {
+          subcategories = [
+            'Appliances',
+            'Dining',
+            'Home Decor & Accessories',
+          ];
+        });
+      } else if (subcategory == 'Accessories') {
+        setState(() {
+          subcategories = [
+            'Women Sunglasses',
+            'Women Scarves',
+            'Women Belts',
+            'Women Earrings',
+            'Women Bracelets',
+            'Women Necklaces',
+            'Women Rings',
+            'Women Watches',
+            'Men Watches',
+            'Men Belts',
+            'Men Cufflinks',
+            'Men Pens',
+            'Men Sunglasses',
+            'Men Ties'
+          ];
+        });
+      } else if (subcategory == 'Shoes') {
+        setState(() {
+          subcategories = [
+            'Women Sneakers',
+            'Women Pumps',
+            'Women Flats',
+            'Women Boots',
+            'Women Sandals',
+            'Men Sneakers',
+            'Men Loafers',
+            'Men Oxfords',
+          ];
+        });
+      }
+    } else if (category == 'Vintage') {
+      if (subcategory == 'Bags & Purses') {
+        setState(() {
+          subcategories = [
+            'Change Purses',
+            'Clutches',
+            'Diaper Bags',
+            'Formal',
+            'Handbags',
+            'Luggage',
+            'Pouches',
+            'Purses',
+            'Totes'
+          ];
+        });
+      } else if (subcategory == 'Antiques') {
+        setState(() {
+          subcategories = [
+            '100 Years or older',
+            '50 to 75 Years',
+            '75 to 100 Years',
+            'Bags & Purses',
+            'Books',
+            'Collectibles',
+            'Electronics',
+            'Home Decor',
+            'Jewelry'
+          ];
+        });
+      } else if (subcategory == 'Jewelry') {
+        setState(() {
+          subcategories = [
+            'Bracelets',
+            'Brooches',
+            'Earrings',
+            'Necklaces',
+            'Pendants',
+            'Rings',
+            'Watches',
+          ];
+        });
+      } else if (subcategory == 'Books') {
+        setState(() {
+          subcategories = [
+            'Art',
+            'Children',
+            'Comics',
+            'Cookbooks',
+            'Crafting',
+            'Fiction',
+            'Health',
+            'Nonfiction',
+            'Poetry'
+          ];
+        });
+      } else if (subcategory == 'Electronics') {
+        setState(() {
+          subcategories = [
+            'Cameras',
+            'Clocks',
+            'Games',
+            'Radios',
+            'Telephones',
+            'Televisions',
+            'Video Games',
+          ];
+        });
+      } else if (subcategory == 'Accessories') {
+        setState(() {
+          subcategories = [
+            'Buckles',
+            'Cuff Links',
+            'Eyewear',
+            'Gloves',
+            'Hats',
+            'Keychains',
+            'Scarves',
+            'Shoes',
+            'Wallets'
+          ];
+        });
+      } else if (subcategory == 'Serving Pieces') {
+        setState(() {
+          subcategories = [
+            'Butter Dishes',
+            'Casserole',
+            'Cream & Sugar Set',
+            'Flatware',
+            'Mugs',
+            'Pitchers',
+            'Salt & Pepper Shakers',
+            'Teacups',
+            'Teapots',
+            'Tumblers'
+          ];
+        });
+      } else if (subcategory == 'Supplies') {
+        setState(() {
+          subcategories = [
+            'Bead',
+            'Button',
+            'Cabochon',
+            'Chain',
+            'Charm',
+            'Fabric',
+            'Finding',
+            'Pattern',
+            'Yarn'
+          ];
+        });
+      } else if (subcategory == 'Clothing') {
+        setState(() {
+          subcategories = [
+            'Baby',
+            'Corsets',
+            'Dresses',
+            'Jackets',
+            'Shirts',
+            'Shorts',
+            'Sweater',
+            'Swimwear',
+            'T-Shirts'
+          ];
+        });
+      } else if (subcategory == 'Houseware') {
+        setState(() {
+          subcategories = [
+            'Bowls',
+            'Ceramics',
+            'Coasters',
+            'Cups',
+            'Glasses',
+            'Lights',
+            'Magnets',
+            'Plates',
+            'Trays'
+          ];
+        });
+      }
     }
   }
 
@@ -1030,6 +1612,41 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
                           Feather.search,
                           size: 24,
                           color: Colors.deepOrange,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          onChanged: (text) {
+                            text = text.trim();
+                            text = text.toLowerCase();
+
+                            if (text.isEmpty) {
+                              loadsubcategory(subcategory);
+                            }
+                            List<String> filtered = List<String>();
+                            filtered.clear();
+                            subcategories.forEach((element) {
+                              element = element.trim();
+                              element = element.toLowerCase();
+                              if (element.contains(text)) {
+                                element = element[0].toUpperCase() +
+                                    element.substring(1, element.length);
+                                filtered.add(element);
+                              }
+                            });
+
+                            setState(() {
+                              subcategories = filtered;
+                            });
+                          },
+                          controller: searchcontroller,
+                          decoration: InputDecoration(
+                              hintText: 'Search Sub Categories',
+                              hintStyle: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                              ),
+                              border: InputBorder.none),
                         ),
                       ),
                     ],

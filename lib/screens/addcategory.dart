@@ -18,6 +18,9 @@ class _AddCategoryState extends State<AddCategory> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      actualcategories = categories;
+    });
   }
 
   List<String> brands = List<String>();
@@ -33,13 +36,15 @@ class _AddCategoryState extends State<AddCategory> {
     'Vintage',
     'Luxury',
     'Garden',
-    'Sports',
+    'Sport & Leisure',
     'Handmade',
     'Books',
     'Motors',
     'Property',
     'Other'
   ];
+
+  List<String> actualcategories = List<String>();
 
   String selectedcategory;
   TextEditingController searchcontroller = TextEditingController();
@@ -88,50 +93,54 @@ class _AddCategoryState extends State<AddCategory> {
                           color: Colors.deepOrange,
                         ),
                       ),
-//                    Expanded(
-//                      child: TextField(
-//                        onChanged: (text) {
-//                          text = text.trim();
-//                          text = text.toLowerCase();
-//
-//                          if (text.isEmpty) {
-//                            loadbrands();
-//                          } else {
-//                            List<String> filtered = List<String>();
-//                            filtered.clear();
-//                            brands.forEach((element) {
-//                              element = element.trim();
-//                              element = element.toLowerCase();
-//                              if (element.contains(text)) {
-//                                element = element[0].toUpperCase() +
-//                                    element.substring(1, element.length);
-//                                filtered.add(element);
-//                              }
-//                            });
-//
-//                            filtered.add('No Brand');
-//                            setState(() {
-//                              brands = filtered;
-//                            });
-//                          }
-//                        },
-//                        controller: searchcontroller,
-//                        decoration: InputDecoration(
-//                            hintText: 'Search Brands',
-//                            hintStyle: TextStyle(
-//                              fontFamily: 'Helvetica',
-//                              fontSize: 16,
-//                            ),
-//                            border: InputBorder.none),
-//                      ),
-//                    ),
+                      Expanded(
+                        child: TextField(
+                          onChanged: (text) {
+                            text = text.trim();
+                            text = text.toLowerCase();
+
+                            if (text.isEmpty) {
+                              setState(() {
+                                actualcategories = categories;
+                              });
+                            }
+                            List<String> filtered = List<String>();
+                            filtered.clear();
+                            actualcategories.forEach((element) {
+                              element = element.trim();
+                              element = element.toLowerCase();
+                              if (element.contains(text)) {
+                                element = element[0].toUpperCase() +
+                                    element.substring(1, element.length);
+                                filtered.add(element);
+                              } else {
+                                setState(() {
+                                  actualcategories = categories;
+                                });
+                              }
+                            });
+
+                            setState(() {
+                              actualcategories = filtered;
+                            });
+                          },
+                          controller: searchcontroller,
+                          decoration: InputDecoration(
+                              hintText: 'Search Categories',
+                              hintStyle: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                              ),
+                              border: InputBorder.none),
+                        ),
+                      ),
                     ],
                   )),
             ),
             Expanded(
                 child: AlphabetListScrollView(
               showPreview: true,
-              strList: categories,
+              strList: actualcategories,
               indexedHeight: (i) {
                 return 60;
               },
@@ -150,7 +159,7 @@ class _AddCategoryState extends State<AddCategory> {
                     child: ListTile(
                       onTap: () {
                         setState(() {
-                          selectedcategory = categories[index];
+                          selectedcategory = actualcategories[index];
                         });
                         Navigator.push(
                           context,
@@ -160,9 +169,9 @@ class _AddCategoryState extends State<AddCategory> {
                                   )),
                         );
                       },
-                      title: categories[index] != null
+                      title: actualcategories[index] != null
                           ? Text(
-                              categories[index],
+                              actualcategories[index],
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 16,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/screens/home.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -459,6 +460,7 @@ class EditItemState extends State<EditItem>
                     setState(() {
                       _status = true;
                       FocusScope.of(context).requestFocus(new FocusNode());
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => RootScreen()),

@@ -218,7 +218,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
         itemsgrid.add(item);
       }
 
-      print(itemsgrid);
+      if (itemsgrid == null) {
+        itemsgrid = [];
+      }
 
       setState(() {
         itemsgrid = itemsgrid;
@@ -1053,6 +1055,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
       category = widget.category;
       subcategory = widget.subcategory;
       loading = true;
+      notifbadge = false;
     });
 
     getnotification();
@@ -1879,7 +1882,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                           children: <Widget>[
                             Container(
                               margin: EdgeInsets.only(
-                                  top: 65.0, left: 15, right: 15, bottom: 10),
+                                  top: 75.0, left: 15, right: 15, bottom: 10),
                               child: Container(
                                   height: 45,
                                   decoration: BoxDecoration(
@@ -2950,64 +2953,95 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               ))
                         : SliverToBoxAdapter(
                             child: Container(
-                            height: MediaQuery.of(context).size.height,
-                            child: Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 16.0),
-                              child: Shimmer.fromColors(
-                                baseColor: Colors.grey[300],
-                                highlightColor: Colors.grey[100],
-                                child: ListView(
-                                  children: [0, 1, 2, 3, 4, 5, 6]
-                                      .map((_) => Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          2 -
-                                                      30,
-                                                  height: 150.0,
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 8.0),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          2 -
-                                                      30,
-                                                  height: 150.0,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ))
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                          ))
+                                height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        'Looks like you are the first one here!\nAdd an Item!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontFamily: 'Helvetica'),
+                                      ),
+                                    ),
+                                    Container(
+                                        height: 500,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Image.asset(
+                                          'assets/favourites.png',
+                                          fit: BoxFit.contain,
+                                        ))
+                                  ],
+                                )),
+                          )
+//                        : SliverToBoxAdapter(
+//                            child: Container(
+//                            height: MediaQuery.of(context).size.height,
+//                            child: Container(
+//                              width: double.infinity,
+//                              padding: const EdgeInsets.symmetric(
+//                                  horizontal: 16.0, vertical: 16.0),
+//                              child: Shimmer.fromColors(
+//                                baseColor: Colors.grey[300],
+//                                highlightColor: Colors.grey[100],
+//                                child: ListView(
+//                                  children: [0, 1, 2, 3, 4, 5, 6]
+//                                      .map((_) => Padding(
+//                                            padding: const EdgeInsets.only(
+//                                                bottom: 8.0),
+//                                            child: Row(
+//                                              crossAxisAlignment:
+//                                                  CrossAxisAlignment.start,
+//                                              children: [
+//                                                Container(
+//                                                  decoration: BoxDecoration(
+//                                                    color: Colors.white,
+//                                                    borderRadius:
+//                                                        BorderRadius.circular(
+//                                                            10),
+//                                                  ),
+//                                                  width: MediaQuery.of(context)
+//                                                              .size
+//                                                              .width /
+//                                                          2 -
+//                                                      30,
+//                                                  height: 150.0,
+//                                                ),
+//                                                Padding(
+//                                                  padding: const EdgeInsets
+//                                                          .symmetric(
+//                                                      horizontal: 8.0),
+//                                                ),
+//                                                Container(
+//                                                  width: MediaQuery.of(context)
+//                                                              .size
+//                                                              .width /
+//                                                          2 -
+//                                                      30,
+//                                                  height: 150.0,
+//                                                  decoration: BoxDecoration(
+//                                                    color: Colors.white,
+//                                                    borderRadius:
+//                                                        BorderRadius.circular(
+//                                                            10),
+//                                                  ),
+//                                                ),
+//                                              ],
+//                                            ),
+//                                          ))
+//                                      .toList(),
+//                                ),
+//                              ),
+//                            ),
+//                          ))
                   ],
                 )
               : Container(

@@ -22,10 +22,11 @@ class _AddSubCategoryState extends State<AddSubCategory> {
   @override
   void initState() {
     super.initState();
-    loadsubcategory(widget.category);
+
     setState(() {
       category = widget.category;
     });
+    loadsubcategory(widget.category);
   }
 
   String subcategory;
@@ -165,21 +166,12 @@ class _AddSubCategoryState extends State<AddSubCategory> {
     } else if (category == 'Books') {
       setState(() {
         subcategories = [
-          'Childrens books',
-          'Fiction books',
+          'Childrens Books',
+          'Fiction Books',
+          'Non Fiction Books',
+          'Crime Books',
+          'Sci-fi & Fantasy Books',
           'Comics',
-          'Sports',
-          'Science',
-          'Diet, Health & Fitness',
-          'Business & Finance',
-          'Biogpraphy & Autobiography',
-          'Crime & Mystery',
-          'History',
-          'Cook Books & Food',
-          'Education',
-          'Foreign Language Study',
-          'Travel',
-          'Magazine',
         ];
       });
     } else if (category == 'Motors') {
@@ -189,18 +181,14 @@ class _AddSubCategoryState extends State<AddSubCategory> {
           'Motorcycles & Scooters',
           'Heavy vehicles',
           'Boats',
-          'Number plates',
-          'Auto accessories',
-          'Car Technology'
+          'Other'
         ];
       });
     } else if (category == 'Property') {
       setState(() {
         subcategories = [
-          'For Sale \nHouses & Apartment',
-          'For Rent \nHouses & Apartment',
-          'For Rent \nShops & Offices',
-          'Guest Houses',
+          'Sale',
+          'Rent',
         ];
       });
     } else if (category == 'Other') {
@@ -215,10 +203,10 @@ class _AddSubCategoryState extends State<AddSubCategory> {
     } else if (category == 'Garden') {
       setState(() {
         subcategories = [
-          'Office Supplies',
-          'Daily & Travel Items',
-          'Musical Instruments',
-          'Pet Supplies',
+          'Garden Plants',
+          'Pots and Garden Tools',
+          'Artificial Plants',
+          'Other',
         ];
       });
     } else if (category == 'Luxury') {
@@ -229,7 +217,6 @@ class _AddSubCategoryState extends State<AddSubCategory> {
           'Home',
           'Accessories',
           'Shoes',
-          'Jewelry'
         ];
       });
     } else if (category == 'Vintage') {
@@ -249,6 +236,8 @@ class _AddSubCategoryState extends State<AddSubCategory> {
       });
     }
   }
+
+  List<String> actualcategories = List<String>();
 
   TextEditingController searchcontroller = TextEditingController();
 
@@ -300,6 +289,41 @@ class _AddSubCategoryState extends State<AddSubCategory> {
                           Feather.search,
                           size: 24,
                           color: Colors.deepOrange,
+                        ),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          onChanged: (text) {
+                            text = text.trim();
+                            text = text.toLowerCase();
+
+                            if (text.isEmpty) {
+                              loadsubcategory(category);
+                            }
+                            List<String> filtered = List<String>();
+                            filtered.clear();
+                            subcategories.forEach((element) {
+                              element = element.trim();
+                              element = element.toLowerCase();
+                              if (element.contains(text)) {
+                                element = element[0].toUpperCase() +
+                                    element.substring(1, element.length);
+                                filtered.add(element);
+                              }
+                            });
+
+                            setState(() {
+                              subcategories = filtered;
+                            });
+                          },
+                          controller: searchcontroller,
+                          decoration: InputDecoration(
+                              hintText: 'Search Sub Categories',
+                              hintStyle: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                              ),
+                              border: InputBorder.none),
                         ),
                       ),
                     ],
