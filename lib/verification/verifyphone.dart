@@ -1,6 +1,5 @@
 import 'package:SellShip/screens/OTPScreen.dart';
 import 'package:SellShip/screens/rootscreen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -76,7 +75,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(bottom: 0),
-                  child: InternationalPhoneNumberInput.withCustomDecoration(
+                  child: InternationalPhoneNumberInput(
                     isEnabled: true,
                     onInputChanged: (PhoneNumber number) async {
                       if (number != null) {
