@@ -1,46 +1,41 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
-import 'package:SellShip/screens/comments.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/categories.dart';
+import 'package:SellShip/screens/comments.dart';
+import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/messages.dart';
-import 'package:SellShip/screens/nearme.dart';
 import 'package:SellShip/screens/notifications.dart';
-import 'package:SellShip/screens/recentlyadded.dart';
+import 'package:SellShip/screens/search.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
-import 'package:flutter_easyrefresh/ball_pulse_header.dart';
-import 'package:flutter_easyrefresh/bezier_bounce_footer.dart';
 import 'package:flutter_easyrefresh/bezier_circle_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:SellShip/models/Items.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
-import 'package:SellShip/screens/details.dart';
-import 'package:SellShip/screens/search.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -1069,11 +1064,14 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
-          position.latitude, position.longitude);
-      Placemark place = p[0];
-      var cit = place.administrativeArea;
-      var countr = place.country;
+      Coordinates coordinates =
+          Coordinates(position.latitude, position.longitude);
+      List<Address> p =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      Address place = p[0];
+      var cit = place.adminArea;
+      var countr = place
+          .countryName; //todo check with zahid was this country code or country name?
       await storage.write(key: 'city', value: cit);
       await storage.write(key: 'locationcountry', value: countr);
       setState(() {
@@ -1102,15 +1100,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final scaffoldState = GlobalKey<ScaffoldState>();
 
-  final Geolocator geolocator = Geolocator();
-
   void getcity() async {
-    List<Placemark> p = await geolocator.placemarkFromCoordinates(
-        position.latitude, position.longitude);
+    Coordinates coordinates =
+        Coordinates(position.latitude, position.longitude);
+    List<Address> p =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
 
-    Placemark place = p[0];
-    var cit = place.administrativeArea;
-    var countryy = place.country;
+    Address place = p[0];
+    var cit = place.adminArea;
+    var countryy = place.countryName;
     await storage.write(key: 'city', value: cit);
     await storage.write(key: 'locationcountry', value: countryy);
 
