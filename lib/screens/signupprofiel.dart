@@ -196,7 +196,7 @@ class _SignUpProfilePageState extends State<SignUpProfilePage> {
                           SizedBox(
                             height: 5,
                           ),
-                          InternationalPhoneNumberInput.withCustomDecoration(
+                          InternationalPhoneNumberInput(
                             isEnabled: true,
                             onInputChanged: (PhoneNumber number) async {
                               var numberss = await PhoneNumber

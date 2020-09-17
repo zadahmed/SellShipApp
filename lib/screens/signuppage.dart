@@ -193,7 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           SizedBox(
                             height: 5,
                           ),
-                          InternationalPhoneNumberInput.withCustomDecoration(
+                          InternationalPhoneNumberInput(
                             isEnabled: true,
                             onInputChanged: (PhoneNumber number) async {
                               var numberss = await PhoneNumber

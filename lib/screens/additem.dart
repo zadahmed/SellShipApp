@@ -1,30 +1,23 @@
 import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
-import 'package:SellShip/screens/addbrans.dart';
-import 'package:SellShip/screens/addcategory.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
-import 'package:app_settings/app_settings.dart';
+
+import 'package:SellShip/screens/rootscreen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:SellShip/screens/rootscreen.dart';
+import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:random_string/random_string.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:random_string/random_string.dart';
 
 class AddItem extends StatefulWidget {
   AddItem({Key key}) : super(key: key);
@@ -85,7 +78,7 @@ class _AddItemState extends State<AddItem> {
     }
 
     _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.DENIED) {
+    if (_permissionGranted == PermissionStatus.denied) {
       setState(() {
         loading = false;
         position = LatLng(25.2048, 55.2708);
@@ -112,10 +105,10 @@ class _AddItemState extends State<AddItem> {
                 onOkButtonPressed: () async {
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  AppSettings.openLocationSettings();
+                  //AppSettings.openLocationSettings();
                 },
               ));
-    } else if (_permissionGranted == PermissionStatus.GRANTED) {
+    } else if (_permissionGranted == PermissionStatus.granted) {
       var location = await _location.getLocation();
       var positio =
           LatLng(location.latitude.toDouble(), location.longitude.toDouble());
@@ -234,7 +227,6 @@ class _AddItemState extends State<AddItem> {
     });
   }
 
-  final Geolocator geolocator = Geolocator();
   String city;
   String country;
 
@@ -253,12 +245,13 @@ class _AddItemState extends State<AddItem> {
 
         _lastMapPosition = point;
       });
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
-          _lastMapPosition.latitude, _lastMapPosition.longitude,
-          localeIdentifier: 'en');
-      Placemark place = p[0];
-      var cit = place.administrativeArea;
-      var countr = place.country;
+      Coordinates coordinates =
+          Coordinates(position.latitude, position.longitude);
+      List<Address> p =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      Address place = p[0];
+      var cit = place.adminArea;
+      var countr = place.countryName;
       setState(() {
         city = cit;
         country = countr;
@@ -277,12 +270,14 @@ class _AddItemState extends State<AddItem> {
         _lastMapPosition = point;
         print(_lastMapPosition);
       });
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
-          _lastMapPosition.latitude, _lastMapPosition.longitude,
-          localeIdentifier: 'en');
-      Placemark place = p[0];
-      var cit = place.administrativeArea;
-      var countr = place.country;
+      Coordinates coordinates =
+          Coordinates(position.latitude, position.longitude);
+      List<Address> p =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      Address place = p[0];
+      var cit = place.adminArea;
+      var countr = place
+          .countryName; //todo check with zahid if this is country code or name
       setState(() {
         city = cit;
         country = countr;
@@ -547,27 +542,27 @@ class _AddItemState extends State<AddItem> {
                                     ),
                                     child: ListTile(
                                       onTap: () async {
-                                        final catdetails = await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddCategory()),
-                                        );
-                                        print(catdetails);
-                                        setState(() {
-                                          _selectedCategory =
-                                              catdetails['category'];
-                                          _selectedsubCategory =
-                                              catdetails['subcategory'];
-                                          _selectedsubsubCategory =
-                                              catdetails['subsubcategory'];
-
-                                          categoryinfo = _selectedCategory +
-                                              ' > ' +
-                                              _selectedsubCategory +
-                                              ' > ' +
-                                              _selectedsubsubCategory;
-                                        });
+                                        // final catdetails = await Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           AddCategory()),
+                                        // );
+                                        // print(catdetails);
+                                        // setState(() {
+                                        //   _selectedCategory =
+                                        //       catdetails['category'];
+                                        //   _selectedsubCategory =
+                                        //       catdetails['subcategory'];
+                                        //   _selectedsubsubCategory =
+                                        //       catdetails['subsubcategory'];
+                                        //
+                                        //   categoryinfo = _selectedCategory +
+                                        //       ' > ' +
+                                        //       _selectedsubCategory +
+                                        //       ' > ' +
+                                        //       _selectedsubsubCategory;
+                                        // });
                                       },
                                       title: Text(
                                         'Category',
@@ -621,20 +616,21 @@ class _AddItemState extends State<AddItem> {
                                                   child: Center(
                                                       child: InkWell(
                                                     onTap: () async {
-                                                      final bran =
-                                                          await Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    Brands(
-                                                                      category:
-                                                                          _selectedCategory,
-                                                                    )),
-                                                      );
-                                                      setState(() {
-                                                        brand = bran;
-                                                      });
+                                                      // final bran =
+                                                      //     await Navigator.push(
+                                                      //   context,
+                                                      //   MaterialPageRoute(
+                                                      //       builder:
+                                                      //           (context) =>
+                                                      //               Brands(
+                                                      //                 category:
+                                                      //                     _selectedCategory,
+                                                      //               )
+                                                      //                 ),
+                                                      // );
+                                                      // setState(() {
+                                                      //   brand = bran;
+                                                      // });
                                                     },
                                                     child: brand != null
                                                         ? Flex(
@@ -1777,194 +1773,194 @@ class _AddItemState extends State<AddItem> {
                                             List<int> _image6;
 
                                             if (images.length == 1) {
-                                              ByteData byteData =
-                                                  await images[0]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image =
-                                                  byteData.buffer.asUint8List();
+                                              // ByteData byteData =
+                                              //     await images[0]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image =
+                                              //     byteData.buffer.asUint8List();
                                             } else if (images.length == 2) {
-                                              ByteData byteData =
-                                                  await images[0]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image =
-                                                  byteData.buffer.asUint8List();
-
-                                              ByteData byteData2 =
-                                                  await images[1]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image2 = byteData2.buffer
-                                                  .asUint8List();
+                                              // ByteData byteData =
+                                              //     await images[0]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image =
+                                              //     byteData.buffer.asUint8List();
+                                              //
+                                              // ByteData byteData2 =
+                                              //     await images[1]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image2 = byteData2.buffer
+                                              //     .asUint8List();
                                             } else if (images.length == 3) {
-                                              ByteData byteData =
-                                                  await images[0]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image =
-                                                  byteData.buffer.asUint8List();
-
-                                              ByteData byteData2 =
-                                                  await images[1]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image2 = byteData2.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData3 =
-                                                  await images[2]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image3 = byteData3.buffer
-                                                  .asUint8List();
+                                              // ByteData byteData =
+                                              //     await images[0]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image =
+                                              //     byteData.buffer.asUint8List();
+                                              //
+                                              // ByteData byteData2 =
+                                              //     await images[1]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image2 = byteData2.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData3 =
+                                              //     await images[2]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image3 = byteData3.buffer
+                                              //     .asUint8List();
                                             } else if (images.length == 4) {
-                                              ByteData byteData =
-                                                  await images[0]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image =
-                                                  byteData.buffer.asUint8List();
-
-                                              ByteData byteData2 =
-                                                  await images[1]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image2 = byteData2.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData3 =
-                                                  await images[2]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image3 = byteData3.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData4 =
-                                                  await images[3]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image4 = byteData4.buffer
-                                                  .asUint8List();
+                                              // ByteData byteData =
+                                              //     await images[0]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image =
+                                              //     byteData.buffer.asUint8List();
+                                              //
+                                              // ByteData byteData2 =
+                                              //     await images[1]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image2 = byteData2.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData3 =
+                                              //     await images[2]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image3 = byteData3.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData4 =
+                                              //     await images[3]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image4 = byteData4.buffer
+                                              //     .asUint8List();
                                             } else if (images.length == 5) {
-                                              ByteData byteData =
-                                                  await images[0]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image =
-                                                  byteData.buffer.asUint8List();
-
-                                              ByteData byteData2 =
-                                                  await images[1]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image2 = byteData2.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData3 =
-                                                  await images[2]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image3 = byteData3.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData4 =
-                                                  await images[3]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image4 = byteData4.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData5 =
-                                                  await images[4]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image5 = byteData5.buffer
-                                                  .asUint8List();
+                                              // ByteData byteData =
+                                              //     await images[0]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image =
+                                              //     byteData.buffer.asUint8List();
+                                              //
+                                              // ByteData byteData2 =
+                                              //     await images[1]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image2 = byteData2.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData3 =
+                                              //     await images[2]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image3 = byteData3.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData4 =
+                                              //     await images[3]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image4 = byteData4.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData5 =
+                                              //     await images[4]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image5 = byteData5.buffer
+                                              //     .asUint8List();
                                             } else if (images.length == 6) {
-                                              ByteData byteData =
-                                                  await images[0]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image =
-                                                  byteData.buffer.asUint8List();
-
-                                              ByteData byteData2 =
-                                                  await images[1]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image2 = byteData2.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData3 =
-                                                  await images[2]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image3 = byteData3.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData4 =
-                                                  await images[3]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image4 = byteData4.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData5 =
-                                                  await images[4]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image5 = byteData5.buffer
-                                                  .asUint8List();
-
-                                              ByteData byteData6 =
-                                                  await images[5]
-                                                      .getThumbByteData(
-                                                600,
-                                                600,
-                                              );
-                                              _image6 = byteData6.buffer
-                                                  .asUint8List();
+                                              // ByteData byteData =
+                                              //     await images[0]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image =
+                                              //     byteData.buffer.asUint8List();
+                                              //
+                                              // ByteData byteData2 =
+                                              //     await images[1]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image2 = byteData2.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData3 =
+                                              //     await images[2]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image3 = byteData3.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData4 =
+                                              //     await images[3]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image4 = byteData4.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData5 =
+                                              //     await images[4]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image5 = byteData5.buffer
+                                              //     .asUint8List();
+                                              //
+                                              // ByteData byteData6 =
+                                              //     await images[5]
+                                              //         .getThumbByteData(
+                                              //   600,
+                                              //   600,
+                                              // );
+                                              // _image6 = byteData6.buffer
+                                              //     .asUint8List();
                                             }
 
                                             Dio dio = new Dio();

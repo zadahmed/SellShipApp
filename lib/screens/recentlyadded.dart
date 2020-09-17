@@ -1,31 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:SellShip/global.dart';
-import 'package:SellShip/screens/categories.dart';
-import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
+
+import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/search.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:SellShip/models/Items.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
-import 'package:SellShip/screens/details.dart';
-import 'package:SellShip/screens/search.dart';
 import 'package:shimmer/shimmer.dart';
 
 class RecentlyAdded extends StatefulWidget {
@@ -710,15 +703,17 @@ class _RecentlyAddedState extends State<RecentlyAdded> {
 
   String country;
 
-  final Geolocator geolocator = Geolocator();
-
   void getcity() async {
-    List<Placemark> p = await geolocator.placemarkFromCoordinates(
-        position.latitude, position.longitude);
+    Coordinates coordinates =
+        Coordinates(position.latitude, position.longitude);
 
-    Placemark place = p[0];
-    var cit = place.administrativeArea;
-    var countryy = place.country;
+// this fetches multiple address, but you need to get the first address by doing the following two codes
+    List<Address> p =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
+    Address place = p[0];
+    var cit = place.adminArea;
+    var countryy = place.countryName;
     await storage.write(key: 'city', value: cit);
     await storage.write(key: 'locationcountry', value: countryy);
 
