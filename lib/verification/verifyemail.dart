@@ -40,10 +40,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
       appBar: AppBar(
         leading: InkWell(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => RootScreen(index: 2)),
-              );
+              Navigator.pop(context);
             },
             child: Icon(Icons.arrow_back_ios)),
         iconTheme: IconThemeData(color: Colors.deepOrange),
@@ -151,14 +148,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                         ),
                                         InkWell(
                                           onTap: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop('dialog');
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RootScreen(index: 2)),
+                                                      RootScreen(index: 1)),
                                             );
                                           },
                                           child: Container(

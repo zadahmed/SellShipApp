@@ -64,7 +64,7 @@ class _SignUpProfilePageState extends State<SignUpProfilePage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RootScreen(index: 2)),
+              MaterialPageRoute(builder: (context) => RootScreen(index: 1)),
             );
           },
           icon: Icon(

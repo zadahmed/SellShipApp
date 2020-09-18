@@ -47,7 +47,7 @@ class _SettingsState extends State<Settings> {
   var userid;
   String email;
   final storage = new FlutterSecureStorage();
-
+  String version;
   @override
   void initState() {
     readdetails();
@@ -58,6 +58,8 @@ class _SettingsState extends State<Settings> {
 
   final facebookLogin = FacebookLogin();
   bool confirmedfb;
+  bool confirmedemail;
+  bool confirmedphone;
 
   verifyFB() async {
     final result = await facebookLogin.logIn(['email']);
@@ -98,6 +100,45 @@ class _SettingsState extends State<Settings> {
   readdetails() async {
     userid = await storage.read(key: 'userid');
 
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/user/' + userid;
+
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        var respons = json.decode(response.body);
+        Map<String, dynamic> profilemap = respons;
+
+        var confirmedemai = profilemap['confirmedemail'];
+        if (confirmedemai != null) {
+        } else {
+          confirmedemai = false;
+        }
+
+        var confirmedphon = profilemap['confirmedphone'];
+        if (confirmedphon != null) {
+        } else {
+          confirmedphon = false;
+        }
+
+        var confirmedf = profilemap['confirmedfb'];
+        if (confirmedf != null) {
+        } else {
+          confirmedf = false;
+        }
+
+        if (profilemap != null) {
+          if (mounted) {
+            setState(() {
+              email = profilemap['email'];
+              confirmedfb = confirmedf;
+              confirmedemail = confirmedemai;
+              confirmedphone = confirmedphon;
+            });
+          }
+        }
+      }
+    }
+
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     String versio = packageInfo.version;
@@ -108,8 +149,6 @@ class _SettingsState extends State<Settings> {
       version = versio + buildNumber;
     });
   }
-
-  String version;
 
   @override
   Widget build(BuildContext context) {
@@ -273,18 +312,28 @@ class _SettingsState extends State<Settings> {
                         Icons.alternate_email,
                         color: Colors.deepOrange,
                       ),
-                      trailing: Icon(
-                        Feather.arrow_right,
-                        size: 16,
-                        color: Colors.deepOrange,
-                      ),
-                      title: Text(
-                        'Verify Email',
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16.0,
-                        ),
-                      ),
+                      trailing: confirmedemail == false
+                          ? Icon(
+                              Feather.arrow_right,
+                              size: 16,
+                              color: Colors.deepOrange,
+                            )
+                          : Icon(Feather.check),
+                      title: confirmedemail == false
+                          ? Text(
+                              'Verify Email',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16.0,
+                              ),
+                            )
+                          : Text(
+                              'Email Verified',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16.0,
+                              ),
+                            ),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -306,18 +355,28 @@ class _SettingsState extends State<Settings> {
                         Icons.phone,
                         color: Colors.deepOrange,
                       ),
-                      trailing: Icon(
-                        Feather.arrow_right,
-                        size: 16,
-                        color: Colors.deepOrange,
-                      ),
-                      title: Text(
-                        'Verify Phone',
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16.0,
-                        ),
-                      ),
+                      trailing: confirmedphone == false
+                          ? Icon(
+                              Feather.arrow_right,
+                              size: 16,
+                              color: Colors.deepOrange,
+                            )
+                          : Icon(Feather.check),
+                      title: confirmedphone == false
+                          ? Text(
+                              'Verify Phone',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16.0,
+                              ),
+                            )
+                          : Text(
+                              'Phone Verified',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16.0,
+                              ),
+                            ),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -338,18 +397,28 @@ class _SettingsState extends State<Settings> {
                         FontAwesome.facebook,
                         color: Colors.deepOrange,
                       ),
-                      trailing: Icon(
-                        Feather.arrow_right,
-                        size: 16,
-                        color: Colors.deepOrange,
-                      ),
-                      title: Text(
-                        'Verify Facebook',
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16.0,
-                        ),
-                      ),
+                      trailing: confirmedfb == false
+                          ? Icon(
+                              Feather.arrow_right,
+                              size: 16,
+                              color: Colors.deepOrange,
+                            )
+                          : Icon(Feather.check),
+                      title: confirmedfb == false
+                          ? Text(
+                              'Verify Facebook',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16.0,
+                              ),
+                            )
+                          : Text(
+                              'Facebook Verified',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16.0,
+                              ),
+                            ),
                       onTap: () {
                         showDialog(
                             context: context,
@@ -528,7 +597,7 @@ class _SettingsState extends State<Settings> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RootScreen(index: 2)),
+                              builder: (context) => RootScreen(index: 1)),
                         );
                       },
                     ))
@@ -536,16 +605,17 @@ class _SettingsState extends State<Settings> {
             Padding(
               padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
               child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'v' + version,
-                  style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
+                  alignment: Alignment.centerLeft,
+                  child: version != null
+                      ? Text(
+                          'v' + version,
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        )
+                      : Container()),
             )
           ],
         ));

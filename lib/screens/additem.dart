@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:SellShip/screens/addbrans.dart';
+import 'package:SellShip/screens/addcategory.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -276,8 +278,7 @@ class _AddItemState extends State<AddItem> {
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
       Address place = p[0];
       var cit = place.adminArea;
-      var countr = place
-          .countryName; //todo check with zahid if this is country code or name
+      var countr = place.countryName;
       setState(() {
         city = cit;
         country = countr;
@@ -542,27 +543,27 @@ class _AddItemState extends State<AddItem> {
                                     ),
                                     child: ListTile(
                                       onTap: () async {
-                                        // final catdetails = await Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) =>
-                                        //           AddCategory()),
-                                        // );
-                                        // print(catdetails);
-                                        // setState(() {
-                                        //   _selectedCategory =
-                                        //       catdetails['category'];
-                                        //   _selectedsubCategory =
-                                        //       catdetails['subcategory'];
-                                        //   _selectedsubsubCategory =
-                                        //       catdetails['subsubcategory'];
-                                        //
-                                        //   categoryinfo = _selectedCategory +
-                                        //       ' > ' +
-                                        //       _selectedsubCategory +
-                                        //       ' > ' +
-                                        //       _selectedsubsubCategory;
-                                        // });
+                                        final catdetails = await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddCategory()),
+                                        );
+                                        print(catdetails);
+                                        setState(() {
+                                          _selectedCategory =
+                                              catdetails['category'];
+                                          _selectedsubCategory =
+                                              catdetails['subcategory'];
+                                          _selectedsubsubCategory =
+                                              catdetails['subsubcategory'];
+
+                                          categoryinfo = _selectedCategory +
+                                              ' > ' +
+                                              _selectedsubCategory +
+                                              ' > ' +
+                                              _selectedsubsubCategory;
+                                        });
                                       },
                                       title: Text(
                                         'Category',
@@ -616,21 +617,20 @@ class _AddItemState extends State<AddItem> {
                                                   child: Center(
                                                       child: InkWell(
                                                     onTap: () async {
-                                                      // final bran =
-                                                      //     await Navigator.push(
-                                                      //   context,
-                                                      //   MaterialPageRoute(
-                                                      //       builder:
-                                                      //           (context) =>
-                                                      //               Brands(
-                                                      //                 category:
-                                                      //                     _selectedCategory,
-                                                      //               )
-                                                      //                 ),
-                                                      // );
-                                                      // setState(() {
-                                                      //   brand = bran;
-                                                      // });
+                                                      final bran =
+                                                          await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    Brands(
+                                                                      category:
+                                                                          _selectedCategory,
+                                                                    )),
+                                                      );
+                                                      setState(() {
+                                                        brand = bran;
+                                                      });
                                                     },
                                                     child: brand != null
                                                         ? Flex(
@@ -1622,6 +1622,11 @@ class _AddItemState extends State<AddItem> {
                                                         .newLatLngBounds(
                                                             geolocation.bounds,
                                                             0));
+
+                                                setState(() {
+                                                  position =
+                                                      geolocation.coordinates;
+                                                });
                                               },
                                             ),
                                           ),

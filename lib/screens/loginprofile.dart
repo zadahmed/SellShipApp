@@ -164,7 +164,7 @@ class _LoginProfileState extends State<LoginProfile> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => RootScreen(index: 2)),
+              MaterialPageRoute(builder: (context) => RootScreen(index: 1)),
             );
           },
           icon: Icon(

@@ -205,7 +205,7 @@ packages:
     source: hosted
     version: "0.3.0+1"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
@@ -486,21 +486,21 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.7+7"
+    version: "0.6.7+8"
   image_picker_platform_interface:
     dependency: transitive
     description:
       name: image_picker_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   intercom_flutter:
     dependency: "direct main"
     description:
       name: intercom_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0+1"
+    version: "2.2.1"
   intl:
     dependency: "direct main"
     description:
@@ -801,7 +801,7 @@ packages:
       name: share
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.5"
+    version: "0.6.5+1"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1072,7 +1072,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "4.5.1"
 sdks:
   dart: ">=2.9.0 <3.0.0"
   flutter: ">=1.20.0 <2.0.0"

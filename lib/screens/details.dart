@@ -69,7 +69,7 @@ class _DetailsState extends State<Details> {
   TextEditingController offercontroller = TextEditingController();
 
   String allowedoffer = '';
-
+  bool disabled = true;
   void showMe(BuildContext context) {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
@@ -141,15 +141,18 @@ class _DetailsState extends State<Details> {
                                         updateState(() {
                                           allowedoffer =
                                               'The offer is too low compared to the selling price';
+                                          disabled = true;
                                         });
                                       } else {
                                         updateState(() {
                                           allowedoffer = '';
+                                          disabled = false;
                                         });
                                       }
                                     } else {
                                       updateState(() {
                                         allowedoffer = '';
+                                        disabled = true;
                                       });
                                     }
                                   },
@@ -192,97 +195,102 @@ class _DetailsState extends State<Details> {
                               )),
                           trailing: InkWell(
                             onTap: () async {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return Container(
-                                      height: 100,
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(12.0),
-                                          child: SpinKitChasingDots(
-                                              color: Colors.deepOrangeAccent)),
-                                    );
-                                  });
-                              var recieverid = newItem.userid;
-                              if (recieverid != userid) {
-                                var itemurl =
-                                    'https://api.sellship.co/api/createoffer/' +
-                                        userid +
-                                        '/' +
-                                        recieverid +
-                                        '/' +
-                                        itemid +
-                                        '/' +
-                                        offercontroller.text.trim();
-
-                                final response = await http.get(itemurl);
-
-                                if (response.statusCode == 200) {
-                                  var messageinfo = json.decode(response.body);
-                                  var messageid = (messageinfo['messageid']);
-                                  var recieverfcmtoken =
-                                      (messageinfo['recieverfcmtoken']);
-                                  var sendername = (messageinfo['sendername']);
-                                  var recipentname =
-                                      (messageinfo['recievername']);
-                                  var offer = messageinfo['offer'];
-                                  var offerstage = messageinfo['offerstage'];
-                                  Navigator.pop(context);
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop('dialog');
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ChatPageView(
-                                        messageid: messageid,
-                                        recipentname: recipentname,
-                                        senderid: userid,
-                                        offer: offer,
-                                        offerstage: offerstage,
-                                        recipentid: recieverid,
-                                        fcmToken: recieverfcmtoken,
-                                        senderName: sendername,
-                                        itemid: itemid,
-                                      ),
-                                    ),
-                                  );
-                                } else {}
-                              } else {
+                              if (disabled == false) {
                                 showDialog(
                                     context: context,
-                                    builder: (_) => AssetGiffyDialog(
-                                          image: Image.asset(
-                                            'assets/oops.gif',
-                                            fit: BoxFit.cover,
-                                          ),
-                                          title: Text(
-                                            'Oops!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 22.0,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          description: Text(
-                                            'You can\'t send an offer to yourself!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(),
-                                          ),
-                                          onlyOkButton: true,
-                                          entryAnimation:
-                                              EntryAnimation.DEFAULT,
-                                          onOkButtonPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop('dialog');
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RootScreen(index: 0)),
-                                            );
-                                          },
-                                        ));
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        height: 100,
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: SpinKitChasingDots(
+                                                color:
+                                                    Colors.deepOrangeAccent)),
+                                      );
+                                    });
+                                var recieverid = newItem.userid;
+                                if (recieverid != userid) {
+                                  var itemurl =
+                                      'https://api.sellship.co/api/createoffer/' +
+                                          userid +
+                                          '/' +
+                                          recieverid +
+                                          '/' +
+                                          itemid +
+                                          '/' +
+                                          offercontroller.text.trim();
+
+                                  final response = await http.get(itemurl);
+
+                                  if (response.statusCode == 200) {
+                                    var messageinfo =
+                                        json.decode(response.body);
+                                    var messageid = (messageinfo['messageid']);
+                                    var recieverfcmtoken =
+                                        (messageinfo['recieverfcmtoken']);
+                                    var sendername =
+                                        (messageinfo['sendername']);
+                                    var recipentname =
+                                        (messageinfo['recievername']);
+                                    var offer = messageinfo['offer'];
+                                    var offerstage = messageinfo['offerstage'];
+                                    Navigator.pop(context);
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatPageView(
+                                          messageid: messageid,
+                                          recipentname: recipentname,
+                                          senderid: userid,
+                                          offer: offer,
+                                          offerstage: offerstage,
+                                          recipentid: recieverid,
+                                          fcmToken: recieverfcmtoken,
+                                          senderName: sendername,
+                                          itemid: itemid,
+                                        ),
+                                      ),
+                                    );
+                                  } else {}
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => AssetGiffyDialog(
+                                            image: Image.asset(
+                                              'assets/oops.gif',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            title: Text(
+                                              'Oops!',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 22.0,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            description: Text(
+                                              'You can\'t send an offer to yourself!',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(),
+                                            ),
+                                            onlyOkButton: true,
+                                            entryAnimation:
+                                                EntryAnimation.DEFAULT,
+                                            onOkButtonPressed: () {
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .pop('dialog');
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RootScreen(index: 0)),
+                                              );
+                                            },
+                                          ));
+                                }
                               }
                             },
                             child: Container(
@@ -1409,7 +1417,7 @@ class _DetailsState extends State<Details> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  RootScreen(index: 2)),
+                                                  RootScreen(index: 1)),
                                         );
                                       },
                                     ));
@@ -1923,7 +1931,7 @@ class _DetailsState extends State<Details> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RootScreen(index: 2)),
+                                                      RootScreen(index: 1)),
                                             );
                                           },
                                         ));
@@ -2040,7 +2048,7 @@ class _DetailsState extends State<Details> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        RootScreen(index: 2)),
+                                                        RootScreen(index: 1)),
                                               );
                                             },
                                           ));
@@ -2076,7 +2084,7 @@ class _DetailsState extends State<Details> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RootScreen(index: 2)),
+                                                      RootScreen(index: 1)),
                                             );
                                           },
                                         ));

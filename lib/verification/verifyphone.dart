@@ -1,5 +1,6 @@
 import 'package:SellShip/screens/OTPScreen.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -22,6 +23,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
   @override
   void initState() {
     super.initState();
+    Firebase.initializeApp();
     setState(() {
       userid = widget.userid;
     });
@@ -47,9 +49,8 @@ class _VerifyPhoneState extends State<VerifyPhone> {
         appBar: AppBar(
           leading: InkWell(
               onTap: () {
-                Navigator.push(
+                Navigator.pop(
                   context,
-                  MaterialPageRoute(builder: (context) => RootScreen(index: 2)),
                 );
               },
               child: Icon(Icons.arrow_back_ios)),

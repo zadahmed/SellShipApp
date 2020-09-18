@@ -64,10 +64,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(
-                                    bottom: 5, left: 5, right: 5),
+                                    bottom: 15, left: 5, right: 5),
                                 child: Container(
-                                  height: 50,
-                                  width: 100,
+                                  height: 40,
+                                  width: 50,
                                   child: Image.asset(
                                     categories[i].image,
                                     fit: BoxFit.contain,

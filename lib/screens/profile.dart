@@ -1750,7 +1750,6 @@ class _LoginPageState extends State<LoginPage>
 //        Intercom.sendTokenToIntercom(token);
       });
       var url = 'https://api.sellship.co/api/user/' + userid;
-      print(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
         var respons = json.decode(response.body);

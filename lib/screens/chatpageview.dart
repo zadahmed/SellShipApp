@@ -957,22 +957,25 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                           ],
                                                         ),
                                                         child: Center(
-                                                          child: Text(
-                                                            userid ==
-                                                                    itemselling
-                                                                        .userid
-                                                                ? offeruserstring
-                                                                : offerstring,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        ),
+                                                            child: itemselling !=
+                                                                    null
+                                                                ? Text(
+                                                                    userid ==
+                                                                            itemselling.userid
+                                                                        ? offeruserstring
+                                                                        : offerstring,
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  )
+                                                                : Container()),
                                                       )
                                                     : Container())
                                           ],
