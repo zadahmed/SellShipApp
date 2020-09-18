@@ -112,50 +112,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   itemBuilder: (ctx, i) {
                     return InkWell(
                         onTap: () {
-                          if (categories[_selectedCat].subCat[i].title ==
-                              'Women') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WomenFashion()),
-                            );
-                          } else if (categories[_selectedCat].subCat[i].title ==
-                              'Men') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MensFashion()),
-                            );
-                          } else if (categories[_selectedCat].subCat[i].title ==
-                              'Boys') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BoysFashion()),
-                            );
-                          } else if (categories[_selectedCat].subCat[i].title ==
-                              'Girls') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => GirlsFashion()),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CategoryDetail(
-                                      category: categories[_selectedCat].title,
-                                      subcategory: categories[_selectedCat]
-                                          .subCat[i]
-                                          .title)),
-                            );
-                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CategoryDetail(
+                                    category: categories[_selectedCat].title,
+                                    subcategory: categories[_selectedCat]
+                                        .subCat[i]
+                                        .title)),
+                          );
                         },
                         child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Container(
-                              height: 200,
+                              height: 100,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.white,
@@ -164,20 +134,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: 10, left: 5, right: 5),
-                                    child: Container(
-                                      height: 90,
-                                      width: 150,
-                                      child: Image.asset(
-                                        categories[_selectedCat]
-                                            .subCat[i]
-                                            .image,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ),
+//                                  Padding(
+//                                    padding: EdgeInsets.only(
+//                                        bottom: 10, left: 5, right: 5),
+//                                    child: Container(
+//                                      height: 90,
+//                                      width: 150,
+//                                      child: Image.asset(
+//                                        categories[_selectedCat]
+//                                            .subCat[i]
+//                                            .image,
+//                                        fit: BoxFit.contain,
+//                                      ),
+//                                    ),
+//                                  ),
                                   Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Text(

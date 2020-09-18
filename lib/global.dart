@@ -48,11 +48,11 @@ List<Categories> categories = [
       SubCategories(
           id: 5,
           title: 'Headphones & Mp3 Players',
-          image: 'assets/electronics/homeappliances.jpeg'),
+          image: 'assets/electronics/headphones.jpeg'),
       SubCategories(
           id: 6,
           title: 'Sound & Audio',
-          image: 'assets/electronics/headphones.jpeg'),
+          image: 'assets/electronics/speakers.jpg'),
       SubCategories(
           id: 7,
           title: 'Tablets & eReaders',
@@ -72,33 +72,34 @@ List<Categories> categories = [
       SubCategories(
           id: 0,
           title: 'Activewear & Sportswear',
-          image: 'assets/fashion/women.jpeg'),
-      SubCategories(id: 1, title: 'Jewelry', image: 'assets/fashion/men.jpg'),
-      SubCategories(id: 2, title: 'Dresses', image: 'assets/fashion/girl.jpeg'),
+          image: 'assets/women/jumpsuit.jpeg'),
       SubCategories(
-          id: 3, title: 'Tops & Blouses', image: 'assets/fashion/boys.jpg'),
+          id: 1, title: 'Jewelry', image: 'assets/women/jewelry.jpeg'),
       SubCategories(
-          id: 4, title: 'Coats & Jackets', image: 'assets/fashion/unisex.jpg'),
+          id: 2, title: 'Dresses', image: 'assets/women/dresses.jpeg'),
       SubCategories(
-          id: 5, title: 'Sweaters', image: 'assets/fashion/unisex.jpg'),
+          id: 3, title: 'Tops & Blouses', image: 'assets/women/tops.jpeg'),
       SubCategories(
-          id: 6, title: 'Handbags', image: 'assets/fashion/unisex.jpg'),
-      SubCategories(id: 7, title: 'Shoes', image: 'assets/fashion/unisex.jpg'),
+          id: 4, title: 'Coats & Jackets', image: 'assets/women/jackets.jpeg'),
+      SubCategories(
+          id: 5, title: 'Sweaters', image: 'assets/women/hoodie.jpeg'),
+      SubCategories(id: 6, title: 'Handbags', image: 'assets/women/bags.jpeg'),
+      SubCategories(id: 7, title: 'Shoes', image: 'assets/women/Heels.jpeg'),
       SubCategories(
           id: 8,
           title: 'Women\'s accessories',
-          image: 'assets/fashion/unisex.jpg'),
+          image: 'assets/women/watch.jpeg'),
       SubCategories(
-          id: 9, title: 'Modest wear', image: 'assets/fashion/unisex.jpg'),
-      SubCategories(id: 10, title: 'Jeans', image: 'assets/fashion/unisex.jpg'),
+          id: 9, title: 'Modest wear', image: 'assets/women/modest.jpeg'),
+      SubCategories(id: 10, title: 'Jeans', image: 'assets/women/jeans.jpeg'),
       SubCategories(
-          id: 11, title: 'Suits & Blazers', image: 'assets/fashion/unisex.jpg'),
+          id: 11, title: 'Suits & Blazers', image: 'assets/women/suits.jpeg'),
       SubCategories(
           id: 12,
           title: 'Swimwear & Beachwear',
-          image: 'assets/fashion/unisex.jpg'),
+          image: 'assets/women/swimwear.jpeg'),
       SubCategories(
-          id: 13, title: 'Bottoms', image: 'assets/fashion/unisex.jpg'),
+          id: 13, title: 'Bottoms', image: 'assets/women/shorts.jpeg'),
     ],
   ),
   Categories(
@@ -110,26 +111,25 @@ List<Categories> categories = [
       SubCategories(
           id: 0,
           title: 'Activewear & Sportswear',
-          image: 'assets/fashion/women.jpeg'),
-      SubCategories(id: 1, title: 'Tops', image: 'assets/fashion/men.jpg'),
-      SubCategories(id: 2, title: 'Shoes', image: 'assets/fashion/girl.jpeg'),
+          image: 'assets/men/active.jpeg'),
+      SubCategories(id: 1, title: 'Tops', image: 'assets/men/shirt.jpeg'),
+      SubCategories(id: 2, title: 'Shoes', image: 'assets/men/shoes.jpeg'),
       SubCategories(
-          id: 3, title: 'Coats & Jackets', image: 'assets/fashion/boys.jpg'),
-      SubCategories(
-          id: 4, title: 'Bottoms', image: 'assets/fashion/unisex.jpg'),
+          id: 3, title: 'Coats & Jackets', image: 'assets/men/coats.jpeg'),
+      SubCategories(id: 4, title: 'Bottoms', image: 'assets/men/pants.jpeg'),
       SubCategories(
           id: 5,
           title: 'Nightwear & Loungewear',
-          image: 'assets/fashion/unisex.jpg'),
+          image: 'assets/men/nightwear.jpeg'),
       SubCategories(
           id: 6,
           title: 'Hoodies & Sweatshirts',
-          image: 'assets/fashion/unisex.jpg'),
-      SubCategories(id: 7, title: 'Jeans', image: 'assets/fashion/unisex.jpg'),
+          image: 'assets/men/hoodie.jpeg'),
+      SubCategories(id: 7, title: 'Jeans', image: 'assets/men/jeans.jpeg'),
       SubCategories(
           id: 8,
           title: 'Swimwear & Beachwear',
-          image: 'assets/fashion/unisex.jpg'),
+          image: 'assets/men/swimshorts.jpeg'),
     ],
   ),
   Categories(
@@ -141,33 +141,35 @@ List<Categories> categories = [
       SubCategories(
           id: 0,
           title: 'Collectibles & Hobbies',
-          image: 'assets/fashion/women.jpeg'),
+          image: 'assets/toys/collectibles.jpg'),
       SubCategories(
           id: 1,
           title: 'Action Figures & Accessories',
-          image: 'assets/fashion/men.jpg'),
+          image: 'assets/toys/actionfigures.jpeg'),
       SubCategories(
           id: 2,
           title: 'Dolls & Accessories',
-          image: 'assets/fashion/girl.jpeg'),
+          image: 'assets/toys/barbie.jpeg'),
       SubCategories(
           id: 3,
           title: 'Vintage & Antique Toys',
-          image: 'assets/fashion/boys.jpg'),
+          image: 'assets/toys/antiquetoys.png'),
       SubCategories(
-          id: 4, title: 'Trading Cards', image: 'assets/fashion/unisex.jpg'),
+          id: 4, title: 'Trading Cards', image: 'assets/toys/cards.jpg'),
       SubCategories(
-          id: 5, title: 'Stuffed Animals', image: 'assets/fashion/unisex.jpg'),
+          id: 5,
+          title: 'Stuffed Animals',
+          image: 'assets/toys/stuffedanimals.jpg'),
       SubCategories(
-          id: 6, title: 'Building Toys', image: 'assets/fashion/unisex.jpg'),
+          id: 6, title: 'Building Toys', image: 'assets/toys/buildingtoys.jpg'),
       SubCategories(
-          id: 7, title: 'Arts & Crafts', image: 'assets/fashion/unisex.jpg'),
+          id: 7, title: 'Arts & Crafts', image: 'assets/toys/artscrafts.jpg'),
       SubCategories(
-          id: 8, title: 'Games & Puzzles', image: 'assets/fashion/unisex.jpg'),
+          id: 8, title: 'Games & Puzzles', image: 'assets/toys/puzzles.jpeg'),
       SubCategories(
           id: 9,
           title: 'Remote Control Toys',
-          image: 'assets/fashion/unisex.jpg'),
+          image: 'assets/toys/remotecontrol.jpg'),
     ],
   ),
   Categories(
@@ -188,7 +190,9 @@ List<Categories> categories = [
           title: "Tools and Accessories",
           image: 'assets/beauty/tools.jpeg'),
       SubCategories(
-          id: 5, title: 'Bath and Body', image: 'assets/beauty/giftset.jpeg'),
+          id: 5,
+          title: 'Bath and Body',
+          image: 'assets/beauty/bathandbody.jpg'),
     ],
   ),
   Categories(
@@ -209,11 +213,14 @@ List<Categories> categories = [
       SubCategories(
           id: 4, title: "Furniture", image: 'assets/home/furniture.jpeg'),
       SubCategories(
-          id: 5, title: 'Cleaning Supplies', image: 'assets/home/garden.jpeg'),
-      SubCategories(id: 6, title: 'Furniture', image: 'assets/home/lamp.jpeg'),
-      SubCategories(id: 7, title: 'Artwork', image: 'assets/home/tools.jpeg'),
+          id: 5,
+          title: 'Cleaning Supplies',
+          image: 'assets/home/cleaningsupplies.jpg'),
+      SubCategories(id: 6, title: 'Artwork', image: 'assets/home/artwork.jpg'),
       SubCategories(
-          id: 8, title: 'Home Appliances', image: 'assets/home/tools.jpeg'),
+          id: 7,
+          title: 'Home Appliances',
+          image: 'assets/electronics/homeappliances.jpeg'),
     ],
   ),
   Categories(

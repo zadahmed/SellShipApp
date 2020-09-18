@@ -11,6 +11,7 @@ import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/search.dart';
+import 'package:SellShip/screens/test.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -1246,10 +1247,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: InkWell(
                     onTap: () {
+//                      Navigator.push(
+//                        context,
+//                        MaterialPageRoute(
+//                            builder: (context) => NotifcationPage()),
+//                      );
+
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => NotifcationPage()),
+                        MaterialPageRoute(builder: (context) => Test()),
                       );
                     },
                     child: Icon(
