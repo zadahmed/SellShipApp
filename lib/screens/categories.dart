@@ -134,20 +134,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-//                                  Padding(
-//                                    padding: EdgeInsets.only(
-//                                        bottom: 10, left: 5, right: 5),
-//                                    child: Container(
-//                                      height: 90,
-//                                      width: 150,
-//                                      child: Image.asset(
-//                                        categories[_selectedCat]
-//                                            .subCat[i]
-//                                            .image,
-//                                        fit: BoxFit.contain,
-//                                      ),
-//                                    ),
-//                                  ),
                                   Align(
                                     alignment: Alignment.bottomCenter,
                                     child: Text(
