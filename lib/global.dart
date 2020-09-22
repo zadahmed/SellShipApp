@@ -226,7 +226,7 @@ List<Categories> categories = [
   Categories(
     title: 'Kids',
     id: 6,
-    image: 'assets/category/Electronics@3x.png',
+    image: 'assets/category/Toys@3x.png',
     icon: FontAwesomeIcons.babyCarriage,
     subCat: [
       SubCategories(

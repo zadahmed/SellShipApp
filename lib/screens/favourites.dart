@@ -49,7 +49,6 @@ class FavouritesScreenState extends State<FavouritesScreen> {
       });
     }
 
-    print(userid);
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
       final response = await http.get(url);
@@ -61,22 +60,24 @@ class FavouritesScreenState extends State<FavouritesScreen> {
 
           if (profilemap != null) {
             for (var i = 0; i < profilemap.length; i++) {
-              Item ite = Item(
-                  itemid: profilemap[i]['_id']['\$oid'],
-                  name: profilemap[i]['name'],
-                  image: profilemap[i]['image'],
-                  likes: profilemap[i]['likes'] == null
-                      ? 0
-                      : profilemap[i]['likes'],
-                  comments: profilemap[i]['comments'] == null
-                      ? 0
-                      : profilemap[i]['comments'].length,
-                  price: profilemap[i]['price'].toString(),
-                  sold: profilemap[i]['sold'] == null
-                      ? false
-                      : profilemap[i]['sold'],
-                  category: profilemap[i]['category']);
-              ites.add(ite);
+              if (profilemap[i] != null) {
+                Item ite = Item(
+                    itemid: profilemap[i]['_id']['\$oid'],
+                    name: profilemap[i]['name'],
+                    image: profilemap[i]['image'],
+                    likes: profilemap[i]['likes'] == null
+                        ? 0
+                        : profilemap[i]['likes'],
+                    comments: profilemap[i]['comments'] == null
+                        ? 0
+                        : profilemap[i]['comments'].length,
+                    price: profilemap[i]['price'].toString(),
+                    sold: profilemap[i]['sold'] == null
+                        ? false
+                        : profilemap[i]['sold'],
+                    category: profilemap[i]['category']);
+                ites.add(ite);
+              }
             }
 
             Iterable inReverse = ites.reversed;

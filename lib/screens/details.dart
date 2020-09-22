@@ -424,7 +424,9 @@ class _DetailsState extends State<Details> {
 
           if (profilemap != null) {
             for (var i = 0; i < profilemap.length; i++) {
-              ites.add(profilemap[i]['_id']['\$oid']);
+              if (profilemap[i] != null) {
+                ites.add(profilemap[i]['_id']['\$oid']);
+              }
             }
 
             if (ites.contains(newItem.itemid)) {

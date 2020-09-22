@@ -751,6 +751,7 @@ class _CheckoutState extends State<Checkout> {
                         context,
                         MaterialPageRoute(builder: (context) => Address()),
                       );
+
                       showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -796,6 +797,7 @@ class _CheckoutState extends State<Checkout> {
                       final response = await http.get(ratesurl);
                       var jsonrates = json.decode(response.body);
 
+                      print(jsonrates);
                       var totalrat = jsonrates['rates']
                               ['RatingServiceSelectionResponse']
                           ['RatedShipment']['TotalCharges']['MonetaryValue'];

@@ -19,6 +19,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:permission_handler/permission_handler.dart' as Permission;
 import 'package:random_string/random_string.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:shimmer/shimmer.dart';
@@ -376,8 +377,19 @@ class _AddItemState extends State<AddItem> {
                                   Container(
                                     height: 150,
                                     child: GestureDetector(
-                                        onTap: () {
-                                          getImageGallery();
+                                        onTap: () async {
+                                          if (await Permission.Permission.photos
+                                              .request()
+                                              .isGranted) {
+                                            getImageGallery();
+                                          } else {
+                                            Map<Permission.Permission,
+                                                    Permission.PermissionStatus>
+                                                statuses = await [
+                                              Permission.Permission.photos,
+                                            ].request();
+                                            Permission.openAppSettings();
+                                          }
                                         },
                                         child: images.isEmpty
                                             ? Row(
@@ -1279,7 +1291,7 @@ class _AddItemState extends State<AddItem> {
                                                   Text(
                                                     currency +
                                                         ' ' +
-                                                        fees.toString(),
+                                                        fees.toStringAsFixed(2),
                                                     style: TextStyle(
                                                         fontFamily: 'Helvetica',
                                                         fontSize: 16,
@@ -1318,7 +1330,8 @@ class _AddItemState extends State<AddItem> {
                                                   Text(
                                                     currency +
                                                         ' ' +
-                                                        totalpayable.toString(),
+                                                        totalpayable
+                                                            .toStringAsFixed(2),
                                                     style: TextStyle(
                                                         fontFamily: 'Helvetica',
                                                         fontSize: 16,
@@ -1695,11 +1708,10 @@ class _AddItemState extends State<AddItem> {
                                             shippingcheckbox == false) {
                                           showInSnackBar(
                                               'Please choose a delivery method!');
-                                        } else if (shippingcheckbox == true) {
-                                          if (_selectedweight == -1) {
-                                            showInSnackBar(
-                                                'Please choose the weight of your item');
-                                          }
+                                        } else if (shippingcheckbox == true &&
+                                            _selectedweight == -1) {
+                                          showInSnackBar(
+                                              'Please choose the weight of your item');
                                         } else if (city == null ||
                                             country == null) {
                                           showInSnackBar(
