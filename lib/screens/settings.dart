@@ -546,33 +546,36 @@ class _SettingsState extends State<Settings> {
                 },
               ),
             ),
-            Container(
-              color: Colors.white,
-              child: ListTile(
-                leading: Icon(
-                  Feather.flag,
-                  color: Colors.deepOrange,
-                ),
-                trailing: Icon(
-                  Feather.arrow_right,
-                  size: 16,
-                  color: Colors.deepOrange,
-                ),
-                title: Text(
-                  'Change Country',
-                  style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16.0,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ChangeCountry()),
-                  );
-                },
-              ),
-            ),
+            email == 'test@test.com' || email == 'zadahmed@outlook.com'
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        Feather.flag,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Feather.arrow_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Change Country',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangeCountry()),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
             Divider(),
             userid != null
                 ? Container(

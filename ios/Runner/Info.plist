@@ -82,8 +82,14 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Capture a photo of the item</string>
+	<key>NSContactsUsageDescription</key>
+	<string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Access location of user to determine places nearby</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -92,18 +98,12 @@
 	<string>Access location of user to determine items nearby</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Capture a photo of the item</string>
+	<key>NSMotionUsageDescription</key>
+	<string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Capture a photo of the item</string>
-	<key>NSAppleMusicUsageDescription</key>
-    <string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
-    <key>NSContactsUsageDescription</key>
-    <string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
-    <key>NSCalendarsUsageDescription</key>
-    <string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
-    <key>NSMotionUsageDescription</key>
-    <string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
-    <key>NSSpeechRecognitionUsageDescription</key>
-    <string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This permission is not needed by the app, but it is required by an underlying API. If you see this dialog, contact us.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

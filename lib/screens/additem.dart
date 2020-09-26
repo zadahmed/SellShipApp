@@ -13,15 +13,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart' as Geocoding;
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
+import 'package:location/location.dart' as Location;
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 import 'package:random_string/random_string.dart';
-import 'package:search_map_place/search_map_place.dart';
+import 'package:search_map_place/search_map_place.dart' as SearchMap;
 import 'package:shimmer/shimmer.dart';
 
 class AddItem extends StatefulWidget {
@@ -69,10 +69,10 @@ class _AddItemState extends State<AddItem> {
     setState(() {
       userid = userid;
     });
-    Location _location = new Location();
+    Location.Location _location = new Location.Location();
 
     bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    Location.PermissionStatus _permissionGranted;
 
     _serviceEnabled = await _location.serviceEnabled();
     if (!_serviceEnabled) {
@@ -83,7 +83,7 @@ class _AddItemState extends State<AddItem> {
     }
 
     _permissionGranted = await _location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
+    if (_permissionGranted == Location.PermissionStatus.denied) {
       setState(() {
         loading = false;
         position = LatLng(25.2048, 55.2708);
@@ -113,7 +113,7 @@ class _AddItemState extends State<AddItem> {
                   AppSettings.openLocationSettings();
                 },
               ));
-    } else if (_permissionGranted == PermissionStatus.granted) {
+    } else if (_permissionGranted == Location.PermissionStatus.granted) {
       var location = await _location.getLocation();
       var positio =
           LatLng(location.latitude.toDouble(), location.longitude.toDouble());
@@ -250,13 +250,15 @@ class _AddItemState extends State<AddItem> {
 
         _lastMapPosition = point;
       });
-      Coordinates coordinates =
-          Coordinates(position.latitude, position.longitude);
-      List<Address> p =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      Address place = p[0];
-      var cit = place.adminArea;
-      var countr = place.countryName;
+
+      List<Geocoding.Placemark> placemarks =
+          await Geocoding.placemarkFromCoordinates(
+              position.latitude, position.longitude,
+              localeIdentifier: 'en');
+
+      Geocoding.Placemark place = placemarks[0];
+      var cit = place.administrativeArea;
+      var countr = place.country;
       setState(() {
         city = cit;
         country = countr;
@@ -275,13 +277,14 @@ class _AddItemState extends State<AddItem> {
         _lastMapPosition = point;
         print(_lastMapPosition);
       });
-      Coordinates coordinates =
-          Coordinates(position.latitude, position.longitude);
-      List<Address> p =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      Address place = p[0];
-      var cit = place.adminArea;
-      var countr = place.countryName;
+      List<Geocoding.Placemark> placemarks =
+          await Geocoding.placemarkFromCoordinates(
+              position.latitude, position.longitude,
+              localeIdentifier: 'en');
+
+      Geocoding.Placemark place = placemarks[0];
+      var cit = place.administrativeArea;
+      var countr = place.country;
       setState(() {
         city = cit;
         country = countr;
@@ -1617,43 +1620,46 @@ class _AddItemState extends State<AddItem> {
                                                     .size
                                                     .width *
                                                 0.05,
-                                            child: SearchMapPlaceWidget(
+                                            child:
+                                                SearchMap.SearchMapPlaceWidget(
                                               apiKey:
                                                   'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
-                                              // The language of the autocompletion
                                               language: 'en',
                                               location: position,
                                               radius: 10000,
-                                              onSelected: (Place place) async {
-                                                final geolocation =
-                                                    await place.geolocation;
+                                              onSelected: (SearchMap.Place
+                                                  places) async {
+                                                final geolocations =
+                                                    await places.geolocation;
 
                                                 controller.animateCamera(
                                                     CameraUpdate.newLatLng(
-                                                        geolocation
+                                                        geolocations
                                                             .coordinates));
                                                 controller.animateCamera(
                                                     CameraUpdate
                                                         .newLatLngBounds(
-                                                            geolocation.bounds,
+                                                            geolocations.bounds,
                                                             0));
 
                                                 setState(() {
                                                   position =
-                                                      geolocation.coordinates;
+                                                      geolocations.coordinates;
                                                 });
 
-                                                Coordinates coordinates =
-                                                    Coordinates(
-                                                        position.latitude,
-                                                        position.longitude);
-                                                List<Address> p = await Geocoder
-                                                    .local
-                                                    .findAddressesFromCoordinates(
-                                                        coordinates);
-                                                Address places = p[0];
-                                                var cit = places.adminArea;
-                                                var countr = places.countryName;
+                                                List<Geocoding.Placemark>
+                                                    placemarks = await Geocoding
+                                                        .placemarkFromCoordinates(
+                                                            position.latitude,
+                                                            position.longitude,
+                                                            localeIdentifier:
+                                                                'en');
+
+                                                Geocoding.Placemark place =
+                                                    placemarks[0];
+                                                var cit =
+                                                    place.administrativeArea;
+                                                var countr = place.country;
                                                 setState(() {
                                                   city = cit;
                                                   country = countr;

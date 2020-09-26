@@ -30,11 +30,13 @@ import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:geocoder/geocoder.dart';
+
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
+import 'package:location/location.dart' as Location;
 import 'package:numeral/numeral.dart';
+import 'package:search_map_place/search_map_place.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -1035,7 +1037,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _getLocation() async {
-    Location _location = new Location();
+    Location.Location _location = new Location.Location();
     var location;
 
     try {
@@ -1067,14 +1069,13 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
-      Coordinates coordinates =
-          Coordinates(position.latitude, position.longitude);
-      List<Address> p =
-          await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      Address place = p[0];
-      var cit = place.adminArea;
-      var countr = place
-          .countryName; //todo check with zahid was this country code or country name?
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          position.latitude, position.longitude,
+          localeIdentifier: 'en');
+
+      Placemark place = placemarks[0];
+      var cit = place.administrativeArea;
+      var countr = place.country;
       await storage.write(key: 'city', value: cit);
       await storage.write(key: 'locationcountry', value: countr);
       setState(() {
@@ -1084,7 +1085,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     } on Exception catch (e) {
       print(e);
-      Location().requestPermission();
+      Location.Location().requestPermission();
       setState(() {
         loading = false;
       });
@@ -1104,22 +1105,20 @@ class _HomeScreenState extends State<HomeScreen> {
   final scaffoldState = GlobalKey<ScaffoldState>();
 
   void getcity() async {
-    Coordinates coordinates =
-        Coordinates(position.latitude, position.longitude);
-    List<Address> p =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude, position.longitude,
+        localeIdentifier: 'en');
 
-    Address place = p[0];
-    var cit = place.adminArea;
-    var countryy = place.countryName;
+    Placemark place = placemarks[0];
+    var cit = place.administrativeArea;
+    var countr = place.country;
     await storage.write(key: 'city', value: cit);
-    await storage.write(key: 'locationcountry', value: countryy);
+    await storage.write(key: 'locationcountry', value: countr);
 
     setState(() {
       city = cit;
-      locationcountry = countryy;
+      locationcountry = countr;
     });
-//    fetchItems(skip, limit);
   }
 
   String city;

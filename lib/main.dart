@@ -10,13 +10,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:SellShip/screens/onboarding.dart';
 import 'package:SellShip/screens/rootscreen.dart';
-//import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-//  InAppPurchaseConnection.enablePendingPurchases();
+  InAppPurchaseConnection.enablePendingPurchases();
   runApp(MyApp());
 }
 

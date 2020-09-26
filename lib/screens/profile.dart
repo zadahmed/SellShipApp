@@ -6,6 +6,7 @@ import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/edititem.dart';
 import 'package:SellShip/screens/favourites.dart';
+import 'package:SellShip/screens/featureitem.dart';
 import 'package:SellShip/screens/loginpage.dart';
 import 'package:SellShip/screens/loginprofile.dart';
 import 'package:SellShip/screens/messages.dart';
@@ -1537,7 +1538,7 @@ class _LoginPageState extends State<LoginPage>
                                     height: 30,
                                     width:
                                         MediaQuery.of(context).size.width / 2 -
-                                            25,
+                                            45,
                                     decoration: BoxDecoration(
                                       color: item[index].sold == true
                                           ? Colors.deepPurpleAccent
@@ -1564,36 +1565,41 @@ class _LoginPageState extends State<LoginPage>
                                     ),
                                   ),
                                 ),
-//                                  InkWell(
-//                                    onTap: () async {},
-//                                    child: Container(
-//                                      height: 30,
-//                                      width: MediaQuery.of(context).size.width /
-//                                              4 -
-//                                          25,
-//                                      decoration: BoxDecoration(
-//                                        color: Colors.deepOrange,
-//                                        boxShadow: [
-//                                          BoxShadow(
-//                                            color: Colors.grey.shade300,
-//                                            offset: Offset(0.0, 1.0), //(x,y)
-//                                            blurRadius: 6.0,
-//                                          ),
-//                                        ],
-//                                        borderRadius:
-//                                            BorderRadius.circular(5.0),
-//                                      ),
-//                                      child: Center(
-//                                        child: Text(
-//                                          'Boost',
-//                                          style: TextStyle(
-//                                              fontFamily: 'Helvetica',
-//                                              fontSize: 14,
-//                                              color: Colors.white),
+//                                InkWell(
+//                                  onTap: () async {
+//                                    Navigator.push(
+//                                      context,
+//                                      MaterialPageRoute(
+//                                          builder: (context) => FeatureItem()),
+//                                    );
+//                                  },
+//                                  child: Container(
+//                                    height: 30,
+//                                    width:
+//                                        MediaQuery.of(context).size.width / 4 -
+//                                            25,
+//                                    decoration: BoxDecoration(
+//                                      color: Colors.deepOrange,
+//                                      boxShadow: [
+//                                        BoxShadow(
+//                                          color: Colors.grey.shade300,
+//                                          offset: Offset(0.0, 1.0), //(x,y)
+//                                          blurRadius: 6.0,
 //                                        ),
+//                                      ],
+//                                      borderRadius: BorderRadius.circular(5.0),
+//                                    ),
+//                                    child: Center(
+//                                      child: Text(
+//                                        'Boost',
+//                                        style: TextStyle(
+//                                            fontFamily: 'Helvetica',
+//                                            fontSize: 14,
+//                                            color: Colors.white),
 //                                      ),
 //                                    ),
 //                                  ),
+//                                ),
                               ],
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
