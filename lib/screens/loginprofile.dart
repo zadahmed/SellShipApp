@@ -5,8 +5,7 @@ import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/forgotpassword.dart';
 import 'package:SellShip/screens/rootscreen.dart';
-import 'package:SellShip/screens/signuppage.dart';
-import 'package:SellShip/screens/signupprofiel.dart';
+import 'package:SellShip/screens/signUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -341,8 +340,7 @@ class _LoginProfileState extends State<LoginProfile> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            SignUpProfilePage()));
+                                        builder: (context) => SignUpPage()));
                               },
                               child: Text(
                                 "Sign up",

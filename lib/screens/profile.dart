@@ -17,8 +17,7 @@ import 'package:SellShip/screens/reviews.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/search.dart';
 import 'package:SellShip/screens/settings.dart';
-import 'package:SellShip/screens/signuppage.dart';
-import 'package:SellShip/screens/signupprofiel.dart';
+import 'package:SellShip/screens/signUpPage.dart';
 import 'package:SellShip/screens/termscondition.dart';
 import 'package:SellShip/verification/verifyemail.dart';
 import 'package:SellShip/verification/verifyphone.dart';
@@ -944,7 +943,7 @@ class _LoginPageState extends State<LoginPage>
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpProfilePage()));
+                              builder: (context) => SignUpPage()));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10),

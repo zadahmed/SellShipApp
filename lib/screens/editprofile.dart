@@ -111,7 +111,7 @@ class EditProfileState extends State<EditProfile>
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       new Text(
-                                        'Parsonal Information',
+                                        'Personal Information',
                                         style: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 16,
