@@ -1,22 +1,23 @@
 import 'dart:async';
+
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/starterscreen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-
-import 'package:SellShip/screens/onboarding.dart';
-import 'package:SellShip/screens/rootscreen.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
-
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'providers/itemProvider.dart';
+import 'providers/userProvider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  InAppPurchaseConnection.enablePendingPurchases();
+//  InAppPurchaseConnection.enablePendingPurchases();
   runApp(MyApp());
 }
 
@@ -39,11 +40,70 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     precacheImage(AssetImage('assets/logo.png'), context);
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
-      color: Colors.blue,
-      home: new Splash(),
-    );
+    return MultiProvider(
+        providers: [
+          Provider<UserProvider>(create: (context) => UserProvider()),
+          Provider<ItemProvider>(create: (context) => ItemProvider())
+        ],
+        child: MaterialApp(
+          routes: {
+            Routes.addBrands: (context) => Brands(),
+            Routes.addCategory: (context) => AddCategory(),
+            Routes.addItem: (context) => AddItem(),
+            Routes.addPayment: (context) => AddPayment(),
+            Routes.address: (context) => Address(),
+            Routes.addSubCategory: (context) => AddSubCategory(),
+            Routes.addSubSubCategory: (context) => AddSubSubCategory(),
+            Routes.balance: (context) => Balance(),
+            Routes.boysFashion: (context) => BoysFashion(),
+            Routes.categories: (context) => CategoryScreen(),
+            Routes.categoryDetail: (context) => CategoryDetail(),
+            Routes.changeCountry: (context) => ChangeCountry(),
+            Routes.chatPageView: (context) => ChatPageView(),
+            Routes.checkout: (context) => Checkout(),
+            Routes.checkoutUAE: (context) => CheckoutUAE(),
+            Routes.comments: (context) => CommentsPage(),
+            Routes.details: (context) => Details(),
+            Routes.editItem: (context) => EditItem(),
+            Routes.editProfile: (context) => EditProfile(),
+            Routes.favourites: (context) => FavouritesScreen(),
+            Routes.featureItem: (context) => FeatureItem(),
+            Routes.forgotPassword: (context) => ForgotPassword(),
+            Routes.girlsFashion: (context) => GirlsFashion(),
+            Routes.home: (context) => HomeScreen(),
+            Routes.loginPage: (context) => ProfilePage(),
+            Routes.loginProfile: (context) => Login(),
+            Routes.menFashion: (context) => MensFashion(),
+            Routes.messages: (context) => Messages(),
+            Routes.myItems: (context) => MyItems(),
+            Routes.notifications: (context) => NotifcationPage(),
+            Routes.onBoarding: (context) => OnboardingScreen(),
+            Routes.orderBuyer: (context) => OrderBuyer(),
+            Routes.orderBuyerUAE: (context) => OrderBuyerUAE(),
+            Routes.orders: (context) => OrdersScreen(), //
+            Routes.orderSeller: (context) => OrderDetail(),
+            Routes.orderSellerUAE: (context) => OrderDetailUAE(),
+            Routes.otpScreen: (context) => OTPScreen(),
+            Routes.paymentDone: (context) => PaymentDone(),
+            Routes.privacyPolicy: (context) => PrivacyPolicy(),
+            Routes.profile: (context) => ProfilePage(),
+            Routes.reviewBuyer: (context) => ReviewBuyer(),
+            Routes.reviews: (context) => ReviewsPage(),
+            Routes.reviewSeller: (context) => ReviewSeller(),
+            Routes.rootScreen: (context) => RootScreen(),
+            Routes.search: (context) => Search(),
+            Routes.settings: (context) => Settings(),
+            Routes.signUpProfile: (context) => SignUpPage(),
+            Routes.starterScreen: (context) => StarterPage(),
+            Routes.subCategory: (context) => SubCategory(),
+            Routes.termsAndConditions: (context) => TermsandConditions(),
+            Routes.userItems: (context) => UserItems(),
+            Routes.womenFashion: (context) => WomenFashion(),
+          },
+          debugShowCheckedModeBanner: false,
+          color: Colors.blue,
+          home: new Splash(),
+        ));
   }
 }
 

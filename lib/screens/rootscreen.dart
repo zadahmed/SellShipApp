@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:SellShip/screens/loginpage.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,7 @@ class _RootScreenState extends State<RootScreen> {
   int _currentPage = 0;
   final List<Widget> _pages = [
     HomeScreen(),
-    LoginPage(),
+    Login(),
   ];
 
   @override

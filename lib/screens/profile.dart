@@ -49,14 +49,14 @@ import 'package:shimmer/shimmer.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  ProfilePage({Key key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _ProfilePageState createState() => new _ProfilePageState();
 }
 
-class _LoginPageState extends State<LoginPage>
+class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 

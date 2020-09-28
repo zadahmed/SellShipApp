@@ -247,10 +247,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       Text("Already have an account?"),
                       InkWell(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Login()));
                         },
                         child: Text(
                           " Login",
