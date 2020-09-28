@@ -1,6 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:SellShip/Navigation/pageNames.dart';
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/forgotpassword.dart';
@@ -9,21 +10,21 @@ import 'package:SellShip/screens/signUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_signin_button/button_view.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-class LoginProfile extends StatefulWidget {
-  LoginProfile({Key key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  LoginPage({this.originPage});
+
+  ///[originPage] use PageNames Class to reference names / found in navigation folder
+  final String originPage;
 
   @override
-  _LoginProfileState createState() => new _LoginProfileState();
+  _LoginPageState createState() => new _LoginPageState();
 }
 
-class _LoginProfileState extends State<LoginProfile> {
+class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
@@ -125,8 +126,12 @@ class _LoginProfileState extends State<LoginProfile> {
                 setState(() {
                   userid = jsondata['id'];
                 });
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RootScreen()));
+                Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.rootScreen,
+                    (route) =>
+                        false); //the predicate since it always returns false will remove
+                // all screens under the stack and replace them with the one being pushed.
               }
             } else {
               print(response.statusCode);
@@ -161,10 +166,7 @@ class _LoginProfileState extends State<LoginProfile> {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RootScreen(index: 1)),
-            );
+            Navigator.pop(context);
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -340,7 +342,9 @@ class _LoginProfileState extends State<LoginProfile> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => SignUpPage()));
+                                        builder: (context) => SignUpPage(
+                                              originPage: PageNames.loginPage,
+                                            )));
                               },
                               child: Text(
                                 "Sign up",

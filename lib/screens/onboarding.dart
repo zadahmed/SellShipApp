@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
-import 'package:SellShip/screens/loginpage.dart';
 import 'package:SellShip/screens/signUpPage.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/screens/rootscreen.dart';
@@ -263,7 +263,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           await SharedPreferences.getInstance();
                       prefs.setBool('seen', true);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Login()));
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10),

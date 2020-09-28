@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/balance.dart';
@@ -7,8 +8,6 @@ import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/edititem.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/featureitem.dart';
-import 'package:SellShip/screens/loginpage.dart';
-import 'package:SellShip/screens/loginprofile.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/myitems.dart';
 import 'package:SellShip/screens/orders.dart';
@@ -896,10 +895,8 @@ class _ProfilePageState extends State<ProfilePage>
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       prefs.setBool('seen', true);
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginProfile()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10),

@@ -65,12 +65,10 @@ class _SignUpPageState extends State<SignUpPage> {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            if (widget.originPage == PageNames.profile) {
+            if (widget.originPage == PageNames.loginPage) {
               Navigator.pop(context);
-            } else if (widget.originPage == PageNames.onBoarding) {
               Navigator.pop(context);
-            } else if (widget.originPage == PageNames.loginPage) {
-              Navigator.pop(context);
+            } else {
               Navigator.pop(context);
             }
           },
@@ -247,8 +245,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       Text("Already have an account?"),
                       InkWell(
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => Login()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()));
                         },
                         child: Text(
                           " Login",
