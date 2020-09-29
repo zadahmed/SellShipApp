@@ -440,30 +440,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 showDialog(
                                     context: context,
                                     builder: (_) => AssetGiffyDialog(
-                                      image: Image.asset(
-                                        'assets/oops.gif',
-                                        fit: BoxFit.cover,
-                                      ),
-                                      title: Text(
-                                        'Oops!',
-                                        style: TextStyle(
-                                            fontSize: 22.0,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      description: Text(
-                                        'Looks like something went wrong!',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(),
-                                      ),
-                                      onlyOkButton: true,
-                                      entryAnimation:
-                                      EntryAnimation.DEFAULT,
-                                      onOkButtonPressed: () {
-                                        Navigator.of(context,
-                                            rootNavigator: true)
-                                            .pop('dialog');
-                                      },
-                                    ));
+                                          image: Image.asset(
+                                            'assets/oops.gif',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            'Oops!',
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'Looks like something went wrong!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(),
+                                          ),
+                                          onlyOkButton: true,
+                                          entryAnimation:
+                                              EntryAnimation.DEFAULT,
+                                          onOkButtonPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                          },
+                                        ));
                               }
                               return user;
                             });
