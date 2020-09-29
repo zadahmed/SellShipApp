@@ -1507,6 +1507,32 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                               child: TabBar(
 
+  onTap:(ind){
+    if(ind == 0){
+      setState(() {
+        _selectedFilter = "Recently Added";
+        _FilterLoad = "Recently Added";
+        skip = 0;
+        limit = 20;
+        loading = true;
+      });
+      itemsgrid.clear();
+
+      fetchRecentlyAdded(skip, limit);
+    }
+    else if(ind == 1){
+      setState(() {
+        _selectedFilter = "Recently Added";
+        _FilterLoad = "Recently Added";
+        skip = 0;
+        limit = 20;
+        loading = true;
+      });
+      itemsgrid.clear();
+
+      fetchRecentlyAdded(skip, limit);
+    }
+  },
                                 indicatorSize: TabBarIndicatorSize.tab,
                                 indicatorPadding: EdgeInsets.all(10),
                                 indicator: CircleTabIndicator(
