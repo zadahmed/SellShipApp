@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -424,10 +425,21 @@ class MessagesState extends State<Messages> {
                             ),
                             secondaryActions: <Widget>[
                               IconSlideAction(
-                                caption: 'Archive',
-                                color: Colors.blue,
-                                icon: Icons.archive,
-                                onTap: () {},
+                                caption: 'Delete',
+                                color: Colors.red,
+                                icon: Feather.trash,
+                                onTap: () async {
+                                  var messageurl =
+                                      'https://api.sellship.co/api/delete/message/' +
+                                          userid.toString() +
+                                          '/' +
+                                          messagesd[index].messageid;
+                                  final responsemessage =
+                                      await http.get(messageurl);
+                                  if (responsemessage.statusCode == 200) {
+                                    getMessages();
+                                  }
+                                },
                               ),
                             ],
                           );

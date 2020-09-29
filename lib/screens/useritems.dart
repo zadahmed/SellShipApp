@@ -402,7 +402,9 @@ class _UserItemsState extends State<UserItems> {
                               Padding(
                                 padding: EdgeInsets.all(5),
                                 child: Text(
-                                  firstname + ' ' + lastname,
+                                  firstname != null
+                                      ? firstname + ' ' + lastname
+                                      : ' ',
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
                                       fontSize: 16.0,

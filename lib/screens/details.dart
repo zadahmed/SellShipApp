@@ -1156,7 +1156,7 @@ class _DetailsState extends State<Details> {
                                                 title: Text(
                                                     'Money Back Guarantee'),
                                                 subtitle: Text(
-                                                  'Item\'s that are not described as listed by the seller, that has undisclosed damage or if the seller has not shipped the item. The buyer can recieve a refund for the item, as long as the refund request is made within 3 days of confirmed delivery',
+                                                  'Item\'s that are not described as listed by the seller, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 3 days of confirmed delivery',
                                                   style: TextStyle(
                                                     fontFamily: 'Helvetica',
                                                     fontSize: 12,
@@ -1172,7 +1172,7 @@ class _DetailsState extends State<Details> {
                                               ListTile(
                                                 title: Text('SellShip Support'),
                                                 subtitle: Text(
-                                                  'The SellShip support team works 24/7 around the call to deal with all issues, queries and doubts.',
+                                                  'The SellShip support team works 24/7 around the clock to deal with all issues, queries and doubts.',
                                                   style: TextStyle(
                                                     fontFamily: 'Helvetica',
                                                     fontSize: 12,
