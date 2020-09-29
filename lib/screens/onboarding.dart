@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/signUpPage.dart';
+import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -13,7 +13,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class OnboardingScreen extends StatefulWidget {
   @override
@@ -397,39 +396,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         1.5,
                         InkWell(
                           onTap: () async {
-                            final credential =
-                                await SignInWithApple.getAppleIDCredential(
-                              scopes: [
-                                AppleIDAuthorizationScopes.email,
-                                AppleIDAuthorizationScopes.fullName,
-                              ],
-                              webAuthenticationOptions:
-                                  WebAuthenticationOptions(
-                                clientId: 'com.zad.sellshipsignin',
-                                redirectUri: Uri.parse(
-                                  'https://flawless-absorbed-marjoram.glitch.me/callbacks/sign_in_with_apple',
-                                ),
-                              ),
-                            );
-
-                            if (credential.email != null &&
-                                credential.givenName != null) {
+                            await FirebaseAuthOAuth().openSignInFlow(
+                                "apple.com",
+                                ["email", "fullName"],
+                                {"locale": "en"}).then((user) async {
                               var url = 'https://api.sellship.co/api/signup';
 
+                              print(user.email);
                               Map<String, String> body = {
-                                'first_name': credential.givenName,
-                                'last_name': credential.familyName,
-                                'email': credential.email,
+                                'first_name': user.displayName != null
+                                    ? user.displayName
+                                    : 'First',
+                                'last_name': 'Name',
+                                'email': user.email,
                                 'phonenumber': '000',
-                                'password': credential.authorizationCode,
+                                'password': user.uid,
                                 'fcmtoken': '000',
                               };
 
                               final response = await http.post(url, body: body);
 
+                              print('Done');
                               if (response.statusCode == 200) {
                                 var jsondata = json.decode(response.body);
-                                print(jsondata);
                                 if (jsondata['id'] != null) {
                                   await storage.write(
                                       key: 'userid', value: jsondata['id']);
@@ -451,59 +440,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 showDialog(
                                     context: context,
                                     builder: (_) => AssetGiffyDialog(
-                                          image: Image.asset(
-                                            'assets/oops.gif',
-                                            fit: BoxFit.cover,
-                                          ),
-                                          title: Text(
-                                            'Oops!',
-                                            style: TextStyle(
-                                                fontSize: 22.0,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          description: Text(
-                                            'Looks like something went wrong!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(),
-                                          ),
-                                          onlyOkButton: true,
-                                          entryAnimation:
-                                              EntryAnimation.DEFAULT,
-                                          onOkButtonPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop('dialog');
-                                          },
-                                        ));
+                                      image: Image.asset(
+                                        'assets/oops.gif',
+                                        fit: BoxFit.cover,
+                                      ),
+                                      title: Text(
+                                        'Oops!',
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      description: Text(
+                                        'Looks like something went wrong!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(),
+                                      ),
+                                      onlyOkButton: true,
+                                      entryAnimation:
+                                      EntryAnimation.DEFAULT,
+                                      onOkButtonPressed: () {
+                                        Navigator.of(context,
+                                            rootNavigator: true)
+                                            .pop('dialog');
+                                      },
+                                    ));
                               }
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => AssetGiffyDialog(
-                                        image: Image.asset(
-                                          'assets/oops.gif',
-                                          fit: BoxFit.cover,
-                                        ),
-                                        title: Text(
-                                          'Oops!',
-                                          style: TextStyle(
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        description: Text(
-                                          'Looks like something went wrong!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(),
-                                        ),
-                                        onlyOkButton: true,
-                                        entryAnimation: EntryAnimation.DEFAULT,
-                                        onOkButtonPressed: () {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop('dialog');
-                                        },
-                                      ));
-                            }
+                              return user;
+                            });
                           },
                           child: Padding(
                             padding: EdgeInsets.all(10),
