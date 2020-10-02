@@ -58,6 +58,52 @@ class RecentlyAddedState extends State<RecentlyAdded> {
     fetchRecentlyAdded(skip, limit);
   }
 
+  Widget loadingwidget(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300],
+          highlightColor: Colors.grey[100],
+          child: ListView(
+            children: [0, 1, 2, 3, 4, 5, 6]
+                .map((_) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            width: MediaQuery.of(context).size.width / 2 - 30,
+                            height: 150.0,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2 - 30,
+                            height: 150.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
     var url = 'https://api.sellship.co/api/recentitems/' +
         country +
@@ -97,9 +143,9 @@ class RecentlyAddedState extends State<RecentlyAdded> {
       );
       itemsgrid.add(item);
     }
-    print(itemsgrid);
     setState(() {
       itemsgrid = itemsgrid;
+      loading = false;
     });
 
     return itemsgrid;
@@ -118,7 +164,31 @@ class RecentlyAddedState extends State<RecentlyAdded> {
     itemsgrid.clear();
     getfavourites();
     readstorage();
+    _scrollController.addListener(_scrollListener);
   }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+
+    super.dispose();
+  }
+
+  _scrollListener() {
+    _scrollController.position.isScrollingNotifier.addListener(() {
+      if (_scrollController.position.pixels >= 1000) {
+        setState(() {
+          showfloatingbutton = true;
+        });
+      } else {
+        setState(() {
+          showfloatingbutton = false;
+        });
+      }
+    });
+  }
+
+  var showfloatingbutton = false;
 
   getfavourites() async {
     var userid = await storage.read(key: 'userid');
@@ -188,9 +258,27 @@ class RecentlyAddedState extends State<RecentlyAdded> {
 
   final _controller = NativeAdmobController();
 
+  ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: home(context));
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: loading == false ? home(context) : loadingwidget(context),
+      floatingActionButton: showfloatingbutton == true
+          ? FloatingActionButton(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.keyboard_arrow_up,
+                color: Colors.deepPurpleAccent,
+              ),
+              onPressed: () {
+                _scrollController.animateTo(0,
+                    duration: Duration(milliseconds: 100), curve: Curves.ease);
+              },
+            )
+          : Container(),
+    );
   }
 
   List<Item> itemsgrid = [];
@@ -201,6 +289,7 @@ class RecentlyAddedState extends State<RecentlyAdded> {
   Widget home(BuildContext context) {
     return EasyRefresh.custom(
       topBouncing: false,
+      scrollController: _scrollController,
       footer: BallPulseFooter(
           color: Colors.deepPurpleAccent, enableInfiniteLoad: true),
       slivers: <Widget>[

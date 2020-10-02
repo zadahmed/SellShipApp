@@ -59,14 +59,7 @@ class HomeViewState extends State<HomeView> {
   }
 
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
-    var url = 'https://api.sellship.co/api/recentitems/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    print(url);
+    var url = 'https://api.sellship.co/api/homeitems/' + country;
 
     final response = await http.get(url);
 
@@ -97,8 +90,9 @@ class HomeViewState extends State<HomeView> {
       );
       itemsgrid.add(item);
     }
-    print(itemsgrid);
+
     setState(() {
+      loading = false;
       itemsgrid = itemsgrid;
     });
 
@@ -118,7 +112,26 @@ class HomeViewState extends State<HomeView> {
     itemsgrid.clear();
     getfavourites();
     readstorage();
+    _scrollController.addListener(_scrollListener);
   }
+
+  _scrollListener() {
+    _scrollController.position.isScrollingNotifier.addListener(() {
+      if (_scrollController.position.pixels >= 1000) {
+        setState(() {
+          showfloatingbutton = true;
+        });
+      } else {
+        setState(() {
+          showfloatingbutton = false;
+        });
+      }
+    });
+  }
+
+  var showfloatingbutton = false;
+
+  ScrollController _scrollController = ScrollController();
 
   getfavourites() async {
     var userid = await storage.read(key: 'userid');
@@ -190,7 +203,23 @@ class HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: home(context));
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: loading == false ? home(context) : loadingwidget(context),
+      floatingActionButton: showfloatingbutton == true
+          ? FloatingActionButton(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.keyboard_arrow_up,
+                color: Colors.deepPurpleAccent,
+              ),
+              onPressed: () {
+                _scrollController.animateTo(0,
+                    duration: Duration(milliseconds: 100), curve: Curves.ease);
+              },
+            )
+          : Container(),
+    );
   }
 
   List<Item> itemsgrid = [];
@@ -198,8 +227,62 @@ class HomeViewState extends State<HomeView> {
   var skip;
   var limit;
 
+  Widget loadingwidget(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300],
+          highlightColor: Colors.grey[100],
+          child: ListView(
+            children: [0, 1, 2, 3, 4, 5, 6]
+                .map((_) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            width: MediaQuery.of(context).size.width / 2 - 30,
+                            height: 150.0,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2 - 30,
+                            height: 150.0,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+
+    super.dispose();
+  }
+
   Widget home(BuildContext context) {
     return EasyRefresh.custom(
+      scrollController: _scrollController,
       topBouncing: false,
       footer: BallPulseFooter(
           color: Colors.deepPurpleAccent, enableInfiniteLoad: true),
@@ -1051,12 +1134,7 @@ class HomeViewState extends State<HomeView> {
       skip = skip + 20;
     });
 
-    var url = 'https://api.sellship.co/api/recentitems/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
+    var url = 'https://api.sellship.co/api/homeitems/' + country;
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
