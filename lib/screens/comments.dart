@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/screens/messages.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -46,6 +47,15 @@ class _CommentsPageState extends State<CommentsPage> {
   var userid;
   var itemid;
 
+  bool enableSlideOff = true;
+  bool hideCloseButton = false;
+  bool onlyOne = true;
+  bool crossPage = true;
+  int seconds = 5;
+  int animationMilliseconds = 200;
+  int animationReverseMilliseconds = 200;
+  BackButtonBehavior backButtonBehavior = BackButtonBehavior.none;
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +63,24 @@ class _CommentsPageState extends State<CommentsPage> {
       itemid = widget.itemid;
     });
     loadcomments();
+    BotToast.showSimpleNotification(
+        title: "Ensure all conversations and deals are done within SellShip",
+        enableSlideOff: enableSlideOff,
+        subTitle:
+            'Beware of scammers insisting to contact them outside the app and prefer alternate payment methods. Deals done within SellShip are only eligible for buyer protection. ',
+        hideCloseButton: hideCloseButton,
+        onTap: () {
+          BotToast.showText(text: 'Tap toast');
+        },
+        onLongPress: () {
+          BotToast.showText(text: 'Long press toast');
+        },
+        onlyOne: onlyOne,
+        crossPage: crossPage,
+        animationDuration: Duration(milliseconds: animationMilliseconds),
+        animationReverseDuration:
+            Duration(milliseconds: animationReverseMilliseconds),
+        duration: Duration(seconds: seconds));
   }
 
   bool commentsloader;
@@ -271,7 +299,9 @@ class _CommentsPageState extends State<CommentsPage> {
                                   });
                                   commentcontroller.clear();
                                   if (response.statusCode == 200) {
-                                    print(response.body);
+                                    if (response.body == 'Matched') {
+                                      print('Matched');
+                                    }
                                     loadcomments();
                                   } else {
                                     print(response.statusCode);

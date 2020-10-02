@@ -4,6 +4,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/starterscreen.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -48,6 +49,7 @@ class _MyAppState extends State<MyApp> {
           Provider<ItemProvider>(create: (context) => ItemProvider())
         ],
         child: MaterialApp(
+          builder: BotToastInit(),
           routes: {
             Routes.addBrands: (context) => Brands(),
             Routes.addCategory: (context) => AddCategory(),

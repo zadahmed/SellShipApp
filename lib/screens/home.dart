@@ -1234,8 +1234,8 @@ class _HomeScreenState extends State<HomeScreen>
                   ];
                 },
                 body: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       SafeArea(
                         child: Container(
