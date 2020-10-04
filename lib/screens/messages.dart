@@ -163,15 +163,6 @@ class MessagesState extends State<Messages> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.deepOrange,
-            ),
-          ),
           iconTheme: IconThemeData(
             color: Colors.deepOrange,
           ),

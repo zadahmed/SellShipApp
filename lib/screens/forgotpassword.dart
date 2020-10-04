@@ -26,7 +26,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RootScreen(index: 1)),
+                MaterialPageRoute(builder: (context) => RootScreen(index: 4)),
               );
             },
             child: Icon(Icons.arrow_back_ios)),
@@ -141,7 +141,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RootScreen(index: 1)),
+                                                      RootScreen(index: 4)),
                                             );
                                           },
                                           child: Container(

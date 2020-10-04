@@ -6,13 +6,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class MensFashion extends StatefulWidget {
-  MensFashion({Key key}) : super(key: key);
+class Discover extends StatefulWidget {
+  Discover({Key key}) : super(key: key);
   @override
-  _MensFashionState createState() => _MensFashionState();
+  _DiscoverState createState() => _DiscoverState();
 }
 
-class _MensFashionState extends State<MensFashion> {
+class _DiscoverState extends State<Discover> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build

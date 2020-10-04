@@ -282,7 +282,6 @@ class HomeViewState extends State<HomeView> {
 
   Widget home(BuildContext context) {
     return EasyRefresh.custom(
-      scrollController: _scrollController,
       topBouncing: false,
       footer: BallPulseFooter(
           color: Colors.deepPurpleAccent, enableInfiniteLoad: true),

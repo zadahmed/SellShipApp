@@ -26,7 +26,6 @@ export 'package:SellShip/screens/forgotpassword.dart';
 export 'package:SellShip/screens/girlsfashion.dart';
 export 'package:SellShip/screens/home.dart';
 export 'package:SellShip/screens/loginPage.dart';
-export 'package:SellShip/screens/menfashion.dart';
 export 'package:SellShip/screens/messages.dart';
 export 'package:SellShip/screens/myitems.dart';
 export 'package:SellShip/screens/notifications.dart';

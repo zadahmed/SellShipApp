@@ -287,7 +287,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RootScreen(index: 1)),
+                                  builder: (context) => RootScreen(index: 4)),
                             );
                           },
                           child: Container(

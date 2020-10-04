@@ -1,6 +1,5 @@
 import 'package:SellShip/screens/boysfashion.dart';
 import 'package:SellShip/screens/girlsfashion.dart';
-import 'package:SellShip/screens/menfashion.dart';
 import 'package:SellShip/screens/womenfashion.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';

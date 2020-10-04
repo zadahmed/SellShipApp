@@ -1123,6 +1123,9 @@ class _HomeScreenState extends State<HomeScreen>
                                   )),
                             ),
                             Container(child: filtersort(context)),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Row(
                               children: <Widget>[
                                 Padding(
@@ -1158,12 +1161,16 @@ class _HomeScreenState extends State<HomeScreen>
                               ],
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             ),
+                            SizedBox(
+                              height: 5,
+                            ),
                             Container(
                               width: MediaQuery.of(context).size.width,
-                              height: 85,
+                              height: 60,
                               child: MediaQuery.removePadding(
                                 context: context,
                                 removeTop: true,
+                                removeBottom: true,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   shrinkWrap: true,
@@ -1183,7 +1190,7 @@ class _HomeScreenState extends State<HomeScreen>
                                           },
                                           child: Container(
                                               width: 80,
-                                              height: 80,
+                                              height: 60,
                                               alignment: Alignment.center,
                                               child: Column(
                                                 children: <Widget>[

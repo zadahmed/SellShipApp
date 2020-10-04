@@ -1419,7 +1419,7 @@ class _DetailsState extends State<Details> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  RootScreen(index: 1)),
+                                                  RootScreen(index: 4)),
                                         );
                                       },
                                     ));
@@ -1933,7 +1933,7 @@ class _DetailsState extends State<Details> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RootScreen(index: 1)),
+                                                      RootScreen(index: 4)),
                                             );
                                           },
                                         ));
@@ -2050,7 +2050,7 @@ class _DetailsState extends State<Details> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        RootScreen(index: 1)),
+                                                        RootScreen(index: 4)),
                                               );
                                             },
                                           ));
@@ -2086,7 +2086,7 @@ class _DetailsState extends State<Details> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RootScreen(index: 1)),
+                                                      RootScreen(index: 4)),
                                             );
                                           },
                                         ));

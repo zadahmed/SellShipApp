@@ -600,7 +600,7 @@ class _SettingsState extends State<Settings> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RootScreen(index: 1)),
+                              builder: (context) => RootScreen(index: 4)),
                         );
                       },
                     ))

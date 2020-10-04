@@ -77,7 +77,6 @@ class _MyAppState extends State<MyApp> {
             Routes.home: (context) => HomeScreen(),
             Routes.loginPage: (context) => ProfilePage(),
             Routes.loginProfile: (context) => LoginPage(),
-            Routes.menFashion: (context) => MensFashion(),
             Routes.messages: (context) => Messages(),
             Routes.myItems: (context) => MyItems(),
             Routes.notifications: (context) => NotifcationPage(),

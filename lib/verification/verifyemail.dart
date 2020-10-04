@@ -152,7 +152,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RootScreen(index: 1)),
+                                                      RootScreen(index: 4)),
                                             );
                                           },
                                           child: Container(

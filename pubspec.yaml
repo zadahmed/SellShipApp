@@ -25,6 +25,7 @@ dependencies:
   alphabet_list_scroll_view: ^1.0.6
   badges: ^1.1.1
   bot_toast: 3.0.4
+  flutter_svg: 0.18.0
   cached_network_image: ^2.3.2+1
   carousel_slider: ^2.2.1
   cupertino_icons: ^0.1.3
@@ -138,6 +139,7 @@ flutter:
     - assets/sport/
     - assets/books/
     - assets/baby/
+    - assets/bottomnavbar/
     - assets/property/
     - assets/homeshow/
     - uaeflag.png

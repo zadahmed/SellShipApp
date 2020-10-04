@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/screens/discover.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:SellShip/screens/additem.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -29,6 +31,9 @@ class _RootScreenState extends State<RootScreen> {
   int _currentPage = 0;
   final List<Widget> _pages = [
     HomeScreen(),
+    Discover(),
+    AddItem(),
+    Messages(),
     ProfilePage(),
   ];
 
@@ -65,6 +70,38 @@ class _RootScreenState extends State<RootScreen> {
     });
   }
 
+  onselected() {
+    if (_currentPage == 0) {
+      setState(() {
+        home = 'assets/bottomnavbar/Home.svg';
+        discover = 'assets/bottomnavbar/Discover.svg';
+        chat = 'assets/bottomnavbar/Chat.svg';
+      });
+    } else if (_currentPage == 1) {
+      setState(() {
+        home = 'assets/bottomnavbar/Homeselect.svg';
+        discover = 'assets/bottomnavbar/Discoverselect.svg';
+        chat = 'assets/bottomnavbar/Chat.svg';
+      });
+    } else if (_currentPage == 3) {
+      setState(() {
+        home = 'assets/bottomnavbar/Homeselect.svg';
+        discover = 'assets/bottomnavbar/Discover.svg';
+        chat = 'assets/bottomnavbar/Chatselect.svg';
+      });
+    } else if (_currentPage == 4) {
+      setState(() {
+        home = 'assets/bottomnavbar/Homeselect.svg';
+        discover = 'assets/bottomnavbar/Discover.svg';
+        chat = 'assets/bottomnavbar/Chat.svg';
+      });
+    }
+  }
+
+  var home = 'assets/bottomnavbar/Home.svg';
+  var discover = 'assets/bottomnavbar/Discover.svg';
+  var chat = 'assets/bottomnavbar/Chat.svg';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -73,21 +110,64 @@ class _RootScreenState extends State<RootScreen> {
         home: Scaffold(
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.deepOrange,
+            selectedItemColor: Color.fromRGBO(28, 45, 65, 1),
             unselectedItemColor: Colors.grey[400],
+            showSelectedLabels: false,
             selectedFontSize: 5,
             unselectedFontSize: 5,
             currentIndex: _currentPage,
             onTap: (i) {
               setState(() {
                 _currentPage = i;
+                onselected();
               });
             },
             items: [
               BottomNavigationBarItem(
-                  icon: Icon(
-                    Feather.home,
-                    size: 26,
+                  icon: SvgPicture.asset(
+                    home,
+                    height: 25,
+                    width: 25,
+                    allowDrawingOutsideViewBox: true,
+                  ),
+                  title: Text('',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 5,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black))),
+              BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    discover,
+                    height: 25,
+                    width: 25,
+                    allowDrawingOutsideViewBox: true,
+                  ),
+                  title: Text('',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 5,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black))),
+              BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    'assets/bottomnavbar/plus.svg',
+                    height: 40,
+                    width: 40,
+                    allowDrawingOutsideViewBox: true,
+                  ),
+                  title: Text('',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 5,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black))),
+              BottomNavigationBarItem(
+                  icon: SvgPicture.asset(
+                    chat,
+                    height: 25,
+                    width: 25,
+                    allowDrawingOutsideViewBox: true,
                   ),
                   title: Text('',
                       style: TextStyle(
@@ -97,8 +177,8 @@ class _RootScreenState extends State<RootScreen> {
                           color: Colors.black))),
               BottomNavigationBarItem(
                   icon: Icon(
-                    Feather.user,
-                    size: 26,
+                    FontAwesome.user_circle,
+                    size: 25,
                   ),
                   title: Text('',
                       style: TextStyle(
@@ -109,19 +189,6 @@ class _RootScreenState extends State<RootScreen> {
             ],
           ),
           body: _pages[_currentPage],
-          floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.deepOrange,
-              child: Icon(Icons.add),
-              onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (BuildContext bc) {
-                      return AddItem();
-                    },
-                    isScrollControlled: true);
-              }),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
         ));
   }
 }

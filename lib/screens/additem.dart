@@ -325,14 +325,6 @@ class _AddItemState extends State<AddItem> {
               ),
             ),
           ),
-          leading: InkWell(
-              child: Icon(
-                Icons.close,
-                color: Colors.blueGrey,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              }),
           elevation: 0.5,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.white),
