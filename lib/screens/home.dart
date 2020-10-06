@@ -9,6 +9,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/filter.dart';
 import 'package:SellShip/screens/home/below100.dart';
 import 'package:SellShip/screens/home/hometab.dart';
 import 'package:SellShip/screens/home/nearme.dart';
@@ -35,6 +36,7 @@ import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -813,6 +815,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   String _selectedCondition;
 
+  PersistentBottomSheetController _bottomsheetcontroller;
+
   _getLocation() async {
     Location.Location _location = new Location.Location();
     var location;
@@ -994,862 +998,847 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
         key: scaffoldState,
         backgroundColor: Colors.white,
-        body: GestureDetector(
+        appBar: AppBar(
+            elevation: 0,
+            backgroundColor: Colors.white,
+            title: Container(
+              height: 30,
+              width: 120,
+              child: Image.asset(
+                'assets/logotransparent.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            actions: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(right: 15),
+                child: Badge(
+                  showBadge: notbadge,
+                  position: BadgePosition.topRight(top: 2, right: 3),
+                  animationType: BadgeAnimationType.slide,
+                  badgeContent: Text(
+                    notcount.toString(),
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NotifcationPage()),
+                      );
+                    },
+                    child: Icon(
+                      Feather.bell,
+                      color: Color.fromRGBO(28, 45, 65, 1),
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ]),
+        body: CustomScrollView(
+          slivers: [
+            buildTabBar(),
+            buildUserPosts(),
+          ],
+        ));
+  }
+
+  String view = 'home';
+
+  SliverFillRemaining buildUserPosts() {
+    if (view == "home") {
+      return SliverFillRemaining(
+          hasScrollBody: false,
+          child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(229, 233, 242, 1),
+              ),
+              child: Container(
+                padding: EdgeInsets.only(top: 15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                  ),
+                ),
+                child: HomeView(),
+              )));
+    } else if (view == "recent") {
+      return SliverFillRemaining(
+          hasScrollBody: false,
+          child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(229, 233, 242, 1),
+              ),
+              child: Container(
+                padding: EdgeInsets.only(top: 15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                  ),
+                ),
+                child: RecentlyAdded(),
+              )));
+    } else if (view == "near") {
+      return SliverFillRemaining(
+          hasScrollBody: false,
+          child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(229, 233, 242, 1),
+              ),
+              child: Container(
+                padding: EdgeInsets.only(top: 15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                  ),
+                ),
+                child: NearMe(),
+              )));
+    } else if (view == "below") {
+      return SliverFillRemaining(
+          hasScrollBody: false,
+          child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(229, 233, 242, 1),
+              ),
+              child: Container(
+                padding: EdgeInsets.only(top: 15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                  ),
+                ),
+                child: Below100(),
+              )));
+    }
+  }
+
+  SliverList buildTabBar() {
+    return SliverList(
+        delegate: SliverChildListDelegate([
+      Row(children: <Widget>[
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10),
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25.0),
+                color: const Color(0x80e5e9f2),
+              ),
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, right: 10),
+                    child: Icon(
+                      Feather.search,
+                      size: 24,
+                      color: Color.fromRGBO(115, 115, 125, 1),
+                    ),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      onTap: () {
+                        showSearch(
+                            context: context,
+                            delegate: UserSearchDelegate(country));
+                      },
+                      controller: searchcontroller,
+                      decoration: InputDecoration(
+                          hintText: 'Search SellShip',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                          border: InputBorder.none),
+                    ),
+                  ),
+                ],
+              )),
+            ),
+          ),
+        ),
+        Padding(
+          child: InkWell(
             onTap: () {
-              FocusScope.of(context).requestFocus(new FocusNode());
-              FocusScope.of(context).requestFocus(new FocusNode());
-            },
-            child: NestedScrollView(
-                controller: _scrollController,
-                headerSliverBuilder: (context, _) {
-                  return [
-                    SliverAppBar(
-                      elevation: 0,
-                      backgroundColor: Colors.white,
-                      leading: Badge(
-                        showBadge: notbadge,
-                        position: BadgePosition.topRight(top: 2, right: 3),
-                        animationType: BadgeAnimationType.slide,
-                        badgeContent: Text(
-                          notcount.toString(),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NotifcationPage()),
-                            );
-                          },
-                          child: Icon(
-                            Feather.bell,
-                            color: Colors.deepOrange,
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                      title: Container(
-                        height: 30,
-                        width: 120,
-                        child: Image.asset(
-                          'assets/logotransparent.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      actions: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(right: 15),
-                          child: Badge(
-                            showBadge: notifbadge,
-                            position: BadgePosition.topRight(top: 2),
-                            animationType: BadgeAnimationType.slide,
-                            badgeContent: Text(
-                              '',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Messages()),
-                                );
-                              },
-                              child: Icon(
-                                Feather.message_square,
-                                color: Colors.deepOrange,
-                                size: 24,
+              _bottomsheetcontroller =
+                  scaffoldState.currentState.showBottomSheet((context) {
+                return Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(width: 0.2, color: Colors.grey),
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white),
+                    height: 525,
+                    width: MediaQuery.of(context).size.width,
+                    child: Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 5,
                               ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SliverPadding(
-                      padding: EdgeInsets.all(1.0),
-                      sliver: SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  top: 10.0, left: 15, right: 15, bottom: 10),
-                              child: Container(
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(5),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: Icon(
-                                          Feather.search,
-                                          size: 24,
-                                          color: Colors.deepOrange,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          onTap: () {
-                                            showSearch(
-                                                context: context,
-                                                delegate: UserSearchDelegate(
-                                                    country));
-                                          },
-                                          controller: searchcontroller,
-                                          decoration: InputDecoration(
-                                              hintText: 'Search SellShip',
-                                              hintStyle: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                              ),
-                                              border: InputBorder.none),
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                            Container(child: filtersort(context)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 10, top: 5, bottom: 10),
-                                  child: Text('Categories',
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.black)),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.only(
-                                        right: 20, top: 10, bottom: 10),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CategoryScreen(
-                                                      selectedcategory: 0)),
-                                        );
-                                      },
-                                      child: Text('View All',
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.deepOrange)),
+                              AppBar(
+                                title: Text('Filter',
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(28, 45, 65, 1),
                                     )),
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 60,
-                              child: MediaQuery.removePadding(
-                                context: context,
-                                removeTop: true,
-                                removeBottom: true,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  shrinkWrap: true,
-                                  itemCount: categories.length,
-                                  itemBuilder: (ctx, i) {
-                                    return Row(
-                                      children: <Widget>[
-                                        GestureDetector(
+                                elevation: 0.5,
+                                backgroundColor: Colors.white,
+                                excludeHeaderSemantics: true,
+                                automaticallyImplyLeading: false,
+                                actions: [
+                                  Padding(
+                                      padding: EdgeInsets.all(15),
+                                      child: InkWell(
                                           onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CategoryScreen(
-                                                          selectedcategory: i)),
-                                            );
+                                            Navigator.pop(context);
                                           },
-                                          child: Container(
-                                              width: 80,
-                                              height: 60,
-                                              alignment: Alignment.center,
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Container(
-                                                    height: 30,
-                                                    width: 80,
-                                                    child: Image.asset(
-                                                      categories[i].image,
+                                          child: Text('Done',
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 18,
+                                                color: Color.fromRGBO(
+                                                    28, 45, 65, 1),
+                                              ))))
+                                ],
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.2,
+                                          height: 450,
+                                          child: ListView(
+                                            scrollDirection: Axis.vertical,
+                                            children: [
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: InkWell(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: Text(
+                                                            'Sort',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 14,
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        28,
+                                                                        45,
+                                                                        65,
+                                                                        1),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                        Divider()
+                                                      ],
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 4,
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "${categories[i].title}",
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 14,
-                                                          color: Colors.black),
-                                                      textAlign:
-                                                          TextAlign.center,
+                                                    onTap: () {
+                                                      _bottomsheetcontroller
+                                                          .setState(() {
+                                                        _filter = 'Sort';
+                                                      });
+                                                    },
+                                                  )),
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: InkWell(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: Text(
+                                                            'Brand',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 14,
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        28,
+                                                                        45,
+                                                                        65,
+                                                                        1),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                        Divider()
+                                                      ],
                                                     ),
-                                                  )
-                                                ],
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                              )),
+                                                    onTap: () async {
+                                                      brands.clear();
+                                                      var categoryurl =
+                                                          'https://api.sellship.co/api/getallbrands';
+                                                      final categoryresponse =
+                                                          await http
+                                                              .get(categoryurl);
+                                                      if (categoryresponse
+                                                              .statusCode ==
+                                                          200) {
+                                                        var categoryrespons =
+                                                            json.decode(
+                                                                categoryresponse
+                                                                    .body);
+
+                                                        for (int i = 0;
+                                                            i <
+                                                                categoryrespons
+                                                                    .length;
+                                                            i++) {
+                                                          brands.add(
+                                                              categoryrespons[
+                                                                  i]);
+                                                        }
+                                                        _bottomsheetcontroller
+                                                            .setState(() {
+                                                          brands = brands;
+                                                        });
+                                                      } else {
+                                                        print(categoryresponse
+                                                            .statusCode);
+                                                      }
+                                                      _bottomsheetcontroller
+                                                          .setState(() {
+                                                        _filter = 'Brand';
+                                                      });
+                                                    },
+                                                  )),
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: InkWell(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: Text(
+                                                            'Condition',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 14,
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        28,
+                                                                        45,
+                                                                        65,
+                                                                        1),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                        Divider()
+                                                      ],
+                                                    ),
+                                                    onTap: () {
+                                                      _bottomsheetcontroller
+                                                          .setState(() {
+                                                        _filter = 'Condition';
+                                                      });
+                                                    },
+                                                  )),
+                                              Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: InkWell(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: Text(
+                                                            'Price',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 14,
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        28,
+                                                                        45,
+                                                                        65,
+                                                                        1),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                        Divider()
+                                                      ],
+                                                    ),
+                                                    onTap: () {
+                                                      _bottomsheetcontroller
+                                                          .setState(() {
+                                                        _filter = 'Price';
+                                                      });
+                                                    },
+                                                  )),
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          width: 2,
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ];
-                },
-                body: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SafeArea(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 60,
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(229, 233, 242, 1),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                            ),
-                          ),
-                          child: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            indicatorPadding: EdgeInsets.all(10),
-                            indicator: CircleTabIndicator(
-                                color: Colors.deepOrange, radius: 4),
-                            isScrollable: true,
-                            labelColor: Colors.black,
-                            labelStyle: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                            ),
-                            tabs: <Widget>[
-                              Tab(
-                                text: 'Home',
-                              ),
-                              Tab(text: 'Recently Added'),
-                              Tab(text: 'Near Me'),
-                              Tab(text: 'Below 100'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 10,
-                        color: Color.fromRGBO(229, 233, 242, 1),
-                      ),
-                      Expanded(
-                        child: Container(
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(229, 233, 242, 1),
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.only(top: 15),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                ),
-                              ),
-                              child: TabBarView(
-                                  controller: _tabController,
-                                  children: [
-                                    HomeView(),
-                                    RecentlyAdded(),
-                                    NearMe(),
-                                    Below100()
-                                  ]),
-                            )),
-                      )
-                    ]))));
+                                        filters(context)
+                                      ]))
+                            ])));
+              });
+            },
+            child: CircleAvatar(
+              backgroundColor: Color.fromRGBO(255, 115, 0, 0.2),
+              child:
+                  SvgPicture.asset('assets/bottomnavbar/sound-module-fill.svg'),
+            ),
+          ),
+          padding: EdgeInsets.only(right: 10),
+        )
+      ]),
+      SafeArea(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 50,
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(229, 233, 242, 1),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+            ),
+          ),
+          child: TabBar(
+            onTap: (int) {
+              if (int == 0) {
+                changeView("home");
+              } else if (int == 1) {
+                changeView("recent");
+              } else if (int == 2) {
+                changeView("near");
+              } else if (int == 3) {
+                changeView("below");
+              }
+            },
+            controller: _tabController,
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorPadding: EdgeInsets.all(10),
+            indicator: CircleTabIndicator(color: Colors.deepOrange, radius: 4),
+            isScrollable: true,
+            labelColor: Colors.black,
+            labelStyle: TextStyle(
+              fontFamily: 'Helvetica',
+              fontSize: 16,
+            ),
+            tabs: <Widget>[
+              Tab(
+                text: 'Home',
+              ),
+              Tab(text: 'Recently Added'),
+              Tab(text: 'Near Me'),
+              Tab(text: 'Below 100'),
+            ],
+          ),
+        ),
+      ),
+      Container(
+        height: 4,
+        color: Color.fromRGBO(229, 233, 242, 1),
+      ),
+    ]));
+  }
+
+  changeView(String viewName) {
+    setState(() {
+      view = viewName;
+    });
   }
 
   String _FilterLoad = "Recently Added";
   String _selectedFilter = "Recently Added";
 
-  Widget filtersort(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(
-          left: 10,
-          right: 10,
-        ),
-        child: Container(
-          height: 30,
-          color: Colors.white,
-          width: MediaQuery.of(context).size.width,
+  String _filter = 'Sort';
+
+  Widget filters(BuildContext context) {
+    if (_filter == 'Sort') {
+      return Container(
+          color: Color.fromRGBO(229, 233, 242, 0.5),
+          width: MediaQuery.of(context).size.width * 0.8 - 5,
+          height: 450,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 2,
+              ),
+              ListTile(
+                title: Text(
+                  'Sort by Price Low to High',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Filtered(
+                              filter: 'Lowest Price',
+                            )),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Sort by Price High to Low',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Filtered(
+                              filter: 'Highest Price',
+                            )),
+                  );
+                },
+              ),
+            ],
+          ));
+    } else if (_filter == 'Condition') {
+      return Container(
+          color: Color.fromRGBO(229, 233, 242, 0.5),
+          width: MediaQuery.of(context).size.width * 0.8 - 5,
+          height: 450,
           child: Padding(
-            padding: EdgeInsets.only(top: 2, bottom: 2),
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                InkWell(
-                    child: _selectedFilter == "Sort"
-                        ? Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.deepOrangeAccent),
-                            width: 60,
-                            child: Center(
-                              child: Text(
-                                'Sort',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 0.2, color: Colors.grey),
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white),
-                            width: 60,
-                            child: Center(
-                              child: Text(
-                                'Sort',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.deepOrange),
-                              ),
-                            ),
-                          ),
-                    onTap: () {
-                      scaffoldState.currentState.showBottomSheet((context) {
-                        return Container(
-                          decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 0.2, color: Colors.grey),
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white),
-                          height: 200,
-                          width: MediaQuery.of(context).size.width,
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Feather.chevron_down),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Center(
-                                  child: Text(
-                                    'Sort',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        color: Colors.deepOrange),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                ListTile(
-                                  title: Text(
-                                    'Price Low to High',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedFilter = 'Sort';
-                                      _FilterLoad = "Lowest Price";
-                                      skip = 0;
-                                      limit = 20;
-                                      loading = true;
-                                    });
-                                    itemsgrid.clear();
-                                    Navigator.of(context).pop();
-
-                                    fetchLowestPrice(skip, limit);
-                                  },
-                                ),
-                                ListTile(
-                                  title: Text(
-                                    'Price High to Low',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedFilter = 'Sort';
-                                      _FilterLoad = "Highest Price";
-                                      skip = 0;
-                                      limit = 20;
-                                      loading = true;
-                                    });
-                                    itemsgrid.clear();
-                                    Navigator.of(context).pop();
-
-                                    fetchHighestPrice(skip, limit);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      });
-                    }),
-                SizedBox(
-                  width: 5,
-                ),
-                InkWell(
-                    onTap: () {
-                      loadbrands();
-                    },
-                    child: _selectedFilter == "Brand"
-                        ? Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.deepOrangeAccent),
-                            width: 60,
-                            child: Center(
-                              child: Text(
-                                'Brand',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 0.2, color: Colors.grey),
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white),
-                            width: 60,
-                            child: Center(
-                              child: Text(
-                                'Brand',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.deepOrange),
-                              ),
-                            ),
-                          )),
-                SizedBox(
-                  width: 5,
-                ),
-                InkWell(
-                    onTap: () {
-                      scaffoldState.currentState.showBottomSheet((context) {
-                        return Container(
-                          height: 500,
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width,
-                          child: Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Icon(Feather.chevron_down),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      'Conditions',
+            padding: const EdgeInsets.all(1.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Container(
+                      height: 450,
+                      child: ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: conditions.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Filtered(
+                                          filter: 'Condition',
+                                          condition: conditions[index],
+                                        )),
+                              );
+                            },
+                            child: ListTile(
+                              title: conditions[index] != null
+                                  ? Text(
+                                      conditions[index],
                                       style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          color: Colors.deepOrange),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Container(
-                                      height: 450,
-                                      child: ListView.builder(
-                                        primary: false,
-                                        shrinkWrap: true,
-                                        itemCount: conditions.length,
-                                        itemBuilder: (context, index) {
-                                          return InkWell(
-                                            onTap: () async {
-                                              setState(() {
-                                                _selectedCondition =
-                                                    conditions[index];
-                                              });
-
-                                              setState(() {
-                                                _selectedFilter = 'Condition';
-                                                _FilterLoad = "Condition";
-                                                condition = _selectedCondition;
-                                                skip = 0;
-                                                limit = 20;
-                                                loading = true;
-                                              });
-                                              itemsgrid.clear();
-                                              Navigator.of(context).pop();
-
-                                              fetchCondition(
-                                                  _selectedCondition);
-                                            },
-                                            child: ListTile(
-                                              title: conditions[index] != null
-                                                  ? Text(conditions[index])
-                                                  : Text('sd'),
-                                            ),
-                                          );
-                                        },
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      });
-                    },
-                    child: _selectedFilter == "Condition"
-                        ? Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.deepOrangeAccent),
-                            width: 80,
-                            child: Center(
-                              child: Text(
-                                'Condition',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 0.2, color: Colors.grey),
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white),
-                            width: 80,
-                            child: Center(
-                              child: Text(
-                                'Condition',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.deepOrange),
-                              ),
-                            ),
-                          )),
-                SizedBox(
-                  width: 5,
-                ),
-                InkWell(
-                    onTap: () {
-                      scaffoldState.currentState.showBottomSheet((context) {
-                        return Container(
-                            height: 300,
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(Feather.chevron_down),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Center(
-                                  child: Text(
-                                    'Price',
-                                    style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 16,
-                                        color: Colors.deepOrange),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Center(
-                                    child: ListTile(
-                                        title: Text(
-                                          'Minimum Price',
-                                          style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        trailing: Container(
-                                            width: 200,
-                                            padding: EdgeInsets.only(),
-                                            child: Center(
-                                              child: TextField(
-                                                cursorColor: Color(0xFF979797),
-                                                controller: minpricecontroller,
-                                                keyboardType: TextInputType
-                                                    .numberWithOptions(),
-                                                decoration: InputDecoration(
-                                                    labelText:
-                                                        "Price " + currency,
-                                                    alignLabelWithHint: true,
-                                                    labelStyle: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                    ),
-                                                    focusColor: Colors.black,
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    border: OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    focusedErrorBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    disabledBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    errorBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    ))),
-                                              ),
-                                            )))),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Center(
-                                    child: ListTile(
-                                        title: Text(
-                                          'Maximum Price',
-                                          style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        trailing: Container(
-                                            width: 200,
-                                            padding: EdgeInsets.only(),
-                                            child: Center(
-                                              child: TextField(
-                                                cursorColor: Color(0xFF979797),
-                                                controller: maxpricecontroller,
-                                                keyboardType: TextInputType
-                                                    .numberWithOptions(),
-                                                decoration: InputDecoration(
-                                                    labelText:
-                                                        "Price " + currency,
-                                                    alignLabelWithHint: true,
-                                                    labelStyle: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                    ),
-                                                    focusColor: Colors.black,
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    border: OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    focusedErrorBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    disabledBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    errorBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    )),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                      color:
-                                                          Colors.grey.shade300,
-                                                    ))),
-                                              ),
-                                            )))),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                InkWell(
-                                    onTap: () async {
-                                      setState(() {
-                                        _selectedFilter = 'Price';
-                                        _FilterLoad = "Price";
-                                        minprice = minpricecontroller.text;
-                                        maxprice = maxpricecontroller.text;
-                                        skip = 0;
-                                        limit = 20;
-                                        loading = true;
-                                      });
-                                      itemsgrid.clear();
-                                      Navigator.of(context).pop();
-
-                                      fetchPrice(minpricecontroller.text,
-                                          maxpricecontroller.text);
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          color: Colors.deepOrangeAccent),
-                                      height: 50,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Center(
-                                        child: Text(
-                                          'Filter',
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white),
-                                        ),
                                       ),
-                                    ))
-                              ],
-                            ));
-                      });
-                    },
-                    child: _selectedFilter == "Price"
-                        ? Container(
-                            height: 30,
+                                    )
+                                  : Text('sd'),
+                            ),
+                          );
+                        },
+                      ))
+                ],
+              ),
+            ),
+          ));
+    } else if (_filter == 'Price') {
+      return Container(
+          color: Color.fromRGBO(229, 233, 242, 0.5),
+          width: MediaQuery.of(context).size.width * 0.8 - 5,
+          height: 450,
+          child: Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: SingleChildScrollView(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                      child: ListTile(
+                          title: Text(
+                            'Minimum Price',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                            ),
+                          ),
+                          trailing: Container(
+                              width: 100,
+                              padding: EdgeInsets.only(),
+                              child: Center(
+                                child: TextField(
+                                  cursorColor: Color(0xFF979797),
+                                  controller: minpricecontroller,
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(),
+                                  decoration: InputDecoration(
+                                      labelText: "Price " + currency,
+                                      alignLabelWithHint: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                      ),
+                                      focusColor: Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      ))),
+                                ),
+                              )))),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Center(
+                      child: ListTile(
+                          title: Text(
+                            'Maximum Price',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                            ),
+                          ),
+                          trailing: Container(
+                              width: 100,
+                              padding: EdgeInsets.only(),
+                              child: Center(
+                                child: TextField(
+                                  cursorColor: Color(0xFF979797),
+                                  controller: maxpricecontroller,
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(),
+                                  decoration: InputDecoration(
+                                      labelText: "Price " + currency,
+                                      alignLabelWithHint: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                      ),
+                                      focusColor: Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      ))),
+                                ),
+                              )))),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: InkWell(
+                          onTap: () async {
+                            Navigator.of(context).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Filtered(
+                                        filter: 'Price',
+                                        minprice: minpricecontroller.text,
+                                        maxprice: maxpricecontroller.text,
+                                      )),
+                            );
+                          },
+                          child: Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(5),
                                 color: Colors.deepOrangeAccent),
-                            width: 60,
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
                             child: Center(
                               child: Text(
-                                'Price',
+                                'Filter',
                                 style: TextStyle(
                                     fontFamily: 'Helvetica',
-                                    fontSize: 14,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
                                     color: Colors.white),
                               ),
                             ),
-                          )
-                        : Container(
-                            height: 30,
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 0.2, color: Colors.grey),
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white),
-                            width: 60,
-                            child: Center(
-                              child: Text(
-                                'Price',
+                          ))),
+                ],
+              ))));
+    } else if (_filter == 'Brand') {
+      return Container(
+          color: Color.fromRGBO(229, 233, 242, 0.5),
+          width: MediaQuery.of(context).size.width * 0.8 - 5,
+          height: 450,
+          child: Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+//                  height: 600,
+                    child: AlphabetListScrollView(
+                  showPreview: true,
+                  strList: brands,
+                  indexedHeight: (i) {
+                    return 40;
+                  },
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () async {
+                        Navigator.of(context).pop();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Filtered(
+                                    filter: 'Brand',
+                                    brand: brands[index],
+                                  )),
+                        );
+
+                        fetchbrands(brands[index]);
+                      },
+                      child: ListTile(
+                        title: brands[index] != null
+                            ? Text(
+                                brands[index],
                                 style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.deepOrange),
-                              ),
-                            ),
-                          )),
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                ),
+                              )
+                            : Text('No Brand'),
+                      ),
+                    );
+                  },
+                ))
               ],
             ),
-          ),
-        ));
+          ));
+    }
   }
 
   List<String> brands = List<String>();

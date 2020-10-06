@@ -83,6 +83,12 @@ class _RootScreenState extends State<RootScreen> {
         discover = 'assets/bottomnavbar/Discoverselect.svg';
         chat = 'assets/bottomnavbar/Chat.svg';
       });
+    } else if (_currentPage == 2) {
+      setState(() {
+        home = 'assets/bottomnavbar/Homeselect.svg';
+        discover = 'assets/bottomnavbar/Discover.svg';
+        chat = 'assets/bottomnavbar/Chat.svg';
+      });
     } else if (_currentPage == 3) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';

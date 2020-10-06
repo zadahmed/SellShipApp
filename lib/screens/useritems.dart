@@ -399,40 +399,40 @@ class _UserItemsState extends State<UserItems> {
                               SizedBox(
                                 height: 5,
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(5),
-                                child: Text(
-                                  firstname != null
-                                      ? firstname + ' ' + lastname
-                                      : ' ',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
-                                  SmoothStarRating(
-                                      allowHalfRating: true,
-                                      starCount: 5,
-                                      isReadOnly: true,
-                                      rating: reviewrating,
-                                      size: 20.0,
-                                      color: Colors.deepPurple,
-                                      borderColor: Colors.deepPurpleAccent,
-                                      spacing: 0.0),
+                                  Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Text(
+                                      firstname != null
+                                          ? firstname + ' ' + lastname
+                                          : ' ',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                   SizedBox(
-                                    width: 5,
+                                    width: 3,
                                   ),
                                   Text(
-                                    reviewrating.toStringAsFixed(1),
+                                    reviewrating == null
+                                        ? '0.0'
+                                        : reviewrating.toStringAsFixed(1),
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 16,
                                         color: Colors.black),
+                                  ),
+                                  SizedBox(
+                                    width: 3,
+                                  ),
+                                  Icon(
+                                    Icons.star,
+                                    color: Colors.deepPurple,
                                   ),
                                 ],
                               ),

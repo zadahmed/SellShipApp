@@ -6,6 +6,7 @@ import 'package:SellShip/screens/orderbuyer.dart';
 import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/orderselleruae.dart';
+import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,25 +17,308 @@ import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/details.dart';
 import 'package:numeral/numeral.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class HomeView extends StatefulWidget {
+class Filtered extends StatefulWidget {
   final String filter;
+  final String brand;
+  final String condition;
+  final String minprice;
+  final String maxprice;
 
-  HomeView({Key key, this.filter}) : super(key: key);
+  Filtered(
+      {Key key,
+      this.filter,
+      this.brand,
+      this.condition,
+      this.minprice,
+      this.maxprice})
+      : super(key: key);
   @override
-  HomeViewState createState() => HomeViewState();
+  FilteredState createState() => FilteredState();
 }
 
-class HomeViewState extends State<HomeView> {
+class FilteredState extends State<Filtered> {
   String country;
   String currency;
 
   final scaffoldState = GlobalKey<ScaffoldState>();
+
+  Future<List<Item>> fetchLowestPrice(int skip, int limit) async {
+    var url = 'https://api.sellship.co/api/lowestprice/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
+        name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
+        username: jsonbody[i]['username'],
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
+    }
+    if (itemsgrid != null) {
+      setState(() {
+        itemsgrid = itemsgrid;
+        loading = false;
+      });
+    } else {
+      setState(() {
+        itemsgrid = [];
+        loading = false;
+      });
+    }
+
+    return itemsgrid;
+  }
+
+  Future<List<Item>> fetchbrands(String brand) async {
+    var categoryurl = 'https://api.sellship.co/api/filter/brand/' +
+        country +
+        '/' +
+        brand +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
+          name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
+          image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> fetchCondition(String condition) async {
+    var categoryurl = 'https://api.sellship.co/api/filter/condition/' +
+        country +
+        '/' +
+        condition +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
+          name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
+          image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> fetchPrice(String minprice, String maxprice) async {
+    var categoryurl = 'https://api.sellship.co/api/filter/price/' +
+        country +
+        '/' +
+        minprice +
+        '/' +
+        maxprice +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    print(categoryurl);
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      var jsonbody = json.decode(categoryresponse.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
+          name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
+          image: jsonbody[i]['image'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        itemsgrid.add(item);
+      }
+      if (itemsgrid != null) {
+        setState(() {
+          itemsgrid = itemsgrid;
+          loading = false;
+        });
+      } else {
+        setState(() {
+          itemsgrid = [];
+          loading = false;
+        });
+      }
+
+      return itemsgrid;
+    } else {
+      print(categoryresponse.statusCode);
+    }
+  }
+
+  Future<List<Item>> fetchHighestPrice(int skip, int limit) async {
+    var url = 'https://api.sellship.co/api/highestprice/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
+        name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
+        image: jsonbody[i]['image'],
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
+    }
+    if (itemsgrid != null) {
+      setState(() {
+        itemsgrid = itemsgrid;
+        loading = false;
+      });
+    } else {
+      setState(() {
+        itemsgrid = [];
+        loading = false;
+      });
+    }
+
+    return itemsgrid;
+  }
 
   void readstorage() async {
     var countr = await storage.read(key: 'country');
@@ -58,7 +342,20 @@ class HomeViewState extends State<HomeView> {
     setState(() {
       country = countr;
     });
-    fetchRecentlyAdded(skip, limit);
+
+    if (_selectedFilter == 'Recently Added') {
+      fetchRecentlyAdded(skip, limit);
+    } else if (_selectedFilter == 'Lowest Price') {
+      fetchLowestPrice(skip, limit);
+    } else if (_selectedFilter == 'Highest Price') {
+      fetchHighestPrice(skip, limit);
+    } else if (_selectedFilter == 'Brand') {
+      fetchbrands(brand);
+    } else if (_selectedFilter == 'Price') {
+      fetchPrice(minprice, maxprice);
+    } else if (_selectedFilter == 'Condition') {
+      fetchCondition(condition);
+    }
   }
 
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
@@ -105,18 +402,14 @@ class HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    if (widget.filter == null) {
-      setState(() {
-        _FilterLoad = 'Recently Added';
-      });
-    } else {
-      setState(() {
-        _FilterLoad = widget.filter;
-      });
-    }
+
     setState(() {
-      _selectedFilter = "Recently Added";
-      _FilterLoad = "Recently Added";
+      _selectedFilter = widget.filter;
+      _FilterLoad = widget.filter;
+      brand = widget.brand;
+      minprice = widget.minprice;
+      maxprice = widget.maxprice;
+      condition = widget.condition;
       skip = 0;
       limit = 20;
       loading = true;
@@ -204,8 +497,8 @@ class HomeViewState extends State<HomeView> {
 
   var loading;
 
-  String _FilterLoad = "Recently Added";
-  String _selectedFilter = "Recently Added";
+  String _FilterLoad;
+  String _selectedFilter;
 
   static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
 
@@ -213,9 +506,320 @@ class HomeViewState extends State<HomeView> {
 
   final _controller = NativeAdmobController();
 
+  PersistentBottomSheetController _bottomsheetcontroller;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldState,
+      appBar: AppBar(
+        title: Text(
+          'Filter by ' + _selectedFilter,
+          style: TextStyle(
+              fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+        ),
+        iconTheme: IconThemeData(color: Colors.black),
+        elevation: 0,
+        actions: [
+          Padding(
+            child: InkWell(
+              onTap: () {
+                _bottomsheetcontroller =
+                    scaffoldState.currentState.showBottomSheet((context) {
+                  return Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 0.2, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white),
+                      height: 525,
+                      width: MediaQuery.of(context).size.width,
+                      child: Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                AppBar(
+                                  title: Text('Filter',
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color.fromRGBO(28, 45, 65, 1),
+                                      )),
+                                  elevation: 0.5,
+                                  backgroundColor: Colors.white,
+                                  excludeHeaderSemantics: true,
+                                  automaticallyImplyLeading: false,
+                                  actions: [
+                                    Padding(
+                                        padding: EdgeInsets.all(15),
+                                        child: InkWell(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text('Done',
+                                                style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 18,
+                                                  color: Color.fromRGBO(
+                                                      28, 45, 65, 1),
+                                                ))))
+                                  ],
+                                ),
+                                Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2,
+                                            height: 450,
+                                            child: ListView(
+                                              scrollDirection: Axis.vertical,
+                                              children: [
+                                                Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: InkWell(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomCenter,
+                                                            child: Text(
+                                                              'Sort',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 14,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          28,
+                                                                          45,
+                                                                          65,
+                                                                          1),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          Divider()
+                                                        ],
+                                                      ),
+                                                      onTap: () {
+                                                        _bottomsheetcontroller
+                                                            .setState(() {
+                                                          _filter = 'Sort';
+                                                        });
+                                                      },
+                                                    )),
+                                                Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: InkWell(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomCenter,
+                                                            child: Text(
+                                                              'Brand',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 14,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          28,
+                                                                          45,
+                                                                          65,
+                                                                          1),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          Divider()
+                                                        ],
+                                                      ),
+                                                      onTap: () async {
+                                                        brands.clear();
+                                                        var categoryurl =
+                                                            'https://api.sellship.co/api/getallbrands';
+                                                        final categoryresponse =
+                                                            await http.get(
+                                                                categoryurl);
+                                                        if (categoryresponse
+                                                                .statusCode ==
+                                                            200) {
+                                                          var categoryrespons =
+                                                              json.decode(
+                                                                  categoryresponse
+                                                                      .body);
+
+                                                          for (int i = 0;
+                                                              i <
+                                                                  categoryrespons
+                                                                      .length;
+                                                              i++) {
+                                                            brands.add(
+                                                                categoryrespons[
+                                                                    i]);
+                                                          }
+                                                          _bottomsheetcontroller
+                                                              .setState(() {
+                                                            brands = brands;
+                                                          });
+                                                        } else {
+                                                          print(categoryresponse
+                                                              .statusCode);
+                                                        }
+                                                        _bottomsheetcontroller
+                                                            .setState(() {
+                                                          _filter = 'Brand';
+                                                        });
+                                                      },
+                                                    )),
+                                                Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: InkWell(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomCenter,
+                                                            child: Text(
+                                                              'Condition',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 14,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          28,
+                                                                          45,
+                                                                          65,
+                                                                          1),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          Divider()
+                                                        ],
+                                                      ),
+                                                      onTap: () {
+                                                        _bottomsheetcontroller
+                                                            .setState(() {
+                                                          _filter = 'Condition';
+                                                        });
+                                                      },
+                                                    )),
+                                                Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: InkWell(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomCenter,
+                                                            child: Text(
+                                                              'Price',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 14,
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          28,
+                                                                          45,
+                                                                          65,
+                                                                          1),
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                          Divider()
+                                                        ],
+                                                      ),
+                                                      onTap: () {
+                                                        _bottomsheetcontroller
+                                                            .setState(() {
+                                                          _filter = 'Price';
+                                                        });
+                                                      },
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                          filters(context)
+                                        ]))
+                              ])));
+                });
+              },
+              child:
+                  SvgPicture.asset('assets/bottomnavbar/sound-module-fill.svg'),
+            ),
+            padding: EdgeInsets.only(right: 10),
+          )
+        ],
+        backgroundColor: Colors.white,
+      ),
       backgroundColor: Colors.white,
       body: loading == false ? home(context) : loadingwidget(context),
       floatingActionButton: showfloatingbutton == true
@@ -234,7 +838,360 @@ class HomeViewState extends State<HomeView> {
     );
   }
 
+  String _filter = 'Sort';
+
+  Widget filters(BuildContext context) {
+    if (_filter == 'Sort') {
+      return Container(
+          color: Color.fromRGBO(229, 233, 242, 0.5),
+          width: MediaQuery.of(context).size.width * 0.8 - 5,
+          height: 450,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 2,
+              ),
+              ListTile(
+                title: Text(
+                  'Sort by Price Low to High',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          Filtered(
+                        filter: 'Lowest Price',
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(
+                  'Sort by Price High to Low',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
+                ),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          Filtered(
+                        filter: 'Highest Price',
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ));
+    } else if (_filter == 'Condition') {
+      return Container(
+          color: Color.fromRGBO(229, 233, 242, 0.5),
+          width: MediaQuery.of(context).size.width * 0.8 - 5,
+          height: 450,
+          child: Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Container(
+                      height: 450,
+                      child: ListView.builder(
+                        primary: false,
+                        shrinkWrap: true,
+                        itemCount: conditions.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () async {
+                              Navigator.of(context).pop();
+
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          Filtered(
+                                    filter: 'Condition',
+                                    condition: conditions[index],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: ListTile(
+                              title: conditions[index] != null
+                                  ? Text(
+                                      conditions[index],
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                      ),
+                                    )
+                                  : Text('sd'),
+                            ),
+                          );
+                        },
+                      ))
+                ],
+              ),
+            ),
+          ));
+    } else if (_filter == 'Price') {
+      return Container(
+          color: Color.fromRGBO(229, 233, 242, 0.5),
+          width: MediaQuery.of(context).size.width * 0.8 - 5,
+          height: 450,
+          child: Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: SingleChildScrollView(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                      child: ListTile(
+                          title: Text(
+                            'Minimum Price',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                            ),
+                          ),
+                          trailing: Container(
+                              width: 100,
+                              padding: EdgeInsets.only(),
+                              child: Center(
+                                child: TextField(
+                                  cursorColor: Color(0xFF979797),
+                                  controller: minpricecontroller,
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(),
+                                  decoration: InputDecoration(
+                                      labelText: "Price " + currency,
+                                      alignLabelWithHint: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                      ),
+                                      focusColor: Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      ))),
+                                ),
+                              )))),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Center(
+                      child: ListTile(
+                          title: Text(
+                            'Maximum Price',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                            ),
+                          ),
+                          trailing: Container(
+                              width: 100,
+                              padding: EdgeInsets.only(),
+                              child: Center(
+                                child: TextField(
+                                  cursorColor: Color(0xFF979797),
+                                  controller: maxpricecontroller,
+                                  keyboardType:
+                                      TextInputType.numberWithOptions(),
+                                  decoration: InputDecoration(
+                                      labelText: "Price " + currency,
+                                      alignLabelWithHint: true,
+                                      labelStyle: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                      ),
+                                      focusColor: Colors.black,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedErrorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      )),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                        color: Colors.grey.shade300,
+                                      ))),
+                                ),
+                              )))),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: InkWell(
+                          onTap: () async {
+                            Navigator.of(context).pop();
+
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        Filtered(
+                                  filter: 'Price',
+                                  minprice: minpricecontroller.text,
+                                  maxprice: maxpricecontroller.text,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.deepOrangeAccent),
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: Text(
+                                'Filter',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ))),
+                ],
+              ))));
+    } else if (_filter == 'Brand') {
+      return Container(
+          color: Color.fromRGBO(229, 233, 242, 0.5),
+          width: MediaQuery.of(context).size.width * 0.8 - 5,
+          height: 450,
+          child: Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+//                  height: 600,
+                    child: AlphabetListScrollView(
+                  showPreview: true,
+                  strList: brands,
+                  indexedHeight: (i) {
+                    return 40;
+                  },
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () async {
+                        Navigator.of(context).pop();
+
+                        Navigator.pushReplacement(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation1, animation2) =>
+                                Filtered(
+                              filter: 'Brand',
+                              brand: brands[index],
+                            ),
+                          ),
+                        );
+
+                        fetchbrands(brands[index]);
+                      },
+                      child: ListTile(
+                        title: brands[index] != null
+                            ? Text(
+                                brands[index],
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                ),
+                              )
+                            : Text('No Brand'),
+                      ),
+                    );
+                  },
+                ))
+              ],
+            ),
+          ));
+    }
+  }
+
+  List<String> brands = List<String>();
+
+  TextEditingController minpricecontroller = new TextEditingController();
+  TextEditingController maxpricecontroller = new TextEditingController();
+
   List<Item> itemsgrid = [];
+  List<String> conditions = [
+    'New with tags',
+    'New, but no tags',
+    'Like new',
+    'Very Good, a bit worn',
+    'Good, some flaws visible in pictures'
+  ];
+
+  String brand;
+
+  String condition;
 
   var skip;
   var limit;
@@ -869,10 +1826,8 @@ class HomeViewState extends State<HomeView> {
     );
   }
 
-  String brand;
   String minprice;
   String maxprice;
-  String condition;
 
   Future<List<Item>> getmorecondition(String condition) async {
     setState(() {
