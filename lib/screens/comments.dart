@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -32,8 +33,12 @@ class Comments {
   final String userid;
   final String userpp;
   final String username;
+  final String id;
+  final String itemid;
 
   Comments({
+    this.itemid,
+    this.id,
     this.message,
     this.date,
     this.userid,
@@ -105,6 +110,8 @@ class _CommentsPageState extends State<CommentsPage> {
         var datecommented = timeago.format(datecomment);
 
         Comments comm = Comments(
+            itemid: jsonbody[i]['itemid'],
+            id: jsonbody[i]['id'],
             message: jsonbody[i]['comment'],
             userid: jsonbody[i]['userid'],
             userpp: jsonbody[i]['userpp'],
@@ -143,6 +150,7 @@ class _CommentsPageState extends State<CommentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: commentState,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -175,57 +183,144 @@ class _CommentsPageState extends State<CommentsPage> {
                     itemCount: commentslist.length,
                     itemBuilder: (BuildContext ctxt, int index) {
                       return new Card(
-                          child: Padding(
+                          child: Container(
                               padding: EdgeInsets.all(5),
-                              child: ListTile(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Messages()),
-                                  );
-                                },
-                                leading: Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
-                                      child: commentslist[index]
-                                              .userpp
-                                              .isNotEmpty
-                                          ? CachedNetworkImage(
-                                              imageUrl:
-                                                  commentslist[index].userpp,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Image.asset(
-                                              'assets/personplaceholder.png',
-                                              fit: BoxFit.fitWidth,
-                                            )),
-                                ),
-                                title: Text(
-                                  commentslist[index].message,
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                            child: commentslist[index]
+                                                    .userpp
+                                                    .isNotEmpty
+                                                ? CachedNetworkImage(
+                                                    imageUrl:
+                                                        commentslist[index]
+                                                            .userpp,
+                                                    fit: BoxFit.cover,
+                                                  )
+                                                : Image.asset(
+                                                    'assets/personplaceholder.png',
+                                                    fit: BoxFit.fitWidth,
+                                                  )),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                subtitle: Text(
-                                  commentslist[index].username,
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 12,
+                                  SizedBox(
+                                    width: 10,
                                   ),
-                                ),
-                                trailing: Text(
-                                  commentslist[index].date,
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                100,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserItems(
+                                                        userid:
+                                                            commentslist[index]
+                                                                .userid,
+                                                        username:
+                                                            commentslist[index]
+                                                                .username,
+                                                      )),
+                                            );
+                                          },
+                                          child: RichText(
+                                            text: new TextSpan(
+                                              style: new TextStyle(
+                                                fontSize: 14.0,
+                                                color: Colors.black,
+                                              ),
+                                              children: <TextSpan>[
+                                                new TextSpan(
+                                                    text: commentslist[index]
+                                                            .username +
+                                                        '  ',
+                                                    style: new TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 14,
+                                                    )),
+                                                new TextSpan(
+                                                  text: commentslist[index]
+                                                      .message,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            commentslist[index].date,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 10,
+                                                color: Colors.grey),
+                                          ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          InkWell(
+                                            onTap: () async {
+                                              var url =
+                                                  'https://api.sellship.co/api/report/comment/' +
+                                                      commentslist[index].id +
+                                                      '/' +
+                                                      itemid;
+
+                                              final response =
+                                                  await http.get(url);
+                                              if (response.statusCode == 200) {
+                                                showInSnackBar(
+                                                    'The comment has been reported. Thank you for making a SellShip a safer community!');
+                                              }
+                                            },
+                                            child: Text(
+                                              'Report',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 10,
+                                                  color: Colors.grey),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                ),
+                                ],
                               )));
                     }))
             : GestureDetector(

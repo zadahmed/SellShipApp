@@ -275,7 +275,7 @@ class _UserItemsState extends State<UserItems> {
           color: Colors.white,
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.deepPurple,
       duration: Duration(seconds: 3),
     ));
   }
@@ -351,20 +351,112 @@ class _UserItemsState extends State<UserItems> {
             child: loading == false
                 ? CustomScrollView(slivers: <Widget>[
                     SliverAppBar(
-                      snap: false,
-                      floating: true,
-                      pinned: true,
-                      iconTheme: IconThemeData(color: Colors.deepPurple),
-                      backgroundColor: Colors.white,
-                      title: Text(
-                        '$username'.toUpperCase(),
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.deepOrange,
-                            fontWeight: FontWeight.w800),
-                      ),
-                    ),
+                        snap: false,
+                        floating: true,
+                        pinned: true,
+                        iconTheme: IconThemeData(color: Colors.deepPurple),
+                        backgroundColor: Colors.white,
+                        title: Text(
+                          '$username'.toUpperCase(),
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              color: Colors.deepOrange,
+                              fontWeight: FontWeight.w800),
+                        ),
+                        actions: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(right: 15),
+                            child: InkWell(
+                              onTap: () {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      var dropdownValue;
+
+                                      List<String> reportvalues = [
+                                        'Inappropriate',
+                                        'Scam/Fraud'
+                                      ];
+
+                                      return StatefulBuilder(
+                                          builder: (context, updateState) {
+                                        return AlertDialog(
+                                            title: Text('Report'),
+                                            content: SingleChildScrollView(
+                                              child: ListBody(
+                                                children: <Widget>[
+                                                  Text(
+                                                    'Would you like to report this user?',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                  DropdownButton(
+                                                    hint: Text(
+                                                      'Please choose a reason',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                      ),
+                                                    ), // Not necessary for Option 1
+                                                    value: dropdownValue,
+                                                    onChanged: (newValue) {
+                                                      updateState(() {
+                                                        dropdownValue =
+                                                            newValue;
+                                                      });
+                                                    },
+                                                    items: reportvalues
+                                                        .map((location) {
+                                                      return DropdownMenuItem(
+                                                        child: new Text(
+                                                          location,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                        value: location,
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              MaterialButton(
+                                                child: Text('Report'),
+                                                onPressed: () async {
+                                                  var url =
+                                                      'https://api.sellship.co/api/report/user/' +
+                                                          userid;
+
+                                                  final response =
+                                                      await http.get(url);
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                    Navigator.of(context).pop();
+                                                    showInSnackBar(
+                                                        'User has been reported! Thank you for making the SellShip community a safer place.');
+                                                  }
+                                                },
+                                              ),
+                                            ]);
+                                      });
+                                    });
+                              },
+                              child: Icon(
+                                Icons.report_problem,
+                                color: Color.fromRGBO(28, 45, 65, 1),
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ]),
                     SliverToBoxAdapter(
                         child: Container(
                             color: Colors.white,
@@ -2198,17 +2290,30 @@ class _UserItemsState extends State<UserItems> {
                   ])
                 : Scaffold(
                     appBar: AppBar(
-                      iconTheme: IconThemeData(color: Colors.deepPurple),
-                      backgroundColor: Colors.white,
-                      title: Text(
-                        '$username'.toUpperCase(),
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.deepOrange,
-                            fontWeight: FontWeight.w800),
-                      ),
-                    ),
+                        elevation: 0,
+                        iconTheme: IconThemeData(color: Colors.deepPurple),
+                        backgroundColor: Colors.white,
+                        title: Text(
+                          '$username'.toUpperCase(),
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              color: Colors.deepOrange,
+                              fontWeight: FontWeight.w800),
+                        ),
+                        actions: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(right: 15),
+                            child: InkWell(
+                              onTap: () {},
+                              child: Icon(
+                                Icons.report_problem,
+                                color: Color.fromRGBO(28, 45, 65, 1),
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ]),
                     body: Container(
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(

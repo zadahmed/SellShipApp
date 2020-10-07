@@ -1,14 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/discover.dart';
 import 'package:SellShip/screens/messages.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:SellShip/screens/additem.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,6 +20,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/profile.dart';
+import 'package:http/http.dart' as http;
 
 class RootScreen extends StatefulWidget {
   int index;
@@ -37,9 +41,36 @@ class _RootScreenState extends State<RootScreen> {
     ProfilePage(),
   ];
 
+  var profilepicture;
+
+  getuser() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/user/' + userid;
+      final response = await http.get(url);
+      var respons = json.decode(response.body);
+      Map<String, dynamic> profilemap = respons;
+      var profilepic = profilemap['profilepicture'];
+      if (profilepic != null) {
+        setState(() {
+          profilepicture = profilepic;
+        });
+      } else {
+        setState(() {
+          profilepicture = null;
+        });
+      }
+    } else {
+      setState(() {
+        profilepicture = null;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    getuser();
     setState(() {
       if (widget.index != null) {
         _currentPage = widget.index;
@@ -182,10 +213,30 @@ class _RootScreenState extends State<RootScreen> {
                           fontWeight: FontWeight.w400,
                           color: Colors.black))),
               BottomNavigationBarItem(
-                  icon: Icon(
-                    FontAwesome.user_circle,
-                    size: 25,
-                  ),
+                  icon: profilepicture != null
+                      ? CircleAvatar(
+                          backgroundColor: Colors.grey.shade300,
+                          radius: 17,
+                          child: Container(
+                              height: 30,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: CachedNetworkImage(
+                                    imageUrl: profilepicture,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        SpinKitChasingDots(
+                                            color: Colors.deepOrange),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ))))
+                      : Icon(
+                          FontAwesome.user_circle,
+                          size: 25,
+                        ),
                   title: Text('',
                       style: TextStyle(
                           fontFamily: 'Helvetica',

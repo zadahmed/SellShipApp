@@ -119,35 +119,40 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
-  void getnotification() async {
-    if (userid != null) {
-      var userid = await storage.read(key: 'userid');
-      var url = 'https://api.sellship.co/api/getnotification/' + userid;
+  var notcount;
 
+  void getnotification() async {
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/getnotification/' + userid;
+      print(url);
       final response = await http.get(url);
       if (response.statusCode == 200) {
         var notificationinfo = json.decode(response.body);
         var notif = notificationinfo['notification'];
+        var notcoun = notificationinfo['notcount'];
 
-        if (notif <= 0) {
+        if (notcoun <= 0) {
           setState(() {
-            notifcount = notif;
-            notifbadge = false;
+            notcount = notcoun;
+            notbadge = false;
           });
-        } else if (notif > 0) {
+          FlutterAppBadger.removeBadge();
+        } else if (notcoun > 0) {
           setState(() {
-            notifcount = notif;
-            notifbadge = true;
+            notcount = notcoun;
+            notbadge = true;
           });
         }
+
+        print(notcount);
+
+        FlutterAppBadger.updateBadgeCount(notcount);
       } else {
         print(response.statusCode);
       }
     }
   }
-
-  var notifcount;
-  var notifbadge;
 
   @override
   void initState() {
@@ -156,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage>
     getnotification();
     setState(() {
       loading = true;
-      notifbadge = false;
+      notbadge = false;
     });
     _tabController = new TabController(length: 4, vsync: this);
     SystemChrome.setPreferredOrientations([
@@ -178,6 +183,7 @@ class _ProfilePageState extends State<ProfilePage>
   var sold;
   var totalitems;
 
+  var notbadge;
   Future getImageCamera() async {
     var image = await ImagePicker.pickImage(
         source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
@@ -365,61 +371,61 @@ class _ProfilePageState extends State<ProfilePage>
   Widget signedinprofile(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: Padding(
-          padding: EdgeInsets.all(10),
-          child: InkWell(
-              child: Icon(
-                Feather.settings,
-                color: Colors.deepOrange,
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Settings(
-                            email: email,
-                          )),
-                );
-              }),
-        ),
-        title: Container(
-          height: 30,
-          width: 120,
-          child: Image.asset(
-            'assets/logotransparent.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-        actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: Badge(
-              showBadge: notifbadge,
-              position: BadgePosition.topRight(top: 2),
-              animationType: BadgeAnimationType.slide,
-              badgeContent: Text(
-                '',
-                style: TextStyle(color: Colors.white),
-              ),
-              child: InkWell(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: Padding(
+            padding: EdgeInsets.all(10),
+            child: InkWell(
+                child: Icon(
+                  Feather.settings,
+                  color: Color.fromRGBO(28, 45, 65, 1),
+                ),
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Messages()),
+                    MaterialPageRoute(
+                        builder: (context) => Settings(
+                              email: email,
+                            )),
                   );
-                },
-                child: Icon(
-                  Feather.message_square,
-                  color: Colors.deepOrange,
-                  size: 24,
+                }),
+          ),
+          title: Container(
+            height: 30,
+            width: 120,
+            child: Image.asset(
+              'assets/logotransparent.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Badge(
+                showBadge: notbadge,
+                position: BadgePosition.topRight(top: 2, right: 3),
+                animationType: BadgeAnimationType.slide,
+                badgeContent: Text(
+                  notcount.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotifcationPage()),
+                    );
+                  },
+                  child: Icon(
+                    Feather.bell,
+                    color: Color.fromRGBO(28, 45, 65, 1),
+                    size: 24,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+          ]),
       key: _scaffoldKey,
       body: loading == false
           ? DefaultTabController(
