@@ -86,7 +86,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                       }
                     },
                     focusNode: myFocusNodePhone,
-                    autoValidate: true,
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
                     countries: ['GB', 'US', 'AE'],
                     textFieldController: _phoneNumberController,
                     inputDecoration: InputDecoration(
@@ -113,13 +113,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     width: MediaQuery.of(context).size.width,
                     height: 48,
                     decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [
-                              Colors.deepOrangeAccent,
-                              Colors.deepOrange
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight),
+                        color: Colors.deepOrange,
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(

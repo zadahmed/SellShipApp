@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:badges/badges.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -361,20 +362,20 @@ class _DiscoverState extends State<Discover> {
             iconTheme: IconThemeData(color: Colors.black),
             backgroundColor: Colors.white,
             elevation: 0,
-            title: Text(
-              'Discover',
-              style: TextStyle(
-                  fontFamily: 'Helvetica',
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w800),
+            title: Container(
+              height: 30,
+              width: 120,
+              child: Image.asset(
+                'assets/logotransparent.png',
+                fit: BoxFit.cover,
+              ),
             ),
             actions: <Widget>[
               Padding(
                 padding: EdgeInsets.only(right: 15),
                 child: Badge(
                   showBadge: notbadge,
-                  position: BadgePosition.topRight(top: 2, right: 3),
+                  position: BadgePosition.topEnd(top: 2, end: -4),
                   animationType: BadgeAnimationType.slide,
                   badgeContent: Text(
                     notcount.toString(),
@@ -456,7 +457,7 @@ class _DiscoverState extends State<Discover> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(left: 15, top: 5, bottom: 10),
-                  child: Text('Categories',
+                  child: Text('Discover',
                       style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 18,

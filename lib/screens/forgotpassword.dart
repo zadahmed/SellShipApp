@@ -179,13 +179,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         width: MediaQuery.of(context).size.width,
                         height: 48,
                         decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                                colors: [
-                                  Colors.deepOrangeAccent,
-                                  Colors.deepOrange
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight),
+                            color: Colors.deepOrange,
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(

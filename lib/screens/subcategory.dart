@@ -1903,7 +1903,7 @@ class _SubCategoryState extends State<SubCategory> {
                           padding: EdgeInsets.only(right: 15),
                           child: Badge(
                             showBadge: notifbadge,
-                            position: BadgePosition.topRight(top: 2),
+                            position: BadgePosition.topEnd(top: 2),
                             animationType: BadgeAnimationType.slide,
                             badgeContent: Text(
                               '',

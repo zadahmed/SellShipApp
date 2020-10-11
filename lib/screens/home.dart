@@ -1014,7 +1014,7 @@ class _HomeScreenState extends State<HomeScreen>
                 padding: EdgeInsets.only(right: 15),
                 child: Badge(
                   showBadge: notbadge,
-                  position: BadgePosition.topRight(top: 2, right: 3),
+                  position: BadgePosition.topEnd(top: 2, end: -4),
                   animationType: BadgeAnimationType.slide,
                   badgeContent: Text(
                     notcount.toString(),
@@ -1053,7 +1053,7 @@ class _HomeScreenState extends State<HomeScreen>
           hasScrollBody: false,
           child: Container(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(229, 233, 242, 1),
+                color: Color.fromRGBO(242, 244, 248, 1),
               ),
               child: Container(
                 padding: EdgeInsets.only(top: 15),
@@ -1070,7 +1070,7 @@ class _HomeScreenState extends State<HomeScreen>
           hasScrollBody: false,
           child: Container(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(229, 233, 242, 1),
+                color: Color.fromRGBO(242, 244, 248, 1),
               ),
               child: Container(
                 padding: EdgeInsets.only(top: 15),
@@ -1087,7 +1087,7 @@ class _HomeScreenState extends State<HomeScreen>
           hasScrollBody: false,
           child: Container(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(229, 233, 242, 1),
+                color: Color.fromRGBO(242, 244, 248, 1),
               ),
               child: Container(
                 padding: EdgeInsets.only(top: 15),
@@ -1104,7 +1104,7 @@ class _HomeScreenState extends State<HomeScreen>
           hasScrollBody: false,
           child: Container(
               decoration: BoxDecoration(
-                color: Color.fromRGBO(229, 233, 242, 1),
+                color: Color.fromRGBO(242, 244, 248, 1),
               ),
               child: Container(
                 padding: EdgeInsets.only(top: 15),
@@ -1465,7 +1465,7 @@ class _HomeScreenState extends State<HomeScreen>
           height: 50,
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
-            color: Color.fromRGBO(229, 233, 242, 1),
+            color: Color.fromRGBO(242, 244, 248, 1),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
             ),
@@ -1505,7 +1505,7 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       Container(
         height: 4,
-        color: Color.fromRGBO(229, 233, 242, 1),
+        color: Color.fromRGBO(242, 244, 248, 1),
       ),
     ]));
   }

@@ -403,7 +403,7 @@ class _ProfilePageState extends State<ProfilePage>
               padding: EdgeInsets.only(right: 15),
               child: Badge(
                 showBadge: notbadge,
-                position: BadgePosition.topRight(top: 2, right: 3),
+                position: BadgePosition.topEnd(top: 2, end: -4),
                 animationType: BadgeAnimationType.slide,
                 badgeContent: Text(
                   notcount.toString(),
@@ -1505,8 +1505,8 @@ class _ProfilePageState extends State<ProfilePage>
                                   child: Container(
                                     height: 30,
                                     width:
-                                        MediaQuery.of(context).size.width / 2 -
-                                            45,
+                                        MediaQuery.of(context).size.width / 4 -
+                                            25,
                                     decoration: BoxDecoration(
                                       color: item[index].sold == true
                                           ? Colors.deepPurpleAccent
@@ -1533,41 +1533,41 @@ class _ProfilePageState extends State<ProfilePage>
                                     ),
                                   ),
                                 ),
-//                                InkWell(
-//                                  onTap: () async {
-//                                    Navigator.push(
-//                                      context,
-//                                      MaterialPageRoute(
-//                                          builder: (context) => FeatureItem()),
-//                                    );
-//                                  },
-//                                  child: Container(
-//                                    height: 30,
-//                                    width:
-//                                        MediaQuery.of(context).size.width / 4 -
-//                                            25,
-//                                    decoration: BoxDecoration(
-//                                      color: Colors.deepOrange,
-//                                      boxShadow: [
-//                                        BoxShadow(
-//                                          color: Colors.grey.shade300,
-//                                          offset: Offset(0.0, 1.0), //(x,y)
-//                                          blurRadius: 6.0,
-//                                        ),
-//                                      ],
-//                                      borderRadius: BorderRadius.circular(5.0),
-//                                    ),
-//                                    child: Center(
-//                                      child: Text(
-//                                        'Boost',
-//                                        style: TextStyle(
-//                                            fontFamily: 'Helvetica',
-//                                            fontSize: 14,
-//                                            color: Colors.white),
-//                                      ),
-//                                    ),
-//                                  ),
-//                                ),
+                                InkWell(
+                                  onTap: () async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => FeatureItem()),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    width:
+                                        MediaQuery.of(context).size.width / 4 -
+                                            25,
+                                    decoration: BoxDecoration(
+                                      color: Colors.deepOrange,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade300,
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Boost',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,

@@ -2388,13 +2388,7 @@ class _AddItemState extends State<AddItem> {
                                           20,
                                       height: 50,
                                       decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                              colors: [
-                                                Colors.deepOrangeAccent,
-                                                Colors.deepOrange
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight),
+                                          color: Colors.deepOrange,
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           boxShadow: [

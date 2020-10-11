@@ -395,7 +395,7 @@ class NearMeState extends State<NearMe> {
             crossAxisSpacing: 1.0,
             crossAxisCount: 2,
             staggeredTileCount: itemsgrid.length,
-            staggeredTileBuilder: (index) => new StaggeredTile.fit(1),
+            staggeredTileBuilder: (index) => new StaggeredTile.count(1, 1.6),
           ),
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
@@ -686,9 +686,14 @@ class NearMeState extends State<NearMe> {
                                     alignment: Alignment.center,
                                     child: Container(
                                       height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepPurpleAccent
+                                            .withOpacity(0.8),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
                                       width: MediaQuery.of(context).size.width,
-                                      color: Colors.deepPurpleAccent
-                                          .withOpacity(0.8),
                                       child: Center(
                                         child: Text(
                                           'Sold',
@@ -824,13 +829,17 @@ class NearMeState extends State<NearMe> {
                           height: 5,
                         ),
                         Padding(
-                          child: Text(
-                            itemsgrid[index].name,
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: Color.fromRGBO(28, 45, 65, 1),
+                          child: Container(
+                            height: 20,
+                            child: Text(
+                              itemsgrid[index].name,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: Color.fromRGBO(28, 45, 65, 1),
+                              ),
                             ),
                           ),
                           padding: EdgeInsets.only(left: 10),

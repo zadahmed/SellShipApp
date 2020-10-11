@@ -153,7 +153,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               });
                             },
                             focusNode: myFocusNodePhone,
-                            autoValidate: true,
+                            autoValidateMode:
+                                AutovalidateMode.onUserInteraction,
                             countries: ['GB', 'US', 'AE'],
                             textFieldController: signupphonecontroller,
                             inputDecoration: InputDecoration(

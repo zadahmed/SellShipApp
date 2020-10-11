@@ -19,6 +19,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jiffy/jiffy.dart';
+import 'package:numeral/numeral.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:http/http.dart' as http;
@@ -65,6 +66,8 @@ class _DetailsState extends State<Details> {
     });
     fetchItem();
   }
+
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   TextEditingController offercontroller = TextEditingController();
 
@@ -673,31 +676,33 @@ class _DetailsState extends State<Details> {
 
   ScrollController _scrollController = ScrollController();
 
-  int inde;
+  int inde = 0;
   @override
   Widget build(BuildContext context) {
     return loading == false
         ? Scaffold(
             backgroundColor: Colors.white,
-            extendBodyBehindAppBar: true,
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.white.withOpacity(0.9),
+              backgroundColor: Colors.white,
               leading: InkWell(
                 onTap: () {
                   Navigator.pop(context);
                 },
                 child: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.deepOrange,
+                  color: Color.fromRGBO(28, 45, 65, 1),
                 ),
               ),
               title: Text(
                 newItem.name,
-                textAlign: TextAlign.left,
+                textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontFamily: 'Helvetica', fontSize: 14, color: Colors.black),
+                    fontFamily: 'Helvetica',
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
               ),
               actions: <Widget>[
                 Padding(
@@ -711,27 +716,21 @@ class _DetailsState extends State<Details> {
                       },
                       child: Icon(
                         Feather.share,
-                        color: Colors.deepOrange,
+                        color: Color.fromRGBO(28, 45, 65, 1),
                       )),
                 ),
               ],
             ),
             key: _scaffoldKey,
-            body: CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: <Widget>[
-                SliverAppBar(
-                    backgroundColor: Colors.white,
-                    automaticallyImplyLeading: false,
-                    expandedHeight: 350,
-                    stretch: true,
-                    stretchTriggerOffset: 150.0,
-                    flexibleSpace: FlexibleSpaceBar(
-                      collapseMode: CollapseMode.parallax,
-                      stretchModes: [StretchMode.zoomBackground],
-                      background: Stack(
-                        children: <Widget>[
-                          PageView.builder(
+            body: SingleChildScrollView(
+                child: Column(
+              children: <Widget>[
+                Container(
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                          height: 400,
+                          child: PageView.builder(
                               itemCount: images.length,
                               onPageChanged: (index) {
                                 print(index);
@@ -761,96 +760,48 @@ class _DetailsState extends State<Details> {
                                     fit: BoxFit.cover,
                                   ),
                                 );
-                              }),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: images.map((url) {
-                                _current = images.indexOf(url);
-                                return Container(
-                                  width: 8.0,
-                                  height: 8.0,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 10.0, horizontal: 2.0),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: _current == inde
-                                        ? Colors.deepOrange
-                                        : Colors.white,
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
-                SliverToBoxAdapter(
-                    child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 10,
-                    ),
-                    ListTile(
-//                      dense: true,
-                      title: Text(
-                        newItem.name,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                              height: 20,
-                              width: 30,
+                              })),
+                      Positioned(
+                          bottom: 20,
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Container(
+                              height: 35,
+                              width: 145,
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Colors.black26.withOpacity(0.4),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: favourited == true
-                                  ? InkWell(
-                                      onTap: () async {
-                                        var userid =
-                                            await storage.read(key: 'userid');
-
-                                        if (userid != null) {
-                                          var url =
-                                              'https://api.sellship.co/api/favourite/' +
-                                                  userid;
-
-                                          Map<String, String> body = {
-                                            'itemid': newItem.itemid,
-                                          };
-
-                                          final response =
-                                              await http.post(url, body: body);
-
-                                          if (response.statusCode == 200) {
-                                            setState(() {
-                                              newItem.likes = newItem.likes - 1;
-                                              favourited = false;
-                                            });
-                                          } else {
-                                            print(response.statusCode);
-                                          }
-                                        } else {
-                                          showInSnackBar(
-                                              'Please Login to use Favourites');
-                                        }
-                                      },
-                                      child: Icon(
-                                        FontAwesome.heart,
-                                        size: 25,
-                                        color: Colors.deepPurple,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    child: InkWell(
+                                      child: Container(
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Feather.heart,
+                                              size: 14,
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              Numeral(newItem.likes).value(),
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                        ),
                                       ),
-                                    )
-                                  : InkWell(
                                       onTap: () async {
                                         var userid =
                                             await storage.read(key: 'userid');
@@ -883,1014 +834,1273 @@ class _DetailsState extends State<Details> {
                                               'Please Login to use Favourites');
                                         }
                                       },
-                                      child: Icon(
-                                        Feather.heart,
-                                        size: 25,
-                                        color: Colors.grey,
-                                      ),
-                                    )),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Flexible(
-                            child: Text(
-                              newItem.likes.toString(),
-//                              '24244242',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 18,
-                                color: Colors.deepPurple,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 10, top: 2),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          currency + ' ' + newItem.price.toString(),
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 25,
-                            color: Colors.deepOrange,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 5, top: 5),
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Icon(
-                              Icons.apps,
-                              color: Colors.deepPurple,
-                              size: 14,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 250,
-                              child: Text(
-                                newItem.category,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 14,
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 5, top: 5),
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Icon(
-                              FontAwesome5.grin_stars,
-                              color: Colors.deepPurple,
-                              size: 14,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 250,
-                              child: Text(
-                                newItem.condition.toString(),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 14,
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 5, top: 5),
-                      child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Icon(FontAwesome.tag,
-                                color: Colors.deepPurple, size: 14),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 250,
-                              child: Text(
-                                newItem.brand.toString(),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 14,
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    newItem.size.isNotEmpty
-                        ? Padding(
-                            padding:
-                                EdgeInsets.only(left: 15, bottom: 5, top: 5),
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.signal_cellular_null,
-                                    color: Colors.deepPurple,
-                                    size: 14,
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Container(
-                                    width: 250,
-                                    child: Text(
-                                      newItem.size.toString(),
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 14,
-                                        color: Colors.blueGrey,
-                                        fontWeight: FontWeight.w500,
-                                      ),
                                     ),
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 5),
                                   ),
-                                ],
-                              ),
-                            ),
-                          )
-                        : Container(),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 10, top: 5),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                              Icons.access_time,
-                              size: 14,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Uploaded $dateuploaded',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 14,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 0.1,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 10,
-                      ),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: ListTile(
-                              onTap: () {
-                                showModalBottomSheet(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                            top: Radius.circular(25.0))),
-                                    backgroundColor: Colors.white,
-                                    context: context,
-                                    isScrollControlled: true,
-                                    builder: (context) => Container(
-                                        height: 500,
-                                        child: Scaffold(
-                                          body: ListView(
-                                            children: <Widget>[
-                                              Container(
-                                                height: 150,
-                                                decoration: new BoxDecoration(
-                                                  image: new DecorationImage(
-                                                    image: new ExactAssetImage(
-                                                        'assets/secure.png'),
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              ListTile(
-                                                leading: Icon(
-                                                  Icons.account_balance_wallet,
-                                                  size: 20,
-                                                  color:
-                                                      Colors.deepPurpleAccent,
-                                                ),
-                                                title: Text(
-                                                  'Buyer Protection',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 20,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                              ),
-                                              ListTile(
-                                                title: Text(
-                                                  'Secure Payments',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                                subtitle: Text(
-                                                  'All transcations within SellShip are secured and encrypted and kept safe using our trusted payment provider Stripe. Payment information is not available to sellers nor stored by us.',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 12,
-                                                    color: Colors.blueGrey,
-                                                  ),
-                                                ),
-                                                leading: Icon(
-                                                  Icons.lock,
-                                                  color:
-                                                      Colors.deepPurpleAccent,
-                                                ),
-                                              ),
-                                              ListTile(
-                                                title: Text(
-                                                    'Money Back Guarantee'),
-                                                subtitle: Text(
-                                                  'Item\'s that are not described as listed by the seller, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 3 days of confirmed delivery',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 12,
-                                                    color: Colors.blueGrey,
-                                                  ),
-                                                ),
-                                                leading: Icon(
-                                                  FontAwesome.money,
-                                                  color:
-                                                      Colors.deepPurpleAccent,
-                                                ),
-                                              ),
-                                              ListTile(
-                                                title: Text('SellShip Support'),
-                                                subtitle: Text(
-                                                  'The SellShip support team works 24/7 around the clock to deal with all issues, queries and doubts.',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 12,
-                                                    color: Colors.blueGrey,
-                                                  ),
-                                                ),
-                                                leading: Icon(
-                                                  Icons.live_help,
-                                                  color:
-                                                      Colors.deepPurpleAccent,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          bottomNavigationBar: Padding(
-                                            padding: EdgeInsets.all(10),
-                                            child: InkWell(
-                                              onTap: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Container(
-                                                height: 48,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    20,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.deepPurple,
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                    Radius.circular(5.0),
-                                                  ),
-                                                  boxShadow: <BoxShadow>[
-                                                    BoxShadow(
-                                                        color: Colors.deepPurple
-                                                            .withOpacity(0.4),
-                                                        offset: const Offset(
-                                                            1.1, 1.1),
-                                                        blurRadius: 10.0),
-                                                  ],
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    'Done',
-                                                    textAlign: TextAlign.left,
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16,
-                                                      letterSpacing: 0.0,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                                    child: VerticalDivider(),
+                                  ),
+                                  Padding(
+                                    child: InkWell(
+                                      child: Container(
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Feather.message_circle,
+                                              size: 14,
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              Numeral(newItem.comments).value(),
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                color: Colors.white,
+                                                fontSize: 14,
                                               ),
                                             ),
-                                          ),
-                                        )));
-                              },
-                              leading: Icon(
-                                FontAwesome.lock,
-                                size: 30,
-                                color: Colors.deepPurple,
-                              ),
-                              title: Text(
-                                'Buyer Protection',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              subtitle: Text(
-                                'Items bought through SellShip are eligible for Buyer Protection and Money Back Guarantee.',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 12,
-                                  color: Colors.blueGrey,
-                                ),
-                              ),
-                              trailing: Icon(
-                                Feather.info,
-                                size: 16,
-                              ))),
-                    ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 0.1,
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(
-                          left: 10,
-                        ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: ListTile(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        CommentsPage(itemid: newItem.itemid)),
-                              );
-                            },
-                            leading: Icon(
-                              Feather.message_circle,
-                              size: 22,
-                              color: Colors.deepPurpleAccent,
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                            ),
-                            title: Text(
-                              newItem.comments.toString() + ' Comments',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        )),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 0.1,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Seller',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserItems(
-                                  userid: newItem.userid,
-                                  username: newItem.username)),
-                        );
-                      },
-                      dense: true,
-                      leading: profilepicture != null
-                          ? Container(
-                              height: 50,
-                              width: 50,
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(25),
-                                  child: CachedNetworkImage(
-                                    imageUrl: profilepicture,
-                                    fit: BoxFit.cover,
-                                  )),
-                            )
-                          : CircleAvatar(
-                              radius: 20,
-                              backgroundColor: Colors.deepOrange,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(25),
-                                child: Image.asset(
-                                  'assets/personplaceholder.png',
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              )),
-                      title: Text(
-                        newItem.username,
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      trailing: InkWell(
-                        onTap: () async {
-                          if (userid != null) {
-                            var recieverid = newItem.userid;
-                            if (recieverid != userid) {
-                              var itemurl =
-                                  'https://api.sellship.co/api/createroom/' +
-                                      userid +
-                                      '/' +
-                                      recieverid +
-                                      '/' +
-                                      itemid;
-                              final response = await http.get(itemurl);
-                              var messageinfo = json.decode(response.body);
-                              var messageid = (messageinfo['messageid']);
-                              var recieverfcmtoken =
-                                  (messageinfo['recieverfcmtoken']);
-                              var sendername = (messageinfo['sendername']);
-                              var recipentname = (messageinfo['recievername']);
-
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ChatPageView(
-                                    messageid: messageid,
-                                    recipentname: recipentname,
-                                    senderid: userid,
-                                    recipentid: recieverid,
-                                    fcmToken: recieverfcmtoken,
-                                    senderName: sendername,
-                                    itemid: itemid,
-                                  ),
-                                ),
-                              );
-                            }
-                          } else {
-                            showDialog(
-                                context: context,
-                                builder: (_) => AssetGiffyDialog(
-                                      image: Image.asset(
-                                        'assets/oops.gif',
-                                        fit: BoxFit.cover,
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                        ),
                                       ),
-                                      title: Text(
-                                        'Oops!',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 22.0,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      description: Text(
-                                        'You need to login to Chat!',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(),
-                                      ),
-                                      onlyOkButton: true,
-                                      entryAnimation: EntryAnimation.DEFAULT,
-                                      onOkButtonPressed: () {
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop('dialog');
+                                      enableFeedback: true,
+                                      onTap: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  RootScreen(index: 4)),
+                                                  CommentsPage(
+                                                      itemid: newItem.itemid)),
                                         );
                                       },
-                                    ));
-                          }
-                        },
-                        child: Container(
-                          width: 60,
-                          height: 40,
+                                    ),
+                                    padding:
+                                        EdgeInsets.only(left: 5, right: 10),
+                                  ),
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                              ),
+                            ),
+                          )),
+                      Positioned(
+                        bottom: 20,
+                        left: MediaQuery.of(context).size.width / 2,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: images.map((url) {
+                            _current = images.indexOf(url);
+                            return Padding(
+                                padding: EdgeInsets.all(5),
+                                child: CircleAvatar(
+                                    radius: 6,
+                                    backgroundColor:
+                                        Colors.grey.withOpacity(0.3),
+                                    child: Container(
+                                      width: 10.0,
+                                      height: 10.0,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _current == inde
+                                            ? Colors.deepOrange
+                                            : Colors.white,
+                                      ),
+                                    )));
+                          }).toList(),
+                        ),
+                      ),
+                      Align(
+                          alignment: Alignment.bottomCenter,
                           child: Container(
+                            height: 20,
+                            decoration: BoxDecoration(
+                                color: Color.fromRGBO(242, 244, 248, 1),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                                border: Border.all(
+                                  width: 0.0,
+                                  color: Color.fromRGBO(242, 244, 248, 1),
+                                )),
+                          )),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.white,
+                                child: favourited == true
+                                    ? InkWell(
+                                        onTap: () async {
+                                          var userid =
+                                              await storage.read(key: 'userid');
+
+                                          if (userid != null) {
+                                            var url =
+                                                'https://api.sellship.co/api/favourite/' +
+                                                    userid;
+
+                                            Map<String, String> body = {
+                                              'itemid': newItem.itemid,
+                                            };
+
+                                            final response = await http
+                                                .post(url, body: body);
+
+                                            if (response.statusCode == 200) {
+                                              setState(() {
+                                                newItem.likes =
+                                                    newItem.likes - 1;
+                                                favourited = false;
+                                              });
+                                            } else {
+                                              print(response.statusCode);
+                                            }
+                                          } else {
+                                            showInSnackBar(
+                                                'Please Login to use Favourites');
+                                          }
+                                        },
+                                        child: Icon(
+                                          FontAwesome.heart,
+                                          size: 22,
+                                          color: Colors.deepPurple,
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () async {
+                                          var userid =
+                                              await storage.read(key: 'userid');
+
+                                          if (userid != null) {
+                                            var url =
+                                                'https://api.sellship.co/api/favourite/' +
+                                                    userid;
+
+                                            Map<String, String> body = {
+                                              'itemid': newItem.itemid,
+                                            };
+
+                                            final response = await http
+                                                .post(url, body: body);
+
+                                            if (response.statusCode == 200) {
+                                              var jsondata =
+                                                  json.decode(response.body);
+
+                                              setState(() {
+                                                newItem.likes =
+                                                    newItem.likes + 1;
+                                                favourited = true;
+                                              });
+                                            } else {
+                                              print(response.statusCode);
+                                            }
+                                          } else {
+                                            showInSnackBar(
+                                                'Please Login to use Favourites');
+                                          }
+                                        },
+                                        child: Icon(
+                                          Feather.heart,
+                                          size: 22,
+                                          color: Colors.grey,
+                                        ),
+                                      ))),
+                      ),
+                    ],
+                  ),
+                  height: 400,
+                ),
+                Container(
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(242, 244, 248, 1),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, bottom: 5, top: 2),
+                          child: Text(
+                            capitalize(newItem.brand),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, bottom: 5, top: 2),
+                          child: Text(
+                            capitalize(newItem.name),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, bottom: 5, top: 2),
+                          child: Text(
+                            '$dateuploaded',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 15, bottom: 5, top: 10, right: 15),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(5.0),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade300,
-                                  offset: Offset(0.0, 0.5), //(x,y)
-                                  blurRadius: 6.0,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 15, bottom: 5, top: 5, right: 15),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.apps,
+                                              color:
+                                                  Color.fromRGBO(60, 72, 88, 1),
+                                              size: 18,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              'Category',
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Color.fromRGBO(
+                                                    60, 72, 88, 1),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          newItem.category,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 5, right: 15),
+                                  child: Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              FontAwesome5.smile_beam,
+                                              color:
+                                                  Color.fromRGBO(60, 72, 88, 1),
+                                              size: 18,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              'Condition',
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Color.fromRGBO(
+                                                    60, 72, 88, 1),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          newItem.condition.toString(),
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 5, right: 15),
+                                  child: Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              FontAwesome.tag,
+                                              color:
+                                                  Color.fromRGBO(60, 72, 88, 1),
+                                              size: 18,
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(
+                                              'Brand',
+                                              textAlign: TextAlign.left,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Color.fromRGBO(
+                                                    60, 72, 88, 1),
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          newItem.brand.toString(),
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                            child: Center(
-                              child: Text('Chat'),
-                            ),
                           ),
                         ),
-                      ),
-                      subtitle: Column(children: <Widget>[
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            SmoothStarRating(
-                                allowHalfRating: true,
-                                starCount: 5,
-                                isReadOnly: true,
-                                rating: reviewrating,
-                                size: 20.0,
-                                color: Colors.deepPurple,
-                                borderColor: Colors.deepPurpleAccent,
-                                spacing: 0.0),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              reviewrating.toStringAsFixed(1),
-                              style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
+                        newItem.size.isNotEmpty
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 5, top: 5),
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.signal_cellular_null,
+                                        color: Colors.deepPurple,
+                                        size: 14,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        width: 250,
+                                        child: Text(
+                                          newItem.size.toString(),
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.blueGrey,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                        Divider(
+                          color: Colors.grey,
+                          thickness: 0.1,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10, bottom: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              InkWell(
-                                child: verifiedemail == true
-                                    ? Badge(
-                                        showBadge: true,
-                                        badgeColor: Colors.deepOrangeAccent,
-                                        position: BadgePosition.topRight(),
-                                        animationType: BadgeAnimationType.slide,
-                                        badgeContent: Icon(
-                                          FontAwesome.check_circle,
-                                          size: 10,
-                                          color: Colors.white,
-                                        ),
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 0.2,
-                                                  color: Colors.grey),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: CircleAvatar(
-                                              radius: 13,
-                                              child: Icon(
-                                                Feather.mail,
-                                                size: 13,
-                                                color: Colors.deepOrange,
-                                              ),
-                                              backgroundColor: Colors.white,
-                                            )))
-                                    : Badge(
-                                        showBadge: true,
-                                        badgeColor: Colors.grey,
-                                        position: BadgePosition.topRight(),
-                                        animationType: BadgeAnimationType.slide,
-                                        badgeContent: Icon(
-                                          FontAwesome.question,
-                                          size: 8,
-                                          color: Colors.white,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 0.2, color: Colors.grey),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: CircleAvatar(
-                                            radius: 13,
-                                            child: Icon(
-                                              Feather.mail,
-                                              size: 13,
-                                              color: Colors.deepOrange,
-                                            ),
-                                            backgroundColor: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              InkWell(
-                                child: verifiedphone == true
-                                    ? Badge(
-                                        showBadge: true,
-                                        badgeColor: Colors.deepOrangeAccent,
-                                        position: BadgePosition.topRight(),
-                                        animationType: BadgeAnimationType.slide,
-                                        badgeContent: Icon(
-                                          FontAwesome.check_circle,
-                                          size: 10,
-                                          color: Colors.white,
-                                        ),
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 0.2,
-                                                  color: Colors.grey),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: CircleAvatar(
-                                              radius: 13,
-                                              child: Icon(
-                                                Feather.phone,
-                                                size: 13,
-                                                color: Colors.deepOrange,
-                                              ),
-                                              backgroundColor: Colors.white,
-                                            )))
-                                    : Badge(
-                                        showBadge: true,
-                                        badgeColor: Colors.grey,
-                                        position: BadgePosition.topRight(),
-                                        animationType: BadgeAnimationType.slide,
-                                        badgeContent: Icon(
-                                          FontAwesome.question,
-                                          size: 8,
-                                          color: Colors.white,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 0.2, color: Colors.grey),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: CircleAvatar(
-                                            radius: 13,
-                                            child: Icon(
-                                              Feather.phone,
-                                              size: 13,
-                                              color: Colors.deepOrange,
-                                            ),
-                                            backgroundColor: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              InkWell(
-                                child: verifiedfb == true
-                                    ? Badge(
-                                        showBadge: true,
-                                        badgeColor: Colors.deepOrange,
-                                        position: BadgePosition.topRight(),
-                                        animationType: BadgeAnimationType.slide,
-                                        badgeContent: Icon(
-                                          FontAwesome.check_circle,
-                                          size: 10,
-                                          color: Colors.white,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 0.2,
-                                                color: Colors.deepOrange),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: CircleAvatar(
-                                            radius: 13,
-                                            child: Icon(
-                                              Feather.facebook,
-                                              size: 13,
-                                              color: Colors.white,
-                                            ),
-                                            backgroundColor: Colors.blueAccent,
-                                          ),
-                                        ),
-                                      )
-                                    : Badge(
-                                        showBadge: true,
-                                        badgeColor: Colors.grey,
-                                        position: BadgePosition.topRight(),
-                                        animationType: BadgeAnimationType.slide,
-                                        badgeContent: Icon(
-                                          FontAwesome.question,
-                                          size: 8,
-                                          color: Colors.white,
-                                        ),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                width: 0.2, color: Colors.grey),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: CircleAvatar(
-                                            radius: 13,
-                                            child: Icon(
-                                              Feather.facebook,
-                                              size: 13,
-                                              color: Colors.blueAccent,
-                                            ),
-                                            backgroundColor: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                            ],
+                          padding: EdgeInsets.only(
+                            left: 10,
                           ),
-                        )
-                      ]),
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
-                    ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 0.1,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Description',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: ListTile(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(25.0))),
+                                        backgroundColor: Colors.white,
+                                        context: context,
+                                        isScrollControlled: true,
+                                        builder: (context) => Container(
+                                            height: 500,
+                                            child: Scaffold(
+                                              body: ListView(
+                                                children: <Widget>[
+                                                  Container(
+                                                    height: 150,
+                                                    decoration:
+                                                        new BoxDecoration(
+                                                      image:
+                                                          new DecorationImage(
+                                                        image: new ExactAssetImage(
+                                                            'assets/secure.png'),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  ListTile(
+                                                    leading: Icon(
+                                                      Icons
+                                                          .account_balance_wallet,
+                                                      size: 20,
+                                                      color: Colors
+                                                          .deepPurpleAccent,
+                                                    ),
+                                                    title: Text(
+                                                      'Buyer Protection',
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 20,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  ListTile(
+                                                    title: Text(
+                                                      'Secure Payments',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    subtitle: Text(
+                                                      'All transcations within SellShip are secured and encrypted and kept safe using our trusted payment provider Stripe. Payment information is not available to sellers nor stored by us.',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 12,
+                                                        color: Colors.blueGrey,
+                                                      ),
+                                                    ),
+                                                    leading: Icon(
+                                                      Icons.lock,
+                                                      color: Colors
+                                                          .deepPurpleAccent,
+                                                    ),
+                                                  ),
+                                                  ListTile(
+                                                    title: Text(
+                                                        'Money Back Guarantee'),
+                                                    subtitle: Text(
+                                                      'Item\'s that are not described as listed by the seller, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 3 days of confirmed delivery',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 12,
+                                                        color: Colors.blueGrey,
+                                                      ),
+                                                    ),
+                                                    leading: Icon(
+                                                      FontAwesome.money,
+                                                      color: Colors
+                                                          .deepPurpleAccent,
+                                                    ),
+                                                  ),
+                                                  ListTile(
+                                                    title: Text(
+                                                        'SellShip Support'),
+                                                    subtitle: Text(
+                                                      'The SellShip support team works 24/7 around the clock to deal with all issues, queries and doubts.',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 12,
+                                                        color: Colors.blueGrey,
+                                                      ),
+                                                    ),
+                                                    leading: Icon(
+                                                      Icons.live_help,
+                                                      color: Colors
+                                                          .deepPurpleAccent,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              bottomNavigationBar: Padding(
+                                                padding: EdgeInsets.all(10),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Container(
+                                                    height: 48,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            20,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.deepPurple,
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                        Radius.circular(5.0),
+                                                      ),
+                                                      boxShadow: <BoxShadow>[
+                                                        BoxShadow(
+                                                            color: Colors
+                                                                .deepPurple
+                                                                .withOpacity(
+                                                                    0.4),
+                                                            offset:
+                                                                const Offset(
+                                                                    1.1, 1.1),
+                                                            blurRadius: 10.0),
+                                                      ],
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Done',
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                          fontSize: 16,
+                                                          letterSpacing: 0.0,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )));
+                                  },
+                                  leading: Icon(
+                                    FontAwesome.lock,
+                                    size: 30,
+                                    color: Colors.deepPurple,
+                                  ),
+                                  title: Text(
+                                    'Buyer Protection',
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 14,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    'Items bought through SellShip are eligible for Buyer Protection and Money Back Guarantee.',
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 12,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                  trailing: Icon(
+                                    Feather.info,
+                                    size: 16,
+                                  ))),
                         ),
-                      ),
-                    ),
-                    Container(
-                      height: 130,
-                      width: MediaQuery.of(context).size.width - 10,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: new SingleChildScrollView(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 10, right: 10),
-                                child: Text(
-                                  newItem.description,
-                                  textAlign: TextAlign.justify,
+                        Divider(
+                          color: Colors.grey,
+                          thickness: 0.1,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(
+                              left: 10,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: ListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CommentsPage(
+                                            itemid: newItem.itemid)),
+                                  );
+                                },
+                                leading: Icon(
+                                  Feather.message_circle,
+                                  size: 22,
+                                  color: Colors.deepPurpleAccent,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 14,
+                                ),
+                                title: Text(
+                                  newItem.comments.toString() + ' Comments',
                                   style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     fontSize: 14,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
+                            )),
+                        Divider(
+                          color: Colors.grey,
+                          thickness: 0.1,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Seller',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 0.1,
-                    ),
-                    Platform.isIOS == true
-                        ? Container(
-                            height: 300,
-                            padding: EdgeInsets.all(5),
-                            child: NativeAdmob(
-                              adUnitID: _iosadUnitID,
-                              controller: _controller,
-                            ),
-                          )
-                        : Container(
-                            height: 300,
-                            padding: EdgeInsets.all(5),
-                            child: NativeAdmob(
-                              adUnitID: _androidadUnitID,
-                              controller: _controller,
-                            ),
-                          ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 0.1,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Secure Payments',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                            color: Colors.grey,
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'All transcations within SellShip are secured and encrypted and kept safe using our trusted payment provider Stripe. Payment information is not available to sellers nor stored by us.',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 12,
-                            color: Colors.blueGrey,
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserItems(
+                                      userid: newItem.userid,
+                                      username: newItem.username)),
+                            );
+                          },
+                          dense: true,
+                          leading: profilepicture != null
+                              ? Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(25),
+                                      child: CachedNetworkImage(
+                                        imageUrl: profilepicture,
+                                        fit: BoxFit.cover,
+                                      )),
+                                )
+                              : CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: Colors.deepOrange,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: Image.asset(
+                                      'assets/personplaceholder.png',
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                                  )),
+                          title: Text(
+                            newItem.username,
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          trailing: InkWell(
+                            onTap: () async {
+                              if (userid != null) {
+                                var recieverid = newItem.userid;
+                                if (recieverid != userid) {
+                                  var itemurl =
+                                      'https://api.sellship.co/api/createroom/' +
+                                          userid +
+                                          '/' +
+                                          recieverid +
+                                          '/' +
+                                          itemid;
+                                  final response = await http.get(itemurl);
+                                  var messageinfo = json.decode(response.body);
+                                  var messageid = (messageinfo['messageid']);
+                                  var recieverfcmtoken =
+                                      (messageinfo['recieverfcmtoken']);
+                                  var sendername = (messageinfo['sendername']);
+                                  var recipentname =
+                                      (messageinfo['recievername']);
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPageView(
+                                        messageid: messageid,
+                                        recipentname: recipentname,
+                                        senderid: userid,
+                                        recipentid: recieverid,
+                                        fcmToken: recieverfcmtoken,
+                                        senderName: sendername,
+                                        itemid: itemid,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AssetGiffyDialog(
+                                          image: Image.asset(
+                                            'assets/oops.gif',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            'Oops!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'You need to login to Chat!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(),
+                                          ),
+                                          onlyOkButton: true,
+                                          entryAnimation:
+                                              EntryAnimation.DEFAULT,
+                                          onOkButtonPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RootScreen(index: 4)),
+                                            );
+                                          },
+                                        ));
+                              }
+                            },
+                            child: Container(
+                              width: 60,
+                              height: 40,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(5.0),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      offset: Offset(0.0, 0.5), //(x,y)
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text('Chat'),
+                                ),
+                              ),
+                            ),
+                          ),
+                          subtitle: Column(children: <Widget>[
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SmoothStarRating(
+                                    allowHalfRating: true,
+                                    starCount: 5,
+                                    isReadOnly: true,
+                                    rating: reviewrating,
+                                    size: 20.0,
+                                    color: Colors.deepPurple,
+                                    borderColor: Colors.deepPurpleAccent,
+                                    spacing: 0.0),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  reviewrating.toStringAsFixed(1),
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.black),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 10, bottom: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  InkWell(
+                                    child: verifiedemail == true
+                                        ? Badge(
+                                            showBadge: true,
+                                            badgeColor: Colors.deepOrangeAccent,
+                                            position: BadgePosition.topEnd(),
+                                            animationType:
+                                                BadgeAnimationType.slide,
+                                            badgeContent: Icon(
+                                              FontAwesome.check_circle,
+                                              size: 10,
+                                              color: Colors.white,
+                                            ),
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      width: 0.2,
+                                                      color: Colors.grey),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: CircleAvatar(
+                                                  radius: 13,
+                                                  child: Icon(
+                                                    Feather.mail,
+                                                    size: 13,
+                                                    color: Colors.deepOrange,
+                                                  ),
+                                                  backgroundColor: Colors.white,
+                                                )))
+                                        : Badge(
+                                            showBadge: true,
+                                            badgeColor: Colors.grey,
+                                            position: BadgePosition.topEnd(),
+                                            animationType:
+                                                BadgeAnimationType.slide,
+                                            badgeContent: Icon(
+                                              FontAwesome.question,
+                                              size: 8,
+                                              color: Colors.white,
+                                            ),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.grey),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: CircleAvatar(
+                                                radius: 13,
+                                                child: Icon(
+                                                  Feather.mail,
+                                                  size: 13,
+                                                  color: Colors.deepOrange,
+                                                ),
+                                                backgroundColor: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  InkWell(
+                                    child: verifiedphone == true
+                                        ? Badge(
+                                            showBadge: true,
+                                            badgeColor: Colors.deepOrangeAccent,
+                                            position: BadgePosition.topEnd(),
+                                            animationType:
+                                                BadgeAnimationType.slide,
+                                            badgeContent: Icon(
+                                              FontAwesome.check_circle,
+                                              size: 10,
+                                              color: Colors.white,
+                                            ),
+                                            child: Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      width: 0.2,
+                                                      color: Colors.grey),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: CircleAvatar(
+                                                  radius: 13,
+                                                  child: Icon(
+                                                    Feather.phone,
+                                                    size: 13,
+                                                    color: Colors.deepOrange,
+                                                  ),
+                                                  backgroundColor: Colors.white,
+                                                )))
+                                        : Badge(
+                                            showBadge: true,
+                                            badgeColor: Colors.grey,
+                                            position: BadgePosition.topEnd(),
+                                            animationType:
+                                                BadgeAnimationType.slide,
+                                            badgeContent: Icon(
+                                              FontAwesome.question,
+                                              size: 8,
+                                              color: Colors.white,
+                                            ),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.grey),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: CircleAvatar(
+                                                radius: 13,
+                                                child: Icon(
+                                                  Feather.phone,
+                                                  size: 13,
+                                                  color: Colors.deepOrange,
+                                                ),
+                                                backgroundColor: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  InkWell(
+                                    child: verifiedfb == true
+                                        ? Badge(
+                                            showBadge: true,
+                                            badgeColor: Colors.deepOrange,
+                                            position: BadgePosition.topEnd(),
+                                            animationType:
+                                                BadgeAnimationType.slide,
+                                            badgeContent: Icon(
+                                              FontAwesome.check_circle,
+                                              size: 10,
+                                              color: Colors.white,
+                                            ),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.deepOrange),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: CircleAvatar(
+                                                radius: 13,
+                                                child: Icon(
+                                                  Feather.facebook,
+                                                  size: 13,
+                                                  color: Colors.white,
+                                                ),
+                                                backgroundColor:
+                                                    Colors.blueAccent,
+                                              ),
+                                            ),
+                                          )
+                                        : Badge(
+                                            showBadge: true,
+                                            badgeColor: Colors.grey,
+                                            position: BadgePosition.topEnd(),
+                                            animationType:
+                                                BadgeAnimationType.slide,
+                                            badgeContent: Icon(
+                                              FontAwesome.question,
+                                              size: 8,
+                                              color: Colors.white,
+                                            ),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    width: 0.2,
+                                                    color: Colors.grey),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: CircleAvatar(
+                                                radius: 13,
+                                                child: Icon(
+                                                  Feather.facebook,
+                                                  size: 13,
+                                                  color: Colors.blueAccent,
+                                                ),
+                                                backgroundColor: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ]),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 0.0, horizontal: 16.0),
+                        ),
+                        Divider(
+                          color: Colors.grey,
+                          thickness: 0.1,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Description',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 10, bottom: 10, top: 10, right: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(FontAwesome.cc_visa),
-                            Icon(FontAwesome.cc_amex),
-                            Icon(FontAwesome.cc_diners_club),
-                            Icon(FontAwesome.cc_paypal),
-                            Icon(FontAwesome.cc_discover),
-                            Icon(FontAwesome.cc_jcb),
-                            Icon(FontAwesome.cc_mastercard),
-                          ],
-                        )),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 0.1,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 5),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
+                        Container(
+                          height: 130,
+                          width: MediaQuery.of(context).size.width - 10,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Icon(
-                                Icons.location_on,
-                                size: 15,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                newItem.city.toString(),
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
+                              Expanded(
+                                flex: 1,
+                                child: new SingleChildScrollView(
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    child: Text(
+                                      newItem.description,
+                                      textAlign: TextAlign.justify,
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
-                          )),
-                    ),
-                    Container(
-                      height: 200,
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            height: 200,
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                target: position,
-                                zoom: 15.0,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.grey,
+                          thickness: 0.1,
+                        ),
+                        Platform.isIOS == true
+                            ? Container(
+                                height: 300,
+                                padding: EdgeInsets.all(5),
+                                child: NativeAdmob(
+                                  adUnitID: _iosadUnitID,
+                                  controller: _controller,
+                                ),
+                              )
+                            : Container(
+                                height: 300,
+                                padding: EdgeInsets.all(5),
+                                child: NativeAdmob(
+                                  adUnitID: _androidadUnitID,
+                                  controller: _controller,
+                                ),
                               ),
-                              onMapCreated: mapCreated,
-                              circles: _circles,
+                        Divider(
+                          color: Colors.grey,
+                          thickness: 0.1,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Secure Payments',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 5),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Location is approximated to protect the user',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w300),
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        reportitem(context);
-                      },
-                      child: Text(
-                        'Report this Item',
-                        style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 12,
-                            color: Colors.blueGrey,
-                            decoration: TextDecoration.underline,
-                            fontWeight: FontWeight.w300),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                    ),
-                  ],
-                ))
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'All transcations within SellShip are secured and encrypted and kept safe using our trusted payment provider Stripe. Payment information is not available to sellers nor stored by us.',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 12,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 10, bottom: 10, top: 10, right: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(FontAwesome.cc_visa),
+                                Icon(FontAwesome.cc_amex),
+                                Icon(FontAwesome.cc_diners_club),
+                                Icon(FontAwesome.cc_paypal),
+                                Icon(FontAwesome.cc_discover),
+                                Icon(FontAwesome.cc_jcb),
+                                Icon(FontAwesome.cc_mastercard),
+                              ],
+                            )),
+                        Divider(
+                          color: Colors.grey,
+                          thickness: 0.1,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 5),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.location_on,
+                                    size: 15,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    newItem.city.toString(),
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                        Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  blurRadius: 6.0,
+                                ),
+                              ],
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                height: 200,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: GoogleMap(
+                                  initialCameraPosition: CameraPosition(
+                                    target: position,
+                                    zoom: 15.0,
+                                  ),
+                                  onMapCreated: mapCreated,
+                                  circles: _circles,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, bottom: 10, top: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Location is approximated to protect the user',
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            reportitem(context);
+                          },
+                          child: Text(
+                            'Report this Item',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 12,
+                                color: Colors.blueGrey,
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.w300),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 100,
+                        ),
+                      ],
+                    )),
               ],
-            ),
+            )),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
             floatingActionButton: newItem.sold == false
                 ? Container(
                     width: MediaQuery.of(context).size.width,
-                    color: Colors.white.withOpacity(0.8),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 10, bottom: 10, right: 10, top: 10),
@@ -1945,22 +2155,23 @@ class _DetailsState extends State<Details> {
                               decoration: BoxDecoration(
                                 color: Colors.deepPurple,
                                 borderRadius: const BorderRadius.all(
-                                  Radius.circular(5.0),
+                                  Radius.circular(20.0),
                                 ),
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(
-                                      color: Colors.deepPurple.withOpacity(0.4),
-                                      offset: const Offset(1.1, 1.1),
-                                      blurRadius: 10.0),
+                                      color: Colors.grey.withOpacity(0.4),
+                                      offset: const Offset(0.0, 0.8),
+                                      blurRadius: 5.0),
                                 ],
                               ),
                               child: Center(
                                 child: Text(
                                   'Make an Offer',
-                                  textAlign: TextAlign.left,
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
+                                    fontFamily: 'Helvetica',
                                     letterSpacing: 0.0,
                                     color: Colors.white,
                                   ),
@@ -1968,159 +2179,35 @@ class _DetailsState extends State<Details> {
                               ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () async {
-                              if (userid != null) {
-                                var recieverid = newItem.userid;
-                                if (recieverid != userid) {
-                                  var itemurl =
-                                      'https://api.sellship.co/api/createroom/' +
-                                          userid +
-                                          '/' +
-                                          recieverid +
-                                          '/' +
-                                          itemid;
-                                  final response = await http.get(itemurl);
-                                  var messageinfo = json.decode(response.body);
-                                  var messageid = (messageinfo['messageid']);
-
-                                  if (country.contains('United States')) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Checkout(
-                                          messageid: messageid,
-                                          item: newItem,
-                                          offer: newItem.price,
-                                        ),
-                                      ),
-                                    );
-                                  } else if (country
-                                      .contains('United Arab Emirates')) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CheckoutUAE(
-                                          messageid: messageid,
-                                          item: newItem,
-                                          offer: newItem.price,
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CheckoutUAE(
-                                          messageid: messageid,
-                                          item: newItem,
-                                          offer: newItem.price,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => AssetGiffyDialog(
-                                            image: Image.asset(
-                                              'assets/oops.gif',
-                                              fit: BoxFit.cover,
-                                            ),
-                                            title: Text(
-                                              'Oops!',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontSize: 22.0,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            description: Text(
-                                              'You can\'t send a message to yourself!',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(),
-                                            ),
-                                            onlyOkButton: true,
-                                            entryAnimation:
-                                                EntryAnimation.DEFAULT,
-                                            onOkButtonPressed: () {
-                                              Navigator.of(context,
-                                                      rootNavigator: true)
-                                                  .pop('dialog');
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        RootScreen(index: 4)),
-                                              );
-                                            },
-                                          ));
-                                }
-                              } else {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => AssetGiffyDialog(
-                                          image: Image.asset(
-                                            'assets/oops.gif',
-                                            fit: BoxFit.cover,
-                                          ),
-                                          title: Text(
-                                            'Oops!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 22.0,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          description: Text(
-                                            'You need to login to create an offer!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(),
-                                          ),
-                                          onlyOkButton: true,
-                                          entryAnimation:
-                                              EntryAnimation.DEFAULT,
-                                          onOkButtonPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop('dialog');
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RootScreen(index: 4)),
-                                            );
-                                          },
-                                        ));
-                              }
-                            },
-                            child: Container(
-                              height: 48,
-                              width: MediaQuery.of(context).size.width / 2 - 20,
-                              decoration: BoxDecoration(
-                                color: Colors.deepOrange,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(5.0),
-                                ),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Colors.deepOrange.withOpacity(0.4),
-                                      offset: const Offset(1.1, 1.1),
-                                      blurRadius: 10.0),
-                                ],
+                          Container(
+                            height: 48,
+                            width: MediaQuery.of(context).size.width / 2 - 20,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(20.0),
                               ),
-                              child: Center(
-                                child: Text(
-                                  'Buy Now',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    letterSpacing: 0.0,
-                                    color: Colors.white,
-                                  ),
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    color: Colors.grey.withOpacity(0.4),
+                                    offset: const Offset(0.0, 0.8),
+                                    blurRadius: 5.0),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                currency + ' ' + newItem.price.toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                  fontFamily: 'Helvetica',
+                                  letterSpacing: 1.0,
+                                  color: Colors.deepPurple,
                                 ),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

@@ -20,7 +20,6 @@ import 'providers/userProvider.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
-//  InAppPurchaseConnection.enablePendingPurchases();
   runApp(MyApp());
 }
 
