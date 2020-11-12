@@ -21,6 +21,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: InkWell(
             onTap: () {
@@ -30,14 +31,17 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               );
             },
             child: Icon(Icons.arrow_back_ios)),
-        iconTheme: IconThemeData(color: Colors.deepOrange),
+        iconTheme: IconThemeData(color: Colors.deepPurple),
         elevation: 0,
         title: Text(
           'Forgot Password',
           style: TextStyle(
-              color: Colors.deepOrange,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Helvetica'),
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            letterSpacing: 0.0,
+            color: Colors.deepPurple,
+            fontFamily: 'Helvetica',
+          ),
         ),
         backgroundColor: Colors.white,
       ),
@@ -82,7 +86,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 30,
                     ),
                     InkWell(
                       onTap: () async {
@@ -98,7 +102,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 return AlertDialog(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
-                                          Radius.circular(32.0))),
+                                          Radius.circular(5.0))),
                                   contentPadding: EdgeInsets.only(top: 10.0),
                                   content: Container(
                                     width: 300.0,
@@ -141,19 +145,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      RootScreen(index: 4)),
+                                                      RootScreen()),
                                             );
                                           },
                                           child: Container(
                                             padding: EdgeInsets.only(
                                                 top: 20.0, bottom: 20.0),
                                             decoration: BoxDecoration(
-                                              color: Colors.deepOrange,
-                                              borderRadius: BorderRadius.only(
-                                                  bottomLeft:
-                                                      Radius.circular(32.0),
-                                                  bottomRight:
-                                                      Radius.circular(32.0)),
+                                              color: Colors.deepPurple,
                                             ),
                                             child: Text(
                                               "Close",
@@ -179,8 +178,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         width: MediaQuery.of(context).size.width,
                         height: 48,
                         decoration: BoxDecoration(
-                            color: Colors.deepOrange,
-                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.deepPurple,
+                            borderRadius: BorderRadius.circular(5),
                             boxShadow: [
                               BoxShadow(
                                   color: Color(0xFF9DA3B4).withOpacity(0.1),

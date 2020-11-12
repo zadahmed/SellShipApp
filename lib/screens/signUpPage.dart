@@ -3,6 +3,8 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/providers/userProvider.dart';
+import 'package:SellShip/verification/verifyphone.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -31,6 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void initState() {
     super.initState();
+    Firebase.initializeApp();
     getNotifications();
   }
 
@@ -62,6 +65,16 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         elevation: 0,
         brightness: Brightness.light,
+        title: Text(
+          "Sign up",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            letterSpacing: 0.0,
+            color: Colors.deepPurple,
+            fontFamily: 'Helvetica',
+          ),
+        ),
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
@@ -79,191 +92,190 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          height: MediaQuery.of(context).size.height,
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  FadeAnimation(
-                      1,
-                      Text(
-                        "Sign up",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "SF",
-                        ),
-                      )),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  FadeAnimation(
-                      1.2,
-                      Text(
-                        "Create an account, It's free",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontFamily: "SF",
-                            color: Colors.grey[700]),
-                      )),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  _SignInTextField(
-                      fadeDelay: 1.2,
-                      titleText: "First Name",
-                      hintText: "Enter your first name",
-                      controller: signupNameController),
-                  _SignInTextField(
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 50,
+            width: 5,
+            child: Image.asset(
+              'assets/logotransparent.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Center(
+            child: FadeAnimation(
+                1.2,
+                Text(
+                  "Create an account, It's free",
+                  style: TextStyle(
+                      fontSize: 15, fontFamily: "SF", color: Colors.grey[700]),
+                )),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                _SignInTextField(
                     fadeDelay: 1.2,
-                    titleText: "Last Name",
-                    hintText: "Enter your last name",
-                    controller: signupLastnameController,
-                  ),
-                  FadeAnimation(
-                      1.3,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Phone Number',
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontFamily: "SF",
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black87),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          InternationalPhoneNumberInput(
-                            isEnabled: true,
-                            onInputChanged: (PhoneNumber number) async {
-                              var numberss = await PhoneNumber
-                                  .getRegionInfoFromPhoneNumber(
-                                      number.toString());
-                              setState(() {
-                                numberphone = numberss.toString();
-                              });
-                            },
-                            focusNode: myFocusNodePhone,
-                            autoValidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            countries: ['GB', 'US', 'AE'],
-                            textFieldController: signupphonecontroller,
-                            inputDecoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              hintText: "0501234567",
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      )),
-                  _SignInTextField(
-                    fadeDelay: 1.2,
-                    titleText: "Email",
-                    hintText: "Enter your email",
-                    controller: signupEmailController,
-                  ),
-                  _SignInTextField(
-                    fadeDelay: 1.3,
-                    titleText: "Password",
-                    hintText: "Enter your Password",
-                    controller: signupPasswordController,
-                    obscureText: true,
-                  ),
-                ],
-              ),
-              FadeAnimation(
-                1.5,
-                InkWell(
-                  child: Padding(
-                    padding: EdgeInsets.all(5),
-                    child: Container(
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.deepPurpleAccent,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10.0),
-                        ),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.deepPurpleAccent.withOpacity(0.4),
-                              offset: const Offset(1.1, 1.1),
-                              blurRadius: 10.0),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          'Sign Up',
-                          textAlign: TextAlign.left,
+                    titleText: "First Name",
+                    hintText: "Enter your first name",
+                    controller: signupNameController),
+                _SignInTextField(
+                  fadeDelay: 1.2,
+                  titleText: "Last Name",
+                  hintText: "Enter your last name",
+                  controller: signupLastnameController,
+                ),
+                FadeAnimation(
+                    1.3,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Phone Number',
                           style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            letterSpacing: 0.0,
-                            color: Colors.white,
+                              fontSize: 15,
+                              fontFamily: "SF",
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black87),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        InternationalPhoneNumberInput(
+                          isEnabled: true,
+                          onInputChanged: (PhoneNumber number) async {
+                            if (number != null) {
+                              setState(() {
+                                numberphone = number.toString();
+                              });
+                            }
+                          },
+                          focusNode: myFocusNodePhone,
+                          autoValidateMode: AutovalidateMode.onUserInteraction,
+                          countries: ['GB', 'US', 'AE'],
+                          textFieldController: signupphonecontroller,
+                          inputDecoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            hintText: "501234567",
                           ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    )),
+                _SignInTextField(
+                  fadeDelay: 1.2,
+                  titleText: "Email",
+                  hintText: "Enter your email",
+                  controller: signupEmailController,
+                ),
+                _SignInTextField(
+                  fadeDelay: 1.3,
+                  titleText: "Password",
+                  hintText: "Enter your Password",
+                  controller: signupPasswordController,
+                  obscureText: true,
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(20),
+            child: FadeAnimation(
+              1.5,
+              InkWell(
+                child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurpleAccent,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.deepPurpleAccent.withOpacity(0.4),
+                            offset: const Offset(1.1, 1.1),
+                            blurRadius: 10.0),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Sign Up',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          letterSpacing: 0.0,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (_) => new AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0))),
-                              content: Builder(
-                                builder: (context) {
-                                  return Container(
-                                      height: 50,
-                                      width: 50,
-                                      child: SpinKitChasingDots(
-                                        color: Colors.deepOrange,
-                                      ));
-                                },
-                              ),
-                            ));
-                    Signup();
-                  },
                 ),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) => new AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            content: Builder(
+                              builder: (context) {
+                                return Container(
+                                    height: 50,
+                                    width: 50,
+                                    child: SpinKitChasingDots(
+                                      color: Colors.deepOrange,
+                                    ));
+                              },
+                            ),
+                          ));
+                  Signup();
+                },
               ),
-              FadeAnimation(
-                  1.6,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("Already have an account?"),
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
-                        },
-                        child: Text(
-                          " Login",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: "SF",
-                              fontSize: 14),
-                        ),
-                      ),
-                    ],
-                  )),
-            ],
+            ),
           ),
-        ),
+          FadeAnimation(
+              1.6,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Already have an account with us?"),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    },
+                    child: Text(
+                      " Login",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "SF",
+                          fontSize: 14),
+                    ),
+                  ),
+                ],
+              )),
+          SizedBox(
+            height: 20,
+          )
+        ],
       ),
     );
   }
@@ -293,6 +305,16 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  bool isValid = false;
+  Future<Null> validate(StateSetter updateState) async {
+    print("in validate : ${signupphonecontroller.text.length}");
+    if (signupphonecontroller.text.length == 10) {
+      updateState(() {
+        isValid = true;
+      });
+    }
+  }
+
   void Signup() async {
     if (signupNameController.text.isNotEmpty &&
         signupLastnameController.text.isNotEmpty &&
@@ -303,17 +325,20 @@ class _SignUpPageState extends State<SignUpPage> {
           firstName: signupNameController.text,
           lastName: signupLastnameController.text,
           email: signupEmailController.text,
-          phoneNumber: signupphonecontroller.text,
+          phoneNumber: numberphone,
           password: signupPasswordController.text,
           fcmtoken: firebasetoken,
-          onSuccess: () {
+          onSuccess: () async {
             Navigator.of(context, rootNavigator: true).pop('dialog');
-            Navigator.pushNamedAndRemoveUntil(
-                //the predicate since it always returns false will remove
-                // all screens under the stack and replace them with the one being pushed.
+            var userid = await storage.read(key: 'userid');
+            Navigator.push(
                 context,
-                Routes.rootScreen,
-                (route) => false);
+                MaterialPageRoute(
+                  builder: (context) => OTPScreen(
+                    phonenumber: numberphone,
+                    userid: userid,
+                  ),
+                ));
           },
           onUserAlreadyExist: () {
             showHttpResultDialog(

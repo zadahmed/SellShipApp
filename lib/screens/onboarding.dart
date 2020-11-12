@@ -4,6 +4,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/signUpPage.dart';
+import 'package:SellShip/verification/verifyphone.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/screens/rootscreen.dart';
@@ -97,8 +98,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             await storage.write(key: 'userid', value: jsondata['id']);
             Navigator.of(context, rootNavigator: true).pop('dialog');
 
+            var userid = await storage.read(key: 'userid');
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => RootScreen()));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VerifyPhone(
+                    userid: userid,
+                  ),
+                ));
           } else {
             var url = 'https://api.sellship.co/api/login';
 
@@ -115,8 +122,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               print(jsondata);
               if (jsondata['id'] != null) {
                 await storage.write(key: 'userid', value: jsondata['id']);
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setBool('seen', true);
 
-                print('Loggd in ');
                 Navigator.of(context, rootNavigator: true).pop('dialog');
 
                 Navigator.push(context,
@@ -157,28 +165,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             fit: BoxFit.cover,
           ),
         ),
-        actions: <Widget>[
-          MaterialButton(
-            color: Colors.white,
-            elevation: 0,
-            child: Text('Skip',
-                style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepOrange)),
-            onPressed: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.setBool('seen', true);
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RootScreen()));
-            },
-          )
-        ],
       ),
       body: Container(
         color: Colors.white,
-        width: double.infinity,
+        width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: ListView(
@@ -187,6 +177,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 1,
                 Container(
                   height: MediaQuery.of(context).size.height / 2.5,
+                  width: MediaQuery.of(context).size.width,
                   child: PageView(
                     physics: ClampingScrollPhysics(),
                     controller: _pageController,
@@ -206,7 +197,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               ),
                               fit: BoxFit.cover,
                               height: MediaQuery.of(context).size.height / 4,
-                              width: 300.0,
+                              width: MediaQuery.of(context).size.width,
                             ),
                           ),
                           SizedBox(height: 20.0),
@@ -229,7 +220,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               ),
                               fit: BoxFit.cover,
                               height: MediaQuery.of(context).size.height / 4,
-                              width: 300.0,
+                              width: MediaQuery.of(context).size.width,
                             ),
                           ),
                           SizedBox(height: 20.0),
@@ -258,9 +249,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   1.5,
                   InkWell(
                     onTap: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      prefs.setBool('seen', true);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => LoginPage()));
                     },
@@ -269,7 +257,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.deepOrange,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(10.0),
                           ),
@@ -288,7 +276,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
                               letterSpacing: 0.0,
-                              color: Colors.deepPurple,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -300,9 +288,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   1.5,
                   InkWell(
                     onTap: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      prefs.setBool('seen', true);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -364,7 +349,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Container(
                         height: 48,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Colors.blueAccent,
                           borderRadius: const BorderRadius.all(
                             Radius.circular(10.0),
                           ),
@@ -383,7 +368,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
                               letterSpacing: 0.0,
-                              color: Colors.blueAccent,
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -416,21 +401,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                               final response = await http.post(url, body: body);
 
-                              print('Done');
+
                               if (response.statusCode == 200) {
                                 var jsondata = json.decode(response.body);
                                 if (jsondata['id'] != null) {
                                   await storage.write(
                                       key: 'userid', value: jsondata['id']);
 
+                                  var userid =
+                                      await storage.read(key: 'userid');
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => RootScreen()));
+                                        builder: (context) => VerifyPhone(
+                                          userid: userid,
+                                        ),
+                                      ));
                                 } else {
                                   var id = jsondata['status']['id'];
                                   await storage.write(key: 'userid', value: id);
-
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  prefs.setBool('seen', true);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

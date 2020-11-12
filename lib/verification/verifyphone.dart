@@ -6,10 +6,8 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class VerifyPhone extends StatefulWidget {
   final String userid;
-  VerifyPhone({
-    Key key,
-    this.userid,
-  }) : super(key: key);
+
+  VerifyPhone({Key key, this.userid}) : super(key: key);
 
   @override
   _VerifyPhoneState createState() => new _VerifyPhoneState();
@@ -96,7 +94,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 InkWell(
                   onTap: () {
@@ -114,7 +112,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     height: 48,
                     decoration: BoxDecoration(
                         color: Colors.deepOrange,
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
                               color: Color(0xFF9DA3B4).withOpacity(0.1),

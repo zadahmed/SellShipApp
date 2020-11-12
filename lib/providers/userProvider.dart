@@ -42,9 +42,7 @@ class UserProvider {
 
     if (response.statusCode == 200) {
       var jsondata = json.decode(response.body);
-      print("jsondata");
-      print(jsondata);
-      //todo check if I am doing this properly
+
       if (jsondata[UserFields.id] != null) {
         // currentUser.id = jsondata[UserFields.id];
         await _storage.write(key: 'userid', value: jsondata['id']);

@@ -12,6 +12,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.originPage});
@@ -62,97 +63,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  var loggedin;
-  final facebookLogin = FacebookLogin();
 
-  _loginWithFB() async {
-    final result = await facebookLogin.logIn(['email']);
-
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final token = result.accessToken.token;
-        final graphResponse = await http.get(
-            'https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
-
-        final profile = json.decode(graphResponse.body);
-
-        var url = 'https://api.sellship.co/api/signup';
-
-        var name = profile['name'].split(" ");
-
-        Map<String, String> body = {
-          'first_name': name[0],
-          'last_name': name[1],
-          'email': profile['email'],
-          'phonenumber': '00',
-          'password': 'password',
-          'fcmtoken': firebasetoken,
-        };
-
-        final response = await http.post(url, body: body);
-
-        if (response.statusCode == 200) {
-          var jsondata = json.decode(response.body);
-          print(jsondata);
-          if (jsondata['id'] != null) {
-            await storage.write(key: 'userid', value: jsondata['id']);
-            Navigator.of(context, rootNavigator: true).pop('dialog');
-            print('signned up ');
-            setState(() {
-              userid = jsondata['id'];
-            });
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => RootScreen()));
-          } else {
-            var url = 'https://api.sellship.co/api/login';
-
-            Map<String, String> body = {
-              'email': profile['email'],
-              'password': 'password',
-              'fcmtoken': firebasetoken,
-            };
-
-            final response = await http.post(url, body: body);
-
-            if (response.statusCode == 200) {
-              var jsondata = json.decode(response.body);
-              print(jsondata);
-              if (jsondata['id'] != null) {
-                await storage.write(key: 'userid', value: jsondata['id']);
-
-                print('Loggd in ');
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-                setState(() {
-                  userid = jsondata['id'];
-                });
-                Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    Routes.rootScreen,
-                    (route) =>
-                        false); //the predicate since it always returns false will remove
-                // all screens under the stack and replace them with the one being pushed.
-              }
-            } else {
-              print(response.statusCode);
-            }
-          }
-        } else {
-          print(response.statusCode);
-        }
-
-        setState(() {
-          loggedin = true;
-        });
-        break;
-
-      case FacebookLoginStatus.cancelledByUser:
-        setState(() => loggedin = false);
-        break;
-      case FacebookLoginStatus.error:
-        setState(() => loggedin = false);
-        break;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +72,16 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         elevation: 0,
+        title: Text(
+          "Login",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            letterSpacing: 0.0,
+            color: Colors.deepPurple,
+            fontFamily: 'Helvetica',
+          ),
+        ),
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -174,214 +95,202 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: 80,
+            width: 10,
+            child: Image.asset(
+              'assets/logotransparent.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 40),
+            child: Column(
+              children: <Widget>[
+                FadeAnimation(
+                    1.2,
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        FadeAnimation(
-                            1,
-                            Text(
-                              "Login",
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                            )),
-                        SizedBox(
-                          height: 10,
+                        Text(
+                          'Email',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black87),
                         ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
-                        children: <Widget>[
-                          FadeAnimation(
-                              1.2,
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Email',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black87),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  TextField(
-                                    controller: EmailController,
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0, horizontal: 10),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey[400])),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey[400])),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                ],
-                              )),
-                          FadeAnimation(
-                              1.3,
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'Password',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black87),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  TextField(
-                                    controller: PasswordController,
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0, horizontal: 10),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey[400])),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.grey[400])),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                ],
-                              )),
-                        ],
-                      ),
-                    ),
-                    FadeAnimation(
-                      1.4,
-                      InkWell(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (_) => new AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0))),
-                                    content: Builder(
-                                      builder: (context) {
-                                        return Container(
-                                            height: 50,
-                                            width: 50,
-                                            child: SpinKitChasingDots(
-                                              color: Colors.deepOrange,
-                                            ));
-                                      },
-                                    ),
-                                  ));
-                          Loginfunc();
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Container(
-                            height: 48,
-                            width: MediaQuery.of(context).size.width / 2 + 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10.0),
-                              ),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    offset: const Offset(1.1, 1.1),
-                                    blurRadius: 10.0),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Login',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                  letterSpacing: 0.0,
-                                  color: Colors.deepPurple,
-                                ),
-                              ),
-                            ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        TextField(
+                          controller: EmailController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 10),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey[400])),
+                            border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey[400])),
                           ),
                         ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                      ],
+                    )),
+                FadeAnimation(
+                    1.3,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Password',
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black87),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        TextField(
+                          controller: PasswordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 10),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey[400])),
+                            border: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey[400])),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                      ],
+                    )),
+              ],
+            ),
+          ),
+          FadeAnimation(
+            1.4,
+            InkWell(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => new AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                          content: Builder(
+                            builder: (context) {
+                              return Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: SpinKitChasingDots(
+                                    color: Colors.deepOrange,
+                                  ));
+                            },
+                          ),
+                        ));
+                Loginfunc();
+              },
+              child: Padding(
+                padding: EdgeInsets.all(40),
+                child: Container(
+                  height: 48,
+                  width: MediaQuery.of(context).size.width / 2 + 100,
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color: Colors.grey.withOpacity(0.4),
+                          offset: const Offset(1.1, 1.1),
+                          blurRadius: 10.0),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Login',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                        letterSpacing: 0.0,
+                        color: Colors.white,
                       ),
                     ),
-                    FadeAnimation(
-                        1.5,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text("Don't have an account?"),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignUpPage(
-                                              originPage: PageNames.loginPage,
-                                            )));
-                              },
-                              child: Text(
-                                "Sign up",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 14),
-                              ),
-                            ),
-                          ],
-                        )),
-                    FadeAnimation(
-                        1.5,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            ForgotPassword()));
-                              },
-                              child: Text(
-                                "Forgot Password?",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )),
-                  ],
+                  ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          FadeAnimation(
+              1.5,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text("Don't have an account with us? "),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage(
+                                    originPage: PageNames.loginPage,
+                                  )));
+                    },
+                    child: Text(
+                      "Sign up",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                    ),
+                  ),
+                ],
+              )),
+          SizedBox(
+            height: 10,
+          ),
+          FadeAnimation(
+              1.5,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPassword()));
+                    },
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ],
       ),
     );
   }
@@ -399,7 +308,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       var jsondata = json.decode(response.body);
-      print(jsondata);
+
       if (jsondata['id'] != null) {
         await storage.write(key: 'userid', value: jsondata['id']);
         if (jsondata['businessid'] != null) {
@@ -410,6 +319,8 @@ class _LoginPageState extends State<LoginPage> {
         setState(() {
           userid = jsondata['id'];
         });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('seen', true);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => RootScreen()));
       } else if (jsondata['status']['message'].toString().trim() ==

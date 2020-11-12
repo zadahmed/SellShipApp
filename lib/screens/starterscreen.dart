@@ -92,6 +92,7 @@ class _StarterPageState extends State<StarterPage>
         ),
         Container(
             height: MediaQuery.of(context).size.height / 2,
+            width: MediaQuery.of(context).size.width,
             child: PageView(
                 physics: ClampingScrollPhysics(),
                 controller: _pageController,
@@ -107,8 +108,8 @@ class _StarterPageState extends State<StarterPage>
                         'assets/153.png',
                       ),
                       fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height / 3,
-                      width: 300.0,
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width,
                     ),
                   ),
                   Center(
@@ -117,8 +118,8 @@ class _StarterPageState extends State<StarterPage>
                         'assets/043.png',
                       ),
                       fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height / 3,
-                      width: 300.0,
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width,
                     ),
                   ),
                   Center(
@@ -127,8 +128,8 @@ class _StarterPageState extends State<StarterPage>
                         'assets/051.png',
                       ),
                       fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height / 3,
-                      width: 300.0,
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width,
                     ),
                   ),
                   Center(
@@ -137,8 +138,8 @@ class _StarterPageState extends State<StarterPage>
                         'assets/062.png',
                       ),
                       fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height / 3,
-                      width: 300.0,
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width,
                     ),
                   ),
                 ])),

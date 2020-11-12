@@ -1,9 +1,12 @@
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/otpinput.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:SellShip/verification/verifyphone.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OTPScreen extends StatefulWidget {
   final String phonenumber;
@@ -48,12 +51,12 @@ class _OTPScreenState extends State<OTPScreen> {
               Navigator.pop(context);
             },
             child: Icon(Icons.arrow_back_ios)),
-        iconTheme: IconThemeData(color: Colors.deepOrange),
+        iconTheme: IconThemeData(color: Colors.deepPurple),
         elevation: 0,
         title: Text(
-          'Verify Details',
+          'Verify Phone Number',
           style: TextStyle(
-              color: Colors.deepOrange,
+              color: Colors.deepPurple,
               fontWeight: FontWeight.bold,
               fontFamily: 'Helvetica'),
         ),
@@ -77,7 +80,9 @@ class _OTPScreenState extends State<OTPScreen> {
                       Text(
                         "OTP sent to ${widget.phonenumber}",
                         style: TextStyle(
-                            fontSize: 16.0, fontWeight: FontWeight.bold),
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Helvetica'),
                       ),
                     ],
                   ),
@@ -108,8 +113,8 @@ class _OTPScreenState extends State<OTPScreen> {
                     width: MediaQuery.of(context).size.width,
                     height: 48,
                     decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.deepPurple,
+                        borderRadius: BorderRadius.circular(5),
                         boxShadow: [
                           BoxShadow(
                               color: Color(0xFF9DA3B4).withOpacity(0.1),
@@ -126,7 +131,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           color: Colors.white,
                         ),
                         SizedBox(
-                          width: 5,
+                          width: 10,
                         ),
                         Text(
                           "Enter OTP",
@@ -143,6 +148,31 @@ class _OTPScreenState extends State<OTPScreen> {
                     _onFormSubmitted();
                   },
                 )),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VerifyPhone(
+                                  userid: userid,
+                                )));
+                  },
+                  child: Text(
+                    "Resent OTP",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -242,7 +272,7 @@ class _OTPScreenState extends State<OTPScreen> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
                   contentPadding: EdgeInsets.only(top: 10.0),
                   content: Container(
                     width: 300.0,
@@ -266,7 +296,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             'Your phone number has been verified successfully.',
                             style: TextStyle(
                                 fontSize: 15,
-                                fontFamily: "SF",
+                                fontFamily: "Helvetica",
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black54),
                           ),
@@ -275,22 +305,19 @@ class _OTPScreenState extends State<OTPScreen> {
                           height: 5.0,
                         ),
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.setBool('seen', true);
                             Navigator.of(context, rootNavigator: true)
                                 .pop('dialog');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RootScreen(index: 4)),
-                            );
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, Routes.rootScreen, (route) => false);
                           },
                           child: Container(
                             padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
                             decoration: BoxDecoration(
-                              color: Colors.deepOrange,
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(32.0),
-                                  bottomRight: Radius.circular(32.0)),
+                              color: Colors.deepPurple,
                             ),
                             child: Text(
                               "Close",
