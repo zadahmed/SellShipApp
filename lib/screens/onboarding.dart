@@ -401,7 +401,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                               final response = await http.post(url, body: body);
 
-
                               if (response.statusCode == 200) {
                                 var jsondata = json.decode(response.body);
                                 if (jsondata['id'] != null) {
