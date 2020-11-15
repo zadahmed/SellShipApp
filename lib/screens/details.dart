@@ -304,7 +304,7 @@ class _DetailsState extends State<Details> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: allowedoffer.isEmpty
-                                      ? Colors.red
+                                      ? Colors.deepPurple
                                       : Colors.grey,
                                   borderRadius: const BorderRadius.all(
                                     Radius.circular(16.0),
@@ -326,7 +326,7 @@ class _DetailsState extends State<Details> {
                             ),
                           ),
                         )),
-                    SizedBox(height: 20),
+                    SizedBox(height: 40),
                   ],
                 ),
               );
@@ -346,50 +346,57 @@ class _DetailsState extends State<Details> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ListTile(
-                    title: Text(
-                      'Report this Item?',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    trailing: InkWell(
-                      onTap: () async {
-                        var itemurl =
-                            'https://api.sellship.co/api/report/' + itemid;
-                        final response = await http.get(itemurl);
-                        if (response.statusCode == 200) {
-                          Navigator.of(context).pop();
-                          showInSnackBar(
-                              'Item has been reported! Thank you for making \nthe SellShip community a safer place!');
-                        }
-                      },
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Report this Item?',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      var itemurl =
+                          'https://api.sellship.co/api/report/' + itemid;
+                      final response = await http.get(itemurl);
+                      if (response.statusCode == 200) {
+                        Navigator.of(context).pop();
+                        showInSnackBar(
+                            'Item has been reported! Thank you for making \nthe SellShip community a safer place!');
+                      }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width - 50,
+                      height: 48,
                       child: Container(
-                        width: 100,
-                        height: 48,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(16.0),
-                            ),
-                            border:
-                                Border.all(color: Colors.red.withOpacity(0.2)),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10.0),
                           ),
-                          child: Center(
-                            child: Text(
-                              'Report Item',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16),
-                            ),
+                          border:
+                              Border.all(color: Colors.red.withOpacity(0.2)),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Report Item',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Helvetica',
+                                fontSize: 16),
                           ),
                         ),
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: 40,
                   )
                 ],
               ),
@@ -2214,6 +2221,7 @@ class _DetailsState extends State<Details> {
                         ),
                       ],
                     )),
+                SizedBox(height: 80),
               ],
             )),
             floatingActionButtonLocation:

@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:SellShip/Navigation/routes.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:SellShip/screens/addbrans.dart';
 import 'package:SellShip/screens/addcategory.dart';
 import 'package:SellShip/screens/rootscreen.dart';
@@ -174,7 +175,7 @@ class _AddItemState extends State<AddItem> {
 
   int _selectedweight = -1;
 
-  int _selectedcondition = -1;
+  String _selectedcondition;
 
   var totalpayable;
   var fees;
@@ -191,7 +192,7 @@ class _AddItemState extends State<AddItem> {
         maxImages: 6,
         enableCamera: true,
         selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "camera"),
         materialOptions: MaterialOptions(
           actionBarColor: "#abcdef",
           actionBarTitle: "SellShip",
@@ -309,18 +310,18 @@ class _AddItemState extends State<AddItem> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.white70,
+      backgroundColor: Color.fromRGBO(242, 244, 248, 1),
       appBar: AppBar(
         title: Center(
           child: Text(
             "Upload an Item",
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              fontFamily: 'Helvetica',
-              fontSize: 16,
-              color: Colors.deepOrange,
-              fontWeight: FontWeight.w700,
-            ),
+                fontFamily: 'Helvetica',
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.bold),
           ),
         ),
         elevation: 0.5,
@@ -337,118 +338,150 @@ class _AddItemState extends State<AddItem> {
                       slivers: <Widget>[
                         SliverToBoxAdapter(
                           child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade300,
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
-                            ),
-                            height: 200,
+                            height: 205,
                             child: Column(
                               children: <Widget>[
                                 SizedBox(
-                                  height: 10,
+                                  height: 20,
                                 ),
                                 Padding(
                                   padding:
-                                      EdgeInsets.only(left: 10, bottom: 10),
+                                      EdgeInsets.only(left: 15, bottom: 10),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      'Images',
+                                      'Upload Images',
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w300),
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  height: 150,
-                                  child: GestureDetector(
-                                      onTap: () async {
-                                        if (await Permission.Permission.photos
-                                            .request()
-                                            .isGranted) {
-                                          getImageGallery();
-                                        } else {
-                                          Map<Permission.Permission,
-                                                  Permission.PermissionStatus>
-                                              statuses = await [
-                                            Permission.Permission.photos,
-                                          ].request();
-                                          Permission.openAppSettings();
-                                        }
-                                      },
-                                      child: images.isEmpty
-                                          ? Row(
-                                              children: <Widget>[
-                                                Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: Container(
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 15,
+                                  ),
+                                  child: Container(
+                                    height: 150,
+                                    child: GestureDetector(
+                                        onTap: () async {
+                                          if (await Permission.Permission.photos
+                                              .request()
+                                              .isGranted) {
+                                            getImageGallery();
+                                          } else {
+                                            Map<Permission.Permission,
+                                                    Permission.PermissionStatus>
+                                                statuses = await [
+                                              Permission.Permission.photos,
+                                            ].request();
+                                            Permission.openAppSettings();
+                                          }
+                                        },
+                                        child: images.isEmpty
+                                            ? Row(
+                                                children: <Widget>[
+                                                  Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      child: DottedBorder(
+                                                        borderType:
+                                                            BorderType.RRect,
+                                                        radius:
+                                                            Radius.circular(12),
+                                                        padding:
+                                                            EdgeInsets.all(6),
+                                                        dashPattern: [12, 4],
+                                                        color: Colors
+                                                            .deepOrangeAccent,
+                                                        child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            12)),
+                                                            child: Container(
+                                                                color: Colors
+                                                                    .white,
+                                                                height: 100,
+                                                                width: 100,
+                                                                child: Icon(
+                                                                  Icons.add,
+                                                                  color: Colors
+                                                                      .deepOrange,
+                                                                ))),
+                                                      ))
+                                                ],
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                              )
+                                            : ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemCount: images.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int position) {
+                                                  Asset asset =
+                                                      images[position];
+                                                  return Stack(children: <
+                                                      Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      child: Container(
                                                         decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .grey.shade100,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10)),
-                                                        height: 150,
-                                                        width: 150,
-                                                        child: Icon(Icons.add)))
-                                              ],
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                            )
-                                          : ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: images.length,
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int position) {
-                                                Asset asset = images[position];
-                                                return Stack(children: <Widget>[
-                                                  Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: Container(
-                                                      child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      8.0),
-                                                          child: AssetThumb(
-                                                            asset: asset,
-                                                            width: 300,
-                                                            height: 300,
-                                                          )),
-                                                      width: 155,
-                                                      height: 155,
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.topRight,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          images.removeAt(
-                                                              position);
-                                                        });
-                                                      },
-                                                      child: Icon(
-                                                        Icons.delete_forever,
-                                                        color: Colors.red,
+                                                                        8.0),
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .white,
+                                                                width: 4.0)),
+                                                        child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8.0),
+                                                            child: AssetThumb(
+                                                              asset: asset,
+                                                              width: 300,
+                                                              height: 300,
+                                                            )),
+                                                        width: 100,
+                                                        height: 100,
                                                       ),
                                                     ),
-                                                  ),
-                                                ]);
-                                              })),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            images.removeAt(
+                                                                position);
+                                                          });
+                                                        },
+                                                        child: CircleAvatar(
+                                                          child: Icon(
+                                                            Icons
+                                                                .delete_forever,
+                                                            color: Colors.white,
+                                                            size: 14,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          radius: 14,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ]);
+                                                })),
+                                  ),
                                 )
                               ],
                             ),
@@ -458,633 +491,563 @@ class _AddItemState extends State<AddItem> {
                           delegate: SliverChildListDelegate(
                             [
                               SizedBox(
-                                height: 10,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: TextField(
-                                  cursorColor: Color(0xFF979797),
-                                  controller: businessnameController,
-                                  autocorrect: true,
-                                  enableSuggestions: true,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  decoration: InputDecoration(
-                                      labelText: "Title",
-                                      labelStyle: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                      ),
-                                      focusColor: Colors.black,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      disabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      ))),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
+                                height: 5,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: 15, bottom: 10, top: 10),
+                                  left: 15,
+                                  bottom: 5,
+                                ),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'Product Detail',
+                                    'Item Info',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 5, top: 10, right: 15),
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                  ),
+                                  child: Center(
+                                    child: TextField(
+                                      cursorColor: Color(0xFF979797),
+                                      controller: businessnameController,
+                                      autocorrect: true,
+                                      enableSuggestions: true,
+                                      textCapitalization:
+                                          TextCapitalization.sentences,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                      decoration: InputDecoration(
+                                        hintText: "Product Name",
+                                        hintStyle: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 18,
+                                            color: Colors.blueGrey,
+                                            fontWeight: FontWeight.bold),
+                                        focusColor: Colors.black,
+                                        border: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        errorBorder: InputBorder.none,
+                                        disabledBorder: InputBorder.none,
+                                        contentPadding: EdgeInsets.only(
+                                            left: 15,
+                                            bottom: 11,
+                                            top: 11,
+                                            right: 15),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                               SizedBox(
-                                height: 10.0,
+                                height: 5,
                               ),
-                              Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: ListTile(
-                                    onTap: () async {
-                                      final catdetails = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                AddCategory()),
-                                      );
-                                      print(catdetails);
-                                      setState(() {
-                                        _selectedCategory =
-                                            catdetails['category'];
-                                        _selectedsubCategory =
-                                            catdetails['subcategory'];
-                                        _selectedsubsubCategory =
-                                            catdetails['subsubcategory'];
-
-                                        categoryinfo = _selectedCategory +
-                                            ' > ' +
-                                            _selectedsubCategory +
-                                            ' > ' +
-                                            _selectedsubsubCategory;
-                                      });
-                                    },
-                                    title: Text(
-                                      'Category',
-                                      style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 10, right: 15),
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15)),
+                                    ),
+                                    child: Center(
+                                      child: TextField(
+                                        cursorColor: Color(0xFF979797),
+                                        controller:
+                                            businessdescriptionController,
+                                        autocorrect: true,
+                                        enableSuggestions: true,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
+                                        maxLines: 6,
+                                        maxLength: 1000,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w200),
+                                        decoration: InputDecoration(
+                                          hintText: "Enter Description here..",
+                                          alignLabelWithHint: true,
+                                          hintStyle: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.blueGrey),
+                                          focusColor: Colors.black,
+                                          border: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                          enabledBorder: InputBorder.none,
+                                          errorBorder: InputBorder.none,
+                                          disabledBorder: InputBorder.none,
+                                          contentPadding: EdgeInsets.only(
+                                              left: 15,
+                                              bottom: 11,
+                                              top: 11,
+                                              right: 15),
+                                        ),
                                       ),
                                     ),
-                                    trailing: categoryinfo == null
-                                        ? Icon(Icons.keyboard_arrow_right)
-                                        : Container(
-                                            width: 300,
-                                            child: Center(
-                                                child: Text(
-                                              categoryinfo,
-                                              textAlign: TextAlign.right,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  color: Colors.deepPurple),
-                                            )),
-                                          ),
                                   )),
                               SizedBox(
                                 height: 10.0,
                               ),
-                              _selectedCategory != null
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: Offset(0.0, 1.0), //(x,y)
-                                            blurRadius: 6.0,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                          child: ListTile(
-                                              title: Text(
-                                                'Brand',
-                                                style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              trailing: Container(
-                                                width: 250,
-                                                padding: EdgeInsets.only(),
-                                                child: Center(
-                                                    child: InkWell(
-                                                  onTap: () async {
-                                                    final bran =
-                                                        await Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              Brands(
-                                                                category:
-                                                                    _selectedCategory,
-                                                              )),
-                                                    );
-                                                    setState(() {
-                                                      brand = bran;
-                                                    });
-                                                  },
-                                                  child: brand != null
-                                                      ? Flex(
-                                                          direction:
-                                                              Axis.horizontal,
-                                                          children: [
-                                                              Flexible(
-                                                                  child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: <
-                                                                    Widget>[
-                                                                  Text(
-                                                                    brand,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          16,
-                                                                    ),
-                                                                  ),
-                                                                  Icon(Icons
-                                                                      .arrow_drop_down)
-                                                                ],
-                                                              ))
-                                                            ])
-                                                      : Container(
-                                                          width: 140,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                'Choose Brand',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 16,
-                                                                ),
-                                                              ),
-                                                              Icon(Icons
-                                                                  .arrow_drop_down)
-                                                            ],
-                                                          )),
-                                                )),
-                                              ))))
-                                  : Container(),
-                              brand == 'Other'
-                                  ? Container(
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                      ),
-                                      child: Center(
-                                          child: ListTile(
-                                              title: Text(
-                                                'Other Brand Name',
-                                                style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              trailing: Container(
-                                                  width: 200,
-                                                  padding: EdgeInsets.only(),
-                                                  child: Center(
-                                                    child: TextField(
-                                                      cursorColor:
-                                                          Color(0xFF979797),
-                                                      controller:
-                                                          businessbrandcontroller,
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      textCapitalization:
-                                                          TextCapitalization
-                                                              .words,
-                                                      decoration:
-                                                          InputDecoration(
-                                                              labelText:
-                                                                  "Brand Name",
-                                                              alignLabelWithHint:
-                                                                  true,
-                                                              labelStyle:
-                                                                  TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                              ),
-                                                              focusColor:
-                                                                  Colors.black,
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              border:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedErrorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              disabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              errorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              ))),
-                                                    ),
-                                                  )))))
-                                  : Container(),
-                              SizedBox(
-                                height: 10.0,
-                              ),
                               Padding(
                                 padding: EdgeInsets.only(
                                   left: 15,
-                                  bottom: 10,
+                                  bottom: 5,
                                 ),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'Item Condition',
+                                    'Category',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w300),
                                   ),
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                  left: 15,
-                                  bottom: 10,
-                                ),
+                                    left: 15, bottom: 5, top: 10, right: 15),
                                 child: Container(
-                                  height: 100,
-                                  child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: conditions.length,
-                                      itemBuilder:
-                                          (BuildContext context, int position) {
-                                        return Padding(
-                                            padding: EdgeInsets.all(5),
-                                            child: InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    _selectedcondition =
-                                                        position;
-                                                    _selectedCondition =
-                                                        conditions[position];
-                                                  });
-                                                },
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          width: 0.2,
-                                                          color: Colors.grey),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15),
-                                                      color: _selectedcondition ==
-                                                              position
-                                                          ? Colors
-                                                              .deepPurpleAccent
-                                                          : Colors.white,
-                                                      boxShadow: [
-                                                        BoxShadow(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15)),
+                                    ),
+                                    child: ListTile(
+                                        onTap: () async {
+                                          final catdetails =
+                                              await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddCategory()),
+                                          );
+                                          print(catdetails);
+                                          setState(() {
+                                            _selectedCategory =
+                                                catdetails['category'];
+                                            _selectedsubCategory =
+                                                catdetails['subcategory'];
+                                            _selectedsubsubCategory =
+                                                catdetails['subsubcategory'];
+
+                                            categoryinfo = _selectedCategory +
+                                                ' > ' +
+                                                _selectedsubCategory +
+                                                ' > ' +
+                                                _selectedsubsubCategory;
+                                          });
+                                        },
+                                        title: categoryinfo == null
+                                            ? Container(
+                                                width: 200,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Choose your Category',
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
                                                           color: Colors
-                                                              .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        ),
-                                                      ],
+                                                              .deepPurple),
                                                     ),
-                                                    height: 100,
-                                                    width: 90,
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Icon(
-                                                          conditionicons[
-                                                              position],
-                                                          size: 30,
-                                                          color: _selectedcondition ==
-                                                                  position
-                                                              ? Colors.white
-                                                              : Colors
-                                                                  .deepPurpleAccent,
-                                                        ),
-                                                        SizedBox(
-                                                          height: 5,
-                                                        ),
-                                                        Text(
-                                                          conditions[position],
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
+                                                    Icon(
+                                                        Icons
+                                                            .keyboard_arrow_right,
+                                                        color:
+                                                            Colors.deepPurple)
+                                                  ],
+                                                ))
+                                            : Container(
+                                                width: 200,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      width: 200,
+                                                      child: Text(
+                                                        categoryinfo,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
                                                             fontFamily:
                                                                 'Helvetica',
-                                                            fontSize: 14,
-                                                            color: _selectedcondition ==
-                                                                    position
-                                                                ? Colors.white
-                                                                : Colors
-                                                                    .deepPurpleAccent,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ))));
-                                      }),
-                                ),
+                                                            fontSize: 16,
+                                                            color: Colors
+                                                                .deepPurple),
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                        Icons
+                                                            .keyboard_arrow_right,
+                                                        color:
+                                                            Colors.deepPurple)
+                                                  ],
+                                                )))),
                               ),
                               SizedBox(
                                 height: 10.0,
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: TextField(
-                                  cursorColor: Color(0xFF979797),
-                                  controller: businessdescriptionController,
-                                  autocorrect: true,
-                                  enableSuggestions: true,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  maxLines: 6,
-//                                    maxLength: 1000,
-                                  decoration: InputDecoration(
-                                      labelText: "Description (optional)",
-                                      alignLabelWithHint: true,
-                                      labelStyle: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
+                              _selectedCategory != null
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 15,
+                                        bottom: 5,
                                       ),
-                                      focusColor: Colors.black,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      disabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      ))),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              _selectedCategory == 'Fashion & Accessories'
-                                  ? Container(
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: Offset(0.0, 1.0), //(x,y)
-                                            blurRadius: 6.0,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Brand',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              _selectedCategory != null
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 5,
+                                          top: 10,
+                                          right: 15),
+                                      child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
                                           ),
-                                        ],
-                                      ),
-                                      child: Center(
                                           child: ListTile(
-                                              title: Text(
-                                                'Size',
-                                                style: TextStyle(
+                                              title: Container(
+                                                  width: 200,
+                                                  child: InkWell(
+                                                    onTap: () async {
+                                                      final bran =
+                                                          await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    Brands(
+                                                                      category:
+                                                                          _selectedCategory,
+                                                                    )),
+                                                      );
+                                                      setState(() {
+                                                        brand = bran;
+                                                      });
+                                                    },
+                                                    child: brand != null
+                                                        ? Container(
+                                                            width: 200,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  brand,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .left,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: Colors
+                                                                          .deepPurple),
+                                                                ),
+                                                                Icon(
+                                                                    Icons
+                                                                        .keyboard_arrow_right,
+                                                                    color: Colors
+                                                                        .deepPurple)
+                                                              ],
+                                                            ))
+                                                        : Container(
+                                                            width: 200,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  'Choose your Brand',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .right,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: Colors
+                                                                          .deepPurple),
+                                                                ),
+                                                                Icon(
+                                                                    Icons
+                                                                        .keyboard_arrow_right,
+                                                                    color: Colors
+                                                                        .deepPurple)
+                                                              ],
+                                                            )),
+                                                  )))))
+                                  : Container(),
+                              brand == 'Other'
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 5,
+                                          top: 10,
+                                          right: 15),
+                                      child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                          ),
+                                          child: Center(
+                                              child: ListTile(
+                                            title: TextField(
+                                              cursorColor: Color(0xFF979797),
+                                              controller:
+                                                  businessbrandcontroller,
+                                              keyboardType: TextInputType.text,
+                                              textCapitalization:
+                                                  TextCapitalization.words,
+                                              decoration: InputDecoration(
+                                                hintText: "Other Brand Name",
+                                                alignLabelWithHint: true,
+                                                hintStyle: TextStyle(
                                                   fontFamily: 'Helvetica',
                                                   fontSize: 16,
                                                 ),
+                                                focusColor: Colors.black,
+                                                border: InputBorder.none,
+                                                focusedBorder: InputBorder.none,
+                                                enabledBorder: InputBorder.none,
+                                                errorBorder: InputBorder.none,
+                                                disabledBorder:
+                                                    InputBorder.none,
                                               ),
-                                              trailing: Container(
-                                                  width: 200,
-                                                  padding: EdgeInsets.only(),
-                                                  child: Center(
-                                                    child: TextField(
-                                                      cursorColor:
-                                                          Color(0xFF979797),
-                                                      controller:
-                                                          businessizecontroller,
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      decoration:
-                                                          InputDecoration(
-                                                              labelText: "Size",
-                                                              alignLabelWithHint:
-                                                                  true,
-                                                              labelStyle:
-                                                                  TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                              ),
-                                                              focusColor:
-                                                                  Colors.black,
-                                                              enabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              border:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedErrorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              disabledBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              errorBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              )),
-                                                              focusedBorder:
-                                                                  OutlineInputBorder(
-                                                                      borderSide:
-                                                                          BorderSide(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                              ))),
-                                                    ),
-                                                  )))))
+                                            ),
+                                          ))))
                                   : Container(),
-                              SizedBox(
-                                height: 5.0,
-                              ),
                               SizedBox(
                                 height: 10.0,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(left: 15, bottom: 15),
+                                padding: EdgeInsets.only(
+                                  left: 15,
+                                  bottom: 5,
+                                ),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Condition',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 10, right: 15),
+                                  child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15)),
+                                    ),
+                                    child: Center(
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton(
+                                          isExpanded: true,
+                                          hint: Text(
+                                            'Condition of Item',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          value: _selectedcondition,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              _selectedcondition = newValue;
+                                            });
+                                          },
+                                          items: conditions.map((location) {
+                                            return DropdownMenuItem(
+                                              child: new Text(
+                                                location,
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    color: Colors.deepPurple,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              value: location,
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              _selectedCategory == 'Women' ||
+                                      _selectedCategory == 'Men' ||
+                                      _selectedCategory == 'Kids'
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 15,
+                                        bottom: 5,
+                                      ),
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          'Size',
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                              _selectedCategory == 'Women' ||
+                                      _selectedCategory == 'Men' ||
+                                      _selectedCategory == 'Kids'
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 5,
+                                          top: 10,
+                                          right: 15),
+                                      child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                          ),
+                                          child: Center(
+                                              child: ListTile(
+                                                  title: Container(
+                                            width: 200,
+                                            child: Center(
+                                              child: TextField(
+                                                  cursorColor:
+                                                      Color(0xFF979797),
+                                                  controller:
+                                                      businessizecontroller,
+                                                  keyboardType:
+                                                      TextInputType.text,
+                                                  decoration: InputDecoration(
+                                                    hintText: "Size",
+                                                    hintStyle: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                    ),
+                                                    focusColor: Colors.black,
+                                                    border: InputBorder.none,
+                                                    focusedBorder:
+                                                        InputBorder.none,
+                                                    enabledBorder:
+                                                        InputBorder.none,
+                                                    errorBorder:
+                                                        InputBorder.none,
+                                                    disabledBorder:
+                                                        InputBorder.none,
+                                                  )),
+                                            ),
+                                          )))))
+                                  : Container(),
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 15,
+                                  bottom: 5,
+                                ),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
                                     'Price',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w300),
                                   ),
                                 ),
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 10, bottom: 15, left: 15, right: 15),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 5, top: 10, right: 15),
+                                child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                  ),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Text('Price',
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                              )),
                                           Container(
                                             child: TextField(
                                               cursorColor: Color(0xFF979797),
@@ -1122,69 +1085,51 @@ class _AddItemState extends State<AddItem> {
                                                   fees = fees;
                                                 });
                                               },
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold),
                                               keyboardType: TextInputType
                                                   .numberWithOptions(),
                                               decoration: InputDecoration(
-                                                  labelText:
-                                                      "Price " + currency,
-                                                  alignLabelWithHint: true,
-                                                  labelStyle: TextStyle(
+                                                hintText: '0',
+//                                                alignLabelWithHint: true,
+                                                hintStyle: TextStyle(
                                                     fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                  ),
-                                                  focusColor: Colors.black,
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                    color: Colors.grey.shade300,
-                                                  )),
-                                                  border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                    color: Colors.grey.shade300,
-                                                  )),
-                                                  focusedErrorBorder:
-                                                      OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                    color: Colors.grey.shade300,
-                                                  )),
-                                                  disabledBorder:
-                                                      OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                    color: Colors.grey.shade300,
-                                                  )),
-                                                  errorBorder:
-                                                      OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                    color: Colors.grey.shade300,
-                                                  )),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                    color: Colors.grey.shade300,
-                                                  ))),
+                                                    fontSize: 24,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                focusColor: Colors.black,
+                                                border: InputBorder.none,
+                                                focusedBorder: InputBorder.none,
+                                                enabledBorder: InputBorder.none,
+                                                errorBorder: InputBorder.none,
+                                                disabledBorder:
+                                                    InputBorder.none,
+                                              ),
                                             ),
                                             width: 100,
                                           ),
+                                          Text(currency,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 22,
+                                              )),
                                         ]),
                                   ),
                                 ),
                               ),
                               fees != null
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 10,
-                                            bottom: 15,
-                                            left: 15,
-                                            right: 15),
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15, top: 2, right: 15),
+                                      child: Container(
+                                        padding: EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15)),
+                                        ),
                                         child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Row(
@@ -1265,7 +1210,7 @@ class _AddItemState extends State<AddItem> {
                                                       fees.toStringAsFixed(2),
                                                   style: TextStyle(
                                                       fontFamily: 'Helvetica',
-                                                      fontSize: 16,
+                                                      fontSize: 18,
                                                       color: Colors.black),
                                                 )
                                               ],
@@ -1274,16 +1219,19 @@ class _AddItemState extends State<AddItem> {
                                     )
                                   : Container(),
                               fees != null
-                                  ? Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 10,
-                                            bottom: 15,
-                                            left: 15,
-                                            right: 15),
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 5,
+                                          top: 4,
+                                          right: 15),
+                                      child: Container(
+                                        padding: EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15)),
+                                        ),
                                         child: Align(
                                             alignment: Alignment.centerLeft,
                                             child: Row(
@@ -1305,76 +1253,195 @@ class _AddItemState extends State<AddItem> {
                                                           .toStringAsFixed(2),
                                                   style: TextStyle(
                                                       fontFamily: 'Helvetica',
-                                                      fontSize: 16,
+                                                      fontSize: 18,
                                                       color: Colors.black),
                                                 )
                                               ],
                                             )),
                                       ))
                                   : Container(),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 15,
+                                  top: 15,
+                                  bottom: 10,
+                                ),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Location',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 5, top: 4, right: 15),
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                  ),
+                                  child: SearchMap.SearchMapPlaceWidget(
+                                    apiKey:
+                                        'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
+                                    language: 'en',
+                                    location: position,
+                                    hasClearButton: true,
+                                    radius: 10000,
+                                    onSelected: (SearchMap.Place places) async {
+                                      final geolocations =
+                                          await places.geolocation;
+
+                                      controller.animateCamera(
+                                          CameraUpdate.newLatLng(
+                                              geolocations.coordinates));
+                                      controller.animateCamera(
+                                          CameraUpdate.newLatLngBounds(
+                                              geolocations.bounds, 0));
+
+                                      setState(() {
+                                        position = geolocations.coordinates;
+                                      });
+
+                                      List<Geocoding.Placemark> placemarks =
+                                          await Geocoding
+                                              .placemarkFromCoordinates(
+                                                  position.latitude,
+                                                  position.longitude,
+                                                  localeIdentifier: 'en');
+
+                                      Geocoding.Placemark place = placemarks[0];
+                                      var cit = place.administrativeArea;
+                                      var countr = place.country;
+                                      setState(() {
+                                        city = cit;
+                                        country = countr;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 5, top: 4, right: 15),
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      position != null
+                                          ? Container(
+                                              height: 350,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: GoogleMap(
+                                                initialCameraPosition:
+                                                    CameraPosition(
+                                                        target: position,
+                                                        zoom: 18.0,
+                                                        bearing: 70),
+                                                onMapCreated: mapCreated,
+                                                onCameraMove: _onCameraMove,
+                                                onTap: _handleTap,
+                                                markers: _markers,
+                                                zoomGesturesEnabled: true,
+                                                myLocationEnabled: true,
+                                                myLocationButtonEnabled: true,
+                                                compassEnabled: true,
+                                                gestureRecognizers: Set()
+                                                  ..add(Factory<
+                                                          EagerGestureRecognizer>(
+                                                      () =>
+                                                          EagerGestureRecognizer())),
+                                              ),
+                                            )
+                                          : Text(
+                                              'Oops! Something went wrong. \n Please try again',
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               SizedBox(
                                 height: 10.0,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: 15, bottom: 10, top: 5),
+                                  left: 15,
+                                  top: 15,
+                                  bottom: 10,
+                                ),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    'Delivery Method',
+                                    'Delivery Option',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w300),
                                   ),
                                 ),
                               ),
-                              Container(
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 5, top: 4, right: 15),
+                                child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15)),
+                                    ),
+                                    child: Column(children: <Widget>[
+                                      CheckboxListTile(
+                                        title: const Text('Meetup',
+                                            style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                            )),
+                                        value: meetupcheckbox,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            meetupcheckbox = value;
+                                          });
+                                        },
+                                        checkColor: Colors.deepOrange,
+                                        activeColor: Colors.transparent,
                                       ),
-                                    ],
-                                  ),
-                                  child: Column(children: <Widget>[
-                                    CheckboxListTile(
-                                      title: const Text('Meetup',
+                                      CheckboxListTile(
+                                        title: const Text(
+                                          'Shipping',
                                           style: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 16,
-                                          )),
-                                      value: meetupcheckbox,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          meetupcheckbox = value;
-                                        });
-                                      },
-                                      secondary:
-                                          const Icon(FontAwesome.handshake_o),
-                                    ),
-                                    CheckboxListTile(
-                                      title: const Text(
-                                        'Shipping',
-                                        style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
+                                          ),
                                         ),
+                                        value: shippingcheckbox,
+                                        onChanged: (bool value) {
+                                          setState(() {
+                                            shippingcheckbox = value;
+                                          });
+                                        },
+                                        checkColor: Colors.deepOrange,
+                                        activeColor: Colors.transparent,
                                       ),
-                                      value: shippingcheckbox,
-                                      onChanged: (bool value) {
-                                        setState(() {
-                                          shippingcheckbox = value;
-                                        });
-                                      },
-                                      secondary:
-                                          const Icon(Icons.local_shipping),
-                                    ),
-                                  ])),
+                                    ])),
+                              ),
                               SizedBox(
                                 height: 10,
                               ),
@@ -1382,6 +1449,7 @@ class _AddItemState extends State<AddItem> {
                                   ? Padding(
                                       padding: EdgeInsets.only(
                                         left: 15,
+                                        top: 5,
                                         bottom: 10,
                                       ),
                                       child: Align(
@@ -1390,8 +1458,8 @@ class _AddItemState extends State<AddItem> {
                                           'Item Weight',
                                           style: TextStyle(
                                               fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w300),
                                         ),
                                       ),
                                     )
@@ -1399,11 +1467,20 @@ class _AddItemState extends State<AddItem> {
                               shippingcheckbox == true
                                   ? Padding(
                                       padding: EdgeInsets.only(
-                                        left: 15,
-                                        bottom: 10,
-                                      ),
+                                          left: 15,
+                                          bottom: 20,
+                                          top: 4,
+                                          right: 15),
                                       child: Container(
-                                        height: 80,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 100,
+                                        padding: EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15)),
+                                        ),
                                         child: ListView.builder(
                                             scrollDirection: Axis.horizontal,
                                             itemCount: weights.length,
@@ -1497,144 +1574,6 @@ class _AddItemState extends State<AddItem> {
                                       ),
                                     )
                                   : Container(),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 15,
-                                  bottom: 10,
-                                ),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Item Location',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 390,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      'Press on the map to choose the Item\'s location',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10.0,
-                                    ),
-                                    Stack(
-                                      children: <Widget>[
-                                        position != null
-                                            ? Container(
-                                                height: 350,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: GoogleMap(
-                                                  initialCameraPosition:
-                                                      CameraPosition(
-                                                          target: position,
-                                                          zoom: 18.0,
-                                                          bearing: 70),
-                                                  onMapCreated: mapCreated,
-                                                  onCameraMove: _onCameraMove,
-                                                  onTap: _handleTap,
-                                                  markers: _markers,
-                                                  zoomGesturesEnabled: true,
-                                                  myLocationEnabled: true,
-                                                  myLocationButtonEnabled: true,
-                                                  compassEnabled: true,
-                                                  gestureRecognizers: Set()
-                                                    ..add(Factory<
-                                                            EagerGestureRecognizer>(
-                                                        () =>
-                                                            EagerGestureRecognizer())),
-                                                ),
-                                              )
-                                            : Text(
-                                                'Oops! Something went wrong. \n Please try again',
-                                                style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                        Positioned(
-                                          top: 10,
-                                          left: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.05,
-                                          child: SearchMap.SearchMapPlaceWidget(
-                                            apiKey:
-                                                'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
-                                            language: 'en',
-                                            location: position,
-                                            radius: 10000,
-                                            onSelected:
-                                                (SearchMap.Place places) async {
-                                              final geolocations =
-                                                  await places.geolocation;
-
-                                              controller.animateCamera(
-                                                  CameraUpdate.newLatLng(
-                                                      geolocations
-                                                          .coordinates));
-                                              controller.animateCamera(
-                                                  CameraUpdate.newLatLngBounds(
-                                                      geolocations.bounds, 0));
-
-                                              setState(() {
-                                                position =
-                                                    geolocations.coordinates;
-                                              });
-
-                                              List<Geocoding.Placemark>
-                                                  placemarks = await Geocoding
-                                                      .placemarkFromCoordinates(
-                                                          position.latitude,
-                                                          position.longitude,
-                                                          localeIdentifier:
-                                                              'en');
-
-                                              Geocoding.Placemark place =
-                                                  placemarks[0];
-                                              var cit =
-                                                  place.administrativeArea;
-                                              var countr = place.country;
-                                              setState(() {
-                                                city = cit;
-                                                country = countr;
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 30.0,
-                              ),
                             ],
                           ),
                         ),
@@ -1773,168 +1712,168 @@ class _AddItemState extends State<AddItem> {
                                           if (images.length == 1) {
                                             ByteData byteData = await images[0]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image =
                                                 byteData.buffer.asUint8List();
                                           } else if (images.length == 2) {
                                             ByteData byteData = await images[0]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image =
                                                 byteData.buffer.asUint8List();
 
                                             ByteData byteData2 = await images[1]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image2 =
                                                 byteData2.buffer.asUint8List();
                                           } else if (images.length == 3) {
                                             ByteData byteData = await images[0]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image =
                                                 byteData.buffer.asUint8List();
 
                                             ByteData byteData2 = await images[1]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image2 =
                                                 byteData2.buffer.asUint8List();
 
                                             ByteData byteData3 = await images[2]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image3 =
                                                 byteData3.buffer.asUint8List();
                                           } else if (images.length == 4) {
                                             ByteData byteData = await images[0]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image =
                                                 byteData.buffer.asUint8List();
 
                                             ByteData byteData2 = await images[1]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image2 =
                                                 byteData2.buffer.asUint8List();
 
                                             ByteData byteData3 = await images[2]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image3 =
                                                 byteData3.buffer.asUint8List();
 
                                             ByteData byteData4 = await images[3]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image4 =
                                                 byteData4.buffer.asUint8List();
                                           } else if (images.length == 5) {
                                             ByteData byteData = await images[0]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image =
                                                 byteData.buffer.asUint8List();
 
                                             ByteData byteData2 = await images[1]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image2 =
                                                 byteData2.buffer.asUint8List();
 
                                             ByteData byteData3 = await images[2]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image3 =
                                                 byteData3.buffer.asUint8List();
 
                                             ByteData byteData4 = await images[3]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image4 =
                                                 byteData4.buffer.asUint8List();
 
                                             ByteData byteData5 = await images[4]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image5 =
                                                 byteData5.buffer.asUint8List();
                                           } else if (images.length == 6) {
                                             ByteData byteData = await images[0]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image =
                                                 byteData.buffer.asUint8List();
 
                                             ByteData byteData2 = await images[1]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image2 =
                                                 byteData2.buffer.asUint8List();
 
                                             ByteData byteData3 = await images[2]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image3 =
                                                 byteData3.buffer.asUint8List();
 
                                             ByteData byteData4 = await images[3]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image4 =
                                                 byteData4.buffer.asUint8List();
 
                                             ByteData byteData5 = await images[4]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image5 =
                                                 byteData5.buffer.asUint8List();
 
                                             ByteData byteData6 = await images[5]
                                                 .getThumbByteData(
-                                              600,
-                                              600,
+                                              400,
+                                              400,
                                             );
                                             _image6 =
                                                 byteData6.buffer.asUint8List();
@@ -2385,12 +2324,12 @@ class _AddItemState extends State<AddItem> {
                                     },
                                     child: Container(
                                       width: MediaQuery.of(context).size.width -
-                                          20,
+                                          30,
                                       height: 50,
                                       decoration: BoxDecoration(
-                                          color: Colors.deepOrange,
+                                          color: Color.fromRGBO(255, 115, 0, 1),
                                           borderRadius:
-                                              BorderRadius.circular(5),
+                                              BorderRadius.circular(10),
                                           boxShadow: [
                                             BoxShadow(
                                                 color: Color(0xFF9DA3B4)
@@ -2403,9 +2342,9 @@ class _AddItemState extends State<AddItem> {
                                           "Upload Item",
                                           style: TextStyle(
                                               fontFamily: 'Helvetica',
-                                              fontSize: 16,
+                                              fontSize: 18,
                                               color: Colors.white,
-                                              fontWeight: FontWeight.bold),
+                                              fontWeight: FontWeight.w300),
                                         ),
                                       ),
                                     ),
@@ -2416,7 +2355,7 @@ class _AddItemState extends State<AddItem> {
                         ),
                         SliverToBoxAdapter(
                             child: SizedBox(
-                          height: 80,
+                          height: 20,
                         ))
                       ],
                     )

@@ -39,6 +39,8 @@ class _BrandsState extends State<Brands> {
         brands.add(categoryrespons[i]);
       }
 
+      brands.add('Other');
+
       if (brands == null || brands.isEmpty) {
         brands = ['No Brand', 'Other'];
       }

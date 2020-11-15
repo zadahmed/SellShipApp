@@ -1128,6 +1128,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                       final f = new DateFormat(
                                                           'hh:mm');
                                                       var s = f.format(date);
+
                                                       childList.add(Padding(
                                                           padding:
                                                               const EdgeInsets
@@ -1138,66 +1139,62 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                                   bottom: 4.0),
                                                           child: Container(
                                                             alignment: Alignment
-                                                                .centerRight,
-                                                            child: Container(
-                                                              constraints: BoxConstraints(
-                                                                  maxWidth: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      3 /
-                                                                      4),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(
-                                                                          12.0),
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Colors
-                                                                    .deepOrange,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            25.0),
-                                                              ),
-                                                              child: Stack(
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
-                                                                          right:
-                                                                              8.0,
-                                                                          left:
-                                                                              8.0,
-                                                                          top:
-                                                                              8.0,
-                                                                          bottom:
-                                                                              15.0),
-                                                                      child: Text(
-                                                                          x,
-                                                                          style: TextStyle(
-                                                                              fontFamily: 'Helvetica',
-                                                                              fontSize: 14,
-                                                                              color: Colors.white)),
+                                                                .centerLeft,
+                                                            child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Container(
+                                                                    constraints: BoxConstraints(
+                                                                        maxWidth: MediaQuery.of(context).size.width *
+                                                                            3 /
+                                                                            4,
+                                                                        minWidth:
+                                                                            100),
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            12.0),
+                                                                    decoration: BoxDecoration(
+                                                                        color: Colors.white,
+                                                                        borderRadius: BorderRadius.circular(15.0),
+                                                                        border: Border.all(
+                                                                          style:
+                                                                              BorderStyle.solid,
+                                                                          color: Colors
+                                                                              .grey
+                                                                              .shade300,
+                                                                        )),
+                                                                    child: Stack(
+                                                                        children: <
+                                                                            Widget>[
+                                                                          Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(right: 2.0, left: 2.0),
+                                                                            child:
+                                                                                Text(x, style: TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black)),
+                                                                          ),
+                                                                        ]),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding: EdgeInsets
+                                                                        .only(
+                                                                            left:
+                                                                                10),
+                                                                    child: Text(
+                                                                      s,
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              'Helvetica',
+                                                                          fontSize:
+                                                                              12,
+                                                                          color: Colors
+                                                                              .black
+                                                                              .withOpacity(0.6)),
                                                                     ),
-                                                                    Positioned(
-                                                                      bottom: 1,
-                                                                      right: 10,
-                                                                      child:
-                                                                          Text(
-                                                                        s,
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'Helvetica',
-                                                                            fontSize:
-                                                                                10,
-                                                                            color:
-                                                                                Colors.white.withOpacity(0.6)),
-                                                                      ),
-                                                                    )
-                                                                  ]),
-                                                            ),
+                                                                  ),
+                                                                ]),
                                                           )));
 
                                                       var url =

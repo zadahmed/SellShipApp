@@ -132,25 +132,93 @@ class _CommentsDetaileState extends State<CommentsDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: commentState,
-        body: commentslist.isNotEmpty
-            ? GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                },
-                child: ListView.builder(
-                    itemCount: commentslist.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return new Card(
-                          child: Container(
-                              padding: EdgeInsets.all(5),
+      backgroundColor: Colors.white,
+      key: commentState,
+      body: commentslist.isNotEmpty
+          ? GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child: Column(children: [
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: TextField(
+                        maxLines: 20,
+                        controller: commentcontroller,
+                        autocorrect: true,
+                        enableSuggestions: true,
+                        textCapitalization: TextCapitalization.sentences,
+                        style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
+                        decoration: InputDecoration(
+                            // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                            suffixIcon: Padding(
+                              padding: EdgeInsets.all(7),
+                              child: InkWell(
+                                  child: CircleAvatar(
+                                    child: Icon(
+                                      Feather.message_circle,
+                                      size: 20,
+                                      color: Colors.white,
+                                    ),
+                                    backgroundColor: Colors.deepOrange,
+                                  ),
+                                  onTap: () async {
+                                    if (commentcontroller.text.isNotEmpty) {
+                                      var url =
+                                          'https://api.sellship.co/api/comment/' +
+                                              itemid;
+                                      var userid =
+                                          await storage.read(key: 'userid');
+                                      if (userid != null) {
+                                        final response = await http.post(url,
+                                            body: {
+                                              'userid': userid,
+                                              'comment': commentcontroller.text
+                                            });
+                                        commentcontroller.clear();
+                                        if (response.statusCode == 200) {
+                                          if (response.body == 'Matched') {
+                                            print('Matched');
+                                          }
+                                          loadcomments();
+                                        } else {
+                                          print(response.statusCode);
+                                        }
+                                      } else {
+                                        showInSnackBar(
+                                            'Please Login to Comment');
+                                      }
+                                    }
+                                  }),
+                            ),
+                            border: InputBorder.none,
+                            hintText: "Enter your comment",
+                            hintStyle: TextStyle(
+                                fontFamily: 'Helvetica', fontSize: 16)),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                    child: ListView.builder(
+                        itemCount: commentslist.length,
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          return new Container(
+                              padding: EdgeInsets.all(10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Container(
                                         height: 50,
@@ -190,68 +258,66 @@ class _CommentsDetaileState extends State<CommentsDetail> {
                                             MediaQuery.of(context).size.width -
                                                 100,
                                         child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      UserItems(
-                                                        userid:
-                                                            commentslist[index]
-                                                                .userid,
-                                                        username:
-                                                            commentslist[index]
-                                                                .username,
-                                                      )),
-                                            );
-                                          },
-                                          child: RichText(
-                                            text: new TextSpan(
-                                              style: new TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.black,
-                                              ),
-                                              children: <TextSpan>[
-                                                new TextSpan(
-                                                    text: commentslist[index]
-                                                            .username +
-                                                        '  ',
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UserItems(
+                                                          userid: commentslist[
+                                                                  index]
+                                                              .userid,
+                                                          username:
+                                                              commentslist[
+                                                                      index]
+                                                                  .username,
+                                                        )),
+                                              );
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                    commentslist[index]
+                                                        .username,
                                                     style: new TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontFamily: 'Helvetica',
                                                       fontSize: 14,
                                                     )),
-                                                new TextSpan(
-                                                  text: commentslist[index]
-                                                      .message,
+                                                Text(
+                                                  commentslist[index].date,
                                                   style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 14,
-                                                  ),
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 10,
+                                                      color: Colors.grey),
                                                 ),
                                               ],
-                                            ),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Container(
+                                        width: 260,
+                                        child: Text(
+                                          commentslist[index].message,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
                                           ),
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 10,
+                                        height: 5,
                                       ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            commentslist[index].date,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 10,
-                                                color: Colors.grey),
-                                          ),
-                                          SizedBox(
-                                            width: 20,
-                                          ),
                                           InkWell(
                                             onTap: () async {
                                               var url =
@@ -280,100 +346,37 @@ class _CommentsDetaileState extends State<CommentsDetail> {
                                     ],
                                   ),
                                 ],
-                              )));
-                    }))
-            : GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Center(
-                      child: Text(
-                        'No comments here ',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16,
-                        ),
+                              ));
+                        })),
+              ]))
+          : GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                    child: Text(
+                      'No Comments Here ',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 16,
                       ),
                     ),
-                    Expanded(
-                        child: Image.asset(
-                      'assets/messages.png',
-                      fit: BoxFit.fitWidth,
-                    ))
-                  ],
-                ),
-              ),
-        bottomNavigationBar: Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Padding(
-            padding: EdgeInsets.all(5),
-            child: Container(
-              color: Colors.white,
-              height: 50,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: TextField(
-                  maxLines: 20,
-                  controller: commentcontroller,
-                  autocorrect: true,
-                  enableSuggestions: true,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
-                  decoration: InputDecoration(
-                      // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      suffixIcon: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: InkWell(
-                            child: CircleAvatar(
-                              child: Icon(
-                                Feather.message_circle,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                              backgroundColor: Colors.deepOrange,
-                            ),
-                            onTap: () async {
-                              if (commentcontroller.text.isNotEmpty) {
-                                var url =
-                                    'https://api.sellship.co/api/comment/' +
-                                        itemid;
-                                var userid = await storage.read(key: 'userid');
-                                if (userid != null) {
-                                  final response = await http.post(url, body: {
-                                    'userid': userid,
-                                    'comment': commentcontroller.text
-                                  });
-                                  commentcontroller.clear();
-                                  if (response.statusCode == 200) {
-                                    if (response.body == 'Matched') {
-                                      print('Matched');
-                                    }
-                                    loadcomments();
-                                  } else {
-                                    print(response.statusCode);
-                                  }
-                                } else {
-                                  showInSnackBar('Please Login to Comment');
-                                }
-                              }
-                            }),
-                      ),
-                      border: InputBorder.none,
-                      hintText: "Enter your comment",
-                      hintStyle:
-                          TextStyle(fontFamily: 'Helvetica', fontSize: 16)),
-                ),
+                  ),
+                  Expanded(
+                      child: Image.asset(
+                    'assets/messages.png',
+                    fit: BoxFit.fitWidth,
+                  ))
+                ],
               ),
             ),
-          ),
-        ));
+    );
   }
 }
