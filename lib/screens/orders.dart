@@ -134,8 +134,8 @@ class OrdersScreenState extends State<OrdersScreen>
           });
         }
 
-        print(sellingitem);
-        print(item);
+        print(sellingitem.length);
+        print(item.length);
       } else {
         setState(() {
           empty = true;

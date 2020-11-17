@@ -693,6 +693,7 @@ class _AddressState extends State<Address> {
                                     ));
                           } else {
                             var addressreturned = jsonbody['response'];
+                            print('d');
 
                             showDialog(
                                 context: context,
@@ -717,22 +718,69 @@ class _AddressState extends State<Address> {
                                                 rootNavigator: true)
                                             .pop('dialog');
 
-                                        Navigator.of(context).pop({
-                                          'address':
-                                              addressreturned['addrLine1'] +
-                                                  ' ,\n' +
-                                                  addressreturned['city'] +
-                                                  ', ' +
-                                                  addressreturned['state'] +
-                                                  ', ' +
-                                                  addressreturned['zip_code'],
-                                          'addrLine1':
-                                              addressreturned['addrLine1'],
-                                          'city': addressreturned['city'],
-                                          'state': addressreturned['state'],
-                                          'zip_code':
-                                              addressreturned['zip_code']
-                                        });
+                                        if (addressreturned['AddressLine']
+                                            is List) {
+                                          Navigator.of(context).pop({
+                                            'address':
+                                                addressreturned['AddressLine']
+                                                        [0] +
+                                                    ' ,\n' +
+                                                    addressreturned[
+                                                        'PoliticalDivision2'] +
+                                                    ', ' +
+                                                    addressreturned[
+                                                        'PoliticalDivision1'] +
+                                                    ', ' +
+                                                    addressreturned[
+                                                        'PostcodeExtendedLow'],
+                                            'addrLine1':
+                                                addressreturned['AddressLine'],
+                                            'city': addressreturned[
+                                                'PoliticalDivision2'],
+                                            'state': addressreturned[
+                                                'PoliticalDivision1'],
+                                            'zip_code': addressreturned[
+                                                'PostcodePrimaryLow']
+                                          });
+                                        } else {
+                                          Navigator.of(context).pop({
+                                            'address':
+                                                addressreturned['AddressLine'] +
+                                                    ' ,\n' +
+                                                    addressreturned[
+                                                        'PoliticalDivision2'] +
+                                                    ', ' +
+                                                    addressreturned[
+                                                        'PoliticalDivision1'] +
+                                                    ', ' +
+                                                    addressreturned[
+                                                        'PostcodeExtendedLow'],
+                                            'addrLine1':
+                                                addressreturned['AddressLine'],
+                                            'city': addressreturned[
+                                                'PoliticalDivision2'],
+                                            'state': addressreturned[
+                                                'PoliticalDivision1'],
+                                            'zip_code': addressreturned[
+                                                'PostcodePrimaryLow']
+                                          });
+                                        }
+//                                          Navigator.of(context).pop({
+//                                            'address':
+//                                                addressreturned['addrLine1'] +
+//                                                    ' ,\n' +
+//                                                    addressreturned['city'] +
+//                                                    ', ' +
+//                                                    addressreturned['state'] +
+//                                                    ', ' +
+//                                                    addressreturned['zip_code'],
+//                                            'addrLine1':
+//                                                addressreturned['addrLine1'],
+//                                            'city': addressreturned['city'],
+//                                            'state': addressreturned['state'],
+//                                            'zip_code':
+//                                                addressreturned['zip_code']
+//                                          });
                                       },
                                     ));
                           }

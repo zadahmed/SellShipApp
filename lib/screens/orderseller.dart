@@ -1290,14 +1290,27 @@ class _OrderDetailState extends State<OrderDetail> {
                                       builder: (BuildContext context) {
                                         return Container(
                                           height: 100,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
                                           child: Padding(
                                               padding:
                                                   const EdgeInsets.all(12.0),
-                                              child: SpinKitChasingDots(
-                                                  color:
-                                                      Colors.deepOrangeAccent)),
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                      'Preparing and Sending Label to Email'),
+                                                  SizedBox(height: 5),
+                                                  SpinKitChasingDots(
+                                                      color: Colors
+                                                          .deepOrangeAccent)
+                                                ],
+                                              )),
                                         );
                                       });
+
                                   var url =
                                       'https://api.sellship.co/api/shipitem/' +
                                           messageid +
@@ -1360,11 +1373,22 @@ class _OrderDetailState extends State<OrderDetail> {
                                     builder: (BuildContext context) {
                                       return Container(
                                         height: 100,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
                                         child: Padding(
                                             padding: const EdgeInsets.all(12.0),
-                                            child: SpinKitChasingDots(
-                                                color:
-                                                    Colors.deepOrangeAccent)),
+                                            child: Column(
+                                              children: [
+                                                Text('Loading'),
+                                                SizedBox(height: 5),
+                                                SpinKitChasingDots(
+                                                    color:
+                                                        Colors.deepOrangeAccent)
+                                              ],
+                                            )),
                                       );
                                     });
                                 var url =
@@ -1384,6 +1408,32 @@ class _OrderDetailState extends State<OrderDetail> {
                                 Navigator.of(context, rootNavigator: true)
                                     .pop('dialog');
                               } else if (deliverystage == 3) {
+                                showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return Container(
+                                        height: 100,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Column(
+                                              children: [
+                                                Text('Loading'),
+                                                SizedBox(height: 5),
+                                                SpinKitChasingDots(
+                                                    color:
+                                                        Colors.deepOrangeAccent)
+                                              ],
+                                            )),
+                                      );
+                                    });
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop('dialog');
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

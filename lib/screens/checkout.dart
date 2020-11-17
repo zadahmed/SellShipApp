@@ -226,7 +226,7 @@ class _CheckoutState extends State<Checkout> {
                                           '/' +
                                           cardresult.paymentid.toString() +
                                           '/' +
-                                          offer.toString() +
+                                          totalpayable.toString() +
                                           '/' +
                                           stripecurrency;
                                   final response = await http.get(messageurl);
