@@ -44,6 +44,7 @@ import 'package:http/http.dart' as http;
 import 'package:location/location.dart' as Location;
 import 'package:numeral/numeral.dart';
 import 'package:search_map_place/search_map_place.dart';
+import 'package:search_page/search_page.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -1002,40 +1003,348 @@ class _HomeScreenState extends State<HomeScreen>
             elevation: 0,
             backgroundColor: Colors.white,
             title: Container(
-              height: 30,
-              width: 120,
+              height: 40,
+              width: 180,
               child: Image.asset(
                 'assets/logotransparent.png',
                 fit: BoxFit.cover,
               ),
             ),
-            actions: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 15),
-                child: Badge(
-                  showBadge: notbadge,
-                  position: BadgePosition.topEnd(top: 2, end: -4),
-                  animationType: BadgeAnimationType.slide,
-                  badgeContent: Text(
-                    notcount.toString(),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NotifcationPage()),
-                      );
-                    },
-                    child: Icon(
-                      Feather.bell,
-                      color: Color.fromRGBO(28, 45, 65, 1),
-                      size: 24,
-                    ),
+            leading: Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Badge(
+                showBadge: notbadge,
+                position: BadgePosition.topEnd(top: 2, end: -4),
+                animationType: BadgeAnimationType.slide,
+                badgeContent: Text(
+                  notcount.toString(),
+                  style: TextStyle(color: Colors.white),
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NotifcationPage()),
+                    );
+                  },
+                  child: Icon(
+                    Feather.bell,
+                    color: Color.fromRGBO(28, 45, 65, 1),
+                    size: 24,
                   ),
                 ),
               ),
+            ),
+            actions: <Widget>[
+              Padding(
+                child: InkWell(
+                  onTap: () {
+                    _bottomsheetcontroller =
+                        scaffoldState.currentState.showBottomSheet((context) {
+                      return Container(
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 0.2, color: Colors.grey),
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white),
+                          height: 525,
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                              padding: const EdgeInsets.all(1.0),
+                              child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    AppBar(
+                                      title: Text('Filter',
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                Color.fromRGBO(28, 45, 65, 1),
+                                          )),
+                                      elevation: 0.5,
+                                      backgroundColor: Colors.white,
+                                      excludeHeaderSemantics: true,
+                                      automaticallyImplyLeading: false,
+                                      actions: [
+                                        Padding(
+                                            padding: EdgeInsets.all(15),
+                                            child: InkWell(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('Done',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 18,
+                                                      color: Color.fromRGBO(
+                                                          28, 45, 65, 1),
+                                                    ))))
+                                      ],
+                                    ),
+                                    Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 10.0),
+                                        child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.2,
+                                                height: 450,
+                                                child: ListView(
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  children: [
+                                                    Container(
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: InkWell(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: <Widget>[
+                                                              Align(
+                                                                alignment: Alignment
+                                                                    .bottomCenter,
+                                                                child: Text(
+                                                                  'Sort',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Color
+                                                                          .fromRGBO(
+                                                                              28,
+                                                                              45,
+                                                                              65,
+                                                                              1),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ),
+                                                              Divider()
+                                                            ],
+                                                          ),
+                                                          onTap: () {
+                                                            _bottomsheetcontroller
+                                                                .setState(() {
+                                                              _filter = 'Sort';
+                                                            });
+                                                          },
+                                                        )),
+                                                    Container(
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: InkWell(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: <Widget>[
+                                                              Align(
+                                                                alignment: Alignment
+                                                                    .bottomCenter,
+                                                                child: Text(
+                                                                  'Brand',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Color
+                                                                          .fromRGBO(
+                                                                              28,
+                                                                              45,
+                                                                              65,
+                                                                              1),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ),
+                                                              Divider()
+                                                            ],
+                                                          ),
+                                                          onTap: () async {
+                                                            brands.clear();
+                                                            var categoryurl =
+                                                                'https://api.sellship.co/api/getallbrands';
+                                                            final categoryresponse =
+                                                                await http.get(
+                                                                    categoryurl);
+                                                            if (categoryresponse
+                                                                    .statusCode ==
+                                                                200) {
+                                                              var categoryrespons =
+                                                                  json.decode(
+                                                                      categoryresponse
+                                                                          .body);
+
+                                                              for (int i = 0;
+                                                                  i <
+                                                                      categoryrespons
+                                                                          .length;
+                                                                  i++) {
+                                                                brands.add(
+                                                                    categoryrespons[
+                                                                        i]);
+                                                              }
+                                                              _bottomsheetcontroller
+                                                                  .setState(() {
+                                                                brands = brands;
+                                                              });
+                                                            } else {
+                                                              print(categoryresponse
+                                                                  .statusCode);
+                                                            }
+                                                            _bottomsheetcontroller
+                                                                .setState(() {
+                                                              _filter = 'Brand';
+                                                            });
+                                                          },
+                                                        )),
+                                                    Container(
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: InkWell(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: <Widget>[
+                                                              Align(
+                                                                alignment: Alignment
+                                                                    .bottomCenter,
+                                                                child: Text(
+                                                                  'Condition',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Color
+                                                                          .fromRGBO(
+                                                                              28,
+                                                                              45,
+                                                                              65,
+                                                                              1),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ),
+                                                              Divider()
+                                                            ],
+                                                          ),
+                                                          onTap: () {
+                                                            _bottomsheetcontroller
+                                                                .setState(() {
+                                                              _filter =
+                                                                  'Condition';
+                                                            });
+                                                          },
+                                                        )),
+                                                    Container(
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                        child: InkWell(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: <Widget>[
+                                                              Align(
+                                                                alignment: Alignment
+                                                                    .bottomCenter,
+                                                                child: Text(
+                                                                  'Price',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Color
+                                                                          .fromRGBO(
+                                                                              28,
+                                                                              45,
+                                                                              65,
+                                                                              1),
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                ),
+                                                              ),
+                                                              Divider()
+                                                            ],
+                                                          ),
+                                                          onTap: () {
+                                                            _bottomsheetcontroller
+                                                                .setState(() {
+                                                              _filter = 'Price';
+                                                            });
+                                                          },
+                                                        )),
+                                                  ],
+                                                ),
+                                              ),
+                                              filters(context)
+                                            ]))
+                                  ])));
+                    });
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Color.fromRGBO(255, 115, 0, 0.2),
+                    child: SvgPicture.asset(
+                        'assets/bottomnavbar/sound-module-fill.svg'),
+                  ),
+                ),
+                padding: EdgeInsets.only(right: 10),
+              )
             ]),
         body: CustomScrollView(
           slivers: [
@@ -1050,21 +1359,9 @@ class _HomeScreenState extends State<HomeScreen>
   SliverFillRemaining buildUserPosts() {
     if (view == "home") {
       return SliverFillRemaining(
-          hasScrollBody: false,
-          child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(242, 244, 248, 1),
-              ),
-              child: Container(
-                padding: EdgeInsets.only(top: 15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                  ),
-                ),
-                child: HomeView(),
-              )));
+        hasScrollBody: false,
+        child: HomeView(),
+      );
     } else if (view == "recent") {
       return SliverFillRemaining(
           hasScrollBody: false,
@@ -1167,346 +1464,51 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
         ),
-        Padding(
-          child: InkWell(
-            onTap: () {
-              _bottomsheetcontroller =
-                  scaffoldState.currentState.showBottomSheet((context) {
-                return Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 0.2, color: Colors.grey),
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.white),
-                    height: 525,
-                    width: MediaQuery.of(context).size.width,
-                    child: Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 5,
-                              ),
-                              AppBar(
-                                title: Text('Filter',
-                                    style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromRGBO(28, 45, 65, 1),
-                                    )),
-                                elevation: 0.5,
-                                backgroundColor: Colors.white,
-                                excludeHeaderSemantics: true,
-                                automaticallyImplyLeading: false,
-                                actions: [
-                                  Padding(
-                                      padding: EdgeInsets.all(15),
-                                      child: InkWell(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text('Done',
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 18,
-                                                color: Color.fromRGBO(
-                                                    28, 45, 65, 1),
-                                              ))))
-                                ],
-                              ),
-                              Padding(
-                                  padding: const EdgeInsets.only(top: 10.0),
-                                  child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          height: 450,
-                                          child: ListView(
-                                            scrollDirection: Axis.vertical,
-                                            children: [
-                                              Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: InkWell(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomCenter,
-                                                          child: Text(
-                                                            'Sort',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 14,
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        28,
-                                                                        45,
-                                                                        65,
-                                                                        1),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ),
-                                                        Divider()
-                                                      ],
-                                                    ),
-                                                    onTap: () {
-                                                      _bottomsheetcontroller
-                                                          .setState(() {
-                                                        _filter = 'Sort';
-                                                      });
-                                                    },
-                                                  )),
-                                              Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: InkWell(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomCenter,
-                                                          child: Text(
-                                                            'Brand',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 14,
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        28,
-                                                                        45,
-                                                                        65,
-                                                                        1),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ),
-                                                        Divider()
-                                                      ],
-                                                    ),
-                                                    onTap: () async {
-                                                      brands.clear();
-                                                      var categoryurl =
-                                                          'https://api.sellship.co/api/getallbrands';
-                                                      final categoryresponse =
-                                                          await http
-                                                              .get(categoryurl);
-                                                      if (categoryresponse
-                                                              .statusCode ==
-                                                          200) {
-                                                        var categoryrespons =
-                                                            json.decode(
-                                                                categoryresponse
-                                                                    .body);
-
-                                                        for (int i = 0;
-                                                            i <
-                                                                categoryrespons
-                                                                    .length;
-                                                            i++) {
-                                                          brands.add(
-                                                              categoryrespons[
-                                                                  i]);
-                                                        }
-                                                        _bottomsheetcontroller
-                                                            .setState(() {
-                                                          brands = brands;
-                                                        });
-                                                      } else {
-                                                        print(categoryresponse
-                                                            .statusCode);
-                                                      }
-                                                      _bottomsheetcontroller
-                                                          .setState(() {
-                                                        _filter = 'Brand';
-                                                      });
-                                                    },
-                                                  )),
-                                              Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: InkWell(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomCenter,
-                                                          child: Text(
-                                                            'Condition',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 14,
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        28,
-                                                                        45,
-                                                                        65,
-                                                                        1),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ),
-                                                        Divider()
-                                                      ],
-                                                    ),
-                                                    onTap: () {
-                                                      _bottomsheetcontroller
-                                                          .setState(() {
-                                                        _filter = 'Condition';
-                                                      });
-                                                    },
-                                                  )),
-                                              Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: InkWell(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomCenter,
-                                                          child: Text(
-                                                            'Price',
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 14,
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        28,
-                                                                        45,
-                                                                        65,
-                                                                        1),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                          ),
-                                                        ),
-                                                        Divider()
-                                                      ],
-                                                    ),
-                                                    onTap: () {
-                                                      _bottomsheetcontroller
-                                                          .setState(() {
-                                                        _filter = 'Price';
-                                                      });
-                                                    },
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
-                                        filters(context)
-                                      ]))
-                            ])));
-              });
-            },
-            child: CircleAvatar(
-              backgroundColor: Color.fromRGBO(255, 115, 0, 0.2),
-              child:
-                  SvgPicture.asset('assets/bottomnavbar/sound-module-fill.svg'),
-            ),
-          ),
-          padding: EdgeInsets.only(right: 10),
-        )
       ]),
-      SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: 50,
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Color.fromRGBO(242, 244, 248, 1),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-            ),
-          ),
-          child: TabBar(
-            onTap: (int) {
-              if (int == 0) {
-                changeView("home");
-              } else if (int == 1) {
-                changeView("recent");
-              } else if (int == 2) {
-                changeView("near");
-              } else if (int == 3) {
-                changeView("below");
-              }
-            },
-            controller: _tabController,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicatorPadding: EdgeInsets.all(10),
-            indicator: CircleTabIndicator(color: Colors.deepOrange, radius: 4),
-            isScrollable: true,
-            labelColor: Colors.black,
-            labelStyle: TextStyle(
-              fontFamily: 'Helvetica',
-              fontSize: 16,
-            ),
-            tabs: <Widget>[
-              Tab(
-                text: 'Home',
-              ),
-              Tab(text: 'Recently Added'),
-              Tab(text: 'Near Me'),
-              Tab(text: 'Below 100'),
-            ],
-          ),
-        ),
-      ),
-      Container(
-        height: 4,
-        color: Color.fromRGBO(242, 244, 248, 1),
-      ),
+//      SafeArea(
+//        child: Container(
+//          width: MediaQuery.of(context).size.width,
+//          height: 50,
+//          padding: EdgeInsets.all(5),
+//          decoration: BoxDecoration(
+//            color: Color.fromRGBO(242, 244, 248, 1),
+//            borderRadius: BorderRadius.only(
+//              topLeft: Radius.circular(20),
+//            ),
+//          ),
+//          child: TabBar(
+//            onTap: (int) {
+//              if (int == 0) {
+//                changeView("home");
+//              } else if (int == 1) {
+//                changeView("recent");
+//              } else if (int == 2) {
+//                changeView("near");
+//              } else if (int == 3) {
+//                changeView("below");
+//              }
+//            },
+//            controller: _tabController,
+//            indicatorSize: TabBarIndicatorSize.tab,
+//            indicatorPadding: EdgeInsets.all(10),
+//            indicator: CircleTabIndicator(color: Colors.deepOrange, radius: 4),
+//            isScrollable: true,
+//            labelColor: Colors.black,
+//            labelStyle: TextStyle(
+//              fontFamily: 'Helvetica',
+//              fontSize: 16,
+//            ),
+//            tabs: <Widget>[
+//              Tab(
+//                text: 'Home',
+//              ),
+//              Tab(text: 'Recently Added'),
+//              Tab(text: 'Near Me'),
+//              Tab(text: 'Below 100'),
+//            ],
+//          ),
+//        ),
+//      ),
     ]));
   }
 
@@ -1957,25 +1959,364 @@ class UserSearchDelegate extends SearchDelegate {
     );
   }
 
+  static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
+
+  static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
+
+  final _controller = NativeAdmobController();
+
   @override
   Widget buildResults(BuildContext context) {
-    return StreamBuilder<List>(
+    getfavourites();
+    return StreamBuilder<List<Item>>(
         stream: getItemsSearch(query).asStream(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Icon(Icons.restore),
-                  title: Text(snapshot.data[index]),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            Search(text: snapshot.data[index])),
+            return EasyRefresh.custom(
+              topBouncing: true,
+              footer: MaterialFooter(
+                enableInfiniteLoad: true,
+                enableHapticFeedback: true,
+              ),
+              slivers: <Widget>[
+                SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    mainAxisSpacing: 1.0,
+                    crossAxisSpacing: 1.0,
+                    crossAxisCount: 2,
                   ),
-                );
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      if (index != 0 && index % 8 == 0) {
+                        return Platform.isIOS == true
+                            ? Padding(
+                                padding: EdgeInsets.all(7),
+                                child: Container(
+                                  height: 220,
+                                  padding: EdgeInsets.all(10),
+                                  margin: EdgeInsets.only(bottom: 20.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.2, color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: NativeAdmob(
+                                    adUnitID: _iosadUnitID,
+                                    controller: _controller,
+                                  ),
+                                ))
+                            : Padding(
+                                padding: EdgeInsets.all(7),
+                                child: Container(
+                                  height: 220,
+                                  padding: EdgeInsets.all(10),
+                                  margin: EdgeInsets.only(bottom: 20.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.2, color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: NativeAdmob(
+                                    adUnitID: _androidadUnitID,
+                                    controller: _controller,
+                                  ),
+                                ));
+                      }
+
+                      return StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return new Padding(
+                            padding: EdgeInsets.all(7),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Details(
+                                            itemid: snapshot.data[index].itemid,
+                                            sold: snapshot.data[index].sold,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 0.2, color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      offset: Offset(0.0, 1.0), //(x,y)
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    new Stack(
+                                      children: <Widget>[
+                                        Container(
+                                          height: 199,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10)),
+                                            child: CachedNetworkImage(
+                                              fadeInDuration:
+                                                  Duration(microseconds: 5),
+                                              imageUrl: snapshot
+                                                      .data[index].image.isEmpty
+                                                  ? SpinKitChasingDots(
+                                                      color: Colors.deepOrange)
+                                                  : snapshot.data[index].image,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  SpinKitChasingDots(
+                                                      color: Colors.deepOrange),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
+                                          ),
+                                        ),
+                                        snapshot.data[index].sold == true
+                                            ? Align(
+                                                alignment: Alignment.center,
+                                                child: Container(
+                                                  height: 50,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors
+                                                        .deepPurpleAccent
+                                                        .withOpacity(0.8),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topLeft: Radius
+                                                                .circular(10),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                    10)),
+                                                  ),
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Sold',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ))
+                                            : favourites != null
+                                                ? favourites.contains(
+                                                        itemsgrid[index].itemid)
+                                                    ? InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.remove(
+                                                                itemsgrid[index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              itemsgrid[index]
+                                                                      .likes =
+                                                                  itemsgrid[index]
+                                                                          .likes -
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    url,
+                                                                    body: body);
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            print(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            10),
+                                                                child:
+                                                                    CircleAvatar(
+                                                                  radius: 18,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .deepPurple,
+                                                                  child: Icon(
+                                                                    FontAwesome
+                                                                        .heart,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    size: 16,
+                                                                  ),
+                                                                ))))
+                                                    : InkWell(
+                                                        enableFeedback: true,
+                                                        onTap: () async {
+                                                          var userid =
+                                                              await storage.read(
+                                                                  key:
+                                                                      'userid');
+
+                                                          if (userid != null) {
+                                                            var url =
+                                                                'https://api.sellship.co/api/favourite/' +
+                                                                    userid;
+
+                                                            Map<String, String>
+                                                                body = {
+                                                              'itemid':
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                            };
+
+                                                            favourites.add(
+                                                                itemsgrid[index]
+                                                                    .itemid);
+                                                            setState(() {
+                                                              favourites =
+                                                                  favourites;
+                                                              itemsgrid[index]
+                                                                      .likes =
+                                                                  itemsgrid[index]
+                                                                          .likes +
+                                                                      1;
+                                                            });
+                                                            final response =
+                                                                await http.post(
+                                                                    url,
+                                                                    body: body);
+
+                                                            if (response
+                                                                    .statusCode ==
+                                                                200) {
+                                                            } else {
+                                                              print(response
+                                                                  .statusCode);
+                                                            }
+                                                          } else {
+                                                            print(
+                                                                'Please Login to use Favourites');
+                                                          }
+                                                        },
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            10),
+                                                                child:
+                                                                    CircleAvatar(
+                                                                  radius: 18,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .white,
+                                                                  child: Icon(
+                                                                    Feather
+                                                                        .heart,
+                                                                    color: Colors
+                                                                        .blueGrey,
+                                                                    size: 16,
+                                                                  ),
+                                                                ))))
+                                                : Align(
+                                                    alignment:
+                                                        Alignment.topRight,
+                                                    child: Padding(
+                                                        padding:
+                                                            EdgeInsets.all(10),
+                                                        child: CircleAvatar(
+                                                          radius: 18,
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          child: Icon(
+                                                            Feather.heart,
+                                                            color:
+                                                                Colors.blueGrey,
+                                                            size: 16,
+                                                          ),
+                                                        ))),
+                                      ],
+                                    ),
+                                  ],
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    childCount: snapshot.data.length,
+                  ),
+                )
+              ],
+              onLoad: () async {
+                getmoreItemsSearch(query);
               },
             );
           } else {
@@ -1984,42 +2325,503 @@ class UserSearchDelegate extends SearchDelegate {
         });
   }
 
-  Future<List> getItemsSearch(String text) async {
-    var url =
-        'https://api.sellship.co/api/searchresults/' + country + '/' + text;
+  var skip = 0;
+  var limit = 20;
+
+  List<Item> itemsgrid = List<Item>();
+
+  Future<List<Item>> getItemsSearch(String text) async {
+    itemsgrid.clear();
+    var url = 'https://api.sellship.co/api/searchitems/' +
+        country +
+        '/' +
+        text.toString().toLowerCase().trim() +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
+        name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
+        image: jsonbody[i]['image'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
+    }
+    print(itemsgrid);
+//    responseJson.add(text);
+    return itemsgrid;
+  }
+
+  Future<List> getmoreItemsSearch(String text) async {
+    skip = skip + 20;
+    limit = limit + 20;
+    var url = 'https://api.sellship.co/api/searchitems/' +
+        country +
+        '/' +
+        text.toString().toLowerCase().trim() +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
 
     final response = await http.get(url);
 
     List responseJson = json.decode(response.body.toString());
-    responseJson.add(text);
+    print(responseJson);
+//    responseJson.add(text);
     return responseJson;
   }
 
   List<String> itemsresult = const [];
 
   bool gridtoggle;
+  final storage = new FlutterSecureStorage();
+
+  getfavourites() async {
+    favourites.clear();
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/favourites/' + userid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        if (response.body != 'Empty') {
+          var respons = json.decode(response.body);
+          var profilemap = respons;
+          List<String> ites = List<String>();
+
+          if (profilemap != null) {
+            for (var i = 0; i < profilemap.length; i++) {
+              if (profilemap[i] != null) {
+                ites.add(profilemap[i]['_id']['\$oid']);
+              }
+            }
+
+            Iterable inReverse = ites.reversed;
+            List<String> jsoninreverse = inReverse.toList();
+
+            favourites = jsoninreverse;
+          } else {
+            favourites = [];
+          }
+        }
+      }
+    } else {
+      favourites = [];
+    }
+  }
+
+  List<String> favourites;
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    getfavourites();
     return query.isNotEmpty
-        ? FutureBuilder<List>(
+        ? FutureBuilder<List<Item>>(
             future: getItemsSearch(query),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                print(snapshot.data.length);
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon(Icons.restore),
-                      title: Text(snapshot.data[index]),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Search(text: snapshot.data[index])),
+                return EasyRefresh.custom(
+                  topBouncing: true,
+                  footer: MaterialFooter(
+                    enableInfiniteLoad: true,
+                    enableHapticFeedback: true,
+                  ),
+                  slivers: <Widget>[
+                    SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisSpacing: 1.0,
+                        crossAxisSpacing: 1.0,
+                        crossAxisCount: 2,
                       ),
-                    );
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          if (index != 0 && index % 8 == 0) {
+                            return Platform.isIOS == true
+                                ? Padding(
+                                    padding: EdgeInsets.all(7),
+                                    child: Container(
+                                      height: 220,
+                                      padding: EdgeInsets.all(10),
+                                      margin: EdgeInsets.only(bottom: 20.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 0.2, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: NativeAdmob(
+                                        adUnitID: _iosadUnitID,
+                                        controller: _controller,
+                                      ),
+                                    ))
+                                : Padding(
+                                    padding: EdgeInsets.all(7),
+                                    child: Container(
+                                      height: 220,
+                                      padding: EdgeInsets.all(10),
+                                      margin: EdgeInsets.only(bottom: 20.0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 0.2, color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: Offset(0.0, 1.0), //(x,y)
+                                            blurRadius: 6.0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: NativeAdmob(
+                                        adUnitID: _androidadUnitID,
+                                        controller: _controller,
+                                      ),
+                                    ));
+                          }
+
+                          return StatefulBuilder(
+                            builder:
+                                (BuildContext context, StateSetter setState) {
+                              return new Padding(
+                                padding: EdgeInsets.all(7),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Details(
+                                                itemid:
+                                                    snapshot.data[index].itemid,
+                                                sold: snapshot.data[index].sold,
+                                              )),
+                                    );
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 0.2, color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.shade300,
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        new Stack(
+                                          children: <Widget>[
+                                            Container(
+                                              height: 199,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    topRight:
+                                                        Radius.circular(10),
+                                                    bottomLeft:
+                                                        Radius.circular(10),
+                                                    bottomRight:
+                                                        Radius.circular(10)),
+                                                child: CachedNetworkImage(
+                                                  fadeInDuration:
+                                                      Duration(microseconds: 5),
+                                                  imageUrl: snapshot.data[index]
+                                                          .image.isEmpty
+                                                      ? SpinKitChasingDots(
+                                                          color:
+                                                              Colors.deepOrange)
+                                                      : snapshot
+                                                          .data[index].image,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) =>
+                                                      SpinKitChasingDots(
+                                                          color: Colors
+                                                              .deepOrange),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(Icons.error),
+                                                ),
+                                              ),
+                                            ),
+                                            snapshot.data[index].sold == true
+                                                ? Align(
+                                                    alignment: Alignment.center,
+                                                    child: Container(
+                                                      height: 50,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .deepPurpleAccent
+                                                            .withOpacity(0.8),
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        10),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        10)),
+                                                      ),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Sold',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                    ))
+                                                : favourites != null
+                                                    ? favourites.contains(
+                                                            itemsgrid[index]
+                                                                .itemid)
+                                                        ? InkWell(
+                                                            enableFeedback:
+                                                                true,
+                                                            onTap: () async {
+                                                              var userid =
+                                                                  await storage
+                                                                      .read(
+                                                                          key:
+                                                                              'userid');
+
+                                                              if (userid !=
+                                                                  null) {
+                                                                var url =
+                                                                    'https://api.sellship.co/api/favourite/' +
+                                                                        userid;
+
+                                                                Map<String,
+                                                                        String>
+                                                                    body = {
+                                                                  'itemid': itemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                                };
+
+                                                                favourites.remove(
+                                                                    itemsgrid[
+                                                                            index]
+                                                                        .itemid);
+                                                                setState(() {
+                                                                  favourites =
+                                                                      favourites;
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .likes = itemsgrid[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                                });
+                                                                final response =
+                                                                    await http.post(
+                                                                        url,
+                                                                        body:
+                                                                            body);
+
+                                                                if (response
+                                                                        .statusCode ==
+                                                                    200) {
+                                                                } else {
+                                                                  print(response
+                                                                      .statusCode);
+                                                                }
+                                                              } else {
+                                                                print(
+                                                                    'Please Login to use Favourites');
+                                                              }
+                                                            },
+                                                            child: Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .topRight,
+                                                                child: Padding(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            10),
+                                                                    child:
+                                                                        CircleAvatar(
+                                                                      radius:
+                                                                          18,
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .deepPurple,
+                                                                      child:
+                                                                          Icon(
+                                                                        FontAwesome
+                                                                            .heart,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        size:
+                                                                            16,
+                                                                      ),
+                                                                    ))))
+                                                        : InkWell(
+                                                            enableFeedback:
+                                                                true,
+                                                            onTap: () async {
+                                                              var userid =
+                                                                  await storage
+                                                                      .read(
+                                                                          key:
+                                                                              'userid');
+
+                                                              if (userid !=
+                                                                  null) {
+                                                                var url =
+                                                                    'https://api.sellship.co/api/favourite/' +
+                                                                        userid;
+
+                                                                Map<String,
+                                                                        String>
+                                                                    body = {
+                                                                  'itemid': itemsgrid[
+                                                                          index]
+                                                                      .itemid,
+                                                                };
+
+                                                                favourites.add(
+                                                                    itemsgrid[
+                                                                            index]
+                                                                        .itemid);
+                                                                setState(() {
+                                                                  favourites =
+                                                                      favourites;
+                                                                  itemsgrid[
+                                                                          index]
+                                                                      .likes = itemsgrid[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                                });
+                                                                final response =
+                                                                    await http.post(
+                                                                        url,
+                                                                        body:
+                                                                            body);
+
+                                                                if (response
+                                                                        .statusCode ==
+                                                                    200) {
+                                                                } else {
+                                                                  print(response
+                                                                      .statusCode);
+                                                                }
+                                                              } else {
+                                                                print(
+                                                                    'Please Login to use Favourites');
+                                                              }
+                                                            },
+                                                            child: Align(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .topRight,
+                                                                child: Padding(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            10),
+                                                                    child:
+                                                                        CircleAvatar(
+                                                                      radius:
+                                                                          18,
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      child:
+                                                                          Icon(
+                                                                        Feather
+                                                                            .heart,
+                                                                        color: Colors
+                                                                            .blueGrey,
+                                                                        size:
+                                                                            16,
+                                                                      ),
+                                                                    ))))
+                                                    : Align(
+                                                        alignment:
+                                                            Alignment.topRight,
+                                                        child: Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    10),
+                                                            child: CircleAvatar(
+                                                              radius: 18,
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              child: Icon(
+                                                                Feather.heart,
+                                                                color: Colors
+                                                                    .blueGrey,
+                                                                size: 16,
+                                                              ),
+                                                            ))),
+                                          ],
+                                        ),
+                                      ],
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        childCount: snapshot.data.length,
+                      ),
+                    )
+                  ],
+                  onLoad: () async {
+                    getmoreItemsSearch(query);
                   },
                 );
               } else {

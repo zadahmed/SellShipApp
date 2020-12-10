@@ -40,7 +40,7 @@ class _StarterPageState extends State<StarterPage>
 
   final storage = new FlutterSecureStorage();
 
-  final int _numPages = 4;
+  final int _numPages = 3;
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
 
@@ -77,286 +77,233 @@ class _StarterPageState extends State<StarterPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView(
+        body: Column(
       children: <Widget>[
-        SizedBox(
-          height: 20,
-        ),
         Container(
-          height: 80,
-          width: 10,
-          child: Image.asset(
-            'assets/logotransparent.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-        Container(
-            height: MediaQuery.of(context).size.height / 2,
+            height: MediaQuery.of(context).size.height / 1.5,
             width: MediaQuery.of(context).size.width,
-            child: PageView(
-                physics: ClampingScrollPhysics(),
-                controller: _pageController,
-                onPageChanged: (int page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                },
-                children: <Widget>[
-                  Center(
-                    child: Image(
-                      image: AssetImage(
-                        'assets/153.png',
-                      ),
-                      fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height / 2,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                  ),
-                  Center(
-                    child: Image(
-                      image: AssetImage(
-                        'assets/043.png',
-                      ),
-                      fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height / 2,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                  ),
-                  Center(
-                    child: Image(
-                      image: AssetImage(
-                        'assets/051.png',
-                      ),
-                      fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height / 2,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                  ),
-                  Center(
-                    child: Image(
-                      image: AssetImage(
-                        'assets/062.png',
-                      ),
-                      fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height / 2,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                  ),
-                ])),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _buildPageIndicator(),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Center(
-          child: Text(
-            'Choose your country',
-            style: TextStyle(
-                fontFamily: 'Helvetica',
-                fontSize: 20,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.only(),
-          child: Center(
-            child: Align(
-              alignment: Alignment.center,
-              child: DropdownButton(
-                autofocus: true,
-                style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-                icon: Icon(Icons.keyboard_arrow_down),
-                hint: Center(
-                  child: Text(
-                    'Please choose a country',
-                    style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Image.asset(
+                      'assets/bgonboard.png',
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
-                value: selectedItem,
-                onChanged: (value) {
-                  setState(() {
-                    selectedItem = value;
-                  });
-                },
-                items: items.entries
-                    .map<DropdownMenuItem<String>>(
-                        (MapEntry<String, String> e) =>
-                            DropdownMenuItem<String>(
-                              value: e.value,
-                              child: Container(
-                                width:
-                                    MediaQuery.of(context).size.width / 2 + 80,
-                                child: ListTile(
-                                  leading: Flag(
-                                    e.key,
-                                    height: 20,
-                                    width: 30,
-                                    fit: BoxFit.cover,
+                Align(
+                    alignment: Alignment.center,
+                    child: PageView(
+                        physics: ClampingScrollPhysics(),
+                        controller: _pageController,
+                        onPageChanged: (int page) {
+                          setState(() {
+                            _currentPage = page;
+                          });
+                        },
+                        children: <Widget>[
+                          Center(
+                            child: Image(
+                              image: AssetImage(
+                                'assets/153.png',
+                              ),
+                              fit: BoxFit.cover,
+                              height: 250,
+                              width: 250,
+                            ),
+                          ),
+                          Center(
+                            child: Image(
+                              image: AssetImage(
+                                'assets/043.png',
+                              ),
+                              fit: BoxFit.cover,
+                              height: 250,
+                              width: 250,
+                            ),
+                          ),
+                          Center(
+                            child: Image(
+                              image: AssetImage(
+                                'assets/051.png',
+                              ),
+                              fit: BoxFit.cover,
+                              height: 250,
+                              width: 250,
+                            ),
+                          ),
+                        ])),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _buildPageIndicator(),
+                  ),
+                )
+              ],
+            )),
+        Padding(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                  padding: EdgeInsets.only(left: 32, top: 20, right: 32),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 60,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                          width: MediaQuery.of(context).size.width - 70,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(131, 146, 165, 0.1),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Center(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                  autofocus: true,
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                  icon: Icon(Icons.keyboard_arrow_down),
+                                  hint: Center(
+                                    child: Text(
+                                      'Please choose a country',
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                      ),
+                                    ),
                                   ),
-                                  title: Text(e.value),
+                                  value: selectedItem,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedItem = value;
+                                    });
+                                  },
+                                  items: items.entries
+                                      .map<DropdownMenuItem<String>>(
+                                          (MapEntry<String, String> e) =>
+                                              DropdownMenuItem<String>(
+                                                value: e.value,
+                                                child: Container(
+                                                  width: MediaQuery.of(context)
+                                                              .size
+                                                              .width /
+                                                          2 +
+                                                      80,
+                                                  child: ListTile(
+                                                    leading: Flag(
+                                                      e.key,
+                                                      height: 20,
+                                                      width: 35,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    title: Text(e.value),
+                                                  ),
+                                                ),
+                                              ))
+                                      .toList(),
                                 ),
                               ),
-                            ))
-                    .toList(),
+                            ),
+                          ),
+                        ),
+                      ])),
+              SizedBox(
+                height: 20,
               ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        InkWell(
-          onTap: () async {
-            if (selectedItem != null) {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.setBool('seen', true);
+              InkWell(
+                onTap: () async {
+                  if (selectedItem != null) {
+//                    SharedPreferences prefs =
+//                        await SharedPreferences.getInstance();
+//                    await prefs.setBool('seen', true);
 
-              await storage
-                  .write(key: 'country', value: selectedItem)
-                  .whenComplete(() => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => OnboardingScreen()),
-                      ));
-            } else {
-              showDialog(
-                  context: context,
-                  builder: (_) => AssetGiffyDialog(
-                        image: Image.asset(
-                          'assets/oops.gif',
-                          fit: BoxFit.cover,
+                    await storage
+                        .write(key: 'country', value: selectedItem)
+                        .whenComplete(() => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OnboardingScreen()),
+                            ));
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (_) => AssetGiffyDialog(
+                              image: Image.asset(
+                                'assets/oops.gif',
+                                fit: BoxFit.cover,
+                              ),
+                              title: Text(
+                                'Oops!',
+                                style: TextStyle(
+                                    fontSize: 22.0,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              description: Text(
+                                'Make sure to choose your country!',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(),
+                              ),
+                              onlyOkButton: true,
+                              entryAnimation: EntryAnimation.DEFAULT,
+                              onOkButtonPressed: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop('dialog');
+                              },
+                            ));
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(30),
+                  child: Container(
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurpleAccent,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                            color: Colors.deepPurpleAccent.withOpacity(0.4),
+                            offset: const Offset(1.1, 1.1),
+                            blurRadius: 10.0),
+                      ],
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Next',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          letterSpacing: 0.0,
+                          color: Colors.white,
                         ),
-                        title: Text(
-                          'Oops!',
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.w600),
-                        ),
-                        description: Text(
-                          'Make sure to choose your country!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(),
-                        ),
-                        onlyOkButton: true,
-                        entryAnimation: EntryAnimation.DEFAULT,
-                        onOkButtonPressed: () {
-                          Navigator.of(context, rootNavigator: true)
-                              .pop('dialog');
-                        },
-                      ));
-            }
-          },
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Container(
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.deepPurpleAccent,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(10.0),
-                ),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.deepPurpleAccent.withOpacity(0.4),
-                      offset: const Offset(1.1, 1.1),
-                      blurRadius: 10.0),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  'Done',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    letterSpacing: 0.0,
-                    color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
+          padding: EdgeInsets.only(bottom: 40),
         ),
-
-//        Row(
-//          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//          crossAxisAlignment: CrossAxisAlignment.center,
-//          children: <Widget>[
-//            InkWell(
-//              onTap: () async {
-
-//              },
-//              child: Container(
-//                  height: 100,
-//                  width: 100,
-//                  child: Column(
-//                    children: <Widget>[
-//                      ClipRRect(
-//                        borderRadius: BorderRadius.circular(50.0),
-//                        child: Image.asset('assets/uaeflag.png'),
-//                      ),
-//                      SizedBox(
-//                        height: 5,
-//                      ),
-//                      Text(
-//                        'UAE',
-//                        style: TextStyle(
-//                            fontFamily: 'Helvetica',
-//                            fontSize: 16,
-//                            color: Colors.white),
-//                      )
-//                    ],
-//                  )),
-//            ),
-//            InkWell(
-//              onTap: () async {
-//                SharedPreferences prefs = await SharedPreferences.getInstance();
-//                await prefs.setBool('seen', true);
-//
-//                await storage
-//                    .write(key: 'country', value: 'United States')
-//                    .whenComplete(() => Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                              builder: (context) => OnboardingScreen()),
-//                        ));
-//              },
-//              child: Container(
-//                  height: 100,
-//                  width: 100,
-//                  child: Column(
-//                    children: <Widget>[
-//                      ClipRRect(
-//                        borderRadius: BorderRadius.circular(50.0),
-//                        child: Image.asset('assets/usaflag.png'),
-//                      ),
-//                      SizedBox(
-//                        height: 5,
-//                      ),
-//                      Text(
-//                        'USA',
-//                        style: TextStyle(
-//                            fontFamily: 'Helvetica',
-//                            fontSize: 16,
-//                            color: Colors.white),
-//                      )
-//                    ],
-//                  )),
-//            ),
-//          ],
-//        )
       ],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
     ));
   }
 }

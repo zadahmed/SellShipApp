@@ -9,8 +9,10 @@ import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -64,6 +66,121 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final storage = new FlutterSecureStorage();
   var firebasetoken;
+
+  final FocusNode myFocusNodePassword = FocusNode();
+  final FocusNode myFocusNodeEmail = FocusNode();
+
+  TextEditingController EmailController = new TextEditingController();
+  TextEditingController PasswordController = new TextEditingController();
+  var userid;
+
+  void Loginfunc() async {
+    var url = 'https://api.sellship.co/api/login';
+
+    Map<String, String> body = {
+      'email': EmailController.text,
+      'password': PasswordController.text,
+      'fcmtoken': firebasetoken,
+    };
+
+    final response = await http.post(url, body: body);
+
+    if (response.statusCode == 200) {
+      var jsondata = json.decode(response.body);
+
+      if (jsondata['id'] != null) {
+        await storage.write(key: 'userid', value: jsondata['id']);
+        if (jsondata['businessid'] != null) {
+          await storage.write(key: 'businessid', value: jsondata['businessid']);
+        }
+        print('Loggd in ');
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        setState(() {
+          userid = jsondata['id'];
+        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setBool('seen', true);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => RootScreen()));
+      } else if (jsondata['status']['message'].toString().trim() ==
+          'User does not exist, please sign up') {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        showDialog(
+            context: context,
+            builder: (_) => AssetGiffyDialog(
+                  image: Image.asset(
+                    'assets/oops.gif',
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(
+                    'Oops!',
+                    style:
+                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                  ),
+                  description: Text(
+                    'Looks like you don\'t have an account with us!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(),
+                  ),
+                  onlyOkButton: true,
+                  entryAnimation: EntryAnimation.DEFAULT,
+                  onOkButtonPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                  },
+                ));
+      } else if (jsondata['status']['message'].toString().trim() ==
+          'Invalid password, try again') {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        showDialog(
+            context: context,
+            builder: (_) => AssetGiffyDialog(
+                  image: Image.asset(
+                    'assets/oops.gif',
+                    fit: BoxFit.cover,
+                  ),
+                  title: Text(
+                    'Oops!',
+                    style:
+                        TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                  ),
+                  description: Text(
+                    'Looks like thats the wrong password!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(),
+                  ),
+                  onlyOkButton: true,
+                  entryAnimation: EntryAnimation.DEFAULT,
+                  onOkButtonPressed: () {
+                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                  },
+                ));
+      }
+    } else {
+      Navigator.of(context, rootNavigator: true).pop('dialog');
+      showDialog(
+          context: context,
+          builder: (_) => AssetGiffyDialog(
+                image: Image.asset(
+                  'assets/oops.gif',
+                  fit: BoxFit.cover,
+                ),
+                title: Text(
+                  'Oops!',
+                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+                ),
+                description: Text(
+                  'Looks like something went wrong!\nPlease try again!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(),
+                ),
+                onlyOkButton: true,
+                entryAnimation: EntryAnimation.DEFAULT,
+                onOkButtonPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                },
+              ));
+    }
+  }
 
   _loginWithFB() async {
     final result = await facebookLogin.logIn(['email']);
@@ -154,330 +271,244 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget OnBoarding(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: Container(
-          height: 30,
-          width: 125,
-          child: Image.asset(
-            'assets/logotransparent.png',
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
       body: Container(
-        color: Colors.white,
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        child: ListView(
-          children: <Widget>[
-            FadeAnimation(
-                1,
-                Container(
-                  height: MediaQuery.of(context).size.height / 2.5,
-                  width: MediaQuery.of(context).size.width,
-                  child: PageView(
-                    physics: ClampingScrollPhysics(),
-                    controller: _pageController,
-                    onPageChanged: (int page) {
-                      setState(() {
-                        _currentPage = page;
-                      });
-                    },
+          color: Colors.white,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: FadeAnimation(
+                    1,
+                    Stack(
+                      children: [
+                        Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                                height: 350,
+                                width: MediaQuery.of(context).size.width,
+                                child: SvgPicture.asset(
+                                  'assets/LoginBG.svg',
+                                  semanticsLabel: 'SellShip BG',
+                                  fit: BoxFit.cover,
+                                ))),
+                        Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 20, top: 150),
+                                child: Text(
+                                  'Welcome\nBack',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 40,
+                                    color: Colors.white,
+                                  ),
+                                ))),
+                      ],
+                    )),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: 600,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Center(
-                            child: Image(
-                              image: AssetImage(
-                                'assets/onboard1.png',
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                          padding:
+                              EdgeInsets.only(left: 36, top: 20, right: 36),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                height: 60,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 5),
+                                width: MediaQuery.of(context).size.width - 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(131, 146, 165, 0.1),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: TextField(
+                                  onChanged: (text) {},
+                                  controller: EmailController,
+                                  cursorColor: Colors.black,
+                                  decoration: InputDecoration(
+                                    hintText: "Email Address",
+                                    hintStyle:
+                                        TextStyle(fontFamily: 'Helvetica'),
+                                    icon: Icon(
+                                      Icons.email,
+                                      color: Colors.blueGrey,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
                               ),
-                              fit: BoxFit.cover,
-                              height: MediaQuery.of(context).size.height / 4,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                          ),
-                          SizedBox(height: 20.0),
-                          Text(
-                              'Buying something? Find the best items near you in less than a minute!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.deepOrange)),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Center(
-                            child: Image(
-                              image: AssetImage(
-                                'assets/onboard2.png',
+                            ],
+                          )),
+                      Padding(
+                          padding:
+                              EdgeInsets.only(left: 36, top: 20, right: 36),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                height: 60,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 5),
+                                width: MediaQuery.of(context).size.width - 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(131, 146, 165, 0.1),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: TextField(
+                                  onChanged: (text) {},
+                                  controller: PasswordController,
+                                  cursorColor: Colors.black,
+                                  decoration: InputDecoration(
+                                    hintText: "Password",
+                                    hintStyle:
+                                        TextStyle(fontFamily: 'Helvetica'),
+                                    icon: Icon(
+                                      Icons.lock,
+                                      color: Colors.blueGrey,
+                                    ),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
                               ),
-                              fit: BoxFit.cover,
-                              height: MediaQuery.of(context).size.height / 4,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                          ),
-                          SizedBox(height: 20.0),
-                          Text(
-                              'Selling Something ? List your item on SellShip within seconds!',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.deepOrange)),
-                        ],
-                      ),
-                    ],
-                  ),
-                )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: _buildPageIndicator(),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Column(
-              children: <Widget>[
-                FadeAnimation(
-                  1.5,
-                  InkWell(
-                    onTap: () async {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.deepOrange,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.4),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 10.0),
+                            ],
+                          )),
+                      Padding(
+                          padding:
+                              EdgeInsets.only(left: 36, top: 40, right: 36),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Loginfunc();
+                                },
+                                child: Container(
+                                  height: 60,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  width:
+                                      MediaQuery.of(context).size.width - 250,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(255, 115, 0, 1),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  child: Center(
+                                      child: Text(
+                                    'Sign In',
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
+                                  )),
+                                ),
+                              ),
+                            ],
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(left: 36, top: 20, right: 36),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FadeAnimation(
+                                1.5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ForgotPassword()));
+                                      },
+                                      child: Text(
+                                        "Forgot Password?",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                            FadeAnimation(
+                                1.5,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ForgotPassword()));
+                                      },
+                                      child: Text(
+                                        "Forgot Password?",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )),
                           ],
                         ),
-                        child: Center(
-                          child: Text(
-                            'Login',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              letterSpacing: 0.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
                       ),
-                    ),
-                  ),
-                ),
-                FadeAnimation(
-                  1.5,
-                  InkWell(
-                    onTap: () async {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SignUpPage()));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.deepPurpleAccent,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.deepPurpleAccent.withOpacity(0.4),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 10.0),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Sign Up',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              letterSpacing: 0.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                FadeAnimation(
-                  1.5,
-                  InkWell(
-                    onTap: () async {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (BuildContext context) {
-                            return Container(
-                              height: 100,
-                              child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: SpinKitChasingDots(
-                                      color: Colors.deepOrangeAccent)),
-                            );
-                          });
-
-                      _loginWithFB();
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.withOpacity(0.4),
-                                offset: const Offset(1.1, 1.1),
-                                blurRadius: 10.0),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Sign in with Facebook',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              letterSpacing: 0.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Platform.isIOS
-                    ? FadeAnimation(
+                      FadeAnimation(
                         1.5,
                         InkWell(
                           onTap: () async {
-                            await FirebaseAuthOAuth().openSignInFlow(
-                                "apple.com",
-                                ["email", "fullName"],
-                                {"locale": "en"}).then((user) async {
-                              var url = 'https://api.sellship.co/api/signup';
-
-                              print(user.email);
-                              Map<String, String> body = {
-                                'first_name': user.displayName != null
-                                    ? user.displayName
-                                    : 'First',
-                                'last_name': 'Name',
-                                'email': user.email,
-                                'phonenumber': '000',
-                                'password': user.uid,
-                                'fcmtoken': '000',
-                              };
-
-                              final response = await http.post(url, body: body);
-
-                              if (response.statusCode == 200) {
-                                var jsondata = json.decode(response.body);
-                                if (jsondata['id'] != null) {
-                                  await storage.write(
-                                      key: 'userid', value: jsondata['id']);
-
-                                  var userid =
-                                      await storage.read(key: 'userid');
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => VerifyPhone(
-                                          userid: userid,
-                                        ),
-                                      ));
-                                } else {
-                                  var id = jsondata['status']['id'];
-                                  await storage.write(key: 'userid', value: id);
-                                  SharedPreferences prefs =
-                                      await SharedPreferences.getInstance();
-                                  prefs.setBool('seen', true);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => RootScreen()));
-                                }
-                              } else {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => AssetGiffyDialog(
-                                          image: Image.asset(
-                                            'assets/oops.gif',
-                                            fit: BoxFit.cover,
-                                          ),
-                                          title: Text(
-                                            'Oops!',
-                                            style: TextStyle(
-                                                fontSize: 22.0,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          description: Text(
-                                            'Looks like something went wrong!',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(),
-                                          ),
-                                          onlyOkButton: true,
-                                          entryAnimation:
-                                              EntryAnimation.DEFAULT,
-                                          onOkButtonPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop('dialog');
-                                          },
-                                        ));
-                              }
-                              return user;
-                            });
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignUpPage()));
                           },
                           child: Padding(
                             padding: EdgeInsets.all(10),
                             child: Container(
                               height: 48,
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Colors.deepPurpleAccent,
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(10.0),
                                 ),
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(
-                                      color: Colors.black.withOpacity(0.4),
+                                      color: Colors.deepPurpleAccent
+                                          .withOpacity(0.4),
                                       offset: const Offset(1.1, 1.1),
                                       blurRadius: 10.0),
                                 ],
                               ),
                               child: Center(
                                 child: Text(
-                                  'Sign in with Apple',
+                                  'Sign Up',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w600,
@@ -490,13 +521,204 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                           ),
                         ),
-                      )
-                    : Container()
-              ],
-            )
-          ],
-        ),
-      ),
+                      ),
+                      FadeAnimation(
+                        1.5,
+                        InkWell(
+                          onTap: () async {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: 100,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: SpinKitChasingDots(
+                                            color: Colors.deepOrangeAccent)),
+                                  );
+                                });
+
+                            _loginWithFB();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              height: 48,
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.grey.withOpacity(0.4),
+                                      offset: const Offset(1.1, 1.1),
+                                      blurRadius: 10.0),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Sign in with Facebook',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    letterSpacing: 0.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Platform.isIOS
+                          ? FadeAnimation(
+                              1.5,
+                              InkWell(
+                                onTap: () async {
+                                  await FirebaseAuthOAuth().openSignInFlow(
+                                      "apple.com",
+                                      ["email", "fullName"],
+                                      {"locale": "en"}).then((user) async {
+                                    var url =
+                                        'https://api.sellship.co/api/signup';
+
+                                    print(user.email);
+                                    Map<String, String> body = {
+                                      'first_name': user.displayName != null
+                                          ? user.displayName
+                                          : 'First',
+                                      'last_name': 'Name',
+                                      'email': user.email,
+                                      'phonenumber': '000',
+                                      'password': user.uid,
+                                      'fcmtoken': '000',
+                                    };
+
+                                    final response =
+                                        await http.post(url, body: body);
+
+                                    if (response.statusCode == 200) {
+                                      var jsondata = json.decode(response.body);
+                                      if (jsondata['id'] != null) {
+                                        await storage.write(
+                                            key: 'userid',
+                                            value: jsondata['id']);
+
+                                        var userid =
+                                            await storage.read(key: 'userid');
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => VerifyPhone(
+                                                userid: userid,
+                                              ),
+                                            ));
+                                      } else {
+                                        var id = jsondata['status']['id'];
+                                        await storage.write(
+                                            key: 'userid', value: id);
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        prefs.setBool('seen', true);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RootScreen()));
+                                      }
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => AssetGiffyDialog(
+                                                image: Image.asset(
+                                                  'assets/oops.gif',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                title: Text(
+                                                  'Oops!',
+                                                  style: TextStyle(
+                                                      fontSize: 22.0,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                description: Text(
+                                                  'Looks like something went wrong!',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(),
+                                                ),
+                                                onlyOkButton: true,
+                                                entryAnimation:
+                                                    EntryAnimation.DEFAULT,
+                                                onOkButtonPressed: () {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                },
+                                              ));
+                                    }
+                                    return user;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Container(
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: const BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                      boxShadow: <BoxShadow>[
+                                        BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.4),
+                                            offset: const Offset(1.1, 1.1),
+                                            blurRadius: 10.0),
+                                      ],
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Sign in with Apple',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                          letterSpacing: 0.0,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container()
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: FadeAnimation(
+                    1,
+                    Padding(
+                      padding: EdgeInsets.only(top: 50, left: 20),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Feather.arrow_left,
+                            color: Colors.white,
+                          )),
+                    )),
+              ),
+            ],
+          )),
     );
   }
 

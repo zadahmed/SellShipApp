@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:badges/badges.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_native_admob/flutter_native_admob.dart';
+import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:numeral/numeral.dart';
 import 'package:shimmer/shimmer.dart';
@@ -58,6 +61,11 @@ class _DiscoverState extends State<Discover> {
   }
 
   List<Item> trendingitems = [];
+  static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
+
+  static const _androidadUnitID = "ca-app-pub-9959700192389744/5957969037";
+
+  final _controller = NativeAdmobController();
 
   void loaddiscover() async {
     var url = 'https://api.sellship.co/api/trending/' + country;
@@ -1274,9 +1282,33 @@ class _DiscoverState extends State<Discover> {
                       ),
                     ),
                   ),
-            SizedBox(
-              height: 5,
-            ),
+            Padding(
+                padding:
+                    EdgeInsets.only(left: 15, bottom: 10, top: 10, right: 15),
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Platform.isIOS == true
+                      ? Container(
+                          height: 250,
+                          padding: EdgeInsets.all(5),
+                          child: NativeAdmob(
+                            adUnitID: _iosadUnitID,
+                            controller: _controller,
+                          ),
+                        )
+                      : Container(
+                          height: 250,
+                          padding: EdgeInsets.all(5),
+                          child: NativeAdmob(
+                            adUnitID: _androidadUnitID,
+                            controller: _controller,
+                          ),
+                        ),
+                )),
             Row(
               children: <Widget>[
                 Padding(
@@ -2726,6 +2758,33 @@ class _DiscoverState extends State<Discover> {
                       ),
                     ),
                   ),
+            Padding(
+                padding:
+                    EdgeInsets.only(left: 15, bottom: 10, top: 10, right: 15),
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Platform.isIOS == true
+                      ? Container(
+                          height: 250,
+                          padding: EdgeInsets.all(5),
+                          child: NativeAdmob(
+                            adUnitID: _iosadUnitID,
+                            controller: _controller,
+                          ),
+                        )
+                      : Container(
+                          height: 250,
+                          padding: EdgeInsets.all(5),
+                          child: NativeAdmob(
+                            adUnitID: _androidadUnitID,
+                            controller: _controller,
+                          ),
+                        ),
+                )),
             Row(
               children: <Widget>[
                 Padding(

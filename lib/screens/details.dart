@@ -782,137 +782,8 @@ class _DetailsState extends State<Details> {
                                 );
                               })),
                       Positioned(
-                          bottom: 20,
-                          child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Container(
-                              height: 35,
-                              width: 145,
-                              decoration: BoxDecoration(
-                                color: Colors.black26.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    child: InkWell(
-                                      child: Container(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Feather.heart,
-                                              size: 14,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              Numeral(newItem.likes).value(),
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                        ),
-                                      ),
-                                      onTap: () async {
-                                        var userid =
-                                            await storage.read(key: 'userid');
-
-                                        if (userid != null) {
-                                          var url =
-                                              'https://api.sellship.co/api/favourite/' +
-                                                  userid;
-
-                                          Map<String, String> body = {
-                                            'itemid': newItem.itemid,
-                                          };
-
-                                          final response =
-                                              await http.post(url, body: body);
-
-                                          if (response.statusCode == 200) {
-                                            var jsondata =
-                                                json.decode(response.body);
-
-                                            setState(() {
-                                              newItem.likes = newItem.likes + 1;
-                                              favourited = true;
-                                            });
-                                          } else {
-                                            print(response.statusCode);
-                                          }
-                                        } else {
-                                          showInSnackBar(
-                                              'Please Login to use Favourites');
-                                        }
-                                      },
-                                    ),
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 5),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, bottom: 5),
-                                    child: VerticalDivider(),
-                                  ),
-                                  Padding(
-                                    child: InkWell(
-                                      child: Container(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Feather.message_circle,
-                                              size: 14,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              Numeral(newItem.comments).value(),
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                        ),
-                                      ),
-                                      enableFeedback: true,
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CommentsPage(
-                                                      itemid: newItem.itemid)),
-                                        );
-                                      },
-                                    ),
-                                    padding:
-                                        EdgeInsets.only(left: 5, right: 10),
-                                  ),
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                              ),
-                            ),
-                          )),
-                      Positioned(
                         bottom: 20,
-                        left: MediaQuery.of(context).size.width / 2,
+                        left: MediaQuery.of(context).size.width / 2 - 40,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: images.map((url) {
@@ -1043,7 +914,7 @@ class _DetailsState extends State<Details> {
                 ),
                 Container(
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(242, 244, 248, 1),
+                      color: Color.fromRGBO(242, 244, 248, 0.9),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,

@@ -432,6 +432,9 @@ class MessagesState extends State<Messages> {
                         );
                       }),
                   onRefresh: () async {
+                    setState(() {
+                      loading = true;
+                    });
                     getMessages();
                   },
                 )
@@ -466,15 +469,25 @@ class MessagesState extends State<Messages> {
                 baseColor: Colors.grey[300],
                 highlightColor: Colors.grey[100],
                 child: Column(
-                  children: [0, 1, 2, 3, 4, 5, 6]
+                  children: [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    9,
+                  ]
                       .map((_) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
+                            padding:
+                                const EdgeInsets.only(bottom: 10.0, top: 5),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width: 48.0,
-                                  height: 48.0,
+                                  width: 50.0,
+                                  height: 50.0,
                                   color: Colors.white,
                                 ),
                                 Padding(
@@ -488,7 +501,7 @@ class MessagesState extends State<Messages> {
                                     children: [
                                       Container(
                                         width: double.infinity,
-                                        height: 8.0,
+                                        height: 10.0,
                                         color: Colors.white,
                                       ),
                                       Padding(
@@ -497,7 +510,7 @@ class MessagesState extends State<Messages> {
                                       ),
                                       Container(
                                         width: double.infinity,
-                                        height: 8.0,
+                                        height: 5.0,
                                         color: Colors.white,
                                       ),
                                       Padding(
@@ -509,6 +522,9 @@ class MessagesState extends State<Messages> {
                                         height: 8.0,
                                         color: Colors.white,
                                       ),
+                                      SizedBox(
+                                        height: 10,
+                                      )
                                     ],
                                   ),
                                 )
