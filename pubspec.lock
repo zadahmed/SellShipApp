@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.5.0-nullsafety.1"
+  auth_buttons:
+    dependency: "direct main"
+    description:
+      name: auth_buttons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   awesome_card:
     dependency: transitive
     description:
@@ -131,6 +138,13 @@ packages:
     dependency: "direct main"
     description:
       name: dotted_border
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
+  email_validator:
+    dependency: "direct main"
+    description:
+      name: email_validator
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.6"
@@ -648,6 +662,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  onesignal_flutter:
+    dependency: "direct main"
+    description:
+      name: onesignal_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.6.2"
   package_info:
     dependency: "direct main"
     description:

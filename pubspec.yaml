@@ -88,6 +88,9 @@ dependencies:
   smooth_star_rating: ^1.1.1
   timeago: ^2.0.27
   url_launcher: ^5.6.0
+  auth_buttons: 0.0.4
+  email_validator: 1.0.6
+  onesignal_flutter: ^2.6.2
 
 
 
@@ -128,9 +131,11 @@ flutter:
     - sports.png
     - home.jpg
     - Books.jpeg
+    - assets/165.png
     - laptops.jpeg
     - phones.jpeg
     - 143.png
+    - assets/184.png
     - logotransparent.png
     - assets/electronics/
     - assets/beauty/

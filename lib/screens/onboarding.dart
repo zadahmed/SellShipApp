@@ -5,6 +5,7 @@ import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/signUpPage.dart';
 import 'package:SellShip/verification/verifyphone.dart';
+import 'package:auth_buttons/auth_buttons.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
 import 'package:SellShip/screens/rootscreen.dart';
@@ -396,7 +397,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           padding:
                               EdgeInsets.only(left: 36, top: 40, right: 36),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               InkWell(
@@ -424,279 +425,187 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   )),
                                 ),
                               ),
+                              Platform.isIOS
+                                  ? AppleAuthButton(
+                                      onPressed: () async {
+                                        await FirebaseAuthOAuth()
+                                            .openSignInFlow("apple.com", [
+                                          "email",
+                                          "fullName"
+                                        ], {
+                                          "locale": "en"
+                                        }).then((user) async {
+                                          var url =
+                                              'https://api.sellship.co/api/signup';
+
+                                          print(user.email);
+                                          Map<String, String> body = {
+                                            'first_name':
+                                                user.displayName != null
+                                                    ? user.displayName
+                                                    : 'First',
+                                            'last_name': 'Name',
+                                            'email': user.email,
+                                            'phonenumber': '000',
+                                            'password': user.uid,
+                                            'fcmtoken': '000',
+                                          };
+
+                                          final response =
+                                              await http.post(url, body: body);
+
+                                          if (response.statusCode == 200) {
+                                            var jsondata =
+                                                json.decode(response.body);
+                                            if (jsondata['id'] != null) {
+                                              await storage.write(
+                                                  key: 'userid',
+                                                  value: jsondata['id']);
+
+                                              var userid = await storage.read(
+                                                  key: 'userid');
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VerifyPhone(
+                                                      userid: userid,
+                                                    ),
+                                                  ));
+                                            } else {
+                                              var id = jsondata['status']['id'];
+                                              await storage.write(
+                                                  key: 'userid', value: id);
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              prefs.setBool('seen', true);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RootScreen()));
+                                            }
+                                          } else {
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    AssetGiffyDialog(
+                                                      image: Image.asset(
+                                                        'assets/oops.gif',
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      title: Text(
+                                                        'Oops!',
+                                                        style: TextStyle(
+                                                            fontSize: 22.0,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      description: Text(
+                                                        'Looks like something went wrong!',
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(),
+                                                      ),
+                                                      onlyOkButton: true,
+                                                      entryAnimation:
+                                                          EntryAnimation
+                                                              .DEFAULT,
+                                                      onOkButtonPressed: () {
+                                                        Navigator.of(context,
+                                                                rootNavigator:
+                                                                    true)
+                                                            .pop('dialog');
+                                                      },
+                                                    ));
+                                          }
+                                          return user;
+                                        });
+                                      },
+                                      style: AuthButtonStyle.icon,
+                                    )
+                                  : Container(),
+                              FacebookAuthButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return Container(
+                                          height: 100,
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: SpinKitChasingDots(
+                                                  color:
+                                                      Colors.deepOrangeAccent)),
+                                        );
+                                      });
+
+                                  _loginWithFB();
+                                },
+                                style: AuthButtonStyle.icon,
+                              )
                             ],
                           )),
-                      Padding(
-                        padding: EdgeInsets.only(left: 36, top: 20, right: 36),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FadeAnimation(
-                                1.5,
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ForgotPassword()));
-                                      },
-                                      child: Text(
-                                        "Forgot Password?",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                            FadeAnimation(
-                                1.5,
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ForgotPassword()));
-                                      },
-                                      child: Text(
-                                        "Forgot Password?",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ],
-                        ),
-                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 40, bottom: 50, right: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       FadeAnimation(
-                        1.5,
-                        InkWell(
-                          onTap: () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignUpPage()));
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: Colors.deepPurpleAccent,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10.0),
-                                ),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Colors.deepPurpleAccent
-                                          .withOpacity(0.4),
-                                      offset: const Offset(1.1, 1.1),
-                                      blurRadius: 10.0),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Sign Up',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    letterSpacing: 0.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      FadeAnimation(
-                        1.5,
-                        InkWell(
-                          onTap: () async {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    height: 100,
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: SpinKitChasingDots(
-                                            color: Colors.deepOrangeAccent)),
-                                  );
-                                });
-
-                            _loginWithFB();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: Colors.blueAccent,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(10.0),
-                                ),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Colors.grey.withOpacity(0.4),
-                                      offset: const Offset(1.1, 1.1),
-                                      blurRadius: 10.0),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Sign in with Facebook',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    letterSpacing: 0.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Platform.isIOS
-                          ? FadeAnimation(
-                              1.5,
+                          1.5,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
                               InkWell(
-                                onTap: () async {
-                                  await FirebaseAuthOAuth().openSignInFlow(
-                                      "apple.com",
-                                      ["email", "fullName"],
-                                      {"locale": "en"}).then((user) async {
-                                    var url =
-                                        'https://api.sellship.co/api/signup';
-
-                                    print(user.email);
-                                    Map<String, String> body = {
-                                      'first_name': user.displayName != null
-                                          ? user.displayName
-                                          : 'First',
-                                      'last_name': 'Name',
-                                      'email': user.email,
-                                      'phonenumber': '000',
-                                      'password': user.uid,
-                                      'fcmtoken': '000',
-                                    };
-
-                                    final response =
-                                        await http.post(url, body: body);
-
-                                    if (response.statusCode == 200) {
-                                      var jsondata = json.decode(response.body);
-                                      if (jsondata['id'] != null) {
-                                        await storage.write(
-                                            key: 'userid',
-                                            value: jsondata['id']);
-
-                                        var userid =
-                                            await storage.read(key: 'userid');
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => VerifyPhone(
-                                                userid: userid,
-                                              ),
-                                            ));
-                                      } else {
-                                        var id = jsondata['status']['id'];
-                                        await storage.write(
-                                            key: 'userid', value: id);
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        prefs.setBool('seen', true);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RootScreen()));
-                                      }
-                                    } else {
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AssetGiffyDialog(
-                                                image: Image.asset(
-                                                  'assets/oops.gif',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                title: Text(
-                                                  'Oops!',
-                                                  style: TextStyle(
-                                                      fontSize: 22.0,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                description: Text(
-                                                  'Looks like something went wrong!',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(),
-                                                ),
-                                                onlyOkButton: true,
-                                                entryAnimation:
-                                                    EntryAnimation.DEFAULT,
-                                                onOkButtonPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                },
-                                              ));
-                                    }
-                                    return user;
-                                  });
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              ForgotPassword()));
                                 },
-                                child: Padding(
-                                  padding: EdgeInsets.all(10),
-                                  child: Container(
-                                    height: 48,
-                                    decoration: BoxDecoration(
-                                      color: Colors.black,
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0),
-                                      ),
-                                      boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.4),
-                                            offset: const Offset(1.1, 1.1),
-                                            blurRadius: 10.0),
-                                      ],
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Sign in with Apple',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                          letterSpacing: 0.0,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
+                                child: Text(
+                                  "Forgot Password?",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ),
-                            )
-                          : Container()
+                            ],
+                          )),
+                      FadeAnimation(
+                          1.5,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => SignUpPage()));
+                                },
+                                child: Text(
+                                  "Create an Account",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
                     ],
                   ),
                 ),

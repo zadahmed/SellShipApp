@@ -199,6 +199,10 @@ class _StarterPageState extends State<StarterPage>
                                               DropdownMenuItem<String>(
                                                 value: e.value,
                                                 child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5)),
                                                   width: MediaQuery.of(context)
                                                               .size
                                                               .width /
@@ -268,20 +272,14 @@ class _StarterPageState extends State<StarterPage>
                   }
                 },
                 child: Padding(
-                  padding: EdgeInsets.all(30),
+                  padding: EdgeInsets.only(left: 36, top: 30, right: 36),
                   child: Container(
-                    height: 48,
+                    height: 60,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    width: MediaQuery.of(context).size.width - 200,
                     decoration: BoxDecoration(
-                      color: Colors.deepPurpleAccent,
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(10.0),
-                      ),
-                      boxShadow: <BoxShadow>[
-                        BoxShadow(
-                            color: Colors.deepPurpleAccent.withOpacity(0.4),
-                            offset: const Offset(1.1, 1.1),
-                            blurRadius: 10.0),
-                      ],
+                      color: Color.fromRGBO(255, 115, 0, 1),
+                      borderRadius: BorderRadius.circular(25),
                     ),
                     child: Center(
                       child: Text(
