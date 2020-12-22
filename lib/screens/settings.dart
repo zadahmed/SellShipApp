@@ -37,7 +37,18 @@ import 'package:package_info/package_info.dart';
 
 class Settings extends StatefulWidget {
   final String email;
-  Settings({Key key, this.email}) : super(key: key);
+  final bool confirmedfb;
+  final bool confirmedemail;
+  final bool confirmedphone;
+  final String userid;
+  Settings(
+      {Key key,
+      this.email,
+      this.confirmedfb,
+      this.confirmedemail,
+      this.confirmedphone,
+      this.userid})
+      : super(key: key);
 
   @override
   _SettingsState createState() => new _SettingsState();
@@ -98,53 +109,18 @@ class _SettingsState extends State<Settings> {
   }
 
   readdetails() async {
-    userid = await storage.read(key: 'userid');
-
-    if (userid != null) {
-      var url = 'https://api.sellship.co/api/user/' + userid;
-
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        var respons = json.decode(response.body);
-        Map<String, dynamic> profilemap = respons;
-
-        var confirmedemai = profilemap['confirmedemail'];
-        if (confirmedemai != null) {
-        } else {
-          confirmedemai = false;
-        }
-
-        var confirmedphon = profilemap['confirmedphone'];
-        if (confirmedphon != null) {
-        } else {
-          confirmedphon = false;
-        }
-
-        var confirmedf = profilemap['confirmedfb'];
-        if (confirmedf != null) {
-        } else {
-          confirmedf = false;
-        }
-
-        if (profilemap != null) {
-          if (mounted) {
-            setState(() {
-              email = profilemap['email'];
-              confirmedfb = confirmedf;
-              confirmedemail = confirmedemai;
-              confirmedphone = confirmedphon;
-            });
-          }
-        }
-      }
-    }
+    setState(() => {
+          userid = widget.userid,
+          confirmedphone = widget.confirmedphone,
+          confirmedemail = widget.confirmedemail,
+          confirmedfb = widget.confirmedfb
+        });
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     String versio = packageInfo.version;
     String buildNumber = packageInfo.buildNumber;
     setState(() {
-      userid = userid;
       email = widget.email;
       version = versio + buildNumber;
     });
@@ -164,7 +140,7 @@ class _SettingsState extends State<Settings> {
           title: Text(
             'Settings',
             style: TextStyle(
-                color: Colors.deepOrange,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Helvetica'),
           ),

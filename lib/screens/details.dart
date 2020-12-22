@@ -6,6 +6,7 @@ import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/checkoutuae.dart';
 import 'package:SellShip/screens/comments.dart';
+import 'package:SellShip/screens/oldprofile.dart';
 import 'package:SellShip/screens/profile.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:badges/badges.dart';

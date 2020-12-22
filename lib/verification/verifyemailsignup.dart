@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:SellShip/username.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 
 class VerifyEmailSignUp extends StatefulWidget {
@@ -39,8 +41,6 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
   checkemailverified() async {
     var url = 'https://api.sellship.co/api/user/' + userid;
 
-    print(url);
-
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var respons = json.decode(response.body);
@@ -60,7 +60,7 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
           confirmedemai = false;
         });
       }
-
+      Navigator.pop(context);
     }
   }
 
@@ -143,7 +143,13 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
                     onTap: () {
                       if (disabled == true) {
                       } else {
-                        print('Create Username');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Username(
+                                userid: userid,
+                              ),
+                            ));
                       }
                     },
                     child: Container(
@@ -179,6 +185,24 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
                   children: [
                     InkWell(
                         onTap: () {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              useRootNavigator: false,
+                              builder: (BuildContext context) {
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          20.0)), //this right here
+                                  child: Container(
+                                    height: 100,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: SpinKitChasingDots(
+                                            color: Colors.deepOrange)),
+                                  ),
+                                );
+                              });
                           checkemailverified();
                         },
                         child: Text(

@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -290,6 +291,22 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
 
   var authvalue;
   void _onFormSubmitted() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        useRootNavigator: false,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)), //this right here
+            child: Container(
+              height: 100,
+              child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: SpinKitChasingDots(color: Colors.deepOrange)),
+            ),
+          );
+        });
     var token = await FirebaseNotifications().getNotifications(context);
     Provider.of<UserProvider>(context, listen: false).signUpUser(
         firstName: widget.fullname,
@@ -311,6 +328,7 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
 
           final response = await http.get(url);
           if (response.statusCode == 200) {
+            Navigator.pop(context);
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -320,13 +338,10 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
                         )));
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('seen', true);
+          } else {
+            Navigator.pop(context);
           }
         },
-
-//          Navigator.pushNamedAndRemoveUntil(
-//              context, Routes.rootScreen, (route) => false);
-//
-
         onUserAlreadyExist: () {
           showHttpResultDialog(
               "Looks like you already have an account! Please login instead");
