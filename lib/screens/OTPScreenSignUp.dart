@@ -354,6 +354,7 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
   void showHttpResultDialog(String message) {
     showDialog(
         context: context,
+        useRootNavigator: false,
         builder: (_) => AssetGiffyDialog(
               image: Image.asset(
                 'assets/oops.gif',

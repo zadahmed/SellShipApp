@@ -138,20 +138,15 @@ class _AddItemState extends State<AddItem> {
 
   List<String> categories = [
     'Electronics',
-    'Women',
-    'Men',
-    'Toys',
+    'Fashion & Accessories',
     'Beauty',
-    'Home',
-    'Kids',
+    'Home & Garden',
+    'Baby & Child',
     'Sport & Leisure',
     'Books',
     'Motors',
     'Property',
-    'Vintage',
-    'Luxury',
-    'Garden',
-    'Handmade'
+    'Other'
   ];
   String _selectedCategory;
 

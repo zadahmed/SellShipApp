@@ -91,7 +91,6 @@ dependencies:
   auth_buttons: 0.0.4
   email_validator: 1.0.6
   onesignal_flutter: ^2.6.2
-  percent_indicator: ^2.1.9
 
 
 
@@ -167,7 +166,6 @@ flutter:
     - assets/bgonboard.png
     - assets/LoginBG.png
     - assets/LoginBG.svg
-    - assets/074.png
 
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg

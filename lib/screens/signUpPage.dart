@@ -480,7 +480,7 @@ class _SignUpPageState extends State<SignUpPage> {
         signupphonecontroller.text.isNotEmpty) {
       final bool isValid = EmailValidator.validate(signupEmailController.text);
       if (isValid) {
-        Navigator.of(context, rootNavigator: true).pop('dialog');
+        Navigator.of(context).pop();
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -492,10 +492,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   password: signupPasswordController.text),
             ));
       } else {
-        Navigator.of(context, rootNavigator: true).pop('dialog');
+        Navigator.of(context).pop();
       }
     } else {
-      Navigator.of(context, rootNavigator: true).pop('dialog');
+      Navigator.of(context).pop();
       showInSnackBar('Looks like you missed something!');
     }
   }

@@ -5,6 +5,7 @@ import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/signUpPage.dart';
 import 'package:SellShip/verification/verifyphone.dart';
+import 'package:SellShip/verification/verifyphonesignup.dart';
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
 import 'package:flutter/material.dart';
@@ -196,6 +197,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
         var url = 'https://api.sellship.co/api/signup';
 
+        print(profile);
+
         var name = profile['name'].split(" ");
 
         Map<String, String> body = {
@@ -203,8 +206,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'last_name': name[1],
           'email': profile['email'],
           'phonenumber': '00',
+          'profilepicture': profile['picture']['data']['url'],
           'password': 'password',
-          'fcmtoken': firebasetoken,
         };
 
         final response = await http.post(url, body: body);
@@ -212,45 +215,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         if (response.statusCode == 200) {
           var jsondata = json.decode(response.body);
           print(jsondata);
-          if (jsondata['id'] != null) {
-            await storage.write(key: 'userid', value: jsondata['id']);
-            Navigator.of(context, rootNavigator: true).pop('dialog');
 
-            var userid = await storage.read(key: 'userid');
+          if (jsondata['status']['message'] == 'User already exists') {
+            await storage.write(key: 'userid', value: jsondata['status']['id']);
+            Navigator.of(context).pop();
+
+            Navigator.pushNamedAndRemoveUntil(
+                context, Routes.rootScreen, (route) => false);
+          } else {
+            Navigator.of(context).pop();
+
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => VerifyPhone(
-                    userid: userid,
+                  builder: (context) => VerifyPhoneSignUp(
+                    userid: jsondata['status']['id'],
                   ),
                 ));
-          } else {
-            var url = 'https://api.sellship.co/api/login';
-
-            Map<String, String> body = {
-              'email': profile['email'],
-              'password': 'password',
-              'fcmtoken': firebasetoken,
-            };
-
-            final response = await http.post(url, body: body);
-
-            if (response.statusCode == 200) {
-              var jsondata = json.decode(response.body);
-              print(jsondata);
-              if (jsondata['id'] != null) {
-                await storage.write(key: 'userid', value: jsondata['id']);
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.setBool('seen', true);
-
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RootScreen()));
-              }
-            } else {
-              print(response.statusCode);
-            }
           }
         } else {
           print(response.statusCode);
@@ -263,9 +244,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       case FacebookLoginStatus.cancelledByUser:
         setState(() => loggedin = false);
+        Navigator.of(context).pop();
         break;
       case FacebookLoginStatus.error:
         setState(() => loggedin = false);
+        Navigator.of(context).pop();
         break;
     }
   }
@@ -312,7 +295,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 600,
+                  height: MediaQuery.of(context).size.height / 2 + 50,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -438,7 +421,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                           var url =
                                               'https://api.sellship.co/api/signup';
 
-                                          print(user.email);
                                           Map<String, String> body = {
                                             'first_name':
                                                 user.displayName != null
@@ -457,34 +439,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                           if (response.statusCode == 200) {
                                             var jsondata =
                                                 json.decode(response.body);
-                                            if (jsondata['id'] != null) {
+                                            if (jsondata['status']['message'] ==
+                                                'User already exists') {
                                               await storage.write(
                                                   key: 'userid',
-                                                  value: jsondata['id']);
+                                                  value: jsondata['status']
+                                                      ['id']);
+                                              Navigator.of(context).pop();
 
-                                              var userid = await storage.read(
-                                                  key: 'userid');
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.rootScreen,
+                                                  (route) => false);
+                                            } else {
+                                              Navigator.of(context).pop();
+
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        VerifyPhone(
-                                                      userid: userid,
+                                                        VerifyPhoneSignUp(
+                                                      userid: jsondata['status']
+                                                          ['id'],
                                                     ),
                                                   ));
-                                            } else {
-                                              var id = jsondata['status']['id'];
-                                              await storage.write(
-                                                  key: 'userid', value: id);
-                                              SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
-                                              prefs.setBool('seen', true);
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RootScreen()));
                                             }
                                           } else {
                                             showDialog(

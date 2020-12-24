@@ -5,6 +5,7 @@ import 'package:SellShip/verification/verifyphone.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,13 +51,13 @@ class _OTPScreenState extends State<OTPScreen> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Icon(Icons.arrow_back_ios)),
-        iconTheme: IconThemeData(color: Colors.deepPurple),
+            child: Icon(Feather.arrow_left)),
+        iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         title: Text(
           'Verify Phone Number',
           style: TextStyle(
-              color: Colors.deepPurple,
+              color: Colors.black,
               fontWeight: FontWeight.bold,
               fontFamily: 'Helvetica'),
         ),
@@ -65,11 +66,27 @@ class _OTPScreenState extends State<OTPScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(
+                  top: 10,
+                ),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                          height: 400,
+                          width: MediaQuery.of(context).size.width,
+                          child: Image.asset(
+                            'assets/165.png',
+                            fit: BoxFit.cover,
+                          ))
+                    ])),
             Container(
-              padding: EdgeInsets.only(left: 16.0, bottom: 16, top: 4),
+              padding: EdgeInsets.only(left: 16.0, bottom: 10, top: 30),
               color: Colors.white,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,12 +94,14 @@ class _OTPScreenState extends State<OTPScreen> {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        "OTP sent to ${widget.phonenumber}",
-                        style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Helvetica'),
+                      Center(
+                        child: Text(
+                          "Verification code sent to ${widget.phonenumber}",
+                          style: TextStyle(
+                              fontSize: 20.0,
+//                            fontWeight: FontWeight.bold,
+                              fontFamily: 'Helvetica'),
+                        ),
                       ),
                     ],
                   ),
@@ -90,83 +109,84 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: PinInputTextField(
-                pinLength: 6,
-                decoration: _pinDecoration,
-                controller: _pinEditingController,
-                autoFocus: true,
-                textInputAction: TextInputAction.done,
-                onSubmit: (pin) {
-                  if (pin.length == 6) {
-                    _onFormSubmitted();
-                  } else {
-                    showInSnackBar("Invalid OTP");
-                  }
-                },
-              ),
-            ),
+                padding: EdgeInsets.only(left: 30, top: 10, right: 30),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        height: 70,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        width: MediaQuery.of(context).size.width - 100,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(131, 146, 165, 0.1),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: PinInputTextField(
+                          pinLength: 6,
+                          decoration: _pinDecoration,
+                          controller: _pinEditingController,
+                          autoFocus: true,
+                          textInputAction: TextInputAction.done,
+                          onSubmit: (pin) {
+                            if (pin.length == 6) {
+                              _onFormSubmitted();
+                            } else {
+                              showInSnackBar("Invalid OTP");
+                            }
+                          },
+                        ),
+                      ),
+                    ])),
             Padding(
-                padding: EdgeInsets.all(10),
-                child: InkWell(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 48,
-                    decoration: BoxDecoration(
-                        color: Colors.deepPurple,
-                        borderRadius: BorderRadius.circular(5),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Color(0xFF9DA3B4).withOpacity(0.1),
-                              blurRadius: 65.0,
-                              offset: Offset(0.0, 15.0))
-                        ]),
-                    child: Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.phone,
-                          color: Colors.white,
+              padding: EdgeInsets.only(left: 36, top: 30, right: 36),
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        _onFormSubmitted();
+                      },
+                      child: Container(
+                        height: 60,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                        width: MediaQuery.of(context).size.width - 250,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(255, 115, 0, 1),
+                          borderRadius: BorderRadius.circular(25),
                         ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Enter OTP",
+                        child: Center(
+                            child: Text(
+                          'Verify Phone',
                           style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )),
-                  ),
-                  onTap: () {
-                    _onFormSubmitted();
-                  },
-                )),
+                            fontFamily: 'Helvetica',
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        )),
+                      ),
+                    ),
+                  ]),
+            ),
             SizedBox(
-              height: 20,
+              height: 50,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => VerifyPhone(
-                                  userid: userid,
-                                )));
+                    setState(() {
+                      _onVerifyCode();
+                    });
                   },
                   child: Text(
                     "Resent OTP",
                     style: TextStyle(
-                      fontWeight: FontWeight.w600,
+                      color: Colors.blueGrey,
                       fontSize: 14,
                     ),
                   ),
@@ -306,11 +326,13 @@ class _OTPScreenState extends State<OTPScreen> {
                         ),
                         InkWell(
                           onTap: () async {
+                            final storage = new FlutterSecureStorage();
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             prefs.setBool('seen', true);
-                            Navigator.of(context, rootNavigator: true)
-                                .pop('dialog');
+                            Navigator.of(context).pop();
+                            await storage.write(
+                                key: 'userid', value: widget.userid);
                             Navigator.pushNamedAndRemoveUntil(
                                 context, Routes.rootScreen, (route) => false);
                           },
