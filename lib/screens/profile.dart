@@ -1,32 +1,4 @@
-import 'dart:io';
-import 'package:SellShip/Navigation/routes.dart';
-import 'package:SellShip/controllers/FadeAnimations.dart';
-import 'package:SellShip/controllers/handleNotifications.dart';
-import 'package:SellShip/screens/balance.dart';
-import 'package:SellShip/screens/comments.dart';
-import 'package:SellShip/screens/details.dart';
-import 'package:SellShip/screens/edititem.dart';
-import 'package:SellShip/screens/favourites.dart';
-import 'package:SellShip/screens/featureitem.dart';
-import 'package:SellShip/screens/messages.dart';
-import 'package:SellShip/screens/myitems.dart';
-import 'package:SellShip/screens/orders.dart';
-import 'package:SellShip/screens/privacypolicy.dart';
-import 'package:SellShip/screens/reviews.dart';
-import 'package:SellShip/screens/rootscreen.dart';
-import 'package:SellShip/screens/search.dart';
-import 'package:SellShip/screens/settings.dart';
-import 'package:SellShip/screens/signUpPage.dart';
-import 'package:SellShip/screens/termscondition.dart';
-import 'package:SellShip/verification/verifyemail.dart';
-import 'package:SellShip/verification/verifyphone.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_oauth/firebase_auth_oauth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:badges/badges.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:SellShip/createstorename.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,14 +13,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:SellShip/models/Items.dart';
-import 'package:SellShip/screens/editprofile.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intercom_flutter/intercom_flutter.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:numeral/numeral.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
@@ -235,6 +199,19 @@ class _ProfilePageState extends State<ProfilePage>
                                   BorderRadius.all(Radius.circular(20)),
                             ),
                             child: ListTile(
+                              onTap: () {
+                                if (stores == null) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateStoreName(
+                                          userid: userid,
+                                        ),
+                                      ));
+                                } else {
+                                  // existing store
+                                }
+                              },
                               title: Text(
                                 'My Store',
                                 style: TextStyle(
@@ -548,11 +525,19 @@ class _ProfilePageState extends State<ProfilePage>
         var respons = json.decode(response.body);
         Map<String, dynamic> profilemap = respons;
 
+        var store;
+        if (profilemap.containsKey('stores')) {
+          store = profilemap['stores'];
+        } else {
+          store = null;
+        }
+
         if (profilemap != null) {
           if (mounted) {
             setState(() {
               firstname = profilemap['first_name'];
               lastname = profilemap['last_name'];
+              stores = store;
             });
           }
         } else {
@@ -563,4 +548,6 @@ class _ProfilePageState extends State<ProfilePage>
       }
     }
   }
+
+  var stores;
 }

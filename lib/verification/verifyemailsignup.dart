@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/screens/rootscreen.dart';
-import 'package:SellShip/username.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -143,13 +143,8 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
                     onTap: () {
                       if (disabled == true) {
                       } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Username(
-                                userid: userid,
-                              ),
-                            ));
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, Routes.rootScreen, (route) => false);
                       }
                     },
                     child: Container(
