@@ -4,98 +4,44 @@ import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:locally/locally.dart';
 import 'package:intercom_flutter/intercom_flutter.dart' show Intercom;
 
-class FirebaseNotifications {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-  Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) async {
-    final data = (message['data'] as Map).cast<String, dynamic>();
-
-    if (await Intercom.isIntercomPush(data)) {
-      await Intercom.handlePush(data);
-      return;
-    }
-  }
-
-  Future getNotifications(BuildContext context) async {
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-
-        var title = message['notification']['title'];
-        var body = message['notification']['body'];
-
-        Locally locally = Locally(
-          context: context,
-          payload: 'test',
-          pageRoute: MaterialPageRoute(builder: (context) => Messages()),
-          appIcon: 'mipmap/ic_launcher',
-        );
-        locally.show(title: title, message: body);
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-        var title = message['notification']['title'];
-        var body = message['notification']['body'];
-
-        Locally locally = Locally(
-          context: context,
-          payload: 'test',
-          pageRoute: MaterialPageRoute(builder: (context) => Messages()),
-          appIcon: 'mipmap/ic_launcher',
-        );
-        locally.show(title: title, message: body);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-        var title = message['notification']['title'];
-        var body = message['notification']['body'];
-
-        Locally locally = Locally(
-          context: context,
-          payload: 'test',
-          pageRoute: MaterialPageRoute(builder: (context) => Messages()),
-          appIcon: 'mipmap/ic_launcher',
-        );
-        locally.show(title: title, message: body);
-      },
-    );
-    await _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(sound: true, badge: true, alert: true));
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {
-      print("Settings registered: $settings");
-    });
-    var token = await _firebaseMessaging.getToken();
-
-    return token;
-  }
-
-  postNotification({title, body, to}) async {
-    var res = await http.post(
-      'https://fcm.googleapis.com/fcm/send',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization':
-            'key=AAAAJ43JO4Q:APA91bGKOls-gW5zRmx5Eh96VBtrRQqxhk9uQG2u8tyIhK7h8I8Ov7e6NTaBNv8XQ0HYPNJ2zA88d7e1KCjhl7IpprRnSYa00YPKd4RpGZQYfLNevDHtxv0vL8NOnPWjP4wGX_Xd2jJD',
-      },
-      body: jsonEncode(
-        <String, dynamic>{
-          "data": {"title": title, "Body": body},
-          "to": to
-        },
-      ),
-    );
-    print(jsonEncode(
-      <String, dynamic>{
-        "data": {"title": title, "Body": body},
-        "to": to
-      },
-    ));
-    print(res.body);
-  }
-}
+//
+//class OneSignalNotifications{
+//  OneSignal.shared.setNotificationReceivedHandler((OSNotification notification) {
+//  // will be called whenever a notification is received
+//  });
+//
+//  OneSignal.shared.setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+//  // will be called whenever a notification is opened/button pressed.
+//  });
+//
+//  OneSignal.shared.setPermissionObserver((OSPermissionStateChanges changes) {
+//  // will be called whenever the permission changes
+//  // (ie. user taps Allow on the permission prompt in iOS)
+//  });
+//
+//  OneSignal.shared.setSubscriptionObserver((OSSubscriptionStateChanges changes) {
+//  // will be called whenever the subscription changes
+//  //(ie. user gets registered with OneSignal and gets a user ID)
+//  });
+//
+//  OneSignal.shared.setEmailSubscriptionObserver((OSEmailSubscriptionStateChanges emailChanges) {
+//  // will be called whenever then user's email subscription changes
+//  // (ie. OneSignal.setEmail(email) is called and the user gets registered
+//  });
+//
+//// For each of the above functions, you can also pass in a
+//// reference to a function as well:
+//
+//  void _handleNotificationReceived(OSNotification notification) {
+//
+//  }
+//
+//  void main() {
+//    OneSignal.shared.setNotificationReceivedHandler(_handleNotificationReceived);
+//  }
+//}

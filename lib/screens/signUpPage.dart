@@ -38,7 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
   void initState() {
     super.initState();
     Firebase.initializeApp();
-    getNotifications();
+
   }
 
   TextEditingController signupEmailController = new TextEditingController();
@@ -313,6 +313,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   onTap: () {
                                     showDialog(
                                         context: context,
+                                        useRootNavigator: false,
                                         barrierDismissible: false,
                                         builder: (_) => new AlertDialog(
                                               shape: RoundedRectangleBorder(
@@ -442,26 +443,7 @@ class _SignUpPageState extends State<SignUpPage> {
   var firebasetoken;
   var userid;
 
-  getNotifications() async {
-    var token = await FirebaseNotifications().getNotifications(context);
-    setState(() {
-      firebasetoken = token;
-    });
-    if (userid != null) {
-      print(token + "\n Token was recieved from firebase");
-      var url = 'https://api.sellship.co/api/checktokenfcm/' +
-          userid +
-          '/' +
-          firebasetoken;
-      print(url);
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        print(response.body);
-      } else {
-        print(response.statusCode);
-      }
-    }
-  }
+
 
   bool isValid = false;
   Future<Null> validate(StateSetter updateState) async {
@@ -520,6 +502,7 @@ class _SignUpPageState extends State<SignUpPage> {
   void showHttpResultDialog(String message) {
     showDialog(
         context: context,
+        useRootNavigator: false,
         builder: (_) => AssetGiffyDialog(
               image: Image.asset(
                 'assets/oops.gif',

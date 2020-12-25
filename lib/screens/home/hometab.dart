@@ -302,13 +302,10 @@ class HomeViewState extends State<HomeView> {
       slivers: <Widget>[
         SliverGrid(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisSpacing: 1.0,
-            crossAxisSpacing: 1.0,
-            crossAxisCount: 2,
-
-//            staggeredTileCount: itemsgrid.length,
-//            staggeredTileBuilder: (index) => new StaggeredTile.fit(1),
-          ),
+              mainAxisSpacing: 1.0,
+              crossAxisSpacing: 1.0,
+              crossAxisCount: 2,
+              childAspectRatio: 0.9),
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
               if (index != 0 && index % 8 == 0) {
@@ -392,14 +389,10 @@ class HomeViewState extends State<HomeView> {
                         new Stack(
                           children: <Widget>[
                             Container(
-                              height: 199,
+                              height: 215,
                               width: MediaQuery.of(context).size.width,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)),
+                                borderRadius: BorderRadius.circular(10),
                                 child: CachedNetworkImage(
                                   fadeInDuration: Duration(microseconds: 5),
                                   imageUrl: itemsgrid[index].image.isEmpty
@@ -559,57 +552,6 @@ class HomeViewState extends State<HomeView> {
                                             ))),
                           ],
                         ),
-//                        SizedBox(
-//                          height: 5,
-//                        ),
-//                        Padding(
-//                          child: Container(
-//                            height: 20,
-//                            child: Text(
-//                              itemsgrid[index].name,
-//                              overflow: TextOverflow.ellipsis,
-//                              style: TextStyle(
-//                                fontFamily: 'Helvetica',
-//                                fontSize: 16,
-//                                fontWeight: FontWeight.w800,
-//                                color: Color.fromRGBO(28, 45, 65, 1),
-//                              ),
-//                            ),
-//                          ),
-//                          padding: EdgeInsets.only(left: 10),
-//                        ),
-//                        SizedBox(height: 4.0),
-//                        currency != null
-//                            ? Padding(
-//                                padding: EdgeInsets.only(left: 10),
-//                                child: Container(
-//                                  child: Text(
-//                                    currency +
-//                                        ' ' +
-//                                        itemsgrid[index].price.toString(),
-//                                    style: TextStyle(
-//                                      fontFamily: 'Helvetica',
-//                                      fontSize: 16,
-//                                      color: Colors.deepOrange,
-//                                      fontWeight: FontWeight.w500,
-//                                    ),
-//                                  ),
-//                                ))
-//                            : Padding(
-//                                padding: EdgeInsets.only(left: 10),
-//                                child: Container(
-//                                  child: Text(
-//                                    itemsgrid[index].price.toString(),
-//                                    style: TextStyle(
-//                                      fontFamily: 'Helvetica',
-//                                      fontSize: 16,
-//                                      fontWeight: FontWeight.w600,
-//                                    ),
-//                                  ),
-//                                )),
-//                        SizedBox(
-//                          height: 10,
-//                        )
                       ],
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

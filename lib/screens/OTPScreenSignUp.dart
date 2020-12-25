@@ -307,14 +307,13 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
             ),
           );
         });
-    var token = await FirebaseNotifications().getNotifications(context);
+
     Provider.of<UserProvider>(context, listen: false).signUpUser(
         firstName: widget.fullname,
         lastName: '',
         email: widget.email,
         phoneNumber: widget.phonenumber,
         password: widget.password,
-        fcmtoken: token,
         onSuccess: () async {
           final storage = new FlutterSecureStorage();
           var userid = await storage.read(key: 'userid');

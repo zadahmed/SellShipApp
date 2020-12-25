@@ -153,7 +153,7 @@ class _StarterPageState extends State<StarterPage>
                 height: 20,
               ),
               Padding(
-                  padding: EdgeInsets.only(left: 32, top: 20, right: 32),
+                  padding: EdgeInsets.only(left: 28, top: 20, right: 28),
                   child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -207,7 +207,7 @@ class _StarterPageState extends State<StarterPage>
                                                               .size
                                                               .width /
                                                           2 +
-                                                      80,
+                                                      70,
                                                   child: ListTile(
                                                     leading: Flag(
                                                       e.key,

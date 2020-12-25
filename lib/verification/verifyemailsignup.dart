@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:SellShip/controllers/FadeAnimations.dart';
@@ -34,6 +35,8 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
       email = widget.email;
       emailcontroller.text = email;
     });
+    Timer timer =
+        Timer.periodic(Duration(seconds: 4), (Timer t) => checkemailverified());
   }
 
   bool disabled = true;

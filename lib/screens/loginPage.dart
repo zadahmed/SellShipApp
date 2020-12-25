@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    getNotifications();
+
   }
 
   final FocusNode myFocusNodePassword = FocusNode();
@@ -41,27 +41,7 @@ class _LoginPageState extends State<LoginPage> {
   var firebasetoken;
   var userid;
 
-  getNotifications() async {
-    var token = await FirebaseNotifications().getNotifications(context);
 
-    setState(() {
-      firebasetoken = token;
-    });
-    if (userid != null) {
-      print(token + "\n Token was recieved from firebase");
-      var url = 'https://api.sellship.co/api/checktokenfcm/' +
-          userid +
-          '/' +
-          firebasetoken;
-      print(url);
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        print(response.body);
-      } else {
-        print(response.statusCode);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

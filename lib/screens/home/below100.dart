@@ -81,19 +81,8 @@ class Below100State extends State<Below100> {
         getcity();
       });
 
-      var token = await FirebaseNotifications().getNotifications(context);
-      if (userid != null) {
-        print(token + "\n Token was recieved from firebase");
-        var url =
-            'https://api.sellship.co/api/checktokenfcm/' + userid + '/' + token;
-        print(url);
-        final response = await http.get(url);
-        if (response.statusCode == 200) {
-          print(response.body);
-        } else {
-          print(response.statusCode);
-        }
-      }
+
+
 
       List<Placemark> placemarks = await placemarkFromCoordinates(
           position.latitude, position.longitude,

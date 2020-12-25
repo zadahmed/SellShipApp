@@ -11,15 +11,32 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'providers/itemProvider.dart';
 import 'providers/userProvider.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
+  OneSignal.shared.init("3df1c23c-12b8-4282-b6ac-a7d34d063a55", iOSSettings: {
+    OSiOSSettings.autoPrompt: false,
+    OSiOSSettings.inAppLaunchUrl: false
+  });
+  OneSignal.shared
+      .setInFocusDisplayType(OSNotificationDisplayType.notification);
+
+  bool allowed =
+      await OneSignal.shared.promptUserForPushNotificationPermission();
+  if (!allowed) {
+    OneSignal.shared.promptUserForPushNotificationPermission();
+  }
+  await OneSignal.shared.sendTags({
+    "device_type": "mobile",
+  });
+
   runApp(MyApp());
 }
 

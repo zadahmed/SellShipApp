@@ -43,6 +43,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart' as Location;
 import 'package:numeral/numeral.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:search_page/search_page.dart';
 import 'package:shimmer/shimmer.dart';
@@ -829,6 +830,26 @@ class _HomeScreenState extends State<HomeScreen>
           key: 'longitude', value: location.longitude.toString());
       var userid = await storage.read(key: 'userid');
 
+      await OneSignal.shared.sendTags({
+        "id": userid,
+      });
+      await OneSignal.shared.setExternalUserId(userid);
+
+      var status = await OneSignal.shared.getPermissionSubscriptionState();
+
+      var playerId = status.subscriptionStatus.userId;
+      print(playerId);
+      print(status);
+
+      await OneSignal.shared.postNotification(OSCreateNotification(
+          playerIds: [playerId],
+          content: "this is a test from OneSignal's Flutter SDK",
+          heading: "Test Notification",
+          buttons: [
+            OSActionButton(text: "test1", id: "id1"),
+            OSActionButton(text: "test2", id: "id2")
+          ]));
+
       await storage.write(
           key: 'longitude', value: location.longitude.toString());
       setState(() {
@@ -837,20 +858,6 @@ class _HomeScreenState extends State<HomeScreen>
         getcity();
       });
 
-      var token = await FirebaseNotifications().getNotifications(context);
-      if (userid != null) {
-        print(token + "\n Token was recieved from firebase");
-        var url =
-            'https://api.sellship.co/api/checktokenfcm/' + userid + '/' + token;
-        print(url);
-        final response = await http.get(url);
-        if (response.statusCode == 200) {
-          print(response.body);
-        } else {
-          print(response.statusCode);
-        }
-      }
-
       List<Placemark> placemarks = await placemarkFromCoordinates(
           position.latitude, position.longitude,
           localeIdentifier: 'en');
@@ -858,12 +865,14 @@ class _HomeScreenState extends State<HomeScreen>
       Placemark place = placemarks[0];
       var cit = place.administrativeArea;
       var countr = place.country;
+      await OneSignal.shared.sendTags({
+        "country": countr,
+      });
       await storage.write(key: 'city', value: cit);
       await storage.write(key: 'locationcountry', value: countr);
       setState(() {
         city = cit;
         locationcountry = countr;
-        print(city);
       });
     } on Exception catch (e) {
       print(e);

@@ -15,7 +15,6 @@ import 'package:SellShip/verification/verifyemail.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -53,14 +53,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    gettoken();
-  }
-
-  gettoken() async {
-    var token = await FirebaseNotifications().getNotifications(context);
-    setState(() {
-      firebasetoken = token;
-    });
   }
 
   var loggedin;
@@ -96,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           await storage.write(key: 'businessid', value: jsondata['businessid']);
         }
         print('Loggd in ');
-        Navigator.of(context, rootNavigator: true).pop('dialog');
+        Navigator.of(context).pop();
         setState(() {
           userid = jsondata['id'];
         });
@@ -106,9 +98,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             context, MaterialPageRoute(builder: (context) => RootScreen()));
       } else if (jsondata['status']['message'].toString().trim() ==
           'User does not exist, please sign up') {
-        Navigator.of(context, rootNavigator: true).pop('dialog');
+        Navigator.of(context).pop();
         showDialog(
             context: context,
+            useRootNavigator: false,
             builder: (_) => AssetGiffyDialog(
                   image: Image.asset(
                     'assets/oops.gif',
@@ -127,14 +120,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onlyOkButton: true,
                   entryAnimation: EntryAnimation.DEFAULT,
                   onOkButtonPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                    Navigator.of(context).pop();
                   },
                 ));
       } else if (jsondata['status']['message'].toString().trim() ==
           'Invalid password, try again') {
-        Navigator.of(context, rootNavigator: true).pop('dialog');
         showDialog(
             context: context,
+            useRootNavigator: false,
             builder: (_) => AssetGiffyDialog(
                   image: Image.asset(
                     'assets/oops.gif',
@@ -153,14 +146,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onlyOkButton: true,
                   entryAnimation: EntryAnimation.DEFAULT,
                   onOkButtonPressed: () {
-                    Navigator.of(context, rootNavigator: true).pop('dialog');
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
                 ));
       }
     } else {
-      Navigator.of(context, rootNavigator: true).pop('dialog');
+      Navigator.of(context).pop();
       showDialog(
           context: context,
+          useRootNavigator: false,
           builder: (_) => AssetGiffyDialog(
                 image: Image.asset(
                   'assets/oops.gif',
@@ -178,7 +173,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onlyOkButton: true,
                 entryAnimation: EntryAnimation.DEFAULT,
                 onOkButtonPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop('dialog');
+                  Navigator.of(context).pop();
                 },
               ));
     }
@@ -217,6 +212,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           print(jsondata);
 
           if (jsondata['status']['message'] == 'User already exists') {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('seen', true);
             await storage.write(key: 'userid', value: jsondata['status']['id']);
             Navigator.of(context).pop();
 
@@ -510,17 +507,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   showDialog(
                                       context: context,
                                       barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return Container(
-                                          height: 100,
-                                          child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(12.0),
-                                              child: SpinKitChasingDots(
-                                                  color:
-                                                      Colors.deepOrangeAccent)),
-                                        );
-                                      });
+                                      useRootNavigator: false,
+                                      builder: (_) => new AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            content: Builder(
+                                              builder: (context) {
+                                                return Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: SpinKitChasingDots(
+                                                      color: Colors.deepOrange,
+                                                    ));
+                                              },
+                                            ),
+                                          ));
 
                                   _loginWithFB();
                                 },
