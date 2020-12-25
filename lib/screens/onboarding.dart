@@ -74,7 +74,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     Map<String, String> body = {
       'email': EmailController.text,
       'password': PasswordController.text,
-      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);
@@ -152,6 +151,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ));
       }
     } else {
+      print(response.body);
       Navigator.of(context).pop();
       showDialog(
           context: context,

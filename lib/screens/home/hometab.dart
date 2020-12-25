@@ -62,7 +62,12 @@ class HomeViewState extends State<HomeView> {
   }
 
   Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
-    var url = 'https://api.sellship.co/api/homeitems/' + country;
+    var url = 'https://api.sellship.co/api/recentitems/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
 
     final response = await http.get(url);
 

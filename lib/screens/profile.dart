@@ -411,382 +411,433 @@ class _ProfilePageState extends State<ProfilePage>
       key: _scaffoldKey,
       body: loading == false
           ? DefaultTabController(
-              length: 2,
+              length: 4,
               child: NestedScrollView(
                   headerSliverBuilder: (context, _) {
                     return [
                       SliverList(
                           delegate: new SliverChildListDelegate([
-                        Padding(
-                            padding:
-                                EdgeInsets.only(left: 30, top: 10, right: 30),
-                            child: Container(
-                                color: Colors.white,
-                                width: double.infinity,
-                                child: Row(children: <Widget>[
-                                  Container(
-                                    height: 110,
-                                    width: 100,
-                                    child: Stack(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: GestureDetector(
-                                            child: Container(
-                                              height: 100,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Colors.grey.shade100,
-                                                      width: 5),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50)),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                child: profilepicture == null
-                                                    ? Image.asset(
-                                                        'assets/personplaceholder.png',
-                                                        fit: BoxFit.fitWidth,
-                                                      )
-                                                    : CachedNetworkImage(
-                                                        imageUrl:
-                                                            profilepicture,
-                                                        fit: BoxFit.cover,
-                                                        placeholder: (context,
-                                                                url) =>
-                                                            SpinKitChasingDots(
+                        Stack(
+                          children: [
+                            Container(
+                              height: 75,
+                              width: MediaQuery.of(context).size.width,
+                              child: SvgPicture.asset(
+                                'assets/LoginBG.svg',
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 20, top: 25, right: 20),
+                                  child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Column(
+                                                children: [
+                                                  Container(
+                                                    height: 110,
+                                                    width: 100,
+                                                    child: Stack(
+                                                      children: [
+                                                        Align(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child:
+                                                              GestureDetector(
+                                                            child: Container(
+                                                              height: 100,
+                                                              width: 100,
+                                                              decoration: BoxDecoration(
+                                                                  border: Border.all(
+                                                                      color: Colors
+                                                                          .grey
+                                                                          .shade100,
+                                                                      width: 5),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              50)),
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            50),
+                                                                child: profilepicture ==
+                                                                        null
+                                                                    ? Image
+                                                                        .asset(
+                                                                        'assets/personplaceholder.png',
+                                                                        fit: BoxFit
+                                                                            .fitWidth,
+                                                                      )
+                                                                    : CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            profilepicture,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        placeholder:
+                                                                            (context, url) =>
+                                                                                SpinKitChasingDots(color: Colors.deepOrange),
+                                                                        errorWidget: (context,
+                                                                                url,
+                                                                                error) =>
+                                                                            Icon(Icons.error),
+                                                                      ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomRight,
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              final action =
+                                                                  CupertinoActionSheet(
+                                                                message: Text(
+                                                                  "Upload an Image",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .normal),
+                                                                ),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  CupertinoActionSheetAction(
+                                                                    child: Text(
+                                                                        "Upload from Camera",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                15.0,
+                                                                            fontWeight:
+                                                                                FontWeight.normal)),
+                                                                    isDefaultAction:
+                                                                        true,
+                                                                    onPressed:
+                                                                        () {
+                                                                      getImageCamera();
+                                                                    },
+                                                                  ),
+                                                                  CupertinoActionSheetAction(
+                                                                    child: Text(
+                                                                        "Upload from Gallery",
+                                                                        style: TextStyle(
+                                                                            fontSize:
+                                                                                15.0,
+                                                                            fontWeight:
+                                                                                FontWeight.normal)),
+                                                                    isDefaultAction:
+                                                                        true,
+                                                                    onPressed:
+                                                                        () {
+                                                                      getImageGallery();
+                                                                    },
+                                                                  )
+                                                                ],
+                                                                cancelButton:
+                                                                    CupertinoActionSheetAction(
+                                                                  child: Text(
+                                                                      "Cancel",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              15.0,
+                                                                          fontWeight:
+                                                                              FontWeight.normal)),
+                                                                  isDestructiveAction:
+                                                                      true,
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context,
+                                                                            rootNavigator:
+                                                                                true)
+                                                                        .pop();
+                                                                  },
+                                                                ),
+                                                              );
+                                                              showCupertinoModalPopup(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) =>
+                                                                          action);
+                                                            },
+                                                            child: CircleAvatar(
+                                                              radius: 16,
+                                                              backgroundColor:
+                                                                  Color
+                                                                      .fromRGBO(
+                                                                          28,
+                                                                          45,
+                                                                          65,
+                                                                          1),
+                                                              child: Icon(
+                                                                Feather.camera,
                                                                 color: Colors
-                                                                    .deepOrange),
-                                                        errorWidget: (context,
-                                                                url, error) =>
-                                                            Icon(Icons.error),
-                                                      ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomRight,
-                                          child: InkWell(
-                                            onTap: () {
-                                              final action =
-                                                  CupertinoActionSheet(
-                                                message: Text(
-                                                  "Upload an Image",
-                                                  style: TextStyle(
-                                                      fontSize: 15.0,
-                                                      fontWeight:
-                                                          FontWeight.normal),
-                                                ),
-                                                actions: <Widget>[
-                                                  CupertinoActionSheetAction(
-                                                    child: Text(
-                                                        "Upload from Camera",
-                                                        style: TextStyle(
-                                                            fontSize: 15.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal)),
-                                                    isDefaultAction: true,
-                                                    onPressed: () {
-                                                      getImageCamera();
-                                                    },
+                                                                    .white,
+                                                                size: 16,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
-                                                  CupertinoActionSheetAction(
-                                                    child: Text(
-                                                        "Upload from Gallery",
-                                                        style: TextStyle(
-                                                            fontSize: 15.0,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .normal)),
-                                                    isDefaultAction: true,
-                                                    onPressed: () {
-                                                      getImageGallery();
-                                                    },
-                                                  )
                                                 ],
-                                                cancelButton:
-                                                    CupertinoActionSheetAction(
-                                                  child: Text("Cancel",
-                                                      style: TextStyle(
-                                                          fontSize: 15.0,
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                  isDestructiveAction: true,
-                                                  onPressed: () {
-                                                    Navigator.of(context,
-                                                            rootNavigator: true)
-                                                        .pop();
-                                                  },
-                                                ),
-                                              );
-                                              showCupertinoModalPopup(
-                                                  context: context,
-                                                  builder: (context) => action);
-                                            },
-                                            child: CircleAvatar(
-                                              radius: 16,
-                                              backgroundColor:
-                                                  Color.fromRGBO(28, 45, 65, 1),
-                                              child: Icon(
-                                                Feather.camera,
-                                                color: Colors.white,
-                                                size: 16,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  firstname != null
-                                      ? Padding(
-                                          padding: EdgeInsets.only(left: 25),
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                firstname + ' ' + lastname,
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 24.0,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              SizedBox(
-                                                height: 2,
-                                              ),
-                                              Text(
-                                                '@' +
-                                                    firstname +
-                                                    ' ' +
-                                                    lastname,
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16.0,
-                                                    color: Colors.grey),
-                                              ),
-                                            ],
-                                          ))
-                                      : Container(
-                                          child: SpinKitChasingDots(
-                                              color: Colors.deepOrangeAccent),
-                                        ),
-                                ]))),
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start),
+                                            firstname != null
+                                                ? Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 25),
+                                                    child: Column(
+                                                        children: [
+                                                          Text(
+                                                            firstname +
+                                                                ' ' +
+                                                                lastname,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 24.0,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          Text(
+                                                            '@' +
+                                                                firstname +
+                                                                ' ' +
+                                                                lastname,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16.0,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 5,
+                                                                    right: 10,
+                                                                    bottom: 5),
+                                                            child: Container(
+                                                              height: 80,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              child: Row(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceEvenly,
+                                                                children: <
+                                                                    Widget>[
+                                                                  Padding(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(5),
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Text(
+                                                                          itemssold == null
+                                                                              ? '0'
+                                                                              : itemssold.toString(),
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                        SizedBox(
+                                                                            height:
+                                                                                5.0),
+                                                                        Text(
+                                                                          'Sold',
+                                                                          style: TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontFamily: 'Helvetica',
+                                                                              color: Colors.blueGrey),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(5),
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Text(
+                                                                          following == null
+                                                                              ? '0'
+                                                                              : following.toString(),
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                        SizedBox(
+                                                                            height:
+                                                                                5.0),
+                                                                        Text(
+                                                                          'Likes',
+                                                                          style: TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontFamily: 'Helvetica',
+                                                                              color: Colors.blueGrey),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(5),
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Text(
+                                                                          followers == null
+                                                                              ? '0'
+                                                                              : followers.toString(),
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.bold),
+                                                                        ),
+                                                                        SizedBox(
+                                                                            height:
+                                                                                5.0),
+                                                                        Text(
+                                                                          'Followers',
+                                                                          style: TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontFamily: 'Helvetica',
+                                                                              color: Colors.blueGrey),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  Padding(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(5),
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: <
+                                                                          Widget>[
+                                                                        Row(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.center,
+                                                                          children: <
+                                                                              Widget>[
+                                                                            Text(
+                                                                              reviewrating != null ? reviewrating.toStringAsFixed(1) : '0.0',
+                                                                              style: TextStyle(fontFamily: 'Helvetica', fontSize: 16, fontWeight: FontWeight.bold),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              width: 2,
+                                                                            ),
+                                                                            Icon(
+                                                                              Feather.star,
+                                                                              color: Colors.black,
+                                                                              size: 18,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        SizedBox(
+                                                                            height:
+                                                                                5.0),
+                                                                        Text(
+                                                                          'Rating',
+                                                                          style: TextStyle(
+                                                                              fontSize: 14,
+                                                                              fontFamily: 'Helvetica',
+                                                                              color: Colors.blueGrey),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start))
+                                                : Container(
+                                                    child: SpinKitChasingDots(
+                                                        color: Colors
+                                                            .deepOrangeAccent),
+                                                  ),
+                                          ]))),
+                            )
+                          ],
+                        ),
                         SizedBox(
                           height: 10,
                         ),
-                        Container(
-                            height: 140,
-                            child: Stack(children: [
-                              Align(
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                      padding: EdgeInsets.only(top: 15),
-                                      child: Container(
-                                          color: Color.fromRGBO(
-                                              131, 146, 165, 0.1),
-                                          child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  height: 120,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topRight: Radius
-                                                                  .circular(20),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      20))),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        top: 30,
-                                                        left: 20,
-                                                        right: 20,
-                                                        bottom: 5),
-                                                    child: Container(
-                                                      height: 120,
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(20),
-                                                          border: Border.all(
-                                                            color:
-                                                                Color.fromRGBO(
-                                                                    255,
-                                                                    115,
-                                                                    0,
-                                                                    1),
-                                                          )),
-                                                      child: Row(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: <Widget>[
-                                                          Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                itemssold ==
-                                                                        null
-                                                                    ? '0'
-                                                                    : itemssold
-                                                                        .toString(),
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        'Helvetica',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 10.0),
-                                                              Text(
-                                                                'Sold',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontFamily:
-                                                                        'Helvetica',
-                                                                    color: Colors
-                                                                        .blueGrey),
-                                                              )
-                                                            ],
-                                                          ),
-                                                          Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                following ==
-                                                                        null
-                                                                    ? '0'
-                                                                    : following
-                                                                        .toString(),
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        'Helvetica',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 10.0),
-                                                              Text(
-                                                                'Likes',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontFamily:
-                                                                        'Helvetica',
-                                                                    color: Colors
-                                                                        .blueGrey),
-                                                              )
-                                                            ],
-                                                          ),
-                                                          Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: <Widget>[
-                                                              Text(
-                                                                followers ==
-                                                                        null
-                                                                    ? '0'
-                                                                    : followers
-                                                                        .toString(),
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        'Helvetica',
-                                                                    fontSize:
-                                                                        16,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                              SizedBox(
-                                                                  height: 10.0),
-                                                              Text(
-                                                                'Followers',
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontFamily:
-                                                                        'Helvetica',
-                                                                    color: Colors
-                                                                        .blueGrey),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ])))),
-                              Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Container(
-                                    width: 80,
-                                    height: 35,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(255, 115, 0, 1),
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Icon(
-                                          Feather.star,
-                                          color: Colors.white,
-                                          size: 18,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          reviewrating != null
-                                              ? reviewrating.toStringAsFixed(1)
-                                              : '0.0',
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                            ]))
                       ]))
                     ];
                   },
@@ -1381,7 +1432,6 @@ class _ProfilePageState extends State<ProfilePage>
     Map<String, String> body = {
       'email': EmailController.text,
       'password': PasswordController.text,
-      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);
@@ -1459,6 +1509,7 @@ class _ProfilePageState extends State<ProfilePage>
                 ));
       }
     } else {
+      print(response.body);
       Navigator.of(context).pop();
       showDialog(
           context: context,
@@ -2057,364 +2108,161 @@ class _ProfilePageState extends State<ProfilePage>
   Widget storeitems(BuildContext context) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 0.7),
+        crossAxisCount: 2,
+        childAspectRatio: 1,
+      ),
       itemBuilder: (context, index) {
-        return Padding(
-          padding: EdgeInsets.all(10),
-          child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Details(
-                          itemid: item[index].itemid,
-                          sold: item[index].sold,
-                        )),
-              );
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.2, color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    offset: Offset(0.0, 1.0), //(x,y)
-                    blurRadius: 6.0,
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Details(
+                        itemid: item[index].itemid,
+                        sold: item[index].sold,
+                      )),
+            );
+          },
+          child: Container(
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: 195,
+                  width: MediaQuery.of(context).size.width,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: CachedNetworkImage(
+                      fadeInDuration: Duration(microseconds: 5),
+                      imageUrl: item[index].image,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          SpinKitChasingDots(color: Colors.deepOrange),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
                   ),
-                ],
-              ),
-              child: Column(
-                children: <Widget>[
-                  new Stack(
-                    children: <Widget>[
-                      Container(
-                        height: 220,
-                        width: MediaQuery.of(context).size.width,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                          child: CachedNetworkImage(
-                            fadeInDuration: Duration(microseconds: 5),
-                            imageUrl: item[index].image,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                SpinKitChasingDots(color: Colors.deepOrange),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
+                ),
+                Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => EditItem(
+                                          itemid: item[index].itemid,
+                                        )),
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: 18,
+                              backgroundColor: Colors.white,
+                              child: Icon(
+                                Feather.edit_2,
+                                color: Colors.blueGrey,
+                                size: 16,
+                              ),
+                            )))),
+                item[index].sold == true
+                    ? Positioned(
+                        top: 60,
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.4),
                           ),
-                        ),
-                      ),
-                      Positioned(
-                          bottom: 0,
-                          left: 0,
-                          child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Container(
-                              height: 35,
-                              width: 145,
-                              decoration: BoxDecoration(
-                                color: Colors.black26.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    child: InkWell(
-                                      child: Container(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Feather.heart,
-                                              size: 14,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              Numeral(item[index].likes)
-                                                  .value(),
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                        ),
-                                      ),
-                                    ),
-                                    padding:
-                                        EdgeInsets.only(left: 10, right: 5),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, bottom: 5),
-                                    child: VerticalDivider(),
-                                  ),
-                                  Padding(
-                                    child: InkWell(
-                                      child: Container(
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Feather.message_circle,
-                                              size: 14,
-                                              color: Colors.white,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              Numeral(item[index].comments)
-                                                  .value(),
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                        ),
-                                      ),
-                                      enableFeedback: true,
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CommentsPage(
-                                                      itemid:
-                                                          item[index].itemid)),
-                                        );
-                                      },
-                                    ),
-                                    padding:
-                                        EdgeInsets.only(left: 5, right: 10),
-                                  ),
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                              ),
-                            ),
-                          )),
-                      item[index].sold == true
-                          ? Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color:
-                                      Colors.deepPurpleAccent.withOpacity(0.8),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                  ),
-                                ),
-                                width: MediaQuery.of(context).size.width,
-                                child: Center(
-                                  child: Text(
-                                    'Sold',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ))
-                          : Container(),
-                      Align(
-                          alignment: Alignment.topRight,
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditItem(
-                                                itemid: item[index].itemid,
-                                              )),
-                                    );
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 18,
-                                    backgroundColor: Colors.white,
-                                    child: Icon(
-                                      Feather.edit_2,
-                                      color: Colors.blueGrey,
-                                      size: 16,
-                                    ),
-                                  )))),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    child: Text(
-                      item[index].name,
-                      style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: Color.fromRGBO(28, 45, 65, 1),
-                      ),
-                    ),
-                    padding: EdgeInsets.only(left: 10),
-                  ),
-                  Padding(
-                    child: Text(
-                      item[index].category,
-                      style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    padding: EdgeInsets.only(left: 10),
-                  ),
-                  SizedBox(height: 4.0),
-                  currency != null
-                      ? Padding(
-                          padding: EdgeInsets.only(left: 10, right: 10),
-                          child: Container(
-                              child: Row(
-                            children: <Widget>[
-                              Text(
-                                currency + ' ' + item[index].price.toString(),
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.deepOrange,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Container(
-                                  child: Row(children: <Widget>[
-                                Icon(
-                                  Icons.remove_red_eye,
-                                  color: Colors.blueGrey,
-                                  size: 14,
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Text(
-                                  item[index].views.toString(),
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.blueGrey,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ])),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          )))
-                      : Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Container(
+                          width: 210,
+                          child: Center(
                             child: Text(
-                              item[index].price.toString(),
+                              'Sold',
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          )),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: 10, top: 5, right: 10, bottom: 10),
-                    child: Container(
-                      child: Row(
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () async {
-                              if (item[index].sold == true) {
-                                var url =
-                                    'https://api.sellship.co/api/unsold/' +
-                                        item[index].itemid +
-                                        '/' +
-                                        userid;
-
-                                final response = await http.get(url);
-                                if (response.statusCode == 200) {
-                                  print(response.body);
-                                }
-                                getProfileData();
-                                showInSnackBar('Item is now live!');
-                              } else {
-                                var url = 'https://api.sellship.co/api/sold/' +
-                                    item[index].itemid +
-                                    '/' +
-                                    userid;
-                                print(url);
-                                final response = await http.get(url);
-                                if (response.statusCode == 200) {
-                                  print(response.body);
-                                }
-                                getProfileData();
-                                showInSnackBar('Item has been marked sold!');
-                              }
-                            },
-                            child: Container(
-                              height: 30,
-                              width: MediaQuery.of(context).size.width / 2 - 25,
-                              decoration: BoxDecoration(
-                                color: item[index].sold == true
-                                    ? Colors.deepPurpleAccent
-                                    : Colors.deepOrange,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    offset: Offset(0.0, 1.0), //(x,y)
-                                    blurRadius: 6.0,
-                                  ),
-                                ],
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  item[index].sold == false
-                                      ? 'Mark Sold'
-                                      : 'Mark Live',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                        ],
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                      ),
-                    ),
-                  )
-                ],
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-              ),
+                        ))
+                    : Container(),
+              ],
             ),
+
+//
+//                  Padding(
+//                    padding: EdgeInsets.only(
+//                        left: 10, top: 5, right: 10, bottom: 10),
+//                    child: Container(
+//                      child: Row(
+//                        children: <Widget>[
+//                          InkWell(
+//                            onTap: () async {
+//                              if (item[index].sold == true) {
+//                                var url =
+//                                    'https://api.sellship.co/api/unsold/' +
+//                                        item[index].itemid +
+//                                        '/' +
+//                                        userid;
+//
+//                                final response = await http.get(url);
+//                                if (response.statusCode == 200) {
+//                                  print(response.body);
+//                                }
+//                                getProfileData();
+//                                showInSnackBar('Item is now live!');
+//                              } else {
+//                                var url = 'https://api.sellship.co/api/sold/' +
+//                                    item[index].itemid +
+//                                    '/' +
+//                                    userid;
+//                                print(url);
+//                                final response = await http.get(url);
+//                                if (response.statusCode == 200) {
+//                                  print(response.body);
+//                                }
+//                                getProfileData();
+//                                showInSnackBar('Item has been marked sold!');
+//                              }
+//                            },
+//                            child: Container(
+//                              height: 30,
+//                              width: MediaQuery.of(context).size.width / 2 - 25,
+//                              decoration: BoxDecoration(
+//                                color: item[index].sold == true
+//                                    ? Colors.deepPurpleAccent
+//                                    : Colors.deepOrange,
+//                                boxShadow: [
+//                                  BoxShadow(
+//                                    color: Colors.grey.shade300,
+//                                    offset: Offset(0.0, 1.0), //(x,y)
+//                                    blurRadius: 6.0,
+//                                  ),
+//                                ],
+//                                borderRadius: BorderRadius.circular(5.0),
+//                              ),
+//                              child: Center(
+//                                child: Text(
+//                                  item[index].sold == false
+//                                      ? 'Mark Sold'
+//                                      : 'Mark Live',
+//                                  style: TextStyle(
+//                                      fontFamily: 'Helvetica',
+//                                      fontSize: 14,
+//                                      color: Colors.white),
+//                                ),
+//                              ),
+//                            ),
+//                          ),
+//                        ],
+//                        mainAxisAlignment: MainAxisAlignment.center,
+//                        crossAxisAlignment: CrossAxisAlignment.center,
+//                      ),
+//                    ),
+//                  )
           ),
         );
       },

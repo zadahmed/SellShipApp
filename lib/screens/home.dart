@@ -830,25 +830,19 @@ class _HomeScreenState extends State<HomeScreen>
           key: 'longitude', value: location.longitude.toString());
       var userid = await storage.read(key: 'userid');
 
-      await OneSignal.shared.sendTags({
-        "id": userid,
-      });
       await OneSignal.shared.setExternalUserId(userid);
 
       var status = await OneSignal.shared.getPermissionSubscriptionState();
 
       var playerId = status.subscriptionStatus.userId;
-      print(playerId);
-      print(status);
 
-      await OneSignal.shared.postNotification(OSCreateNotification(
-          playerIds: [playerId],
-          content: "this is a test from OneSignal's Flutter SDK",
-          heading: "Test Notification",
-          buttons: [
-            OSActionButton(text: "test1", id: "id1"),
-            OSActionButton(text: "test2", id: "id2")
-          ]));
+      if (userid != null) {
+        var url = 'https://api.sellship.co/api/save/onesignalid/' +
+            userid +
+            '/' +
+            playerId;
+        final response = await http.get(url);
+      }
 
       await storage.write(
           key: 'longitude', value: location.longitude.toString());
@@ -923,7 +917,7 @@ class _HomeScreenState extends State<HomeScreen>
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/getnotification/' + userid;
-      print(url);
+
       final response = await http.get(url);
       if (response.statusCode == 200) {
         var notificationinfo = json.decode(response.body);
@@ -1373,21 +1367,9 @@ class _HomeScreenState extends State<HomeScreen>
       );
     } else if (view == "recent") {
       return SliverFillRemaining(
-          hasScrollBody: false,
-          child: Container(
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(242, 244, 248, 1),
-              ),
-              child: Container(
-                padding: EdgeInsets.only(top: 15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                  ),
-                ),
-                child: RecentlyAdded(),
-              )));
+        hasScrollBody: false,
+        child: RecentlyAdded(),
+      );
     } else if (view == "near") {
       return SliverFillRemaining(
           hasScrollBody: false,
@@ -2354,6 +2336,7 @@ class UserSearchDelegate extends SearchDelegate {
 
     var jsonbody = json.decode(response.body);
 
+    print(jsonbody.length);
     for (var i = 0; i < jsonbody.length; i++) {
       var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
 
@@ -2409,7 +2392,10 @@ class UserSearchDelegate extends SearchDelegate {
   final storage = new FlutterSecureStorage();
 
   getfavourites() async {
-    favourites.clear();
+    if (favourites != null) {
+      if (favourites.isNotEmpty) favourites.clear();
+    }
+
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
