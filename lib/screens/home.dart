@@ -1436,9 +1436,10 @@ class _HomeScreenState extends State<HomeScreen>
                   Expanded(
                     child: TextField(
                       onTap: () {
-                        showSearch(
-                            context: context,
-                            delegate: UserSearchDelegate(country));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Search()),
+                        );
                       },
                       controller: searchcontroller,
                       decoration: InputDecoration(
@@ -1456,50 +1457,6 @@ class _HomeScreenState extends State<HomeScreen>
           ),
         ),
       ]),
-//      SafeArea(
-//        child: Container(
-//          width: MediaQuery.of(context).size.width,
-//          height: 50,
-//          padding: EdgeInsets.all(5),
-//          decoration: BoxDecoration(
-//            color: Color.fromRGBO(242, 244, 248, 1),
-//            borderRadius: BorderRadius.only(
-//              topLeft: Radius.circular(20),
-//            ),
-//          ),
-//          child: TabBar(
-//            onTap: (int) {
-//              if (int == 0) {
-//                changeView("home");
-//              } else if (int == 1) {
-//                changeView("recent");
-//              } else if (int == 2) {
-//                changeView("near");
-//              } else if (int == 3) {
-//                changeView("below");
-//              }
-//            },
-//            controller: _tabController,
-//            indicatorSize: TabBarIndicatorSize.tab,
-//            indicatorPadding: EdgeInsets.all(10),
-//            indicator: CircleTabIndicator(color: Colors.deepOrange, radius: 4),
-//            isScrollable: true,
-//            labelColor: Colors.black,
-//            labelStyle: TextStyle(
-//              fontFamily: 'Helvetica',
-//              fontSize: 16,
-//            ),
-//            tabs: <Widget>[
-//              Tab(
-//                text: 'Home',
-//              ),
-//              Tab(text: 'Recently Added'),
-//              Tab(text: 'Near Me'),
-//              Tab(text: 'Below 100'),
-//            ],
-//          ),
-//        ),
-//      ),
     ]));
   }
 

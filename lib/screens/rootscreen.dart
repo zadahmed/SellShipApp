@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/screens/activity.dart';
 import 'package:SellShip/screens/discover.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -37,7 +38,7 @@ class _RootScreenState extends State<RootScreen> {
     HomeScreen(),
     Discover(),
     AddItem(),
-    Messages(),
+    Activity(),
     ProfilePage(),
   ];
 
@@ -107,34 +108,40 @@ class _RootScreenState extends State<RootScreen> {
         home = 'assets/bottomnavbar/Home.svg';
         discover = 'assets/bottomnavbar/Discover.svg';
         chat = 'assets/bottomnavbar/Chat.svg';
+        selectedActivityColor = Colors.grey[400];
       });
     } else if (_currentPage == 1) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';
         discover = 'assets/bottomnavbar/Discoverselect.svg';
         chat = 'assets/bottomnavbar/Chat.svg';
+        selectedActivityColor = Colors.grey[400];
       });
     } else if (_currentPage == 2) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';
         discover = 'assets/bottomnavbar/Discover.svg';
         chat = 'assets/bottomnavbar/Chat.svg';
+        selectedActivityColor = Colors.grey[400];
       });
     } else if (_currentPage == 3) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';
         discover = 'assets/bottomnavbar/Discover.svg';
         chat = 'assets/bottomnavbar/Chatselect.svg';
+        selectedActivityColor = Color.fromRGBO(28, 45, 65, 1);
       });
     } else if (_currentPage == 4) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';
         discover = 'assets/bottomnavbar/Discover.svg';
         chat = 'assets/bottomnavbar/Chat.svg';
+        selectedActivityColor = Colors.grey[400];
       });
     }
   }
 
+  var selectedActivityColor;
   var home = 'assets/bottomnavbar/Home.svg';
   var discover = 'assets/bottomnavbar/Discover.svg';
   var chat = 'assets/bottomnavbar/Chat.svg';
@@ -200,11 +207,9 @@ class _RootScreenState extends State<RootScreen> {
                           fontWeight: FontWeight.w400,
                           color: Colors.black))),
               BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    chat,
-                    height: 25,
-                    width: 25,
-                    allowDrawingOutsideViewBox: true,
+                  icon: Icon(
+                    Feather.bell,
+                    color: selectedActivityColor,
                   ),
                   title: Text('',
                       style: TextStyle(
