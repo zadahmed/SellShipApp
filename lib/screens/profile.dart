@@ -53,6 +53,7 @@ import 'package:numeral/numeral.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:SellShip/username.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
@@ -157,6 +158,32 @@ class _ProfilePageState extends State<ProfilePage>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     getProfileData();
     getItemData();
+
+    _tabController.addListener(() {
+      var tab = _tabController.index;
+
+      if (tab == 3) {
+        refreshreviews();
+        setState(() {
+          reviewloading = true;
+          refreshreviews();
+        });
+      }
+      if (tab == 1) {
+        setState(() {
+          orderloading = true;
+          getorders();
+        });
+      }
+
+      if (tab == 2) {
+        setState(() {
+          favouriteloading = true;
+          getfavourites();
+          getfavouritesuser();
+        });
+      }
+    });
   }
 
   var profilepicture;
@@ -198,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage>
   bool profileloading = true;
 
   getfavourites() async {
-    favourites.clear();
+    if (favourites != null) favourites.clear();
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
@@ -567,7 +594,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                     MainAxisAlignment.start,
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start),
-                                            firstname != null
+                                            username != null
                                                 ? Padding(
                                                     padding: EdgeInsets.only(
                                                       left: 25,
@@ -575,10 +602,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                     child: Column(
                                                         children: [
                                                           Text(
-                                                            '@' +
-                                                                firstname +
-                                                                ' ' +
-                                                                lastname,
+                                                            '@' + username,
                                                             style: TextStyle(
                                                                 fontFamily:
                                                                     'Helvetica',
@@ -596,11 +620,82 @@ class _ProfilePageState extends State<ProfilePage>
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
                                                                 .start))
-                                                : Container(
-                                                    child: SpinKitChasingDots(
-                                                        color: Colors
-                                                            .deepOrangeAccent),
-                                                  ),
+                                                : Column(
+                                                    children: [
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                            left: 20,
+                                                          ),
+                                                          child: Column(
+                                                              children: [
+                                                                Text(
+                                                                  '@Username',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          22.0,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ],
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start)),
+                                                      InkWell(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          Username(
+                                                                    userid:
+                                                                        userid,
+                                                                  ),
+                                                                ));
+                                                          },
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 20,
+                                                                    top: 2),
+                                                            child: Container(
+                                                                height: 40,
+                                                                width: 130,
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    border: Border.all(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        width:
+                                                                            2),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  'Set Username',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ))),
+                                                          ))
+                                                    ],
+                                                  )
                                           ]))),
                             )
                           ],
@@ -839,22 +934,22 @@ class _ProfilePageState extends State<ProfilePage>
                                   child: TabBar(
                                     controller: _tabController,
                                     labelStyle: tabTextStyle,
-                                    onTap: (tab) {
-                                      if (tab == 3) {
-                                        refreshreviews();
-                                      }
-                                      if (tab == 1) {
-                                        getorders();
-                                      }
-
-                                      if (tab == 2) {
-                                        setState(() {
-                                          favouriteloading = true;
-                                          getfavourites();
-                                          getfavouritesuser();
-                                        });
-                                      }
-                                    },
+//                                    onTap: (tab) {
+//                                      if (tab == 3) {
+//                                        refreshreviews();
+//                                      }
+//                                      if (tab == 1) {
+//                                        getorders();
+//                                      }
+//
+//                                      if (tab == 2) {
+//                                        setState(() {
+//                                          favouriteloading = true;
+//                                          getfavourites();
+//                                          getfavouritesuser();
+//                                        });
+//                                      }
+//                                    },
                                     unselectedLabelStyle: TextStyle(
                                       fontSize: 16,
                                       color: Colors.black,
@@ -1033,6 +1128,16 @@ class _ProfilePageState extends State<ProfilePage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 36, top: 10, bottom: 10, right: 36),
+            child: Text(
+              favouritelist.length.toString() + ' Favourites',
+              style: TextStyle(
+                  fontFamily: 'Helvetica',
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
           favouriteloading == false
               ? favouritelist.isNotEmpty
                   ? Flexible(
@@ -1298,7 +1403,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       ),
                                       width: MediaQuery.of(context).size.width /
                                               2 -
-                                          30,
+                                          40,
                                       height: 150.0,
                                     ),
                                     Padding(
@@ -1308,7 +1413,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     Container(
                                       width: MediaQuery.of(context).size.width /
                                               2 -
-                                          30,
+                                          40,
                                       height: 150.0,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
@@ -1498,9 +1603,11 @@ class _ProfilePageState extends State<ProfilePage>
               orderslist.sort((a, b) {
                 return a.compareTo(b);
               });
+              orderloading = false;
             });
           } else {
             orderslist = [];
+            orderloading = false;
           }
         } else {
           setState(() {
@@ -1520,170 +1627,245 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget getOrders(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 36, top: 10, bottom: 10, right: 36),
-          child: Text(
-            orderslist.length.toString() + ' Orders',
-            style: TextStyle(
-                fontFamily: 'Helvetica',
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: orderslist.length,
-              itemBuilder: (BuildContext ctxt, int index) {
-                return new Container(
-                    child: Padding(
-                        padding: EdgeInsets.only(
-                            left: 16, top: 5, bottom: 5, right: 16),
-                        child: ListTile(
-                          onTap: () async {
-                            if (orderslist[index].orderstatus == 'Sold') {
-                              var countr = await storage.read(key: 'country');
+    return orderloading == false
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    EdgeInsets.only(left: 36, top: 10, bottom: 10, right: 36),
+                child: Text(
+                  orderslist.length.toString() + ' Orders',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              orderslist.isNotEmpty
+                  ? Expanded(
+                      child: ListView.builder(
+                          itemCount: orderslist.length,
+                          itemBuilder: (BuildContext ctxt, int index) {
+                            return new Container(
+                                child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 16, top: 5, bottom: 5, right: 16),
+                                    child: ListTile(
+                                      onTap: () async {
+                                        if (orderslist[index].orderstatus ==
+                                            'Sold') {
+                                          var countr = await storage.read(
+                                              key: 'country');
 
-                              if (countr.trim().toLowerCase() ==
-                                  'united arab emirates') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => OrderBuyerUAE(
-                                          messageid: item[index].description,
-                                          item: item[index])),
-                                );
-                              } else if (countr.trim().toLowerCase() ==
-                                  'united states') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => OrderBuyer(
-                                          messageid: item[index].description,
-                                          item: item[index])),
-                                );
-                              }
-                            } else {
-                              var countr = await storage.read(key: 'country');
+                                          if (countr.trim().toLowerCase() ==
+                                              'united arab emirates') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderBuyerUAE(
+                                                          messageid: item[index]
+                                                              .description,
+                                                          item: item[index])),
+                                            );
+                                          } else if (countr
+                                                  .trim()
+                                                  .toLowerCase() ==
+                                              'united states') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderBuyer(
+                                                          messageid: item[index]
+                                                              .description,
+                                                          item: item[index])),
+                                            );
+                                          }
+                                        } else {
+                                          var countr = await storage.read(
+                                              key: 'country');
 
-                              if (countr.trim().toLowerCase() ==
-                                  'united arab emirates') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => OrderSellerUAE(
-                                          messageid: item[index].description,
-                                          item: item[index])),
-                                );
-                              } else if (countr.trim().toLowerCase() ==
-                                  'united states') {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => OrderSeller(
-                                          messageid: item[index].description,
-                                          item: item[index])),
-                                );
-                              }
-                            }
-                          },
-                          leading: Container(
-                            height: 140,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: CachedNetworkImage(
-                                  imageUrl: orderslist[index].image,
-                                  fit: BoxFit.cover,
-                                )),
+                                          if (countr.trim().toLowerCase() ==
+                                              'united arab emirates') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderSellerUAE(
+                                                          messageid: item[index]
+                                                              .description,
+                                                          item: item[index])),
+                                            );
+                                          } else if (countr
+                                                  .trim()
+                                                  .toLowerCase() ==
+                                              'united states') {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OrderSeller(
+                                                          messageid: item[index]
+                                                              .description,
+                                                          item: item[index])),
+                                            );
+                                          }
+                                        }
+                                      },
+                                      leading: Container(
+                                        height: 140,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: CachedNetworkImage(
+                                              imageUrl: orderslist[index].image,
+                                              fit: BoxFit.cover,
+                                            )),
+                                      ),
+                                      trailing: Container(
+                                        height: 30,
+                                        width: 80,
+                                        decoration: BoxDecoration(
+                                            color:
+                                                orderslist[index].orderstatus ==
+                                                        'Sold'
+                                                    ? Colors.deepOrangeAccent
+                                                        .withOpacity(0.9)
+                                                    : Colors.black,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: Center(
+                                            child: Text(
+                                          orderslist[index].orderstatus,
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
+                                        )),
+                                      ),
+                                      title: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                              width: 250,
+                                              child: Text(
+                                                orderslist[index].name,
+                                                overflow: TextOverflow.fade,
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ]),
+                                      subtitle: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                                currency +
+                                                    ' ' +
+                                                    orderslist[index].price,
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                    color: Colors
+                                                        .deepOrangeAccent
+                                                        .withOpacity(1))),
+                                            SizedBox(
+                                              height: 2,
+                                            ),
+                                          ]),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0.0, horizontal: 16.0),
+                                    )));
+                          }),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Center(
+                          child: Text(
+                            'View your Orders here ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                            ),
                           ),
-                          trailing: Container(
-                            height: 30,
-                            width: 80,
-                            decoration: BoxDecoration(
-                                color: orderslist[index].orderstatus == 'Sold'
-                                    ? Colors.deepOrangeAccent.withOpacity(0.9)
-                                    : Colors.black,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Center(
-                                child: Text(
-                              orderslist[index].orderstatus,
-                              style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            )),
+                        ),
+                        Expanded(
+                            child: Image.asset(
+                          'assets/messages.png',
+                          fit: BoxFit.fitWidth,
+                        ))
+                      ],
+                    )
+            ],
+          )
+        : Container(
+            width: double.infinity,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.grey[100],
+              child: ListView(
+                children: [0, 1, 2, 3, 4, 5, 6]
+                    .map((_) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                width:
+                                    MediaQuery.of(context).size.width / 2 - 30,
+                                height: 150.0,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                              ),
+                              Container(
+                                width:
+                                    MediaQuery.of(context).size.width / 2 - 30,
+                                height: 150.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ],
                           ),
-                          title: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  width: 250,
-                                  child: Text(
-                                    orderslist[index].name,
-                                    overflow: TextOverflow.fade,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black),
-                                  ),
-                                ),
-                              ]),
-                          subtitle: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(currency + ' ' + orderslist[index].price,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 14,
-                                        color: Colors.deepOrangeAccent
-                                            .withOpacity(1))),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                              ]),
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 0.0, horizontal: 16.0),
-                        )));
-              }),
-        ),
-      ],
-    );
-//    : Column(
-//    crossAxisAlignment: CrossAxisAlignment.start,
-//    children: <Widget>[
-//    SizedBox(
-//    height: 15,
-//    ),
-//    Center(
-//    child: Text(
-//    'View your Reviews here ',
-//    textAlign: TextAlign.center,
-//    style: TextStyle(
-//    fontFamily: 'Helvetica',
-//    fontSize: 16,
-//    ),
-//    ),
-//    ),
-//    Expanded(
-//    child: Image.asset(
-//    'assets/messages.png',
-//    fit: BoxFit.fitWidth,
-//    ))
-//    ],
-//    );
+                        ))
+                    .toList(),
+              ),
+            ),
+          );
   }
 
   void Loginfunc() async {
@@ -2169,6 +2351,7 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   refreshreviews() async {
+    reviews.clear();
     userid = await storage.read(key: 'userid');
     if (userid != null) {
       var messageurl = 'https://api.sellship.co/api/getreviews/' + userid;
@@ -2200,11 +2383,13 @@ class _ProfilePageState extends State<ProfilePage>
         List<Reviews> jsoninreverse = inReverse.toList();
 
         setState(() {
+          reviewloading = false;
           reviews = jsoninreverse;
         });
       }
     } else {
       setState(() {
+        reviewloading = false;
         reviews = [];
       });
     }
@@ -2213,276 +2398,349 @@ class _ProfilePageState extends State<ProfilePage>
 
   List<Reviews> reviews = List<Reviews>();
 
+  bool orderloading = true;
+  bool reviewloading = true;
+
   Widget reviewslist(BuildContext context) {
-    return reviews.isNotEmpty
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding:
-                    EdgeInsets.only(left: 36, top: 20, bottom: 10, right: 36),
-                child: Text(
-                  reviews.length.toString() + ' Reviews',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: reviews.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return new Container(
-                          child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: 16, top: 5, bottom: 5, right: 16),
-                              child: ListTile(
-                                dense: true,
-                                leading: Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
-                                      child: reviews[index]
-                                              .profilepicture
-                                              .isNotEmpty
-                                          ? CachedNetworkImage(
-                                              imageUrl:
-                                                  reviews[index].profilepicture,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Image.asset(
-                                              'assets/personplaceholder.png',
-                                              fit: BoxFit.fitWidth,
-                                            )),
-                                ),
-                                trailing: Padding(
-                                    padding: EdgeInsets.only(top: 5),
-                                    child: Text(
-                                      reviews[index].date,
-                                      style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 10,
-                                      ),
-                                    )),
-                                title: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                        width: 250,
-                                        child: Text(
-                                          reviews[index].username,
-                                          overflow: TextOverflow.fade,
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 2,
-                                      ),
-                                      Row(
-                                        children: [
-                                          SmoothStarRating(
-                                              allowHalfRating: true,
-                                              starCount: 5,
-                                              isReadOnly: true,
-                                              rating: reviews[index].rating,
-                                              size: 16.0,
-                                              color: Color.fromRGBO(
-                                                  255, 115, 0, 1),
-                                              borderColor: Colors.blueGrey,
-                                              spacing: 0.0),
-                                          SizedBox(
-                                            width: 4,
-                                          ),
-                                          Text(
-                                            reviews[index].rating.toString(),
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black),
-                                          )
-                                        ],
-                                      )
-                                    ]),
-                                subtitle: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(reviews[index].message,
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 14,
-                                              color: Colors.black
-                                                  .withOpacity(0.6))),
-                                      SizedBox(
-                                        height: 2,
-                                      ),
-                                    ]),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 0.0, horizontal: 16.0),
-                              )));
-                    }),
-              ),
-            ],
-          )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 15,
-              ),
-              Center(
-                child: Text(
-                  'View your Reviews here ',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16,
+    return reviewloading == false
+        ? reviews.isNotEmpty
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 36, top: 20, bottom: 10, right: 36),
+                    child: Text(
+                      reviews.length.toString() + ' Reviews',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: reviews.length,
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          return new Container(
+                              child: Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 16, top: 5, bottom: 5, right: 16),
+                                  child: ListTile(
+                                    dense: true,
+                                    leading: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(25),
+                                          child: reviews[index]
+                                                  .profilepicture
+                                                  .isNotEmpty
+                                              ? CachedNetworkImage(
+                                                  imageUrl: reviews[index]
+                                                      .profilepicture,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Image.asset(
+                                                  'assets/personplaceholder.png',
+                                                  fit: BoxFit.fitWidth,
+                                                )),
+                                    ),
+                                    trailing: Padding(
+                                        padding: EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          reviews[index].date,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 10,
+                                          ),
+                                        )),
+                                    title: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            width: 250,
+                                            child: Text(
+                                              reviews[index].username,
+                                              overflow: TextOverflow.fade,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SmoothStarRating(
+                                                  allowHalfRating: true,
+                                                  starCount: 5,
+                                                  isReadOnly: true,
+                                                  rating: reviews[index].rating,
+                                                  size: 16.0,
+                                                  color: Color.fromRGBO(
+                                                      255, 115, 0, 1),
+                                                  borderColor: Colors.blueGrey,
+                                                  spacing: 0.0),
+                                              SizedBox(
+                                                width: 4,
+                                              ),
+                                              Text(
+                                                reviews[index]
+                                                    .rating
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          )
+                                        ]),
+                                    subtitle: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(reviews[index].message,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 14,
+                                                  color: Colors.black
+                                                      .withOpacity(0.6))),
+                                          SizedBox(
+                                            height: 2,
+                                          ),
+                                        ]),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0.0, horizontal: 16.0),
+                                  )));
+                        }),
+                  ),
+                ],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                    child: Text(
+                      'View your Reviews here ',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: Image.asset(
+                    'assets/messages.png',
+                    fit: BoxFit.fitWidth,
+                  ))
+                ],
+              )
+        : Container(
+            width: double.infinity,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.grey[100],
+              child: ListView(
+                children: [0, 1, 2, 3, 4, 5, 6]
+                    .map((_) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                width:
+                                    MediaQuery.of(context).size.width / 2 - 30,
+                                height: 150.0,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                              ),
+                              Container(
+                                width:
+                                    MediaQuery.of(context).size.width / 2 - 30,
+                                height: 150.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
               ),
-              Expanded(
-                  child: Image.asset(
-                'assets/messages.png',
-                fit: BoxFit.fitWidth,
-              ))
-            ],
+            ),
           );
   }
 
   Widget storeitems(BuildContext context) {
-    return item.isNotEmpty
-        ? GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1,
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 36, top: 10, bottom: 10, right: 36),
+            child: Text(
+              item.length.toString() + ' Items',
+              style: TextStyle(
+                  fontFamily: 'Helvetica',
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold),
             ),
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Details(
-                              itemid: item[index].itemid,
-                              sold: item[index].sold,
-                            )),
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: 195,
-                        width: MediaQuery.of(context).size.width,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: CachedNetworkImage(
-                            fadeInDuration: Duration(microseconds: 5),
-                            imageUrl: item[index].image,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) =>
-                                SpinKitChasingDots(color: Colors.deepOrange),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                        ),
+          ),
+          Expanded(
+              child: item.isNotEmpty
+                  ? GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1,
                       ),
-                      Align(
-                          alignment: Alignment.topRight,
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditItem(
-                                                itemid: item[index].itemid,
-                                              )),
-                                    );
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 18,
-                                    backgroundColor: Colors.white,
-                                    child: Icon(
-                                      Feather.edit_2,
-                                      color: Colors.blueGrey,
-                                      size: 16,
-                                    ),
-                                  )))),
-                      item[index].sold == true
-                          ? Positioned(
-                              top: 60,
-                              child: Container(
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.4),
-                                ),
-                                width: 210,
-                                child: Center(
-                                  child: Text(
-                                    'Sold',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      color: Colors.white,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Details(
+                                        itemid: item[index].itemid,
+                                        sold: item[index].sold,
+                                      )),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: Stack(
+                              children: <Widget>[
+                                Container(
+                                  height: 195,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: CachedNetworkImage(
+                                      fadeInDuration: Duration(microseconds: 5),
+                                      imageUrl: item[index].image,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          SpinKitChasingDots(
+                                              color: Colors.deepOrange),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
                                     ),
                                   ),
                                 ),
-                              ))
-                          : Container(),
-                    ],
-                  ),
-                ),
-              );
-            },
-            itemCount: item.length,
-          )
-        : Container(
-            child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 10,
-              ),
-              Center(
-                child: Text(
-                    'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                    )),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Expanded(
-                  child: Image.asset(
-                'assets/little_theologians_4x.png',
-                fit: BoxFit.fitWidth,
-              ))
-            ],
-          ));
+                                Align(
+                                    alignment: Alignment.topRight,
+                                    child: Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EditItem(
+                                                          itemid: item[index]
+                                                              .itemid,
+                                                        )),
+                                              );
+                                            },
+                                            child: CircleAvatar(
+                                              radius: 18,
+                                              backgroundColor: Colors.white,
+                                              child: Icon(
+                                                Feather.edit_2,
+                                                color: Colors.blueGrey,
+                                                size: 16,
+                                              ),
+                                            )))),
+                                item[index].sold == true
+                                    ? Positioned(
+                                        top: 60,
+                                        child: Container(
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.4),
+                                          ),
+                                          width: 210,
+                                          child: Center(
+                                            child: Text(
+                                              'Sold',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ))
+                                    : Container(),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: item.length,
+                    )
+                  : Container(
+                      child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Center(
+                          child: Text(
+                              'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 16,
+                              )),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Expanded(
+                            child: Image.asset(
+                          'assets/little_theologians_4x.png',
+                          fit: BoxFit.fitWidth,
+                        ))
+                      ],
+                    )))
+        ]);
   }
 
   final int _numPages = 2;
@@ -2572,6 +2830,12 @@ class _ProfilePageState extends State<ProfilePage>
           sol = [];
         }
 
+        var usernam = profilemap['username'];
+        if (usernam != null) {
+        } else {
+          usernam = null;
+        }
+
         var profilepic = profilemap['profilepicture'];
         if (profilepic != null) {
           print(profilepic);
@@ -2623,6 +2887,7 @@ class _ProfilePageState extends State<ProfilePage>
               confirmedemail = confirmedemai;
               confirmedphone = confirmedphon;
               profilepicture = profilepic;
+              username = usernam;
             });
           }
 
@@ -2685,6 +2950,7 @@ class _ProfilePageState extends State<ProfilePage>
     }
   }
 
+  var username;
   double reviewrating;
 
   void getItemData() async {
