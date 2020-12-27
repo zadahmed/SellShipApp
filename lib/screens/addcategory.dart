@@ -40,7 +40,6 @@ class _AddCategoryState extends State<AddCategory> {
     'Handmade',
     'Books',
     'Motors',
-    'Property',
     'Other'
   ];
 

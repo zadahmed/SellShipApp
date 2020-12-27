@@ -845,7 +845,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  OrderDetailUAE(
+                                                                  OrderSellerUAE(
                                                                       messageid:
                                                                           messageid,
                                                                       item:
@@ -859,7 +859,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  OrderDetail(
+                                                                  OrderSeller(
                                                                       messageid:
                                                                           messageid,
                                                                       item:

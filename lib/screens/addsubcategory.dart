@@ -184,13 +184,6 @@ class _AddSubCategoryState extends State<AddSubCategory> {
           'Other'
         ];
       });
-    } else if (category == 'Property') {
-      setState(() {
-        subcategories = [
-          'Sale',
-          'Rent',
-        ];
-      });
     } else if (category == 'Other') {
       setState(() {
         subcategories = [

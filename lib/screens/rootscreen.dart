@@ -150,6 +150,7 @@ class _RootScreenState extends State<RootScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: new ThemeData(fontFamily: 'Helvetica'),
         title: 'SellShip',
         home: Scaffold(
           bottomNavigationBar: BottomNavigationBar(

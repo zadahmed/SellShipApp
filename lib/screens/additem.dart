@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/screens/addlocation.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:SellShip/screens/addbrans.dart';
 import 'package:SellShip/screens/addcategory.dart';
@@ -14,16 +15,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:geocoding/geocoding.dart' as Geocoding;
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart' as Location;
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
 import 'package:random_string/random_string.dart';
-import 'package:search_map_place/search_map_place.dart' as SearchMap;
+
 import 'package:shimmer/shimmer.dart';
+import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 
 class AddItem extends StatefulWidget {
   AddItem({Key key}) : super(key: key);
@@ -38,10 +40,28 @@ class _AddItemState extends State<AddItem> {
   void initState() {
     super.initState();
     getuser();
+    focusNode = FocusNode();
   }
 
   var currency;
   var metric;
+  LatLng _lastMapPosition;
+
+  List<String> photoguidelinesimages = [
+    'assets/photoguidelines/7.jpeg',
+    'assets/photoguidelines/8.jpeg',
+    'assets/photoguidelines/1.jpeg',
+    'assets/photoguidelines/2.jpeg',
+    'assets/photoguidelines/3.jpeg',
+    'assets/photoguidelines/4.jpeg',
+    'assets/photoguidelines/5.jpeg',
+    'assets/photoguidelines/6.jpeg',
+  ];
+
+  String city;
+  String country;
+
+  int quantity = 0;
 
   getuser() async {
     var countr = await storage.read(key: 'country');
@@ -129,6 +149,7 @@ class _AddItemState extends State<AddItem> {
   GlobalKey _toolTipKey = GlobalKey();
   LatLng position;
 
+  String locdetials;
   final businessnameController = TextEditingController();
 
   final businessdescriptionController = TextEditingController();
@@ -171,13 +192,31 @@ class _AddItemState extends State<AddItem> {
   String _selectedsubCategory;
   String _selectedsubsubCategory;
 
-  List<String> weights = ['2', '5', '10', '20', '50', '100'];
+  List<String> weights = [
+    '5',
+    '10',
+    '20',
+    '50',
+  ];
+
+  bool quantityswitch = false;
 
   int _selectedweight = -1;
 
   String _selectedcondition;
 
   var totalpayable;
+
+  FocusNode focusNode;
+
+  void showKeyboard() {
+    focusNode.requestFocus();
+  }
+
+  void dismissKeyboard() {
+    focusNode.unfocus();
+  }
+
   var fees;
 
   List<String> brands = List<String>();
@@ -209,89 +248,14 @@ class _AddItemState extends State<AddItem> {
 
     setState(() {
       images = resultList;
+      percentindictor = 0.3;
     });
   }
 
-  GoogleMapController controller;
-  LatLng _lastMapPosition;
-
-  Set<Marker> _markers = Set();
   bool meetupcheckbox = false;
   bool shippingcheckbox = false;
   var brand;
   final businesspricecontroller = TextEditingController();
-
-  void mapCreated(GoogleMapController controlle) {
-    setState(() {
-      controller = controlle;
-    });
-  }
-
-  void _onCameraMove(CameraPosition position) {
-    setState(() {
-      _lastMapPosition = position.target;
-    });
-  }
-
-  String city;
-  String country;
-
-  _handleTap(LatLng point) async {
-    if (_markers.isNotEmpty) {
-      _markers.remove(_markers.last);
-      setState(() {
-        _markers.add(Marker(
-          markerId: MarkerId(point.toString()),
-          position: point,
-          infoWindow: InfoWindow(
-            title: 'Location of Item',
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        ));
-
-        _lastMapPosition = point;
-      });
-
-      List<Geocoding.Placemark> placemarks =
-          await Geocoding.placemarkFromCoordinates(
-              position.latitude, position.longitude,
-              localeIdentifier: 'en');
-
-      Geocoding.Placemark place = placemarks[0];
-      var cit = place.administrativeArea;
-      var countr = place.country;
-      setState(() {
-        city = cit;
-        country = countr;
-      });
-    } else {
-      setState(() {
-        _markers.add(Marker(
-          markerId: MarkerId(point.toString()),
-          position: point,
-          infoWindow: InfoWindow(
-            title: 'Location of Item',
-          ),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        ));
-
-        _lastMapPosition = point;
-        print(_lastMapPosition);
-      });
-      List<Geocoding.Placemark> placemarks =
-          await Geocoding.placemarkFromCoordinates(
-              position.latitude, position.longitude,
-              localeIdentifier: 'en');
-
-      Geocoding.Placemark place = placemarks[0];
-      var cit = place.administrativeArea;
-      var countr = place.country;
-      setState(() {
-        city = cit;
-        country = countr;
-      });
-    }
-  }
 
   @override
   void dispose() {
@@ -303,6 +267,8 @@ class _AddItemState extends State<AddItem> {
   int itemweight;
 
   String categoryinfo;
+
+  double percentindictor = 0.0;
   bool loading;
 
   @override
@@ -310,16 +276,15 @@ class _AddItemState extends State<AddItem> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
-      backgroundColor: Color.fromRGBO(242, 244, 248, 1),
+      backgroundColor: Color.fromRGBO(242, 244, 248, 1).withOpacity(0.4),
       appBar: AppBar(
         title: Center(
           child: Text(
-            "Upload an Item",
+            "Add an Item",
             textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 fontFamily: 'Helvetica',
-                fontSize: 16,
+                fontSize: 20,
                 color: Colors.black,
                 fontWeight: FontWeight.bold),
           ),
@@ -328,6 +293,21 @@ class _AddItemState extends State<AddItem> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.white),
       ),
+      bottomNavigationBar: Padding(
+          padding: EdgeInsets.only(left: 15, bottom: 5, top: 10, right: 15),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            child: LinearPercentIndicator(
+              width: MediaQuery.of(context).size.width - 50,
+              lineHeight: 8.0,
+              percent: percentindictor,
+              progressColor: Colors.orange,
+            ),
+          )),
       body: loading == false
           ? GestureDetector(
               onTap: () {
@@ -338,26 +318,182 @@ class _AddItemState extends State<AddItem> {
                       slivers: <Widget>[
                         SliverToBoxAdapter(
                           child: Container(
-                            height: 205,
+                            height: 229,
                             child: Column(
                               children: <Widget>[
                                 SizedBox(
                                   height: 20,
                                 ),
                                 Padding(
-                                  padding:
-                                      EdgeInsets.only(left: 15, bottom: 10),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      'Upload Images',
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                  ),
-                                ),
+                                    padding:
+                                        EdgeInsets.only(left: 15, bottom: 5),
+                                    child: Row(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            'Upload Images',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                                Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 15, bottom: 10, right: 15),
+                                    child: Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              useRootNavigator: false,
+                                              isScrollControlled: true,
+                                              builder: (_) {
+                                                return DraggableScrollableSheet(
+                                                  expand: false,
+                                                  initialChildSize: 0.7,
+                                                  builder: (_, controller) {
+                                                    return Container(
+                                                        height: 350.0,
+                                                        color:
+                                                            Color(0xFF737373),
+                                                        child: Container(
+                                                            decoration: new BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius: new BorderRadius
+                                                                        .only(
+                                                                    topLeft: const Radius
+                                                                            .circular(
+                                                                        20.0),
+                                                                    topRight: const Radius
+                                                                            .circular(
+                                                                        20.0))),
+                                                            child: Column(
+                                                              children: [
+                                                                Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 15,
+                                                                    top: 10,
+                                                                  ),
+                                                                  child: Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .centerLeft,
+                                                                      child: InkWell(
+                                                                          child: Icon(Icons.clear),
+                                                                          onTap: () {
+                                                                            Navigator.pop(context);
+                                                                          })),
+                                                                ),
+                                                                Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .only(
+                                                                    left: 15,
+                                                                    top: 10,
+                                                                  ),
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Text(
+                                                                      'Eye-catching photos help sell your item quicker.',
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              'Helvetica',
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w800),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              15,
+                                                                          top:
+                                                                              10,
+                                                                          bottom:
+                                                                              15),
+                                                                  child: Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Text(
+                                                                      'Check out some of our favorites!',
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  child: GridView
+                                                                      .builder(
+                                                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                                        mainAxisSpacing:
+                                                                            10.0,
+                                                                        crossAxisSpacing:
+                                                                            10.0,
+                                                                        crossAxisCount:
+                                                                            2,
+                                                                        childAspectRatio:
+                                                                            1),
+                                                                    itemBuilder:
+                                                                        (_, i) {
+                                                                      return Container(
+                                                                        height:
+                                                                            195,
+                                                                        width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width,
+                                                                        child: ClipRRect(
+                                                                            borderRadius: BorderRadius.circular(15),
+                                                                            child: Image.asset(
+                                                                              photoguidelinesimages[i],
+                                                                              fit: BoxFit.cover,
+                                                                            )),
+                                                                      );
+                                                                    },
+                                                                    itemCount:
+                                                                        photoguidelinesimages
+                                                                            .length,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            )));
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              'Read our photo upload tips',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 14,
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                                 Padding(
                                   padding: EdgeInsets.only(
                                     left: 15,
@@ -490,6 +626,127 @@ class _AddItemState extends State<AddItem> {
                         SliverList(
                           delegate: SliverChildListDelegate(
                             [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 15,
+                                  top: 10,
+                                ),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Category',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 5, top: 10, right: 15),
+                                child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15)),
+                                    ),
+                                    child: ListTile(
+                                        onTap: () async {
+                                          final catdetails =
+                                              await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddCategory()),
+                                          );
+                                          print(catdetails);
+                                          setState(() {
+                                            percentindictor = 0.1;
+                                            _selectedCategory =
+                                                catdetails['category'];
+                                            _selectedsubCategory =
+                                                catdetails['subcategory'];
+                                            _selectedsubsubCategory =
+                                                catdetails['subsubcategory'];
+
+                                            categoryinfo = _selectedCategory +
+                                                ' > ' +
+                                                _selectedsubCategory +
+                                                ' > ' +
+                                                _selectedsubsubCategory;
+                                          });
+                                        },
+                                        title: categoryinfo == null
+                                            ? Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Choose your Category',
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color:
+                                                              Colors.blueGrey),
+                                                    ),
+                                                    Icon(
+                                                        Icons
+                                                            .keyboard_arrow_right,
+                                                        color:
+                                                            Colors.deepPurple)
+                                                  ],
+                                                ))
+                                            : Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2,
+                                                      child: Text(
+                                                        categoryinfo,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color: Colors
+                                                                .deepPurple),
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                        Icons
+                                                            .keyboard_arrow_right,
+                                                        color:
+                                                            Colors.deepPurple)
+                                                  ],
+                                                )))),
+                              ),
                               SizedBox(
                                 height: 5,
                               ),
@@ -500,13 +757,11 @@ class _AddItemState extends State<AddItem> {
                                 ),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Item Info',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w300),
-                                  ),
+                                  child: Text('Item Info',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700)),
                                 ),
                               ),
                               Padding(
@@ -525,6 +780,13 @@ class _AddItemState extends State<AddItem> {
                                       controller: businessnameController,
                                       autocorrect: true,
                                       enableSuggestions: true,
+                                      onChanged: (text) {
+                                        if (text.isNotEmpty) {
+                                          setState(() {
+                                            percentindictor = 0.4;
+                                          });
+                                        }
+                                      },
                                       textCapitalization:
                                           TextCapitalization.sentences,
                                       style: TextStyle(
@@ -535,9 +797,8 @@ class _AddItemState extends State<AddItem> {
                                         hintText: "Product Name",
                                         hintStyle: TextStyle(
                                             fontFamily: 'Helvetica',
-                                            fontSize: 18,
-                                            color: Colors.blueGrey,
-                                            fontWeight: FontWeight.bold),
+                                            fontSize: 16,
+                                            color: Colors.blueGrey),
                                         focusColor: Colors.black,
                                         border: InputBorder.none,
                                         focusedBorder: InputBorder.none,
@@ -572,12 +833,158 @@ class _AddItemState extends State<AddItem> {
                                         cursorColor: Color(0xFF979797),
                                         controller:
                                             businessdescriptionController,
+                                        onChanged: (text) {
+                                          if (text.isNotEmpty) {
+                                            setState(() {
+                                              percentindictor = 0.5;
+                                            });
+                                          }
+                                        },
                                         autocorrect: true,
                                         enableSuggestions: true,
                                         textCapitalization:
                                             TextCapitalization.sentences,
                                         maxLines: 6,
                                         maxLength: 1000,
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            useRootNavigator: false,
+                                            isScrollControlled: true,
+                                            builder: (_) {
+                                              return DraggableScrollableSheet(
+                                                expand: false,
+                                                initialChildSize: 0.5,
+                                                builder: (_, controller) {
+                                                  return Container(
+                                                      height: 350.0,
+                                                      color: Color(0xFF737373),
+                                                      child: Container(
+                                                          decoration: new BoxDecoration(
+                                                              color: Colors
+                                                                  .white,
+                                                              borderRadius: new BorderRadius
+                                                                      .only(
+                                                                  topLeft:
+                                                                      const Radius
+                                                                              .circular(
+                                                                          20.0),
+                                                                  topRight: const Radius
+                                                                          .circular(
+                                                                      20.0))),
+                                                          child: ListView(
+                                                            children: [
+                                                              Center(
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .warning_rounded,
+                                                                  color: Colors
+                                                                      .red,
+                                                                  size: 150,
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .only(
+                                                                  left: 15,
+                                                                  top: 10,
+                                                                ),
+                                                                child: Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Text(
+                                                                    'Attention!',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            20,
+                                                                        fontWeight:
+                                                                            FontWeight.w800),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .only(
+                                                                  left: 15,
+                                                                  top: 10,
+                                                                  bottom: 10,
+                                                                ),
+                                                                child: Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Text(
+                                                                    'Please note purchases are only accepted through the buy option in the app. Adding mobile numbers and asking for payments outside the app is strictly prohibited and is against our community guidelines in order to protect buyer and seller privacy.',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          18,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                child: InkWell(
+                                                                    child:
+                                                                        Container(
+                                                                      width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width -
+                                                                          30,
+                                                                      height:
+                                                                          50,
+                                                                      decoration: BoxDecoration(
+                                                                          color: Colors
+                                                                              .redAccent,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          boxShadow: [
+                                                                            BoxShadow(
+                                                                                color: Colors.redAccent.withOpacity(0.1),
+                                                                                blurRadius: 65.0,
+                                                                                offset: Offset(0.0, 15.0))
+                                                                          ]),
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Text(
+                                                                          "I Accept",
+                                                                          style: TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 18,
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.w300),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    onTap: () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    }),
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top: 10,
+                                                                        bottom:
+                                                                            10,
+                                                                        left:
+                                                                            10,
+                                                                        right:
+                                                                            10),
+                                                              )
+                                                            ],
+                                                          )));
+                                                },
+                                              );
+                                            },
+                                          );
+                                        },
                                         style: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 16,
@@ -608,118 +1015,123 @@ class _AddItemState extends State<AddItem> {
                                 height: 10.0,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(
-                                  left: 15,
-                                  bottom: 5,
-                                ),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Category',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, bottom: 5, top: 10, right: 15),
-                                child: Container(
-                                    padding: EdgeInsets.all(10),
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 10, right: 15),
+                                  child: Container(
+                                    padding: EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(15)),
                                     ),
-                                    child: ListTile(
-                                        onTap: () async {
-                                          final catdetails =
-                                              await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddCategory()),
-                                          );
-                                          print(catdetails);
-                                          setState(() {
-                                            _selectedCategory =
-                                                catdetails['category'];
-                                            _selectedsubCategory =
-                                                catdetails['subcategory'];
-                                            _selectedsubsubCategory =
-                                                catdetails['subsubcategory'];
-
-                                            categoryinfo = _selectedCategory +
-                                                ' > ' +
-                                                _selectedsubCategory +
-                                                ' > ' +
-                                                _selectedsubsubCategory;
-                                          });
-                                        },
-                                        title: categoryinfo == null
-                                            ? Container(
-                                                width: 200,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Text(
-                                                      'Choose your Category',
-                                                      textAlign:
-                                                          TextAlign.right,
+                                    child: SwitchListTile(
+                                      value: quantityswitch,
+                                      activeColor: Colors.deepPurple,
+                                      title: Text(
+                                        'Selling more than one of the same item?',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.blueGrey),
+                                      ),
+                                      onChanged: (value) => setState(() {
+                                        quantityswitch = value;
+                                      }),
+                                    ),
+                                  )),
+                              quantityswitch == true
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 15,
+                                          bottom: 5,
+                                          top: 10,
+                                          right: 15),
+                                      child: Container(
+                                          padding: EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                          ),
+                                          child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: 15,
+                                                    bottom: 5,
+                                                  ),
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      'Quantity of Item',
                                                       style: TextStyle(
                                                           fontFamily:
                                                               'Helvetica',
                                                           fontSize: 16,
-                                                          color: Colors
-                                                              .deepPurple),
+                                                          color:
+                                                              Colors.blueGrey),
                                                     ),
-                                                    Icon(
-                                                        Icons
-                                                            .keyboard_arrow_right,
-                                                        color:
-                                                            Colors.deepPurple)
-                                                  ],
-                                                ))
-                                            : Container(
-                                                width: 200,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      width: 200,
-                                                      child: Text(
-                                                        categoryinfo,
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 16,
-                                                            color: Colors
-                                                                .deepPurple),
-                                                      ),
-                                                    ),
-                                                    Icon(
-                                                        Icons
-                                                            .keyboard_arrow_right,
-                                                        color:
-                                                            Colors.deepPurple)
-                                                  ],
-                                                )))),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                    height: 70,
+                                                    width: 130,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        IconButton(
+                                                          icon: Icon(
+                                                              Icons.remove),
+                                                          iconSize: 16,
+                                                          color:
+                                                              Colors.deepOrange,
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              if (quantity >
+                                                                  0) {
+                                                                quantity =
+                                                                    quantity -
+                                                                        1;
+                                                              }
+                                                            });
+                                                          },
+                                                        ),
+                                                        Container(
+                                                          width: 25,
+                                                          child: Text(
+                                                            quantity.toString(),
+                                                            style: TextStyle(
+                                                                fontSize: 18),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          icon: Icon(Icons.add),
+                                                          iconSize: 16,
+                                                          color:
+                                                              Colors.deepOrange,
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              if (quantity >=
+                                                                  0) {
+                                                                quantity =
+                                                                    quantity +
+                                                                        1;
+                                                              }
+                                                            });
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ))
+                                              ])))
+                                  : Container(),
                               _selectedCategory != null
                                   ? Padding(
                                       padding: EdgeInsets.only(
@@ -770,6 +1182,8 @@ class _AddItemState extends State<AddItem> {
                                                       );
                                                       setState(() {
                                                         brand = bran;
+
+                                                        percentindictor = 0.6;
                                                       });
                                                     },
                                                     child: brand != null
@@ -826,7 +1240,7 @@ class _AddItemState extends State<AddItem> {
                                                                       fontSize:
                                                                           16,
                                                                       color: Colors
-                                                                          .deepPurple),
+                                                                          .blueGrey),
                                                                 ),
                                                                 Icon(
                                                                     Icons
@@ -864,9 +1278,9 @@ class _AddItemState extends State<AddItem> {
                                                 hintText: "Other Brand Name",
                                                 alignLabelWithHint: true,
                                                 hintStyle: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                ),
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    color: Colors.blueGrey),
                                                 focusColor: Colors.black,
                                                 border: InputBorder.none,
                                                 focusedBorder: InputBorder.none,
@@ -892,8 +1306,8 @@ class _AddItemState extends State<AddItem> {
                                     'Condition',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w300),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700),
                                   ),
                                 ),
                               ),
@@ -901,6 +1315,7 @@ class _AddItemState extends State<AddItem> {
                                   padding: EdgeInsets.only(
                                       left: 15, bottom: 5, top: 10, right: 15),
                                   child: Container(
+                                    height: 70,
                                     padding: EdgeInsets.all(20),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -916,12 +1331,13 @@ class _AddItemState extends State<AddItem> {
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.w500),
+                                                color: Colors.blueGrey),
                                           ),
                                           value: _selectedcondition,
                                           onChanged: (newValue) {
                                             setState(() {
                                               _selectedcondition = newValue;
+                                              percentindictor = 0.7;
                                             });
                                           },
                                           items: conditions.map((location) {
@@ -931,7 +1347,7 @@ class _AddItemState extends State<AddItem> {
                                                 style: TextStyle(
                                                     fontFamily: 'Helvetica',
                                                     fontSize: 16,
-                                                    color: Colors.deepPurple,
+                                                    color: Colors.black,
                                                     fontWeight:
                                                         FontWeight.w500),
                                               ),
@@ -994,11 +1410,12 @@ class _AddItemState extends State<AddItem> {
                                                   keyboardType:
                                                       TextInputType.text,
                                                   decoration: InputDecoration(
-                                                    hintText: "Size",
+                                                    hintText:
+                                                        "Choose your Size",
                                                     hintStyle: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                    ),
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.blueGrey),
                                                     focusColor: Colors.black,
                                                     border: InputBorder.none,
                                                     focusedBorder:
@@ -1014,6 +1431,110 @@ class _AddItemState extends State<AddItem> {
                                           )))))
                                   : Container(),
                               SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 15,
+                                  top: 5,
+                                  bottom: 10,
+                                ),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Item Weight',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 20, top: 4, right: 15),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: 70,
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                  ),
+                                  child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: weights.length,
+                                      itemBuilder:
+                                          (BuildContext context, int position) {
+                                        return Padding(
+                                            padding: EdgeInsets.all(5),
+                                            child: InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _selectedweight = position;
+                                                    itemweight = int.parse(
+                                                        weights[position]);
+                                                  });
+                                                },
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          width: 0.2,
+                                                          color: Colors.grey),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                      color: _selectedweight ==
+                                                              position
+                                                          ? Colors
+                                                              .deepOrangeAccent
+                                                          : Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          offset: Offset(
+                                                              0.0, 1.0), //(x,y)
+                                                          blurRadius: 6.0,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    width: 80,
+                                                    height: 10,
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          '< ' +
+                                                              weights[
+                                                                  position] +
+                                                              ' ' +
+                                                              metric,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 14,
+                                                            color:
+                                                                _selectedweight ==
+                                                                        position
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ))));
+                                      }),
+                                ),
+                              ),
+                              SizedBox(
                                 height: 5.0,
                               ),
                               Padding(
@@ -1027,8 +1548,8 @@ class _AddItemState extends State<AddItem> {
                                     'Price',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w300),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700),
                                   ),
                                 ),
                               ),
@@ -1036,6 +1557,7 @@ class _AddItemState extends State<AddItem> {
                                 padding: EdgeInsets.only(
                                     left: 15, bottom: 5, top: 10, right: 15),
                                 child: Container(
+                                  height: 85,
                                   padding: EdgeInsets.all(20),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -1043,10 +1565,12 @@ class _AddItemState extends State<AddItem> {
                                         BorderRadius.all(Radius.circular(15)),
                                   ),
                                   child: Align(
-                                    alignment: Alignment.centerLeft,
+                                    alignment: Alignment.center,
                                     child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
                                         children: <Widget>[
                                           Container(
                                             child: TextField(
@@ -1054,6 +1578,20 @@ class _AddItemState extends State<AddItem> {
                                               controller:
                                                   businesspricecontroller,
                                               onChanged: (text) {
+                                                var weightfees;
+                                                if (_selectedweight == 0) {
+                                                  weightfees = 20;
+                                                } else if (_selectedweight ==
+                                                    1) {
+                                                  weightfees = 30;
+                                                } else if (_selectedweight ==
+                                                    2) {
+                                                  weightfees = 50;
+                                                } else if (_selectedweight ==
+                                                    3) {
+                                                  weightfees = 110;
+                                                }
+
                                                 if (int.parse(
                                                         businesspricecontroller
                                                             .text) <
@@ -1064,30 +1602,38 @@ class _AddItemState extends State<AddItem> {
                                                       0) {
                                                     fees = 0;
                                                   } else {
-                                                    fees = 2.0;
+                                                    var s = 0.15 *
+                                                        int.parse(
+                                                            businesspricecontroller
+                                                                .text);
+                                                    fees = int.parse(
+                                                            businesspricecontroller
+                                                                .text) +
+                                                        s +
+                                                        weightfees;
                                                   }
                                                 } else {
-                                                  fees = 0.10 *
-                                                      int.parse(
+                                                  fees = int.parse(
                                                           businesspricecontroller
-                                                              .text);
+                                                              .text) +
+                                                      weightfees +
+                                                      0.15 *
+                                                          int.parse(
+                                                              businesspricecontroller
+                                                                  .text);
                                                 }
 
-                                                totalpayable = double.parse(
-                                                        businesspricecontroller
-                                                            .text) -
-                                                    fees;
-                                                if (totalpayable <= 0) {
-                                                  totalpayable = 0;
-                                                }
+                                                print(fees);
                                                 setState(() {
                                                   totalpayable = totalpayable;
                                                   fees = fees;
+
+                                                  percentindictor = 0.8;
                                                 });
                                               },
                                               style: TextStyle(
                                                   fontFamily: 'Helvetica',
-                                                  fontSize: 24,
+                                                  fontSize: 22,
                                                   fontWeight: FontWeight.bold),
                                               keyboardType: TextInputType
                                                   .numberWithOptions(),
@@ -1096,7 +1642,7 @@ class _AddItemState extends State<AddItem> {
 //                                                alignLabelWithHint: true,
                                                 hintStyle: TextStyle(
                                                     fontFamily: 'Helvetica',
-                                                    fontSize: 24,
+                                                    fontSize: 22,
                                                     fontWeight:
                                                         FontWeight.bold),
                                                 focusColor: Colors.black,
@@ -1127,8 +1673,9 @@ class _AddItemState extends State<AddItem> {
                                         padding: EdgeInsets.all(20),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15)),
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(15),
+                                              topLeft: Radius.circular(15)),
                                         ),
                                         child: Align(
                                             alignment: Alignment.centerLeft,
@@ -1141,17 +1688,19 @@ class _AddItemState extends State<AddItem> {
                                                   width: 155,
                                                   child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                        MainAxisAlignment.start,
                                                     children: <Widget>[
                                                       Text(
-                                                        'Selling fee (10%)',
+                                                        'Listing Price',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Helvetica',
                                                             fontSize: 16,
                                                             color:
                                                                 Colors.black),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
                                                       ),
                                                       GestureDetector(
                                                         onTap: () {
@@ -1221,16 +1770,14 @@ class _AddItemState extends State<AddItem> {
                               fees != null
                                   ? Padding(
                                       padding: EdgeInsets.only(
-                                          left: 15,
-                                          bottom: 5,
-                                          top: 4,
-                                          right: 15),
+                                          left: 15, bottom: 5, right: 15),
                                       child: Container(
                                         padding: EdgeInsets.all(20),
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15)),
+                                          borderRadius: BorderRadius.only(
+                                              bottomRight: Radius.circular(15),
+                                              bottomLeft: Radius.circular(15)),
                                         ),
                                         child: Align(
                                             alignment: Alignment.centerLeft,
@@ -1247,10 +1794,13 @@ class _AddItemState extends State<AddItem> {
                                                       color: Colors.black),
                                                 ),
                                                 Text(
-                                                  currency +
-                                                      ' ' +
-                                                      totalpayable
-                                                          .toStringAsFixed(2),
+                                                  businesspricecontroller
+                                                          .text.isNotEmpty
+                                                      ? currency +
+                                                          ' ' +
+                                                          businesspricecontroller
+                                                              .text
+                                                      : '0',
                                                   style: TextStyle(
                                                       fontFamily: 'Helvetica',
                                                       fontSize: 18,
@@ -1272,134 +1822,14 @@ class _AddItemState extends State<AddItem> {
                                     'Location',
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w300),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700),
                                   ),
                                 ),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: 15, bottom: 5, top: 4, right: 15),
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15)),
-                                  ),
-                                  child: SearchMap.SearchMapPlaceWidget(
-                                    apiKey:
-                                        'AIzaSyAL0gczX37-cNVHC_4aV6lWE3RSNqeamf4',
-                                    language: 'en',
-                                    location: position,
-                                    hasClearButton: true,
-                                    radius: 10000,
-                                    onSelected: (SearchMap.Place places) async {
-                                      final geolocations =
-                                          await places.geolocation;
-
-                                      controller.animateCamera(
-                                          CameraUpdate.newLatLng(
-                                              geolocations.coordinates));
-                                      controller.animateCamera(
-                                          CameraUpdate.newLatLngBounds(
-                                              geolocations.bounds, 0));
-
-                                      setState(() {
-                                        position = geolocations.coordinates;
-                                      });
-
-                                      List<Geocoding.Placemark> placemarks =
-                                          await Geocoding
-                                              .placemarkFromCoordinates(
-                                                  position.latitude,
-                                                  position.longitude,
-                                                  localeIdentifier: 'en');
-
-                                      Geocoding.Placemark place = placemarks[0];
-                                      var cit = place.administrativeArea;
-                                      var countr = place.country;
-                                      setState(() {
-                                        city = cit;
-                                        country = countr;
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, bottom: 5, top: 4, right: 15),
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15)),
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      position != null
-                                          ? Container(
-                                              height: 350,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: GoogleMap(
-                                                initialCameraPosition:
-                                                    CameraPosition(
-                                                        target: position,
-                                                        zoom: 18.0,
-                                                        bearing: 70),
-                                                onMapCreated: mapCreated,
-                                                onCameraMove: _onCameraMove,
-                                                onTap: _handleTap,
-                                                markers: _markers,
-                                                zoomGesturesEnabled: true,
-                                                myLocationEnabled: true,
-                                                myLocationButtonEnabled: true,
-                                                compassEnabled: true,
-                                                gestureRecognizers: Set()
-                                                  ..add(Factory<
-                                                          EagerGestureRecognizer>(
-                                                      () =>
-                                                          EagerGestureRecognizer())),
-                                              ),
-                                            )
-                                          : Text(
-                                              'Oops! Something went wrong. \n Please try again',
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: 15,
-                                  top: 15,
-                                  bottom: 10,
-                                ),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Delivery Option',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, bottom: 5, top: 4, right: 15),
+                                    left: 15, bottom: 5, top: 10, right: 15),
                                 child: Container(
                                     padding: EdgeInsets.all(10),
                                     decoration: BoxDecoration(
@@ -1407,173 +1837,101 @@ class _AddItemState extends State<AddItem> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(15)),
                                     ),
-                                    child: Column(children: <Widget>[
-                                      CheckboxListTile(
-                                        title: const Text('Meetup',
-                                            style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                            )),
-                                        value: meetupcheckbox,
-                                        onChanged: (bool value) {
+                                    child: ListTile(
+                                        onTap: () async {
+                                          final locationdetails =
+                                              await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddLocation()),
+                                          );
+                                          print(locationdetails);
+
                                           setState(() {
-                                            meetupcheckbox = value;
+                                            percentindictor = 0.9;
+                                            city = locationdetails['city'];
+                                            country =
+                                                locationdetails['country'];
+                                            _lastMapPosition = locationdetails[
+                                                'lastmapposition'];
+
+                                            locdetials = country + ' > ' + city;
                                           });
                                         },
-                                        checkColor: Colors.deepOrange,
-                                        activeColor: Colors.transparent,
-                                      ),
-                                      CheckboxListTile(
-                                        title: const Text(
-                                          'Shipping',
-                                          style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        value: shippingcheckbox,
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            shippingcheckbox = value;
-                                          });
-                                        },
-                                        checkColor: Colors.deepOrange,
-                                        activeColor: Colors.transparent,
-                                      ),
-                                    ])),
+                                        title: locdetials == null
+                                            ? Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Choose your Location',
+                                                      textAlign:
+                                                          TextAlign.right,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors
+                                                              .deepPurple),
+                                                    ),
+                                                    Icon(
+                                                        Icons
+                                                            .keyboard_arrow_right,
+                                                        color:
+                                                            Colors.deepPurple)
+                                                  ],
+                                                ))
+                                            : Container(
+                                                width: MediaQuery.of(context)
+                                                            .size
+                                                            .width /
+                                                        2 +
+                                                    50,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Container(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              2,
+                                                      child: Text(
+                                                        locdetials,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color: Colors
+                                                                .deepPurple),
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                        Icons
+                                                            .keyboard_arrow_right,
+                                                        color:
+                                                            Colors.deepPurple)
+                                                  ],
+                                                )))),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 10.0,
                               ),
-                              shippingcheckbox == true
-                                  ? Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 15,
-                                        top: 5,
-                                        bottom: 10,
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          'Item Weight',
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w300),
-                                        ),
-                                      ),
-                                    )
-                                  : Container(),
-                              shippingcheckbox == true
-                                  ? Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 15,
-                                          bottom: 20,
-                                          top: 4,
-                                          right: 15),
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 100,
-                                        padding: EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15)),
-                                        ),
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: weights.length,
-                                            itemBuilder: (BuildContext context,
-                                                int position) {
-                                              return Padding(
-                                                  padding: EdgeInsets.all(5),
-                                                  child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          _selectedweight =
-                                                              position;
-                                                          itemweight =
-                                                              int.parse(weights[
-                                                                  position]);
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 0.2,
-                                                                color: Colors
-                                                                    .grey),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15),
-                                                            color: _selectedweight ==
-                                                                    position
-                                                                ? Colors
-                                                                    .deepPurpleAccent
-                                                                : Colors.white,
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: Colors
-                                                                    .grey
-                                                                    .shade300,
-                                                                offset: Offset(
-                                                                    0.0,
-                                                                    1.0), //(x,y)
-                                                                blurRadius: 6.0,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          height: 80,
-                                                          width: 90,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Icon(
-                                                                Feather.box,
-                                                                size: 30,
-                                                                color: _selectedweight ==
-                                                                        position
-                                                                    ? Colors
-                                                                        .white
-                                                                    : Colors
-                                                                        .deepPurpleAccent,
-                                                              ),
-                                                              SizedBox(
-                                                                height: 5,
-                                                              ),
-                                                              Text(
-                                                                'Upto ' +
-                                                                    weights[
-                                                                        position] +
-                                                                    ' ' +
-                                                                    metric,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 14,
-                                                                  color: _selectedweight ==
-                                                                          position
-                                                                      ? Colors
-                                                                          .white
-                                                                      : Colors
-                                                                          .deepPurpleAccent,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ))));
-                                            }),
-                                      ),
-                                    )
-                                  : Container(),
                             ],
                           ),
                         ),

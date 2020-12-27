@@ -29,6 +29,7 @@ class Item {
   final bool sold;
   final String size;
   final int views;
+  final String orderstatus;
 
   Item(
       {this.itemid,
@@ -40,6 +41,7 @@ class Item {
       this.weight,
       this.image2,
       this.image3,
+      this.orderstatus,
       this.image4,
       this.comments,
       this.image5,
@@ -73,5 +75,10 @@ class Item {
       subsubcategory: json['subsubcategory'],
       distance: json['distance'],
     );
+  }
+
+  int compareTo(Item other) {
+    int order = other.date.compareTo(date);
+    return order;
   }
 }

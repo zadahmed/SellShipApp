@@ -686,13 +686,13 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                                 'united arab emirates') {
                                                                               Navigator.push(
                                                                                 context,
-                                                                                MaterialPageRoute(builder: (context) => OrderDetailUAE(messageid: sellingitem[index].description, item: sellingitem[index])),
+                                                                                MaterialPageRoute(builder: (context) => OrderSellerUAE(messageid: sellingitem[index].description, item: sellingitem[index])),
                                                                               );
                                                                             } else if (countr.trim().toLowerCase() ==
                                                                                 'united states') {
                                                                               Navigator.push(
                                                                                 context,
-                                                                                MaterialPageRoute(builder: (context) => OrderDetail(messageid: sellingitem[index].description, item: sellingitem[index])),
+                                                                                MaterialPageRoute(builder: (context) => OrderSeller(messageid: sellingitem[index].description, item: sellingitem[index])),
                                                                               );
                                                                             }
                                                                           },

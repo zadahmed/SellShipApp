@@ -100,8 +100,8 @@ class _MyAppState extends State<MyApp> {
             Routes.orderBuyer: (context) => OrderBuyer(),
             Routes.orderBuyerUAE: (context) => OrderBuyerUAE(),
             Routes.orders: (context) => OrdersScreen(), //
-            Routes.orderSeller: (context) => OrderDetail(),
-            Routes.orderSellerUAE: (context) => OrderDetailUAE(),
+            Routes.orderSeller: (context) => OrderSeller(),
+            Routes.orderSellerUAE: (context) => OrderSellerUAE(),
             Routes.otpScreen: (context) => OTPScreen(),
             Routes.paymentDone: (context) => PaymentDone(),
             Routes.privacyPolicy: (context) => PrivacyPolicy(),

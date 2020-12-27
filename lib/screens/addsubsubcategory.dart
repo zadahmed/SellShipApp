@@ -1219,30 +1219,6 @@ class _AddSubSubCategoryState extends State<AddSubSubCategory> {
           ];
         });
       }
-    } else if (category == 'Property') {
-      if (subcategory == 'Sale') {
-        setState(() {
-          subcategories = [
-            'Villas',
-            'Apartments',
-            'Townhouses',
-            'Plots',
-            'Buildings',
-            'Offices'
-          ];
-        });
-      } else if (subcategory == 'Rent') {
-        setState(() {
-          subcategories = [
-            'Villas',
-            'Apartments',
-            'Townhouses',
-            'Plots',
-            'Buildings',
-            'Offices'
-          ];
-        });
-      }
     } else if (category == 'Other') {
       if (subcategory == 'Office Supplies') {
         setState(() {

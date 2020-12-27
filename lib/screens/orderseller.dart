@@ -18,16 +18,16 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class OrderDetail extends StatefulWidget {
+class OrderSeller extends StatefulWidget {
   String messageid;
   Item item;
 
-  OrderDetail({Key key, this.messageid, this.item}) : super(key: key);
+  OrderSeller({Key key, this.messageid, this.item}) : super(key: key);
   @override
-  _OrderDetailState createState() => _OrderDetailState();
+  _OrderSellerState createState() => _OrderSellerState();
 }
 
-class _OrderDetailState extends State<OrderDetail> {
+class _OrderSellerState extends State<OrderSeller> {
   Item item;
   String messageid;
   var addressline1;
