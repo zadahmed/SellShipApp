@@ -164,6 +164,7 @@ flutter:
     - assets/bgonboard.png
     - assets/LoginBG.png
     - assets/LoginBG.svg
+    - assets/interests/
 
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg

@@ -5,6 +5,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/activity.dart';
 import 'package:SellShip/screens/discover.dart';
 import 'package:SellShip/screens/messages.dart';
+import 'package:SellShip/screens/onboardinginterests.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,7 +39,7 @@ class _RootScreenState extends State<RootScreen> {
     HomeScreen(),
     Discover(),
     AddItem(),
-    Activity(),
+    OnboardingInterests(),
     ProfilePage(),
   ];
 
