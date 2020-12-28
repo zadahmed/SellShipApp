@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
 import GoogleMaps
+import Firebase
 
 
 
@@ -18,7 +19,19 @@ import GoogleMaps
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
+    
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+            
+            Auth.auth().setAPNSToken(deviceToken, type: .unknown)
 
-
-
+        }
+    
+    
+    override func application(_ application: UIApplication, didReceiveRemoteNotification notification: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+            if Auth.auth().canHandleNotification(notification) {
+                completionHandler(UIBackgroundFetchResult.noData)
+                return
+            }
+            
+        }
 }

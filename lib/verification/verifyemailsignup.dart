@@ -28,6 +28,11 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
   String email;
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     setState(() {
@@ -35,14 +40,12 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
       email = widget.email;
       emailcontroller.text = email;
     });
-    Timer timer =
-        Timer.periodic(Duration(seconds: 4), (Timer t) => checkemailverified());
   }
 
   bool disabled = true;
 
-  checkemailverified() async {
-    var url = 'https://api.sellship.co/api/user/' + userid;
+  Future<bool> checkemailverified() async {
+    var url = 'https://api.sellship.co/api/user/' + userid.toString();
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -51,20 +54,17 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
       print(profilemap);
 
       var confirmedemai = profilemap['confirmedemail'];
-      if (confirmedemai != null) {
-        print(confirmedemai);
-        setState(() {
-          disabled = false;
-          confirmedemai = true;
-        });
+      if (profilemap.containsKey('confirmedemail')) {
+        disabled = false;
       } else {
-        setState(() {
-          disabled = true;
-          confirmedemai = false;
-        });
+        disabled = true;
       }
-      Navigator.pop(context);
+    } else {
+      disabled = true;
     }
+    print('yesss');
+    print(disabled);
+    return disabled;
   }
 
   TextEditingController emailcontroller = TextEditingController();
@@ -136,50 +136,54 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 36, top: 20, right: 36),
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      if (disabled == true) {
-                      } else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Username(
-                                userid: userid,
+          FutureBuilder<bool>(
+              future: checkemailverified(),
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                return Padding(
+                  padding: EdgeInsets.only(left: 36, top: 20, right: 36),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            if (snapshot.data == true) {
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Username(
+                                      userid: userid,
+                                    ),
+                                  ));
+                            }
+                          },
+                          child: Container(
+                            height: 60,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            width: MediaQuery.of(context).size.width - 150,
+                            decoration: BoxDecoration(
+                              color: snapshot.data == true
+                                  ? Colors.grey
+                                  : Color.fromRGBO(255, 115, 0, 1),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Center(
+                                child: Text(
+                              'Create Username',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                color: Colors.white,
                               ),
-                            ));
-                      }
-                    },
-                    child: Container(
-                      height: 60,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                      width: MediaQuery.of(context).size.width - 150,
-                      decoration: BoxDecoration(
-                        color: disabled == true
-                            ? Colors.grey
-                            : Color.fromRGBO(255, 115, 0, 1),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Center(
-                          child: Text(
-                        'Create Username',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 18,
-                          color: Colors.white,
+                            )),
+                          ),
                         ),
-                      )),
-                    ),
-                  ),
-                ]),
-          ),
+                      ]),
+                );
+              }),
           Padding(
               padding: EdgeInsets.only(left: 20, top: 40, right: 20),
               child: Row(

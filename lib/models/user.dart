@@ -6,15 +6,14 @@ class User {
   String email;
   String phoneNumber;
   String password;
-  String fcmToken;
 
-  User(
-      {this.firstName,
-      this.lastName,
-      this.phoneNumber,
-      this.email,
-      this.password,
-      this.fcmToken});
+  User({
+    this.firstName,
+    this.lastName,
+    this.phoneNumber,
+    this.email,
+    this.password,
+  });
 
   User.fromDB({Map<String, dynamic> dbSnapshot}) {
     firstName = dbSnapshot[UserFields.firstName];
@@ -22,7 +21,6 @@ class User {
     email = dbSnapshot[UserFields.email];
     phoneNumber = dbSnapshot[UserFields.phoneNumber];
     password = dbSnapshot[UserFields.password];
-    fcmToken = dbSnapshot[UserFields.fcmtoken];
   }
 
   Map<String, dynamic> toMap() {
@@ -32,7 +30,6 @@ class User {
       UserFields.phoneNumber: phoneNumber,
       UserFields.email: email,
       UserFields.password: password,
-      UserFields.fcmtoken: fcmToken
     };
   }
 }

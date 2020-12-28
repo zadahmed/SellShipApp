@@ -123,7 +123,7 @@ class HomeViewState extends State<HomeView> {
       _selectedFilter = "Recently Added";
       _FilterLoad = "Recently Added";
       skip = 0;
-      limit = 20;
+      limit = 40;
       loading = true;
     });
     itemsgrid.clear();
@@ -859,8 +859,8 @@ class HomeViewState extends State<HomeView> {
 
   _getmoreRecentData() async {
     setState(() {
-      limit = limit + 20;
-      skip = skip + 20;
+      limit = limit + 40;
+      skip = skip + 40;
     });
 
     var url = 'https://api.sellship.co/api/homeitems/' + country;

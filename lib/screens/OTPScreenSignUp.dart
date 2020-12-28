@@ -323,8 +323,9 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
               '/' +
               widget.phonenumber;
 
-          print(url);
-
+          print('userid');
+          print(widget.phonenumber);
+          print(userid);
           final response = await http.get(url);
           if (response.statusCode == 200) {
             Navigator.pop(context);
