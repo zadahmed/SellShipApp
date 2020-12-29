@@ -6,6 +6,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StarterPage extends StatefulWidget {
@@ -29,6 +30,19 @@ class _StarterPageState extends State<StarterPage>
         Tween<double>(begin: 1.0, end: 25.0).animate(_animationController);
 
     super.initState();
+
+    onesignal();
+  }
+
+  onesignal() async {
+    bool allowed =
+        await OneSignal.shared.promptUserForPushNotificationPermission();
+    if (!allowed) {
+      OneSignal.shared.promptUserForPushNotificationPermission();
+    }
+    await OneSignal.shared.sendTags({
+      "device_type": "mobile",
+    });
   }
 
   @override

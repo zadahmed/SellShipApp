@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
+import 'package:SellShip/screens/onboardinginterests.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -195,7 +196,7 @@ class _UsernameState extends State<Username> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RootScreen()));
+                                  builder: (context) => OnboardingInterests()));
                         } else {
                           Navigator.pop(context);
                           showDialog(

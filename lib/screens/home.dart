@@ -113,58 +113,54 @@ class _HomeScreenState extends State<HomeScreen>
 
   List<String> favourites;
 
+  List<Item> below100list = List<Item>();
+
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
-    if (country == null) {
-      _getLocation();
-    } else {
-      var url = 'https://api.sellship.co/api/belowhundred/' +
-          country +
-          '/' +
-          skip.toString() +
-          '/' +
-          limit.toString();
+    var url = 'https://api.sellship.co/api/belowhundred/' +
+        country +
+        '/' +
+        0.toString() +
+        '/' +
+        20.toString();
 
-      final response = await http.get(url);
-      var jsonbody = json.decode(response.body);
+    final response = await http.get(url);
+    var jsonbody = json.decode(response.body);
 
-      for (var i = 0; i < jsonbody.length; i++) {
-        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+    for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
 
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsonbody[i]['_id']['\$oid'],
-          date: dateuploaded,
-          name: jsonbody[i]['name'],
-          condition: jsonbody[i]['condition'] == null
-              ? 'Like New'
-              : jsonbody[i]['condition'],
-          username: jsonbody[i]['username'],
-          image: jsonbody[i]['image'],
-          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
-          comments: jsonbody[i]['comments'] == null
-              ? 0
-              : jsonbody[i]['comments'].length,
-          price: jsonbody[i]['price'].toString(),
-          category: jsonbody[i]['category'],
-          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-        );
-        itemsgrid.add(item);
-      }
-      if (itemsgrid != null) {
-        setState(() {
-          itemsgrid = itemsgrid;
-          loading = false;
-        });
-      } else {
-        setState(() {
-          itemsgrid = [];
-          loading = false;
-        });
-      }
-
-      return itemsgrid;
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
+        name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
+        image: jsonbody[i]['image'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      below100list.add(item);
     }
+    if (below100list != null) {
+      setState(() {
+        below100list = below100list;
+      });
+    } else {
+      setState(() {
+        below100list = [];
+      });
+    }
+
+    return below100list;
   }
 
   Future<List<Item>> fetchHighestPrice(int skip, int limit) async {
@@ -800,6 +796,7 @@ class _HomeScreenState extends State<HomeScreen>
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
     ));
 
+    gettopdata();
     readstorage();
   }
 
@@ -864,6 +861,7 @@ class _HomeScreenState extends State<HomeScreen>
         city = cit;
         locationcountry = countr;
       });
+      fetchnearme(skip, limit);
     } on Exception catch (e) {
       print(e);
       Location.Location().requestPermission();
@@ -983,7 +981,9 @@ class _HomeScreenState extends State<HomeScreen>
     setState(() {
       country = countr;
     });
+
     fetchRecentlyAdded(skip, limit);
+    fetchbelowhundred(skip, limit);
 
     _getLocation();
   }
@@ -1384,7 +1384,6 @@ class _HomeScreenState extends State<HomeScreen>
                             child: TabBar(
                               controller: _tabController,
                               labelStyle: tabTextStyle,
-//
                               unselectedLabelStyle: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
@@ -1422,13 +1421,75 @@ class _HomeScreenState extends State<HomeScreen>
                             topRight: Radius.circular(20),
                           ),
                         ),
-                        child: TabBarView(children: [
-                          homePage(context),
-                          homePage(context)
-                        ]))))));
+                        child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              homePage(context),
+                              foryouPage(context)
+                            ]))))));
   }
 
   String view = 'home';
+
+  Widget foryouPage(BuildContext context) {
+    return loading == false
+        ? EasyRefresh.custom(
+            topBouncing: true,
+            footer: MaterialFooter(
+              enableInfiniteLoad: true,
+              enableHapticFeedback: true,
+            ),
+            slivers: <Widget>[
+                SliverToBoxAdapter(
+                  child: Text('For You'),
+                )
+              ])
+        : Container(
+            height: MediaQuery.of(context).size.height,
+            child: Container(
+              width: double.infinity,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey[300],
+                highlightColor: Colors.grey[100],
+                child: ListView(
+                  children: [0, 1, 2, 3, 4, 5, 6]
+                      .map((_) => Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      30,
+                                  height: 150.0,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                ),
+                                Container(
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      30,
+                                  height: 150.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ));
+  }
 
   Widget homePage(BuildContext context) {
     return loading == false
@@ -1439,12 +1500,922 @@ class _HomeScreenState extends State<HomeScreen>
               enableHapticFeedback: true,
             ),
             slivers: <Widget>[
+              topitems.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 16, top: 10, bottom: 10, right: 36),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Top Picks',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'See All',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          )),
+                    )
+                  : SliverToBoxAdapter(),
+              topitems.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Container(
+                      height: 220,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                        itemCount: 20,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          return new Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width / 2 - 20,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  new InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                  itemid:
+                                                      topitems[index].itemid,
+                                                  sold: topitems[index].sold,
+                                                )),
+                                      );
+                                    },
+                                    child: Stack(children: <Widget>[
+                                      Container(
+                                        height: 150,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                            fadeInDuration:
+                                                Duration(microseconds: 5),
+                                            imageUrl: topitems[index]
+                                                    .image
+                                                    .isEmpty
+                                                ? SpinKitChasingDots(
+                                                    color: Colors.deepOrange)
+                                                : topitems[index].image,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                SpinKitChasingDots(
+                                                    color: Colors.deepOrange),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                          ),
+                                        ),
+                                      ),
+                                      topitems[index].sold == true
+                                          ? Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.deepPurpleAccent
+                                                      .withOpacity(0.8),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10)),
+                                                ),
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Sold',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ))
+                                          : Container(),
+                                    ]),
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            topitems[index].name,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            height: 1,
+                                          ),
+                                          Text(
+                                            currency +
+                                                ' ' +
+                                                topitems[index].price,
+                                          )
+                                        ],
+                                      )),
+                                      favourites != null
+                                          ? favourites.contains(
+                                                  topitems[index].itemid)
+                                              ? InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
+
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
+
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            topitems[index]
+                                                                .itemid,
+                                                      };
+
+                                                      favourites.remove(
+                                                          topitems[index]
+                                                              .itemid);
+                                                      setState(() {
+                                                        favourites = favourites;
+                                                        topitems[index].likes =
+                                                            topitems[index]
+                                                                    .likes -
+                                                                1;
+                                                      });
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
+
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.deepPurple,
+                                                    child: Icon(
+                                                      FontAwesome.heart,
+                                                      color: Colors.white,
+                                                      size: 16,
+                                                    ),
+                                                  ))
+                                              : InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
+
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
+
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            topitems[index]
+                                                                .itemid,
+                                                      };
+
+                                                      favourites.add(
+                                                          topitems[index]
+                                                              .itemid);
+                                                      setState(() {
+                                                        favourites = favourites;
+                                                        topitems[index].likes =
+                                                            topitems[index]
+                                                                    .likes +
+                                                                1;
+                                                      });
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
+
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    child: Icon(
+                                                      Feather.heart,
+                                                      color: Colors.blueGrey,
+                                                      size: 16,
+                                                    ),
+                                                  ))
+                                          : CircleAvatar(
+                                              radius: 18,
+                                              backgroundColor: Colors.white,
+                                              child: Icon(
+                                                Feather.heart,
+                                                color: Colors.blueGrey,
+                                                size: 16,
+                                              ),
+                                            )
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  )
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ))
+                  : SliverToBoxAdapter(),
+              SliverToBoxAdapter(
+                child: Padding(
+                    padding: EdgeInsets.only(
+                        left: 16, top: 10, bottom: 10, right: 36),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Shop by Category',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'See All',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+              nearmeItems.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 16, top: 10, bottom: 10, right: 36),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Near You',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'See All',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          )),
+                    )
+                  : SliverToBoxAdapter(),
+              nearmeItems.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Container(
+                      height: 220,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                        itemCount: nearmeItems.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          return new Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width / 2 - 20,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  new InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                  itemid:
+                                                      nearmeItems[index].itemid,
+                                                  sold: nearmeItems[index].sold,
+                                                )),
+                                      );
+                                    },
+                                    child: Stack(children: <Widget>[
+                                      Container(
+                                        height: 150,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                            fadeInDuration:
+                                                Duration(microseconds: 5),
+                                            imageUrl: nearmeItems[index]
+                                                    .image
+                                                    .isEmpty
+                                                ? SpinKitChasingDots(
+                                                    color: Colors.deepOrange)
+                                                : nearmeItems[index].image,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                SpinKitChasingDots(
+                                                    color: Colors.deepOrange),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                          ),
+                                        ),
+                                      ),
+                                      nearmeItems[index].sold == true
+                                          ? Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.deepPurpleAccent
+                                                      .withOpacity(0.8),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10)),
+                                                ),
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Sold',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ))
+                                          : Container(),
+                                    ]),
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            nearmeItems[index].name,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            height: 1,
+                                          ),
+                                          Text(
+                                            currency +
+                                                ' ' +
+                                                nearmeItems[index].price,
+                                          )
+                                        ],
+                                      )),
+                                      favourites != null
+                                          ? favourites.contains(
+                                                  nearmeItems[index].itemid)
+                                              ? InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
+
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
+
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            nearmeItems[index]
+                                                                .itemid,
+                                                      };
+
+                                                      favourites.remove(
+                                                          topitems[index]
+                                                              .itemid);
+                                                      setState(() {
+                                                        favourites = favourites;
+                                                        nearmeItems[index]
+                                                                .likes =
+                                                            nearmeItems[index]
+                                                                    .likes -
+                                                                1;
+                                                      });
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
+
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.deepPurple,
+                                                    child: Icon(
+                                                      FontAwesome.heart,
+                                                      color: Colors.white,
+                                                      size: 16,
+                                                    ),
+                                                  ))
+                                              : InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
+
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
+
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            nearmeItems[index]
+                                                                .itemid,
+                                                      };
+
+                                                      favourites.add(
+                                                          nearmeItems[index]
+                                                              .itemid);
+                                                      setState(() {
+                                                        favourites = favourites;
+                                                        nearmeItems[index]
+                                                                .likes =
+                                                            nearmeItems[index]
+                                                                    .likes +
+                                                                1;
+                                                      });
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
+
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    child: Icon(
+                                                      Feather.heart,
+                                                      color: Colors.blueGrey,
+                                                      size: 16,
+                                                    ),
+                                                  ))
+                                          : CircleAvatar(
+                                              radius: 18,
+                                              backgroundColor: Colors.white,
+                                              child: Icon(
+                                                Feather.heart,
+                                                color: Colors.blueGrey,
+                                                size: 16,
+                                              ),
+                                            )
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  )
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ))
+                  : SliverToBoxAdapter(),
+              SliverToBoxAdapter(
+                child: Padding(
+                    padding: EdgeInsets.only(
+                        left: 16, top: 10, bottom: 10, right: 36),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Deals under 100',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'See All',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+              below100list.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Container(
+                      height: 220,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                        itemCount: below100list.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          return new Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width / 2 - 20,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  new InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                  itemid: below100list[index]
+                                                      .itemid,
+                                                  sold:
+                                                      below100list[index].sold,
+                                                )),
+                                      );
+                                    },
+                                    child: Stack(children: <Widget>[
+                                      Container(
+                                        height: 150,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                            fadeInDuration:
+                                                Duration(microseconds: 5),
+                                            imageUrl: below100list[index]
+                                                    .image
+                                                    .isEmpty
+                                                ? SpinKitChasingDots(
+                                                    color: Colors.deepOrange)
+                                                : below100list[index].image,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                SpinKitChasingDots(
+                                                    color: Colors.deepOrange),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Icon(Icons.error),
+                                          ),
+                                        ),
+                                      ),
+                                      below100list[index].sold == true
+                                          ? Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.deepPurpleAccent
+                                                      .withOpacity(0.8),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10)),
+                                                ),
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Sold',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ))
+                                          : Container(),
+                                    ]),
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            below100list[index].name,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            height: 1,
+                                          ),
+                                          Text(
+                                            currency +
+                                                ' ' +
+                                                below100list[index].price,
+                                          )
+                                        ],
+                                      )),
+                                      favourites != null
+                                          ? favourites.contains(
+                                                  below100list[index].itemid)
+                                              ? InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
+
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
+
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            below100list[index]
+                                                                .itemid,
+                                                      };
+
+                                                      favourites.remove(
+                                                          below100list[index]
+                                                              .itemid);
+                                                      setState(() {
+                                                        favourites = favourites;
+                                                        below100list[index]
+                                                                .likes =
+                                                            below100list[index]
+                                                                    .likes -
+                                                                1;
+                                                      });
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
+
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.deepPurple,
+                                                    child: Icon(
+                                                      FontAwesome.heart,
+                                                      color: Colors.white,
+                                                      size: 16,
+                                                    ),
+                                                  ))
+                                              : InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
+
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
+
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            below100list[index]
+                                                                .itemid,
+                                                      };
+
+                                                      favourites.add(
+                                                          below100list[index]
+                                                              .itemid);
+                                                      setState(() {
+                                                        favourites = favourites;
+                                                        below100list[index]
+                                                                .likes =
+                                                            below100list[index]
+                                                                    .likes +
+                                                                1;
+                                                      });
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
+
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    child: Icon(
+                                                      Feather.heart,
+                                                      color: Colors.blueGrey,
+                                                      size: 16,
+                                                    ),
+                                                  ))
+                                          : CircleAvatar(
+                                              radius: 18,
+                                              backgroundColor: Colors.white,
+                                              child: Icon(
+                                                Feather.heart,
+                                                color: Colors.blueGrey,
+                                                size: 16,
+                                              ),
+                                            )
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  )
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ))
+                  : SliverToBoxAdapter(),
               SliverToBoxAdapter(
                 child: Padding(
                   padding:
                       EdgeInsets.only(left: 16, top: 10, bottom: 10, right: 36),
                   child: Text(
-                    'Recently Added',
+                    'New In',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 18.0,
@@ -1516,6 +2487,7 @@ class _HomeScreenState extends State<HomeScreen>
                       padding: EdgeInsets.all(10),
                       child: Container(
                         decoration: BoxDecoration(
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Column(
@@ -1536,6 +2508,7 @@ class _HomeScreenState extends State<HomeScreen>
                                   height: 150,
                                   width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
+                                    color: Colors.white,
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey.shade300,
@@ -1787,6 +2760,64 @@ class _HomeScreenState extends State<HomeScreen>
           );
   }
 
+  List<Item> topitems = List<Item>();
+
+  gettopdata() async {
+    var country = await storage.read(key: 'country');
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://api.sellship.co/api/top/' +
+        country +
+        '/' +
+        userid +
+        '/' +
+        '0' +
+        '/' +
+        '20';
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
+          name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
+          image: jsonbody[i]['image'],
+          userid: jsonbody[i]['userid'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        topitems.add(item);
+      }
+
+      if (topitems != null) {
+        setState(() {
+          topitems = topitems;
+        });
+      } else {
+        setState(() {
+          topitems = [];
+        });
+      }
+    } else {
+      print('error');
+    }
+  }
+
   _getmoreRecentData() async {
     setState(() {
       limit = limit + 40;
@@ -1801,7 +2832,6 @@ class _HomeScreenState extends State<HomeScreen>
         skip.toString() +
         '/' +
         limit.toString();
-    ;
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -1847,65 +2877,6 @@ class _HomeScreenState extends State<HomeScreen>
     } else {
       print(response.statusCode);
     }
-  }
-
-  SliverList buildTabBar() {
-    return SliverList(
-        delegate: SliverChildListDelegate([
-      Row(children: <Widget>[
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(top: 10.0, left: 10, right: 10, bottom: 10),
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.0),
-                color: const Color(0x80e5e9f2),
-              ),
-              child: Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, right: 10),
-                    child: Icon(
-                      Feather.search,
-                      size: 24,
-                      color: Color.fromRGBO(115, 115, 125, 1),
-                    ),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Search()),
-                        );
-                      },
-                      controller: searchcontroller,
-                      decoration: InputDecoration(
-                          hintText: 'Search SellShip',
-                          hintStyle: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16,
-                          ),
-                          border: InputBorder.none),
-                    ),
-                  ),
-                ],
-              )),
-            ),
-          ),
-        ),
-      ]),
-    ]));
-  }
-
-  changeView(String viewName) {
-    setState(() {
-      view = viewName;
-    });
   }
 
   String _FilterLoad = "Recently Added";
@@ -2278,6 +3249,56 @@ class _HomeScreenState extends State<HomeScreen>
 
     return itemsgrid;
   }
+
+  Future<List<Item>> fetchnearme(int skip, int limit) async {
+    var url = 'https://api.sellship.co/api/getitems/' +
+        country +
+        '/' +
+        0.toString() +
+        '/' +
+        20.toString();
+
+    final response = await http.post(url, body: {
+      'latitude': position.latitude.toString(),
+      'longitude': position.longitude.toString()
+    });
+
+    var jsonbody = json.decode(response.body);
+
+    for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
+        name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
+        image: jsonbody[i]['image'],
+        userid: jsonbody[i]['userid'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      nearmeItems.add(item);
+    }
+
+    setState(() {
+      nearmeItems = nearmeItems;
+    });
+
+    return nearmeItems;
+  }
+
+  List<Item> nearmeItems = List<Item>();
 
   List<String> brands = List<String>();
 

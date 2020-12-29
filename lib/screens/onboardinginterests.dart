@@ -1,12 +1,14 @@
 import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
@@ -40,7 +42,7 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
     'assets/interests/beauty.jpg',
     'assets/interests/electronics.jpg',
     'assets/interests/luxury.jpg',
-    'assets/interests/home.jpg',
+    'assets/interests/home.jpeg',
     'assets/interests/vintage.jpg',
     'assets/interests/handmade.jpg',
     'assets/interests/garden.jpg',
@@ -118,8 +120,8 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
           Expanded(
             child: GridView.builder(
               itemCount: categoryimages.length,
-              gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: 1.5),
               itemBuilder: (BuildContext context, int index) {
                 return new InkWell(
                     onTap: () {
@@ -179,13 +181,46 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                 children: [
                   InkWell(
                     onTap: () async {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          useRootNavigator: false,
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      20.0)), //this right here
+                              child: Container(
+                                height: 100,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: SpinKitChasingDots(
+                                        color: Colors.deepOrange)),
+                              ),
+                            );
+                          });
+                      final storage = new FlutterSecureStorage();
+                      var userid = await storage.read(key: 'userid');
                       if (selectedinterests.length >= 2) {
-                        var url = 'https://api.sellship.co/api/user/' +
-                            userid; // change URL
+                        var url =
+                            'https://api.sellship.co/api/interests/' + userid;
 
-                        final response = await http.get(url);
+                        FormData formData = FormData.fromMap({
+                          'interests': selectedinterests,
+                        });
+
+                        Dio dio = new Dio();
+                        var response = await dio.post(url, data: formData);
+
                         if (response.statusCode == 200) {
-                          print(response.body);
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RootScreen()));
+                        } else {
+                          Navigator.pop(context);
+                          print(response.statusCode);
                         }
                       }
                     },

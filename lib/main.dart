@@ -28,15 +28,6 @@ void main() async {
   OneSignal.shared
       .setInFocusDisplayType(OSNotificationDisplayType.notification);
 
-  bool allowed =
-      await OneSignal.shared.promptUserForPushNotificationPermission();
-  if (!allowed) {
-    OneSignal.shared.promptUserForPushNotificationPermission();
-  }
-  await OneSignal.shared.sendTags({
-    "device_type": "mobile",
-  });
-
   runApp(MyApp());
 }
 

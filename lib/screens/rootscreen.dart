@@ -37,9 +37,9 @@ class _RootScreenState extends State<RootScreen> {
   int _currentPage = 0;
   final List<Widget> _pages = [
     HomeScreen(),
-    Discover(),
+    Search(),
     AddItem(),
-    OnboardingInterests(),
+    Activity(),
     ProfilePage(),
   ];
 
@@ -107,42 +107,46 @@ class _RootScreenState extends State<RootScreen> {
     if (_currentPage == 0) {
       setState(() {
         home = 'assets/bottomnavbar/Home.svg';
-        discover = 'assets/bottomnavbar/Discover.svg';
+
         chat = 'assets/bottomnavbar/Chat.svg';
         selectedActivityColor = Colors.grey[400];
+        selectedsearchColor = Colors.grey[400];
       });
     } else if (_currentPage == 1) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';
-        discover = 'assets/bottomnavbar/Discoverselect.svg';
+        selectedsearchColor = Color.fromRGBO(28, 45, 65, 1);
         chat = 'assets/bottomnavbar/Chat.svg';
         selectedActivityColor = Colors.grey[400];
       });
     } else if (_currentPage == 2) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';
-        discover = 'assets/bottomnavbar/Discover.svg';
+        selectedsearchColor = Colors.grey[400];
         chat = 'assets/bottomnavbar/Chat.svg';
         selectedActivityColor = Colors.grey[400];
       });
     } else if (_currentPage == 3) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';
-        discover = 'assets/bottomnavbar/Discover.svg';
+
         chat = 'assets/bottomnavbar/Chatselect.svg';
         selectedActivityColor = Color.fromRGBO(28, 45, 65, 1);
+        selectedsearchColor = Colors.grey[400];
       });
     } else if (_currentPage == 4) {
       setState(() {
         home = 'assets/bottomnavbar/Homeselect.svg';
-        discover = 'assets/bottomnavbar/Discover.svg';
+
         chat = 'assets/bottomnavbar/Chat.svg';
         selectedActivityColor = Colors.grey[400];
+        selectedsearchColor = Colors.grey[400];
       });
     }
   }
 
   var selectedActivityColor;
+  var selectedsearchColor;
   var home = 'assets/bottomnavbar/Home.svg';
   var discover = 'assets/bottomnavbar/Discover.svg';
   var chat = 'assets/bottomnavbar/Chat.svg';
@@ -183,11 +187,9 @@ class _RootScreenState extends State<RootScreen> {
                           fontWeight: FontWeight.w400,
                           color: Colors.black))),
               BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    discover,
-                    height: 25,
-                    width: 25,
-                    allowDrawingOutsideViewBox: true,
+                  icon: Icon(
+                    Feather.search,
+                    color: selectedsearchColor,
                   ),
                   title: Text('',
                       style: TextStyle(
