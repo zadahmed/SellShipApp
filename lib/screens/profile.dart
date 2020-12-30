@@ -934,22 +934,6 @@ class _ProfilePageState extends State<ProfilePage>
                                   child: TabBar(
                                     controller: _tabController,
                                     labelStyle: tabTextStyle,
-//                                    onTap: (tab) {
-//                                      if (tab == 3) {
-//                                        refreshreviews();
-//                                      }
-//                                      if (tab == 1) {
-//                                        getorders();
-//                                      }
-//
-//                                      if (tab == 2) {
-//                                        setState(() {
-//                                          favouriteloading = true;
-//                                          getfavourites();
-//                                          getfavouritesuser();
-//                                        });
-//                                      }
-//                                    },
                                     unselectedLabelStyle: TextStyle(
                                       fontSize: 16,
                                       color: Colors.black,
@@ -995,6 +979,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   ),
                                 ),
                                 child: TabBarView(
+                                  controller: _tabController,
                                   children: [
                                     profileloading == false
                                         ? storeitems(context)
@@ -1069,7 +1054,6 @@ class _ProfilePageState extends State<ProfilePage>
                                     favouriteslist(context),
                                     reviewslist(context)
                                   ],
-                                  controller: _tabController,
                                 ),
                               )))
                     ],
@@ -1814,11 +1798,17 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ),
                         ),
-                        Expanded(
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            height:
+                                MediaQuery.of(context).size.height / 2 - 100,
                             child: Image.asset(
-                          'assets/messages.png',
-                          fit: BoxFit.fitWidth,
-                        ))
+                              'assets/messages.png',
+                              fit: BoxFit.fitWidth,
+                            ))
                       ],
                     )
             ],

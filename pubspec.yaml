@@ -88,6 +88,7 @@ dependencies:
   email_validator: 1.0.6
   stepper_counter_swipe: ^1.0.0
   onesignal_flutter: ^2.6.2
+  dropdown_search: ^0.4.8
 
 
 
