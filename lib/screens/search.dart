@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/models/user.dart';
+import 'package:substring_highlight/substring_highlight.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 //import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -37,9 +40,11 @@ class Search extends StatefulWidget {
 class Category {
   final String categoryname;
   final List subcategories;
+  final String categoryimage;
 
   Category({
     this.categoryname,
+    this.categoryimage,
     this.subcategories,
   });
 }
@@ -100,8 +105,10 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
       skip = 0;
       limit = 20;
     });
-    _tabController = new TabController(length: 2, vsync: this);
+    _tabController = new TabController(length: 4, vsync: this);
   }
+
+  List<User> userList = new List<User>();
 
   List<Category> categoryList = new List<Category>();
 
@@ -112,11 +119,14 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
     var jsonbody = json.decode(response.body);
 
     for (int i = 0; i < jsonbody.length; i++) {
-      Category cat = new Category(
-          categoryname: jsonbody[i]['name'],
-          subcategories: jsonbody[i]['subcategories']);
+      if (jsonbody[i]['name'] != 'Other') {
+        Category cat = new Category(
+            categoryname: jsonbody[i]['name'],
+            categoryimage: jsonbody[i]['categoryimage'],
+            subcategories: jsonbody[i]['subcategories']);
 
-      categoryList.add(cat);
+        categoryList.add(cat);
+      }
     }
 
     setState(() {
@@ -163,7 +173,51 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
     }
 
     setState(() {
-      itemsgrid = itemsgrid;
+      itemsgrid = itemsgrid.toSet().toList();
+      loading = false;
+    });
+  }
+
+  onSearchUsers(textsearch) async {
+    userList.clear();
+    var url = 'https://api.sellship.co/api/searchusers/' +
+        capitalize(textsearch).trim() +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var jsondata in jsonbody) {
+      var lastname;
+      var username;
+      if (jsondata.containsKey('last_name')) {
+        lastname = jsondata['last_name'];
+      } else {
+        lastname = '';
+      }
+
+      if (jsondata.containsKey('username')) {
+        username = jsondata['username'];
+      } else {
+        username = jsondata['first_name'];
+      }
+
+      print(jsondata);
+
+      User user = new User(
+          firstName: capitalize(jsondata['first_name']) + ' ' + lastname,
+          username: username,
+          userid: jsondata['_id']['\$oid'],
+          profilepicture: jsondata['profilepicture']);
+      userList.add(user);
+    }
+
+    setState(() {
+      userList = userList.toSet().toList();
       loading = false;
     });
   }
@@ -233,6 +287,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
   onSearch(textsearch) async {
+    itemsgrid.clear();
     var url = 'https://api.sellship.co/api/searchitems/' +
         country +
         '/' +
@@ -284,7 +339,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                 'Search Products',
                 style: TextStyle(
                     fontFamily: 'Helvetica',
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.w900),
               ),
             ),
@@ -596,14 +651,28 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                   Expanded(
                     child: TextField(
                       onChanged: (text) {
-                        setState(() {
-                          searched = false;
-                          skip = 0;
-                          limit = 20;
-                          itemsgrid.clear();
-                          loading = true;
-                        });
-                        onSearch(text);
+                        if (_tabController.index == 0 ||
+                            _tabController.index == 1) {
+                          setState(() {
+                            searched = false;
+                            skip = 0;
+                            limit = 20;
+                            itemsgrid.clear();
+                            loading = true;
+                          });
+                          onSearch(text);
+                          _getRecentSearches();
+                        } else if (_tabController.index == 2) {
+                          setState(() {
+                            searched = false;
+                            skip = 0;
+                            limit = 20;
+                            userList.clear();
+                            loading = true;
+                          });
+                          onSearchUsers(text);
+                          _getRecentSearches();
+                        }
                       },
                       controller: searchcontroller,
                       decoration: InputDecoration(
@@ -624,7 +693,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
           ),
         ),
         body: DefaultTabController(
-            length: 2,
+            length: 4,
             child: NestedScrollView(
                 headerSliverBuilder: (context, _) {
                   return [
@@ -657,10 +726,16 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                               labelColor: Colors.black,
                               tabs: [
                                 new Tab(
-                                  text: 'Items',
+                                  text: 'Top',
+                                ),
+                                new Tab(
+                                  text: 'Products',
                                 ),
                                 new Tab(
                                   text: 'Users',
+                                ),
+                                new Tab(
+                                  text: 'Hashtags',
                                 ),
                               ],
                             ),
@@ -699,117 +774,142 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                             FocusScope.of(context)
                                                 .requestFocus(new FocusNode());
                                           },
-                                          child: CustomScrollView(slivers: <
-                                              Widget>[
-                                            SliverToBoxAdapter(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 15, top: 10),
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    'Search Results',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w900),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            itemsgrid.isNotEmpty
-                                                ? SliverList(
-                                                    delegate:
-                                                        new SliverChildBuilderDelegate(
-                                                      (context, index) =>
-                                                          ListTile(
-                                                        onTap: () async {
-                                                          await _saveToRecentSearches(
-                                                              itemsgrid[index]
-                                                                  .name);
-                                                          setState(() {
-                                                            loading = true;
-                                                            onSearch(
-                                                                itemsgrid[index]
-                                                                    .name);
-                                                            searched = true;
-                                                          });
-                                                        },
-                                                        title: Text(
-                                                          itemsgrid[index].name,
-                                                          style: TextStyle(
+                                          child: CustomScrollView(
+                                              slivers: <Widget>[
+                                                SliverToBoxAdapter(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 15, top: 10),
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        'Search Results',
+                                                        style: TextStyle(
                                                             fontFamily:
                                                                 'Helvetica',
                                                             fontSize: 18,
-                                                          ),
-                                                        ),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w900),
                                                       ),
-                                                      childCount:
-                                                          itemsgrid.length <= 15
+                                                    ),
+                                                  ),
+                                                ),
+                                                itemsgrid.isNotEmpty
+                                                    ? SliverList(
+                                                        delegate:
+                                                            new SliverChildBuilderDelegate(
+                                                          (context, index) =>
+                                                              ListTile(
+                                                                  onTap:
+                                                                      () async {
+                                                                    await _saveToRecentSearches(
+                                                                        itemsgrid[index]
+                                                                            .name);
+                                                                    setState(
+                                                                        () {
+                                                                      loading =
+                                                                          true;
+                                                                      onSearch(itemsgrid[
+                                                                              index]
+                                                                          .name);
+                                                                      searched =
+                                                                          true;
+                                                                    });
+                                                                  },
+                                                                  leading: Icon(
+                                                                      Feather
+                                                                          .search),
+                                                                  title:
+                                                                      SubstringHighlight(
+                                                                    text: itemsgrid[
+                                                                            index]
+                                                                        .name,
+                                                                    term: searchcontroller
+                                                                        .text,
+                                                                    textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .black),
+                                                                    textStyleHighlight: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .black),
+                                                                  )
+
+//
+                                                                  ),
+                                                          childCount: itemsgrid
+                                                                      .length <=
+                                                                  15
                                                               ? itemsgrid.length
                                                               : 15,
-                                                    ),
-                                                  )
-                                                : SliverToBoxAdapter(
-                                                    child: Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 15,
-                                                                top: 10),
-                                                        child: Column(
-                                                          children: [
-                                                            Container(
-                                                                height: MediaQuery.of(context)
+                                                        ),
+                                                      )
+                                                    : SliverToBoxAdapter(
+                                                        child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 15,
+                                                                    top: 10),
+                                                            child: Column(
+                                                              children: [
+                                                                Container(
+                                                                    height:
+                                                                        MediaQuery.of(context).size.height /
+                                                                                2 -
+                                                                            200,
+                                                                    width: MediaQuery.of(context)
                                                                             .size
-                                                                            .height /
-                                                                        2 -
-                                                                    200,
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width -
-                                                                    50,
-                                                                child:
-                                                                    Image.asset(
-                                                                  'assets/184.png',
-                                                                  fit: BoxFit
-                                                                      .fitHeight,
-                                                                )),
-                                                            SizedBox(
-                                                              height: 30,
-                                                            ),
-                                                            searchcontroller
-                                                                        .text
-                                                                        .length >
-                                                                    3
-                                                                ? Text(
-                                                                    'Oops. Can\'t find any results for that search.',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontSize:
-                                                                            18,
-                                                                        color: Colors
-                                                                            .grey
-                                                                            .shade500),
-                                                                  )
-                                                                : Text(
-                                                                    'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontSize:
-                                                                            18,
-                                                                        color: Colors
-                                                                            .grey
-                                                                            .shade500),
-                                                                  )
-                                                          ],
-                                                        )),
-                                                  ),
-                                          ]))
+                                                                            .width -
+                                                                        50,
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'assets/184.png',
+                                                                      fit: BoxFit
+                                                                          .fitHeight,
+                                                                    )),
+                                                                SizedBox(
+                                                                  height: 30,
+                                                                ),
+                                                                searchcontroller
+                                                                            .text
+                                                                            .length >
+                                                                        3
+                                                                    ? Text(
+                                                                        'Oops. Can\'t find any results for that search.',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                18,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      )
+                                                                    : Text(
+                                                                        'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                18,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      )
+                                                              ],
+                                                            )),
+                                                      ),
+                                              ]))
                                       : searchresults(context)
                                   : Container(
                                       height:
@@ -885,22 +985,55 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                     )
                               : CustomScrollView(
                                   slivers: [
-                                    SliverToBoxAdapter(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, top: 15, bottom: 10),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            'Recent Searches',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    recentsearches.isNotEmpty
+                                        ? SliverToBoxAdapter(
+                                            child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 16,
+                                                    top: 10,
+                                                    bottom: 10,
+                                                    right: 36),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Recent Searches',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 18.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        final pref =
+                                                            await SharedPreferences
+                                                                .getInstance();
+
+                                                        pref.remove(
+                                                            'recentSearches');
+                                                        setState(() {
+                                                          recentsearches = [];
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                        'Clear All',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                          )
+                                        : SliverToBoxAdapter(),
                                     recentsearches.isNotEmpty
                                         ? SliverList(
                                             delegate:
@@ -916,11 +1049,42 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                                     searched = true;
                                                   });
                                                 },
+                                                leading: Icon(
+                                                  Feather.clock,
+                                                  size: 18,
+                                                ),
+                                                trailing: InkWell(
+                                                  onTap: () async {
+                                                    final pref =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    var allSearches = pref
+                                                        .getStringList(
+                                                            "recentSearches")
+                                                        .toList();
+
+                                                    allSearches.remove(
+                                                        recentsearches[index]);
+
+                                                    pref.setStringList(
+                                                        "recentSearches",
+                                                        allSearches.toList());
+
+                                                    setState(() {
+                                                      recentsearches =
+                                                          allSearches.toList();
+                                                    });
+                                                  },
+                                                  child: Icon(
+                                                    Icons.cancel_rounded,
+                                                    size: 18,
+                                                  ),
+                                                ),
                                                 title: Text(
                                                   recentsearches[index],
                                                   style: TextStyle(
                                                     fontFamily: 'Helvetica',
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                   ),
                                                 ),
                                               ),
@@ -941,7 +1105,7 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                             'Categories',
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
-                                                fontSize: 20,
+                                                fontSize: 18,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -954,14 +1118,79 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                         return InkWell(
                                           onTap: () {},
                                           child: Padding(
-                                            padding: EdgeInsets.all(10),
+                                            padding: EdgeInsets.all(5),
                                             child: Container(
-                                              color: Colors.red,
-                                              height: 50,
-                                              width: 100,
-                                              child: Text(categoryList[index]
-                                                  .categoryname),
-                                            ),
+                                                height: 160,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Stack(
+                                                  children: [
+                                                    Container(
+                                                      height: 160,
+                                                      width: 180,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                      child: categoryList[index]
+                                                                  .categoryimage !=
+                                                              null
+                                                          ? ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl: categoryList[
+                                                                        index]
+                                                                    .categoryimage,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ))
+                                                          : Container(),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Container(
+                                                        height: 50,
+                                                        width: 100,
+                                                        padding:
+                                                            EdgeInsets.all(5),
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.5),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: Center(
+                                                          child: Text(
+                                                            categoryList[index]
+                                                                .categoryname,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w900),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
                                           ),
                                         );
                                       },
@@ -981,59 +1210,142 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                             FocusScope.of(context)
                                                 .requestFocus(new FocusNode());
                                           },
-                                          child: CustomScrollView(slivers: <
-                                              Widget>[
-                                            SliverToBoxAdapter(
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 15,
-                                                    top: 15,
-                                                    bottom: 10),
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    'Search Results',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SliverList(
-                                              delegate:
-                                                  new SliverChildBuilderDelegate(
-                                                (context, index) => ListTile(
-                                                  onTap: () async {
-                                                    await _saveToRecentSearches(
-                                                        itemsgrid[index].name);
-                                                    searchcontroller.text =
-                                                        itemsgrid[index].name;
-                                                    setState(() {
-                                                      loading = true;
-                                                      onSearch(itemsgrid[index]
-                                                          .name);
-                                                      searched = true;
-                                                    });
-                                                  },
-                                                  title: Text(
-                                                    itemsgrid[index].name,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 18,
+                                          child: CustomScrollView(
+                                              slivers: <Widget>[
+                                                SliverToBoxAdapter(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 15, top: 10),
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        'Search Results',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w900),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                                childCount:
-                                                    itemsgrid.length <= 15
-                                                        ? itemsgrid.length
-                                                        : 15,
-                                              ),
-                                            ),
-                                          ]))
+                                                itemsgrid.isNotEmpty
+                                                    ? SliverList(
+                                                        delegate:
+                                                            new SliverChildBuilderDelegate(
+                                                          (context, index) =>
+                                                              ListTile(
+                                                                  onTap:
+                                                                      () async {
+                                                                    await _saveToRecentSearches(
+                                                                        itemsgrid[index]
+                                                                            .name);
+                                                                    setState(
+                                                                        () {
+                                                                      loading =
+                                                                          true;
+                                                                      onSearch(itemsgrid[
+                                                                              index]
+                                                                          .name);
+                                                                      searched =
+                                                                          true;
+                                                                    });
+                                                                  },
+                                                                  leading: Icon(
+                                                                      Feather
+                                                                          .search),
+                                                                  title:
+                                                                      SubstringHighlight(
+                                                                    text: itemsgrid[
+                                                                            index]
+                                                                        .name,
+                                                                    term: searchcontroller
+                                                                        .text,
+                                                                    textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .black),
+                                                                    textStyleHighlight: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .black),
+                                                                  )
+
+//
+                                                                  ),
+                                                          childCount: itemsgrid
+                                                                      .length <=
+                                                                  15
+                                                              ? itemsgrid.length
+                                                              : 15,
+                                                        ),
+                                                      )
+                                                    : SliverToBoxAdapter(
+                                                        child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 15,
+                                                                    top: 10),
+                                                            child: Column(
+                                                              children: [
+                                                                Container(
+                                                                    height:
+                                                                        MediaQuery.of(context).size.height /
+                                                                                2 -
+                                                                            200,
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width -
+                                                                        50,
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'assets/184.png',
+                                                                      fit: BoxFit
+                                                                          .fitHeight,
+                                                                    )),
+                                                                SizedBox(
+                                                                  height: 30,
+                                                                ),
+                                                                searchcontroller
+                                                                            .text
+                                                                            .length >
+                                                                        3
+                                                                    ? Text(
+                                                                        'Oops. Can\'t find any results for that search.',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                18,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      )
+                                                                    : Text(
+                                                                        'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                18,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      )
+                                                              ],
+                                                            )),
+                                                      ),
+                                              ]))
                                       : searchresults(context)
                                   : Container(
                                       height:
@@ -1109,22 +1421,55 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                     )
                               : CustomScrollView(
                                   slivers: [
-                                    SliverToBoxAdapter(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, top: 15, bottom: 10),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            'Recent Searches',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    recentsearches.isNotEmpty
+                                        ? SliverToBoxAdapter(
+                                            child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 16,
+                                                    top: 10,
+                                                    bottom: 10,
+                                                    right: 36),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Recent Searches',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 18.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        final pref =
+                                                            await SharedPreferences
+                                                                .getInstance();
+
+                                                        pref.remove(
+                                                            'recentSearches');
+                                                        setState(() {
+                                                          recentsearches = [];
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                        'Clear All',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                          )
+                                        : SliverToBoxAdapter(),
                                     recentsearches.isNotEmpty
                                         ? SliverList(
                                             delegate:
@@ -1140,11 +1485,42 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                                     searched = true;
                                                   });
                                                 },
+                                                leading: Icon(
+                                                  Feather.clock,
+                                                  size: 18,
+                                                ),
+                                                trailing: InkWell(
+                                                  onTap: () async {
+                                                    final pref =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    var allSearches = pref
+                                                        .getStringList(
+                                                            "recentSearches")
+                                                        .toList();
+
+                                                    allSearches.remove(
+                                                        recentsearches[index]);
+
+                                                    pref.setStringList(
+                                                        "recentSearches",
+                                                        allSearches.toList());
+
+                                                    setState(() {
+                                                      recentsearches =
+                                                          allSearches.toList();
+                                                    });
+                                                  },
+                                                  child: Icon(
+                                                    Icons.cancel_rounded,
+                                                    size: 18,
+                                                  ),
+                                                ),
                                                 title: Text(
                                                   recentsearches[index],
                                                   style: TextStyle(
                                                     fontFamily: 'Helvetica',
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                   ),
                                                 ),
                                               ),
@@ -1155,46 +1531,721 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                             ),
                                           )
                                         : SliverToBoxAdapter(),
-                                    SliverToBoxAdapter(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 15, top: 15, bottom: 10),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            'Categories',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
+                                  ],
+                                ),
+                          searchcontroller.text.isNotEmpty
+                              ? loading == false
+                                  ? searched == false
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            FocusScope.of(context)
+                                                .requestFocus(new FocusNode());
+                                          },
+                                          child: CustomScrollView(
+                                              slivers: <Widget>[
+                                                SliverToBoxAdapter(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 15,
+                                                        top: 10,
+                                                        bottom: 10),
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        'Search Users',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w900),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                userList.isNotEmpty
+                                                    ? SliverList(
+                                                        delegate:
+                                                            new SliverChildBuilderDelegate(
+                                                          (context, index) =>
+                                                              ListTile(
+                                                            onTap: () async {
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) => UserItems(
+                                                                        userid: userList[index]
+                                                                            .userid,
+                                                                        username:
+                                                                            userList[index].username)),
+                                                              );
+                                                            },
+                                                            leading: userList[index]
+                                                                            .profilepicture !=
+                                                                        null &&
+                                                                    userList[index]
+                                                                        .profilepicture
+                                                                        .isNotEmpty
+                                                                ? Container(
+                                                                    height: 50,
+                                                                    width: 50,
+                                                                    child: ClipRRect(
+                                                                        borderRadius: BorderRadius.circular(25),
+                                                                        child: CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              userList[index].profilepicture,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        )),
+                                                                  )
+                                                                : CircleAvatar(
+                                                                    radius: 25,
+                                                                    backgroundColor: Colors
+                                                                        .deepOrangeAccent
+                                                                        .withOpacity(
+                                                                            0.3),
+                                                                    child:
+                                                                        ClipRRect(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              25),
+                                                                      child: Image
+                                                                          .asset(
+                                                                        'assets/personplaceholder.png',
+                                                                        fit: BoxFit
+                                                                            .fitWidth,
+                                                                      ),
+                                                                    )),
+                                                            title:
+                                                                SubstringHighlight(
+                                                              text: userList[
+                                                                      index]
+                                                                  .firstName,
+                                                              term:
+                                                                  searchcontroller
+                                                                      .text,
+                                                              textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .black),
+                                                              textStyleHighlight: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                            subtitle:
+                                                                SubstringHighlight(
+                                                              text: '@' +
+                                                                  userList[
+                                                                          index]
+                                                                      .username,
+                                                              term:
+                                                                  searchcontroller
+                                                                      .text,
+                                                              textStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .grey),
+                                                              textStyleHighlight: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 16,
+                                                                  color: Colors
+                                                                      .grey),
+                                                            ),
+//
+                                                          ),
+                                                          childCount: userList
+                                                                      .length <=
+                                                                  15
+                                                              ? userList.length
+                                                              : 15,
+                                                        ),
+                                                      )
+                                                    : SliverToBoxAdapter(
+                                                        child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 15,
+                                                                    top: 10),
+                                                            child: Column(
+                                                              children: [
+                                                                Container(
+                                                                    height:
+                                                                        MediaQuery.of(context).size.height /
+                                                                                2 -
+                                                                            200,
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width -
+                                                                        50,
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'assets/184.png',
+                                                                      fit: BoxFit
+                                                                          .fitHeight,
+                                                                    )),
+                                                                SizedBox(
+                                                                  height: 30,
+                                                                ),
+                                                                searchcontroller
+                                                                            .text
+                                                                            .length >
+                                                                        3
+                                                                    ? Text(
+                                                                        'Oops. Can\'t find any results for that search.',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                18,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      )
+                                                                    : Text(
+                                                                        'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                18,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      )
+                                                              ],
+                                                            )),
+                                                      ),
+                                              ]))
+                                      : searchresults(context)
+                                  : Container(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0, vertical: 16.0),
+                                        child: Shimmer.fromColors(
+                                          baseColor: Colors.grey[300],
+                                          highlightColor: Colors.grey[100],
+                                          child: ListView(
+                                            children: [0, 1, 2, 3, 4, 5, 6]
+                                                .map((_) => Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 8.0),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                            width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    2 -
+                                                                30,
+                                                            height: 150.0,
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                          ),
+                                                          Container(
+                                                            width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    2 -
+                                                                30,
+                                                            height: 150.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ))
+                                                .toList(),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    SliverStaggeredGrid.countBuilder(
-                                      crossAxisCount: 3,
-                                      itemBuilder:
-                                          (BuildContext context, index) {
-                                        return InkWell(
-                                          onTap: () {},
-                                          child: Padding(
-                                            padding: EdgeInsets.all(10),
-                                            child: Container(
-                                              color: Colors.red,
-                                              height: 50,
-                                              width: 100,
-                                              child: Text(categoryList[index]
-                                                  .categoryname),
+                                    )
+                              : CustomScrollView(
+                                  slivers: [
+                                    recentsearches.isNotEmpty
+                                        ? SliverToBoxAdapter(
+                                            child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 16,
+                                                    top: 10,
+                                                    bottom: 10,
+                                                    right: 36),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Recent Searches',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 18.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        final pref =
+                                                            await SharedPreferences
+                                                                .getInstance();
+
+                                                        pref.remove(
+                                                            'recentSearches');
+                                                        setState(() {
+                                                          recentsearches = [];
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                        'Clear All',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                          )
+                                        : SliverToBoxAdapter(),
+                                    recentsearches.isNotEmpty
+                                        ? SliverList(
+                                            delegate:
+                                                new SliverChildBuilderDelegate(
+                                              (context, index) => ListTile(
+                                                onTap: () async {
+                                                  await _saveToRecentSearches(
+                                                      recentsearches[index]);
+                                                  setState(() {
+                                                    loading = true;
+                                                    onSearch(
+                                                        recentsearches[index]);
+                                                    searched = true;
+                                                  });
+                                                },
+                                                leading: Icon(
+                                                  Feather.clock,
+                                                  size: 18,
+                                                ),
+                                                trailing: InkWell(
+                                                  onTap: () async {
+                                                    final pref =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    var allSearches = pref
+                                                        .getStringList(
+                                                            "recentSearches")
+                                                        .toList();
+
+                                                    allSearches.remove(
+                                                        recentsearches[index]);
+
+                                                    pref.setStringList(
+                                                        "recentSearches",
+                                                        allSearches.toList());
+
+                                                    setState(() {
+                                                      recentsearches =
+                                                          allSearches.toList();
+                                                    });
+                                                  },
+                                                  child: Icon(
+                                                    Icons.cancel_rounded,
+                                                    size: 18,
+                                                  ),
+                                                ),
+                                                title: Text(
+                                                  recentsearches[index],
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ),
+                                              childCount:
+                                                  recentsearches.length <= 8
+                                                      ? recentsearches.length
+                                                      : 8,
                                             ),
+                                          )
+                                        : SliverToBoxAdapter(),
+                                  ],
+                                ),
+                          searchcontroller.text.isNotEmpty
+                              ? loading == false
+                                  ? searched == false
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            FocusScope.of(context)
+                                                .requestFocus(new FocusNode());
+                                          },
+                                          child: CustomScrollView(
+                                              slivers: <Widget>[
+                                                SliverToBoxAdapter(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 15, top: 10),
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        'Search Results',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w900),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                itemsgrid.isNotEmpty
+                                                    ? SliverList(
+                                                        delegate:
+                                                            new SliverChildBuilderDelegate(
+                                                          (context, index) =>
+                                                              ListTile(
+                                                                  onTap:
+                                                                      () async {
+                                                                    await _saveToRecentSearches(
+                                                                        itemsgrid[index]
+                                                                            .name);
+                                                                    setState(
+                                                                        () {
+                                                                      loading =
+                                                                          true;
+                                                                      onSearch(itemsgrid[
+                                                                              index]
+                                                                          .name);
+                                                                      searched =
+                                                                          true;
+                                                                    });
+                                                                  },
+                                                                  leading: Icon(
+                                                                      Feather
+                                                                          .search),
+                                                                  title:
+                                                                      SubstringHighlight(
+                                                                    text: itemsgrid[
+                                                                            index]
+                                                                        .name,
+                                                                    term: searchcontroller
+                                                                        .text,
+                                                                    textStyle: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .black),
+                                                                    textStyleHighlight: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .black),
+                                                                  )
+
+//
+                                                                  ),
+                                                          childCount: itemsgrid
+                                                                      .length <=
+                                                                  15
+                                                              ? itemsgrid.length
+                                                              : 15,
+                                                        ),
+                                                      )
+                                                    : SliverToBoxAdapter(
+                                                        child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 15,
+                                                                    top: 10),
+                                                            child: Column(
+                                                              children: [
+                                                                Container(
+                                                                    height:
+                                                                        MediaQuery.of(context).size.height /
+                                                                                2 -
+                                                                            200,
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width -
+                                                                        50,
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'assets/184.png',
+                                                                      fit: BoxFit
+                                                                          .fitHeight,
+                                                                    )),
+                                                                SizedBox(
+                                                                  height: 30,
+                                                                ),
+                                                                searchcontroller
+                                                                            .text
+                                                                            .length >
+                                                                        3
+                                                                    ? Text(
+                                                                        'Oops. Can\'t find any results for that search.',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                18,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      )
+                                                                    : Text(
+                                                                        'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                'Helvetica',
+                                                                            fontSize:
+                                                                                18,
+                                                                            color:
+                                                                                Colors.grey.shade500),
+                                                                      )
+                                                              ],
+                                                            )),
+                                                      ),
+                                              ]))
+                                      : searchresults(context)
+                                  : Container(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      child: Container(
+                                        width: double.infinity,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0, vertical: 16.0),
+                                        child: Shimmer.fromColors(
+                                          baseColor: Colors.grey[300],
+                                          highlightColor: Colors.grey[100],
+                                          child: ListView(
+                                            children: [0, 1, 2, 3, 4, 5, 6]
+                                                .map((_) => Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 8.0),
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                            width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    2 -
+                                                                30,
+                                                            height: 150.0,
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        8.0),
+                                                          ),
+                                                          Container(
+                                                            width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    2 -
+                                                                30,
+                                                            height: 150.0,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ))
+                                                .toList(),
                                           ),
-                                        );
-                                      },
-                                      itemCount: categoryList.length,
-                                      staggeredTileBuilder: (int index) =>
-                                          new StaggeredTile.fit(1),
-                                      mainAxisSpacing: 4.0,
-                                      crossAxisSpacing: 4.0,
-                                    ),
+                                        ),
+                                      ),
+                                    )
+                              : CustomScrollView(
+                                  slivers: [
+                                    recentsearches.isNotEmpty
+                                        ? SliverToBoxAdapter(
+                                            child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 16,
+                                                    top: 10,
+                                                    bottom: 10,
+                                                    right: 36),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Recent Searches',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 18.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () async {
+                                                        final pref =
+                                                            await SharedPreferences
+                                                                .getInstance();
+
+                                                        pref.remove(
+                                                            'recentSearches');
+                                                        setState(() {
+                                                          recentsearches = [];
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                        'Clear All',
+                                                        style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
+                                          )
+                                        : SliverToBoxAdapter(),
+                                    recentsearches.isNotEmpty
+                                        ? SliverList(
+                                            delegate:
+                                                new SliverChildBuilderDelegate(
+                                              (context, index) => ListTile(
+                                                onTap: () async {
+                                                  await _saveToRecentSearches(
+                                                      recentsearches[index]);
+                                                  setState(() {
+                                                    loading = true;
+                                                    onSearch(
+                                                        recentsearches[index]);
+                                                    searched = true;
+                                                  });
+                                                },
+                                                leading: Icon(
+                                                  Feather.clock,
+                                                  size: 18,
+                                                ),
+                                                trailing: InkWell(
+                                                  onTap: () async {
+                                                    final pref =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    var allSearches = pref
+                                                        .getStringList(
+                                                            "recentSearches")
+                                                        .toList();
+
+                                                    allSearches.remove(
+                                                        recentsearches[index]);
+
+                                                    pref.setStringList(
+                                                        "recentSearches",
+                                                        allSearches.toList());
+
+                                                    setState(() {
+                                                      recentsearches =
+                                                          allSearches.toList();
+                                                    });
+                                                  },
+                                                  child: Icon(
+                                                    Icons.cancel_rounded,
+                                                    size: 18,
+                                                  ),
+                                                ),
+                                                title: Text(
+                                                  recentsearches[index],
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                              ),
+                                              childCount:
+                                                  recentsearches.length <= 8
+                                                      ? recentsearches.length
+                                                      : 8,
+                                            ),
+                                          )
+                                        : SliverToBoxAdapter(),
                                   ],
                                 ),
                         ]))))));

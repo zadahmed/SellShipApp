@@ -467,7 +467,9 @@ class _ProfilePageState extends State<ProfilePage>
                                                                         .circular(
                                                                             50),
                                                                 child: profilepicture ==
-                                                                        null
+                                                                            null ||
+                                                                        profilepicture
+                                                                            .isEmpty
                                                                     ? Image
                                                                         .asset(
                                                                         'assets/personplaceholder.png',

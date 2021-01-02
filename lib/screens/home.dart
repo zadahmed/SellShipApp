@@ -6,6 +6,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/models/user.dart';
 import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
@@ -796,9 +797,28 @@ class _HomeScreenState extends State<HomeScreen>
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
     ));
 
+    _tabController.addListener(() {
+      var tab = _tabController.index;
+
+      if (tab == 0) {
+        setState(() {
+          loading = true;
+          gettopdata();
+          readstorage();
+        });
+      }
+      if (tab == 1) {
+        setState(() {
+          foryouloading = true;
+          foryoupage();
+        });
+      }
+    });
     gettopdata();
     readstorage();
   }
+
+  bool foryouloading = true;
 
   List<String> conditions = [
     'New with tags',
@@ -953,6 +973,10 @@ class _HomeScreenState extends State<HomeScreen>
       }
     }
   }
+
+  Color followcolor = Colors.deepOrange;
+
+  var follow = false;
 
   var notifcount;
   var notifbadge;
@@ -1431,8 +1455,38 @@ class _HomeScreenState extends State<HomeScreen>
 
   String view = 'home';
 
+  List<User> followingusers = List<User>();
+
+  followuser(user) async {
+    User foluser = user;
+    var userid = await storage.read(key: 'userid');
+    if (followingusers.contains(user)) {
+      setState(() {
+        followingusers.remove(foluser);
+      });
+      var followurl =
+          'https://api.sellship.co/api/follow/' + userid + '/' + foluser.userid;
+
+      final followresponse = await http.get(followurl);
+      if (followresponse.statusCode == 200) {
+        print('UnFollowed');
+      }
+    } else {
+      setState(() {
+        followingusers.add(foluser);
+      });
+      var followurl =
+          'https://api.sellship.co/api/follow/' + userid + '/' + foluser.userid;
+
+      final followresponse = await http.get(followurl);
+      if (followresponse.statusCode == 200) {
+        print('Followed');
+      }
+    }
+  }
+
   Widget foryouPage(BuildContext context) {
-    return loading == false
+    return foryouloading == false
         ? EasyRefresh.custom(
             topBouncing: true,
             footer: MaterialFooter(
@@ -1441,8 +1495,186 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             slivers: <Widget>[
                 SliverToBoxAdapter(
-                  child: Text('For You'),
-                )
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height / 4,
+                      width: MediaQuery.of(context).size.width,
+                      child:
+                          Image.asset('assets/024.png', fit: BoxFit.fitHeight),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Text(
+                          'Oops! Looks like you are not following any SellShipers. Here are a few recommendations.',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 18.0,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w400),
+                          textAlign: TextAlign.center,
+                        )),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 10),
+                      child: Container(
+                          height: 270,
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Sellers you may like',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 20.0,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w800),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(height: 10),
+                              Container(
+                                height: 215,
+                                width: MediaQuery.of(context).size.width,
+                                child: ListView.builder(
+                                  itemCount: userList.length,
+                                  scrollDirection: Axis.horizontal,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return new Padding(
+                                      padding: EdgeInsets.only(
+                                          right: 5, top: 10, bottom: 10),
+                                      child: Container(
+                                        height: 205,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                    2 -
+                                                100,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            userList[index].profilepicture !=
+                                                        null &&
+                                                    userList[index]
+                                                        .profilepicture
+                                                        .isNotEmpty
+                                                ? Container(
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          imageUrl: userList[
+                                                                  index]
+                                                              .profilepicture,
+                                                          fit: BoxFit.cover,
+                                                        )),
+                                                  )
+                                                : CircleAvatar(
+                                                    radius: 40,
+                                                    backgroundColor: Colors
+                                                        .deepOrangeAccent
+                                                        .withOpacity(0.3),
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                      child: Image.asset(
+                                                        'assets/personplaceholder.png',
+                                                        fit: BoxFit.fitWidth,
+                                                      ),
+                                                    )),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              '@' + userList[index].username,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              userList[index].productsnumber !=
+                                                      null
+                                                  ? userList[index]
+                                                          .productsnumber +
+                                                      ' Listings'
+                                                  : '0 Listings',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 14,
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: Container(
+                                                height: 30,
+                                                width: 100,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      followingusers.contains(
+                                                              userList[index])
+                                                          ? Colors.black
+                                                          : Colors.deepOrange,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    followuser(userList[index]);
+                                                  },
+                                                  child: Center(
+                                                    child: Text(
+                                                      followingusers.contains(
+                                                              userList[index])
+                                                          ? 'Following'
+                                                          : 'Follow',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                  ],
+                ))
               ])
         : Container(
             height: MediaQuery.of(context).size.height,
@@ -1490,6 +1722,84 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ));
   }
+
+  foryoupage() async {
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://api.sellship.co/api/foryou/feed/' + userid;
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+      if (jsonbody.isEmpty) {
+        getsellerrecommendation();
+      } else {
+        print(jsonbody);
+      }
+    }
+  }
+
+  getsellerrecommendation() async {
+    userList.clear();
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://api.sellship.co/api/follower/recommendations/' +
+        userid +
+        '/' +
+        country;
+
+    List<User> testList = new List<User>();
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+
+      for (var jsondata in jsonbody) {
+        var lastname;
+        var username;
+        if (jsondata.containsKey('last_name')) {
+          lastname = jsondata['last_name'];
+        } else {
+          lastname = '';
+        }
+
+        if (jsondata.containsKey('username')) {
+          username = jsondata['username'];
+        } else {
+          username = jsondata['first_name'];
+        }
+
+        int products;
+        if (jsondata.containsKey('products')) {
+          products = jsondata['products'].length;
+          print(products.toString());
+        } else {
+          products = 0;
+        }
+
+        User user = new User(
+            firstName: capitalize(jsondata['first_name']) + ' ' + lastname,
+            username: username,
+            userid: jsondata['_id']['\$oid'],
+            productsnumber: products.toString(),
+            profilepicture: jsondata['profilepicture']);
+
+        if (!testList.contains(user)) {
+          testList.add(user);
+        }
+      }
+
+      testList.sort((a, b) {
+        return a.compareTo(b);
+      });
+
+      setState(() {
+        userList = testList;
+        foryouloading = false;
+      });
+    }
+  }
+
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
+  List<User> userList = new List<User>();
 
   Widget homePage(BuildContext context) {
     return loading == false

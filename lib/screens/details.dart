@@ -1449,7 +1449,8 @@ class _DetailsState extends State<Details> {
                                         );
                                       },
                                       dense: true,
-                                      leading: profilepicture != null
+                                      leading: profilepicture != null &&
+                                              profilepicture.isNotEmpty
                                           ? Container(
                                               height: 50,
                                               width: 50,

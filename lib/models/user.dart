@@ -1,19 +1,26 @@
 import 'package:SellShip/models/databaseFields.dart';
 
 class User {
+  String userid;
   String firstName;
   String lastName;
   String email;
   String phoneNumber;
   String password;
+  String profilepicture;
+  String username;
+  String productsnumber;
 
-  User({
-    this.firstName,
-    this.lastName,
-    this.phoneNumber,
-    this.email,
-    this.password,
-  });
+  User(
+      {this.firstName,
+      this.userid,
+      this.lastName,
+      this.phoneNumber,
+      this.username,
+      this.email,
+      this.productsnumber,
+      this.password,
+      this.profilepicture});
 
   User.fromDB({Map<String, dynamic> dbSnapshot}) {
     firstName = dbSnapshot[UserFields.firstName];
@@ -31,5 +38,10 @@ class User {
       UserFields.email: email,
       UserFields.password: password,
     };
+  }
+
+  int compareTo(User other) {
+    int order = other.productsnumber.compareTo(productsnumber);
+    return order;
   }
 }
