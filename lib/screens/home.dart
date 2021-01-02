@@ -810,7 +810,9 @@ class _HomeScreenState extends State<HomeScreen>
       if (tab == 1) {
         setState(() {
           foryouloading = true;
-          foryoupage();
+          foryou();
+          getsellerrecommendation();
+          foryoupagescroll();
         });
       }
     });
@@ -1487,43 +1489,330 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget foryouPage(BuildContext context) {
     return foryouloading == false
-        ? EasyRefresh.custom(
-            topBouncing: true,
-            footer: MaterialFooter(
-              enableInfiniteLoad: true,
-              enableHapticFeedback: true,
-            ),
-            slivers: <Widget>[
-                SliverToBoxAdapter(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height / 4,
-                      width: MediaQuery.of(context).size.width,
-                      child:
-                          Image.asset('assets/024.png', fit: BoxFit.fitHeight),
+        ? foryoulist.isEmpty
+            ? EasyRefresh.custom(
+                topBouncing: true,
+                footer: MaterialFooter(
+                  enableInfiniteLoad: true,
+                  enableHapticFeedback: true,
+                ),
+                slivers: <Widget>[
+                    SliverToBoxAdapter(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height / 4,
+                          width: MediaQuery.of(context).size.width,
+                          child: Image.asset('assets/024.png',
+                              fit: BoxFit.fitHeight),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Text(
+                              'Oops! Looks like you are not following any SellShipers. Here are a few recommendations.',
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 18.0,
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.w400),
+                              textAlign: TextAlign.center,
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(left: 20, right: 10),
+                          child: Container(
+                              height: 270,
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Sellers you may like',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 20.0,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w800),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    height: 215,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListView.builder(
+                                      itemCount: userList.length,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return new Padding(
+                                          padding: EdgeInsets.only(
+                                              right: 5, top: 10, bottom: 10),
+                                          child: Container(
+                                            height: 205,
+                                            width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    2 -
+                                                100,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                userList[index].profilepicture !=
+                                                            null &&
+                                                        userList[index]
+                                                            .profilepicture
+                                                            .isNotEmpty
+                                                    ? Container(
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        50),
+                                                            child:
+                                                                CachedNetworkImage(
+                                                              imageUrl: userList[
+                                                                      index]
+                                                                  .profilepicture,
+                                                              fit: BoxFit.cover,
+                                                            )),
+                                                      )
+                                                    : CircleAvatar(
+                                                        radius: 40,
+                                                        backgroundColor: Colors
+                                                            .deepOrangeAccent
+                                                            .withOpacity(0.3),
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(50),
+                                                          child: Image.asset(
+                                                            'assets/personplaceholder.png',
+                                                            fit:
+                                                                BoxFit.fitWidth,
+                                                          ),
+                                                        )),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  '@' +
+                                                      userList[index].username,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  userList[index]
+                                                              .productsnumber !=
+                                                          null
+                                                      ? userList[index]
+                                                              .productsnumber +
+                                                          ' Listings'
+                                                      : '0 Listings',
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 14,
+                                                      color: Colors.black),
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(5),
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                      color: followingusers
+                                                              .contains(
+                                                                  userList[
+                                                                      index])
+                                                          ? Colors.black
+                                                          : Colors.deepOrange,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: InkWell(
+                                                      onTap: () async {
+                                                        followuser(
+                                                            userList[index]);
+                                                      },
+                                                      child: Center(
+                                                        child: Text(
+                                                          followingusers
+                                                                  .contains(
+                                                                      userList[
+                                                                          index])
+                                                              ? 'Following'
+                                                              : 'Follow',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              )),
+                        ),
+                      ],
+                    ))
+                  ])
+            : EasyRefresh.custom(
+                topBouncing: true,
+                footer: MaterialFooter(
+                  enableInfiniteLoad: true,
+                  enableHapticFeedback: true,
+                ),
+                slivers: <Widget>[
+                  SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, childAspectRatio: 1),
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        if (index != 0 && index % 8 == 0) {
+                          return Platform.isIOS == true
+                              ? Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.2, color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: NativeAdmob(
+                                    adUnitID: _iosadUnitID,
+                                    controller: _controller,
+                                  ),
+                                )
+                              : Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.2, color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: NativeAdmob(
+                                    adUnitID: _androidadUnitID,
+                                    controller: _controller,
+                                  ),
+                                );
+                        }
+
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Details(
+                                        itemid: foryoulist[index].itemid,
+                                        sold: foryoulist[index].sold,
+                                      )),
+                            );
+                          },
+                          child: Stack(children: <Widget>[
+                            Container(
+                              height: 150,
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                child: CachedNetworkImage(
+                                  fadeInDuration: Duration(microseconds: 5),
+                                  imageUrl: foryoulist[index].image.isEmpty
+                                      ? SpinKitChasingDots(
+                                          color: Colors.deepOrange)
+                                      : foryoulist[index].image,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      SpinKitChasingDots(
+                                          color: Colors.deepOrange),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                            foryoulist[index].sold == true
+                                ? Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.4),
+                                      ),
+                                      width: 210,
+                                      child: Center(
+                                        child: Text(
+                                          'Sold',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                                : Container(),
+                          ]),
+                        );
+                      },
+                      childCount: foryoulist.length,
                     ),
-                    Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Text(
-                          'Oops! Looks like you are not following any SellShipers. Here are a few recommendations.',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w400),
-                          textAlign: TextAlign.center,
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 10),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20, right: 10, top: 10),
                       child: Container(
-                          height: 270,
+                          height: 245,
                           width: MediaQuery.of(context).size.width,
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
                             color: Colors.white,
                           ),
                           child: Column(
@@ -1539,9 +1828,9 @@ class _HomeScreenState extends State<HomeScreen>
                                     fontWeight: FontWeight.w800),
                                 textAlign: TextAlign.center,
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 5),
                               Container(
-                                height: 215,
+                                height: 195,
                                 width: MediaQuery.of(context).size.width,
                                 child: ListView.builder(
                                   itemCount: userList.length,
@@ -1550,7 +1839,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       (BuildContext context, int index) {
                                     return new Padding(
                                       padding: EdgeInsets.only(
-                                          right: 5, top: 10, bottom: 10),
+                                          right: 5, top: 10, bottom: 5),
                                       child: Container(
                                         height: 205,
                                         width:
@@ -1673,9 +1962,124 @@ class _HomeScreenState extends State<HomeScreen>
                             ],
                           )),
                     ),
-                  ],
-                ))
-              ])
+                  ),
+                  SliverGrid(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, childAspectRatio: 1),
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        if (index != 0 && index % 8 == 0) {
+                          return Platform.isIOS == true
+                              ? Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.2, color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: NativeAdmob(
+                                    adUnitID: _iosadUnitID,
+                                    controller: _controller,
+                                  ),
+                                )
+                              : Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 0.2, color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: Offset(0.0, 1.0), //(x,y)
+                                        blurRadius: 6.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: NativeAdmob(
+                                    adUnitID: _androidadUnitID,
+                                    controller: _controller,
+                                  ),
+                                );
+                        }
+
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Details(
+                                        itemid: foryouscroll[index].itemid,
+                                        sold: foryouscroll[index].sold,
+                                      )),
+                            );
+                          },
+                          child: Stack(children: <Widget>[
+                            Container(
+                              height: 150,
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                child: CachedNetworkImage(
+                                  fadeInDuration: Duration(microseconds: 5),
+                                  imageUrl: foryouscroll[index].image.isEmpty
+                                      ? SpinKitChasingDots(
+                                          color: Colors.deepOrange)
+                                      : foryouscroll[index].image,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      SpinKitChasingDots(
+                                          color: Colors.deepOrange),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                            foryouscroll[index].sold == true
+                                ? Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.4),
+                                      ),
+                                      width: 210,
+                                      child: Center(
+                                        child: Text(
+                                          'Sold',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                                : Container(),
+                          ]),
+                        );
+                      },
+                      childCount: foryouscroll.length,
+                    ),
+                  )
+                ],
+                enableControlFinishLoad: true,
+                onLoad: () {
+                  setState(() {
+                    foryouskip = foryouskip + 30;
+                    foryoulimit = foryoulimit + 30;
+                  });
+                  return foryoupagescroll();
+                },
+              )
         : Container(
             height: MediaQuery.of(context).size.height,
             child: Container(
@@ -1723,20 +2127,84 @@ class _HomeScreenState extends State<HomeScreen>
             ));
   }
 
-  foryoupage() async {
+  foryou() async {
     var userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/foryou/feed/' + userid;
+    var url = 'https://api.sellship.co/api/foryou/feed/' + userid + '/0/10';
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
+      print(response.body);
       var jsonbody = json.decode(response.body);
       if (jsonbody.isEmpty) {
-        getsellerrecommendation();
+        setState(() {
+          foryoulist = [];
+        });
       } else {
-        print(jsonbody);
+        var jsonbody = json.decode(response.body);
+
+        for (var i = 0; i < jsonbody.length; i++) {
+          Item item = Item(
+            itemid: jsonbody[i]['_id']['\$oid'],
+            image: jsonbody[i]['image'],
+            sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+          );
+          foryoulist.add(item);
+        }
+
+        setState(() {
+          foryoulist = foryoulist;
+          foryouloading = false;
+        });
       }
+    } else {
+      print(response.statusCode);
     }
   }
+
+  int foryouskip = 10;
+  int foryoulimit = 40;
+
+  foryoupagescroll() async {
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://api.sellship.co/api/foryou/feed/' +
+        userid +
+        '/' +
+        foryouskip.toString() +
+        '/' +
+        foryoulimit.toString();
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      print(response.body);
+      var jsonbody = json.decode(response.body);
+      if (jsonbody.isEmpty) {
+        setState(() {
+          foryouscroll = [];
+        });
+      } else {
+        var jsonbody = json.decode(response.body);
+
+        for (var i = 0; i < jsonbody.length; i++) {
+          Item item = Item(
+            itemid: jsonbody[i]['_id']['\$oid'],
+            image: jsonbody[i]['image'],
+            sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+          );
+          foryouscroll.add(item);
+        }
+
+        setState(() {
+          foryouscroll = foryouscroll;
+          foryouloading = false;
+        });
+      }
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  List<Item> foryoulist = List<Item>();
+  List<Item> foryouscroll = List<Item>();
 
   getsellerrecommendation() async {
     userList.clear();
@@ -1912,29 +2380,18 @@ class _HomeScreenState extends State<HomeScreen>
                                               child: Container(
                                                 height: 50,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.deepPurpleAccent
-                                                      .withOpacity(0.8),
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  10),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  10)),
+                                                  color: Colors.black
+                                                      .withOpacity(0.4),
                                                 ),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
+                                                width: 210,
                                                 child: Center(
                                                   child: Text(
                                                     'Sold',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                      fontFamily: 'Helvetica',
+                                                      color: Colors.white,
+                                                    ),
                                                   ),
                                                 ),
                                               ))
@@ -2231,29 +2688,18 @@ class _HomeScreenState extends State<HomeScreen>
                                               child: Container(
                                                 height: 50,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.deepPurpleAccent
-                                                      .withOpacity(0.8),
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  10),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  10)),
+                                                  color: Colors.black
+                                                      .withOpacity(0.4),
                                                 ),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
+                                                width: 210,
                                                 child: Center(
                                                   child: Text(
                                                     'Sold',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                      fontFamily: 'Helvetica',
+                                                      color: Colors.white,
+                                                    ),
                                                   ),
                                                 ),
                                               ))
@@ -2526,29 +2972,18 @@ class _HomeScreenState extends State<HomeScreen>
                                               child: Container(
                                                 height: 50,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.deepPurpleAccent
-                                                      .withOpacity(0.8),
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  10),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  10)),
+                                                  color: Colors.black
+                                                      .withOpacity(0.4),
                                                 ),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
+                                                width: 210,
                                                 child: Center(
                                                   child: Text(
                                                     'Sold',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                      fontFamily: 'Helvetica',
+                                                      color: Colors.white,
+                                                    ),
                                                   ),
                                                 ),
                                               ))
@@ -2850,22 +3285,18 @@ class _HomeScreenState extends State<HomeScreen>
                                         child: Container(
                                           height: 50,
                                           decoration: BoxDecoration(
-                                            color: Colors.deepPurpleAccent
-                                                .withOpacity(0.8),
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                topRight: Radius.circular(10)),
+                                            color:
+                                                Colors.black.withOpacity(0.4),
                                           ),
-                                          width:
-                                              MediaQuery.of(context).size.width,
+                                          width: 210,
                                           child: Center(
                                             child: Text(
                                               'Sold',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                                fontFamily: 'Helvetica',
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
                                         ))
@@ -3874,31 +4305,19 @@ class UserSearchDelegate extends SearchDelegate {
                                                 child: Container(
                                                   height: 50,
                                                   decoration: BoxDecoration(
-                                                    color: Colors
-                                                        .deepPurpleAccent
-                                                        .withOpacity(0.8),
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft: Radius
-                                                                .circular(10),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    10)),
+                                                    color: Colors.black
+                                                        .withOpacity(0.4),
                                                   ),
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
+                                                  width: 210,
                                                   child: Center(
                                                     child: Text(
                                                       'Sold',
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                      ),
                                                     ),
                                                   ),
                                                 ))
@@ -4357,35 +4776,20 @@ class UserSearchDelegate extends SearchDelegate {
                                                     child: Container(
                                                       height: 50,
                                                       decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .deepPurpleAccent
-                                                            .withOpacity(0.8),
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        10),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        10)),
+                                                        color: Colors.black
+                                                            .withOpacity(0.4),
                                                       ),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
+                                                      width: 210,
                                                       child: Center(
                                                         child: Text(
                                                           'Sold',
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
                                                       ),
                                                     ))
