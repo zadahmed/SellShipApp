@@ -38,7 +38,6 @@ class _SignUpPageState extends State<SignUpPage> {
   void initState() {
     super.initState();
     Firebase.initializeApp();
-
   }
 
   TextEditingController signupEmailController = new TextEditingController();
@@ -442,8 +441,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final storage = new FlutterSecureStorage();
   var firebasetoken;
   var userid;
-
-
 
   bool isValid = false;
   Future<Null> validate(StateSetter updateState) async {

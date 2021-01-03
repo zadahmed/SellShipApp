@@ -785,13 +785,15 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
 
-    setState(() {
-      skip = 0;
-      limit = 40;
-      loading = true;
-      notifbadge = false;
-      notbadge = false;
-    });
+    if (mounted) {
+      setState(() {
+        skip = 0;
+        limit = 40;
+        loading = true;
+        notifbadge = false;
+        notbadge = false;
+      });
+    }
     _tabController = new TabController(length: 2, vsync: this);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
@@ -801,19 +803,23 @@ class _HomeScreenState extends State<HomeScreen>
       var tab = _tabController.index;
 
       if (tab == 0) {
-        setState(() {
-          loading = true;
-          gettopdata();
-          readstorage();
-        });
+        if (mounted) {
+          setState(() {
+            loading = true;
+            gettopdata();
+            readstorage();
+          });
+        }
       }
       if (tab == 1) {
-        setState(() {
-          foryouloading = true;
-          foryou();
-          getsellerrecommendation();
-          foryoupagescroll();
-        });
+        if (mounted) {
+          setState(() {
+            foryouloading = true;
+            foryou();
+            getsellerrecommendation();
+            foryoupagescroll();
+          });
+        }
       }
     });
     gettopdata();
@@ -988,25 +994,30 @@ class _HomeScreenState extends State<HomeScreen>
     getfavourites();
     var countr = await storage.read(key: 'country');
     if (countr.toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
+      if (mounted)
+        setState(() {
+          currency = 'AED';
+        });
     } else if (countr.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (countr.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (countr.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\£';
+        });
     }
-    setState(() {
-      country = countr;
-    });
+    if (mounted)
+      setState(() {
+        country = countr;
+      });
 
     fetchRecentlyAdded(skip, limit);
     fetchbelowhundred(skip, limit);
@@ -1707,19 +1718,6 @@ class _HomeScreenState extends State<HomeScreen>
                           return Platform.isIOS == true
                               ? Container(
                                   height: 200,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.2, color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
                                   child: NativeAdmob(
                                     adUnitID: _iosadUnitID,
                                     controller: _controller,
@@ -1727,19 +1725,6 @@ class _HomeScreenState extends State<HomeScreen>
                                 )
                               : Container(
                                   height: 200,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.2, color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
                                   child: NativeAdmob(
                                     adUnitID: _androidadUnitID,
                                     controller: _controller,
@@ -2136,9 +2121,10 @@ class _HomeScreenState extends State<HomeScreen>
       print(response.body);
       var jsonbody = json.decode(response.body);
       if (jsonbody.isEmpty) {
-        setState(() {
-          foryoulist = [];
-        });
+        if (mounted)
+          setState(() {
+            foryoulist = [];
+          });
       } else {
         var jsonbody = json.decode(response.body);
 
@@ -2150,11 +2136,11 @@ class _HomeScreenState extends State<HomeScreen>
           );
           foryoulist.add(item);
         }
-
-        setState(() {
-          foryoulist = foryoulist;
-          foryouloading = false;
-        });
+        if (mounted)
+          setState(() {
+            foryoulist = foryoulist;
+            foryouloading = false;
+          });
       }
     } else {
       print(response.statusCode);
@@ -2178,9 +2164,10 @@ class _HomeScreenState extends State<HomeScreen>
       print(response.body);
       var jsonbody = json.decode(response.body);
       if (jsonbody.isEmpty) {
-        setState(() {
-          foryouscroll = [];
-        });
+        if (mounted)
+          setState(() {
+            foryouscroll = [];
+          });
       } else {
         var jsonbody = json.decode(response.body);
 
@@ -2193,10 +2180,11 @@ class _HomeScreenState extends State<HomeScreen>
           foryouscroll.add(item);
         }
 
-        setState(() {
-          foryouscroll = foryouscroll;
-          foryouloading = false;
-        });
+        if (mounted)
+          setState(() {
+            foryouscroll = foryouscroll;
+            foryouloading = false;
+          });
       }
     } else {
       print(response.statusCode);
@@ -2258,10 +2246,11 @@ class _HomeScreenState extends State<HomeScreen>
         return a.compareTo(b);
       });
 
-      setState(() {
-        userList = testList;
-        foryouloading = false;
-      });
+      if (mounted)
+        setState(() {
+          userList = testList;
+          foryouloading = false;
+        });
     }
   }
 
@@ -3546,13 +3535,15 @@ class _HomeScreenState extends State<HomeScreen>
       }
 
       if (topitems != null) {
-        setState(() {
-          topitems = topitems;
-        });
+        if (mounted)
+          setState(() {
+            topitems = topitems;
+          });
       } else {
-        setState(() {
-          topitems = [];
-        });
+        if (mounted)
+          setState(() {
+            topitems = [];
+          });
       }
     } else {
       print('error');
@@ -3982,11 +3973,11 @@ class _HomeScreenState extends State<HomeScreen>
       );
       itemsgrid.add(item);
     }
-
-    setState(() {
-      loading = false;
-      itemsgrid = itemsgrid;
-    });
+    if (mounted)
+      setState(() {
+        loading = false;
+        itemsgrid = itemsgrid;
+      });
 
     return itemsgrid;
   }

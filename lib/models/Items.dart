@@ -30,6 +30,11 @@ class Item {
   final String size;
   final int views;
   final String orderstatus;
+  final int offerstage;
+  final String buyerid;
+  final String sellerid;
+  final String buyername;
+  final String sellername;
 
   Item(
       {this.itemid,
@@ -41,6 +46,11 @@ class Item {
       this.weight,
       this.image2,
       this.image3,
+      this.offerstage,
+      this.buyerid,
+      this.sellerid,
+      this.buyername,
+      this.sellername,
       this.orderstatus,
       this.image4,
       this.comments,

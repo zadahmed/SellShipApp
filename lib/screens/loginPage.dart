@@ -28,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-
   }
 
   final FocusNode myFocusNodePassword = FocusNode();
@@ -40,8 +39,6 @@ class _LoginPageState extends State<LoginPage> {
   final storage = new FlutterSecureStorage();
   var firebasetoken;
   var userid;
-
-
 
   @override
   Widget build(BuildContext context) {

@@ -1145,8 +1145,8 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                                                       .circular(
                                                                           10),
                                                               child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl: categoryList[
+                                                                  Image.network(
+                                                                categoryList[
                                                                         index]
                                                                     .categoryimage,
                                                                 fit: BoxFit

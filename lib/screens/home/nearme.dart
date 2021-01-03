@@ -97,9 +97,6 @@ class NearMeState extends State<NearMe> {
         getcity();
       });
 
-
-
-
       List<Placemark> placemarks = await placemarkFromCoordinates(
           position.latitude, position.longitude,
           localeIdentifier: 'en');

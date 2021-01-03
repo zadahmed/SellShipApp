@@ -120,16 +120,18 @@ class _ProfilePageState extends State<ProfilePage>
         var notcoun = notificationinfo['notcount'];
 
         if (notcoun <= 0) {
-          setState(() {
-            notcount = notcoun;
-            notbadge = false;
-          });
+          if (mounted)
+            setState(() {
+              notcount = notcoun;
+              notbadge = false;
+            });
           FlutterAppBadger.removeBadge();
         } else if (notcoun > 0) {
-          setState(() {
-            notcount = notcoun;
-            notbadge = true;
-          });
+          if (mounted)
+            setState(() {
+              notcount = notcoun;
+              notbadge = true;
+            });
         }
 
         print(notcount);
@@ -146,10 +148,11 @@ class _ProfilePageState extends State<ProfilePage>
     super.initState();
 
     getnotification();
-    setState(() {
-      loading = true;
-      notbadge = false;
-    });
+    if (mounted)
+      setState(() {
+        loading = true;
+        notbadge = false;
+      });
     _tabController = new TabController(length: 4, vsync: this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -164,24 +167,27 @@ class _ProfilePageState extends State<ProfilePage>
 
       if (tab == 3) {
         refreshreviews();
-        setState(() {
-          reviewloading = true;
-          refreshreviews();
-        });
+        if (mounted)
+          setState(() {
+            reviewloading = true;
+            refreshreviews();
+          });
       }
       if (tab == 1) {
-        setState(() {
-          orderloading = true;
-          getorders();
-        });
+        if (mounted)
+          setState(() {
+            orderloading = true;
+            getorders();
+          });
       }
 
       if (tab == 2) {
-        setState(() {
-          favouriteloading = true;
-          getfavourites();
-          getfavouritesuser();
-        });
+        if (mounted)
+          setState(() {
+            favouriteloading = true;
+            getfavourites();
+            getfavouritesuser();
+          });
       }
     });
   }
@@ -215,9 +221,10 @@ class _ProfilePageState extends State<ProfilePage>
       print(response.data);
     }
 
-    setState(() {
-      profilepicture = response.data;
-    });
+    if (mounted)
+      setState(() {
+        profilepicture = response.data;
+      });
 
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -243,18 +250,20 @@ class _ProfilePageState extends State<ProfilePage>
 
             Iterable inReverse = ites.reversed;
             List<String> jsoninreverse = inReverse.toList();
-            setState(() {
-              favourites = jsoninreverse;
-            });
+            if (mounted)
+              setState(() {
+                favourites = jsoninreverse;
+              });
           } else {
             favourites = [];
           }
         }
       }
     } else {
-      setState(() {
-        favourites = [];
-      });
+      if (mounted)
+        setState(() {
+          favourites = [];
+        });
     }
   }
 
@@ -278,9 +287,10 @@ class _ProfilePageState extends State<ProfilePage>
       print(response.data);
     }
 
-    setState(() {
-      profilepicture = response.data;
-    });
+    if (mounted)
+      setState(() {
+        profilepicture = response.data;
+      });
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -289,7 +299,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   onSearch(String texte) async {
     if (texte.isEmpty) {
-      setState(() {});
+      if (mounted) setState(() {});
     } else {
       searchcontroller.clear();
       Navigator.push(
@@ -356,9 +366,10 @@ class _ProfilePageState extends State<ProfilePage>
           print(response.statusCode);
         }
 
-        setState(() {
-          loggedin = true;
-        });
+        if (mounted)
+          setState(() {
+            loggedin = true;
+          });
         break;
 
       case FacebookLoginStatus.cancelledByUser:
@@ -1203,14 +1214,17 @@ class _ProfilePageState extends State<ProfilePage>
                                                       favourites.remove(
                                                           favouritelist[index]
                                                               .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        favouritelist[index]
-                                                                .likes =
-                                                            favouritelist[index]
-                                                                    .likes -
-                                                                1;
-                                                      });
+                                                      if (mounted)
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          favouritelist[index]
+                                                                  .likes =
+                                                              favouritelist[
+                                                                          index]
+                                                                      .likes -
+                                                                  1;
+                                                        });
                                                       final response =
                                                           await http.post(url,
                                                               body: body);
@@ -1266,14 +1280,17 @@ class _ProfilePageState extends State<ProfilePage>
                                                       favourites.add(
                                                           favouritelist[index]
                                                               .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        favouritelist[index]
-                                                                .likes =
-                                                            favouritelist[index]
-                                                                    .likes +
-                                                                1;
-                                                      });
+                                                      if (mounted)
+                                                        setState(() {
+                                                          favourites =
+                                                              favourites;
+                                                          favouritelist[index]
+                                                                  .likes =
+                                                              favouritelist[
+                                                                          index]
+                                                                      .likes +
+                                                                  1;
+                                                        });
                                                       final response =
                                                           await http.post(url,
                                                               body: body);
@@ -1424,21 +1441,25 @@ class _ProfilePageState extends State<ProfilePage>
     var country = await storage.read(key: 'country');
 
     if (country.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
+      if (mounted)
+        setState(() {
+          currency = 'AED';
+        });
     } else if (country.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (country.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (country.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\£';
+        });
     }
 
     if (userid != null) {
@@ -1474,28 +1495,32 @@ class _ProfilePageState extends State<ProfilePage>
 
             Iterable inReverse = ites.reversed;
             List<Item> jsoninreverse = inReverse.toList();
-            setState(() {
-              favouritelist = jsoninreverse;
+            if (mounted)
+              setState(() {
+                favouritelist = jsoninreverse;
 
-              favouriteloading = false;
-            });
+                favouriteloading = false;
+              });
           } else {
             favouritelist = [];
           }
         } else {
+          if (mounted)
+            setState(() {
+              favouriteloading = false;
+            });
+        }
+      } else {
+        if (mounted)
           setState(() {
             favouriteloading = false;
           });
-        }
-      } else {
+      }
+    } else {
+      if (mounted)
         setState(() {
           favouriteloading = false;
         });
-      }
-    } else {
-      setState(() {
-        favouriteloading = false;
-      });
     }
   }
 
@@ -1508,21 +1533,25 @@ class _ProfilePageState extends State<ProfilePage>
     var country = await storage.read(key: 'country');
 
     if (country.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
+      if (mounted)
+        setState(() {
+          currency = 'AED';
+        });
     } else if (country.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (country.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (country.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\£';
+        });
     }
 
     if (userid != null) {
@@ -1585,30 +1614,34 @@ class _ProfilePageState extends State<ProfilePage>
             List<Item> jsoninreverse = inReverse.toList();
 
             orderslist = jsoninreverse;
-            setState(() {
-              orderslist.sort((a, b) {
-                return a.compareTo(b);
+            if (mounted)
+              setState(() {
+                orderslist.sort((a, b) {
+                  return a.compareTo(b);
+                });
+                orderloading = false;
               });
-              orderloading = false;
-            });
           } else {
             orderslist = [];
             orderloading = false;
           }
         } else {
+          if (mounted)
+            setState(() {
+              loading = false;
+            });
+        }
+      } else {
+        if (mounted)
           setState(() {
             loading = false;
           });
-        }
-      } else {
+      }
+    } else {
+      if (mounted)
         setState(() {
           loading = false;
         });
-      }
-    } else {
-      setState(() {
-        loading = false;
-      });
     }
   }
 
@@ -1880,9 +1913,10 @@ class _ProfilePageState extends State<ProfilePage>
         }
         print('Loggd in ');
         Navigator.of(context).pop();
-        setState(() {
-          userid = jsondata['id'];
-        });
+        if (mounted)
+          setState(() {
+            userid = jsondata['id'];
+          });
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('seen', true);
         Navigator.push(
@@ -2374,16 +2408,18 @@ class _ProfilePageState extends State<ProfilePage>
         Iterable inReverse = reviews.reversed;
         List<Reviews> jsoninreverse = inReverse.toList();
 
-        setState(() {
-          reviewloading = false;
-          reviews = jsoninreverse;
-        });
+        if (mounted)
+          setState(() {
+            reviewloading = false;
+            reviews = jsoninreverse;
+          });
       }
     } else {
-      setState(() {
-        reviewloading = false;
-        reviews = [];
-      });
+      if (mounted)
+        setState(() {
+          reviewloading = false;
+          reviews = [];
+        });
     }
     return reviews;
   }
@@ -2776,21 +2812,25 @@ class _ProfilePageState extends State<ProfilePage>
     var country = await storage.read(key: 'country');
 
     if (country.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
+      if (mounted)
+        setState(() {
+          currency = 'AED';
+        });
     } else if (country.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (country.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (country.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\£';
+        });
     }
 
     if (userid != null) {
@@ -2865,22 +2905,23 @@ class _ProfilePageState extends State<ProfilePage>
 
         if (profilemap != null) {
           if (mounted) {
-            setState(() {
-              reviewrating = rating;
-              firstname = profilemap['first_name'];
-              lastname = profilemap['last_name'];
-              phonenumber = profilemap['phonenumber'];
-              email = profilemap['email'];
-              loading = false;
-              following = followin;
-              followers = follower.length;
-              itemssold = sol.length;
-              confirmedfb = confirmedf;
-              confirmedemail = confirmedemai;
-              confirmedphone = confirmedphon;
-              profilepicture = profilepic;
-              username = usernam;
-            });
+            if (mounted)
+              setState(() {
+                reviewrating = rating;
+                firstname = profilemap['first_name'];
+                lastname = profilemap['last_name'];
+                phonenumber = profilemap['phonenumber'];
+                email = profilemap['email'];
+                loading = false;
+                following = followin;
+                followers = follower.length;
+                itemssold = sol.length;
+                confirmedfb = confirmedf;
+                confirmedemail = confirmedemai;
+                confirmedphone = confirmedphon;
+                profilepicture = profilepic;
+                username = usernam;
+              });
           }
 
           await OneSignal.shared.setEmail(email: email);
@@ -2921,24 +2962,27 @@ class _ProfilePageState extends State<ProfilePage>
               Iterable inReverse = ites.reversed;
               List<Item> jsoninreverse = inReverse.toList();
 
-              setState(() {
-                item = jsoninreverse;
-              });
+              if (mounted)
+                setState(() {
+                  item = jsoninreverse;
+                });
             }
           } else {
             item = [];
           }
         } else {
-          setState(() {
-            loading = false;
-            userid = null;
-          });
+          if (mounted)
+            setState(() {
+              loading = false;
+              userid = null;
+            });
         }
       }
     } else {
-      setState(() {
-        loading = false;
-      });
+      if (mounted)
+        setState(() {
+          loading = false;
+        });
     }
   }
 
@@ -2950,21 +2994,25 @@ class _ProfilePageState extends State<ProfilePage>
     var country = await storage.read(key: 'country');
 
     if (country.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-      });
+      if (mounted)
+        setState(() {
+          currency = 'AED';
+        });
     } else if (country.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (country.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\$';
+        });
     } else if (country.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-      });
+      if (mounted)
+        setState(() {
+          currency = '\£';
+        });
     }
 
     if (userid != null) {
@@ -3033,28 +3081,32 @@ class _ProfilePageState extends State<ProfilePage>
                     category: productmap[i]['category']);
                 ites.add(ite);
               }
-              setState(() {
-                item = ites;
-                profileloading = false;
-              });
+              if (mounted)
+                setState(() {
+                  item = ites;
+                  profileloading = false;
+                });
             } else {
-              setState(() {
-                item = [];
-                profileloading = false;
-              });
+              if (mounted)
+                setState(() {
+                  item = [];
+                  profileloading = false;
+                });
             }
           }
         } else {
-          setState(() {
-            profileloading = false;
-            userid = null;
-          });
+          if (mounted)
+            setState(() {
+              profileloading = false;
+              userid = null;
+            });
         }
       }
     } else {
-      setState(() {
-        profileloading = false;
-      });
+      if (mounted)
+        setState(() {
+          profileloading = false;
+        });
     }
   }
 }

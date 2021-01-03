@@ -81,9 +81,6 @@ class Below100State extends State<Below100> {
         getcity();
       });
 
-
-
-
       List<Placemark> placemarks = await placemarkFromCoordinates(
           position.latitude, position.longitude,
           localeIdentifier: 'en');

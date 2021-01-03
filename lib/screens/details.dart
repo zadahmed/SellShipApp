@@ -91,18 +91,47 @@ class _DetailsState extends State<Details> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 10, top: 20),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Make an Offer',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
+                        padding: EdgeInsets.only(
+                            left: 15, bottom: 5, top: 20, right: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Make an Offer',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.deepOrangeAccent
+                                          .withOpacity(0.2)),
+                                  color:
+                                      Colors.deepOrangeAccent.withOpacity(0.2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Text(
+                                  'Current Price ' + currency + newItem.price,
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    color: Colors.deepOrange,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
                     allowedoffer.isNotEmpty
                         ? Padding(
                             padding:
@@ -127,11 +156,13 @@ class _DetailsState extends State<Details> {
                       padding: EdgeInsets.only(
                           left: 15, bottom: 5, top: 10, right: 15),
                       child: Container(
-                        height: 85,
+                        height: 84,
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Colors.black.withOpacity(0.2)),
                           color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
                         ),
                         child: Align(
                           alignment: Alignment.center,
@@ -203,97 +234,103 @@ class _DetailsState extends State<Details> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    InkWell(
-                      onTap: () async {
-                        if (disabled == false) {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              useRootNavigator: false,
-                              builder: (BuildContext context) {
-                                return Container(
-                                  height: 100,
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: SpinKitChasingDots(
-                                          color: Colors.deepOrangeAccent)),
-                                );
-                              });
-                          var recieverid = newItem.userid;
-                          if (recieverid != userid) {
-                            var itemurl =
-                                'https://api.sellship.co/api/createoffer/' +
-                                    userid +
-                                    '/' +
-                                    recieverid +
-                                    '/' +
-                                    itemid +
-                                    '/' +
-                                    offercontroller.text.trim();
-
-                            final response = await http.get(itemurl);
-
-                            if (response.statusCode == 200) {
-                              var messageinfo = json.decode(response.body);
-                              Navigator.pop(context);
-                            } else {}
-                          } else {
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: 15, bottom: 5, top: 10, right: 15),
+                      child: InkWell(
+                        onTap: () async {
+                          if (disabled == false) {
                             showDialog(
                                 context: context,
-                                builder: (_) => AssetGiffyDialog(
-                                      image: Image.asset(
-                                        'assets/oops.gif',
-                                        fit: BoxFit.cover,
-                                      ),
-                                      title: Text(
-                                        'Oops!',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 22.0,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      description: Text(
-                                        'You can\'t send an offer to yourself!',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(),
-                                      ),
-                                      onlyOkButton: true,
-                                      entryAnimation: EntryAnimation.DEFAULT,
-                                      onOkButtonPressed: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  RootScreen(index: 0)),
-                                        );
-                                      },
-                                    ));
+                                barrierDismissible: false,
+                                useRootNavigator: false,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: 100,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: SpinKitChasingDots(
+                                            color: Colors.deepOrangeAccent)),
+                                  );
+                                });
+                            var recieverid = newItem.userid;
+                            if (recieverid != userid) {
+                              var itemurl =
+                                  'https://api.sellship.co/api/createoffer/' +
+                                      userid +
+                                      '/' +
+                                      recieverid +
+                                      '/' +
+                                      itemid +
+                                      '/' +
+                                      offercontroller.text.trim();
+
+                              final response = await http.get(itemurl);
+
+                              if (response.statusCode == 200) {
+                                Navigator.pop(context);
+                              } else {
+                                Navigator.pop(context);
+                                print(response.statusCode);
+                              }
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AssetGiffyDialog(
+                                        image: Image.asset(
+                                          'assets/oops.gif',
+                                          fit: BoxFit.cover,
+                                        ),
+                                        title: Text(
+                                          'Oops!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 22.0,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        description: Text(
+                                          'You can\'t send an offer to yourself!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(),
+                                        ),
+                                        onlyOkButton: true,
+                                        entryAnimation: EntryAnimation.DEFAULT,
+                                        onOkButtonPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RootScreen(index: 0)),
+                                          );
+                                        },
+                                      ));
+                            }
                           }
-                        }
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 48,
+                        },
                         child: Container(
-                          decoration: BoxDecoration(
-                            color: allowedoffer.isEmpty
-                                ? Colors.deepPurple
-                                : Colors.grey,
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10.0),
+                          width: MediaQuery.of(context).size.width,
+                          height: 48,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: allowedoffer.isEmpty
+                                  ? Colors.deepPurple
+                                  : Colors.grey,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10.0),
+                              ),
+                              border: Border.all(
+                                  color: Colors.red.withOpacity(0.2)),
                             ),
-                            border:
-                                Border.all(color: Colors.red.withOpacity(0.2)),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Make Offer',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16),
+                            child: Center(
+                              child: Text(
+                                'Make Offer',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16),
+                              ),
                             ),
                           ),
                         ),
