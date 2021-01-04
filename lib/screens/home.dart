@@ -52,6 +52,13 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+class Subcategory {
+  final String name;
+  final String image;
+
+  Subcategory({this.name, this.image});
+}
+
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   List<Item> itemsgrid = [];
@@ -806,6 +813,7 @@ class _HomeScreenState extends State<HomeScreen>
         if (mounted) {
           setState(() {
             loading = true;
+            getsubcategoriesinterested();
             gettopdata();
             readstorage();
           });
@@ -823,6 +831,7 @@ class _HomeScreenState extends State<HomeScreen>
       }
     });
     gettopdata();
+    getsubcategoriesinterested();
     readstorage();
   }
 
@@ -2575,6 +2584,67 @@ class _HomeScreenState extends State<HomeScreen>
                       ],
                     )),
               ),
+              SliverStaggeredGrid.countBuilder(
+                crossAxisCount: 3,
+                itemBuilder: (BuildContext context, index) {
+                  return InkWell(
+                    onTap: () {},
+                    child: Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Container(
+                          height: 160,
+                          width: 100,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 160,
+                                width: 180,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: subcategoryList[index].image != null
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              subcategoryList[index].image,
+                                          fit: BoxFit.cover,
+                                        ))
+                                    : Container(),
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  height: 50,
+                                  width: 100,
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Center(
+                                    child: Text(
+                                      subcategoryList[index].name,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w900),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                  );
+                },
+                itemCount: 6,
+                staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+                mainAxisSpacing: 4.0,
+                crossAxisSpacing: 4.0,
+              ),
               nearmeItems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Padding(
@@ -3547,6 +3617,28 @@ class _HomeScreenState extends State<HomeScreen>
       }
     } else {
       print('error');
+    }
+  }
+
+  List<Subcategory> subcategoryList = new List<Subcategory>();
+  getsubcategoriesinterested() async {
+    subcategoryList.clear();
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://api.sellship.co/api/top/subcategories/' + userid;
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+      for (int i = 0; i < jsonbody.length; i++) {
+        Subcategory cat = new Subcategory(
+            name: jsonbody[i]['name'], image: jsonbody[i]['image']);
+        subcategoryList.add(cat);
+      }
+      setState(() {
+        subcategoryList = subcategoryList;
+      });
+    } else {
+      print(response.statusCode);
     }
   }
 

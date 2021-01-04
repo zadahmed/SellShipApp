@@ -269,9 +269,10 @@ class _DetailsState extends State<Details> {
 
                               if (response.statusCode == 200) {
                                 Navigator.pop(context);
+                                Navigator.pop(context);
                               } else {
                                 Navigator.pop(context);
-                                print(response.statusCode);
+                                Navigator.pop(context);
                               }
                             } else {
                               showDialog(

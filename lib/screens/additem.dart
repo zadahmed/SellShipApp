@@ -1754,7 +1754,7 @@ class _AddItemState extends State<AddItem> {
                                       print(locationdetails);
 
                                       setState(() {
-                                        percentindictor = 0.9;
+                                        percentindictor = 1;
                                         city = locationdetails['city'];
                                         country = locationdetails['country'];
                                         _lastMapPosition =
@@ -1857,12 +1857,7 @@ class _AddItemState extends State<AddItem> {
                                           'Fashion & Accessories') {
                                     showInSnackBar(
                                         'Please choose the size for your item!');
-                                  } else if (meetupcheckbox == false &&
-                                      shippingcheckbox == false) {
-                                    showInSnackBar(
-                                        'Please choose a delivery method!');
-                                  } else if (shippingcheckbox == true &&
-                                      _selectedweight == -1) {
+                                  } else if (_selectedweight == -1) {
                                     showInSnackBar(
                                         'Please choose the weight of your item');
                                   } else if (city == null || country == null) {
@@ -1919,20 +1914,13 @@ class _AddItemState extends State<AddItem> {
                                           json.decode(userresponse.body);
                                       var profilemap = userrespons;
 
-                                      if (mounted) {
-                                        setState(() {
-                                          firstname = profilemap['username'];
-                                          phonenumber =
-                                              profilemap['phonenumber'];
-                                          email = profilemap['email'];
-                                        });
-                                      }
-                                    } else if (city == null) {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop('dialog');
-                                      showInSnackBar(
-                                          'Please choose the location of your item!');
-                                    } else {
+                                      setState(() {
+                                        firstname = profilemap['username'];
+                                        phonenumber = profilemap['phonenumber'];
+                                        email = profilemap['email'];
+                                      });
+
+                                      print('I am here');
                                       var url =
                                           'https://api.sellship.co/api/additem';
 
@@ -2114,7 +2102,8 @@ class _AddItemState extends State<AddItem> {
                                             randomAlphaNumeric(20);
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': businesspricecontroller.text,
+                                          'price': int.parse(
+                                              fees.toStringAsFixed(2)),
                                           'originalprice': '',
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
@@ -2128,8 +2117,6 @@ class _AddItemState extends State<AddItem> {
                                           'description':
                                               businessdescriptionController
                                                   .text,
-                                          'meetup': meetupcheckbox,
-                                          'shipping': shippingcheckbox,
                                           'city': city.trim(),
                                           'country': country.trim(),
                                           'condition': _selectedCondition,
@@ -2160,7 +2147,8 @@ class _AddItemState extends State<AddItem> {
                                             randomAlphaNumeric(20);
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': businesspricecontroller.text,
+                                          'price': int.parse(
+                                              fees.toStringAsFixed(2)),
                                           'originalprice': '',
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
@@ -2171,8 +2159,6 @@ class _AddItemState extends State<AddItem> {
                                           'latitude': _lastMapPosition.latitude,
                                           'longitude':
                                               _lastMapPosition.longitude,
-                                          'meetup': meetupcheckbox,
-                                          'shipping': shippingcheckbox,
                                           'description':
                                               businessdescriptionController
                                                   .text,
@@ -2213,7 +2199,8 @@ class _AddItemState extends State<AddItem> {
 
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': businesspricecontroller.text,
+                                          'price': int.parse(
+                                              fees.toStringAsFixed(2)),
                                           'category': _selectedCategory,
                                           'originalprice': '',
                                           'subcategory': _selectedsubCategory,
@@ -2229,8 +2216,6 @@ class _AddItemState extends State<AddItem> {
                                                   .text,
                                           'city': city.trim(),
                                           'condition': _selectedCondition,
-                                          'meetup': meetupcheckbox,
-                                          'shipping': shippingcheckbox,
                                           'quantity': quantity,
                                           'brand': bran,
                                           'size':
@@ -2272,7 +2257,8 @@ class _AddItemState extends State<AddItem> {
 
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': businesspricecontroller.text,
+                                          'price': int.parse(
+                                              fees.toStringAsFixed(2)),
                                           'category': _selectedCategory,
                                           'originalprice': '',
                                           'subcategory': _selectedsubCategory,
@@ -2290,8 +2276,6 @@ class _AddItemState extends State<AddItem> {
                                           'city': city.trim(),
                                           'userid': userid,
                                           'condition': _selectedCondition,
-                                          'meetup': meetupcheckbox,
-                                          'shipping': shippingcheckbox,
                                           'brand': bran,
                                           'size':
                                               businessizecontroller.text == null
@@ -2337,7 +2321,8 @@ class _AddItemState extends State<AddItem> {
 
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': businesspricecontroller.text,
+                                          'price': int.parse(
+                                              fees.toStringAsFixed(2)),
                                           'category': _selectedCategory,
                                           'originalprice': '',
                                           'subcategory': _selectedsubCategory,
@@ -2360,8 +2345,6 @@ class _AddItemState extends State<AddItem> {
                                                   ? ''
                                                   : businessizecontroller.text,
                                           'condition': _selectedCondition,
-                                          'meetup': meetupcheckbox,
-                                          'shipping': shippingcheckbox,
                                           'userid': userid,
                                           'username': firstname,
                                           'useremail': email,
@@ -2407,7 +2390,8 @@ class _AddItemState extends State<AddItem> {
                                             randomAlphaNumeric(20);
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': businesspricecontroller.text,
+                                          'price': int.parse(
+                                              fees.toStringAsFixed(2)),
                                           'category': _selectedCategory,
                                           'originalprice': '',
                                           'subcategory': _selectedsubCategory,
@@ -2426,8 +2410,6 @@ class _AddItemState extends State<AddItem> {
                                           'quantity': quantity,
                                           'country': country.trim(),
                                           'username': firstname,
-                                          'meetup': meetupcheckbox,
-                                          'shipping': shippingcheckbox,
                                           'brand': bran,
                                           'size':
                                               businessizecontroller.text == null

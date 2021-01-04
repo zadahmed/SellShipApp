@@ -78,29 +78,6 @@ class _RootScreenState extends State<RootScreen> {
         _currentPage = widget.index;
       }
     });
-    this.initDynamicLinks();
-  }
-
-  void initDynamicLinks() async {
-    final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
-
-    if (deepLink != null) {
-      Navigator.pushNamed(context, deepLink.path);
-    }
-
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      final Uri deepLink = dynamicLink?.link;
-
-      if (deepLink != null) {
-        Navigator.pushNamed(context, deepLink.path);
-      }
-    }, onError: (OnLinkErrorException e) async {
-      print('onLinkError');
-      print(e.message);
-    });
   }
 
   onselected() {
@@ -222,7 +199,7 @@ class _RootScreenState extends State<RootScreen> {
                           fontWeight: FontWeight.w400,
                           color: Colors.black))),
               BottomNavigationBarItem(
-                  icon: profilepicture != null
+                  icon: profilepicture != null && profilepicture.isNotEmpty
                       ? CircleAvatar(
                           backgroundColor: Colors.grey.shade300,
                           radius: 17,
