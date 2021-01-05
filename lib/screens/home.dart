@@ -795,7 +795,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (mounted) {
       setState(() {
         skip = 0;
-        limit = 40;
+        limit = 50;
         loading = true;
         notifbadge = false;
         notbadge = false;
@@ -1540,7 +1540,7 @@ class _HomeScreenState extends State<HomeScreen>
                               textAlign: TextAlign.center,
                             )),
                         Padding(
-                          padding: EdgeInsets.only(left: 20, right: 10),
+                          padding: EdgeInsets.only(left: 5, right: 5),
                           child: Container(
                               height: 270,
                               width: MediaQuery.of(context).size.width,
@@ -1801,7 +1801,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 20, right: 10, top: 10),
+                      padding: EdgeInsets.only(top: 10),
                       child: Container(
                           height: 245,
                           width: MediaQuery.of(context).size.width,
@@ -2559,92 +2559,101 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ))
                   : SliverToBoxAdapter(),
-              SliverToBoxAdapter(
-                child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 16, top: 10, bottom: 10, right: 36),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Shop by Category',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'See All',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
-              SliverStaggeredGrid.countBuilder(
-                crossAxisCount: 3,
-                itemBuilder: (BuildContext context, index) {
-                  return InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Container(
-                          height: 160,
-                          width: 100,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Stack(
+              subcategoryList.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 16, top: 10, bottom: 10, right: 36),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                height: 160,
-                                width: 180,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: subcategoryList[index].image != null
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              subcategoryList[index].image,
-                                          fit: BoxFit.cover,
-                                        ))
-                                    : Container(),
+                              Text(
+                                'Shop by Category',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  height: 50,
-                                  width: 100,
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Center(
-                                    child: Text(
-                                      subcategoryList[index].name,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w900),
-                                    ),
-                                  ),
+                              Text(
+                                'See All',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16.0,
                                 ),
                               ),
                             ],
                           )),
-                    ),
-                  );
-                },
-                itemCount: 6,
-                staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
-              ),
+                    )
+                  : SliverToBoxAdapter(),
+              subcategoryList.isNotEmpty
+                  ? SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisSpacing: 1.0,
+                          crossAxisSpacing: 1.0,
+                          crossAxisCount: 3,
+                          childAspectRatio: 0.8),
+                      delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () {},
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Container(
+                                height: 160,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 160,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: subcategoryList[index].image !=
+                                              null
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: CachedNetworkImage(
+                                                imageUrl: subcategoryList[index]
+                                                    .image,
+                                                fit: BoxFit.cover,
+                                              ))
+                                          : Container(),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        height: 50,
+                                        width: 100,
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            subcategoryList[index].name,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w900),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                          ),
+                        );
+                      }, childCount: 6))
+                  : SliverToBoxAdapter(),
               nearmeItems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Padding(
@@ -3232,7 +3241,7 @@ class _HomeScreenState extends State<HomeScreen>
                     mainAxisSpacing: 1.0,
                     crossAxisSpacing: 1.0,
                     crossAxisCount: 2,
-                    childAspectRatio: 1),
+                    childAspectRatio: 0.9),
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     if (index != 0 && index % 8 == 0) {
@@ -3644,8 +3653,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   _getmoreRecentData() async {
     setState(() {
-      limit = limit + 40;
-      skip = skip + 40;
+      limit = limit + 50;
+      skip = skip + 50;
     });
 
     var country = await storage.read(key: 'country');
@@ -4595,7 +4604,7 @@ class UserSearchDelegate extends SearchDelegate {
   }
 
   var skip = 0;
-  var limit = 20;
+  var limit = 50;
 
   List<Item> itemsgrid = List<Item>();
 

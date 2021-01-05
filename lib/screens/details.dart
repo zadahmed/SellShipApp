@@ -85,7 +85,7 @@ class _DetailsState extends State<Details> {
         builder: (context) => StatefulBuilder(
                 builder: (BuildContext context, StateSetter updateState) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
+                padding: MediaQuery.of(context).viewInsets,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,

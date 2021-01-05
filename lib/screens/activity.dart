@@ -77,6 +77,7 @@ class _ActivityState extends State<Activity>
   final storage = new FlutterSecureStorage();
 
   loadbuyingactivity() async {
+    buyingItem.clear();
     var countr = await storage.read(key: 'country');
 
     if (countr.trim().toLowerCase() == 'united arab emirates') {
@@ -132,6 +133,7 @@ class _ActivityState extends State<Activity>
   }
 
   loadsellingactivity() async {
+    sellingItem.clear();
     var countr = await storage.read(key: 'country');
 
     if (countr.trim().toLowerCase() == 'united arab emirates') {
@@ -308,6 +310,24 @@ class _ActivityState extends State<Activity>
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   InkWell(
+                    onTap: () async {
+                      var userid = await storage.read(key: 'userid');
+                      var itemurl = 'https://api.sellship.co/api/acceptoffer/' +
+                          userid +
+                          '/' +
+                          itemid +
+                          '/' +
+                          senderuserid +
+                          '/' +
+                          recieveruserid;
+                      print(itemurl);
+                      final response = await http.get(itemurl);
+                      if (response.statusCode == 200) {
+                        loadsellingactivity();
+                      } else {
+                        print(response.statusCode);
+                      }
+                    },
                     child: CircleAvatar(
                       radius: 18,
                       backgroundColor: Colors.lightGreen,
@@ -336,6 +356,7 @@ class _ActivityState extends State<Activity>
                       final response = await http.get(itemurl);
                       if (response.statusCode == 200) {
                         print(response.body);
+                        loadsellingactivity();
                       } else {
                         print(response.statusCode);
                       }
@@ -394,6 +415,50 @@ class _ActivityState extends State<Activity>
           ),
         ],
       );
+    } else if (offerstage == 2 && _tabController.index == 1) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            width: 125,
+            height: 35,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                color: Colors.deepOrange.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(5)),
+            child: Center(
+                child: Text(
+              'Payment Pending',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+            )),
+          ),
+        ],
+      );
+    } else if (offerstage == 2 && _tabController.index == 0) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            width: 125,
+            height: 35,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                color: Colors.lightGreen.withOpacity(0.8),
+                borderRadius: BorderRadius.circular(5)),
+            child: Center(
+                child: Text(
+              'Pay',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+            )),
+          ),
+        ],
+      );
     }
   }
 
@@ -412,14 +477,14 @@ class _ActivityState extends State<Activity>
         builder: (context) => StatefulBuilder(
                 builder: (BuildContext context, StateSetter updateState) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
+                padding: MediaQuery.of(context).viewInsets,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Padding(
                         padding: EdgeInsets.only(
-                            left: 15, bottom: 5, top: 20, right: 15),
+                            left: 15, bottom: 5, top: 20, right: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -595,6 +660,7 @@ class _ActivityState extends State<Activity>
                             final response = await http.get(itemurl);
 
                             if (response.statusCode == 200) {
+                              loadbuyingactivity();
                               Navigator.pop(context);
                               Navigator.pop(context);
                             } else {
@@ -649,7 +715,7 @@ class _ActivityState extends State<Activity>
         builder: (context) => StatefulBuilder(
                 builder: (BuildContext context, StateSetter updateState) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
+                padding: MediaQuery.of(context).viewInsets,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -786,6 +852,7 @@ class _ActivityState extends State<Activity>
                           final response = await http.get(itemurl);
 
                           if (response.statusCode == 200) {
+                            loadsellingactivity();
                             Navigator.pop(context);
                             Navigator.pop(context);
                           } else {
