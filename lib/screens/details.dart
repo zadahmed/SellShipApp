@@ -277,6 +277,7 @@ class _DetailsState extends State<Details> {
                             } else {
                               showDialog(
                                   context: context,
+                                  useRootNavigator: false,
                                   builder: (_) => AssetGiffyDialog(
                                         image: Image.asset(
                                           'assets/oops.gif',
@@ -298,12 +299,8 @@ class _DetailsState extends State<Details> {
                                         entryAnimation: EntryAnimation.DEFAULT,
                                         onOkButtonPressed: () {
                                           Navigator.pop(context);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RootScreen(index: 0)),
-                                          );
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
                                         },
                                       ));
                             }

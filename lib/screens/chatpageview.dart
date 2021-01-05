@@ -818,18 +818,18 @@ class _ChatPageViewState extends State<ChatPageView> {
                                                         itemselling.userid) {
                                                       canceloffer();
                                                     } else {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                Checkout(
-                                                                    messageid:
-                                                                        messageid,
-                                                                    offer:
-                                                                        offer,
-                                                                    item:
-                                                                        itemselling)),
-                                                      );
+//                                                      Navigator.push(
+//                                                        context,
+//                                                        MaterialPageRoute(
+//                                                            builder: (context) =>
+//                                                                Checkout(
+//                                                                    messageid:
+//                                                                        messageid,
+//                                                                    offer:
+//                                                                        offer,
+//                                                                    item:
+//                                                                        itemselling)),
+//                                                      );
                                                     }
                                                   } else if (offerstage == 2) {
                                                     if (userid ==

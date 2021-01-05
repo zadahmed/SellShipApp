@@ -67,7 +67,6 @@ class _MyAppState extends State<MyApp> {
             Routes.addSubSubCategory: (context) => AddSubSubCategory(),
             Routes.balance: (context) => Balance(),
             Routes.boysFashion: (context) => BoysFashion(),
-            Routes.categories: (context) => CategoryScreen(),
             Routes.categoryDetail: (context) => CategoryDetail(),
             Routes.changeCountry: (context) => ChangeCountry(),
             Routes.chatPageView: (context) => ChatPageView(),

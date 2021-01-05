@@ -7,7 +7,6 @@ import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/user.dart';
-import 'package:SellShip/screens/categories.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/filter.dart';

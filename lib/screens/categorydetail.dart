@@ -28,7 +28,7 @@ import 'package:shimmer/shimmer.dart';
 
 class CategoryDetail extends StatefulWidget {
   final String category;
-  final String subcategory;
+  final List<dynamic> subcategory;
 
   CategoryDetail({Key key, this.category, this.subcategory}) : super(key: key);
 
@@ -65,7 +65,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -136,7 +136,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -186,7 +186,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/recent/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -238,7 +238,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/belowhundred/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -288,7 +288,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/highestprice/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -638,7 +638,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/lowestprice/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -785,7 +785,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/highestprice/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -864,7 +864,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/lowestprice/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -913,7 +913,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/belowhundred/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -1000,7 +1000,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
     var url = 'https://api.sellship.co/api/categories/recent/' +
         category +
         '/' +
-        subcategory +
+        subcategory[0] +
         '/' +
         country +
         '/' +
@@ -1048,7 +1048,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
   String maxprice;
   String condition;
   String category;
-  String subcategory;
+  List<dynamic> subcategory;
 
   @override
   void initState() {
@@ -1060,6 +1060,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
       loading = true;
       notifbadge = false;
     });
+
+    print(subcategory);
 
     getnotification();
     getfavourites();
@@ -1817,6 +1819,19 @@ class _CategoryDetailState extends State<CategoryDetail> {
     return Scaffold(
         key: scaffoldState,
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text(
+            category,
+            style: TextStyle(
+                fontFamily: 'Helvetica',
+                fontSize: 18.0,
+                color: Colors.black,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).requestFocus(new FocusNode());
@@ -1946,7 +1961,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                             Padding(
                               padding:
                                   EdgeInsets.only(left: 10, top: 10, bottom: 5),
-                              child: Text(subcategory,
+                              child: Text(subcategory[0],
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
                                       fontSize: 18,

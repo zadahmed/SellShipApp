@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/activity.dart';
-import 'package:SellShip/screens/discover.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/onboardinginterests.dart';
 import 'package:cached_network_image/cached_network_image.dart';

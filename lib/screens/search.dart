@@ -1116,7 +1116,21 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                       itemBuilder:
                                           (BuildContext context, index) {
                                         return InkWell(
-                                          onTap: () {},
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CategoryDetail(
+                                                        category:
+                                                            categoryList[index]
+                                                                .categoryname,
+                                                        subcategory:
+                                                            categoryList[index]
+                                                                .subcategories,
+                                                      )),
+                                            );
+                                          },
                                           child: Padding(
                                             padding: EdgeInsets.all(5),
                                             child: Container(

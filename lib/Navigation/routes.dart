@@ -10,7 +10,6 @@ export 'package:SellShip/screens/addsubcategory.dart';
 export 'package:SellShip/screens/addsubsubcategory.dart';
 export 'package:SellShip/screens/balance.dart';
 export 'package:SellShip/screens/boysfashion.dart';
-export 'package:SellShip/screens/categories.dart';
 export 'package:SellShip/screens/categorydetail.dart';
 export 'package:SellShip/screens/changecountry.dart';
 export 'package:SellShip/screens/chatpageview.dart';
