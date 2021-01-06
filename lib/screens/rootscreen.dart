@@ -79,6 +79,8 @@ class _RootScreenState extends State<RootScreen> {
     });
   }
 
+  bool seenadditem;
+
   onselected() {
     if (_currentPage == 0) {
       setState(() {
@@ -130,107 +132,168 @@ class _RootScreenState extends State<RootScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: new ThemeData(fontFamily: 'Helvetica'),
-        title: 'SellShip',
-        home: Scaffold(
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: Color.fromRGBO(28, 45, 65, 1),
-            unselectedItemColor: Colors.grey[400],
-            showSelectedLabels: false,
-            selectedFontSize: 5,
-            unselectedFontSize: 5,
-            currentIndex: _currentPage,
-            onTap: (i) {
+      debugShowCheckedModeBanner: false,
+      theme: new ThemeData(fontFamily: 'Helvetica'),
+      title: 'SellShip',
+      home: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: Color.fromRGBO(28, 45, 65, 1),
+          unselectedItemColor: Colors.grey[400],
+          showSelectedLabels: false,
+          selectedFontSize: 5,
+          unselectedFontSize: 5,
+          currentIndex: _currentPage,
+          onTap: (i) async {
+            if (i != 2) {
+              if (seenadditem == true) {
+                var check = await storage.read(key: 'additem');
+                if (check != null) {
+                  showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (_) => new AlertDialog(
+                            title: new Text("Are you sure you want to exit",
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black)),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('Exit',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.red)),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  setState(() {
+                                    seenadditem = false;
+                                    storage.delete(key: 'additem');
+                                    _currentPage = i;
+                                    onselected();
+                                  });
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('Continue Editing',
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black)),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ));
+                } else {
+                  setState(() {
+                    _currentPage = i;
+                    onselected();
+                  });
+                }
+              } else {
+                setState(() {
+                  _currentPage = i;
+                  onselected();
+                });
+              }
+            } else {
               setState(() {
+                seenadditem = true;
                 _currentPage = i;
                 onselected();
               });
-            },
-            items: [
-              BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    home,
-                    height: 25,
-                    width: 25,
-                    allowDrawingOutsideViewBox: true,
-                  ),
-                  title: Text('',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 5,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black))),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Feather.search,
-                    color: selectedsearchColor,
-                  ),
-                  title: Text('',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 5,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black))),
-              BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/bottomnavbar/plus.svg',
-                    height: 40,
-                    width: 40,
-                    allowDrawingOutsideViewBox: true,
-                  ),
-                  title: Text('',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 5,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black))),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Feather.bell,
-                    color: selectedActivityColor,
-                  ),
-                  title: Text('',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 5,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black))),
-              BottomNavigationBarItem(
-                  icon: profilepicture != null && profilepicture.isNotEmpty
-                      ? CircleAvatar(
-                          backgroundColor: Colors.grey.shade300,
-                          radius: 17,
-                          child: Container(
-                              height: 30,
-                              width: 30,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50)),
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: CachedNetworkImage(
-                                    imageUrl: profilepicture,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        SpinKitChasingDots(
-                                            color: Colors.deepOrange),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
-                                  ))))
-                      : Icon(
-                          FontAwesome.user_circle,
-                          size: 25,
-                        ),
-                  title: Text('',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 5,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black))),
-            ],
-          ),
-          body: _pages[_currentPage],
-        ));
+            }
+          },
+          items: [
+            BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  home,
+                  height: 25,
+                  width: 25,
+                  allowDrawingOutsideViewBox: true,
+                ),
+                title: Text('',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 5,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black))),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Feather.search,
+                  color: selectedsearchColor,
+                ),
+                title: Text('',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 5,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black))),
+            BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  'assets/bottomnavbar/plus.svg',
+                  height: 40,
+                  width: 40,
+                  allowDrawingOutsideViewBox: true,
+                ),
+                title: Text('',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 5,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black))),
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Feather.bell,
+                  color: selectedActivityColor,
+                ),
+                title: Text('',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 5,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black))),
+            BottomNavigationBarItem(
+                icon: profilepicture != null && profilepicture.isNotEmpty
+                    ? CircleAvatar(
+                        backgroundColor: Colors.grey.shade300,
+                        radius: 17,
+                        child: Container(
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50)),
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: CachedNetworkImage(
+                                  imageUrl: profilepicture,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      SpinKitChasingDots(
+                                          color: Colors.deepOrange),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ))))
+                    : Icon(
+                        FontAwesome.user_circle,
+                        size: 25,
+                      ),
+                title: Text('',
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 5,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black))),
+          ],
+        ),
+        body: _pages[_currentPage],
+      ),
+    );
   }
 }

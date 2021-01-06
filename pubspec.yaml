@@ -76,6 +76,7 @@ dependencies:
   random_string: ^2.1.0
   search_map_place: ^0.3.0
   substring_highlight: ^0.1.2
+  flutter_material_color_picker: ^1.0.5
   share: ^0.6.5
   shimmer: ^1.1.1
   shared_preferences: ^0.5.10

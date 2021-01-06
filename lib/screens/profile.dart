@@ -3,6 +3,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:SellShip/screens/comments.dart';
@@ -2648,101 +2649,128 @@ class _ProfilePageState extends State<ProfilePage>
           ),
           Expanded(
               child: item.isNotEmpty
-                  ? GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1,
-                      ),
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Details(
-                                        itemid: item[index].itemid,
-                                        sold: item[index].sold,
-                                      )),
+                  ? EasyRefresh(
+                      header: CustomHeader(
+                          extent: 40.0,
+                          enableHapticFeedback: true,
+                          triggerDistance: 50.0,
+                          headerBuilder: (context,
+                              loadState,
+                              pulledExtent,
+                              loadTriggerPullDistance,
+                              loadIndicatorExtent,
+                              axisDirection,
+                              float,
+                              completeDuration,
+                              enableInfiniteLoad,
+                              success,
+                              noMore) {
+                            return SpinKitFadingCircle(
+                              color: Colors.deepOrange,
+                              size: 30.0,
                             );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  height: 195,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: CachedNetworkImage(
-                                      fadeInDuration: Duration(microseconds: 5),
-                                      imageUrl: item[index].image,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          SpinKitChasingDots(
-                                              color: Colors.deepOrange),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
+                          }),
+                      onRefresh: () {
+                        getProfileData();
+
+                        return getItemData();
+                      },
+                      child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 1,
+                        ),
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Details(
+                                          itemid: item[index].itemid,
+                                          sold: item[index].sold,
+                                        )),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    height: 195,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15),
+                                      child: CachedNetworkImage(
+                                        fadeInDuration:
+                                            Duration(microseconds: 5),
+                                        imageUrl: item[index].image,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            SpinKitChasingDots(
+                                                color: Colors.deepOrange),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Align(
-                                    alignment: Alignment.topRight,
-                                    child: Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditItem(
-                                                          itemid: item[index]
-                                                              .itemid,
-                                                        )),
-                                              );
-                                            },
-                                            child: CircleAvatar(
-                                              radius: 18,
-                                              backgroundColor: Colors.white,
-                                              child: Icon(
-                                                Feather.edit_2,
-                                                color: Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )))),
-                                item[index].sold == true
-                                    ? Positioned(
-                                        top: 60,
-                                        child: Container(
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.4),
-                                          ),
-                                          width: 210,
-                                          child: Center(
-                                            child: Text(
-                                              'Sold',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.white,
+                                  Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditItem(
+                                                            itemid: item[index]
+                                                                .itemid,
+                                                          )),
+                                                );
+                                              },
+                                              child: CircleAvatar(
+                                                radius: 18,
+                                                backgroundColor: Colors.white,
+                                                child: Icon(
+                                                  Feather.edit_2,
+                                                  color: Colors.blueGrey,
+                                                  size: 16,
+                                                ),
+                                              )))),
+                                  item[index].sold == true
+                                      ? Positioned(
+                                          top: 60,
+                                          child: Container(
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.4),
+                                            ),
+                                            width: 210,
+                                            child: Center(
+                                              child: Text(
+                                                'Sold',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  color: Colors.white,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ))
-                                    : Container(),
-                              ],
+                                          ))
+                                      : Container(),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      itemCount: item.length,
-                    )
+                          );
+                        },
+                        itemCount: item.length,
+                      ))
                   : Container(
                       child: Column(
                       children: <Widget>[
@@ -2989,7 +3017,7 @@ class _ProfilePageState extends State<ProfilePage>
   var username;
   double reviewrating;
 
-  void getItemData() async {
+  getItemData() async {
     userid = await storage.read(key: 'userid');
     var country = await storage.read(key: 'country');
 

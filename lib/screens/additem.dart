@@ -13,6 +13,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
@@ -42,6 +43,11 @@ class _AddItemState extends State<AddItem> {
     getuser();
     focusNode = FocusNode();
   }
+
+  ColorSwatch _tempMainColor;
+  Color _tempShadeColor;
+
+  ColorSwatch _mainColor = Colors.blue;
 
   var currency;
   var metric;
@@ -201,6 +207,9 @@ class _AddItemState extends State<AddItem> {
     '50',
   ];
 
+  var _selectedsize;
+  var _selectedcolor;
+
   bool quantityswitch = false;
 
   int _selectedweight = -1;
@@ -248,6 +257,8 @@ class _AddItemState extends State<AddItem> {
 
     if (!mounted) return;
 
+    await storage.write(key: 'additem', value: 'true');
+
     setState(() {
       images = resultList;
       percentindictor = 0.3;
@@ -261,6 +272,7 @@ class _AddItemState extends State<AddItem> {
 
   @override
   void dispose() {
+    print("Back To old Screen");
     businessnameController.dispose();
     businesspricecontroller.dispose();
     super.dispose();
@@ -645,7 +657,8 @@ class _AddItemState extends State<AddItem> {
                                             builder: (context) =>
                                                 AddCategory()),
                                       );
-                                      print(catdetails);
+                                      await storage.write(
+                                          key: 'additem', value: 'true');
                                       setState(() {
                                         percentindictor = 0.1;
                                         _selectedCategory =
@@ -729,7 +742,7 @@ class _AddItemState extends State<AddItem> {
                             ),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text('Item Info',
+                              child: Text('Product Info',
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
                                       fontSize: 20,
@@ -1089,6 +1102,7 @@ class _AddItemState extends State<AddItem> {
                                   padding: EdgeInsets.only(
                                     left: 15,
                                     bottom: 5,
+                                    top: 10,
                                   ),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
@@ -1096,8 +1110,8 @@ class _AddItemState extends State<AddItem> {
                                       'Brand',
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w300),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 )
@@ -1304,17 +1318,15 @@ class _AddItemState extends State<AddItem> {
                                   _selectedCategory == 'Kids'
                               ? Padding(
                                   padding: EdgeInsets.only(
-                                    left: 15,
-                                    bottom: 5,
-                                  ),
+                                      left: 15, bottom: 5, top: 10),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       'Size',
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w300),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 )
@@ -1332,35 +1344,527 @@ class _AddItemState extends State<AddItem> {
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(15)),
                                       ),
-                                      child: Center(
-                                          child: ListTile(
-                                              title: Container(
-                                        width: 200,
-                                        child: Center(
-                                          child: TextField(
-                                              cursorColor: Color(0xFF979797),
-                                              controller: businessizecontroller,
-                                              keyboardType: TextInputType.text,
-                                              decoration: InputDecoration(
-                                                hintText: "Choose your Size",
-                                                hintStyle: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    color: Colors.blueGrey),
-                                                focusColor: Colors.black,
-                                                border: InputBorder.none,
-                                                focusedBorder: InputBorder.none,
-                                                enabledBorder: InputBorder.none,
-                                                errorBorder: InputBorder.none,
-                                                disabledBorder:
-                                                    InputBorder.none,
-                                              )),
-                                        ),
-                                      )))))
+                                      child: ListTile(
+                                          title: Container(
+                                              width: 200,
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  List<String> topsizes = [
+                                                    'XXS',
+                                                    'XS',
+                                                    'S',
+                                                    'M',
+                                                    'L',
+                                                    'XL',
+                                                    'XXL'
+                                                  ];
+
+                                                  List<String> bottomsizes = [
+                                                    '26',
+                                                    '27',
+                                                    '28',
+                                                    '29',
+                                                    '30',
+                                                    '31',
+                                                    '32',
+                                                    '33',
+                                                    '34',
+                                                    '35',
+                                                    '36',
+                                                    '37',
+                                                    '38',
+                                                    '39',
+                                                    '40',
+                                                    '41',
+                                                    '42',
+                                                    '43',
+                                                    '44'
+                                                  ];
+
+                                                  List<String> shoesizes = [
+                                                    '5',
+                                                    '5.5',
+                                                    '6',
+                                                    '6.5',
+                                                    '7',
+                                                    '7.5',
+                                                    '8',
+                                                    '8.5',
+                                                    '9',
+                                                    '9.5',
+                                                    '10',
+                                                    '10.5',
+                                                    '11',
+                                                    '11.5',
+                                                    '12',
+                                                    '12.5',
+                                                    '13',
+                                                    '14',
+                                                    '15'
+                                                  ];
+
+                                                  List<String>
+                                                      accessoriessizes = [
+                                                    'OS',
+                                                    '26',
+                                                    '28',
+                                                    '30',
+                                                    '32',
+                                                    '34',
+                                                    '36',
+                                                    '38',
+                                                    '40',
+                                                    '42',
+                                                    '44',
+                                                    '46'
+                                                  ];
+
+                                                  List<String> selectedsize =
+                                                      List<String>();
+
+                                                  showModalBottomSheet(
+                                                      context: context,
+                                                      useRootNavigator: false,
+                                                      isScrollControlled: true,
+                                                      builder: (_) {
+                                                        return DraggableScrollableSheet(
+                                                            expand: false,
+                                                            initialChildSize:
+                                                                0.7,
+                                                            builder: (_,
+                                                                controller) {
+                                                              return StatefulBuilder(
+                                                                  // You need this, notice the parameters below:
+                                                                  builder: (BuildContext
+                                                                          context,
+                                                                      StateSetter
+                                                                          updateState) {
+                                                                return Container(
+                                                                    height:
+                                                                        350.0,
+                                                                    color: Color(
+                                                                        0xFF737373),
+                                                                    child: Container(
+                                                                        padding: EdgeInsets.only(left: 10, right: 10),
+                                                                        decoration: new BoxDecoration(color: Colors.white, borderRadius: new BorderRadius.only(topLeft: const Radius.circular(20.0), topRight: const Radius.circular(20.0))),
+                                                                        child: Column(children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Padding(
+                                                                                padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
+                                                                                child: Align(
+                                                                                    alignment: Alignment.centerLeft,
+                                                                                    child: InkWell(
+                                                                                        child: Icon(Icons.clear),
+                                                                                        onTap: () {
+                                                                                          Navigator.pop(context);
+                                                                                        })),
+                                                                              ),
+                                                                              InkWell(
+                                                                                  onTap: () {
+                                                                                    Navigator.pop(context);
+                                                                                    updateState(() {
+                                                                                      _selectedsize = selectedsize[0];
+                                                                                    });
+                                                                                  },
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.only(right: 15, top: 15, bottom: 5),
+                                                                                    child: Text(
+                                                                                      "Done",
+                                                                                      style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w300),
+                                                                                    ),
+                                                                                  ))
+                                                                            ],
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceBetween,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.end,
+                                                                          ),
+                                                                          Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(left: 15, bottom: 15),
+                                                                            child:
+                                                                                Center(
+                                                                              child: Text(
+                                                                                'Choose your Size',
+                                                                                textAlign: TextAlign.right,
+                                                                                style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          _selectedsubCategory.contains('Hoodies & Sweatshirts') || _selectedsubCategory.contains('Nightwear & Loungewear') || _selectedsubCategory.contains('Swimwear & Beachwear') || _selectedsubCategory.contains('Tops') || _selectedsubCategory.contains('Activewear & Sportswear') || _selectedsubCategory.contains('Coats & Jackets') || _selectedsubCategory.contains('Dresses') || _selectedsubCategory.contains('Modest wear') || _selectedsubCategory.contains('Tops & Blouses') || _selectedsubCategory.contains('Girls Tops & T-shirts') || _selectedsubCategory.contains('Girls One-pieces') || _selectedsubCategory.contains('Girls Dresses') || _selectedsubCategory.contains('Boys Tops & T-shirts')
+                                                                              ? Expanded(
+                                                                                  child: GridView.builder(
+                                                                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
+                                                                                    itemBuilder: (_, i) {
+                                                                                      return Padding(
+                                                                                          padding: EdgeInsets.all(5),
+                                                                                          child: InkWell(
+                                                                                              onTap: () {
+                                                                                                selectedsize.clear();
+                                                                                                updateState(() {
+                                                                                                  selectedsize.add(topsizes[i]);
+                                                                                                });
+                                                                                                print(topsizes[i]);
+                                                                                              },
+                                                                                              child: Container(
+                                                                                                  height: 100,
+                                                                                                  width: MediaQuery.of(context).size.width,
+                                                                                                  decoration: BoxDecoration(
+                                                                                                      color: selectedsize.contains(topsizes[i]) ? Colors.black : Colors.white,
+                                                                                                      border: Border.all(
+                                                                                                        color: Colors.grey,
+                                                                                                      ),
+                                                                                                      borderRadius: BorderRadius.circular(10)),
+                                                                                                  child: Center(
+                                                                                                      child: Text(
+                                                                                                    topsizes[i],
+                                                                                                    style: selectedsize.contains(topsizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                  )))));
+                                                                                    },
+                                                                                    itemCount: topsizes.length,
+                                                                                  ),
+                                                                                )
+                                                                              : _selectedsubCategory.contains('Jewelry') || _selectedsubCategory.contains('Women\'s accessories') || _selectedsubCategory.contains('Men\'s accessories') || _selectedsubCategory.contains('Boys Accessories') || _selectedsubCategory.contains('Girls Accessories')
+                                                                                  ? Expanded(
+                                                                                      child: GridView.builder(
+                                                                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
+                                                                                        itemBuilder: (_, i) {
+                                                                                          return Padding(
+                                                                                              padding: EdgeInsets.all(5),
+                                                                                              child: InkWell(
+                                                                                                  onTap: () {
+                                                                                                    selectedsize.clear();
+                                                                                                    updateState(() {
+                                                                                                      selectedsize.add(accessoriessizes[i]);
+                                                                                                    });
+                                                                                                    print(accessoriessizes[i]);
+                                                                                                  },
+                                                                                                  child: Container(
+                                                                                                      height: 100,
+                                                                                                      width: MediaQuery.of(context).size.width,
+                                                                                                      decoration: BoxDecoration(
+                                                                                                          color: selectedsize.contains(accessoriessizes[i]) ? Colors.black : Colors.white,
+                                                                                                          border: Border.all(
+                                                                                                            color: Colors.grey,
+                                                                                                          ),
+                                                                                                          borderRadius: BorderRadius.circular(10)),
+                                                                                                      child: Center(
+                                                                                                          child: Text(
+                                                                                                        accessoriessizes[i],
+                                                                                                        style: selectedsize.contains(accessoriessizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                      )))));
+                                                                                        },
+                                                                                        itemCount: accessoriessizes.length,
+                                                                                      ),
+                                                                                    )
+                                                                                  : _selectedsubCategory.contains('Shoes') || _selectedsubCategory.contains('Boys Shoes') || _selectedsubCategory.contains('Girls Shoes')
+                                                                                      ? Expanded(
+                                                                                          child: GridView.builder(
+                                                                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
+                                                                                            itemBuilder: (_, i) {
+                                                                                              return Padding(
+                                                                                                  padding: EdgeInsets.all(5),
+                                                                                                  child: InkWell(
+                                                                                                      onTap: () {
+                                                                                                        selectedsize.clear();
+                                                                                                        updateState(() {
+                                                                                                          selectedsize.add(shoesizes[i]);
+                                                                                                        });
+                                                                                                        print(shoesizes[i]);
+                                                                                                      },
+                                                                                                      child: Container(
+                                                                                                          height: 100,
+                                                                                                          width: MediaQuery.of(context).size.width,
+                                                                                                          decoration: BoxDecoration(
+                                                                                                              color: selectedsize.contains(shoesizes[i]) ? Colors.black : Colors.white,
+                                                                                                              border: Border.all(
+                                                                                                                color: Colors.grey,
+                                                                                                              ),
+                                                                                                              borderRadius: BorderRadius.circular(10)),
+                                                                                                          child: Center(
+                                                                                                              child: Text(
+                                                                                                            shoesizes[i],
+                                                                                                            style: selectedsize.contains(shoesizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                          )))));
+                                                                                            },
+                                                                                            itemCount: shoesizes.length,
+                                                                                          ),
+                                                                                        )
+                                                                                      : Expanded(
+                                                                                          child: GridView.builder(
+                                                                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1),
+                                                                                            itemBuilder: (_, i) {
+                                                                                              return Padding(
+                                                                                                  padding: EdgeInsets.all(5),
+                                                                                                  child: InkWell(
+                                                                                                      onTap: () {
+                                                                                                        selectedsize.clear();
+                                                                                                        updateState(() {
+                                                                                                          selectedsize.add(bottomsizes[i]);
+                                                                                                        });
+                                                                                                        print(bottomsizes[i]);
+                                                                                                      },
+                                                                                                      child: Container(
+                                                                                                          height: 100,
+                                                                                                          width: MediaQuery.of(context).size.width,
+                                                                                                          decoration: BoxDecoration(
+                                                                                                              color: selectedsize.contains(bottomsizes[i]) ? Colors.black : Colors.white,
+                                                                                                              border: Border.all(
+                                                                                                                color: Colors.grey,
+                                                                                                              ),
+                                                                                                              borderRadius: BorderRadius.circular(10)),
+                                                                                                          child: Center(
+                                                                                                              child: Text(
+                                                                                                            bottomsizes[i],
+                                                                                                            style: selectedsize.contains(bottomsizes[i]) ? TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.white) : TextStyle(fontFamily: 'Helvetica', fontSize: 16, color: Colors.black),
+                                                                                                          )))));
+                                                                                            },
+                                                                                            itemCount: bottomsizes.length,
+                                                                                          ),
+                                                                                        ),
+                                                                        ])));
+                                                              });
+                                                            });
+                                                      });
+                                                },
+                                                child: Container(
+                                                    width: 200,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        _selectedsize != null
+                                                            ? Text(
+                                                                'Size - ' +
+                                                                    _selectedsize,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .right,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .blueGrey),
+                                                              )
+                                                            : Text(
+                                                                'Choose your Size',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .right,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .blueGrey),
+                                                              ),
+                                                        Icon(
+                                                            Icons
+                                                                .keyboard_arrow_right,
+                                                            color: Colors
+                                                                .deepPurple)
+                                                      ],
+                                                    )),
+                                              )))))
                               : Container(),
                           SizedBox(
                             height: 10,
                           ),
+                          _selectedCategory == 'Women' ||
+                                  _selectedCategory == 'Men' ||
+                                  _selectedCategory == 'Kids'
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Color',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          _selectedCategory == 'Women' ||
+                                  _selectedCategory == 'Men' ||
+                                  _selectedCategory == 'Kids'
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 10, right: 15),
+                                  child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(15)),
+                                      ),
+                                      child: ListTile(
+                                          title: Container(
+                                              width: 200,
+                                              child: InkWell(
+                                                onTap: () async {
+                                                  showModalBottomSheet(
+                                                      context: context,
+                                                      useRootNavigator: false,
+                                                      isScrollControlled: true,
+                                                      builder: (_) {
+                                                        return DraggableScrollableSheet(
+                                                            expand: false,
+                                                            initialChildSize:
+                                                                0.7,
+                                                            builder: (_,
+                                                                controller) {
+                                                              return StatefulBuilder(
+                                                                  // You need this, notice the parameters below:
+                                                                  builder: (BuildContext
+                                                                          context,
+                                                                      StateSetter
+                                                                          updateState) {
+                                                                return Container(
+                                                                    height:
+                                                                        350.0,
+                                                                    color: Color(
+                                                                        0xFF737373),
+                                                                    child: Container(
+                                                                        padding: EdgeInsets.only(left: 10, right: 10),
+                                                                        decoration: new BoxDecoration(color: Colors.white, borderRadius: new BorderRadius.only(topLeft: const Radius.circular(20.0), topRight: const Radius.circular(20.0))),
+                                                                        child: Column(children: [
+                                                                          Row(
+                                                                            children: [
+                                                                              Padding(
+                                                                                padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
+                                                                                child: Align(
+                                                                                    alignment: Alignment.centerLeft,
+                                                                                    child: InkWell(
+                                                                                        child: Icon(Icons.clear),
+                                                                                        onTap: () {
+                                                                                          Navigator.pop(context);
+                                                                                        })),
+                                                                              ),
+                                                                              InkWell(
+                                                                                  onTap: () {
+                                                                                    Navigator.pop(context);
+                                                                                  },
+                                                                                  child: Padding(
+                                                                                    padding: EdgeInsets.only(right: 15, top: 15, bottom: 5),
+                                                                                    child: Text(
+                                                                                      "Done",
+                                                                                      style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.black, fontWeight: FontWeight.w300),
+                                                                                    ),
+                                                                                  ))
+                                                                            ],
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceBetween,
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.end,
+                                                                          ),
+                                                                          Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(left: 15, bottom: 15),
+                                                                            child:
+                                                                                Center(
+                                                                              child: Text(
+                                                                                'Choose your Color',
+                                                                                textAlign: TextAlign.right,
+                                                                                style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          Expanded(
+                                                                            child:
+                                                                                MaterialColorPicker(
+                                                                              shrinkWrap: true,
+                                                                              circleSize: 50,
+                                                                              spacing: 15,
+                                                                              selectedColor: _mainColor,
+                                                                              allowShades: false,
+                                                                              onMainColorChange: (color) => setState(() {
+                                                                                _tempMainColor = color;
+                                                                                _selectedcolor = color.toString();
+                                                                              }),
+                                                                            ),
+                                                                          )
+                                                                        ])));
+                                                              });
+                                                            });
+                                                      });
+                                                },
+                                                child: Container(
+                                                    width: 200,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        _selectedcolor != null
+                                                            ? Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    'Color ',
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .right,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .blueGrey),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 20,
+                                                                  ),
+                                                                  CircleColor(
+                                                                      color:
+                                                                          _tempMainColor,
+                                                                      circleSize:
+                                                                          30),
+                                                                ],
+                                                              )
+                                                            : Text(
+                                                                'Choose your Color',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .right,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        16,
+                                                                    color: Colors
+                                                                        .blueGrey),
+                                                              ),
+                                                        Icon(
+                                                            Icons
+                                                                .keyboard_arrow_right,
+                                                            color: Colors
+                                                                .deepPurple)
+                                                      ],
+                                                    )),
+                                              )))))
+                              : Container(),
+                          SizedBox(height: 10),
                           Padding(
                             padding: EdgeInsets.only(
                               left: 15,
@@ -1496,7 +2000,9 @@ class _AddItemState extends State<AddItem> {
                                         child: TextField(
                                           cursorColor: Color(0xFF979797),
                                           controller: businesspricecontroller,
-                                          onChanged: (text) {
+                                          onChanged: (text) async {
+                                            await storage.write(
+                                                key: 'additem', value: 'true');
                                             var weightfees;
                                             if (_selectedweight == 0) {
                                               weightfees = 20;

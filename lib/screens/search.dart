@@ -49,7 +49,7 @@ class Category {
   });
 }
 
-class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
+class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
   List<Item> itemsgrid = [];
 
   var skip;
@@ -105,7 +105,6 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
       skip = 0;
       limit = 20;
     });
-    _tabController = new TabController(length: 4, vsync: this);
   }
 
   List<User> userList = new List<User>();
@@ -620,7 +619,11 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
   bool searched = false;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         key: scaffoldState,
         backgroundColor: Colors.white,
@@ -1122,6 +1125,9 @@ class _SearchState extends State<Search> with SingleTickerProviderStateMixin {
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       CategoryDetail(
+                                                        categoryimage:
+                                                            categoryList[index]
+                                                                .categoryimage,
                                                         category:
                                                             categoryList[index]
                                                                 .categoryname,

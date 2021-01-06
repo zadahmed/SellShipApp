@@ -812,6 +812,8 @@ class _HomeScreenState extends State<HomeScreen>
         if (mounted) {
           setState(() {
             loading = true;
+            subcategoryList.clear();
+            topitems.clear();
             getsubcategoriesinterested();
             gettopdata();
             readstorage();
@@ -821,6 +823,8 @@ class _HomeScreenState extends State<HomeScreen>
       if (tab == 1) {
         if (mounted) {
           setState(() {
+            foryoulist.clear();
+            foryouscroll.clear();
             foryouloading = true;
             foryou();
             getsellerrecommendation();
@@ -1510,11 +1514,58 @@ class _HomeScreenState extends State<HomeScreen>
     return foryouloading == false
         ? foryoulist.isEmpty
             ? EasyRefresh.custom(
-                topBouncing: true,
-                footer: MaterialFooter(
-                  enableInfiniteLoad: true,
-                  enableHapticFeedback: true,
-                ),
+                footer: CustomFooter(
+                    extent: 40.0,
+                    enableHapticFeedback: true,
+                    triggerDistance: 50.0,
+                    footerBuilder: (context,
+                        loadState,
+                        pulledExtent,
+                        loadTriggerPullDistance,
+                        loadIndicatorExtent,
+                        axisDirection,
+                        float,
+                        completeDuration,
+                        enableInfiniteLoad,
+                        success,
+                        noMore) {
+                      return SpinKitFadingCircle(
+                        color: Colors.deepOrange,
+                        size: 30.0,
+                      );
+                    }),
+                header: CustomHeader(
+                    extent: 40.0,
+                    enableHapticFeedback: true,
+                    triggerDistance: 50.0,
+                    headerBuilder: (context,
+                        loadState,
+                        pulledExtent,
+                        loadTriggerPullDistance,
+                        loadIndicatorExtent,
+                        axisDirection,
+                        float,
+                        completeDuration,
+                        enableInfiniteLoad,
+                        success,
+                        noMore) {
+                      return SpinKitFadingCircle(
+                        color: Colors.deepOrange,
+                        size: 30.0,
+                      );
+                    }),
+                onRefresh: () {
+                  if (mounted) {
+                    setState(() {
+                      foryouloading = true;
+                      foryou();
+
+                      foryoupagescroll();
+                    });
+                  }
+
+                  return getsellerrecommendation();
+                },
                 slivers: <Widget>[
                     SliverToBoxAdapter(
                         child: Column(
@@ -1711,11 +1762,58 @@ class _HomeScreenState extends State<HomeScreen>
                     ))
                   ])
             : EasyRefresh.custom(
-                topBouncing: true,
-                footer: MaterialFooter(
-                  enableInfiniteLoad: true,
-                  enableHapticFeedback: true,
-                ),
+                footer: CustomFooter(
+                    extent: 40.0,
+                    enableHapticFeedback: true,
+                    triggerDistance: 50.0,
+                    footerBuilder: (context,
+                        loadState,
+                        pulledExtent,
+                        loadTriggerPullDistance,
+                        loadIndicatorExtent,
+                        axisDirection,
+                        float,
+                        completeDuration,
+                        enableInfiniteLoad,
+                        success,
+                        noMore) {
+                      return SpinKitFadingCircle(
+                        color: Colors.deepOrange,
+                        size: 30.0,
+                      );
+                    }),
+                header: CustomHeader(
+                    extent: 40.0,
+                    enableHapticFeedback: true,
+                    triggerDistance: 50.0,
+                    headerBuilder: (context,
+                        loadState,
+                        pulledExtent,
+                        loadTriggerPullDistance,
+                        loadIndicatorExtent,
+                        axisDirection,
+                        float,
+                        completeDuration,
+                        enableInfiniteLoad,
+                        success,
+                        noMore) {
+                      return SpinKitFadingCircle(
+                        color: Colors.deepOrange,
+                        size: 30.0,
+                      );
+                    }),
+                onRefresh: () {
+                  if (mounted) {
+                    setState(() {
+                      foryouloading = true;
+                      foryou();
+
+                      foryoupagescroll();
+                    });
+                  }
+
+                  return getsellerrecommendation();
+                },
                 slivers: <Widget>[
                   SliverGrid(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -2269,12 +2367,160 @@ class _HomeScreenState extends State<HomeScreen>
   Widget homePage(BuildContext context) {
     return loading == false
         ? EasyRefresh.custom(
-            topBouncing: true,
-            footer: MaterialFooter(
-              enableInfiniteLoad: true,
-              enableHapticFeedback: true,
-            ),
+            footer: CustomFooter(
+                extent: 40.0,
+                enableHapticFeedback: true,
+                triggerDistance: 50.0,
+                footerBuilder: (context,
+                    loadState,
+                    pulledExtent,
+                    loadTriggerPullDistance,
+                    loadIndicatorExtent,
+                    axisDirection,
+                    float,
+                    completeDuration,
+                    enableInfiniteLoad,
+                    success,
+                    noMore) {
+                  return SpinKitFadingCircle(
+                    color: Colors.deepOrange,
+                    size: 30.0,
+                  );
+                }),
+            header: CustomHeader(
+                extent: 40.0,
+                enableHapticFeedback: true,
+                triggerDistance: 50.0,
+                headerBuilder: (context,
+                    loadState,
+                    pulledExtent,
+                    loadTriggerPullDistance,
+                    loadIndicatorExtent,
+                    axisDirection,
+                    float,
+                    completeDuration,
+                    enableInfiniteLoad,
+                    success,
+                    noMore) {
+                  return SpinKitFadingCircle(
+                    color: Colors.deepOrange,
+                    size: 30.0,
+                  );
+                }),
+            onRefresh: () {
+              gettopdata();
+              readstorage();
+              foryoulist.clear();
+              foryouscroll.clear();
+
+              if (mounted) {
+                setState(() {
+                  skip = 0;
+                  limit = 50;
+                  loading = true;
+                  notifbadge = false;
+                  notbadge = false;
+                });
+              }
+
+              return getsubcategoriesinterested();
+            },
             slivers: <Widget>[
+              subcategoryList.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 16, top: 10, bottom: 10, right: 36),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Shop by Category',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                'See All',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ],
+                          )),
+                    )
+                  : SliverToBoxAdapter(),
+              subcategoryList.isNotEmpty
+                  ? SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisSpacing: 1.0,
+                          crossAxisSpacing: 1.0,
+                          crossAxisCount: 3,
+                          childAspectRatio: 0.8),
+                      delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () {},
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Container(
+                                height: 160,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 160,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: subcategoryList[index].image !=
+                                              null
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: CachedNetworkImage(
+                                                imageUrl: subcategoryList[index]
+                                                    .image,
+                                                fit: BoxFit.cover,
+                                              ))
+                                          : Container(),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        height: 50,
+                                        width: 100,
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            subcategoryList[index].name,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w900),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                          ),
+                        );
+                      }, childCount: 6))
+                  : SliverToBoxAdapter(),
               topitems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Padding(
@@ -2557,101 +2803,6 @@ class _HomeScreenState extends State<HomeScreen>
                         },
                       ),
                     ))
-                  : SliverToBoxAdapter(),
-              subcategoryList.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 16, top: 10, bottom: 10, right: 36),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Shop by Category',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'See All',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          )),
-                    )
-                  : SliverToBoxAdapter(),
-              subcategoryList.isNotEmpty
-                  ? SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisSpacing: 1.0,
-                          crossAxisSpacing: 1.0,
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.8),
-                      delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {},
-                          child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Container(
-                                height: 160,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      height: 160,
-                                      width: 180,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: subcategoryList[index].image !=
-                                              null
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: CachedNetworkImage(
-                                                imageUrl: subcategoryList[index]
-                                                    .image,
-                                                fit: BoxFit.cover,
-                                              ))
-                                          : Container(),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: 50,
-                                        width: 100,
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.5),
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Center(
-                                          child: Text(
-                                            subcategoryList[index].name,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w900),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        );
-                      }, childCount: 6))
                   : SliverToBoxAdapter(),
               nearmeItems.isNotEmpty
                   ? SliverToBoxAdapter(

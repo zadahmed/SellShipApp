@@ -1077,7 +1077,7 @@ class _ActivityState extends State<Activity>
                                                               '@' +
                                                                   buyingItem[
                                                                           index]
-                                                                      .buyername,
+                                                                      .sellername,
                                                               style: TextStyle(
                                                                   fontFamily:
                                                                       'Helvetica',
