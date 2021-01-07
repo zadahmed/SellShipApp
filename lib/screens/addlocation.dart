@@ -181,6 +181,7 @@ class _AddLocationState extends State<AddLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(

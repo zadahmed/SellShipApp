@@ -64,7 +64,9 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void showInSnackBar(String value) {
@@ -93,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         body: userid != null ? signedinprofile(context) : profile(context));
   }
@@ -1920,8 +1923,8 @@ class _ProfilePageState extends State<ProfilePage>
           });
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('seen', true);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => RootScreen()));
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.rootScreen, (route) => false);
       } else if (jsondata['status']['message'].toString().trim() ==
           'User does not exist, please sign up') {
         Navigator.of(context).pop();

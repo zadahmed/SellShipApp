@@ -32,7 +32,7 @@ class RootScreen extends StatefulWidget {
 
 class _RootScreenState extends State<RootScreen> {
   final storage = new FlutterSecureStorage();
-
+  PageController pageController;
   int _currentPage = 0;
   final List<Widget> _pages = [
     HomeScreen(),
@@ -41,6 +41,13 @@ class _RootScreenState extends State<RootScreen> {
     Activity(),
     ProfilePage(),
   ];
+
+  @override
+  void dispose() {
+    pageController.dispose();
+
+    super.dispose();
+  }
 
   var profilepicture;
 
@@ -72,6 +79,7 @@ class _RootScreenState extends State<RootScreen> {
   void initState() {
     super.initState();
     getuser();
+    pageController = new PageController(initialPage: _currentPage);
     setState(() {
       if (widget.index != null) {
         _currentPage = widget.index;
@@ -173,6 +181,7 @@ class _RootScreenState extends State<RootScreen> {
                                     seenadditem = false;
                                     storage.delete(key: 'additem');
                                     _currentPage = i;
+                                    pageController.jumpToPage(i);
                                     onselected();
                                   });
                                 },
@@ -194,12 +203,14 @@ class _RootScreenState extends State<RootScreen> {
                   setState(() {
                     _currentPage = i;
                     onselected();
+                    pageController.jumpToPage(i);
                   });
                 }
               } else {
                 setState(() {
                   _currentPage = i;
                   onselected();
+                  pageController.jumpToPage(i);
                 });
               }
             } else {
@@ -207,6 +218,7 @@ class _RootScreenState extends State<RootScreen> {
                 seenadditem = true;
                 _currentPage = i;
                 onselected();
+                pageController.jumpToPage(i);
               });
             }
           },
@@ -292,7 +304,10 @@ class _RootScreenState extends State<RootScreen> {
                         color: Colors.black))),
           ],
         ),
-        body: _pages[_currentPage],
+        body: PageView(
+            physics: NeverScrollableScrollPhysics(),
+            children: _pages,
+            controller: pageController),
       ),
     );
   }

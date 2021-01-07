@@ -67,6 +67,32 @@ class _AddItemState extends State<AddItem> {
   String city;
   String country;
 
+  List<Color> colorslist = [
+    Colors.red,
+    Colors.black,
+    Colors.white,
+    Colors.green,
+    Colors.yellow,
+    Colors.blue,
+    Colors.orange,
+    Colors.pink,
+    Colors.purple,
+    Colors.amber,
+    Colors.deepOrange,
+    Colors.deepPurple,
+    Colors.tealAccent,
+    Colors.teal,
+    Colors.redAccent,
+    Colors.lime,
+    Colors.limeAccent,
+    Colors.cyan,
+    Colors.cyanAccent,
+    Colors.brown,
+    Colors.indigo,
+  ];
+
+  List<Color> selectedColors = List<Color>();
+
   int quantity = 0;
 
   getuser() async {
@@ -1450,16 +1476,6 @@ class _AddItemState extends State<AddItem> {
                                                                         child: Column(children: [
                                                                           Row(
                                                                             children: [
-                                                                              Padding(
-                                                                                padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
-                                                                                child: Align(
-                                                                                    alignment: Alignment.centerLeft,
-                                                                                    child: InkWell(
-                                                                                        child: Icon(Icons.clear),
-                                                                                        onTap: () {
-                                                                                          Navigator.pop(context);
-                                                                                        })),
-                                                                              ),
                                                                               InkWell(
                                                                                   onTap: () {
                                                                                     Navigator.pop(context);
@@ -1742,16 +1758,6 @@ class _AddItemState extends State<AddItem> {
                                                                         child: Column(children: [
                                                                           Row(
                                                                             children: [
-                                                                              Padding(
-                                                                                padding: EdgeInsets.only(left: 15, top: 15, bottom: 5),
-                                                                                child: Align(
-                                                                                    alignment: Alignment.centerLeft,
-                                                                                    child: InkWell(
-                                                                                        child: Icon(Icons.clear),
-                                                                                        onTap: () {
-                                                                                          Navigator.pop(context);
-                                                                                        })),
-                                                                              ),
                                                                               InkWell(
                                                                                   onTap: () {
                                                                                     Navigator.pop(context);
@@ -1783,16 +1789,42 @@ class _AddItemState extends State<AddItem> {
                                                                           ),
                                                                           Expanded(
                                                                             child:
-                                                                                MaterialColorPicker(
-                                                                              shrinkWrap: true,
-                                                                              circleSize: 50,
-                                                                              spacing: 15,
-                                                                              selectedColor: _mainColor,
-                                                                              allowShades: false,
-                                                                              onMainColorChange: (color) => setState(() {
-                                                                                _tempMainColor = color;
-                                                                                _selectedcolor = color.toString();
-                                                                              }),
+                                                                                GridView.builder(
+                                                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(mainAxisSpacing: 5.0, crossAxisSpacing: 5.0, crossAxisCount: 4, childAspectRatio: 1.3),
+                                                                              itemBuilder: (_, i) {
+                                                                                return Padding(
+                                                                                    padding: EdgeInsets.all(5),
+                                                                                    child: InkWell(
+                                                                                      onTap: () {
+                                                                                        if (selectedColors.length > 3) {
+                                                                                          selectedColors.removeAt(0);
+                                                                                          selectedColors.add(colorslist[i]);
+                                                                                        } else {
+                                                                                          selectedColors.add(colorslist[i]);
+                                                                                        }
+                                                                                        updateState(() {
+                                                                                          selectedColors = selectedColors;
+                                                                                        });
+                                                                                      },
+                                                                                      child: Container(
+                                                                                          height: 30,
+                                                                                          width: 30,
+                                                                                          decoration: BoxDecoration(
+                                                                                            shape: BoxShape.circle,
+                                                                                            border: Border.all(
+                                                                                              color: Colors.grey.shade300,
+                                                                                            ),
+                                                                                            color: colorslist[i],
+                                                                                          ),
+                                                                                          child: selectedColors.contains(colorslist[i])
+                                                                                              ? Icon(
+                                                                                                  Icons.check,
+                                                                                                  color: Colors.white,
+                                                                                                )
+                                                                                              : Container()),
+                                                                                    ));
+                                                                              },
+                                                                              itemCount: colorslist.length,
                                                                             ),
                                                                           )
                                                                         ])));
@@ -1810,7 +1842,7 @@ class _AddItemState extends State<AddItem> {
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: <Widget>[
-                                                        _selectedcolor != null
+                                                        selectedColors != null
                                                             ? Row(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
@@ -1819,27 +1851,32 @@ class _AddItemState extends State<AddItem> {
                                                                     CrossAxisAlignment
                                                                         .center,
                                                                 children: [
-                                                                  Text(
-                                                                    'Color ',
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .right,
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontSize:
-                                                                            16,
-                                                                        color: Colors
-                                                                            .blueGrey),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 20,
-                                                                  ),
-                                                                  CircleColor(
-                                                                      color:
-                                                                          _tempMainColor,
-                                                                      circleSize:
-                                                                          30),
+                                                                  Container(
+                                                                      height:
+                                                                          30,
+                                                                      width:
+                                                                          200,
+                                                                      child: ListView
+                                                                          .builder(
+                                                                        scrollDirection:
+                                                                            Axis.horizontal,
+                                                                        itemCount:
+                                                                            selectedColors.length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return Container(
+                                                                              height: 30,
+                                                                              width: 30,
+                                                                              decoration: BoxDecoration(
+                                                                                shape: BoxShape.circle,
+                                                                                border: Border.all(
+                                                                                  color: Colors.grey.shade300,
+                                                                                ),
+                                                                                color: selectedColors[index],
+                                                                              ));
+                                                                        },
+                                                                      ))
                                                                 ],
                                                               )
                                                             : Text(
@@ -2358,9 +2395,8 @@ class _AddItemState extends State<AddItem> {
                                       .text.isEmpty) {
                                     showInSnackBar(
                                         'Oops looks like your missing a price for your item!');
-                                  } else if (businessizecontroller == null &&
-                                      _selectedCategory ==
-                                          'Fashion & Accessories') {
+                                  } else if (_selectedsize == null &&
+                                      _selectedCategory == 'Women') {
                                     showInSnackBar(
                                         'Please choose the size for your item!');
                                   } else if (_selectedweight == -1) {
@@ -2610,7 +2646,11 @@ class _AddItemState extends State<AddItem> {
                                           'name': businessnameController.text,
                                           'price': int.parse(
                                               fees.toStringAsFixed(2)),
-                                          'originalprice': '',
+                                          'originalprice':
+                                              businesspricecontroller.text
+                                                  .toString(),
+                                          'colors': selectedColors,
+                                          'size': _selectedsize,
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
@@ -2655,7 +2695,11 @@ class _AddItemState extends State<AddItem> {
                                           'name': businessnameController.text,
                                           'price': int.parse(
                                               fees.toStringAsFixed(2)),
-                                          'originalprice': '',
+                                          'originalprice':
+                                              businesspricecontroller.text
+                                                  .toString(),
+                                          'colors': selectedColors,
+                                          'size': _selectedsize,
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
@@ -2708,7 +2752,11 @@ class _AddItemState extends State<AddItem> {
                                           'price': int.parse(
                                               fees.toStringAsFixed(2)),
                                           'category': _selectedCategory,
-                                          'originalprice': '',
+                                          'originalprice':
+                                              businesspricecontroller.text
+                                                  .toString(),
+                                          'colors': selectedColors,
+                                          'size': _selectedsize,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
@@ -2766,7 +2814,11 @@ class _AddItemState extends State<AddItem> {
                                           'price': int.parse(
                                               fees.toStringAsFixed(2)),
                                           'category': _selectedCategory,
-                                          'originalprice': '',
+                                          'originalprice':
+                                              businesspricecontroller.text
+                                                  .toString(),
+                                          'colors': selectedColors,
+                                          'size': _selectedsize,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
@@ -2830,7 +2882,11 @@ class _AddItemState extends State<AddItem> {
                                           'price': int.parse(
                                               fees.toStringAsFixed(2)),
                                           'category': _selectedCategory,
-                                          'originalprice': '',
+                                          'originalprice':
+                                              businesspricecontroller.text
+                                                  .toString(),
+                                          'colors': selectedColors,
+                                          'size': _selectedsize,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
@@ -2899,7 +2955,11 @@ class _AddItemState extends State<AddItem> {
                                           'price': int.parse(
                                               fees.toStringAsFixed(2)),
                                           'category': _selectedCategory,
-                                          'originalprice': '',
+                                          'originalprice':
+                                              businesspricecontroller.text
+                                                  .toString(),
+                                          'colors': selectedColors,
+                                          'size': _selectedsize,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
@@ -2951,6 +3011,8 @@ class _AddItemState extends State<AddItem> {
 
                                       var response =
                                           await dio.post(url, data: formData);
+                                      print(response.data);
+                                      print(response.statusCode);
 
                                       if (response.statusCode == 200) {
                                         showDialog(

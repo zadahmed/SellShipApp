@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/balance.dart';
 import 'package:SellShip/screens/changecountry.dart';
@@ -572,11 +573,8 @@ class _SettingsState extends State<Settings> {
                         setState(() {
                           userid = null;
                         });
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RootScreen(index: 4)),
-                        );
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, Routes.rootScreen, (route) => false);
                       },
                     ))
                 : Container(),

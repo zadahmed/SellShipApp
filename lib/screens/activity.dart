@@ -945,6 +945,7 @@ class _ActivityState extends State<Activity>
                               labelStyle: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
                                 fontFamily: 'Helvetica',
                               ),
                               unselectedLabelStyle: TextStyle(
@@ -956,14 +957,20 @@ class _ActivityState extends State<Activity>
                               indicator: UnderlineTabIndicator(
                                   borderSide: BorderSide(
                                       width: 2.0, color: Colors.deepOrange)),
-                              isScrollable: true,
+                              isScrollable: false,
                               labelColor: Colors.black,
                               tabs: [
-                                new Tab(
-                                  text: 'Buy',
+                                new Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: new Tab(
+                                    text: 'Buy',
+                                  ),
                                 ),
-                                new Tab(
-                                  text: 'Sell',
+                                new Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: new Tab(
+                                    text: 'Sell',
+                                  ),
                                 ),
                               ],
                             ),

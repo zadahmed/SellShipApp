@@ -59,7 +59,7 @@ class Subcategory {
 }
 
 class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   List<Item> itemsgrid = [];
 
   var skip;
@@ -71,6 +71,9 @@ class _HomeScreenState extends State<HomeScreen>
 
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
 
@@ -1045,6 +1048,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         key: scaffoldState,
         backgroundColor: Colors.white,
@@ -1442,14 +1446,19 @@ class _HomeScreenState extends State<HomeScreen>
                               indicator: UnderlineTabIndicator(
                                   borderSide: BorderSide(
                                       width: 2.0, color: Colors.deepOrange)),
-                              isScrollable: true,
                               labelColor: Colors.black,
                               tabs: [
-                                new Tab(
-                                  text: 'Discover',
+                                new Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: new Tab(
+                                    text: 'Discover',
+                                  ),
                                 ),
-                                new Tab(
-                                  text: 'For You',
+                                new Container(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: new Tab(
+                                    text: 'For You',
+                                  ),
                                 ),
                               ],
                             ),

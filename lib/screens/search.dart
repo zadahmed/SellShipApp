@@ -1164,14 +1164,18 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                                                                   BorderRadius
                                                                       .circular(
                                                                           10),
-                                                              child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl: categoryList[
-                                                                        index]
-                                                                    .categoryimage,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ))
+                                                              child: Hero(
+                                                                  tag: categoryList[
+                                                                          index]
+                                                                      .categoryname,
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    imageUrl: categoryList[
+                                                                            index]
+                                                                        .categoryimage,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  )))
                                                           : Container(),
                                                     ),
                                                     Align(
