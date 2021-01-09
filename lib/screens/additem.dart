@@ -93,7 +93,7 @@ class _AddItemState extends State<AddItem> {
 
   List<Color> selectedColors = List<Color>();
 
-  int quantity = 0;
+  int quantity = 1;
 
   getuser() async {
     var countr = await storage.read(key: 'country');
@@ -298,7 +298,6 @@ class _AddItemState extends State<AddItem> {
 
   @override
   void dispose() {
-    print("Back To old Screen");
     businessnameController.dispose();
     businesspricecontroller.dispose();
     super.dispose();
@@ -2412,18 +2411,20 @@ class _AddItemState extends State<AddItem> {
                                     }
 
                                     String bran;
-                                    if (businessbrandcontroller != null) {
-                                      String brandcontrollertext =
-                                          businessbrandcontroller.text.trim();
-                                      if (brandcontrollertext.isNotEmpty) {
-                                        bran = businessbrandcontroller.text;
-                                      } else if (brand != null) {
-                                        bran = brand;
+                                    if (brand == 'Other') {
+                                      if (businessbrandcontroller != null) {
+                                        String brandcontrollertext =
+                                            businessbrandcontroller.text.trim();
+                                        if (brandcontrollertext.isNotEmpty) {
+                                          bran = businessbrandcontroller.text;
+                                        }
+                                      } else if (businessbrandcontroller ==
+                                          null) {
+                                        showInSnackBar(
+                                            'Please choose a brand for your item!');
                                       }
-                                    } else if (businessbrandcontroller ==
-                                        null) {
-                                      showInSnackBar(
-                                          'Please choose a brand for your item!');
+                                    } else {
+                                      bran = brand;
                                     }
 
                                     showDialog(
@@ -2446,6 +2447,7 @@ class _AddItemState extends State<AddItem> {
                                             ),
                                           );
                                         });
+
                                     var userurl =
                                         'https://api.sellship.co/api/user/' +
                                             userid;
@@ -2463,8 +2465,6 @@ class _AddItemState extends State<AddItem> {
                                       });
 
                                       print('I am here');
-                                      var url =
-                                          'https://api.sellship.co/api/additem';
 
                                       List<int> _image;
                                       List<int> _image2;
@@ -2474,183 +2474,128 @@ class _AddItemState extends State<AddItem> {
                                       List<int> _image6;
 
                                       if (images.length == 1) {
-                                        ByteData byteData =
-                                            await images[0].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData = await images[0]
+                                            .getByteData(quality: 50);
                                         _image = byteData.buffer.asUint8List();
                                       } else if (images.length == 2) {
-                                        ByteData byteData =
-                                            await images[0].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData = await images[0]
+                                            .getByteData(quality: 50);
                                         _image = byteData.buffer.asUint8List();
 
-                                        ByteData byteData2 =
-                                            await images[1].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData2 = await images[1]
+                                            .getByteData(quality: 50);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
                                       } else if (images.length == 3) {
-                                        ByteData byteData =
-                                            await images[0].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData = await images[0]
+                                            .getByteData(quality: 50);
                                         _image = byteData.buffer.asUint8List();
 
-                                        ByteData byteData2 =
-                                            await images[1].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData2 = await images[1]
+                                            .getByteData(quality: 50);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
 
-                                        ByteData byteData3 =
-                                            await images[2].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData3 = await images[2]
+                                            .getByteData(quality: 50);
                                         _image3 =
                                             byteData3.buffer.asUint8List();
                                       } else if (images.length == 4) {
-                                        ByteData byteData =
-                                            await images[0].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData = await images[0]
+                                            .getByteData(quality: 50);
                                         _image = byteData.buffer.asUint8List();
 
-                                        ByteData byteData2 =
-                                            await images[1].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData2 = await images[1]
+                                            .getByteData(quality: 50);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
 
-                                        ByteData byteData3 =
-                                            await images[2].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData3 = await images[2]
+                                            .getByteData(quality: 50);
                                         _image3 =
                                             byteData3.buffer.asUint8List();
 
-                                        ByteData byteData4 =
-                                            await images[3].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData4 = await images[3]
+                                            .getByteData(quality: 50);
                                         _image4 =
                                             byteData4.buffer.asUint8List();
                                       } else if (images.length == 5) {
-                                        ByteData byteData =
-                                            await images[0].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData = await images[0]
+                                            .getByteData(quality: 50);
                                         _image = byteData.buffer.asUint8List();
 
-                                        ByteData byteData2 =
-                                            await images[1].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData2 = await images[1]
+                                            .getByteData(quality: 50);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
 
-                                        ByteData byteData3 =
-                                            await images[2].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData3 = await images[2]
+                                            .getByteData(quality: 50);
                                         _image3 =
                                             byteData3.buffer.asUint8List();
 
-                                        ByteData byteData4 =
-                                            await images[3].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData4 = await images[3]
+                                            .getByteData(quality: 50);
                                         _image4 =
                                             byteData4.buffer.asUint8List();
 
-                                        ByteData byteData5 =
-                                            await images[4].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData5 = await images[4]
+                                            .getByteData(quality: 50);
                                         _image5 =
                                             byteData5.buffer.asUint8List();
                                       } else if (images.length == 6) {
-                                        ByteData byteData =
-                                            await images[0].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData = await images[0]
+                                            .getByteData(quality: 50);
                                         _image = byteData.buffer.asUint8List();
 
-                                        ByteData byteData2 =
-                                            await images[1].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData2 = await images[1]
+                                            .getByteData(quality: 50);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
 
-                                        ByteData byteData3 =
-                                            await images[2].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData3 = await images[2]
+                                            .getByteData(quality: 50);
                                         _image3 =
                                             byteData3.buffer.asUint8List();
 
-                                        ByteData byteData4 =
-                                            await images[3].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData4 = await images[3]
+                                            .getByteData(quality: 50);
                                         _image4 =
                                             byteData4.buffer.asUint8List();
 
-                                        ByteData byteData5 =
-                                            await images[4].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData5 = await images[4]
+                                            .getByteData(quality: 50);
                                         _image5 =
                                             byteData5.buffer.asUint8List();
 
-                                        ByteData byteData6 =
-                                            await images[5].getThumbByteData(
-                                          400,
-                                          400,
-                                        );
+                                        ByteData byteData6 = await images[5]
+                                            .getByteData(quality: 50);
                                         _image6 =
                                             byteData6.buffer.asUint8List();
                                       }
 
+                                      print('I am here 2');
+
                                       Dio dio = new Dio();
                                       FormData formData;
+
                                       if (_image != null) {
                                         String fileName =
                                             randomAlphaNumeric(20);
+                                        print(fileName);
+
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': int.parse(
-                                              fees.toStringAsFixed(2)),
+                                          'price': fees.toStringAsFixed(2),
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors,
-                                          'size': _selectedsize,
+                                          'colors': selectedColors == null
+                                              ? []
+                                              : selectedColors,
+                                          'size': _selectedsize == null
+                                              ? ''
+                                              : _selectedsize,
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
@@ -2667,10 +2612,6 @@ class _AddItemState extends State<AddItem> {
                                           'country': country.trim(),
                                           'condition': _selectedCondition,
                                           'brand': bran,
-                                          'size':
-                                              businessizecontroller.text == null
-                                                  ? ''
-                                                  : businessizecontroller.text,
                                           'userid': userid,
                                           'username': firstname,
                                           'useremail': email,
@@ -2693,13 +2634,16 @@ class _AddItemState extends State<AddItem> {
                                             randomAlphaNumeric(20);
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': int.parse(
-                                              fees.toStringAsFixed(2)),
+                                          'price': fees.toStringAsFixed(2),
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors,
-                                          'size': _selectedsize,
+                                          'colors': selectedColors == null
+                                              ? []
+                                              : selectedColors,
+                                          'size': _selectedsize == null
+                                              ? ''
+                                              : _selectedsize,
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
@@ -2713,20 +2657,16 @@ class _AddItemState extends State<AddItem> {
                                               businessdescriptionController
                                                   .text,
                                           'city': city.trim(),
-                                          'condition': _selectedCondition,
-                                          'userid': userid,
-                                          'brand': bran,
-                                          'size':
-                                              businessizecontroller.text == null
-                                                  ? ''
-                                                  : businessizecontroller.text,
                                           'country': country.trim(),
+                                          'condition': _selectedCondition,
+                                          'brand': bran,
+                                          'userid': userid,
                                           'username': firstname,
                                           'useremail': email,
                                           'usernumber': phonenumber,
-                                          'quantity': quantity,
                                           'weight': itemweight,
                                           'weightmetric': metric,
+                                          'quantity': quantity,
                                           'date_uploaded':
                                               DateTime.now().toString(),
                                           'image': MultipartFile.fromBytes(
@@ -2749,14 +2689,17 @@ class _AddItemState extends State<AddItem> {
 
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': int.parse(
-                                              fees.toStringAsFixed(2)),
-                                          'category': _selectedCategory,
+                                          'price': fees.toStringAsFixed(2),
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors,
-                                          'size': _selectedsize,
+                                          'colors': selectedColors == null
+                                              ? []
+                                              : selectedColors,
+                                          'size': _selectedsize == null
+                                              ? ''
+                                              : _selectedsize,
+                                          'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
@@ -2769,20 +2712,16 @@ class _AddItemState extends State<AddItem> {
                                               businessdescriptionController
                                                   .text,
                                           'city': city.trim(),
-                                          'condition': _selectedCondition,
-                                          'quantity': quantity,
-                                          'brand': bran,
-                                          'size':
-                                              businessizecontroller.text == null
-                                                  ? ''
-                                                  : businessizecontroller.text,
-                                          'userid': userid,
                                           'country': country.trim(),
+                                          'condition': _selectedCondition,
+                                          'brand': bran,
+                                          'userid': userid,
                                           'username': firstname,
                                           'useremail': email,
                                           'usernumber': phonenumber,
                                           'weight': itemweight,
                                           'weightmetric': metric,
+                                          'quantity': quantity,
                                           'date_uploaded':
                                               DateTime.now().toString(),
                                           'image': MultipartFile.fromBytes(
@@ -2811,14 +2750,17 @@ class _AddItemState extends State<AddItem> {
 
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': int.parse(
-                                              fees.toStringAsFixed(2)),
-                                          'category': _selectedCategory,
+                                          'price': fees.toStringAsFixed(2),
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors,
-                                          'size': _selectedsize,
+                                          'colors': selectedColors == null
+                                              ? []
+                                              : selectedColors,
+                                          'size': _selectedsize == null
+                                              ? ''
+                                              : _selectedsize,
+                                          'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
@@ -2827,24 +2769,20 @@ class _AddItemState extends State<AddItem> {
                                           'latitude': _lastMapPosition.latitude,
                                           'longitude':
                                               _lastMapPosition.longitude,
-                                          'quantity': quantity,
                                           'description':
                                               businessdescriptionController
                                                   .text,
                                           'city': city.trim(),
-                                          'userid': userid,
+                                          'country': country.trim(),
                                           'condition': _selectedCondition,
                                           'brand': bran,
-                                          'size':
-                                              businessizecontroller.text == null
-                                                  ? ''
-                                                  : businessizecontroller.text,
-                                          'country': country.trim(),
+                                          'userid': userid,
                                           'username': firstname,
                                           'useremail': email,
                                           'usernumber': phonenumber,
                                           'weight': itemweight,
                                           'weightmetric': metric,
+                                          'quantity': quantity,
                                           'date_uploaded':
                                               DateTime.now().toString(),
                                           'image': MultipartFile.fromBytes(
@@ -2879,14 +2817,17 @@ class _AddItemState extends State<AddItem> {
 
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': int.parse(
-                                              fees.toStringAsFixed(2)),
-                                          'category': _selectedCategory,
+                                          'price': fees.toStringAsFixed(2),
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors,
-                                          'size': _selectedsize,
+                                          'colors': selectedColors == null
+                                              ? []
+                                              : selectedColors,
+                                          'size': _selectedsize == null
+                                              ? ''
+                                              : _selectedsize,
+                                          'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
@@ -2895,24 +2836,20 @@ class _AddItemState extends State<AddItem> {
                                           'latitude': _lastMapPosition.latitude,
                                           'longitude':
                                               _lastMapPosition.longitude,
-                                          'quantity': quantity,
                                           'description':
                                               businessdescriptionController
                                                   .text,
                                           'city': city.trim(),
                                           'country': country.trim(),
-                                          'brand': bran,
-                                          'size':
-                                              businessizecontroller.text == null
-                                                  ? ''
-                                                  : businessizecontroller.text,
                                           'condition': _selectedCondition,
+                                          'brand': bran,
                                           'userid': userid,
                                           'username': firstname,
                                           'useremail': email,
                                           'usernumber': phonenumber,
                                           'weight': itemweight,
                                           'weightmetric': metric,
+                                          'quantity': quantity,
                                           'date_uploaded':
                                               DateTime.now().toString(),
                                           'image': MultipartFile.fromBytes(
@@ -2952,14 +2889,17 @@ class _AddItemState extends State<AddItem> {
                                             randomAlphaNumeric(20);
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
-                                          'price': int.parse(
-                                              fees.toStringAsFixed(2)),
-                                          'category': _selectedCategory,
+                                          'price': fees.toStringAsFixed(2),
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors,
-                                          'size': _selectedsize,
+                                          'colors': selectedColors == null
+                                              ? []
+                                              : selectedColors,
+                                          'size': _selectedsize == null
+                                              ? ''
+                                              : _selectedsize,
+                                          'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
                                               _selectedsubsubCategory == null
@@ -2972,20 +2912,16 @@ class _AddItemState extends State<AddItem> {
                                               businessdescriptionController
                                                   .text,
                                           'city': city.trim(),
-                                          'userid': userid,
-                                          'quantity': quantity,
                                           'country': country.trim(),
-                                          'username': firstname,
-                                          'brand': bran,
-                                          'size':
-                                              businessizecontroller.text == null
-                                                  ? ''
-                                                  : businessizecontroller.text,
                                           'condition': _selectedCondition,
+                                          'brand': bran,
+                                          'userid': userid,
+                                          'username': firstname,
                                           'useremail': email,
                                           'usernumber': phonenumber,
                                           'weight': itemweight,
                                           'weightmetric': metric,
+                                          'quantity': quantity,
                                           'date_uploaded':
                                               DateTime.now().toString(),
                                           'image': MultipartFile.fromBytes(
@@ -3009,8 +2945,14 @@ class _AddItemState extends State<AddItem> {
                                         });
                                       }
 
-                                      var response =
-                                          await dio.post(url, data: formData);
+                                      print('I am here 3');
+
+                                      print('Ue');
+
+                                      var addurl =
+                                          'https://api.sellship.co/api/additem';
+                                      var response = await dio.post(addurl,
+                                          data: formData);
                                       print(response.data);
                                       print(response.statusCode);
 
@@ -3045,7 +2987,7 @@ class _AddItemState extends State<AddItem> {
                                                             rootNavigator: true)
                                                         .pop('dialog');
 
-                                                    Navigator.push(
+                                                    Navigator.pushReplacement(
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>

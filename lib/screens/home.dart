@@ -1853,9 +1853,11 @@ class _HomeScreenState extends State<HomeScreen>
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Details(
-                                        itemid: foryoulist[index].itemid,
-                                        sold: foryoulist[index].sold,
-                                      )),
+                                      itemid: foryoulist[index].itemid,
+                                      image: foryoulist[index].image,
+                                      name: foryoulist[index].name,
+                                      sold: foryoulist[index].sold,
+                                      source: 'foryou')),
                             );
                           },
                           child: Stack(children: <Widget>[
@@ -1863,18 +1865,21 @@ class _HomeScreenState extends State<HomeScreen>
                               height: 150,
                               width: MediaQuery.of(context).size.width,
                               child: ClipRRect(
-                                child: CachedNetworkImage(
-                                  fadeInDuration: Duration(microseconds: 5),
-                                  imageUrl: foryoulist[index].image.isEmpty
-                                      ? SpinKitChasingDots(
-                                          color: Colors.deepOrange)
-                                      : foryoulist[index].image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitChasingDots(
-                                          color: Colors.deepOrange),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                child: Hero(
+                                  tag: 'foryou${foryoulist[index].itemid}',
+                                  child: CachedNetworkImage(
+                                    fadeInDuration: Duration(microseconds: 5),
+                                    imageUrl: foryoulist[index].image.isEmpty
+                                        ? SpinKitChasingDots(
+                                            color: Colors.deepOrange)
+                                        : foryoulist[index].image,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        SpinKitChasingDots(
+                                            color: Colors.deepOrange),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ),
                                 ),
                               ),
                             ),
@@ -2118,9 +2123,11 @@ class _HomeScreenState extends State<HomeScreen>
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Details(
-                                        itemid: foryouscroll[index].itemid,
-                                        sold: foryouscroll[index].sold,
-                                      )),
+                                      itemid: foryouscroll[index].itemid,
+                                      image: foryouscroll[index].image,
+                                      name: foryouscroll[index].name,
+                                      sold: foryouscroll[index].sold,
+                                      source: 'foryouscroll')),
                             );
                           },
                           child: Stack(children: <Widget>[
@@ -2128,18 +2135,22 @@ class _HomeScreenState extends State<HomeScreen>
                               height: 150,
                               width: MediaQuery.of(context).size.width,
                               child: ClipRRect(
-                                child: CachedNetworkImage(
-                                  fadeInDuration: Duration(microseconds: 5),
-                                  imageUrl: foryouscroll[index].image.isEmpty
-                                      ? SpinKitChasingDots(
-                                          color: Colors.deepOrange)
-                                      : foryouscroll[index].image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitChasingDots(
-                                          color: Colors.deepOrange),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
+                                child: Hero(
+                                  tag:
+                                      'foryouscroll${foryouscroll[index].itemid}',
+                                  child: CachedNetworkImage(
+                                    fadeInDuration: Duration(microseconds: 5),
+                                    imageUrl: foryouscroll[index].image.isEmpty
+                                        ? SpinKitChasingDots(
+                                            color: Colors.deepOrange)
+                                        : foryouscroll[index].image,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        SpinKitChasingDots(
+                                            color: Colors.deepOrange),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  ),
                                 ),
                               ),
                             ),
@@ -2229,6 +2240,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   foryou() async {
     var userid = await storage.read(key: 'userid');
+    List<Item> testforoyou = List<Item>();
     var url = 'https://api.sellship.co/api/foryou/feed/' + userid + '/0/10';
 
     final response = await http.get(url);
@@ -2238,7 +2250,7 @@ class _HomeScreenState extends State<HomeScreen>
       if (jsonbody.isEmpty) {
         if (mounted)
           setState(() {
-            foryoulist = [];
+            testforoyou = [];
           });
       } else {
         var jsonbody = json.decode(response.body);
@@ -2247,13 +2259,14 @@ class _HomeScreenState extends State<HomeScreen>
           Item item = Item(
             itemid: jsonbody[i]['_id']['\$oid'],
             image: jsonbody[i]['image'],
+            name: jsonbody[i]['name'],
             sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
           );
-          foryoulist.add(item);
+          testforoyou.add(item);
         }
         if (mounted)
           setState(() {
-            foryoulist = foryoulist;
+            foryoulist = testforoyou.toSet().toList();
             foryouloading = false;
           });
       }
@@ -2290,6 +2303,7 @@ class _HomeScreenState extends State<HomeScreen>
           Item item = Item(
             itemid: jsonbody[i]['_id']['\$oid'],
             image: jsonbody[i]['image'],
+            name: jsonbody[i]['name'],
             sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
           );
           foryouscroll.add(item);
@@ -2397,9 +2411,9 @@ class _HomeScreenState extends State<HomeScreen>
                   );
                 }),
             header: CustomHeader(
-                extent: 40.0,
+                extent: 160.0,
                 enableHapticFeedback: true,
-                triggerDistance: 50.0,
+                triggerDistance: 160.0,
                 headerBuilder: (context,
                     loadState,
                     pulledExtent,
@@ -2583,10 +2597,11 @@ class _HomeScreenState extends State<HomeScreen>
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Details(
-                                                  itemid:
-                                                      topitems[index].itemid,
-                                                  sold: topitems[index].sold,
-                                                )),
+                                                itemid: topitems[index].itemid,
+                                                image: topitems[index].image,
+                                                name: topitems[index].name,
+                                                sold: topitems[index].sold,
+                                                source: 'top')),
                                       );
                                     },
                                     child: Stack(children: <Widget>[
@@ -2607,22 +2622,25 @@ class _HomeScreenState extends State<HomeScreen>
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
-                                            fadeInDuration:
-                                                Duration(microseconds: 5),
-                                            imageUrl: topitems[index]
-                                                    .image
-                                                    .isEmpty
-                                                ? SpinKitChasingDots(
-                                                    color: Colors.deepOrange)
-                                                : topitems[index].image,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                SpinKitChasingDots(
-                                                    color: Colors.deepOrange),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
+                                          child: Hero(
+                                            tag: 'top${topitems[index].itemid}',
+                                            child: CachedNetworkImage(
+                                              fadeInDuration:
+                                                  Duration(microseconds: 5),
+                                              imageUrl: topitems[index]
+                                                      .image
+                                                      .isEmpty
+                                                  ? SpinKitChasingDots(
+                                                      color: Colors.deepOrange)
+                                                  : topitems[index].image,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  SpinKitChasingDots(
+                                                      color: Colors.deepOrange),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -2868,6 +2886,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             builder: (context) => Details(
                                                   itemid:
                                                       nearmeItems[index].itemid,
+                                                  image:
+                                                      nearmeItems[index].image,
+                                                  name: nearmeItems[index].name,
                                                   sold: nearmeItems[index].sold,
                                                 )),
                                       );
@@ -2890,22 +2911,26 @@ class _HomeScreenState extends State<HomeScreen>
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
-                                            fadeInDuration:
-                                                Duration(microseconds: 5),
-                                            imageUrl: nearmeItems[index]
-                                                    .image
-                                                    .isEmpty
-                                                ? SpinKitChasingDots(
-                                                    color: Colors.deepOrange)
-                                                : nearmeItems[index].image,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                SpinKitChasingDots(
-                                                    color: Colors.deepOrange),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
+                                          child: Hero(
+                                            tag:
+                                                'hero${nearmeItems[index].itemid}',
+                                            child: CachedNetworkImage(
+                                              fadeInDuration:
+                                                  Duration(microseconds: 5),
+                                              imageUrl: nearmeItems[index]
+                                                      .image
+                                                      .isEmpty
+                                                  ? SpinKitChasingDots(
+                                                      color: Colors.deepOrange)
+                                                  : nearmeItems[index].image,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  SpinKitChasingDots(
+                                                      color: Colors.deepOrange),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -3149,11 +3174,13 @@ class _HomeScreenState extends State<HomeScreen>
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Details(
-                                                  itemid: below100list[index]
-                                                      .itemid,
-                                                  sold:
-                                                      below100list[index].sold,
-                                                )),
+                                                itemid:
+                                                    below100list[index].itemid,
+                                                image:
+                                                    below100list[index].image,
+                                                name: below100list[index].name,
+                                                sold: below100list[index].sold,
+                                                source: 'below100')),
                                       );
                                     },
                                     child: Stack(children: <Widget>[
@@ -3174,22 +3201,26 @@ class _HomeScreenState extends State<HomeScreen>
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
-                                            fadeInDuration:
-                                                Duration(microseconds: 5),
-                                            imageUrl: below100list[index]
-                                                    .image
-                                                    .isEmpty
-                                                ? SpinKitChasingDots(
-                                                    color: Colors.deepOrange)
-                                                : below100list[index].image,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                SpinKitChasingDots(
-                                                    color: Colors.deepOrange),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
+                                          child: Hero(
+                                            tag:
+                                                'below100${below100list[index].itemid}',
+                                            child: CachedNetworkImage(
+                                              fadeInDuration:
+                                                  Duration(microseconds: 5),
+                                              imageUrl: below100list[index]
+                                                      .image
+                                                      .isEmpty
+                                                  ? SpinKitChasingDots(
+                                                      color: Colors.deepOrange)
+                                                  : below100list[index].image,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  SpinKitChasingDots(
+                                                      color: Colors.deepOrange),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -3470,9 +3501,11 @@ class _HomeScreenState extends State<HomeScreen>
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => Details(
-                                            itemid: itemsgrid[index].itemid,
-                                            sold: itemsgrid[index].sold,
-                                          )),
+                                          itemid: itemsgrid[index].itemid,
+                                          image: itemsgrid[index].image,
+                                          name: itemsgrid[index].name,
+                                          sold: itemsgrid[index].sold,
+                                          source: 'newin')),
                                 );
                               },
                               child: Stack(children: <Widget>[
@@ -3491,18 +3524,22 @@ class _HomeScreenState extends State<HomeScreen>
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: CachedNetworkImage(
-                                      fadeInDuration: Duration(microseconds: 5),
-                                      imageUrl: itemsgrid[index].image.isEmpty
-                                          ? SpinKitChasingDots(
-                                              color: Colors.deepOrange)
-                                          : itemsgrid[index].image,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          SpinKitChasingDots(
-                                              color: Colors.deepOrange),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
+                                    child: Hero(
+                                      tag: 'newin${itemsgrid[index].itemid}',
+                                      child: CachedNetworkImage(
+                                        fadeInDuration:
+                                            Duration(microseconds: 5),
+                                        imageUrl: itemsgrid[index].image.isEmpty
+                                            ? SpinKitChasingDots(
+                                                color: Colors.deepOrange)
+                                            : itemsgrid[index].image,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) =>
+                                            SpinKitChasingDots(
+                                                color: Colors.deepOrange),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -4499,6 +4536,8 @@ class UserSearchDelegate extends SearchDelegate {
                                   MaterialPageRoute(
                                       builder: (context) => Details(
                                             itemid: snapshot.data[index].itemid,
+                                            image: snapshot.data[index].image,
+                                            name: snapshot.data[index].name,
                                             sold: snapshot.data[index].sold,
                                           )),
                                 );
@@ -4532,21 +4571,28 @@ class UserSearchDelegate extends SearchDelegate {
                                                 bottomLeft: Radius.circular(10),
                                                 bottomRight:
                                                     Radius.circular(10)),
-                                            child: CachedNetworkImage(
-                                              fadeInDuration:
-                                                  Duration(microseconds: 5),
-                                              imageUrl: snapshot
-                                                      .data[index].image.isEmpty
-                                                  ? SpinKitChasingDots(
-                                                      color: Colors.deepOrange)
-                                                  : snapshot.data[index].image,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  SpinKitChasingDots(
-                                                      color: Colors.deepOrange),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
+                                            child: Hero(
+                                              tag:
+                                                  'hero${snapshot.data[index].itemid}',
+                                              child: CachedNetworkImage(
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                imageUrl: snapshot.data[index]
+                                                        .image.isEmpty
+                                                    ? SpinKitChasingDots(
+                                                        color:
+                                                            Colors.deepOrange)
+                                                    : snapshot
+                                                        .data[index].image,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitChasingDots(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -4963,6 +5009,9 @@ class UserSearchDelegate extends SearchDelegate {
                                           builder: (context) => Details(
                                                 itemid:
                                                     snapshot.data[index].itemid,
+                                                image:
+                                                    snapshot.data[index].image,
+                                                name: snapshot.data[index].name,
                                                 sold: snapshot.data[index].sold,
                                               )),
                                     );
@@ -5000,24 +5049,31 @@ class UserSearchDelegate extends SearchDelegate {
                                                         Radius.circular(10),
                                                     bottomRight:
                                                         Radius.circular(10)),
-                                                child: CachedNetworkImage(
-                                                  fadeInDuration:
-                                                      Duration(microseconds: 5),
-                                                  imageUrl: snapshot.data[index]
-                                                          .image.isEmpty
-                                                      ? SpinKitChasingDots(
-                                                          color:
-                                                              Colors.deepOrange)
-                                                      : snapshot
-                                                          .data[index].image,
-                                                  fit: BoxFit.cover,
-                                                  placeholder: (context, url) =>
-                                                      SpinKitChasingDots(
-                                                          color: Colors
-                                                              .deepOrange),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
+                                                child: Hero(
+                                                  tag:
+                                                      'hero${snapshot.data[index].itemid}',
+                                                  child: CachedNetworkImage(
+                                                    fadeInDuration: Duration(
+                                                        microseconds: 5),
+                                                    imageUrl: snapshot
+                                                            .data[index]
+                                                            .image
+                                                            .isEmpty
+                                                        ? SpinKitChasingDots(
+                                                            color: Colors
+                                                                .deepOrange)
+                                                        : snapshot
+                                                            .data[index].image,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        SpinKitChasingDots(
+                                                            color: Colors
+                                                                .deepOrange),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  ),
                                                 ),
                                               ),
                                             ),
