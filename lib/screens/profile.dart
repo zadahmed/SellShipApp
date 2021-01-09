@@ -2692,6 +2692,9 @@ class _ProfilePageState extends State<ProfilePage>
                                     builder: (context) => Details(
                                           itemid: item[index].itemid,
                                           sold: item[index].sold,
+                                          image: item[index].image,
+                                          name: item[index].name,
+                                          source: 'detail',
                                         )),
                               );
                             },
@@ -2707,16 +2710,19 @@ class _ProfilePageState extends State<ProfilePage>
                                     width: MediaQuery.of(context).size.width,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(15),
-                                      child: CachedNetworkImage(
-                                        fadeInDuration:
-                                            Duration(microseconds: 5),
-                                        imageUrl: item[index].image,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            SpinKitChasingDots(
-                                                color: Colors.deepOrange),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
+                                      child: Hero(
+                                        tag: 'detail' + item[index].itemid,
+                                        child: CachedNetworkImage(
+                                          fadeInDuration:
+                                              Duration(microseconds: 5),
+                                          imageUrl: item[index].image,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              SpinKitChasingDots(
+                                                  color: Colors.deepOrange),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -2733,6 +2739,9 @@ class _ProfilePageState extends State<ProfilePage>
                                                           EditItem(
                                                             itemid: item[index]
                                                                 .itemid,
+                                                            itemname:
+                                                                item[index]
+                                                                    .name,
                                                           )),
                                                 );
                                               },

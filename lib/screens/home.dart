@@ -1851,7 +1851,7 @@ class _HomeScreenState extends State<HomeScreen>
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              CupertinoPageRoute(
                                   builder: (context) => Details(
                                       itemid: foryoulist[index].itemid,
                                       image: foryoulist[index].image,
@@ -2121,7 +2121,7 @@ class _HomeScreenState extends State<HomeScreen>
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              CupertinoPageRoute(
                                   builder: (context) => Details(
                                       itemid: foryouscroll[index].itemid,
                                       image: foryouscroll[index].image,
@@ -2595,7 +2595,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        CupertinoPageRoute(
                                             builder: (context) => Details(
                                                 itemid: topitems[index].itemid,
                                                 image: topitems[index].image,
@@ -2882,15 +2882,14 @@ class _HomeScreenState extends State<HomeScreen>
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        CupertinoPageRoute(
                                             builder: (context) => Details(
-                                                  itemid:
-                                                      nearmeItems[index].itemid,
-                                                  image:
-                                                      nearmeItems[index].image,
-                                                  name: nearmeItems[index].name,
-                                                  sold: nearmeItems[index].sold,
-                                                )),
+                                                itemid:
+                                                    nearmeItems[index].itemid,
+                                                image: nearmeItems[index].image,
+                                                name: nearmeItems[index].name,
+                                                sold: nearmeItems[index].sold,
+                                                source: 'nearme')),
                                       );
                                     },
                                     child: Stack(children: <Widget>[
@@ -2913,7 +2912,7 @@ class _HomeScreenState extends State<HomeScreen>
                                               BorderRadius.circular(10),
                                           child: Hero(
                                             tag:
-                                                'hero${nearmeItems[index].itemid}',
+                                                'nearme${nearmeItems[index].itemid}',
                                             child: CachedNetworkImage(
                                               fadeInDuration:
                                                   Duration(microseconds: 5),
@@ -3172,7 +3171,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        CupertinoPageRoute(
                                             builder: (context) => Details(
                                                 itemid:
                                                     below100list[index].itemid,
@@ -3499,7 +3498,7 @@ class _HomeScreenState extends State<HomeScreen>
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                       builder: (context) => Details(
                                           itemid: itemsgrid[index].itemid,
                                           image: itemsgrid[index].image,
@@ -4533,7 +4532,7 @@ class UserSearchDelegate extends SearchDelegate {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                       builder: (context) => Details(
                                             itemid: snapshot.data[index].itemid,
                                             image: snapshot.data[index].image,
@@ -5005,7 +5004,7 @@ class UserSearchDelegate extends SearchDelegate {
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(
+                                      CupertinoPageRoute(
                                           builder: (context) => Details(
                                                 itemid:
                                                     snapshot.data[index].itemid,

@@ -1798,6 +1798,8 @@ class _AddItemState extends State<AddItem> {
                                                                                         if (selectedColors.length > 3) {
                                                                                           selectedColors.removeAt(0);
                                                                                           selectedColors.add(colorslist[i]);
+                                                                                        } else if (selectedColors.contains(colorslist[i])) {
+                                                                                          selectedColors.remove(colorslist[i]);
                                                                                         } else {
                                                                                           selectedColors.add(colorslist[i]);
                                                                                         }
@@ -2576,6 +2578,8 @@ class _AddItemState extends State<AddItem> {
 
                                       print('I am here 2');
 
+                                      print(selectedColors);
+
                                       Dio dio = new Dio();
                                       FormData formData;
 
@@ -2590,9 +2594,9 @@ class _AddItemState extends State<AddItem> {
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors == null
+                                          'colors': selectedColors.isEmpty
                                               ? []
-                                              : selectedColors,
+                                              : {selectedColors},
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
@@ -2638,9 +2642,9 @@ class _AddItemState extends State<AddItem> {
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors == null
+                                          'colors': selectedColors.isEmpty
                                               ? []
-                                              : selectedColors,
+                                              : {selectedColors},
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
@@ -2693,9 +2697,9 @@ class _AddItemState extends State<AddItem> {
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors == null
+                                          'colors': selectedColors.isEmpty
                                               ? []
-                                              : selectedColors,
+                                              : {selectedColors},
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
@@ -2754,9 +2758,9 @@ class _AddItemState extends State<AddItem> {
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors == null
+                                          'colors': selectedColors.isEmpty
                                               ? []
-                                              : selectedColors,
+                                              : {selectedColors},
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
@@ -2821,9 +2825,9 @@ class _AddItemState extends State<AddItem> {
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors == null
+                                          'colors': selectedColors.isEmpty
                                               ? []
-                                              : selectedColors,
+                                              : {selectedColors},
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
@@ -2893,9 +2897,9 @@ class _AddItemState extends State<AddItem> {
                                           'originalprice':
                                               businesspricecontroller.text
                                                   .toString(),
-                                          'colors': selectedColors == null
+                                          'colors': selectedColors.isEmpty
                                               ? []
-                                              : selectedColors,
+                                              : {selectedColors},
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
@@ -2944,8 +2948,6 @@ class _AddItemState extends State<AddItem> {
                                               filename: fileName6),
                                         });
                                       }
-
-                                      print('I am here 3');
 
                                       print('Ue');
 
