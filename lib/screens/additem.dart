@@ -189,8 +189,11 @@ class _AddItemState extends State<AddItem> {
   final businessdescriptionController = TextEditingController();
 
   final businessbrandcontroller = TextEditingController();
+  final tagscontroller = TextEditingController();
   final businessizecontroller = TextEditingController();
 
+
+  List<String> tags = List<String>();
   List<String> categories = [
     'Electronics',
     'Fashion & Accessories',
@@ -1016,6 +1019,70 @@ class _AddItemState extends State<AddItem> {
                                   ),
                                 ),
                               )),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 15, bottom: 5, top: 10, right: 15),
+                            child: Container(
+                              height: 100,
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                BorderRadius.all(Radius.circular(15)),
+                              ),
+                              child: Column(children: [
+                                Expanded(
+    child: ListView.builder(
+                                    itemCount: tags.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return InputChip(
+
+    label: Text(tags[index]),
+
+    );
+    })
+                                ),
+
+                              Expanded(
+                                child: TextField(
+                                cursorColor: Color(0xFF979797),
+                                controller: tagscontroller,
+                                keyboardType: TextInputType.text,
+                                textCapitalization:
+                                TextCapitalization.words,
+                                onChanged: (tag){
+
+                                  if(tag.endsWith(',')) {
+                                    var sentence = tag.split(',');
+
+                                    setState(() {
+                                      tags.add(sentence[0]);
+                                    });
+                                    tagscontroller.clear();
+                                  }
+
+                                },
+                                decoration: InputDecoration(
+                                  hintText: "Enter Tags (optional)",
+                                  alignLabelWithHint: true,
+                                  hintStyle: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.blueGrey),
+                                  focusColor: Colors.black,
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                ),
+                              ),)
+                              ],))),
                           SizedBox(
                             height: 10.0,
                           ),
