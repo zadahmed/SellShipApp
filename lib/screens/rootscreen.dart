@@ -79,12 +79,13 @@ class _RootScreenState extends State<RootScreen> {
   void initState() {
     super.initState();
     getuser();
-    pageController = new PageController(initialPage: _currentPage);
+
     setState(() {
       if (widget.index != null) {
         _currentPage = widget.index;
       }
     });
+    pageController = new PageController(initialPage: _currentPage);
   }
 
   bool seenadditem;

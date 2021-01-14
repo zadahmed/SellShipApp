@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 
 class Brands extends StatefulWidget {
   final String category;
-  Brands({Key key, this.category}) : super(key: key);
+  final List<String> brands;
+  Brands({Key key, this.category, this.brands}) : super(key: key);
 
   _BrandsState createState() => _BrandsState();
 }
@@ -22,34 +23,13 @@ class _BrandsState extends State<Brands> {
     super.initState();
     setState(() {
       category = widget.category;
+      brands = widget.brands;
+      actbrands = widget.brands;
     });
-    loadbrands();
   }
 
   List<String> brands = List<String>();
-
-  loadbrands() async {
-    var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
-    final categoryresponse = await http.get(categoryurl);
-    if (categoryresponse.statusCode == 200) {
-      brands.clear();
-      var categoryrespons = json.decode(categoryresponse.body);
-
-      for (int i = 0; i < categoryrespons.length; i++) {
-        brands.add(categoryrespons[i]);
-      }
-
-      brands.add('Other');
-
-      if (brands == null || brands.isEmpty) {
-        brands = ['No Brand', 'Other'];
-      }
-
-      setState(() {
-        brands = brands.toSet().toList();
-      });
-    }
-  }
+  List<String> actbrands = List<String>();
 
   String brand;
   TextEditingController searchcontroller = TextEditingController();
@@ -103,11 +83,13 @@ class _BrandsState extends State<Brands> {
                           text = text.toLowerCase();
 
                           if (text.isEmpty) {
-                            loadbrands();
-                          } else {
+                            setState(() {
+                              brands = actbrands;
+                            });
+                          } else if (text.length >= 1) {
                             List<String> filtered = List<String>();
                             filtered.clear();
-                            var notfound = false;
+
                             brands.forEach((element) {
                               element = element.trim();
                               element = element.toLowerCase();
@@ -115,8 +97,6 @@ class _BrandsState extends State<Brands> {
                                 element = element[0].toUpperCase() +
                                     element.substring(1, element.length);
                                 filtered.add(element);
-                              } else {
-                                notfound = true;
                               }
                             });
 

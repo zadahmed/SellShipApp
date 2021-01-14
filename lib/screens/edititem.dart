@@ -224,6 +224,40 @@ class EditItemState extends State<EditItem>
             color: Colors.black,
           ),
         ),
+        actions: [
+          Padding(
+            child: InkWell(
+              child: Icon(
+                Icons.more_horiz,
+                color: Colors.black,
+              ),
+              onTap: () async {
+                var url = 'https://api.sellship.co/api/deleteitem/' +
+                    itemid +
+                    "/" +
+                    userid;
+
+                var response = await http.get(url);
+
+                if (response.statusCode == 200) {
+                  print(response.body);
+                  setState(() {
+                    _status = true;
+                    FocusScope.of(context).requestFocus(new FocusNode());
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RootScreen()),
+                    );
+                  });
+                } else {
+                  print(response.statusCode);
+                }
+              },
+            ),
+            padding: EdgeInsets.only(right: 10),
+          ),
+        ],
       ),
       body: loading == false
           ? GestureDetector(

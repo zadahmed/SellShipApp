@@ -8,6 +8,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
@@ -41,8 +42,13 @@ class Offer {
 }
 
 class _ActivityState extends State<Activity>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController _tabController;
+
+  bool keepalive = true;
+
+  @override
+  bool get wantKeepAlive => keepalive;
 
   @override
   void initState() {
@@ -73,7 +79,7 @@ class _ActivityState extends State<Activity>
   }
 
   var currency;
-  bool loading = true;
+  bool loading;
   final storage = new FlutterSecureStorage();
 
   loadbuyingactivity() async {
@@ -125,6 +131,7 @@ class _ActivityState extends State<Activity>
         }
         if (mounted)
           setState(() {
+            keepalive = false;
             loading = false;
             buyingItem = ites;
           });
@@ -194,16 +201,16 @@ class _ActivityState extends State<Activity>
       recieveruserid, offerprice) {
     if (offerstage == 0 && _tabController.index == 0) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
+            width: 140,
+            height: 27,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-                color: Colors.deepOrangeAccent.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(5)),
+                color: Color.fromRGBO(69, 80, 163, 1),
+                borderRadius: BorderRadius.circular(20)),
             child: Center(
                 child: Text(
               'Pending Offer',
@@ -211,6 +218,9 @@ class _ActivityState extends State<Activity>
               style: TextStyle(
                   fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
             )),
+          ),
+          SizedBox(
+            height: 5,
           ),
           InkWell(
               onTap: () async {
@@ -244,24 +254,19 @@ class _ActivityState extends State<Activity>
       );
     } else if (offerstage == 1 && _tabController.index == 0) {
       return Container(
-          width: 80,
-          height: 50,
-          padding: EdgeInsets.all(10),
+          width: 140,
+          height: 27,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(5)),
-          child: Column(
-            children: [
-              Text(
-                'Pay',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 14.0,
-                    color: Colors.white),
-              )
-            ],
-          ));
+              color: Color.fromRGBO(69, 80, 163, 1),
+              borderRadius: BorderRadius.circular(20)),
+          child: Center(
+              child: Text(
+            'Pay',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+          )));
     } else if (offerstage == -1 && _tabController.index == 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -417,16 +422,16 @@ class _ActivityState extends State<Activity>
       );
     } else if (offerstage == 2 && _tabController.index == 1) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
+            width: 140,
+            height: 27,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-                color: Colors.deepOrange.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(5)),
+                color: Color.fromRGBO(239, 190, 125, 1),
+                borderRadius: BorderRadius.circular(20)),
             child: Center(
                 child: Text(
               'Payment Pending',
@@ -439,35 +444,33 @@ class _ActivityState extends State<Activity>
       );
     } else if (offerstage == 2 && _tabController.index == 0) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Checkout(itemid: itemid)),
-              );
-            },
-            child: Container(
-              width: 125,
-              height: 35,
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  color: Colors.lightGreen.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(5)),
-              child: Center(
-                  child: Text(
-                'Pay',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 14.0,
-                    color: Colors.white),
-              )),
-            ),
-          ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Checkout(itemid: itemid)),
+                );
+              },
+              child: Container(
+                  width: 140,
+                  height: 27,
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(119, 221, 119, 1),
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Center(
+                      child: Text(
+                    'Pay',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 14.0,
+                        color: Colors.white),
+                  ))))
         ],
       );
     }
@@ -978,340 +981,645 @@ class _ActivityState extends State<Activity>
                         )),
                   ];
                 },
-                body: Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(229, 233, 242, 1).withOpacity(0.5),
-                    ),
-                    child: Container(
-                        padding: EdgeInsets.only(top: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
+                body: loading == false
+                    ? TabBarView(controller: _tabController, children: [
+                        buyingItem.isNotEmpty
+                            ? EasyRefresh.custom(
+                                onRefresh: () {
+                                  setState(() {
+                                    loading = true;
+                                  });
+                                  return loadbuyingactivity();
+                                },
+                                header: CustomHeader(
+                                    extent: 40.0,
+                                    enableHapticFeedback: true,
+                                    triggerDistance: 50.0,
+                                    headerBuilder: (context,
+                                        loadState,
+                                        pulledExtent,
+                                        loadTriggerPullDistance,
+                                        loadIndicatorExtent,
+                                        axisDirection,
+                                        float,
+                                        completeDuration,
+                                        enableInfiniteLoad,
+                                        success,
+                                        noMore) {
+                                      return SpinKitFadingCircle(
+                                        color: Colors.deepOrange,
+                                        size: 30.0,
+                                      );
+                                    }),
+                                slivers: [
+                                    SliverToBoxAdapter(
+                                      child: SizedBox(
+                                        height: 5,
+                                      ),
+                                    ),
+                                    SliverList(
+                                      delegate: SliverChildBuilderDelegate(
+                                        (BuildContext context, int index) {
+                                          return Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 10,
+                                                  right: 10,
+                                                  bottom: 10),
+                                              child: Container(
+                                                  height: 100,
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15,
+                                                      vertical: 5),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          offset: Offset(
+                                                              0.0, 1.0), //(x,y)
+                                                          blurRadius: 6.0,
+                                                        ),
+                                                      ],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5)),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              Details(
+                                                                                itemid: buyingItem[index].itemid,
+                                                                                sold: buyingItem[index].sold,
+                                                                              )),
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                height: 80,
+                                                                width: 80,
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                  child: Image
+                                                                      .network(
+                                                                    buyingItem[
+                                                                            index]
+                                                                        .image,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  buyingItem[
+                                                                          index]
+                                                                      .name,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                                Text(
+                                                                  '@' +
+                                                                      buyingItem[
+                                                                              index]
+                                                                          .sellername,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Colors
+                                                                          .grey),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Text(
+                                                                  'Offer ' +
+                                                                      currency +
+                                                                      ' ' +
+                                                                      buyingItem[
+                                                                              index]
+                                                                          .price,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      color: Colors
+                                                                          .black),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ]),
+                                                      Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .end,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            offerstatus(
+                                                              context,
+                                                              buyingItem[index]
+                                                                  .offerstage,
+                                                              buyingItem[index]
+                                                                  .itemid,
+                                                              buyingItem[index]
+                                                                  .buyerid,
+                                                              buyingItem[index]
+                                                                  .sellerid,
+                                                              buyingItem[index]
+                                                                  .price,
+                                                            ),
+                                                          ])
+                                                    ],
+                                                  )));
+                                        },
+                                        childCount: buyingItem.length,
+                                      ),
+                                    )
+                                  ])
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, right: 20, top: 40),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '🛍',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 40.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text('You have not made any offers yet ',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                        textAlign: TextAlign.center),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'The buy section is for all your activities regarding items you are buying. You can make offers, track your orders and even make purchases. What are you waiting for?',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          color: Colors.black),
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: Container(
+                                          height: 45,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2,
+                                          decoration: BoxDecoration(
+                                            color: Colors.deepOrange,
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(25.0),
+                                            ),
+                                            boxShadow: <BoxShadow>[
+                                              BoxShadow(
+                                                  color: Colors.deepOrange
+                                                      .withOpacity(0.4),
+                                                  offset:
+                                                      const Offset(1.1, 1.1),
+                                                  blurRadius: 5.0),
+                                            ],
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              'Start SellShipping',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                                letterSpacing: 0.0,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => RootScreen(
+                                                    index: 0,
+                                                  )),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                )),
+                        sellingItem.isNotEmpty
+                            ? EasyRefresh.custom(
+                                onRefresh: () {
+                                  setState(() {
+                                    loading = true;
+                                  });
+                                  return loadsellingactivity();
+                                },
+                                header: CustomHeader(
+                                    extent: 40.0,
+                                    enableHapticFeedback: true,
+                                    triggerDistance: 50.0,
+                                    headerBuilder: (context,
+                                        loadState,
+                                        pulledExtent,
+                                        loadTriggerPullDistance,
+                                        loadIndicatorExtent,
+                                        axisDirection,
+                                        float,
+                                        completeDuration,
+                                        enableInfiniteLoad,
+                                        success,
+                                        noMore) {
+                                      return SpinKitFadingCircle(
+                                        color: Colors.deepOrange,
+                                        size: 30.0,
+                                      );
+                                    }),
+                                slivers: [
+                                    SliverToBoxAdapter(
+                                      child: SizedBox(
+                                        height: 5,
+                                      ),
+                                    ),
+                                    SliverList(
+                                      delegate: SliverChildBuilderDelegate(
+                                        (BuildContext context, int index) {
+                                          return Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 10, right: 10),
+                                              child: Container(
+                                                  height: 100,
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 15,
+                                                      vertical: 5),
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          offset: Offset(
+                                                              0.0, 1.0), //(x,y)
+                                                          blurRadius: 6.0,
+                                                        ),
+                                                      ],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5)),
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            InkWell(
+                                                              onTap: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              Details(
+                                                                                itemid: sellingItem[index].itemid,
+                                                                                sold: sellingItem[index].sold,
+                                                                              )),
+                                                                );
+                                                              },
+                                                              child: Container(
+                                                                height: 80,
+                                                                width: 80,
+                                                                child:
+                                                                    ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              5),
+                                                                  child: Image
+                                                                      .network(
+                                                                    sellingItem[
+                                                                            index]
+                                                                        .image,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Text(
+                                                                  sellingItem[
+                                                                          index]
+                                                                      .name,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                                Text(
+                                                                  '@' +
+                                                                      sellingItem[
+                                                                              index]
+                                                                          .buyername,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Colors
+                                                                          .grey),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Text(
+                                                                  'Offer ' +
+                                                                      currency +
+                                                                      ' ' +
+                                                                      sellingItem[
+                                                                              index]
+                                                                          .price,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      color: Colors
+                                                                          .black),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ]),
+                                                      Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .end,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            offerstatus(
+                                                              context,
+                                                              sellingItem[index]
+                                                                  .offerstage,
+                                                              sellingItem[index]
+                                                                  .itemid,
+                                                              sellingItem[index]
+                                                                  .buyerid,
+                                                              sellingItem[index]
+                                                                  .sellerid,
+                                                              sellingItem[index]
+                                                                  .price,
+                                                            ),
+                                                          ])
+                                                    ],
+                                                  )));
+                                        },
+                                        childCount: sellingItem.length,
+                                      ),
+                                    )
+                                  ])
+                            : Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, right: 20, top: 40),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '😞',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 40.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text('You have no offers yet ',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                        textAlign: TextAlign.center),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'The sell section is for all your activities regarding items you are selling. You can accept offers, send counter offers and even schedule pickups and track orders. What are you waiting for? Start listing your items',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          color: Colors.black),
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: Container(
+                                          height: 45,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2,
+                                          decoration: BoxDecoration(
+                                            color: Colors.deepOrange,
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(25.0),
+                                            ),
+                                            boxShadow: <BoxShadow>[
+                                              BoxShadow(
+                                                  color: Colors.deepOrange
+                                                      .withOpacity(0.4),
+                                                  offset:
+                                                      const Offset(1.1, 1.1),
+                                                  blurRadius: 5.0),
+                                            ],
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              'Start SellShipping',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                                letterSpacing: 0.0,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => RootScreen(
+                                                    index: 2,
+                                                  )),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ))
+                      ])
+                    : Container(
+                        height: MediaQuery.of(context).size.height,
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 16.0),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: ListView(
+                              children: [0, 1, 2, 3, 4, 5, 6]
+                                  .map((_) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8.0),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2 -
+                                                  30,
+                                              height: 150.0,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2 -
+                                                  30,
+                                              height: 150.0,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ))
+                                  .toList(),
+                            ),
                           ),
                         ),
-                        child: loading == false
-                            ? TabBarView(controller: _tabController, children: [
-                                EasyRefresh.custom(
-                                    onRefresh: () {
-                                      return loadbuyingactivity();
-                                    },
-                                    header: MaterialHeader(
-                                        enableHapticFeedback: true),
-                                    slivers: [
-                                      SliverList(
-                                        delegate: SliverChildBuilderDelegate(
-                                          (BuildContext context, int index) {
-                                            return Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5)),
-                                                    child: ListTile(
-                                                        trailing: offerstatus(
-                                                          context,
-                                                          buyingItem[index]
-                                                              .offerstage,
-                                                          buyingItem[index]
-                                                              .itemid,
-                                                          buyingItem[index]
-                                                              .buyerid,
-                                                          buyingItem[index]
-                                                              .sellerid,
-                                                          buyingItem[index]
-                                                              .price,
-                                                        ),
-                                                        leading: InkWell(
-                                                          child: Container(
-                                                            height: 60,
-                                                            width: 60,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              child:
-                                                                  Image.network(
-                                                                buyingItem[
-                                                                        index]
-                                                                    .image,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          Details(
-                                                                            itemid:
-                                                                                buyingItem[index].itemid,
-                                                                            sold:
-                                                                                buyingItem[index].sold,
-                                                                          )),
-                                                            );
-                                                          },
-                                                        ),
-                                                        title: Text(
-                                                          buyingItem[index]
-                                                              .name,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 16,
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                        subtitle: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            Text(
-                                                              '@' +
-                                                                  buyingItem[
-                                                                          index]
-                                                                      .sellername,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .grey),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            Text(
-                                                              'Offer ' +
-                                                                  currency +
-                                                                  ' ' +
-                                                                  buyingItem[
-                                                                          index]
-                                                                      .price,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  color: Colors
-                                                                      .deepOrange),
-                                                            )
-                                                          ],
-                                                        ))));
-                                          },
-                                          childCount: buyingItem.length,
-                                        ),
-                                      )
-                                    ]),
-                                EasyRefresh.custom(
-                                    onRefresh: () {
-                                      return loadsellingactivity();
-                                    },
-                                    header: MaterialHeader(
-                                        enableHapticFeedback: true),
-                                    slivers: [
-                                      SliverList(
-                                        delegate: SliverChildBuilderDelegate(
-                                          (BuildContext context, int index) {
-                                            return Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5)),
-                                                    child: ListTile(
-                                                        trailing: offerstatus(
-                                                          context,
-                                                          sellingItem[index]
-                                                              .offerstage,
-                                                          sellingItem[index]
-                                                              .itemid,
-                                                          sellingItem[index]
-                                                              .buyerid,
-                                                          sellingItem[index]
-                                                              .sellerid,
-                                                          sellingItem[index]
-                                                              .price,
-                                                        ),
-                                                        leading: InkWell(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          Details(
-                                                                            itemid:
-                                                                                sellingItem[index].itemid,
-                                                                            sold:
-                                                                                sellingItem[index].sold,
-                                                                          )),
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            height: 70,
-                                                            width: 60,
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                              child:
-                                                                  Image.network(
-                                                                sellingItem[
-                                                                        index]
-                                                                    .image,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        title: Text(
-                                                          sellingItem[index]
-                                                              .name,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                        dense: false,
-                                                        subtitle: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            Text(
-                                                              '@' +
-                                                                  sellingItem[
-                                                                          index]
-                                                                      .buyername,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .grey),
-                                                            ),
-                                                            SizedBox(
-                                                              height: 2,
-                                                            ),
-                                                            Text(
-                                                              'Offer ' +
-                                                                  currency +
-                                                                  ' ' +
-                                                                  sellingItem[
-                                                                          index]
-                                                                      .price,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize:
-                                                                      14.0,
-                                                                  color: Colors
-                                                                      .deepOrange),
-                                                            )
-                                                          ],
-                                                        ))));
-                                          },
-                                          childCount: sellingItem.length,
-                                        ),
-                                      )
-                                    ]),
-                              ])
-                            : Container(
-                                height: MediaQuery.of(context).size.height,
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 16.0),
-                                  child: Shimmer.fromColors(
-                                    baseColor: Colors.grey[300],
-                                    highlightColor: Colors.grey[100],
-                                    child: ListView(
-                                      children: [0, 1, 2, 3, 4, 5, 6]
-                                          .map((_) => Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 8.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                      .size
-                                                                      .width /
-                                                                  2 -
-                                                              30,
-                                                      height: 150.0,
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 8.0),
-                                                    ),
-                                                    Container(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                      .size
-                                                                      .width /
-                                                                  2 -
-                                                              30,
-                                                      height: 150.0,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ))
-                                          .toList(),
-                                    ),
-                                  ),
-                                ),
-                              ))))));
+                      ))));
   }
 }

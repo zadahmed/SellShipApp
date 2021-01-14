@@ -353,8 +353,10 @@ class _ProfilePageState extends State<ProfilePage>
             await storage.write(key: 'userid', value: jsondata['status']['id']);
             Navigator.of(context).pop();
 
-            Navigator.pushNamedAndRemoveUntil(
-                context, Routes.rootScreen, (route) => false);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => RootScreen()));
           } else {
             Navigator.of(context).pop();
 
@@ -1923,8 +1925,8 @@ class _ProfilePageState extends State<ProfilePage>
           });
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('seen', true);
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.rootScreen, (route) => false);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => RootScreen()));
       } else if (jsondata['status']['message'].toString().trim() ==
           'User does not exist, please sign up') {
         Navigator.of(context).pop();
@@ -2230,10 +2232,12 @@ class _ProfilePageState extends State<ProfilePage>
                                                       ['id']);
                                               Navigator.of(context).pop();
 
-                                              Navigator.pushNamedAndRemoveUntil(
+                                              Navigator.pushReplacement(
                                                   context,
-                                                  Routes.rootScreen,
-                                                  (route) => false);
+                                                  MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          RootScreen()));
                                             } else {
                                               Navigator.of(context).pop();
 

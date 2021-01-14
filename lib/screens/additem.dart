@@ -192,7 +192,6 @@ class _AddItemState extends State<AddItem> {
   final tagscontroller = TextEditingController();
   final businessizecontroller = TextEditingController();
 
-
   List<String> tags = List<String>();
   List<String> categories = [
     'Electronics',
@@ -260,6 +259,29 @@ class _AddItemState extends State<AddItem> {
   var fees;
 
   List<String> brands = List<String>();
+
+  loadbrands(category) async {
+    var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
+    final categoryresponse = await http.get(categoryurl);
+    if (categoryresponse.statusCode == 200) {
+      brands.clear();
+      var categoryrespons = json.decode(categoryresponse.body);
+
+      for (int i = 0; i < categoryrespons.length; i++) {
+        brands.add(categoryrespons[i]);
+      }
+
+      brands.add('Other');
+
+      if (brands == null || brands.isEmpty) {
+        brands = ['No Brand', 'Other'];
+      }
+
+      setState(() {
+        brands = brands.toSet().toList();
+      });
+    }
+  }
 
   List<Asset> images = List<Asset>();
   Future getImageGallery() async {
@@ -696,6 +718,8 @@ class _AddItemState extends State<AddItem> {
                                         _selectedsubsubCategory =
                                             catdetails['subsubcategory'];
 
+                                        loadbrands(_selectedCategory);
+
                                         categoryinfo = _selectedCategory +
                                             ' > ' +
                                             _selectedsubCategory +
@@ -1023,66 +1047,87 @@ class _AddItemState extends State<AddItem> {
                             height: 10.0,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(
-                                left: 15, bottom: 5, top: 10, right: 15),
-                            child: Container(
-                              height: 100,
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                BorderRadius.all(Radius.circular(15)),
-                              ),
-                              child: Column(children: [
-                                Expanded(
-    child: ListView.builder(
-                                    itemCount: tags.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return InputChip(
+                              padding: EdgeInsets.only(
+                                  left: 15, bottom: 5, top: 10, right: 15),
+                              child: Container(
+                                  height: tags.isNotEmpty ? 100 : 55,
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      tags.isNotEmpty
+                                          ? Expanded(
+                                              child: ListView.builder(
+                                                  itemCount: tags.length,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    return Padding(
+                                                        padding:
+                                                            EdgeInsets.all(2),
+                                                        child: InputChip(
+                                                          backgroundColor: Colors
+                                                              .deepOrangeAccent,
+                                                          label: Text(
+                                                            tags[index],
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                          onDeleted: () {
+                                                            setState(() {
+                                                              tags.removeAt(
+                                                                  index);
+                                                            });
+                                                          },
+                                                        ));
+                                                  }))
+                                          : Container(),
+                                      Expanded(
+                                        child: TextField(
+                                          cursorColor: Color(0xFF979797),
+                                          controller: tagscontroller,
+                                          keyboardType: TextInputType.text,
+                                          textCapitalization:
+                                              TextCapitalization.words,
+                                          onChanged: (tag) {
+                                            if (tag.endsWith(',')) {
+                                              var sentence = tag.split(',');
 
-    label: Text(tags[index]),
-
-    );
-    })
-                                ),
-
-                              Expanded(
-                                child: TextField(
-                                cursorColor: Color(0xFF979797),
-                                controller: tagscontroller,
-                                keyboardType: TextInputType.text,
-                                textCapitalization:
-                                TextCapitalization.words,
-                                onChanged: (tag){
-
-                                  if(tag.endsWith(',')) {
-                                    var sentence = tag.split(',');
-
-                                    setState(() {
-                                      tags.add(sentence[0]);
-                                    });
-                                    tagscontroller.clear();
-                                  }
-
-                                },
-                                decoration: InputDecoration(
-                                  hintText: "Enter Tags (optional)",
-                                  alignLabelWithHint: true,
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey),
-                                  focusColor: Colors.black,
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                ),
-                              ),)
-                              ],))),
+                                              setState(() {
+                                                tags.add(sentence[0]);
+                                              });
+                                              tagscontroller.clear();
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText:
+                                                "Enter Tags - dubaifashion,abudhabilifestyle,topdeals",
+                                            alignLabelWithHint: true,
+                                            hintStyle: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey),
+                                            focusColor: Colors.black,
+                                            border: InputBorder.none,
+                                            focusedBorder: InputBorder.none,
+                                            enabledBorder: InputBorder.none,
+                                            errorBorder: InputBorder.none,
+                                            disabledBorder: InputBorder.none,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ))),
                           SizedBox(
                             height: 10.0,
                           ),
@@ -1189,7 +1234,8 @@ class _AddItemState extends State<AddItem> {
                                                 ))
                                           ])))
                               : Container(),
-                          _selectedCategory != null
+                          _selectedCategory != null &&
+                                  _selectedCategory != 'Books'
                               ? Padding(
                                   padding: EdgeInsets.only(
                                     left: 15,
@@ -1208,7 +1254,8 @@ class _AddItemState extends State<AddItem> {
                                   ),
                                 )
                               : Container(),
-                          _selectedCategory != null
+                          _selectedCategory != null &&
+                                  _selectedCategory != 'Books'
                               ? Padding(
                                   padding: EdgeInsets.only(
                                       left: 15, bottom: 5, top: 10, right: 15),
@@ -1230,6 +1277,7 @@ class _AddItemState extends State<AddItem> {
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             Brands(
+                                                              brands: brands,
                                                               category:
                                                                   _selectedCategory,
                                                             )),
@@ -2488,9 +2536,14 @@ class _AddItemState extends State<AddItem> {
                                           bran = businessbrandcontroller.text;
                                         }
                                       } else if (businessbrandcontroller ==
-                                          null) {
+                                              null &&
+                                          _selectedCategory != 'Books') {
                                         showInSnackBar(
                                             'Please choose a brand for your item!');
+                                      } else if (businessbrandcontroller ==
+                                              null &&
+                                          _selectedCategory == 'Books') {
+                                        bran = '';
                                       }
                                     } else {
                                       bran = brand;
@@ -2643,17 +2696,12 @@ class _AddItemState extends State<AddItem> {
                                             byteData6.buffer.asUint8List();
                                       }
 
-                                      print('I am here 2');
-
-                                      print(selectedColors);
-
                                       Dio dio = new Dio();
                                       FormData formData;
 
                                       if (_image != null) {
                                         String fileName =
                                             randomAlphaNumeric(20);
-                                        print(fileName);
 
                                         formData = FormData.fromMap({
                                           'name': businessnameController.text,
@@ -2664,6 +2712,7 @@ class _AddItemState extends State<AddItem> {
                                           'colors': selectedColors.isEmpty
                                               ? []
                                               : {selectedColors},
+                                          'tags': tags.isEmpty ? [] : {tags},
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
@@ -2715,6 +2764,7 @@ class _AddItemState extends State<AddItem> {
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
+                                          'tags': tags.isEmpty ? [] : {tags},
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
@@ -2770,6 +2820,7 @@ class _AddItemState extends State<AddItem> {
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
+                                          'tags': tags.isEmpty ? [] : {tags},
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
@@ -2831,6 +2882,7 @@ class _AddItemState extends State<AddItem> {
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
+                                          'tags': tags.isEmpty ? [] : {tags},
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':
@@ -2911,6 +2963,7 @@ class _AddItemState extends State<AddItem> {
                                               businessdescriptionController
                                                   .text,
                                           'city': city.trim(),
+                                          'tags': tags.isEmpty ? [] : {tags},
                                           'country': country.trim(),
                                           'condition': _selectedCondition,
                                           'brand': bran,
@@ -2970,6 +3023,7 @@ class _AddItemState extends State<AddItem> {
                                           'size': _selectedsize == null
                                               ? ''
                                               : _selectedsize,
+                                          'tags': tags.isEmpty ? [] : {tags},
                                           'category': _selectedCategory,
                                           'subcategory': _selectedsubCategory,
                                           'subsubcategory':

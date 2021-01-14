@@ -573,8 +573,12 @@ class _SettingsState extends State<Settings> {
                         setState(() {
                           userid = null;
                         });
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, Routes.rootScreen, (route) => false);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    RootScreen()),
+                            ModalRoute.withName(Routes.settings));
                       },
                     ))
                 : Container(),
