@@ -22,7 +22,6 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:numeral/numeral.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/useritems.dart';
@@ -778,13 +777,14 @@ class _DetailsState extends State<Details> {
                                           Navigator.of(context).push(
                                               PageRouteBuilder(
                                                   opaque: false,
-                                                  pageBuilder: (BuildContext
-                                                              context,
-                                                          _,
-                                                          __) =>
-                                                      ImageDisplay(
-                                                          image:
-                                                              images[index])));
+                                                  pageBuilder:
+                                                      (BuildContext context, _,
+                                                              __) =>
+                                                          ImageDisplay(
+                                                            image: images,
+                                                            itemname:
+                                                                widget.name,
+                                                          )));
                                         },
                                         child: CachedNetworkImage(
                                           imageUrl: images[index],
@@ -852,7 +852,13 @@ class _DetailsState extends State<Details> {
                                       backgroundColor: Colors.white,
                                       child: favourited == true
                                           ? InkWell(
+                                              enableFeedback: true,
                                               onTap: () async {
+                                                setState(() {
+                                                  favourited = false;
+                                                  newItem.likes =
+                                                      newItem.likes + 1;
+                                                });
                                                 var userid = await storage.read(
                                                     key: 'userid');
 
@@ -867,17 +873,6 @@ class _DetailsState extends State<Details> {
 
                                                   final response = await http
                                                       .post(url, body: body);
-
-                                                  if (response.statusCode ==
-                                                      200) {
-                                                    setState(() {
-                                                      newItem.likes =
-                                                          newItem.likes - 1;
-                                                      favourited = false;
-                                                    });
-                                                  } else {
-                                                    print(response.statusCode);
-                                                  }
                                                 } else {
                                                   showInSnackBar(
                                                       'Please Login to use Favourites');
@@ -890,7 +885,13 @@ class _DetailsState extends State<Details> {
                                               ),
                                             )
                                           : InkWell(
+                                              enableFeedback: true,
                                               onTap: () async {
+                                                setState(() {
+                                                  favourited = true;
+                                                  newItem.likes =
+                                                      newItem.likes + 1;
+                                                });
                                                 var userid = await storage.read(
                                                     key: 'userid');
 
@@ -905,20 +906,6 @@ class _DetailsState extends State<Details> {
 
                                                   final response = await http
                                                       .post(url, body: body);
-
-                                                  if (response.statusCode ==
-                                                      200) {
-                                                    var jsondata = json
-                                                        .decode(response.body);
-
-                                                    setState(() {
-                                                      newItem.likes =
-                                                          newItem.likes + 1;
-                                                      favourited = true;
-                                                    });
-                                                  } else {
-                                                    print(response.statusCode);
-                                                  }
                                                 } else {
                                                   showInSnackBar(
                                                       'Please Login to use Favourites');
@@ -2128,12 +2115,33 @@ class _DetailsState extends State<Details> {
                           )),
                       Container(
                           height: 500,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(242, 244, 248, 1),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
+                            ),
+                          ),
                           width: MediaQuery.of(context).size.width,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16.0, vertical: 16.0),
                           child: Column(
                               mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 2),
+                                  child: Text(
+                                    capitalize(widget.name),
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
                                 Expanded(
                                     child: Shimmer.fromColors(
                                   baseColor: Colors.grey[300],
@@ -2350,36 +2358,84 @@ class _DetailsState extends State<Details> {
 }
 
 class ImageDisplay extends StatefulWidget {
-  final String image;
-  ImageDisplay({Key key, this.image}) : super(key: key);
+  final List<String> image;
+  final String itemname;
+  ImageDisplay({Key key, this.image, this.itemname}) : super(key: key);
   @override
   ImageDisplayState createState() => ImageDisplayState();
 }
 
 class ImageDisplayState extends State<ImageDisplay> {
+  var inde = 0;
+  int _current = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Pictures',
-          style: TextStyle(
-            fontFamily: 'Helvetica',
-            fontSize: 16,
+        appBar: AppBar(
+          title: Text(
+            widget.itemname,
+            style: TextStyle(
+              fontFamily: 'Helvetica',
+              fontSize: 16,
+            ),
           ),
+          backgroundColor: Colors.transparent,
         ),
-        backgroundColor: Colors.transparent,
-      ),
-      backgroundColor: Colors.black.withOpacity(0.85),
-      body: Container(
+        backgroundColor: Colors.black.withOpacity(0.85),
+        body: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          child: PhotoView.customChild(
-            child: Image.network(
-              widget.image,
-              fit: BoxFit.contain,
+          child: Stack(children: [
+            PageView.builder(
+                itemCount: widget.image.length,
+                onPageChanged: (index) {
+                  print(index);
+                  setState(() {
+                    inde = index;
+                  });
+                },
+                itemBuilder: (BuildContext ctxt, int index) {
+                  return InteractiveViewer(
+                      panEnabled: false, // Set it to false
+                      boundaryMargin: EdgeInsets.all(100),
+                      minScale: 0.5,
+                      maxScale: 2,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.image[index],
+                        height: MediaQuery.of(context).size.height,
+                        placeholder: (context, url) =>
+                            SpinKitChasingDots(color: Colors.deepOrange),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.cover,
+                      ));
+                }),
+            Positioned(
+              bottom: 20,
+              left: MediaQuery.of(context).size.width / 2 - 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: widget.image.map((url) {
+                  _current = widget.image.indexOf(url);
+                  return Padding(
+                      padding: EdgeInsets.all(5),
+                      child: CircleAvatar(
+                          radius: 6,
+                          backgroundColor: Colors.grey.withOpacity(0.3),
+                          child: Container(
+                            width: 10.0,
+                            height: 10.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _current == inde
+                                  ? Colors.deepOrange
+                                  : Colors.white,
+                            ),
+                          )));
+                }).toList(),
+              ),
             ),
-          )),
-    );
+          ]),
+        ));
   }
 }

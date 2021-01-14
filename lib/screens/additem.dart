@@ -16,6 +16,7 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -1606,7 +1607,7 @@ class _AddItemState extends State<AddItem> {
                                                                                   ))
                                                                             ],
                                                                             mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceBetween,
+                                                                                MainAxisAlignment.end,
                                                                             crossAxisAlignment:
                                                                                 CrossAxisAlignment.end,
                                                                           ),
@@ -1885,7 +1886,7 @@ class _AddItemState extends State<AddItem> {
                                                                                   ))
                                                                             ],
                                                                             mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceBetween,
+                                                                                MainAxisAlignment.end,
                                                                             crossAxisAlignment:
                                                                                 CrossAxisAlignment.end,
                                                                           ),
@@ -2239,98 +2240,156 @@ class _AddItemState extends State<AddItem> {
                             ),
                           ),
                           fees != null
-                              ? Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 15, top: 2, right: 15),
-                                  child: Container(
-                                    padding: EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(15),
-                                          topLeft: Radius.circular(15)),
-                                    ),
-                                    child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Container(
-                                              width: 155,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                    'Listing Price',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 16,
-                                                        color: Colors.black),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      final dynamic tooltip =
-                                                          _toolTipKey
-                                                              .currentState;
-                                                      tooltip
-                                                          .ensureTooltipVisible();
-                                                    },
-                                                    child: Tooltip(
-                                                        key: _toolTipKey,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          boxShadow: <
-                                                              BoxShadow>[
-                                                            BoxShadow(
+                              ? GestureDetector(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        useRootNavigator: false,
+                                        isScrollControlled: true,
+                                        builder: (_) {
+                                          return DraggableScrollableSheet(
+                                              expand: false,
+                                              initialChildSize: 0.3,
+                                              builder: (_, controller) {
+                                                return Container(
+                                                    height: 100.0,
+                                                    color: Color(0xFF737373),
+                                                    child: Container(
+                                                        padding:
+                                                            EdgeInsets.all(20),
+                                                        decoration: new BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius: new BorderRadius
+                                                                    .only(
+                                                                topLeft:
+                                                                    const Radius
+                                                                            .circular(
+                                                                        20.0),
+                                                                topRight:
+                                                                    const Radius
+                                                                            .circular(
+                                                                        20.0))),
+                                                        child:
+                                                            Column(children: [
+                                                          Row(
+                                                            children: [
+                                                              InkWell(
+                                                                  onTap: () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child:
+                                                                      Padding(
+                                                                    padding: EdgeInsets.only(
+                                                                        right:
+                                                                            15,
+                                                                        bottom:
+                                                                            10),
+                                                                    child: Text(
+                                                                      "Done",
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              'Helvetica',
+                                                                          fontSize:
+                                                                              18,
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontWeight:
+                                                                              FontWeight.w300),
+                                                                    ),
+                                                                  ))
+                                                            ],
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                          ),
+                                                          Text(
+                                                            'SellShip Listing Protection & Pricing',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
                                                                 color: Colors
-                                                                    .grey
-                                                                    .withOpacity(
-                                                                        0.2),
-                                                                offset:
-                                                                    const Offset(
-                                                                        0.0,
-                                                                        0.6),
-                                                                blurRadius:
-                                                                    5.0),
-                                                          ],
-                                                        ),
-                                                        textStyle: TextStyle(
-                                                          color: Colors.black,
+                                                                    .black),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            'The SellShip listing protection and pricing helps us offer you 24/7 support, cover the transaction fees, free delivery and protect you as a seller. Also covering Buyers to be provided free delivery and protection throughout all their purchases on SellShip',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black),
+                                                          )
+                                                        ])));
+                                              });
+                                        });
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 15, top: 2, right: 15),
+                                    child: Container(
+                                      padding: EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(15),
+                                            topLeft: Radius.circular(15)),
+                                      ),
+                                      child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Container(
+                                                width: 155,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Listing Price',
+                                                      style: TextStyle(
                                                           fontFamily:
                                                               'Helvetica',
-                                                          fontSize: 12,
-                                                        ),
-                                                        message:
-                                                            'This helps us offer you 24/7 support, cover the transaction fees and protect you as a seller. Overall improve the SellShip community.',
-                                                        child: Icon(
-                                                          FontAwesome5
-                                                              .question_circle,
-                                                          size: 15,
-                                                          color: Colors.grey,
-                                                        )),
-                                                  ),
-                                                ],
+                                                          fontSize: 16,
+                                                          color: Colors.black),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Icon(
+                                                      FontAwesome5
+                                                          .question_circle,
+                                                      size: 15,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              currency +
-                                                  ' ' +
-                                                  fees.toStringAsFixed(2),
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 18,
-                                                  color: Colors.black),
-                                            )
-                                          ],
-                                        )),
-                                  ),
-                                )
+                                              Text(
+                                                currency +
+                                                    ' ' +
+                                                    fees.toStringAsFixed(2),
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 18,
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                  ))
                               : Container(),
                           fees != null
                               ? Padding(

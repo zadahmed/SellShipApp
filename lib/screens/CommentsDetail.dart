@@ -134,78 +134,79 @@ class _CommentsDetaileState extends State<CommentsDetail> {
     return Scaffold(
       backgroundColor: Colors.white,
       key: commentState,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Padding(
+          padding: EdgeInsets.all(10),
+          child: Container(
+            height: 50,
+            decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(20)),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: TextField(
+                maxLines: 20,
+                controller: commentcontroller,
+                autocorrect: true,
+                enableSuggestions: true,
+                textCapitalization: TextCapitalization.sentences,
+                style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
+                decoration: InputDecoration(
+                    // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    suffixIcon: Padding(
+                      padding: EdgeInsets.all(7),
+                      child: InkWell(
+                          child: CircleAvatar(
+                            child: Icon(
+                              Feather.message_circle,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                            backgroundColor: Colors.deepOrange,
+                          ),
+                          onTap: () async {
+                            if (commentcontroller.text.isNotEmpty) {
+                              var url = 'https://api.sellship.co/api/comment/' +
+                                  itemid;
+                              var userid = await storage.read(key: 'userid');
+                              if (userid != null) {
+                                final response = await http.post(url, body: {
+                                  'userid': userid,
+                                  'comment': commentcontroller.text
+                                });
+                                commentcontroller.clear();
+                                if (response.statusCode == 200) {
+                                  if (response.body == 'Matched') {
+                                    print('Matched');
+                                  }
+                                  loadcomments();
+                                } else {
+                                  print(response.statusCode);
+                                }
+                              } else {
+                                showInSnackBar('Please Login to Comment');
+                              }
+                            }
+                          }),
+                    ),
+                    border: InputBorder.none,
+                    hintText: "Enter your comment",
+                    hintStyle:
+                        TextStyle(fontFamily: 'Helvetica', fontSize: 16)),
+              ),
+            ),
+          ),
+        ),
+      ),
       body: commentslist.isNotEmpty
           ? GestureDetector(
               onTap: () {
                 FocusScope.of(context).requestFocus(new FocusNode());
               },
               child: Column(children: [
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15.0),
-                      child: TextField(
-                        maxLines: 20,
-                        controller: commentcontroller,
-                        autocorrect: true,
-                        enableSuggestions: true,
-                        textCapitalization: TextCapitalization.sentences,
-                        style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
-                        decoration: InputDecoration(
-                            // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-                            suffixIcon: Padding(
-                              padding: EdgeInsets.all(7),
-                              child: InkWell(
-                                  child: CircleAvatar(
-                                    child: Icon(
-                                      Feather.message_circle,
-                                      size: 20,
-                                      color: Colors.white,
-                                    ),
-                                    backgroundColor: Colors.deepOrange,
-                                  ),
-                                  onTap: () async {
-                                    if (commentcontroller.text.isNotEmpty) {
-                                      var url =
-                                          'https://api.sellship.co/api/comment/' +
-                                              itemid;
-                                      var userid =
-                                          await storage.read(key: 'userid');
-                                      if (userid != null) {
-                                        final response = await http.post(url,
-                                            body: {
-                                              'userid': userid,
-                                              'comment': commentcontroller.text
-                                            });
-                                        commentcontroller.clear();
-                                        if (response.statusCode == 200) {
-                                          if (response.body == 'Matched') {
-                                            print('Matched');
-                                          }
-                                          loadcomments();
-                                        } else {
-                                          print(response.statusCode);
-                                        }
-                                      } else {
-                                        showInSnackBar(
-                                            'Please Login to Comment');
-                                      }
-                                    }
-                                  }),
-                            ),
-                            border: InputBorder.none,
-                            hintText: "Enter your comment",
-                            hintStyle: TextStyle(
-                                fontFamily: 'Helvetica', fontSize: 16)),
-                      ),
-                    ),
-                  ),
-                ),
                 Expanded(
                     child: ListView.builder(
                         itemCount: commentslist.length,

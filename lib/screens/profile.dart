@@ -157,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage>
         loading = true;
         notbadge = false;
       });
-    _tabController = new TabController(length: 4, vsync: this);
+    _tabController = new TabController(length: 3, vsync: this);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -169,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage>
     _tabController.addListener(() {
       var tab = _tabController.index;
 
-      if (tab == 3) {
+      if (tab == 2) {
         refreshreviews();
         if (mounted)
           setState(() {
@@ -177,15 +177,15 @@ class _ProfilePageState extends State<ProfilePage>
             refreshreviews();
           });
       }
-      if (tab == 1) {
-        if (mounted)
-          setState(() {
-            orderloading = true;
-            getorders();
-          });
-      }
+//      if (tab == 1) {
+//        if (mounted)
+//          setState(() {
+//            orderloading = true;
+//            getorders();
+//          });
+//      }
 
-      if (tab == 2) {
+      if (tab == 1) {
         if (mounted)
           setState(() {
             favouriteloading = true;
@@ -432,7 +432,7 @@ class _ProfilePageState extends State<ProfilePage>
       key: _scaffoldKey,
       body: loading == false
           ? DefaultTabController(
-              length: 4,
+              length: 3,
               child: NestedScrollView(
                   headerSliverBuilder: (context, _) {
                     return [
@@ -969,9 +969,9 @@ class _ProfilePageState extends State<ProfilePage>
                                       new Tab(
                                         text: 'Items',
                                       ),
-                                      new Tab(
-                                        text: 'Orders',
-                                      ),
+//                                      new Tab(
+//                                        text: 'Orders',
+//                                      ),
                                       new Tab(
                                         text: 'Favourites',
                                       ),
@@ -1069,7 +1069,7 @@ class _ProfilePageState extends State<ProfilePage>
                                               ),
                                             ),
                                           ),
-                                    getOrders(context),
+//                                    getOrders(context),
                                     favouriteslist(context),
                                     reviewslist(context)
                                   ],
@@ -1164,6 +1164,9 @@ class _ProfilePageState extends State<ProfilePage>
                                               itemid:
                                                   favouritelist[index].itemid,
                                               sold: favouritelist[index].sold,
+                                              image: favouritelist[index].image,
+                                              name: favouritelist[index].name,
+                                              source: 'fav',
                                             )),
                                   );
                                 },
@@ -1181,78 +1184,89 @@ class _ProfilePageState extends State<ProfilePage>
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(15),
-                                          child: CachedNetworkImage(
-                                            fadeInDuration:
-                                                Duration(microseconds: 5),
-                                            imageUrl:
-                                                favouritelist[index].image,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                SpinKitChasingDots(
-                                                    color: Colors.deepOrange),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
+                                          child: Hero(
+                                            tag:
+                                                'fav${favouritelist[index].itemid}',
+                                            child: CachedNetworkImage(
+                                              fadeInDuration:
+                                                  Duration(microseconds: 5),
+                                              imageUrl:
+                                                  favouritelist[index].image,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  SpinKitChasingDots(
+                                                      color: Colors.deepOrange),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
                                           ),
                                         ),
                                       ),
                                       favourites != null
                                           ? favourites.contains(
                                                   favouritelist[index].itemid)
-                                              ? InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
+                                              ? Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      child: InkWell(
+                                                          enableFeedback: true,
+                                                          onTap: () async {
+                                                            var userid =
+                                                                await storage.read(
+                                                                    key:
+                                                                        'userid');
 
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
+                                                            if (userid !=
+                                                                null) {
+                                                              var url =
+                                                                  'https://api.sellship.co/api/favourite/' +
+                                                                      userid;
 
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            favouritelist[index]
-                                                                .itemid,
-                                                      };
+                                                              Map<String,
+                                                                      String>
+                                                                  body = {
+                                                                'itemid':
+                                                                    favouritelist[
+                                                                            index]
+                                                                        .itemid,
+                                                              };
 
-                                                      favourites.remove(
-                                                          favouritelist[index]
-                                                              .itemid);
-                                                      if (mounted)
-                                                        setState(() {
-                                                          favourites =
-                                                              favourites;
-                                                          favouritelist[index]
-                                                                  .likes =
-                                                              favouritelist[
+                                                              favourites.remove(
+                                                                  favouritelist[
                                                                           index]
-                                                                      .likes -
-                                                                  1;
-                                                        });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: body);
+                                                                      .itemid);
+                                                              if (mounted)
+                                                                setState(() {
+                                                                  favourites =
+                                                                      favourites;
+                                                                  favouritelist[
+                                                                          index]
+                                                                      .likes = favouritelist[
+                                                                              index]
+                                                                          .likes -
+                                                                      1;
+                                                                });
+                                                              final response =
+                                                                  await http.post(
+                                                                      url,
+                                                                      body:
+                                                                          body);
 
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: Align(
-                                                      alignment:
-                                                          Alignment.topRight,
-                                                      child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
+                                                              if (response
+                                                                      .statusCode ==
+                                                                  200) {
+                                                              } else {
+                                                                print(response
+                                                                    .statusCode);
+                                                              }
+                                                            } else {
+                                                              showInSnackBar(
+                                                                  'Please Login to use Favourites');
+                                                            }
+                                                          },
                                                           child: CircleAvatar(
                                                             radius: 18,
                                                             backgroundColor:
@@ -1265,60 +1279,67 @@ class _ProfilePageState extends State<ProfilePage>
                                                               size: 16,
                                                             ),
                                                           ))))
-                                              : InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
+                                              : Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      child: InkWell(
+                                                          enableFeedback: true,
+                                                          onTap: () async {
+                                                            var userid =
+                                                                await storage.read(
+                                                                    key:
+                                                                        'userid');
 
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
+                                                            if (userid !=
+                                                                null) {
+                                                              var url =
+                                                                  'https://api.sellship.co/api/favourite/' +
+                                                                      userid;
 
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            favouritelist[index]
-                                                                .itemid,
-                                                      };
+                                                              Map<String,
+                                                                      String>
+                                                                  body = {
+                                                                'itemid':
+                                                                    favouritelist[
+                                                                            index]
+                                                                        .itemid,
+                                                              };
 
-                                                      favourites.add(
-                                                          favouritelist[index]
-                                                              .itemid);
-                                                      if (mounted)
-                                                        setState(() {
-                                                          favourites =
-                                                              favourites;
-                                                          favouritelist[index]
-                                                                  .likes =
-                                                              favouritelist[
+                                                              favourites.add(
+                                                                  favouritelist[
                                                                           index]
-                                                                      .likes +
-                                                                  1;
-                                                        });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: body);
+                                                                      .itemid);
+                                                              if (mounted)
+                                                                setState(() {
+                                                                  favourites =
+                                                                      favourites;
+                                                                  favouritelist[
+                                                                          index]
+                                                                      .likes = favouritelist[
+                                                                              index]
+                                                                          .likes +
+                                                                      1;
+                                                                });
+                                                              final response =
+                                                                  await http.post(
+                                                                      url,
+                                                                      body:
+                                                                          body);
 
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: Align(
-                                                      alignment:
-                                                          Alignment.topRight,
-                                                      child: Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
+                                                              if (response
+                                                                      .statusCode ==
+                                                                  200) {
+                                                              } else {
+                                                                print(response
+                                                                    .statusCode);
+                                                              }
+                                                            } else {
+                                                              showInSnackBar(
+                                                                  'Please Login to use Favourites');
+                                                            }
+                                                          },
                                                           child: CircleAvatar(
                                                             radius: 18,
                                                             backgroundColor:
