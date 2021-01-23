@@ -339,64 +339,65 @@ class MessagesState extends State<Messages> {
                                       onTap: () {
                                         if (messagesd[index].offerstage !=
                                             null) {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ChatPageView(
-                                                        senderName:
-                                                            messagesd[index]
-                                                                .senderName,
-                                                        messageid:
-                                                            messagesd[index]
-                                                                .messageid,
-                                                        recipentname:
-                                                            messagesd[index]
-                                                                .peoplemessaged,
-                                                        senderid:
-                                                            messagesd[index]
-                                                                .senderid,
-                                                        recipentid:
-                                                            messagesd[index]
-                                                                .recipentid,
-                                                        fcmToken: messagesd[
-                                                                index]
-                                                            .fcmtokenreciever,
-                                                        itemid: messagesd[index]
-                                                            .itemid,
-                                                        offerstage:
-                                                            messagesd[index]
-                                                                .offerstage,
-                                                        offer: messagesd[index]
-                                                            .offer,
-                                                      )));
-                                        } else {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ChatPageView(
-                                                        senderName:
-                                                            messagesd[index]
-                                                                .senderName,
-                                                        messageid:
-                                                            messagesd[index]
-                                                                .messageid,
-                                                        recipentname:
-                                                            messagesd[index]
-                                                                .peoplemessaged,
-                                                        senderid:
-                                                            messagesd[index]
-                                                                .senderid,
-                                                        recipentid:
-                                                            messagesd[index]
-                                                                .recipentid,
-                                                        fcmToken: messagesd[
-                                                                index]
-                                                            .fcmtokenreciever,
-                                                        itemid: messagesd[index]
-                                                            .itemid,
-                                                      )));
+//                                          Navigator.push(
+//                                              context,
+//                                              MaterialPageRoute(
+//                                                  builder: (context) =>
+//                                                      ChatPageView(
+//                                                        senderName:
+//                                                            messagesd[index]
+//                                                                .senderName,
+//                                                        messageid:
+//                                                            messagesd[index]
+//                                                                .messageid,
+//                                                        recipentname:
+//                                                            messagesd[index]
+//                                                                .peoplemessaged,
+//                                                        senderid:
+//                                                            messagesd[index]
+//                                                                .senderid,
+//                                                        recipentid:
+//                                                            messagesd[index]
+//                                                                .recipentid,
+//                                                        fcmToken: messagesd[
+//                                                                index]
+//                                                            .fcmtokenreciever,
+//                                                        itemid: messagesd[index]
+//                                                            .itemid,
+//                                                        offerstage:
+//                                                            messagesd[index]
+//                                                                .offerstage,
+//                                                        offer: messagesd[index]
+//                                                            .offer,
+//                                                      )));
+//                                        } else {
+//                                          Navigator.push(
+//                                              context,
+//                                              MaterialPageRoute(
+//                                                  builder: (context) =>
+//                                                      ChatPageView(
+//                                                        senderName:
+//                                                            messagesd[index]
+//                                                                .senderName,
+//                                                        messageid:
+//                                                            messagesd[index]
+//                                                                .messageid,
+//                                                        recipentname:
+//                                                            messagesd[index]
+//                                                                .peoplemessaged,
+//                                                        senderid:
+//                                                            messagesd[index]
+//                                                                .senderid,
+//                                                        recipentid:
+//                                                            messagesd[index]
+//                                                                .recipentid,
+//                                                        fcmToken: messagesd[
+//                                                                index]
+//                                                            .fcmtokenreciever,
+//                                                        itemid: messagesd[index]
+//                                                            .itemid,
+//                                                      )));
+//                                        }
                                         }
                                       },
                                     ),

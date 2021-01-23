@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:169882499972:android:fcdccd0ad96a9e1a9fbbd1",
+        "mobilesdk_app_id": "1:169882499972:android:9b0194073a03a66f9fbbd1",
         "android_client_info": {
-          "package_name": "com.zad.sellship"
+          "package_name": "com.zafra.sellship"
         }
       },
       "oauth_client": [
@@ -35,7 +35,7 @@
               "client_id": "169882499972-0fjo89kkjd9k3kdnns5g5h8q4i4m36gb.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.zad.sellship",
+                "bundle_id": "com.zafra.sellship",
                 "app_store_id": "1506496966"
               }
             }

@@ -27,7 +27,7 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-class ChatPageView extends StatefulWidget {
+class ChatPageViewSeller extends StatefulWidget {
   final String recipentname;
   final String messageid;
   final String senderid;
@@ -38,7 +38,7 @@ class ChatPageView extends StatefulWidget {
   final String itemprice;
   final int offerstage;
 
-  const ChatPageView({
+  const ChatPageViewSeller({
     Key key,
     this.recipentname,
     this.itemname,
@@ -52,10 +52,10 @@ class ChatPageView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ChatPageViewState createState() => _ChatPageViewState();
+  _ChatPageViewSellerState createState() => _ChatPageViewSellerState();
 }
 
-class _ChatPageViewState extends State<ChatPageView> {
+class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
   TextEditingController _text = new TextEditingController();
   ScrollController _scrollController = ScrollController();
   var childList = <Widget>[];
@@ -88,6 +88,88 @@ class _ChatPageViewState extends State<ChatPageView> {
     });
 
     getItem();
+  }
+
+  Widget selleroptions(BuildContext context) {
+    if (offerstage == 0) {
+      return Container(
+        height: 150,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white),
+                        height: 40,
+                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.check),
+                            Text(
+                              'Accept Offer',
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        )))),
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white),
+                        height: 40,
+                        width: MediaQuery.of(context).size.width / 2 - 20,
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.cancel),
+                            Text(
+                              'Cancel Offer',
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        )))),
+              ],
+            ),
+            Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white),
+                    height: 40,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.keyboard_return),
+                        Text(
+                          'Counter Offer',
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    )))),
+          ],
+        ),
+      );
+    }
   }
 
   var profilepicture;
@@ -569,6 +651,7 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   Widget chatView(BuildContext context) {
     return Scaffold(
+        bottomNavigationBar: selleroptions(context),
         body: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());

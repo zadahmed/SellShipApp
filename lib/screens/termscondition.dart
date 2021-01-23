@@ -7,7 +7,7 @@ Welcome to SellShip!
 SellShip is owned and operated by RentHet Inc.
 These are the terms and conditions for: 
 SellShip App (Android and iOS version – Available on Google Play and App store)
-Play store - https://play.google.com/store/apps/details?id=com.zad.sellship&hl=en
+Play store - https://play.google.com/store/apps/details?id=com.zafra.sellship&hl=en
 App store - https://apps.apple.com/us/app/sellship-local-classifieds/id1506496966?ls=1
 By registering and using the application, you agree to be bound by these terms and conditions and our Privacy Policy. If you do not accept all of these terms, then you may not use the application and services. In these terms, "we", "us", "our" and SellShip refers to SellShip and "you" and "your" refers to you, the user of SellShip.
 The following terms and conditions apply to the application and services offered by SellShip. This includes the mobile and tablet versions as well as any other version of SellShip accessible via desktop, mobile, tablet, social media or other devices.

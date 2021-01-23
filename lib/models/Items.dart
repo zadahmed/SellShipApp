@@ -11,6 +11,8 @@ class Item {
   final String price;
   final String userid;
   final String username;
+  final List<dynamic> tags;
+  final String messageid;
   int likes;
   final int comments;
   final String city;
@@ -25,7 +27,8 @@ class Item {
   final String subsubcategory;
   final double distance;
   final String brand;
-  final int weight;
+  final int quantity;
+  final String weight;
   final bool sold;
   final String size;
   final int views;
@@ -35,12 +38,16 @@ class Item {
   final String sellerid;
   final String buyername;
   final String sellername;
+  final String country;
 
   Item(
       {this.itemid,
       this.name,
       this.views,
       this.image,
+      this.tags,
+      this.country,
+      this.quantity,
       this.image1,
       this.date,
       this.weight,
@@ -53,6 +60,7 @@ class Item {
       this.sellername,
       this.orderstatus,
       this.image4,
+      this.messageid,
       this.comments,
       this.image5,
       this.likes,

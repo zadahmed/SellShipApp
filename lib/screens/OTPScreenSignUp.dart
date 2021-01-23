@@ -372,8 +372,8 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
               onlyOkButton: true,
               entryAnimation: EntryAnimation.DEFAULT,
               onOkButtonPressed: () {
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-                Navigator.of(context, rootNavigator: true).pop('dialog');
+                Navigator.pop(context);
+                Navigator.pop(context);
               },
             ));
   }

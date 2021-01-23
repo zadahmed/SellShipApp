@@ -13,6 +13,7 @@ import 'package:SellShip/screens/filter.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/search.dart';
+import 'package:SellShip/screens/subcategory.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -72,8 +73,10 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
+  bool alive = false;
+
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => alive;
 
   static const _iosadUnitID = "ca-app-pub-9959700192389744/1316209960";
 
@@ -866,20 +869,6 @@ class _HomeScreenState extends State<HomeScreen>
           key: 'longitude', value: location.longitude.toString());
       var userid = await storage.read(key: 'userid');
 
-      await OneSignal.shared.setExternalUserId(userid);
-
-      var status = await OneSignal.shared.getPermissionSubscriptionState();
-
-      var playerId = status.subscriptionStatus.userId;
-
-      if (userid != null) {
-        var url = 'https://api.sellship.co/api/save/onesignalid/' +
-            userid +
-            '/' +
-            playerId;
-        final response = await http.get(url);
-      }
-
       await storage.write(
           key: 'longitude', value: location.longitude.toString());
       setState(() {
@@ -1566,6 +1555,7 @@ class _HomeScreenState extends State<HomeScreen>
                 onRefresh: () {
                   if (mounted) {
                     setState(() {
+                      alive = false;
                       foryouloading = true;
                       foryou();
 
@@ -2266,6 +2256,7 @@ class _HomeScreenState extends State<HomeScreen>
         }
         if (mounted)
           setState(() {
+            alive = true;
             foryoulist = testforoyou.toSet().toList();
             foryouloading = false;
           });
@@ -2431,20 +2422,23 @@ class _HomeScreenState extends State<HomeScreen>
                   );
                 }),
             onRefresh: () {
-              gettopdata();
-              readstorage();
-              foryoulist.clear();
-              foryouscroll.clear();
-
               if (mounted) {
                 setState(() {
+                  alive = false;
                   skip = 0;
                   limit = 50;
                   loading = true;
-                  notifbadge = false;
-                  notbadge = false;
                 });
               }
+
+              itemsgrid.clear();
+              nearmeItems.clear();
+              below100list.clear();
+              subcategoryList.clear();
+              topitems.clear();
+              getsubcategoriesinterested();
+              gettopdata();
+              readstorage();
 
               return getsubcategoriesinterested();
             },
@@ -2465,11 +2459,22 @@ class _HomeScreenState extends State<HomeScreen>
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold),
                               ),
-                              Text(
-                                'See All',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16.0,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RootScreen(
+                                              index: 1,
+                                            )),
+                                  );
+                                },
+                                child: Text(
+                                  'See All',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16.0,
+                                  ),
                                 ),
                               ),
                             ],
@@ -2486,7 +2491,18 @@ class _HomeScreenState extends State<HomeScreen>
                       delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                         return InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => SubCategory(
+                                        subcategory:
+                                            subcategoryList[index].name,
+                                        categoryimage:
+                                            subcategoryList[index].image,
+                                      )),
+                            );
+                          },
                           child: Padding(
                             padding: EdgeInsets.all(5),
                             child: Container(
@@ -2507,11 +2523,15 @@ class _HomeScreenState extends State<HomeScreen>
                                           ? ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(10),
-                                              child: CachedNetworkImage(
-                                                imageUrl: subcategoryList[index]
-                                                    .image,
-                                                fit: BoxFit.cover,
-                                              ))
+                                              child: Hero(
+                                                  tag: subcategoryList[index]
+                                                      .name,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl:
+                                                        subcategoryList[index]
+                                                            .image,
+                                                    fit: BoxFit.cover,
+                                                  )))
                                           : Container(),
                                     ),
                                     Align(
@@ -4272,6 +4292,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (mounted)
       setState(() {
         loading = false;
+        alive = true;
         itemsgrid = itemsgrid;
       });
 

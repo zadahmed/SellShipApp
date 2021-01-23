@@ -134,7 +134,7 @@ class _OrderSellerState extends State<OrderSeller> {
       cancelled = cancell;
       trackingnumber = trackingno;
       deliverystage = delstage;
-      newitem = Item(weight: int.parse(jsonbody['itemobject']['weight']));
+      newitem = Item(weight: jsonbody['itemobject']['weight']);
       itemfees = jsonbody['fees'];
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];

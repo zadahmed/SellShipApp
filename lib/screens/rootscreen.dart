@@ -22,6 +22,7 @@ import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/profile.dart';
 import 'package:http/http.dart' as http;
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class RootScreen extends StatefulWidget {
   int index;
@@ -53,6 +54,21 @@ class _RootScreenState extends State<RootScreen> {
 
   getuser() async {
     var userid = await storage.read(key: 'userid');
+
+    await OneSignal.shared.setExternalUserId(userid);
+
+    var status = await OneSignal.shared.getPermissionSubscriptionState();
+
+    var playerId = status.subscriptionStatus.userId;
+
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/save/onesignalid/' +
+          userid +
+          '/' +
+          playerId;
+      final response = await http.get(url);
+    }
+
     if (userid != null) {
       var url = 'https://api.sellship.co/api/user/' + userid;
       final response = await http.get(url);

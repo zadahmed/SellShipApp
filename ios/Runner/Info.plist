@@ -45,7 +45,7 @@
 			<string>sellshipdynamic</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.zad.sellship</string>
+				<string>com.zafra.sellship</string>
 			</array>
 		</dict>
 		<dict>

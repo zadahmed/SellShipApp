@@ -358,6 +358,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 child: TextField(
                                   onChanged: (text) {},
                                   controller: PasswordController,
+                                  obscureText: true,
                                   cursorColor: Colors.black,
                                   decoration: InputDecoration(
                                     hintText: "Password",

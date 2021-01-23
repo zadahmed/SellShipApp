@@ -49,11 +49,16 @@ class Category {
   });
 }
 
-class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
+class _SearchState extends State<Search>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   List<Item> itemsgrid = [];
 
   var skip;
   var limit;
+
+  @override
+  bool get wantKeepAlive => true;
+
   var text;
 
   ScrollController _scrollController = ScrollController();
@@ -98,6 +103,10 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
   void initState() {
     super.initState();
 
+    _tabController = TabController(
+      length: 4,
+      vsync: this,
+    );
     getCategories();
     readstorage();
     _getRecentSearches();
@@ -297,6 +306,7 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
         limit.toString();
 
     final response = await http.get(url);
+    print(response.body);
 
     var jsonbody = json.decode(response.body);
 
@@ -619,11 +629,7 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
   bool searched = false;
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
         key: scaffoldState,
         backgroundColor: Colors.white,
@@ -654,8 +660,10 @@ class _SearchState extends State<Search> with AutomaticKeepAliveClientMixin {
                   Expanded(
                     child: TextField(
                       onChanged: (text) {
+                        print(_tabController.index);
                         if (_tabController.index == 0 ||
                             _tabController.index == 1) {
+                          print(text);
                           setState(() {
                             searched = false;
                             skip = 0;

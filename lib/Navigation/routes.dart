@@ -9,7 +9,7 @@ export 'package:SellShip/screens/address.dart';
 export 'package:SellShip/screens/addsubcategory.dart';
 export 'package:SellShip/screens/addsubsubcategory.dart';
 export 'package:SellShip/screens/balance.dart';
-export 'package:SellShip/screens/boysfashion.dart';
+
 export 'package:SellShip/screens/categorydetail.dart';
 export 'package:SellShip/screens/changecountry.dart';
 export 'package:SellShip/screens/chatpageview.dart';
@@ -22,7 +22,7 @@ export 'package:SellShip/screens/editprofile.dart';
 export 'package:SellShip/screens/favourites.dart';
 export 'package:SellShip/screens/featureitem.dart';
 export 'package:SellShip/screens/forgotpassword.dart';
-export 'package:SellShip/screens/girlsfashion.dart';
+
 export 'package:SellShip/screens/home.dart';
 export 'package:SellShip/screens/loginPage.dart';
 export 'package:SellShip/screens/messages.dart';
@@ -44,11 +44,10 @@ export 'package:SellShip/screens/search.dart';
 export 'package:SellShip/screens/settings.dart';
 export 'package:SellShip/screens/signUpPage.dart';
 export 'package:SellShip/screens/starterscreen.dart';
-export 'package:SellShip/screens/subcategory.dart';
+
 export 'package:SellShip/screens/termscondition.dart';
 export 'package:SellShip/screens/test.dart';
 export 'package:SellShip/screens/useritems.dart';
-export 'package:SellShip/screens/womenfashion.dart';
 
 class Routes {
   static final String addBrands = '/addBrands';

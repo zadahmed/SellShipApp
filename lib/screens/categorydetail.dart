@@ -1194,12 +1194,46 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 },
                 body: loading == false
                     ? EasyRefresh.custom(
-                        topBouncing: true,
-                        header: MaterialHeader(),
-                        footer: MaterialFooter(
-                          enableInfiniteLoad: true,
-                          enableHapticFeedback: true,
-                        ),
+                        footer: CustomFooter(
+                            extent: 40.0,
+                            enableHapticFeedback: true,
+                            triggerDistance: 50.0,
+                            footerBuilder: (context,
+                                loadState,
+                                pulledExtent,
+                                loadTriggerPullDistance,
+                                loadIndicatorExtent,
+                                axisDirection,
+                                float,
+                                completeDuration,
+                                enableInfiniteLoad,
+                                success,
+                                noMore) {
+                              return SpinKitFadingCircle(
+                                color: Colors.deepOrange,
+                                size: 30.0,
+                              );
+                            }),
+                        header: CustomHeader(
+                            extent: 40.0,
+                            enableHapticFeedback: true,
+                            triggerDistance: 50.0,
+                            headerBuilder: (context,
+                                loadState,
+                                pulledExtent,
+                                loadTriggerPullDistance,
+                                loadIndicatorExtent,
+                                axisDirection,
+                                float,
+                                completeDuration,
+                                enableInfiniteLoad,
+                                success,
+                                noMore) {
+                              return SpinKitFadingCircle(
+                                color: Colors.deepOrange,
+                                size: 30.0,
+                              );
+                            }),
                         slivers: <Widget>[
                           SliverGrid(
                             gridDelegate:

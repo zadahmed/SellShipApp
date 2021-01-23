@@ -80,10 +80,7 @@ class _StarterPageState extends State<StarterPage>
   }
 
   final items = {
-    'US': 'United States',
     'AE': 'United Arab Emirates',
-    'GB': 'United Kingdom',
-    'CA': 'Canada',
   };
 
   var selectedItem;
@@ -167,7 +164,7 @@ class _StarterPageState extends State<StarterPage>
                 height: 20,
               ),
               Padding(
-                  padding: EdgeInsets.only(left: 28, top: 20, right: 28),
+                  padding: EdgeInsets.only(left: 18, top: 20, right: 18),
                   child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -176,7 +173,7 @@ class _StarterPageState extends State<StarterPage>
                           height: 60,
                           padding:
                               EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          width: MediaQuery.of(context).size.width - 70,
+                          width: MediaQuery.of(context).size.width - 50,
                           decoration: BoxDecoration(
                             color: Color.fromRGBO(131, 146, 165, 0.1),
                             borderRadius: BorderRadius.circular(25),

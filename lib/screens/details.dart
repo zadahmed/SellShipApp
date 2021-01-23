@@ -174,7 +174,7 @@ class _DetailsState extends State<Details> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Container(
+                                Expanded(
                                   child: TextField(
                                     cursorColor: Color(0xFF979797),
                                     controller: offercontroller,
@@ -226,7 +226,6 @@ class _DetailsState extends State<Details> {
                                       disabledBorder: InputBorder.none,
                                     ),
                                   ),
-                                  width: 100,
                                 ),
                                 Text(currency,
                                     style: TextStyle(
@@ -275,6 +274,7 @@ class _DetailsState extends State<Details> {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               } else {
+                                print(response.statusCode);
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               }
@@ -690,10 +690,10 @@ class _DetailsState extends State<Details> {
       uriPrefix: 'https://sellship.page.link',
       link: Uri.parse('https://api.sellship.co/items?id=$id'),
       androidParameters: AndroidParameters(
-        packageName: 'com.zad.sellship',
+        packageName: 'com.zafra.sellship',
       ),
       iosParameters: IosParameters(
-        bundleId: 'com.zad.sellship',
+        bundleId: 'com.zafra.sellship',
         appStoreId: '1506496966',
       ),
       socialMetaTagParameters: SocialMetaTagParameters(
@@ -930,18 +930,6 @@ class _DetailsState extends State<Details> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15, bottom: 5, top: 2),
-                                child: Text(
-                                  capitalize(newItem.brand),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
                               Padding(
                                 padding: EdgeInsets.only(
                                     left: 15, bottom: 5, top: 2),
@@ -2396,8 +2384,8 @@ class ImageDisplayState extends State<ImageDisplay> {
                 },
                 itemBuilder: (BuildContext ctxt, int index) {
                   return InteractiveViewer(
-                      panEnabled: false, // Set it to false
-                      boundaryMargin: EdgeInsets.all(100),
+                      panEnabled: false,
+                      boundaryMargin: EdgeInsets.all(10),
                       minScale: 0.5,
                       maxScale: 2,
                       child: CachedNetworkImage(
@@ -2407,7 +2395,7 @@ class ImageDisplayState extends State<ImageDisplay> {
                             SpinKitChasingDots(color: Colors.deepOrange),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                         width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.cover,
+                        fit: BoxFit.contain,
                       ));
                 }),
             Positioned(

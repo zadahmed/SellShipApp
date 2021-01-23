@@ -1,4 +1,4 @@
-package com.zad.sellship
+package com.zafra.sellship
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

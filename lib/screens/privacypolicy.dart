@@ -17,7 +17,7 @@ This Privacy Policy may change from time to time. Your continued use of the appl
 GENERAL INFORMATION
 The personal data of the users that are collected and processed through:
 SellShip App (Android and iOS version – Available on Google Play and App store)
-Play store - https://play.google.com/store/apps/details?id=com.zad.sellship&hl=en
+Play store - https://play.google.com/store/apps/details?id=com.zafra.sellship&hl=en
 App store - https://apps.apple.com/us/app/sellship-local-classifieds/id1506496966?ls=1
 Will be under responsibility and in charge of:
 RentHet Inc.

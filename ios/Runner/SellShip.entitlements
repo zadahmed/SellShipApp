@@ -15,7 +15,7 @@
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.zad.sellship.onesignal</string>
+		<string>group.com.zafra.sellship.onesignal</string>
 	</array>
 </dict>
 </plist>

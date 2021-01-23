@@ -4,6 +4,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/starterscreen.dart';
+import 'package:SellShip/screens/subcategory.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -66,7 +67,6 @@ class _MyAppState extends State<MyApp> {
             Routes.addSubCategory: (context) => AddSubCategory(),
             Routes.addSubSubCategory: (context) => AddSubSubCategory(),
             Routes.balance: (context) => Balance(),
-            Routes.boysFashion: (context) => BoysFashion(),
             Routes.categoryDetail: (context) => CategoryDetail(),
             Routes.changeCountry: (context) => ChangeCountry(),
             Routes.chatPageView: (context) => ChatPageView(),
@@ -79,7 +79,6 @@ class _MyAppState extends State<MyApp> {
             Routes.favourites: (context) => FavouritesScreen(),
             Routes.featureItem: (context) => FeatureItem(),
             Routes.forgotPassword: (context) => ForgotPassword(),
-            Routes.girlsFashion: (context) => GirlsFashion(),
             Routes.home: (context) => HomeScreen(),
             Routes.loginPage: (context) => ProfilePage(),
             Routes.loginProfile: (context) => LoginPage(),
@@ -107,7 +106,6 @@ class _MyAppState extends State<MyApp> {
             Routes.subCategory: (context) => SubCategory(),
             Routes.termsAndConditions: (context) => TermsandConditions(),
             Routes.userItems: (context) => UserItems(),
-            Routes.womenFashion: (context) => WomenFashion(),
           },
           debugShowCheckedModeBanner: false,
           color: Colors.blue,

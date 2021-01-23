@@ -22,7 +22,7 @@ class StripeService {
     StripePayment.setOptions(StripeOptions(
         publishableKey: "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
 //        publishableKey: "pk_test_d6wXVbCGxxASaVxefHuX8Pc000I7qe4dyv",
-        merchantId: "merchant.com.zad.sellship",
+        merchantId: "merchant.com.zafra.sellship",
         androidPayMode: 'test'));
   }
 
