@@ -1843,6 +1843,7 @@ class _HomeScreenState extends State<HomeScreen>
                               context,
                               CupertinoPageRoute(
                                   builder: (context) => Details(
+                                      item: foryoulist[index],
                                       itemid: foryoulist[index].itemid,
                                       image: foryoulist[index].image,
                                       name: foryoulist[index].name,

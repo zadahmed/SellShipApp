@@ -92,6 +92,7 @@ class _ChatPageViewState extends State<ChatPageView> {
       offerstage = widget.offerstage;
     });
 
+    print(offerstage);
     getItem();
   }
 
@@ -140,7 +141,7 @@ class _ChatPageViewState extends State<ChatPageView> {
     }
     if (offerstage == 1) {
       return Container(
-          height: 150,
+          height: 60,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
               color: Colors.grey.shade100,
@@ -780,39 +781,51 @@ class _ChatPageViewState extends State<ChatPageView> {
 
   acceptoffer() async {
     if (offerstage != null) {
-      var url = 'https://api.sellship.co/api/acceptoffer/' +
-          messageid +
+      var url = 'https://api.sellship.co/api/counter/acceptoffer/' +
+          widget.messageid +
           '/' +
-          senderid +
+          widget.itemid +
           '/' +
-          recipentid;
+          widget.senderid +
+          '/' +
+          widget.recipentid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        print('Success');
         setState(() {
-          offerstage = 1;
+          offerstage = 2;
         });
-        print(offerstage);
+
+        print('accepted');
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CheckoutUAE(
+                    messageid: widget.messageid,
+                    offer: widget.offer,
+                  )),
+        );
       }
     }
   }
 
   canceloffer() async {
     if (offerstage != null) {
-      var url = 'https://api.sellship.co/api/canceloffer/' +
-          messageid +
+      var url = 'https://api.sellship.co/api/counter/canceloffer/' +
+          widget.messageid +
           '/' +
-          senderid +
+          widget.itemid +
           '/' +
-          recipentid;
+          widget.senderid +
+          '/' +
+          widget.recipentid;
       final response = await http.get(url);
       print(response.statusCode);
       if (response.statusCode == 200) {
         print('Success');
         setState(() {
-          offerstage = 0;
+          offerstage = -1;
         });
-        print(offerstage);
       }
     }
   }

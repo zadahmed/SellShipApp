@@ -277,6 +277,36 @@ class _ActivityState extends State<Activity>
           )
         ],
       );
+    } else if (offerstage == 1 && _tabController.index == 0) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            width: 125,
+            height: 35,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(69, 80, 163, 1),
+                borderRadius: BorderRadius.circular(20)),
+            child: Center(
+                child: Text(
+              'Counteroffer',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+            )),
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 20,
+            color: Colors.blueGrey,
+          )
+        ],
+      );
     }
   }
 
@@ -362,6 +392,43 @@ class _ActivityState extends State<Activity>
                   fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
             )),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 20,
+            color: Colors.blueGrey,
+          )
+        ],
+      );
+    } else if (offerstage == 1 && _tabController.index == 1) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            width: 140,
+            height: 47,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(239, 190, 125, 1),
+                borderRadius: BorderRadius.circular(20)),
+            child: Text(
+              'Counteroffer Pending',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 20,
+            color: Colors.blueGrey,
+          )
         ],
       );
     } else if (offerstage == 2 && _tabController.index == 0) {
@@ -392,7 +459,15 @@ class _ActivityState extends State<Activity>
                         fontFamily: 'Helvetica',
                         fontSize: 14.0,
                         color: Colors.white),
-                  ))))
+                  )))),
+          SizedBox(
+            height: 10,
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 20,
+            color: Colors.blueGrey,
+          )
         ],
       );
     }

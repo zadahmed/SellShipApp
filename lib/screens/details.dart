@@ -34,10 +34,18 @@ import 'package:url_launcher/url_launcher.dart';
 class Details extends StatefulWidget {
   final String itemid;
   final String image;
+  final Item item;
   final String name;
   final String source;
   final bool sold;
-  Details({Key key, this.itemid, this.sold, this.image, this.name, this.source})
+  Details(
+      {Key key,
+      this.itemid,
+      this.sold,
+      this.image,
+      this.name,
+      this.source,
+      this.item})
       : super(key: key);
   @override
   _DetailsState createState() => _DetailsState();

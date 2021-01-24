@@ -160,6 +160,46 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
             ),
             Padding(
                 padding: EdgeInsets.all(10),
+                child: InkWell(
+                    onTap: () {
+                      showMe(context);
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white),
+                        height: 40,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.keyboard_return),
+                            SizedBox(width: 5),
+                            Text(
+                              'Counter Offer',
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ))))),
+          ],
+        ),
+      );
+    }
+    if (offerstage == 2) {
+      return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+                padding: EdgeInsets.all(10),
                 child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
@@ -171,10 +211,10 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(Icons.keyboard_return),
+                        Icon(Icons.timer),
                         SizedBox(width: 5),
                         Text(
-                          'Counter Offer',
+                          'Pending Payment',
                           textAlign: TextAlign.center,
                         )
                       ],
@@ -183,7 +223,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
         ),
       );
     }
-    if (offerstage == 2) {
+    if (offerstage == 1) {
       return Container(
         height: 60,
         width: MediaQuery.of(context).size.width,
@@ -429,11 +469,15 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
     return childList;
   }
 
+  bool disabled = true;
+
   Stream<List<Widget>> getMessages() async* {
     yield* Stream<int>.periodic(Duration(seconds: 1), (i) => i)
         .asyncMap((i) => getRemoteMessages())
         .map((json) => mapJsonMessagesToListOfWidgetMessages(json));
   }
+
+  var itemprice;
 
   TextEditingController offercontroller = TextEditingController();
 
@@ -447,24 +491,57 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
         builder: (context) => StatefulBuilder(
                 builder: (BuildContext context, StateSetter updateState) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18),
+                padding: MediaQuery.of(context).viewInsets,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 15, bottom: 10, top: 10),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Make an Offer',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
+                        padding: EdgeInsets.only(
+                            left: 15, bottom: 5, top: 20, right: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Make an Offer',
+                                style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.deepOrangeAccent
+                                          .withOpacity(0.2)),
+                                  color:
+                                      Colors.deepOrangeAccent.withOpacity(0.2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                ),
+                                child: Text(
+                                  itemprice == null
+                                      ? 'Current Price ' +
+                                          currency +
+                                          widget.itemprice
+                                      : 'Current Price ' + currency + itemprice,
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    color: Colors.deepOrange,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
                     allowedoffer.isNotEmpty
                         ? Padding(
                             padding:
@@ -486,198 +563,196 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                       height: 8.0,
                     ),
                     Padding(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: ListTile(
-                          title: Container(
-                              width: 200,
-                              padding: EdgeInsets.only(),
-                              child: Center(
-                                child: TextField(
-                                  cursorColor: Color(0xFF979797),
-                                  controller: offercontroller,
-                                  onChanged: (text) {
-                                    if (text.isNotEmpty) {
-                                      var offer = double.parse(text);
-                                      var minoffer =
-                                          double.parse(itemselling.price) *
-                                              0.50;
-                                      minoffer =
-                                          double.parse(itemselling.price) -
-                                              minoffer;
+                      padding: EdgeInsets.only(
+                          left: 15, bottom: 5, top: 10, right: 15),
+                      child: Container(
+                        height: 84,
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Colors.black.withOpacity(0.2)),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                  child: TextField(
+                                    cursorColor: Color(0xFF979797),
+                                    controller: offercontroller,
+                                    onChanged: (text) {
+                                      if (text.isNotEmpty) {
+                                        var offer = double.parse(text);
+                                        var minoffer =
+                                            double.parse(widget.itemprice) *
+                                                0.50;
+                                        minoffer =
+                                            double.parse(widget.itemprice) -
+                                                minoffer;
 
-                                      if (offer < minoffer) {
-                                        updateState(() {
-                                          allowedoffer =
-                                              'The offer is too low compared to the selling price';
-                                        });
+                                        if (offer < minoffer) {
+                                          updateState(() {
+                                            allowedoffer =
+                                                'The offer is too low compared to the selling price';
+                                            disabled = true;
+                                          });
+                                        } else {
+                                          updateState(() {
+                                            allowedoffer = '';
+                                            disabled = false;
+                                          });
+                                        }
                                       } else {
                                         updateState(() {
                                           allowedoffer = '';
+                                          disabled = true;
                                         });
                                       }
-                                    } else {
-                                      updateState(() {
-                                        allowedoffer = '';
-                                      });
-                                    }
-                                  },
-                                  keyboardType:
-                                      TextInputType.numberWithOptions(),
-                                  textCapitalization: TextCapitalization.words,
-                                  decoration: InputDecoration(
-                                      labelText: "Offer Price",
-                                      alignLabelWithHint: true,
-                                      labelStyle: TextStyle(
+                                    },
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(),
+                                    style: TextStyle(
                                         fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                      ),
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
+                                    decoration: InputDecoration(
+                                      hintText: '0',
+//                                                alignLabelWithHint: true,
+                                      hintStyle: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold),
                                       focusColor: Colors.black,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      disabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      errorBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      )),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                        color: Colors.grey.shade300,
-                                      ))),
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                    ),
+                                  ),
                                 ),
-                              )),
-                          trailing: InkWell(
-                            onTap: () async {
+                                Text(currency,
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 22,
+                                    )),
+                              ]),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: 15, bottom: 5, top: 10, right: 15),
+                      child: InkWell(
+                        onTap: () async {
+                          if (disabled == false) {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                useRootNavigator: false,
+                                builder: (BuildContext context) {
+                                  return Container(
+                                    height: 100,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: SpinKitChasingDots(
+                                            color: Colors.deepOrangeAccent)),
+                                  );
+                                });
+                            var recieverid = widget.recipentid;
+                            if (recieverid != userid) {
+                              var itemurl =
+                                  'https://api.sellship.co/api/counteroffer/' +
+                                      widget.messageid +
+                                      '/' +
+                                      widget.senderid +
+                                      '/' +
+                                      widget.recipentid +
+                                      '/' +
+                                      widget.itemid +
+                                      '/' +
+                                      offercontroller.text.trim();
+
+                              final response = await http.get(itemurl);
+
+                              if (response.statusCode == 200) {
+                                setState(() {
+                                  offerstage = 0;
+                                  itemprice = offercontroller.text.trim();
+                                });
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              } else {
+                                print(response.statusCode);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            } else {
                               showDialog(
                                   context: context,
-                                  barrierDismissible: false,
-                                  builder: (_) => new AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                        content: Builder(
-                                          builder: (context) {
-                                            return Container(
-                                                height: 50,
-                                                width: 50,
-                                                child: SpinKitChasingDots(
-                                                  color: Colors.deepOrange,
-                                                ));
-                                          },
+                                  useRootNavigator: false,
+                                  builder: (_) => AssetGiffyDialog(
+                                        image: Image.asset(
+                                          'assets/oops.gif',
+                                          fit: BoxFit.cover,
                                         ),
+                                        title: Text(
+                                          'Oops!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 22.0,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        description: Text(
+                                          'You can\'t send an offer to yourself!',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(),
+                                        ),
+                                        onlyOkButton: true,
+                                        entryAnimation: EntryAnimation.DEFAULT,
+                                        onOkButtonPressed: () {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                        },
                                       ));
-                              var recieverid = itemselling.userid;
-                              if (recieverid != userid) {
-//                                var itemurl =
-//                                    'https://api.sellship.co/api/createoffer/' +
-//                                        senderid +
-//                                        '/' +
-//                                        recieverid +
-//                                        '/' +
-//                                        itemid +
-//                                        '/' +
-//                                        offercontroller.text.trim();
-
-//                                final response = await http.get(itemurl);
-//
-//                                if (response.statusCode == 200) {
-//                                  var messageinfo = json.decode(response.body);
-//
-//                                  (messageinfo['recievername']);
-//                                  var offers = messageinfo['offer'];
-//
-//                                  Navigator.pop(context);
-//                                  Navigator.of(context, rootNavigator: true)
-//                                      .pop('dialog');
-//                                  setState(() {
-//                                    offer = offers;
-//                                  });
-//                                } else {
-//                                  Navigator.pop(context);
-//                                  Navigator.of(context, rootNavigator: true)
-//                                      .pop('dialog');
-//                                }
-//                              } else {
-//                                showDialog(
-//                                    context: context,
-//                                    builder: (_) => AssetGiffyDialog(
-//                                          image: Image.asset(
-//                                            'assets/oops.gif',
-//                                            fit: BoxFit.cover,
-//                                          ),
-//                                          title: Text(
-//                                            'Oops!',
-//                                            textAlign: TextAlign.center,
-//                                            style: TextStyle(
-//                                                fontSize: 22.0,
-//                                                fontWeight: FontWeight.w600),
-//                                          ),
-//                                          description: Text(
-//                                            'You can\'t send an offer to yourself!',
-//                                            textAlign: TextAlign.center,
-//                                            style: TextStyle(),
-//                                          ),
-//                                          onlyOkButton: true,
-//                                          entryAnimation:
-//                                              EntryAnimation.DEFAULT,
-//                                          onOkButtonPressed: () {
-//                                            Navigator.pop(context);
-//                                            Navigator.of(context,
-//                                                    rootNavigator: true)
-//                                                .pop('dialog');
-//                                            Navigator.push(
-//                                              context,
-//                                              MaterialPageRoute(
-//                                                  builder: (context) =>
-//                                                      RootScreen(index: 0)),
-//                                            );
-//                                          },
-//                                        ));
-//                              }
-                              }
-                            },
-                            child: Container(
-                              width: 100,
-                              height: 48,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: allowedoffer.isEmpty
-                                      ? Colors.red
-                                      : Colors.grey,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(16.0),
-                                  ),
-                                  border: Border.all(
-                                      color: Colors.red.withOpacity(0.2)),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Make Offer',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16),
-                                  ),
-                                ),
+                            }
+                          }
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 48,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: allowedoffer.isEmpty
+                                  ? Colors.deepPurple
+                                  : Colors.grey,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10.0),
+                              ),
+                              border: Border.all(
+                                  color: Colors.red.withOpacity(0.2)),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Make Offer',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16),
                               ),
                             ),
                           ),
-                        )),
-                    SizedBox(height: 20),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 80),
                   ],
                 ),
               );
@@ -732,8 +807,6 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
         setState(() {
           offerstage = -1;
         });
-
-        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       }
     }
   }
