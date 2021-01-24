@@ -131,7 +131,7 @@ class _ActivityState extends State<Activity>
               sold: itemmap[i]['item']['sold']);
           ites.add(ite);
         }
-        print(buyingItem);
+
         if (mounted)
           setState(() {
             keepalive = false;
@@ -209,9 +209,9 @@ class _ActivityState extends State<Activity>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 140,
-            height: 27,
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            width: 125,
+            height: 35,
+            padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
                 borderRadius: BorderRadius.circular(20)),
@@ -233,14 +233,13 @@ class _ActivityState extends State<Activity>
           )
         ],
       );
-    } else if (offerstage == 1 && _tabController.index == 0) {
+    } else if (offerstage == 2 && _tabController.index == 0) {
       return Container(
           width: 140,
           height: 27,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
-              color: Color.fromRGBO(69, 80, 163, 1),
-              borderRadius: BorderRadius.circular(20)),
+              color: Colors.green, borderRadius: BorderRadius.circular(20)),
           child: Center(
               child: Text(
             'Pay',
@@ -250,7 +249,7 @@ class _ActivityState extends State<Activity>
           )));
     } else if (offerstage == -1 && _tabController.index == 0) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
@@ -258,8 +257,8 @@ class _ActivityState extends State<Activity>
             height: 35,
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(5)),
+                color: Color.fromRGBO(69, 80, 163, 1),
+                borderRadius: BorderRadius.circular(20)),
             child: Center(
                 child: Text(
               'Offer Declined',
@@ -268,19 +267,14 @@ class _ActivityState extends State<Activity>
                   fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
             )),
           ),
-          InkWell(
-              onTap: () {
-                showMe(
-                    context, offerprice, recieveruserid, senderuserid, itemid);
-              },
-              child: Text(
-                'Make an Offer',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 14.0,
-                    color: Colors.black),
-              ))
+          SizedBox(
+            height: 5,
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 20,
+            color: Colors.blueGrey,
+          )
         ],
       );
     }
@@ -320,7 +314,7 @@ class _ActivityState extends State<Activity>
       );
     } else if (offerstage == -1 && _tabController.index == 1) {
       return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
@@ -338,6 +332,14 @@ class _ActivityState extends State<Activity>
                   fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
             )),
           ),
+          SizedBox(
+            height: 10,
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 20,
+            color: Colors.blueGrey,
+          )
         ],
       );
     } else if (offerstage == 2 && _tabController.index == 1) {
@@ -954,6 +956,8 @@ class _ActivityState extends State<Activity>
                                                               builder:
                                                                   (context) =>
                                                                       ChatPageView(
+                                                                        itemid:
+                                                                            buyingItem[index].itemid,
                                                                         recipentid:
                                                                             buyingItem[index].sellerid,
                                                                         senderid:
@@ -1326,6 +1330,9 @@ class _ActivityState extends State<Activity>
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   ChatPageViewSeller(
+                                                                    itemid: sellingItem[
+                                                                            index]
+                                                                        .itemid,
                                                                     recipentid:
                                                                         sellingItem[index]
                                                                             .buyerid,

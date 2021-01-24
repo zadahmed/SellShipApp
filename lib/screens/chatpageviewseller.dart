@@ -36,6 +36,7 @@ class ChatPageViewSeller extends StatefulWidget {
   final String itemname;
   final String itemimage;
   final String itemprice;
+  final String itemid;
   final int offerstage;
 
   const ChatPageViewSeller({
@@ -46,6 +47,7 @@ class ChatPageViewSeller extends StatefulWidget {
     this.messageid,
     this.offerstage,
     this.itemprice,
+    this.itemid,
     this.senderid,
     this.offer,
     this.recipentid,
@@ -93,7 +95,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
   Widget selleroptions(BuildContext context) {
     if (offerstage == 0) {
       return Container(
-        height: 150,
+        height: 120,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -106,44 +108,54 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
               children: [
                 Padding(
                     padding: EdgeInsets.all(10),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white),
-                        height: 40,
-                        width: MediaQuery.of(context).size.width / 2 - 20,
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.check),
-                            Text(
-                              'Accept Offer',
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        )))),
+                    child: InkWell(
+                        onTap: () {
+                          acceptoffer();
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            height: 40,
+                            width: MediaQuery.of(context).size.width / 2 - 20,
+                            child: Center(
+                                child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.check),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Accept Offer',
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ))))),
                 Padding(
                     padding: EdgeInsets.all(10),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.white),
-                        height: 40,
-                        width: MediaQuery.of(context).size.width / 2 - 20,
-                        child: Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(Icons.cancel),
-                            Text(
-                              'Cancel Offer',
-                              textAlign: TextAlign.center,
-                            )
-                          ],
-                        )))),
+                    child: InkWell(
+                        onTap: () {
+                          canceloffer();
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white),
+                            height: 40,
+                            width: MediaQuery.of(context).size.width / 2 - 20,
+                            child: Center(
+                                child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.cancel),
+                                SizedBox(width: 5),
+                                Text(
+                                  'Cancel Offer',
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ))))),
               ],
             ),
             Padding(
@@ -160,8 +172,81 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(Icons.keyboard_return),
+                        SizedBox(width: 5),
                         Text(
                           'Counter Offer',
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    )))),
+          ],
+        ),
+      );
+    }
+    if (offerstage == 2) {
+      return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white),
+                    height: 40,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.timer),
+                        SizedBox(width: 5),
+                        Text(
+                          'Pending Payment',
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    )))),
+          ],
+        ),
+      );
+    }
+    if (offerstage == -1) {
+      return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white),
+                    height: 40,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.cancel),
+                        SizedBox(width: 5),
+                        Text(
+                          'Offer Declined',
                           textAlign: TextAlign.center,
                         )
                       ],
@@ -224,7 +309,6 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
         skip.toString();
     final response = await http.get(url);
 
-    print(response.body);
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       print(jsonResponse);
@@ -346,7 +430,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
   }
 
   Stream<List<Widget>> getMessages() async* {
-    yield* Stream<int>.periodic(Duration(microseconds: 3), (i) => i)
+    yield* Stream<int>.periodic(Duration(seconds: 1), (i) => i)
         .asyncMap((i) => getRemoteMessages())
         .map((json) => mapJsonMessagesToListOfWidgetMessages(json));
   }
@@ -613,11 +697,13 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
   acceptoffer() async {
     if (offerstage != null) {
       var url = 'https://api.sellship.co/api/acceptoffer/' +
-          messageid +
+          widget.messageid +
           '/' +
-          senderid +
+          widget.itemid +
           '/' +
-          recipentid;
+          widget.senderid +
+          '/' +
+          widget.recipentid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
         print('Success');
@@ -632,26 +718,29 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
   canceloffer() async {
     if (offerstage != null) {
       var url = 'https://api.sellship.co/api/canceloffer/' +
-          messageid +
+          widget.messageid +
           '/' +
-          senderid +
+          widget.itemid +
           '/' +
-          recipentid;
+          widget.senderid +
+          '/' +
+          widget.recipentid;
       final response = await http.get(url);
       print(response.statusCode);
       if (response.statusCode == 200) {
         print('Success');
         setState(() {
-          offerstage = 0;
+          offerstage = -1;
         });
-        print(offerstage);
+
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       }
     }
   }
 
   Widget chatView(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: selleroptions(context),
+        bottomNavigationBar: SafeArea(child: selleroptions(context)),
         body: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -752,7 +841,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                           color: Colors.white,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.grey.shade200,
+                                              color: Colors.grey.shade300,
                                               offset: Offset(0.0, 1.0), //(x,y)
                                               blurRadius: 6.0,
                                             ),
@@ -848,13 +937,14 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                               });
                                             },
                                             child: SingleChildScrollView(
+                                                controller: _scrollController,
                                                 child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: snapshot.data,
-                                            )));
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: snapshot.data,
+                                                )));
                                       } else if (snapshot.hasError) {
                                         return SingleChildScrollView(
                                             controller: _scrollController,
