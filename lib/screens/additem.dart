@@ -2656,101 +2656,101 @@ class _AddItemState extends State<AddItem> {
 
                                       if (images.length == 1) {
                                         ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image = byteData.buffer.asUint8List();
                                       } else if (images.length == 2) {
                                         ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image = byteData.buffer.asUint8List();
 
                                         ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
                                       } else if (images.length == 3) {
                                         ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image = byteData.buffer.asUint8List();
 
                                         ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
 
                                         ByteData byteData3 = await images[2]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image3 =
                                             byteData3.buffer.asUint8List();
                                       } else if (images.length == 4) {
                                         ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image = byteData.buffer.asUint8List();
 
                                         ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
 
                                         ByteData byteData3 = await images[2]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image3 =
                                             byteData3.buffer.asUint8List();
 
                                         ByteData byteData4 = await images[3]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image4 =
                                             byteData4.buffer.asUint8List();
                                       } else if (images.length == 5) {
                                         ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image = byteData.buffer.asUint8List();
 
                                         ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
 
                                         ByteData byteData3 = await images[2]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image3 =
                                             byteData3.buffer.asUint8List();
 
                                         ByteData byteData4 = await images[3]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image4 =
                                             byteData4.buffer.asUint8List();
 
                                         ByteData byteData5 = await images[4]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image5 =
                                             byteData5.buffer.asUint8List();
                                       } else if (images.length == 6) {
                                         ByteData byteData = await images[0]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image = byteData.buffer.asUint8List();
 
                                         ByteData byteData2 = await images[1]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image2 =
                                             byteData2.buffer.asUint8List();
 
                                         ByteData byteData3 = await images[2]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image3 =
                                             byteData3.buffer.asUint8List();
 
                                         ByteData byteData4 = await images[3]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image4 =
                                             byteData4.buffer.asUint8List();
 
                                         ByteData byteData5 = await images[4]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image5 =
                                             byteData5.buffer.asUint8List();
 
                                         ByteData byteData6 = await images[5]
-                                            .getByteData(quality: 50);
+                                            .getByteData(quality: 40);
                                         _image6 =
                                             byteData6.buffer.asUint8List();
                                       }

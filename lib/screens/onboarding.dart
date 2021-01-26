@@ -383,6 +383,24 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (_) => new AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0))),
+                                            content: Builder(
+                                              builder: (context) {
+                                                return Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: SpinKitChasingDots(
+                                                      color: Colors.deepOrange,
+                                                    ));
+                                              },
+                                            ),
+                                          ));
                                   Loginfunc();
                                 },
                                 child: Container(

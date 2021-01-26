@@ -35,6 +35,7 @@ class ChatPageViewSeller extends StatefulWidget {
   final String offer;
   final String itemname;
   final String itemimage;
+  final String weight;
   final String itemprice;
   final String itemid;
   final int offerstage;
@@ -46,6 +47,7 @@ class ChatPageViewSeller extends StatefulWidget {
     this.itemimage,
     this.messageid,
     this.offerstage,
+    this.weight,
     this.itemprice,
     this.itemid,
     this.senderid,
@@ -90,12 +92,37 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
     });
 
     getItem();
+    calculateearning();
   }
 
+  calculateearning() {
+    var weight = int.parse(widget.weight);
+    var weightfees;
+    if (weight <= 5) {
+      weightfees = 20;
+    } else if (weight <= 10) {
+      weightfees = 30;
+    } else if (weight <= 20) {
+      weightfees = 50;
+    } else if (weight <= 50) {
+      weightfees = 110;
+    }
+
+    var fees = int.parse(offer.toString()) - weightfees;
+
+    finalfees = fees - (0.15 * fees);
+
+    print(finalfees);
+    setState(() {
+      finalfees = finalfees;
+    });
+  }
+
+  var finalfees;
   Widget selleroptions(BuildContext context) {
     if (offerstage == 0) {
       return Container(
-        height: 120,
+        height: 170,
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
             color: Colors.grey.shade100,
@@ -104,12 +131,55 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            currency != null
+                ? Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.deepOrange),
+                          color: Colors.deepOrange,
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                        ),
+                        height: 40,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(Icons.monetization_on,
+                                color: Colors.white, size: 16),
+                            SizedBox(width: 5),
+                            Text(
+                              'You Earn ' + currency + finalfees.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            )
+                          ],
+                        ))))
+                : Container(),
             Row(
               children: [
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: InkWell(
                         onTap: () {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              useRootNavigator: false,
+                              builder: (_) => Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: SpinKitChasingDots(
+                                    color: Colors.deepOrange,
+                                  )));
+
                           acceptoffer();
                         },
                         child: Container(
@@ -135,6 +205,16 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                     padding: EdgeInsets.all(10),
                     child: InkWell(
                         onTap: () {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              useRootNavigator: false,
+                              builder: (_) => Container(
+                                  height: 50,
+                                  width: 50,
+                                  child: SpinKitChasingDots(
+                                    color: Colors.deepOrange,
+                                  )));
                           canceloffer();
                         },
                         child: Container(
@@ -260,40 +340,34 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
       );
     }
     if (offerstage == -1) {
-      return Container(
-        height: 60,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-            borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white),
-                    height: 40,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.cancel),
-                        SizedBox(width: 5),
-                        Text(
-                          'Offer Declined',
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    )))),
-          ],
-        ),
-      );
+      return Padding(
+          padding: EdgeInsets.all(10),
+          child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.red.withOpacity(0.2)),
+                color: Colors.red.withOpacity(0.2),
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+              height: 40,
+              width: MediaQuery.of(context).size.width,
+              child: Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.cancel, color: Colors.red, size: 16),
+                  SizedBox(width: 5),
+                  Text(
+                    'Offer Declined',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
+              ))));
     }
   }
 
@@ -350,9 +424,15 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      print(jsonResponse);
-      return jsonResponse;
+      var jsonResponse = json.decode(response.body);
+
+      offerstage = int.parse(jsonResponse['offerstage']);
+
+      setState(() {
+        offerstage = offerstage;
+      });
+      List jsonChat = json.decode(jsonResponse['chats']);
+      return jsonChat;
     } else {
       print(response.statusCode);
     }
@@ -655,15 +735,12 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                 context: context,
                                 barrierDismissible: false,
                                 useRootNavigator: false,
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    height: 100,
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: SpinKitChasingDots(
-                                            color: Colors.deepOrangeAccent)),
-                                  );
-                                });
+                                builder: (_) => Container(
+                                    height: 50,
+                                    width: 50,
+                                    child: SpinKitChasingDots(
+                                      color: Colors.deepOrange,
+                                    )));
                             var recieverid = widget.recipentid;
                             if (recieverid != userid) {
                               var itemurl =
@@ -781,7 +858,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
           widget.recipentid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        print('Success');
+        Navigator.pop(context);
         setState(() {
           offerstage = 1;
         });
@@ -803,6 +880,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
       final response = await http.get(url);
       print(response.statusCode);
       if (response.statusCode == 200) {
+        Navigator.pop(context);
         print('Success');
         setState(() {
           offerstage = -1;

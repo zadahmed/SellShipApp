@@ -179,6 +179,7 @@ class _ActivityState extends State<Activity>
               itemid: itemmap[i]['item']['_id']['\$oid'],
               name: itemmap[i]['item']['name'],
               image: itemmap[i]['item']['image'],
+              weight: itemmap[i]['item']['weight'].toString(),
               price: itemmap[i]['offer'].toString(),
               messageid: itemmap[i]['messageid'].toString(),
               offerstage: itemmap[i]['offerstage'],
@@ -257,7 +258,7 @@ class _ActivityState extends State<Activity>
             height: 35,
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Color.fromRGBO(69, 80, 163, 1),
+                color: Colors.red.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(20)),
             child: Center(
                 child: Text(
@@ -353,7 +354,7 @@ class _ActivityState extends State<Activity>
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
                 color: Colors.red.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(5)),
+                borderRadius: BorderRadius.circular(20)),
             child: Center(
                 child: Text(
               'Offer Declined',
@@ -1397,7 +1398,9 @@ class _ActivityState extends State<Activity>
                                           return sellingItem.isNotEmpty
                                               ? Padding(
                                                   padding: EdgeInsets.only(
-                                                      left: 10, right: 10),
+                                                      left: 10,
+                                                      right: 10,
+                                                      bottom: 10),
                                                   child: InkWell(
                                                       onTap: () {
                                                         Navigator.push(
@@ -1405,6 +1408,9 @@ class _ActivityState extends State<Activity>
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   ChatPageViewSeller(
+                                                                    weight: sellingItem[
+                                                                            index]
+                                                                        .weight,
                                                                     itemid: sellingItem[
                                                                             index]
                                                                         .itemid,
@@ -1423,7 +1429,7 @@ class _ActivityState extends State<Activity>
                                                                     messageid: sellingItem[
                                                                             index]
                                                                         .messageid,
-                                                                    offer: buyingItem[
+                                                                    offer: sellingItem[
                                                                             index]
                                                                         .price,
                                                                     offerstage:

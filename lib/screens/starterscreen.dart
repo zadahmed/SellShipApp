@@ -79,9 +79,7 @@ class _StarterPageState extends State<StarterPage>
     );
   }
 
-  final items = {
-    'AE': 'United Arab Emirates',
-  };
+  final items = {'AE': 'United Arab Emirates', 'US': 'United States'};
 
   var selectedItem;
 

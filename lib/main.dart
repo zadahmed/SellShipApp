@@ -57,6 +57,7 @@ class _MyAppState extends State<MyApp> {
           Provider<ItemProvider>(create: (context) => ItemProvider())
         ],
         child: MaterialApp(
+          theme: ThemeData(fontFamily: 'Helvetica'),
           builder: BotToastInit(),
           routes: {
             Routes.addBrands: (context) => Brands(),
@@ -133,44 +134,12 @@ class SplashState extends State<Splash> {
     }
   }
 
-  Future handleDynamicLinks() async {
-    // 1. Get the initial dynamic link if the app is opened with a dynamic link
-    final PendingDynamicLinkData data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
-
-    _handleDeepLink(data);
-
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
-      _handleDeepLink(dynamicLink);
-    }, onError: (OnLinkErrorException e) async {
-      print('Link Failed: ${e.message}');
-    });
-  }
-
-  void _handleDeepLink(PendingDynamicLinkData data) {
-    final Uri deepLink = data?.link;
-    if (deepLink != null) {
-      print('_handleDeepLink | deeplink: $deepLink');
-
-      var id = deepLink.queryParameters['id'];
-
-      if (id != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Details(itemid: id)),
-        );
-      }
-    }
-  }
-
   @override
   void initState() {
     super.initState();
 
-    new Timer(new Duration(milliseconds: 10), () {
+    new Timer(new Duration(milliseconds: 4), () {
       if (mounted) {
-        handleDynamicLinks();
         navigatetoscreen();
       }
     });

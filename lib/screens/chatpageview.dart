@@ -34,6 +34,7 @@ class ChatPageView extends StatefulWidget {
   final String senderid;
   final String recipentid;
   final String offer;
+
   final String itemname;
   final String itemimage;
   final String itemprice;
@@ -117,9 +118,13 @@ class _ChatPageViewState extends State<ChatPageView> {
             Padding(
                 padding: EdgeInsets.all(10),
                 child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white),
+                      border:
+                          Border.all(color: Colors.deepPurple.withOpacity(0.2)),
+                      color: Colors.deepPurple.withOpacity(0.2),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
                     height: 40,
                     width: MediaQuery.of(context).size.width,
                     child: Center(
@@ -127,11 +132,15 @@ class _ChatPageViewState extends State<ChatPageView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(Icons.timer),
+                        Icon(Icons.timer, color: Colors.deepPurple, size: 16),
                         SizedBox(width: 5),
                         Text(
                           'Pending Offer',
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.deepPurple,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
                         )
                       ],
                     )))),
@@ -156,6 +165,14 @@ class _ChatPageViewState extends State<ChatPageView> {
                         padding: EdgeInsets.all(10),
                         child: InkWell(
                             onTap: () {
+                              showDialog(
+                                  context: context,
+                                  useRootNavigator: false,
+                                  barrierDismissible: false,
+                                  builder: (_) => SpinKitChasingDots(
+                                        color: Colors.deepOrange,
+                                      ));
+
                               acceptoffer();
                             },
                             child: Container(
@@ -182,6 +199,13 @@ class _ChatPageViewState extends State<ChatPageView> {
                         padding: EdgeInsets.all(10),
                         child: InkWell(
                             onTap: () {
+                              showDialog(
+                                  context: context,
+                                  useRootNavigator: false,
+                                  barrierDismissible: false,
+                                  builder: (_) => SpinKitChasingDots(
+                                        color: Colors.deepOrange,
+                                      ));
                               canceloffer();
                             },
                             child: Container(
@@ -229,12 +253,16 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 builder: (context) => CheckoutUAE(
                                       messageid: widget.messageid,
                                       offer: widget.offer,
+                                      image: widget.itemimage,
+                                      itemname: widget.itemname,
+                                      itemid: widget.itemid,
+                                      price: widget.itemprice,
                                     )),
                           );
                         },
                         child: Container(
                             decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(10),
                                 color: Colors.green),
                             height: 40,
                             width: MediaQuery.of(context).size.width - 20,
@@ -266,9 +294,12 @@ class _ChatPageViewState extends State<ChatPageView> {
             Padding(
                 padding: EdgeInsets.all(10),
                 child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white),
+                      border: Border.all(color: Colors.red.withOpacity(0.2)),
+                      color: Colors.red.withOpacity(0.2),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
                     height: 40,
                     width: MediaQuery.of(context).size.width,
                     child: Center(
@@ -276,11 +307,15 @@ class _ChatPageViewState extends State<ChatPageView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Icon(Icons.cancel),
+                        Icon(Icons.cancel, color: Colors.red, size: 16),
                         SizedBox(width: 5),
                         Text(
                           'Offer Declined',
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
                         )
                       ],
                     )))),
@@ -640,9 +675,16 @@ class _ChatPageViewState extends State<ChatPageView> {
 
     print(response.body);
     if (response.statusCode == 200) {
-      List jsonResponse = json.decode(response.body);
-      print(jsonResponse);
-      return jsonResponse;
+      var jsonResponse = json.decode(response.body);
+
+      offerstage = int.parse(jsonResponse['offerstage']);
+
+      setState(() {
+        offerstage = offerstage;
+      });
+
+      List jsonChat = json.decode(jsonResponse['chats']);
+      return jsonChat;
     } else {
       print(response.statusCode);
     }
@@ -795,7 +837,7 @@ class _ChatPageViewState extends State<ChatPageView> {
           offerstage = 2;
         });
 
-        print('accepted');
+        Navigator.pop(context);
 
         Navigator.push(
           context,
@@ -822,7 +864,7 @@ class _ChatPageViewState extends State<ChatPageView> {
       final response = await http.get(url);
       print(response.statusCode);
       if (response.statusCode == 200) {
-        print('Success');
+        Navigator.pop(context);
         setState(() {
           offerstage = -1;
         });

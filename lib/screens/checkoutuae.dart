@@ -25,17 +25,26 @@ import 'package:http/http.dart' as http;
 import 'package:stripe_sdk/stripe_sdk.dart';
 
 class CheckoutUAE extends StatefulWidget {
-  Item item;
+  String itemid;
   String offer;
+  String image;
+  String price;
+  String itemname;
   String messageid;
-  CheckoutUAE({Key key, this.item, this.messageid, this.offer})
+  CheckoutUAE(
+      {Key key,
+      this.messageid,
+      this.offer,
+      this.itemid,
+      this.image,
+      this.itemname,
+      this.price})
       : super(key: key);
   @override
   _CheckoutUAEState createState() => _CheckoutUAEState();
 }
 
 class _CheckoutUAEState extends State<CheckoutUAE> {
-  Item item;
   String messageid;
   String offer;
   var cardresult;
@@ -48,11 +57,9 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
 
     setState(() {
       messageid = widget.messageid;
-      item = widget.item;
+
       offer = widget.offer;
     });
-
-//    calculatefees();
   }
 
   var totalpayable;
@@ -282,7 +289,7 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                                             'https://api.sellship.co/api/payment/' +
                                                 messageid +
                                                 '/' +
-                                                item.itemid +
+                                                widget.itemid +
                                                 '/' +
                                                 offer.toString() +
                                                 '/' +
@@ -298,15 +305,15 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                                             await http.get(messageurl);
 
                                         if (response.statusCode == 200) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PaymentDone(
-                                                      item: item,
-                                                      messageid: messageid,
-                                                    )),
-                                          );
+//                                          Navigator.pushReplacement(
+//                                            context,
+//                                            MaterialPageRoute(
+//                                                builder: (context) =>
+//                                                    PaymentDone(
+//                                                      item: item,
+//                                                      messageid: messageid,
+//                                                    )),
+//                                          );
                                         }
                                       } else {
                                         showDialog(
@@ -348,7 +355,7 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                                           'https://api.sellship.co/api/payment/' +
                                               messageid +
                                               '/' +
-                                              item.itemid +
+                                              widget.itemid +
                                               '/' +
                                               offer.toString() +
                                               '/' +
@@ -364,14 +371,14 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                                           await http.get(messageurl);
 
                                       if (response.statusCode == 200) {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => PaymentDone(
-                                                    item: item,
-                                                    messageid: messageid,
-                                                  )),
-                                        );
+//                                        Navigator.pushReplacement(
+//                                          context,
+//                                          MaterialPageRoute(
+//                                              builder: (context) => PaymentDone(
+//                                                    item: item,
+//                                                    messageid: messageid,
+//                                                  )),
+//                                        );
 
                                         await dialog.hide();
                                       }
@@ -485,7 +492,7 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                                             'https://api.sellship.co/api/payment/' +
                                                 messageid +
                                                 '/' +
-                                                item.itemid +
+                                                widget.itemid +
                                                 '/' +
                                                 offer.toString() +
                                                 '/' +
@@ -501,15 +508,15 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                                             await http.get(messageurl);
 
                                         if (response.statusCode == 200) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PaymentDone(
-                                                      item: item,
-                                                      messageid: messageid,
-                                                    )),
-                                          );
+//                                          Navigator.pushReplacement(
+//                                            context,
+//                                            MaterialPageRoute(
+//                                                builder: (context) =>
+//                                                    PaymentDone(
+//                                                      item: item,
+//                                                      messageid: messageid,
+//                                                    )),
+//                                          );
                                         }
                                       } else {
                                         showDialog(
@@ -551,7 +558,7 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                                           'https://api.sellship.co/api/payment/' +
                                               messageid +
                                               '/' +
-                                              item.itemid +
+                                              widget.itemid +
                                               '/' +
                                               offer.toString() +
                                               '/' +
@@ -567,14 +574,14 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                                           await http.get(messageurl);
 
                                       if (response.statusCode == 200) {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => PaymentDone(
-                                                    item: item,
-                                                    messageid: messageid,
-                                                  )),
-                                        );
+//                                        Navigator.pushReplacement(
+//                                          context,
+//                                          MaterialPageRoute(
+//                                              builder: (context) => PaymentDone(
+//                                                    item: item,
+//                                                    messageid: messageid,
+//                                                  )),
+//                                        );
 
                                         await dialog.hide();
                                       }
@@ -657,7 +664,7 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  Details(itemid: item.itemid)),
+                                  Details(itemid: widget.itemid)),
                         );
                       },
                       child: Container(
@@ -675,7 +682,7 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                           ),
                           child: ListTile(
                             title: Text(
-                              item.name,
+                              widget.itemname,
                               style: TextStyle(
                                   fontFamily: 'Helvetica',
                                   fontSize: 16,
@@ -690,12 +697,12 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: CachedNetworkImage(
-                                  imageUrl: item.image,
+                                  imageUrl: widget.image,
                                 ),
                               ),
                             ),
                             subtitle: Text(
-                              item.price.toString() + ' ' + currency,
+                              widget.price.toString() + ' ' + currency,
                               style: TextStyle(
                                   fontFamily: 'Helvetica',
                                   fontSize: 14,
@@ -899,7 +906,7 @@ class _CheckoutUAEState extends State<CheckoutUAE> {
                           Container(
                             width: 250,
                             child: Text(
-                              item.name,
+                              widget.itemname,
                               style: TextStyle(
                                   fontFamily: 'Helvetica',
                                   fontSize: 16,
