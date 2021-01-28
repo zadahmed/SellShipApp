@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/messages.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -26,17 +28,31 @@ class NotifcationPage extends StatefulWidget {
 class Notifications {
   final String message;
   final String date;
+  final String image;
+  final String navroute;
+  final String navigationid;
+  final String itemid;
   final bool unread;
 
   Notifications({
     this.message,
     this.date,
+    this.itemid,
+    this.navigationid,
+    this.navroute,
+    this.image,
     this.unread,
   });
 }
 
-class _NotifcationPageState extends State<NotifcationPage> {
+class _NotifcationPageState extends State<NotifcationPage>
+    with AutomaticKeepAliveClientMixin {
   List<Notifications> notifs = List<Notifications>();
+
+  bool alive = true;
+
+  @override
+  bool get wantKeepAlive => alive;
 
   final storage = new FlutterSecureStorage();
   var userid;
@@ -69,6 +85,18 @@ class _NotifcationPageState extends State<NotifcationPage> {
 
           Notifications withd = Notifications(
             message: jsonResponse[i]['message'],
+            image: jsonResponse[i]['image'] != null
+                ? jsonResponse[i]['image']
+                : '',
+            itemid: jsonResponse[i]['itemid'] != null
+                ? jsonResponse[i]['itemid']
+                : '',
+            navigationid: jsonResponse[i]['navid'] != null
+                ? jsonResponse[i]['navid']
+                : '',
+            navroute: jsonResponse[i]['navroute'] != null
+                ? jsonResponse[i]['navroute']
+                : '',
             date: dateuploaded,
             unread: jsonResponse[i]['unread'],
           );
@@ -80,10 +108,12 @@ class _NotifcationPageState extends State<NotifcationPage> {
 
         setState(() {
           notifs = jsoninreverse;
+          alive = true;
         });
       }
     } else {
       setState(() {
+        alive = true;
         notifs = [];
       });
     }
@@ -111,6 +141,18 @@ class _NotifcationPageState extends State<NotifcationPage> {
 
           Notifications withd = Notifications(
             message: jsonResponse[i]['message'],
+            image: jsonResponse[i]['image'] != null
+                ? jsonResponse[i]['image']
+                : '',
+            itemid: jsonResponse[i]['itemid'] != null
+                ? jsonResponse[i]['itemid']
+                : '',
+            navigationid: jsonResponse[i]['navid'] != null
+                ? jsonResponse[i]['navid']
+                : '',
+            navroute: jsonResponse[i]['navroute'] != null
+                ? jsonResponse[i]['navroute']
+                : '',
             date: dateuploaded,
             unread: jsonResponse[i]['unread'],
           );
@@ -124,10 +166,12 @@ class _NotifcationPageState extends State<NotifcationPage> {
 
         setState(() {
           notifs = jsoninreverse;
+          alive = true;
         });
       }
     } else {
       setState(() {
+        alive = true;
         notifs = [];
       });
     }
@@ -146,7 +190,7 @@ class _NotifcationPageState extends State<NotifcationPage> {
           },
           child: Icon(
             Icons.arrow_back_ios,
-            color: Colors.deepOrange,
+            color: Colors.black,
           ),
         ),
         title: Text(
@@ -166,15 +210,51 @@ class _NotifcationPageState extends State<NotifcationPage> {
                             padding: EdgeInsets.all(5),
                             child: ListTile(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Messages()),
-                                );
+                                if (notifs[index].navroute == ('activity')) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RootScreen(
+                                              index: 3,
+                                            )),
+                                  );
+                                } else if (notifs[index].navroute == ('item')) {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => Details(
+                                              itemid: notifs[index].itemid,
+                                              image: notifs[index].image,
+                                              name: 'My Item',
+                                              sold: false,
+                                              source: 'notif',
+                                            )),
+                                  );
+                                }
                               },
+                              leading: Container(
+                                  height: 60,
+                                  width: 60,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: CachedNetworkImage(
+                                      fadeInDuration: Duration(microseconds: 5),
+                                      imageUrl: notifs[index].image.isEmpty
+                                          ? SpinKitChasingDots(
+                                              color: Colors.deepOrange)
+                                          : notifs[index].image,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          SpinKitChasingDots(
+                                              color: Colors.deepOrange),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                  )),
                               trailing: Icon(
-                                Feather.arrow_right,
-                                color: Colors.deepOrange,
+                                Icons.chevron_right,
+                                size: 20,
+                                color: Colors.blueGrey,
                               ),
                               title: notifs[index].unread == false
                                   ? Text(
@@ -210,7 +290,30 @@ class _NotifcationPageState extends State<NotifcationPage> {
                                         )),
                             )));
                   }),
+              header: CustomHeader(
+                  extent: 40.0,
+                  enableHapticFeedback: true,
+                  triggerDistance: 50.0,
+                  headerBuilder: (context,
+                      loadState,
+                      pulledExtent,
+                      loadTriggerPullDistance,
+                      loadIndicatorExtent,
+                      axisDirection,
+                      float,
+                      completeDuration,
+                      enableInfiniteLoad,
+                      success,
+                      noMore) {
+                    return SpinKitFadingCircle(
+                      color: Colors.deepOrange,
+                      size: 30.0,
+                    );
+                  }),
               onRefresh: () async {
+                setState(() {
+                  alive = false;
+                });
                 refresh();
               },
             )

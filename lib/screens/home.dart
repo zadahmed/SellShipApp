@@ -4560,6 +4560,7 @@ class UserSearchDelegate extends SearchDelegate {
                                             image: snapshot.data[index].image,
                                             name: snapshot.data[index].name,
                                             sold: snapshot.data[index].sold,
+                                            source: 'notif',
                                           )),
                                 );
                               },

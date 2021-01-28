@@ -1140,14 +1140,24 @@ class _ActivityState extends State<Activity>
                                                                           CrossAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        Text(
-                                                                          buyingItem[index]
-                                                                              .name,
-                                                                          style: TextStyle(
-                                                                              fontFamily: 'Helvetica',
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.black),
+                                                                        Container(
+                                                                          height:
+                                                                              25,
+                                                                          width:
+                                                                              MediaQuery.of(context).size.width / 3 - 10,
+                                                                          child:
+                                                                              Text(
+                                                                            buyingItem[index].name,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            textAlign:
+                                                                                TextAlign.start,
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Helvetica',
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.black),
+                                                                          ),
                                                                         ),
                                                                         Text(
                                                                           '@' +
@@ -1530,14 +1540,24 @@ class _ActivityState extends State<Activity>
                                                                           CrossAxisAlignment
                                                                               .start,
                                                                       children: [
-                                                                        Text(
-                                                                          sellingItem[index]
-                                                                              .name,
-                                                                          style: TextStyle(
-                                                                              fontFamily: 'Helvetica',
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.black),
+                                                                        Container(
+                                                                          height:
+                                                                              25,
+                                                                          width:
+                                                                              MediaQuery.of(context).size.width / 3 - 10,
+                                                                          child:
+                                                                              Text(
+                                                                            sellingItem[index].name,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            textAlign:
+                                                                                TextAlign.start,
+                                                                            style: TextStyle(
+                                                                                fontFamily: 'Helvetica',
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.black),
+                                                                          ),
                                                                         ),
                                                                         Text(
                                                                           '@' +
