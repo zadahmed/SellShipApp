@@ -1134,6 +1134,8 @@ class _SubCategoryState extends State<SubCategory> {
                           background: Hero(
                               tag: widget.subcategory,
                               child: CachedNetworkImage(
+                                height: 200,
+                                width: 300,
                                 imageUrl: categoryimage,
                                 fit: BoxFit.cover,
                               ))),
@@ -1271,6 +1273,11 @@ class _SubCategoryState extends State<SubCategory> {
                                                             .itemid,
                                                         sold: itemsgrid[index]
                                                             .sold,
+                                                        source: 'catdetail',
+                                                        image: itemsgrid[index]
+                                                            .image,
+                                                        name: itemsgrid[index]
+                                                            .name,
                                                       )),
                                             );
                                           },
@@ -1294,24 +1301,32 @@ class _SubCategoryState extends State<SubCategory> {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: CachedNetworkImage(
-                                                  fadeInDuration:
-                                                      Duration(microseconds: 5),
-                                                  imageUrl: itemsgrid[index]
-                                                          .image
-                                                          .isEmpty
-                                                      ? SpinKitChasingDots(
-                                                          color:
-                                                              Colors.deepOrange)
-                                                      : itemsgrid[index].image,
-                                                  fit: BoxFit.cover,
-                                                  placeholder: (context, url) =>
-                                                      SpinKitChasingDots(
-                                                          color: Colors
-                                                              .deepOrange),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Icon(Icons.error),
+                                                child: Hero(
+                                                  tag:
+                                                      'catdetail${itemsgrid[index].itemid}',
+                                                  child: CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
+                                                    fadeInDuration: Duration(
+                                                        microseconds: 5),
+                                                    imageUrl: itemsgrid[index]
+                                                            .image
+                                                            .isEmpty
+                                                        ? SpinKitChasingDots(
+                                                            color: Colors
+                                                                .deepOrange)
+                                                        : itemsgrid[index]
+                                                            .image,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        SpinKitChasingDots(
+                                                            color: Colors
+                                                                .deepOrange),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  ),
                                                 ),
                                               ),
                                             ),

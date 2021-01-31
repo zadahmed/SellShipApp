@@ -1354,6 +1354,8 @@ class FilteredState extends State<Filtered> {
                                     topRight: Radius.circular(10),
                                     bottomRight: Radius.circular(10)),
                                 child: CachedNetworkImage(
+                                  height: 200,
+                                  width: 300,
                                   fadeInDuration: Duration(microseconds: 5),
                                   imageUrl: itemsgrid[index].image.isEmpty
                                       ? SpinKitChasingDots(

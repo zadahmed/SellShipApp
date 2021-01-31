@@ -238,6 +238,8 @@ class _NotifcationPageState extends State<NotifcationPage>
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: CachedNetworkImage(
+                                      height: 200,
+                                      width: 300,
                                       fadeInDuration: Duration(microseconds: 5),
                                       imageUrl: notifs[index].image.isEmpty
                                           ? SpinKitChasingDots(

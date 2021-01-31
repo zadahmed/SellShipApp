@@ -451,13 +451,13 @@ class _DetailsState extends State<Details> {
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
-          var profilemap = respons;
+
           List<String> ites = List<String>();
 
-          if (profilemap != null) {
-            for (var i = 0; i < profilemap.length; i++) {
-              if (profilemap[i] != null) {
-                ites.add(profilemap[i]['_id']['\$oid']);
+          if (respons != null) {
+            for (var i = 0; i < respons.length; i++) {
+              if (respons[i] != null) {
+                ites.add(respons[i]['_id']['\$oid']);
               }
             }
 
@@ -521,11 +521,6 @@ class _DetailsState extends State<Details> {
 
     var jsonbody = json.decode(response.body);
 
-    var userurl = 'https://api.sellship.co/api/user/' + jsonbody[0]['userid'];
-    final userresponse = await http.get(userurl);
-
-    var userjsonbody = json.decode(userresponse.body);
-
     newItem = Item(
         name: jsonbody[0]['name'],
         itemid: jsonbody[0]['_id']['\$oid'].toString(),
@@ -563,28 +558,7 @@ class _DetailsState extends State<Details> {
     DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
     dateuploaded = timeago.format(dateuploade);
 
-    var rating;
-    if (userjsonbody['reviewrating'] == null) {
-      rating = 0.0;
-    } else {
-      rating = userjsonbody['reviewrating'];
-    }
-
-    var revie;
-    if (userjsonbody['reviewnumber'] == null) {
-      review = 0;
-    } else {
-      review = userjsonbody['reviewnumber'];
-    }
-
     setState(() {
-      review = revie;
-      reviewrating = rating;
-      verifiedfb = userjsonbody['confirmedfb'];
-      verifiedphone = userjsonbody['confirmedphone'];
-      verifiedemail = userjsonbody['confirmedemail'];
-      profilepicture = userjsonbody['profilepicture'];
-
       dateuploaded = dateuploaded;
 
       position = LatLng(
@@ -620,8 +594,39 @@ class _DetailsState extends State<Details> {
     }
 
     getfavourites();
+    getuserDetails(jsonbody[0]['userid']);
 
     return newItem;
+  }
+
+  getuserDetails(user) async {
+    var userurl = 'https://api.sellship.co/api/user/' + user;
+    final userresponse = await http.get(userurl);
+
+    var userjsonbody = json.decode(userresponse.body);
+
+    var rating;
+    if (userjsonbody['reviewrating'] == null) {
+      rating = 0.0;
+    } else {
+      rating = userjsonbody['reviewrating'];
+    }
+
+    var revie;
+    if (userjsonbody['reviewnumber'] == null) {
+      review = 0;
+    } else {
+      review = userjsonbody['reviewnumber'];
+    }
+
+    setState(() {
+      review = revie;
+      reviewrating = rating;
+      verifiedfb = userjsonbody['confirmedfb'];
+      verifiedphone = userjsonbody['confirmedphone'];
+      verifiedemail = userjsonbody['confirmedemail'];
+      profilepicture = userjsonbody['profilepicture'];
+    });
   }
 
   double review;
@@ -1522,6 +1527,8 @@ class _DetailsState extends State<Details> {
                                                                 .circular(25),
                                                         child:
                                                             CachedNetworkImage(
+                                                          height: 200,
+                                                          width: 300,
                                                           imageUrl:
                                                               profilepicture,
                                                           fit: BoxFit.cover,
@@ -1826,61 +1833,81 @@ class _DetailsState extends State<Details> {
                                                     vertical: 0.0,
                                                     horizontal: 16.0),
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 15, top: 10, right: 15),
-                                            child: Row(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: <Widget>[
-                                                    SmoothStarRating(
-                                                        allowHalfRating: true,
-                                                        starCount: 5,
-                                                        isReadOnly: true,
-                                                        rating: reviewrating,
-                                                        size: 20.0,
-                                                        color:
-                                                            Colors.deepOrange,
-                                                        borderColor:
-                                                            Colors.grey,
-                                                        spacing: 0.0),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(
-                                                      reviewrating
-                                                          .toStringAsFixed(1),
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Color.fromRGBO(
-                                                              27, 44, 64, 1)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Text(
-                                                  review != null
-                                                      ? '${review} Reviews'
-                                                      : '0 Reviews',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color.fromRGBO(
-                                                          27, 44, 64, 1)),
+                                          reviewrating != null
+                                              ? Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 15,
+                                                      top: 10,
+                                                      right: 15),
+                                                  child: Row(
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          SmoothStarRating(
+                                                              allowHalfRating:
+                                                                  true,
+                                                              starCount: 5,
+                                                              isReadOnly: true,
+                                                              rating:
+                                                                  reviewrating,
+                                                              size: 20.0,
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                              borderColor:
+                                                                  Colors.grey,
+                                                              spacing: 0.0),
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Text(
+                                                            reviewrating
+                                                                .toStringAsFixed(
+                                                                    1),
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        27,
+                                                                        44,
+                                                                        64,
+                                                                        1)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Text(
+                                                        review != null
+                                                            ? '${review} Reviews'
+                                                            : '0 Reviews',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    27,
+                                                                    44,
+                                                                    64,
+                                                                    1)),
+                                                      )
+                                                    ],
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                  ),
                                                 )
-                                              ],
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                            ),
-                                          ),
+                                              : SpinKitChasingDots(
+                                                  color: Colors.deepOrange,
+                                                ),
                                           SizedBox(
                                             height: 5,
                                           ),

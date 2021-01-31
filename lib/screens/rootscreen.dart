@@ -301,6 +301,8 @@ class _RootScreenState extends State<RootScreen> {
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
+                                  height: 200,
+                                  width: 300,
                                   imageUrl: profilepicture,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) =>

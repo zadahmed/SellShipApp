@@ -139,6 +139,8 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                                         5),
                                                             child:
                                                                 CachedNetworkImage(
+                                                              height: 200,
+                                                              width: 300,
                                                               imageUrl:
                                                                   item[index]
                                                                       .image,

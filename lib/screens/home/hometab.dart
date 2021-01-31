@@ -399,6 +399,8 @@ class HomeViewState extends State<HomeView> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: CachedNetworkImage(
+                                  height: 200,
+                                  width: 300,
                                   fadeInDuration: Duration(microseconds: 5),
                                   imageUrl: itemsgrid[index].image.isEmpty
                                       ? SpinKitChasingDots(

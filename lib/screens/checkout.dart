@@ -678,7 +678,7 @@ class _CheckoutState extends State<Checkout> {
 //                                  borderRadius: BorderRadius.circular(10)),
 //                              child: ClipRRect(
 //                                borderRadius: BorderRadius.circular(10),
-//                                child: CachedNetworkImage(
+//                                child: CachedNetworkImage( height: 200, width: 300,
 //                                  imageUrl: item.image,
 //                                ),
 //                              ),

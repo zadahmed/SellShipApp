@@ -236,7 +236,7 @@ class _ActivityState extends State<Activity>
       );
     } else if (offerstage == 2 && _tabController.index == 0) {
       return Container(
-          width: 140,
+          width: 120,
           height: 27,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
@@ -319,7 +319,7 @@ class _ActivityState extends State<Activity>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 140,
+            width: 120,
             height: 27,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
@@ -379,7 +379,7 @@ class _ActivityState extends State<Activity>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 140,
+            width: 120,
             height: 27,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
@@ -409,7 +409,7 @@ class _ActivityState extends State<Activity>
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
-            width: 140,
+            width: 120,
             height: 47,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
@@ -446,7 +446,7 @@ class _ActivityState extends State<Activity>
                 );
               },
               child: Container(
-                  width: 140,
+                  width: 120,
                   height: 27,
                   padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                   decoration: BoxDecoration(

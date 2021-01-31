@@ -206,6 +206,8 @@ class _CommentsPageState extends State<CommentsPage> {
                                                     .userpp
                                                     .isNotEmpty
                                                 ? CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
                                                     imageUrl:
                                                         commentslist[index]
                                                             .userpp,

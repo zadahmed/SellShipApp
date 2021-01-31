@@ -223,6 +223,8 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                                   .circular(5),
                                                           child:
                                                               CachedNetworkImage(
+                                                            height: 200,
+                                                            width: 300,
                                                             imageUrl:
                                                                 item[index]
                                                                     .image,

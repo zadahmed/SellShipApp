@@ -302,6 +302,8 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                             5),
                                                                 child:
                                                                     CachedNetworkImage(
+                                                                  height: 200,
+                                                                  width: 300,
                                                                   imageUrl: item[
                                                                           index]
                                                                       .image,
@@ -595,6 +597,8 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                             5),
                                                                 child:
                                                                     CachedNetworkImage(
+                                                                  height: 200,
+                                                                  width: 300,
                                                                   imageUrl:
                                                                       sellingitem[
                                                                               index]

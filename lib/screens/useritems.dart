@@ -478,6 +478,8 @@ class _UserItemsState extends State<UserItems> {
                                           fit: BoxFit.fitWidth,
                                         )
                                       : CachedNetworkImage(
+                                          height: 200,
+                                          width: 300,
                                           imageUrl: profilepicture,
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>
@@ -1129,6 +1131,8 @@ class _UserItemsState extends State<UserItems> {
                                                                       .circular(
                                                                           10)),
                                                       child: CachedNetworkImage(
+                                                        height: 200,
+                                                        width: 300,
                                                         fadeInDuration:
                                                             Duration(
                                                                 microseconds:
@@ -1968,6 +1972,8 @@ class _UserItemsState extends State<UserItems> {
                                                         ),
                                                         child:
                                                             CachedNetworkImage(
+                                                          height: 200,
+                                                          width: 300,
                                                           fadeInDuration:
                                                               Duration(
                                                                   microseconds:

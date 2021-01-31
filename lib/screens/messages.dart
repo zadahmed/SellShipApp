@@ -281,6 +281,8 @@ class MessagesState extends State<Messages> {
                                                     fit: BoxFit.cover,
                                                   )
                                                 : CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
                                                     imageUrl: messagesd[index]
                                                         .profilepicture,
                                                     fit: BoxFit.cover,

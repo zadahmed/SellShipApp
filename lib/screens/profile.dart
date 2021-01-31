@@ -494,6 +494,10 @@ class _ProfilePageState extends State<ProfilePage>
                                                                             .fitWidth,
                                                                       )
                                                                     : CachedNetworkImage(
+                                                                        height:
+                                                                            200,
+                                                                        width:
+                                                                            300,
                                                                         imageUrl:
                                                                             profilepicture,
                                                                         fit: BoxFit
@@ -1188,6 +1192,8 @@ class _ProfilePageState extends State<ProfilePage>
                                             tag:
                                                 'fav${favouritelist[index].itemid}',
                                             child: CachedNetworkImage(
+                                              height: 200,
+                                              width: 300,
                                               fadeInDuration:
                                                   Duration(microseconds: 5),
                                               imageUrl:
@@ -1771,6 +1777,8 @@ class _ProfilePageState extends State<ProfilePage>
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             child: CachedNetworkImage(
+                                              height: 200,
+                                              width: 300,
                                               imageUrl: orderslist[index].image,
                                               fit: BoxFit.cover,
                                             )),
@@ -2499,6 +2507,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                   .profilepicture
                                                   .isNotEmpty
                                               ? CachedNetworkImage(
+                                                  height: 200,
+                                                  width: 300,
                                                   imageUrl: reviews[index]
                                                       .profilepicture,
                                                   fit: BoxFit.cover,
@@ -2738,6 +2748,8 @@ class _ProfilePageState extends State<ProfilePage>
                                       child: Hero(
                                         tag: 'detail' + item[index].itemid,
                                         child: CachedNetworkImage(
+                                          height: 200,
+                                          width: 300,
                                           fadeInDuration:
                                               Duration(microseconds: 5),
                                           imageUrl: item[index].image,
@@ -2990,51 +3002,6 @@ class _ProfilePageState extends State<ProfilePage>
           }
 
           await OneSignal.shared.setEmail(email: email);
-
-          var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
-          print(itemurl);
-          final itemresponse = await http.get(itemurl);
-          if (itemresponse.statusCode == 200) {
-            var itemrespons = json.decode(itemresponse.body);
-            Map<String, dynamic> itemmap = itemrespons;
-            print(itemmap);
-            List<Item> ites = List<Item>();
-            var productmap = itemmap['products'];
-
-            if (productmap != null) {
-              for (var i = 0; i < productmap.length; i++) {
-                Item ite = Item(
-                    itemid: productmap[i]['_id']['\$oid'],
-                    name: productmap[i]['name'],
-                    image: productmap[i]['image'],
-                    views: productmap[i]['views'] == null
-                        ? 0
-                        : productmap[i]['views'],
-                    price: productmap[i]['price'].toString(),
-                    likes: productmap[i]['likes'] == null
-                        ? 0
-                        : productmap[i]['likes'],
-                    comments: productmap[i]['comments'] == null
-                        ? 0
-                        : productmap[i]['comments'].length,
-                    sold: productmap[i]['sold'] == null
-                        ? false
-                        : productmap[i]['sold'],
-                    category: productmap[i]['category']);
-                ites.add(ite);
-              }
-
-              Iterable inReverse = ites.reversed;
-              List<Item> jsoninreverse = inReverse.toList();
-
-              if (mounted)
-                setState(() {
-                  item = jsoninreverse;
-                });
-            }
-          } else {
-            item = [];
-          }
         } else {
           if (mounted)
             setState(() {
@@ -3055,123 +3022,48 @@ class _ProfilePageState extends State<ProfilePage>
   double reviewrating;
 
   getItemData() async {
-    userid = await storage.read(key: 'userid');
-    var country = await storage.read(key: 'country');
+    var userid = await storage.read(key: 'userid');
+    var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
 
-    if (country.trim().toLowerCase() == 'united arab emirates') {
-      if (mounted)
-        setState(() {
-          currency = 'AED';
-        });
-    } else if (country.trim().toLowerCase() == 'united states') {
-      if (mounted)
-        setState(() {
-          currency = '\$';
-        });
-    } else if (country.trim().toLowerCase() == 'canada') {
-      if (mounted)
-        setState(() {
-          currency = '\$';
-        });
-    } else if (country.trim().toLowerCase() == 'united kingdom') {
-      if (mounted)
-        setState(() {
-          currency = '\£';
-        });
-    }
+    final itemresponse = await http.get(itemurl);
+    if (itemresponse.statusCode == 200) {
+      var itemrespons = json.decode(itemresponse.body);
+      Map<String, dynamic> itemmap = itemrespons;
 
-    if (userid != null) {
-      var url = 'https://api.sellship.co/api/user/' + userid;
+      List<Item> ites = List<Item>();
+      var productmap = itemmap['products'];
 
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        var respons = json.decode(response.body);
-        Map<String, dynamic> profilemap = respons;
-
-        var follower = profilemap['follower'];
-
-        if (follower != null) {
-        } else {
-          follower = [];
+      if (productmap != null) {
+        for (var i = 0; i < productmap.length; i++) {
+          Item ite = Item(
+              itemid: productmap[i]['_id']['\$oid'],
+              name: productmap[i]['name'],
+              image: productmap[i]['image'],
+              price: productmap[i]['price'].toString(),
+              views:
+                  productmap[i]['views'] == null ? 0 : productmap[i]['views'],
+              likes:
+                  productmap[i]['likes'] == null ? 0 : productmap[i]['likes'],
+              comments: productmap[i]['comments'] == null
+                  ? 0
+                  : productmap[i]['comments'].length,
+              sold:
+                  productmap[i]['sold'] == null ? false : productmap[i]['sold'],
+              category: productmap[i]['category']);
+          ites.add(ite);
         }
-
-        var followin = profilemap['likes'];
-        if (followin != null) {
-        } else {
-          followin = 0;
-        }
-
-        var sol = profilemap['sold'];
-        if (sol != null) {
-        } else {
-          sol = [];
-        }
-
-        var profilepic = profilemap['profilepicture'];
-        if (profilepic != null) {
-        } else {
-          profilepic = null;
-        }
-
-        if (profilemap != null) {
-          var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
-
-          final itemresponse = await http.get(itemurl);
-          if (itemresponse.statusCode == 200) {
-            var itemrespons = json.decode(itemresponse.body);
-            Map<String, dynamic> itemmap = itemrespons;
-
-            List<Item> ites = List<Item>();
-            var productmap = itemmap['products'];
-
-            if (productmap != null) {
-              for (var i = 0; i < productmap.length; i++) {
-                Item ite = Item(
-                    itemid: productmap[i]['_id']['\$oid'],
-                    name: productmap[i]['name'],
-                    image: productmap[i]['image'],
-                    price: productmap[i]['price'].toString(),
-                    views: productmap[i]['views'] == null
-                        ? 0
-                        : productmap[i]['views'],
-                    likes: productmap[i]['likes'] == null
-                        ? 0
-                        : productmap[i]['likes'],
-                    comments: productmap[i]['comments'] == null
-                        ? 0
-                        : productmap[i]['comments'].length,
-                    sold: productmap[i]['sold'] == null
-                        ? false
-                        : productmap[i]['sold'],
-                    category: productmap[i]['category']);
-                ites.add(ite);
-              }
-              if (mounted)
-                setState(() {
-                  item = ites;
-                  profileloading = false;
-                });
-            } else {
-              if (mounted)
-                setState(() {
-                  item = [];
-                  profileloading = false;
-                });
-            }
-          }
-        } else {
-          if (mounted)
-            setState(() {
-              profileloading = false;
-              userid = null;
-            });
-        }
+        if (mounted)
+          setState(() {
+            item = ites;
+            profileloading = false;
+          });
+      } else {
+        if (mounted)
+          setState(() {
+            item = [];
+            profileloading = false;
+          });
       }
-    } else {
-      if (mounted)
-        setState(() {
-          profileloading = false;
-        });
     }
   }
 }

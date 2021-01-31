@@ -450,6 +450,8 @@ class _SearchState extends State<Search>
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: CachedNetworkImage(
+                                  height: 200,
+                                  width: 300,
                                   fadeInDuration: Duration(microseconds: 5),
                                   imageUrl: itemsgrid[index].image.isEmpty
                                       ? SpinKitChasingDots(
@@ -1180,6 +1182,8 @@ class _SearchState extends State<Search>
                                                                       .categoryname,
                                                                   child:
                                                                       CachedNetworkImage(
+                                                                    height: 200,
+                                                                    width: 300,
                                                                     imageUrl: categoryList[
                                                                             index]
                                                                         .categoryimage,
@@ -1628,6 +1632,10 @@ class _SearchState extends State<Search>
                                                                     child: ClipRRect(
                                                                         borderRadius: BorderRadius.circular(25),
                                                                         child: CachedNetworkImage(
+                                                                          height:
+                                                                              200,
+                                                                          width:
+                                                                              300,
                                                                           imageUrl:
                                                                               userList[index].profilepicture,
                                                                           fit: BoxFit

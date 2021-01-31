@@ -234,6 +234,8 @@ class _CommentsDetaileState extends State<CommentsDetail> {
                                                     .userpp
                                                     .isNotEmpty
                                                 ? CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
                                                     imageUrl:
                                                         commentslist[index]
                                                             .userpp,

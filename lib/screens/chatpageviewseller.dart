@@ -938,6 +938,8 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                           child: CachedNetworkImage(
+                                            height: 200,
+                                            width: 300,
                                             imageUrl: profilepicture,
                                             fit: BoxFit.cover,
                                             placeholder: (context, url) =>
@@ -1019,6 +1021,8 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
                                                 imageUrl: widget.itemimage,
                                                 fit: BoxFit.cover,
                                               ),

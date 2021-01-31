@@ -26,12 +26,12 @@ import 'package:location/location.dart' as Location;
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class Below100 extends StatefulWidget {
+class TopPicks extends StatefulWidget {
   @override
-  Below100State createState() => Below100State();
+  TopPicksState createState() => TopPicksState();
 }
 
-class Below100State extends State<Below100> {
+class TopPicksState extends State<TopPicks> {
   String country;
   String currency;
 
@@ -126,57 +126,56 @@ class Below100State extends State<Below100> {
   LatLng position;
 
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
-    if (country == null) {
-      _getLocation();
-    } else {
-      var url = 'https://api.sellship.co/api/belowhundred/' +
-          country +
-          '/' +
-          skip.toString() +
-          '/' +
-          limit.toString();
+    var userid = await storage.read(key: 'userid');
+    var url = 'https://api.sellship.co/api/top/' +
+        country +
+        '/' +
+        userid +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
 
-      final response = await http.get(url);
-      var jsonbody = json.decode(response.body);
+    final response = await http.get(url);
+    var jsonbody = json.decode(response.body);
 
-      for (var i = 0; i < jsonbody.length; i++) {
-        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+    for (var i = 0; i < jsonbody.length; i++) {
+      var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
 
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsonbody[i]['_id']['\$oid'],
-          date: dateuploaded,
-          name: jsonbody[i]['name'],
-          condition: jsonbody[i]['condition'] == null
-              ? 'Like New'
-              : jsonbody[i]['condition'],
-          username: jsonbody[i]['username'],
-          image: jsonbody[i]['image'],
-          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
-          comments: jsonbody[i]['comments'] == null
-              ? 0
-              : jsonbody[i]['comments'].length,
-          price: jsonbody[i]['price'].toString(),
-          category: jsonbody[i]['category'],
-          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
-        );
-        itemsgrid.add(item);
-      }
-      if (itemsgrid != null) {
-        setState(() {
-          itemsgrid = itemsgrid;
-          loading = false;
-        });
-      } else {
-        setState(() {
-          itemsgrid = [];
-          loading = false;
-        });
-      }
-
-      return itemsgrid;
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
+      Item item = Item(
+        itemid: jsonbody[i]['_id']['\$oid'],
+        date: dateuploaded,
+        name: jsonbody[i]['name'],
+        condition: jsonbody[i]['condition'] == null
+            ? 'Like New'
+            : jsonbody[i]['condition'],
+        username: jsonbody[i]['username'],
+        image: jsonbody[i]['image'],
+        likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+        comments: jsonbody[i]['comments'] == null
+            ? 0
+            : jsonbody[i]['comments'].length,
+        price: jsonbody[i]['price'].toString(),
+        category: jsonbody[i]['category'],
+        sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+      );
+      itemsgrid.add(item);
     }
+    if (itemsgrid != null) {
+      setState(() {
+        itemsgrid = itemsgrid;
+        loading = false;
+      });
+    } else {
+      setState(() {
+        itemsgrid = [];
+        loading = false;
+      });
+    }
+
+    return itemsgrid;
   }
 
   @override
@@ -286,7 +285,7 @@ class Below100State extends State<Below100> {
           ),
         ),
         title: Text(
-          'Deals under 100',
+          'Top Picks',
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(

@@ -264,6 +264,7 @@ class _AddItemState extends State<AddItem> {
   loadbrands(category) async {
     var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
     final categoryresponse = await http.get(categoryurl);
+
     if (categoryresponse.statusCode == 200) {
       brands.clear();
       var categoryrespons = json.decode(categoryresponse.body);
@@ -2150,7 +2151,7 @@ class _AddItemState extends State<AddItem> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: <Widget>[
-                                      Container(
+                                      Expanded(
                                         child: TextField(
                                           cursorColor: Color(0xFF979797),
                                           controller: businesspricecontroller,
@@ -2228,7 +2229,6 @@ class _AddItemState extends State<AddItem> {
                                             disabledBorder: InputBorder.none,
                                           ),
                                         ),
-                                        width: 100,
                                       ),
                                       Text(currency,
                                           style: TextStyle(

@@ -193,6 +193,8 @@ class _ReviewsPageState extends State<ReviewsPage> {
                                                     .profilepicture
                                                     .isNotEmpty
                                                 ? CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
                                                     imageUrl: reviews[index]
                                                         .profilepicture,
                                                     fit: BoxFit.cover,

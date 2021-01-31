@@ -10,6 +10,9 @@ import 'package:SellShip/models/user.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/filter.dart';
+import 'package:SellShip/screens/home/below100.dart';
+import 'package:SellShip/screens/home/nearme.dart';
+import 'package:SellShip/screens/home/toppicks.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/search.dart';
@@ -93,16 +96,17 @@ class _HomeScreenState extends State<HomeScreen>
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
       final response = await http.get(url);
+
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
-          var profilemap = respons;
+
           List<String> ites = List<String>();
 
-          if (profilemap != null) {
-            for (var i = 0; i < profilemap.length; i++) {
-              if (profilemap[i] != null) {
-                ites.add(profilemap[i]['_id']['\$oid']);
+          if (respons != null) {
+            for (var i = 0; i < respons.length; i++) {
+              if (respons[i] != null) {
+                ites.add(respons[i]['_id']['\$oid']);
               }
             }
 
@@ -819,6 +823,7 @@ class _HomeScreenState extends State<HomeScreen>
           setState(() {
             loading = true;
             subcategoryList.clear();
+            subcategoryListsecond.clear();
             topitems.clear();
             getsubcategoriesinterested();
             gettopdata();
@@ -1651,6 +1656,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                                         50),
                                                             child:
                                                                 CachedNetworkImage(
+                                                              height: 200,
+                                                              width: 300,
                                                               imageUrl: userList[
                                                                       index]
                                                                   .profilepicture,
@@ -1859,6 +1866,8 @@ class _HomeScreenState extends State<HomeScreen>
                                 child: Hero(
                                   tag: 'foryou${foryoulist[index].itemid}',
                                   child: CachedNetworkImage(
+                                    height: 200,
+                                    width: 300,
                                     fadeInDuration: Duration(microseconds: 5),
                                     imageUrl: foryoulist[index].image.isEmpty
                                         ? SpinKitChasingDots(
@@ -1962,6 +1971,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                                 .circular(50),
                                                         child:
                                                             CachedNetworkImage(
+                                                          height: 200,
+                                                          width: 300,
                                                           imageUrl: userList[
                                                                   index]
                                                               .profilepicture,
@@ -2130,6 +2141,8 @@ class _HomeScreenState extends State<HomeScreen>
                                   tag:
                                       'foryouscroll${foryouscroll[index].itemid}',
                                   child: CachedNetworkImage(
+                                    height: 200,
+                                    width: 300,
                                     fadeInDuration: Duration(microseconds: 5),
                                     imageUrl: foryouscroll[index].image.isEmpty
                                         ? SpinKitChasingDots(
@@ -2436,6 +2449,7 @@ class _HomeScreenState extends State<HomeScreen>
               nearmeItems.clear();
               below100list.clear();
               subcategoryList.clear();
+              subcategoryListsecond.clear();
               topitems.clear();
               getsubcategoriesinterested();
               gettopdata();
@@ -2488,7 +2502,7 @@ class _HomeScreenState extends State<HomeScreen>
                           mainAxisSpacing: 1.0,
                           crossAxisSpacing: 1.0,
                           crossAxisCount: 3,
-                          childAspectRatio: 0.8),
+                          childAspectRatio: 0.70),
                       delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                         return InkWell(
@@ -2507,14 +2521,14 @@ class _HomeScreenState extends State<HomeScreen>
                           child: Padding(
                             padding: EdgeInsets.all(5),
                             child: Container(
-                                height: 160,
+                                height: 200,
                                 width: 100,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10)),
                                 child: Stack(
                                   children: [
                                     Container(
-                                      height: 160,
+                                      height: 200,
                                       width: 180,
                                       decoration: BoxDecoration(
                                           borderRadius:
@@ -2528,6 +2542,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                   tag: subcategoryList[index]
                                                       .name,
                                                   child: CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
                                                     imageUrl:
                                                         subcategoryList[index]
                                                             .image,
@@ -2574,18 +2590,38 @@ class _HomeScreenState extends State<HomeScreen>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'Top Picks',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold),
+                              InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => TopPicks()),
+                                  );
+                                },
+                                child: Text(
+                                  'Top Picks',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                              Text(
-                                'See All',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16.0,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => TopPicks()),
+                                  );
+                                },
+                                enableFeedback: true,
+                                child: Text(
+                                  'See All',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16.0,
+                                  ),
                                 ),
                               ),
                             ],
@@ -2595,7 +2631,7 @@ class _HomeScreenState extends State<HomeScreen>
               topitems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(
-                      height: 220,
+                      height: 280,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         itemCount: 20,
@@ -2604,7 +2640,7 @@ class _HomeScreenState extends State<HomeScreen>
                           return new Padding(
                             padding: EdgeInsets.all(10),
                             child: Container(
-                              height: 200,
+                              height: 280,
                               width: MediaQuery.of(context).size.width / 2 - 20,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -2627,11 +2663,13 @@ class _HomeScreenState extends State<HomeScreen>
                                     },
                                     child: Stack(children: <Widget>[
                                       Container(
-                                        height: 150,
+                                        height: 220,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Colors.grey.shade300,
@@ -2646,6 +2684,8 @@ class _HomeScreenState extends State<HomeScreen>
                                           child: Hero(
                                             tag: 'top${topitems[index].itemid}',
                                             child: CachedNetworkImage(
+                                              height: 200,
+                                              width: 300,
                                               fadeInDuration:
                                                   Duration(microseconds: 5),
                                               imageUrl: topitems[index]
@@ -2852,6 +2892,320 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ))
                   : SliverToBoxAdapter(),
+              SliverToBoxAdapter(
+                child: Padding(
+                    padding: EdgeInsets.only(
+                        left: 16, top: 10, bottom: 10, right: 36),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          enableFeedback: true,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => Below100()),
+                            );
+                          },
+                          child: Text(
+                            'Deals under 100',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => Below100()),
+                            );
+                          },
+                          enableFeedback: true,
+                          child: Text(
+                            'See All',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+              below100list.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Container(
+                      height: 230,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                        itemCount: below100list.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (BuildContext context, int index) {
+                          return new Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              height: 210,
+                              width: MediaQuery.of(context).size.width / 2 - 20,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  new InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => Details(
+                                                itemid:
+                                                    below100list[index].itemid,
+                                                image:
+                                                    below100list[index].image,
+                                                name: below100list[index].name,
+                                                sold: below100list[index].sold,
+                                                source: 'below100')),
+                                      );
+                                    },
+                                    child: Stack(children: <Widget>[
+                                      Container(
+                                        height: 170,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Hero(
+                                            tag:
+                                                'below100${below100list[index].itemid}',
+                                            child: CachedNetworkImage(
+                                              height: 200,
+                                              width: 300,
+                                              fadeInDuration:
+                                                  Duration(microseconds: 5),
+                                              imageUrl: below100list[index]
+                                                      .image
+                                                      .isEmpty
+                                                  ? SpinKitChasingDots(
+                                                      color: Colors.deepOrange)
+                                                  : below100list[index].image,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) =>
+                                                  SpinKitChasingDots(
+                                                      color: Colors.deepOrange),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      below100list[index].sold == true
+                                          ? Align(
+                                              alignment: Alignment.center,
+                                              child: Container(
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.4),
+                                                ),
+                                                width: 210,
+                                                child: Center(
+                                                  child: Text(
+                                                    'Sold',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ))
+                                          : Container(),
+                                    ]),
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                          child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            below100list[index].name,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            height: 1,
+                                          ),
+                                          Text(
+                                            currency +
+                                                ' ' +
+                                                below100list[index].price,
+                                          )
+                                        ],
+                                      )),
+                                      favourites != null
+                                          ? favourites.contains(
+                                                  below100list[index].itemid)
+                                              ? InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
+
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
+
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            below100list[index]
+                                                                .itemid,
+                                                      };
+
+                                                      favourites.remove(
+                                                          below100list[index]
+                                                              .itemid);
+                                                      setState(() {
+                                                        favourites = favourites;
+                                                        below100list[index]
+                                                                .likes =
+                                                            below100list[index]
+                                                                    .likes -
+                                                                1;
+                                                      });
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
+
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.deepPurple,
+                                                    child: Icon(
+                                                      FontAwesome.heart,
+                                                      color: Colors.white,
+                                                      size: 16,
+                                                    ),
+                                                  ))
+                                              : InkWell(
+                                                  enableFeedback: true,
+                                                  onTap: () async {
+                                                    var userid = await storage
+                                                        .read(key: 'userid');
+
+                                                    if (userid != null) {
+                                                      var url =
+                                                          'https://api.sellship.co/api/favourite/' +
+                                                              userid;
+
+                                                      Map<String, String> body =
+                                                          {
+                                                        'itemid':
+                                                            below100list[index]
+                                                                .itemid,
+                                                      };
+
+                                                      favourites.add(
+                                                          below100list[index]
+                                                              .itemid);
+                                                      setState(() {
+                                                        favourites = favourites;
+                                                        below100list[index]
+                                                                .likes =
+                                                            below100list[index]
+                                                                    .likes +
+                                                                1;
+                                                      });
+                                                      final response =
+                                                          await http.post(url,
+                                                              body: body);
+
+                                                      if (response.statusCode ==
+                                                          200) {
+                                                      } else {
+                                                        print(response
+                                                            .statusCode);
+                                                      }
+                                                    } else {
+                                                      showInSnackBar(
+                                                          'Please Login to use Favourites');
+                                                    }
+                                                  },
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    child: Icon(
+                                                      Feather.heart,
+                                                      color: Colors.blueGrey,
+                                                      size: 16,
+                                                    ),
+                                                  ))
+                                          : CircleAvatar(
+                                              radius: 18,
+                                              backgroundColor: Colors.white,
+                                              child: Icon(
+                                                Feather.heart,
+                                                color: Colors.blueGrey,
+                                                size: 16,
+                                              ),
+                                            )
+                                    ],
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                  )
+                                ],
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ))
+                  : SliverToBoxAdapter(),
               nearmeItems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Padding(
@@ -2861,18 +3215,38 @@ class _HomeScreenState extends State<HomeScreen>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'Near You',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold),
+                              InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => NearMe()),
+                                  );
+                                },
+                                child: Text(
+                                  'Near You',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
-                              Text(
-                                'See All',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16.0,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => NearMe()),
+                                  );
+                                },
+                                enableFeedback: true,
+                                child: Text(
+                                  'See All',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16.0,
+                                  ),
                                 ),
                               ),
                             ],
@@ -2882,7 +3256,7 @@ class _HomeScreenState extends State<HomeScreen>
               nearmeItems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(
-                      height: 220,
+                      height: 280,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         itemCount: nearmeItems.length,
@@ -2891,8 +3265,8 @@ class _HomeScreenState extends State<HomeScreen>
                           return new Padding(
                             padding: EdgeInsets.all(10),
                             child: Container(
-                              height: 200,
-                              width: MediaQuery.of(context).size.width / 2 - 20,
+                              height: 280,
+                              width: MediaQuery.of(context).size.width / 2 - 10,
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
@@ -2915,11 +3289,13 @@ class _HomeScreenState extends State<HomeScreen>
                                     },
                                     child: Stack(children: <Widget>[
                                       Container(
-                                        height: 150,
+                                        height: 220,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Colors.grey.shade300,
@@ -2935,6 +3311,8 @@ class _HomeScreenState extends State<HomeScreen>
                                             tag:
                                                 'nearme${nearmeItems[index].itemid}',
                                             child: CachedNetworkImage(
+                                              height: 200,
+                                              width: 300,
                                               fadeInDuration:
                                                   Duration(microseconds: 5),
                                               imageUrl: nearmeItems[index]
@@ -3144,294 +3522,95 @@ class _HomeScreenState extends State<HomeScreen>
                     ))
                   : SliverToBoxAdapter(),
               SliverToBoxAdapter(
-                child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 16, top: 10, bottom: 10, right: 36),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Deals under 100',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'See All',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
-              below100list.isNotEmpty
-                  ? SliverToBoxAdapter(
-                      child: Container(
-                      height: 220,
-                      width: MediaQuery.of(context).size.width,
-                      child: ListView.builder(
-                        itemCount: below100list.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return new Padding(
-                            padding: EdgeInsets.all(10),
+                  child: SizedBox(
+                height: 4,
+              )),
+              subcategoryListsecond.isNotEmpty
+                  ? SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisSpacing: 1.0,
+                          crossAxisSpacing: 1.0,
+                          crossAxisCount: 3,
+                          childAspectRatio: 0.70),
+                      delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => SubCategory(
+                                        subcategory:
+                                            subcategoryListsecond[index].name,
+                                        categoryimage:
+                                            subcategoryListsecond[index].image,
+                                      )),
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
                             child: Container(
-                              height: 200,
-                              width: MediaQuery.of(context).size.width / 2 - 20,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  new InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                            builder: (context) => Details(
-                                                itemid:
-                                                    below100list[index].itemid,
-                                                image:
-                                                    below100list[index].image,
-                                                name: below100list[index].name,
-                                                sold: below100list[index].sold,
-                                                source: 'below100')),
-                                      );
-                                    },
-                                    child: Stack(children: <Widget>[
-                                      Container(
-                                        height: 150,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                        ),
-                                        child: ClipRRect(
+                                height: 200,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 200,
+                                      width: 180,
+                                      decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Hero(
-                                            tag:
-                                                'below100${below100list[index].itemid}',
-                                            child: CachedNetworkImage(
-                                              fadeInDuration:
-                                                  Duration(microseconds: 5),
-                                              imageUrl: below100list[index]
-                                                      .image
-                                                      .isEmpty
-                                                  ? SpinKitChasingDots(
-                                                      color: Colors.deepOrange)
-                                                  : below100list[index].image,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  SpinKitChasingDots(
-                                                      color: Colors.deepOrange),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                            ),
+                                              BorderRadius.circular(10)),
+                                      child: subcategoryList[index].image !=
+                                              null
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Hero(
+                                                  tag: subcategoryListsecond[
+                                                          index]
+                                                      .name,
+                                                  child: CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
+                                                    imageUrl:
+                                                        subcategoryListsecond[
+                                                                index]
+                                                            .image,
+                                                    fit: BoxFit.cover,
+                                                  )))
+                                          : Container(),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Container(
+                                        height: 50,
+                                        width: 100,
+                                        padding: EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            subcategoryListsecond[index].name,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w900),
                                           ),
                                         ),
                                       ),
-                                      below100list[index].sold == true
-                                          ? Align(
-                                              alignment: Alignment.center,
-                                              child: Container(
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black
-                                                      .withOpacity(0.4),
-                                                ),
-                                                width: 210,
-                                                child: Center(
-                                                  child: Text(
-                                                    'Sold',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ))
-                                          : Container(),
-                                    ]),
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                          child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            below100list[index].name,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(
-                                            height: 1,
-                                          ),
-                                          Text(
-                                            currency +
-                                                ' ' +
-                                                below100list[index].price,
-                                          )
-                                        ],
-                                      )),
-                                      favourites != null
-                                          ? favourites.contains(
-                                                  below100list[index].itemid)
-                                              ? InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            below100list[index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.remove(
-                                                          below100list[index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        below100list[index]
-                                                                .likes =
-                                                            below100list[index]
-                                                                    .likes -
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: body);
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 18,
-                                                    backgroundColor:
-                                                        Colors.deepPurple,
-                                                    child: Icon(
-                                                      FontAwesome.heart,
-                                                      color: Colors.white,
-                                                      size: 16,
-                                                    ),
-                                                  ))
-                                              : InkWell(
-                                                  enableFeedback: true,
-                                                  onTap: () async {
-                                                    var userid = await storage
-                                                        .read(key: 'userid');
-
-                                                    if (userid != null) {
-                                                      var url =
-                                                          'https://api.sellship.co/api/favourite/' +
-                                                              userid;
-
-                                                      Map<String, String> body =
-                                                          {
-                                                        'itemid':
-                                                            below100list[index]
-                                                                .itemid,
-                                                      };
-
-                                                      favourites.add(
-                                                          below100list[index]
-                                                              .itemid);
-                                                      setState(() {
-                                                        favourites = favourites;
-                                                        below100list[index]
-                                                                .likes =
-                                                            below100list[index]
-                                                                    .likes +
-                                                                1;
-                                                      });
-                                                      final response =
-                                                          await http.post(url,
-                                                              body: body);
-
-                                                      if (response.statusCode ==
-                                                          200) {
-                                                      } else {
-                                                        print(response
-                                                            .statusCode);
-                                                      }
-                                                    } else {
-                                                      showInSnackBar(
-                                                          'Please Login to use Favourites');
-                                                    }
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 18,
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    child: Icon(
-                                                      Feather.heart,
-                                                      color: Colors.blueGrey,
-                                                      size: 16,
-                                                    ),
-                                                  ))
-                                          : CircleAvatar(
-                                              radius: 18,
-                                              backgroundColor: Colors.white,
-                                              child: Icon(
-                                                Feather.heart,
-                                                color: Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            )
-                                    ],
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                  )
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ))
+                                    ),
+                                  ],
+                                )),
+                          ),
+                        );
+                      }, childCount: 4))
                   : SliverToBoxAdapter(),
               SliverToBoxAdapter(
                 child: Padding(
@@ -3451,7 +3630,7 @@ class _HomeScreenState extends State<HomeScreen>
                     mainAxisSpacing: 1.0,
                     crossAxisSpacing: 1.0,
                     crossAxisCount: 2,
-                    childAspectRatio: 0.9),
+                    childAspectRatio: 0.80),
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     if (index != 0 && index % 8 == 0) {
@@ -3530,10 +3709,11 @@ class _HomeScreenState extends State<HomeScreen>
                               },
                               child: Stack(children: <Widget>[
                                 Container(
-                                  height: 150,
+                                  height: 195,
                                   width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
                                     color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey.shade300,
@@ -3547,6 +3727,8 @@ class _HomeScreenState extends State<HomeScreen>
                                     child: Hero(
                                       tag: 'newin${itemsgrid[index].itemid}',
                                       child: CachedNetworkImage(
+                                        height: 200,
+                                        width: 300,
                                         fadeInDuration:
                                             Duration(microseconds: 5),
                                         imageUrl: itemsgrid[index].image.isEmpty
@@ -3846,8 +4028,10 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   List<Subcategory> subcategoryList = new List<Subcategory>();
+  List<Subcategory> subcategoryListsecond = new List<Subcategory>();
   getsubcategoriesinterested() async {
     subcategoryList.clear();
+    subcategoryListsecond.clear();
     var userid = await storage.read(key: 'userid');
     var url = 'https://api.sellship.co/api/top/subcategories/' + userid;
 
@@ -3861,6 +4045,9 @@ class _HomeScreenState extends State<HomeScreen>
       }
       setState(() {
         subcategoryList = subcategoryList;
+        subcategoryListsecond = subcategoryList.sublist(
+          6,
+        );
       });
     } else {
       print(response.statusCode);
@@ -4306,14 +4493,17 @@ class _HomeScreenState extends State<HomeScreen>
         '/' +
         0.toString() +
         '/' +
-        20.toString();
+        20.toString() +
+        '/' +
+        position.longitude.toString() +
+        '/' +
+        position.latitude.toString();
 
-    final response = await http.post(url, body: {
-      'latitude': position.latitude.toString(),
-      'longitude': position.longitude.toString()
-    });
+    final response = await http.get(url);
+    print(url);
 
     var jsonbody = json.decode(response.body);
+    print(jsonbody);
 
     for (var i = 0; i < jsonbody.length; i++) {
       var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
@@ -4597,6 +4787,8 @@ class UserSearchDelegate extends SearchDelegate {
                                               tag:
                                                   'hero${snapshot.data[index].itemid}',
                                               child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
                                                 fadeInDuration:
                                                     Duration(microseconds: 5),
                                                 imageUrl: snapshot.data[index]
@@ -4917,7 +5109,7 @@ class UserSearchDelegate extends SearchDelegate {
       if (response.statusCode == 200) {
         if (response.body != 'Empty') {
           var respons = json.decode(response.body);
-          var profilemap = respons;
+          Map<String, dynamic> profilemap = respons;
           List<String> ites = List<String>();
 
           if (profilemap != null) {
@@ -5075,6 +5267,8 @@ class UserSearchDelegate extends SearchDelegate {
                                                   tag:
                                                       'hero${snapshot.data[index].itemid}',
                                                   child: CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
                                                     fadeInDuration: Duration(
                                                         microseconds: 5),
                                                     imageUrl: snapshot
