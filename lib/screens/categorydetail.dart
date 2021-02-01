@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
@@ -39,7 +40,8 @@ class CategoryDetail extends StatefulWidget {
   _CategoryDetailState createState() => _CategoryDetailState();
 }
 
-class _CategoryDetailState extends State<CategoryDetail> {
+class _CategoryDetailState extends State<CategoryDetail>
+    with SingleTickerProviderStateMixin {
   List<Item> itemsgrid = [];
 
   var categoryimage;
@@ -138,13 +140,15 @@ class _CategoryDetailState extends State<CategoryDetail> {
     }
 
     var url = 'https://api.sellship.co/api/categories/all/' +
-        category +
+        category.trim() +
         '/' +
         country +
         '/' +
         skip.toString() +
         '/' +
         limit.toString();
+
+    print(url);
 
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -1095,24 +1099,145 @@ class _CategoryDetailState extends State<CategoryDetail> {
   String category;
   List<dynamic> subcategory;
 
+  TabController _tabController;
+
+  List<Tab> subcategorytabs = [];
+
   @override
   void initState() {
     setState(() {
       skip = 0;
-      limit = 20;
+      limit = 40;
       categoryimage = widget.categoryimage;
       category = widget.category;
       subcategory = widget.subcategory;
       loading = true;
       notifbadge = false;
-      tabcontrollerlength = subcategory.length + 1;
+      tabcontrollerlength = widget.subcategory.length + 1;
     });
 
+    _tabController =
+        new TabController(length: tabcontrollerlength, vsync: this);
+
+    gettabs();
     getnotification();
     getfavourites();
     fetchItems(skip, limit);
 
+    _tabController.addListener(() {
+      if (_tabController.index != 0) {
+        setState(() {
+          skip = 0;
+          limit = 40;
+
+          loading = true;
+        });
+
+        var subname = subcategorytabs[_tabController.index].text;
+        fetchsubcategories(skip, limit, subname);
+      } else {
+        setState(() {
+          skip = 0;
+          limit = 40;
+
+          loading = true;
+        });
+
+        fetchItems(skip, limit);
+      }
+    });
+
     super.initState();
+  }
+
+  Future<List<Item>> fetchsubcategories(
+      int skip, int limit, String subcategor) async {
+    country = await storage.read(key: 'country');
+
+    if (country.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+        country = country;
+      });
+    } else if (country.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = '\$';
+        country = country;
+      });
+    } else if (country.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+        country = country;
+      });
+    } else if (country.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+        country = country;
+      });
+    }
+
+    var url = 'https://api.sellship.co/api/home/subcategories/' +
+        subcategor +
+        '/' +
+        country +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    print(url);
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var jsonbody = json.decode(response.body);
+      itemsgrid.clear();
+
+      for (var jsondata in jsonbody) {
+        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsondata['_id']['\$oid'],
+          name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
+          image: jsondata['image'],
+          price: jsondata['price'].toString(),
+          category: jsondata['category'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
+        );
+        itemsgrid.add(item);
+      }
+
+      setState(() {
+        itemsgrid = itemsgrid;
+        loading = false;
+      });
+    } else {
+      print(response.statusCode);
+    }
+
+    return itemsgrid;
+  }
+
+  gettabs() {
+    var subcat = widget.subcategory;
+    subcategorytabs.add(Tab(
+      text: 'All',
+    ));
+    for (int i = 0; i < subcat.length; i++) {
+      subcategorytabs.add(Tab(
+        text: subcat[i]['name'],
+      ));
+    }
+    setState(() {
+      subcategorytabs = subcategorytabs;
+    });
   }
 
   var tabcontrollerlength = 0;
@@ -1147,7 +1272,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
         key: scaffoldState,
         backgroundColor: Colors.white,
         body: DefaultTabController(
-            length: 4,
+            length: tabcontrollerlength,
             child: NestedScrollView(
                 headerSliverBuilder: (context, _) {
                   return [
@@ -1191,6 +1316,41 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                 imageUrl: categoryimage,
                                 fit: BoxFit.cover,
                               ))),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(229, 233, 242, 1)
+                                  .withOpacity(0.5),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(20),
+                                  topLeft: Radius.circular(20))),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 50,
+                                  child: TabBar(
+                                      controller: _tabController,
+                                      labelStyle: tabTextStyle,
+                                      unselectedLabelStyle: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                        fontFamily: 'Helvetica',
+                                      ),
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      indicator: UnderlineTabIndicator(
+                                          borderSide: BorderSide(
+                                              width: 2.0,
+                                              color: Colors.deepOrange)),
+                                      isScrollable: true,
+                                      labelColor: Colors.black,
+                                      tabs: subcategorytabs),
+                                ),
+                              ])),
                     ),
                   ];
                 },

@@ -802,7 +802,7 @@ class _ChatPageViewState extends State<ChatPageView> {
   }
 
   Stream<List<Widget>> getMessages() async* {
-    yield* Stream<int>.periodic(Duration(seconds: 1), (i) => i)
+    yield* Stream<int>.periodic(Duration(seconds: 3), (i) => i)
         .asyncMap((i) => getRemoteMessages())
         .map((json) => mapJsonMessagesToListOfWidgetMessages(json));
   }

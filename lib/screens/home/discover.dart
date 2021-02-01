@@ -11,8 +11,6 @@ import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/filter.dart';
 import 'package:SellShip/screens/home/below100.dart';
-import 'package:SellShip/screens/home/discover.dart';
-import 'package:SellShip/screens/home/foryou.dart';
 import 'package:SellShip/screens/home/nearme.dart';
 import 'package:SellShip/screens/home/toppicks.dart';
 import 'package:SellShip/screens/messages.dart';
@@ -51,10 +49,10 @@ import 'package:search_page/search_page.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
+class Discover extends StatefulWidget {
+  Discover({Key key}) : super(key: key);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _DiscoverState createState() => _DiscoverState();
 }
 
 class Subcategory {
@@ -64,8 +62,8 @@ class Subcategory {
   Subcategory({this.name, this.image});
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class _DiscoverState extends State<Discover>
+    with AutomaticKeepAliveClientMixin {
   List<Item> itemsgrid = [];
 
   var skip;
@@ -805,14 +803,18 @@ class _HomeScreenState extends State<HomeScreen>
 
     if (mounted) {
       setState(() {
-        notifbadge = false;
-        notbadge = false;
+        skip = 0;
+        limit = 50;
+        loading = true;
       });
     }
-    _tabController = new TabController(length: 2, vsync: this);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
     ));
+
+    gettopdata();
+    getsubcategoriesinterested();
+    readstorage();
   }
 
   bool foryouloading = true;
@@ -1012,436 +1014,7 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
         key: scaffoldState,
         backgroundColor: Colors.white,
-        appBar: AppBar(
-            elevation: 0,
-            backgroundColor: Colors.white,
-            title: Container(
-              height: 40,
-              width: 180,
-              child: Image.asset(
-                'assets/logotransparent.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-            leading: Padding(
-              padding: EdgeInsets.only(left: 5),
-              child: Badge(
-                showBadge: notbadge,
-                position: BadgePosition.topEnd(top: 2, end: -4),
-                animationType: BadgeAnimationType.slide,
-                badgeContent: Text(
-                  notcount.toString(),
-                  style: TextStyle(color: Colors.white),
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NotifcationPage()),
-                    );
-                  },
-                  child: Icon(
-                    Feather.bell,
-                    color: Color.fromRGBO(28, 45, 65, 1),
-                    size: 24,
-                  ),
-                ),
-              ),
-            ),
-            actions: <Widget>[
-//              Padding(
-//                child: InkWell(
-//                  onTap: () {
-//                    _bottomsheetcontroller =
-//                        scaffoldState.currentState.showBottomSheet((context) {
-//                      return Container(
-//                          decoration: BoxDecoration(
-//                              border:
-//                                  Border.all(width: 0.2, color: Colors.grey),
-//                              borderRadius: BorderRadius.circular(20),
-//                              color: Colors.white),
-//                          height: 525,
-//                          width: MediaQuery.of(context).size.width,
-//                          child: Padding(
-//                              padding: const EdgeInsets.all(1.0),
-//                              child: Column(
-//                                  mainAxisAlignment: MainAxisAlignment.start,
-//                                  crossAxisAlignment: CrossAxisAlignment.center,
-//                                  children: [
-//                                    SizedBox(
-//                                      height: 5,
-//                                    ),
-//                                    AppBar(
-//                                      title: Text('Filter',
-//                                          style: TextStyle(
-//                                            fontFamily: 'Helvetica',
-//                                            fontSize: 18,
-//                                            fontWeight: FontWeight.bold,
-//                                            color:
-//                                                Color.fromRGBO(28, 45, 65, 1),
-//                                          )),
-//                                      elevation: 0.5,
-//                                      backgroundColor: Colors.white,
-//                                      excludeHeaderSemantics: true,
-//                                      automaticallyImplyLeading: false,
-//                                      actions: [
-//                                        Padding(
-//                                            padding: EdgeInsets.all(15),
-//                                            child: InkWell(
-//                                                onTap: () {
-//                                                  Navigator.pop(context);
-//                                                },
-//                                                child: Text('Done',
-//                                                    style: TextStyle(
-//                                                      fontFamily: 'Helvetica',
-//                                                      fontSize: 18,
-//                                                      color: Color.fromRGBO(
-//                                                          28, 45, 65, 1),
-//                                                    ))))
-//                                      ],
-//                                    ),
-//                                    Padding(
-//                                        padding:
-//                                            const EdgeInsets.only(top: 10.0),
-//                                        child: Row(
-//                                            crossAxisAlignment:
-//                                                CrossAxisAlignment.start,
-//                                            children: <Widget>[
-//                                              Container(
-//                                                width: MediaQuery.of(context)
-//                                                        .size
-//                                                        .width *
-//                                                    0.2,
-//                                                height: 450,
-//                                                child: ListView(
-//                                                  scrollDirection:
-//                                                      Axis.vertical,
-//                                                  children: [
-//                                                    Container(
-//                                                        width: MediaQuery.of(
-//                                                                context)
-//                                                            .size
-//                                                            .width,
-//                                                        child: InkWell(
-//                                                          child: Column(
-//                                                            mainAxisAlignment:
-//                                                                MainAxisAlignment
-//                                                                    .center,
-//                                                            crossAxisAlignment:
-//                                                                CrossAxisAlignment
-//                                                                    .center,
-//                                                            children: <Widget>[
-//                                                              Align(
-//                                                                alignment: Alignment
-//                                                                    .bottomCenter,
-//                                                                child: Text(
-//                                                                  'Sort',
-//                                                                  style: TextStyle(
-//                                                                      fontFamily:
-//                                                                          'Helvetica',
-//                                                                      fontSize:
-//                                                                          14,
-//                                                                      color: Color
-//                                                                          .fromRGBO(
-//                                                                              28,
-//                                                                              45,
-//                                                                              65,
-//                                                                              1),
-//                                                                      fontWeight:
-//                                                                          FontWeight
-//                                                                              .w600),
-//                                                                  textAlign:
-//                                                                      TextAlign
-//                                                                          .center,
-//                                                                ),
-//                                                              ),
-//                                                              Divider()
-//                                                            ],
-//                                                          ),
-//                                                          onTap: () {
-//                                                            _bottomsheetcontroller
-//                                                                .setState(() {
-//                                                              _filter = 'Sort';
-//                                                            });
-//                                                          },
-//                                                        )),
-//                                                    Container(
-//                                                        width: MediaQuery.of(
-//                                                                context)
-//                                                            .size
-//                                                            .width,
-//                                                        child: InkWell(
-//                                                          child: Column(
-//                                                            mainAxisAlignment:
-//                                                                MainAxisAlignment
-//                                                                    .center,
-//                                                            crossAxisAlignment:
-//                                                                CrossAxisAlignment
-//                                                                    .center,
-//                                                            children: <Widget>[
-//                                                              Align(
-//                                                                alignment: Alignment
-//                                                                    .bottomCenter,
-//                                                                child: Text(
-//                                                                  'Brand',
-//                                                                  style: TextStyle(
-//                                                                      fontFamily:
-//                                                                          'Helvetica',
-//                                                                      fontSize:
-//                                                                          14,
-//                                                                      color: Color
-//                                                                          .fromRGBO(
-//                                                                              28,
-//                                                                              45,
-//                                                                              65,
-//                                                                              1),
-//                                                                      fontWeight:
-//                                                                          FontWeight
-//                                                                              .w600),
-//                                                                  textAlign:
-//                                                                      TextAlign
-//                                                                          .center,
-//                                                                ),
-//                                                              ),
-//                                                              Divider()
-//                                                            ],
-//                                                          ),
-//                                                          onTap: () async {
-//                                                            brands.clear();
-//                                                            var categoryurl =
-//                                                                'https://api.sellship.co/api/getallbrands';
-//                                                            final categoryresponse =
-//                                                                await http.get(
-//                                                                    categoryurl);
-//                                                            if (categoryresponse
-//                                                                    .statusCode ==
-//                                                                200) {
-//                                                              var categoryrespons =
-//                                                                  json.decode(
-//                                                                      categoryresponse
-//                                                                          .body);
-//
-//                                                              for (int i = 0;
-//                                                                  i <
-//                                                                      categoryrespons
-//                                                                          .length;
-//                                                                  i++) {
-//                                                                brands.add(
-//                                                                    categoryrespons[
-//                                                                        i]);
-//                                                              }
-//                                                              _bottomsheetcontroller
-//                                                                  .setState(() {
-//                                                                brands = brands;
-//                                                              });
-//                                                            } else {
-//                                                              print(categoryresponse
-//                                                                  .statusCode);
-//                                                            }
-//                                                            _bottomsheetcontroller
-//                                                                .setState(() {
-//                                                              _filter = 'Brand';
-//                                                            });
-//                                                          },
-//                                                        )),
-//                                                    Container(
-//                                                        width: MediaQuery.of(
-//                                                                context)
-//                                                            .size
-//                                                            .width,
-//                                                        child: InkWell(
-//                                                          child: Column(
-//                                                            mainAxisAlignment:
-//                                                                MainAxisAlignment
-//                                                                    .center,
-//                                                            crossAxisAlignment:
-//                                                                CrossAxisAlignment
-//                                                                    .center,
-//                                                            children: <Widget>[
-//                                                              Align(
-//                                                                alignment: Alignment
-//                                                                    .bottomCenter,
-//                                                                child: Text(
-//                                                                  'Condition',
-//                                                                  style: TextStyle(
-//                                                                      fontFamily:
-//                                                                          'Helvetica',
-//                                                                      fontSize:
-//                                                                          14,
-//                                                                      color: Color
-//                                                                          .fromRGBO(
-//                                                                              28,
-//                                                                              45,
-//                                                                              65,
-//                                                                              1),
-//                                                                      fontWeight:
-//                                                                          FontWeight
-//                                                                              .w600),
-//                                                                  textAlign:
-//                                                                      TextAlign
-//                                                                          .center,
-//                                                                ),
-//                                                              ),
-//                                                              Divider()
-//                                                            ],
-//                                                          ),
-//                                                          onTap: () {
-//                                                            _bottomsheetcontroller
-//                                                                .setState(() {
-//                                                              _filter =
-//                                                                  'Condition';
-//                                                            });
-//                                                          },
-//                                                        )),
-//                                                    Container(
-//                                                        width: MediaQuery.of(
-//                                                                context)
-//                                                            .size
-//                                                            .width,
-//                                                        child: InkWell(
-//                                                          child: Column(
-//                                                            mainAxisAlignment:
-//                                                                MainAxisAlignment
-//                                                                    .center,
-//                                                            crossAxisAlignment:
-//                                                                CrossAxisAlignment
-//                                                                    .center,
-//                                                            children: <Widget>[
-//                                                              Align(
-//                                                                alignment: Alignment
-//                                                                    .bottomCenter,
-//                                                                child: Text(
-//                                                                  'Price',
-//                                                                  style: TextStyle(
-//                                                                      fontFamily:
-//                                                                          'Helvetica',
-//                                                                      fontSize:
-//                                                                          14,
-//                                                                      color: Color
-//                                                                          .fromRGBO(
-//                                                                              28,
-//                                                                              45,
-//                                                                              65,
-//                                                                              1),
-//                                                                      fontWeight:
-//                                                                          FontWeight
-//                                                                              .w600),
-//                                                                  textAlign:
-//                                                                      TextAlign
-//                                                                          .center,
-//                                                                ),
-//                                                              ),
-//                                                              Divider()
-//                                                            ],
-//                                                          ),
-//                                                          onTap: () {
-//                                                            _bottomsheetcontroller
-//                                                                .setState(() {
-//                                                              _filter = 'Price';
-//                                                            });
-//                                                          },
-//                                                        )),
-//                                                  ],
-//                                                ),
-//                                              ),
-//                                              filters(context)
-//                                            ]))
-//                                  ])));
-//                    });
-//                  },
-//                  child: CircleAvatar(
-//                    backgroundColor: Color.fromRGBO(255, 115, 0, 0.2),
-//                    child: SvgPicture.asset(
-//                        'assets/bottomnavbar/sound-module-fill.svg'),
-//                  ),
-//                ),
-
-//                padding: EdgeInsets.only(right: 10),
-//              )
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Search()),
-                  );
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(right: 15),
-                  child: Icon(
-                    Feather.shopping_bag,
-                    size: 24,
-                    color: Color.fromRGBO(28, 45, 65, 1),
-                  ),
-                ),
-              )
-            ]),
-        body: DefaultTabController(
-            length: 2,
-            child: NestedScrollView(
-                headerSliverBuilder: (context, _) {
-                  return [
-                    SliverAppBar(
-                        backgroundColor: Colors.white,
-                        elevation: 0,
-                        pinned: true,
-                        title: Container(
-                          height: 60,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20))),
-                          child: Center(
-                            child: TabBar(
-                              controller: _tabController,
-                              labelStyle: tabTextStyle,
-                              unselectedLabelStyle: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontFamily: 'Helvetica',
-                              ),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              indicator: UnderlineTabIndicator(
-                                  borderSide: BorderSide(
-                                      width: 2.0, color: Colors.deepOrange)),
-                              labelColor: Colors.black,
-                              tabs: [
-                                new Container(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: new Tab(
-                                    text: 'Discover',
-                                  ),
-                                ),
-                                new Container(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: new Tab(
-                                    text: 'For You',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-                  ];
-                },
-                body: Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(229, 233, 242, 1).withOpacity(0.5),
-                    ),
-                    child: Container(
-                        padding: EdgeInsets.only(top: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: TabBarView(
-                            controller: _tabController,
-                            children: [Discover(), ForYou()]))))));
+        body: homePage(context));
   }
 
   String view = 'home';

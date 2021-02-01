@@ -552,7 +552,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
   bool disabled = true;
 
   Stream<List<Widget>> getMessages() async* {
-    yield* Stream<int>.periodic(Duration(seconds: 1), (i) => i)
+    yield* Stream<int>.periodic(Duration(microseconds: 3), (i) => i)
         .asyncMap((i) => getRemoteMessages())
         .map((json) => mapJsonMessagesToListOfWidgetMessages(json));
   }

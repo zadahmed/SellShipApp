@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/Items.dart';
-import 'package:SellShip/screens/activitybuy.dart';
-import 'package:SellShip/screens/activitysell.dart';
 import 'package:SellShip/screens/chatpageviewseller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +14,12 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 
-class Activity extends StatefulWidget {
-  Activity({Key key}) : super(key: key);
+class ActivitySell extends StatefulWidget {
+  final int index;
+  ActivitySell({Key key, this.index}) : super(key: key);
 
   @override
-  _ActivityState createState() => new _ActivityState();
+  _ActivitySellState createState() => new _ActivitySellState();
 }
 
 class Offer {
@@ -44,8 +43,8 @@ class Offer {
       this.offerstage});
 }
 
-class _ActivityState extends State<Activity>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class _ActivitySellState extends State<ActivitySell>
+    with AutomaticKeepAliveClientMixin {
   TabController _tabController;
 
   bool keepalive = true;
@@ -57,7 +56,7 @@ class _ActivityState extends State<Activity>
   void initState() {
     super.initState();
 
-    _tabController = new TabController(length: 2, vsync: this);
+    loadsellingactivity();
   }
 
   var currency;
@@ -891,80 +890,440 @@ class _ActivityState extends State<Activity>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          title: Text(
-            'Activity',
-            style: TextStyle(
-                fontFamily: 'Helvetica',
-                fontSize: 18.0,
-                color: Colors.black,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-        body: DefaultTabController(
-            length: 2,
-            child: NestedScrollView(
-                headerSliverBuilder: (context, _) {
-                  return [
-                    SliverAppBar(
-                        backgroundColor: Colors.white,
-                        elevation: 0,
-                        snap: true,
-                        floating: true,
-                        title: Container(
-                          height: 60,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20))),
-                          child: Center(
-                            child: TabBar(
-                              controller: _tabController,
-                              labelStyle: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Helvetica',
-                              ),
-                              unselectedLabelStyle: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontFamily: 'Helvetica',
-                              ),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              indicator: UnderlineTabIndicator(
-                                  borderSide: BorderSide(
-                                      width: 2.0, color: Colors.deepOrange)),
-                              isScrollable: false,
-                              labelColor: Colors.black,
-                              tabs: [
-                                new Container(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: new Tab(
-                                    text: 'Buy',
-                                  ),
-                                ),
-                                new Container(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  child: new Tab(
-                                    text: 'Sell',
-                                  ),
-                                ),
-                              ],
-                            ),
+        body: loading == false
+            ? sellingItem.isNotEmpty
+                ? EasyRefresh.custom(
+                    onRefresh: () {
+                      setState(() {
+                        loading = true;
+                      });
+                      return loadsellingactivity();
+                    },
+                    header: CustomHeader(
+                        extent: 40.0,
+                        enableHapticFeedback: true,
+                        triggerDistance: 50.0,
+                        headerBuilder: (context,
+                            loadState,
+                            pulledExtent,
+                            loadTriggerPullDistance,
+                            loadIndicatorExtent,
+                            axisDirection,
+                            float,
+                            completeDuration,
+                            enableInfiniteLoad,
+                            success,
+                            noMore) {
+                          return SpinKitFadingCircle(
+                            color: Colors.deepOrange,
+                            size: 30.0,
+                          );
+                        }),
+                    slivers: [
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 5,
                           ),
-                        )),
-                  ];
-                },
-                body: TabBarView(controller: _tabController, children: [
-                  ActivityBuy(
-                    index: _tabController.index,
+                        ),
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return sellingItem.isNotEmpty
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 10, right: 10, bottom: 10),
+                                      child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ChatPageViewSeller(
+                                                        weight:
+                                                            sellingItem[index]
+                                                                .weight,
+                                                        itemid:
+                                                            sellingItem[index]
+                                                                .itemid,
+                                                        recipentid:
+                                                            sellingItem[index]
+                                                                .buyerid,
+                                                        senderid:
+                                                            sellingItem[index]
+                                                                .sellerid,
+                                                        recipentname:
+                                                            sellingItem[index]
+                                                                .buyername,
+                                                        itemprice:
+                                                            sellingItem[index]
+                                                                .price,
+                                                        messageid:
+                                                            sellingItem[index]
+                                                                .messageid,
+                                                        offer:
+                                                            sellingItem[index]
+                                                                .price,
+                                                        offerstage:
+                                                            sellingItem[index]
+                                                                .offerstage,
+                                                        itemimage:
+                                                            sellingItem[index]
+                                                                .image,
+                                                        itemname:
+                                                            sellingItem[index]
+                                                                .name,
+                                                      )),
+                                            );
+                                          },
+                                          child: Container(
+                                              height: 100,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 15, vertical: 5),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      offset: Offset(
+                                                          0.0, 1.0), //(x,y)
+                                                      blurRadius: 6.0,
+                                                    ),
+                                                  ],
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          Details(
+                                                                            itemid:
+                                                                                sellingItem[index].itemid,
+                                                                            sold:
+                                                                                sellingItem[index].sold,
+                                                                          )),
+                                                            );
+                                                          },
+                                                          child: Container(
+                                                            height: 80,
+                                                            width: 80,
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                              child:
+                                                                  Image.network(
+                                                                sellingItem[
+                                                                        index]
+                                                                    .image,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Container(
+                                                              height: 25,
+                                                              width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width /
+                                                                      3 -
+                                                                  10,
+                                                              child: Text(
+                                                                sellingItem[
+                                                                        index]
+                                                                    .name,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              '@' +
+                                                                  sellingItem[
+                                                                          index]
+                                                                      .buyername,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .grey),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Text(
+                                                              'Offer ' +
+                                                                  currency +
+                                                                  ' ' +
+                                                                  sellingItem[
+                                                                          index]
+                                                                      .price,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize:
+                                                                      14.0,
+                                                                  color: Colors
+                                                                      .black),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ]),
+                                                  Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        offerstatusseller(
+                                                          context,
+                                                          sellingItem[index]
+                                                              .offerstage,
+                                                          sellingItem[index]
+                                                              .itemid,
+                                                          sellingItem[index]
+                                                              .buyerid,
+                                                          sellingItem[index]
+                                                              .sellerid,
+                                                          sellingItem[index]
+                                                              .price,
+                                                        ),
+                                                      ])
+                                                ],
+                                              ))))
+                                  : Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Container(
+                                        height: 50,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                50,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade200,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      ));
+                            },
+                            childCount: sellingItem.length,
+                          ),
+                        )
+                      ])
+                : EasyRefresh.custom(
+                    onRefresh: () {
+                      setState(() {
+                        loading = true;
+                      });
+                      return loadbuyingactivity();
+                    },
+                    header: CustomHeader(
+                        extent: 40.0,
+                        enableHapticFeedback: true,
+                        triggerDistance: 50.0,
+                        headerBuilder: (context,
+                            loadState,
+                            pulledExtent,
+                            loadTriggerPullDistance,
+                            loadIndicatorExtent,
+                            axisDirection,
+                            float,
+                            completeDuration,
+                            enableInfiniteLoad,
+                            success,
+                            noMore) {
+                          return SpinKitFadingCircle(
+                            color: Colors.deepOrange,
+                            size: 30.0,
+                          );
+                        }),
+                    slivers: [
+                        SliverFillRemaining(
+                            child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, right: 20, top: 40),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '😞',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 40.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text('You have no offers yet ',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                        textAlign: TextAlign.center),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'The sell section is for all your activities regarding items you are selling. You can accept offers, send counter offers and even schedule pickups and track orders. What are you waiting for? Start listing your items',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18.0,
+                                          color: Colors.black),
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    InkWell(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: Container(
+                                          height: 45,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2,
+                                          decoration: BoxDecoration(
+                                            color: Colors.deepOrange,
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              Radius.circular(25.0),
+                                            ),
+                                            boxShadow: <BoxShadow>[
+                                              BoxShadow(
+                                                  color: Colors.deepOrange
+                                                      .withOpacity(0.4),
+                                                  offset:
+                                                      const Offset(1.1, 1.1),
+                                                  blurRadius: 5.0),
+                                            ],
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              'Start SellShipping',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16,
+                                                letterSpacing: 0.0,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => RootScreen(
+                                                    index: 2,
+                                                  )),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                )))
+                      ])
+            : Container(
+                height: MediaQuery.of(context).size.height,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 16.0),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.grey[100],
+                    child: ListView(
+                      children: [0, 1, 2, 3, 4, 5, 6]
+                          .map((_) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          30,
+                                      height: 150.0,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          30,
+                                      height: 150.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ))
+                          .toList(),
+                    ),
                   ),
-                  ActivitySell()
-                ]))));
+                ),
+              ));
   }
 }

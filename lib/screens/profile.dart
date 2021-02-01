@@ -973,9 +973,6 @@ class _ProfilePageState extends State<ProfilePage>
                                       new Tab(
                                         text: 'Items',
                                       ),
-//                                      new Tab(
-//                                        text: 'Orders',
-//                                      ),
                                       new Tab(
                                         text: 'Favourites',
                                       ),
