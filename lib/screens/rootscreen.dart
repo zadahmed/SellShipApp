@@ -161,8 +161,10 @@ class _RootScreenState extends State<RootScreen> {
       theme: new ThemeData(fontFamily: 'Helvetica'),
       title: 'SellShip',
       home: Scaffold(
+        extendBody: true,
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white.withOpacity(0.85),
           selectedItemColor: Color.fromRGBO(28, 45, 65, 1),
           unselectedItemColor: Colors.grey[400],
           showSelectedLabels: false,

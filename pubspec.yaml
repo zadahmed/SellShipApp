@@ -93,6 +93,7 @@ dependencies:
 
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -168,9 +169,11 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-   - family: Helvetica
-     fonts:
-       - asset: assets/fonts/ProximaNova-Regular.otf
+    - family: Helvetica
+      fonts:
+        - asset: assets/fonts/Gilroy-Regular.otf
+        - asset: assets/fonts/Gilroy-ExtraBold.otf
+          weight: 900
 
 
 #       - asset: fonts/Schyler-Italic.ttf

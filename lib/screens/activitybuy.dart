@@ -1011,8 +1011,16 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                                   builder:
                                                                       (context) =>
                                                                           Details(
+                                                                            source:
+                                                                                'activity',
+                                                                            item:
+                                                                                buyingItem[index],
                                                                             itemid:
                                                                                 buyingItem[index].itemid,
+                                                                            image:
+                                                                                buyingItem[index].image,
+                                                                            name:
+                                                                                buyingItem[index].name,
                                                                             sold:
                                                                                 buyingItem[index].sold,
                                                                           )),
@@ -1030,12 +1038,26 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                                             index]
                                                                         .image
                                                                         .isNotEmpty
-                                                                    ? Image
-                                                                        .network(
-                                                                        buyingItem[index]
-                                                                            .image,
-                                                                        fit: BoxFit
-                                                                            .cover,
+                                                                    ? Hero(
+                                                                        tag:
+                                                                            'activity${buyingItem[index].itemid}',
+                                                                        child:
+                                                                            CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              buyingItem[index].image,
+                                                                          height:
+                                                                              200,
+                                                                          width:
+                                                                              300,
+                                                                          fadeInDuration:
+                                                                              Duration(microseconds: 5),
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                          placeholder: (context, url) =>
+                                                                              SpinKitChasingDots(color: Colors.deepOrange),
+                                                                          errorWidget: (context, url, error) =>
+                                                                              Icon(Icons.error),
+                                                                        ),
                                                                       )
                                                                     : SpinKitFadingCircle(
                                                                         color: Colors

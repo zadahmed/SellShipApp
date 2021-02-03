@@ -36,7 +36,8 @@ class _CheckoutState extends State<Checkout> {
     getcurrency();
 
     setState(() {
-      itemid = widget.itemid;
+      //TODO CHANGE
+      itemid = '5ea35b603383d1370dd3713d';
     });
   }
 
@@ -47,6 +48,8 @@ class _CheckoutState extends State<Checkout> {
 
   final storage = new FlutterSecureStorage();
 
+  List<Item> listitems = List<Item>();
+
   getcurrency() async {
     var countr = await storage.read(key: 'country');
     if (countr.toLowerCase() == 'united arab emirates') {
@@ -54,24 +57,43 @@ class _CheckoutState extends State<Checkout> {
         currency = 'AED';
         stripecurrency = 'AED';
       });
-    } else if (countr.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-        stripecurrency = 'USD';
-      });
-    } else if (countr.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-        stripecurrency = 'CAD';
-      });
-    } else if (countr.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\$';
-        stripecurrency = 'GBP';
-      });
     }
+
+    var url = 'https://api.sellship.co/api/getitem/' + itemid;
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    newItem = Item(
+        name: jsonbody[0]['name'],
+        itemid: jsonbody[0]['_id']['\$oid'].toString(),
+        price: jsonbody[0]['price'].toString(),
+        description: jsonbody[0]['description'],
+        category: jsonbody[0]['category'],
+        image: jsonbody[0]['image'],
+        sold: jsonbody[0]['sold'] == null ? false : jsonbody[0]['sold'],
+        likes: jsonbody[0]['likes'] == null ? 0 : jsonbody[0]['likes'],
+        city: jsonbody[0]['city'],
+        username: jsonbody[0]['username'],
+        brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
+        size: jsonbody[0]['size'] == null ? '' : jsonbody[0]['size'],
+        useremail: jsonbody[0]['useremail'],
+        usernumber: jsonbody[0]['usernumber'],
+        userid: jsonbody[0]['userid'],
+        latitude: jsonbody[0]['latitude'],
+        comments: jsonbody[0]['comments'] == null
+            ? 0
+            : jsonbody[0]['comments'].length,
+        longitude: jsonbody[0]['longitude'],
+        subsubcategory: jsonbody[0]['subsubcategory'],
+        subcategory: jsonbody[0]['subcategory']);
+
+    setState(() {
+      newItem = newItem;
+    });
   }
 
+  Item newItem;
   var addressline1;
   var city;
   var state;
@@ -89,530 +111,298 @@ class _CheckoutState extends State<Checkout> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldState,
+      backgroundColor: Color.fromRGBO(242, 244, 248, 1),
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.deepOrange),
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         title: Text(
-          'CHECKOUT',
+          'Checkout',
           style: TextStyle(
               fontFamily: 'Helvetica',
-              fontSize: 16,
-              color: Colors.deepOrange,
+              fontSize: 18,
+              color: Colors.black,
               fontWeight: FontWeight.w800),
         ),
+      ),
+      body: ListView(
+        children: [
+          Padding(
+              padding: EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+              child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 80,
+                        width: 80,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: newItem.image.isNotEmpty
+                                ? Hero(
+                                    tag: 'activity${newItem.itemid}',
+                                    child: CachedNetworkImage(
+                                      imageUrl: newItem.image,
+                                      height: 200,
+                                      width: 300,
+                                      fadeInDuration: Duration(microseconds: 5),
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          SpinKitChasingDots(
+                                              color: Colors.deepOrange),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                  )
+                                : SpinKitFadingCircle(
+                                    color: Colors.deepOrange,
+                                  )),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 25,
+                            width: MediaQuery.of(context).size.width / 2 - 10,
+                            child: Text(
+                              newItem.name,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          Text(
+                            '@' + newItem.username,
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 14,
+                                color: Colors.grey),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            currency + ' ' + newItem.price,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 14.0,
+                                color: Colors.black),
+                          )
+                        ],
+                      ),
+                    ],
+                  ))),
+          Padding(
+              padding: EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+              child: Container(
+                  padding: EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.white),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Subtotal',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          Text(
+                            currency + ' ' + newItem.price,
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Delivery',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          Text(
+                            'Free',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Deliver To',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          Text(
+                            'Choose Address',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Pay Using',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          Text(
+                            'Choose Payment Method',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ))),
+          Padding(
+            padding: EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+            child: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15), color: Colors.white),
+              child: ListTile(
+                leading: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.deepOrangeAccent.withOpacity(0.2)),
+                  child: Center(
+                    child: Icon(
+                      Icons.warning,
+                      color: Colors.deepOrangeAccent,
+                    ),
+                  ),
+                ),
+                title: Text(
+                  'On tapping \'Pay\', you hereby accept the terms and conditions of service from SellShip and our payment provider Telr.',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 12,
+                      color: Colors.blueGrey),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: AnimatedOpacity(
         duration: const Duration(milliseconds: 500),
         opacity: 1,
         child: Container(
-            height: 110,
+            height: 200,
             decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    color: Colors.grey.withOpacity(0.4),
-                    offset: const Offset(1.1, 1.1),
-                    blurRadius: 10.0),
-              ],
-            ),
+                color: Colors.white,
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                      color: Colors.grey.withOpacity(0.4),
+                      offset: const Offset(1.1, 1.1),
+                      blurRadius: 10.0),
+                ],
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20))),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding:
-                      EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'On tapping \'Pay\', you hereby accept the terms and conditions of service from SellShip and our payment provider Stripe.',
-                      style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 12,
-                          color: Colors.blueGrey),
-                    ),
-                  ),
-                ),
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 10, top: 5, right: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Total',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            letterSpacing: 0.0,
+                            color: Colors.black45,
+                          ),
+                        ),
+                        Text(currency + ' ' + newItem.price,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 20,
+                              letterSpacing: 0.0,
+                              color: Colors.black,
+                            )),
+                      ],
+                    )),
                 Padding(
                     padding:
                         const EdgeInsets.only(left: 15, bottom: 10, right: 15),
                     child: Container(
                       child: InkWell(
-                        onTap: () async {
-//                            if (deliveryaddress == null) {
-//                              //todo this is the same code as below refactor into widget.
-//                              showDialog(
-//                                  context: context,
-//                                  builder: (_) => AssetGiffyDialog(
-//                                        image: Image.asset(
-//                                          'assets/oops.gif',
-//                                          fit: BoxFit.cover,
-//                                        ),
-//                                        title: Text(
-//                                          'Oops!',
-//                                          style: TextStyle(
-//                                              fontSize: 22.0,
-//                                              fontWeight: FontWeight.w600),
-//                                        ),
-//                                        description: Text(
-//                                          'Looks like your missing your delivery address!',
-//                                          textAlign: TextAlign.center,
-//                                          style: TextStyle(),
-//                                        ),
-//                                        onlyOkButton: true,
-//                                        entryAnimation: EntryAnimation.DEFAULT,
-//                                        onOkButtonPressed: () {
-//                                          Navigator.of(context,
-//                                                  rootNavigator: true)
-//                                              .pop('dialog');
-//                                        },
-//                                      ));
-//                            } else if (paymentby == null) {
-//                              showDialog(
-//                                  context: context,
-//                                  builder: (_) => AssetGiffyDialog(
-//                                        image: Image.asset(
-//                                          'assets/oops.gif',
-//                                          fit: BoxFit.cover,
-//                                        ),
-//                                        title: Text(
-//                                          'Oops!',
-//                                          style: TextStyle(
-//                                              fontSize: 22.0,
-//                                              fontWeight: FontWeight.w600),
-//                                        ),
-//                                        description: Text(
-//                                          'Looks like your missing your Payment Method',
-//                                          textAlign: TextAlign.center,
-//                                          style: TextStyle(),
-//                                        ),
-//                                        onlyOkButton: true,
-//                                        entryAnimation: EntryAnimation.DEFAULT,
-//                                        onOkButtonPressed: () {
-//                                          Navigator.of(context,
-//                                                  rootNavigator: true)
-//                                              .pop('dialog');
-//                                        },
-//                                      ));
-//                            } else {
-//                              if (paymentby != null) {
-//                                ProgressDialog dialog = new ProgressDialog(
-//                                  context,
-//                                );
-//                                dialog.style(message: 'Please wait...');
-//                                await dialog.show();
-//                                var userid = await storage.read(key: 'userid');
-//
-//                                if (cardresult is Payments) {
-//                                  var messageurl =
-//                                      'https://api.sellship.co/api/stripe/pay/' +
-//                                          userid.toString() +
-//                                          '/' +
-//                                          cardresult.paymentid.toString() +
-//                                          '/' +
-//                                          totalpayable.toString() +
-//                                          '/' +
-//                                          stripecurrency;
-//                                  final response = await http.get(messageurl);
-//
-//                                  var paymentresponse =
-//                                      json.decode(response.body);
-//
-//                                  if (paymentresponse['done'] == null) {
-//                                    if (paymentresponse['error']['code'] ==
-//                                        'card_declined') {
-//                                      await dialog.hide();
-//                                      showDialog(
-//                                          context: context,
-//                                          builder: (_) => AssetGiffyDialog(
-//                                                image: Image.asset(
-//                                                  'assets/oops.gif',
-//                                                  fit: BoxFit.cover,
-//                                                ),
-//                                                title: Text(
-//                                                  'Oops!',
-//                                                  style: TextStyle(
-//                                                      fontSize: 22.0,
-//                                                      fontWeight:
-//                                                          FontWeight.w600),
-//                                                ),
-//                                                description: Text(
-//                                                  'Looks like your card has been declined! Please try another payment method',
-//                                                  textAlign: TextAlign.center,
-//                                                  style: TextStyle(),
-//                                                ),
-//                                                onlyOkButton: true,
-//                                                entryAnimation:
-//                                                    EntryAnimation.DEFAULT,
-//                                                onOkButtonPressed: () {
-//                                                  Navigator.of(context,
-//                                                          rootNavigator: true)
-//                                                      .pop('dialog');
-//                                                },
-//                                              ));
-//                                    } else if (paymentresponse['error']
-//                                            ['code'] ==
-//                                        'authentication_required') {
-//                                      var clientsecret =
-//                                          paymentresponse['error']
-//                                                  ['payment_intent']
-//                                              ['client_secret'];
-//                                      await dialog.hide();
-//
-//                                      Stripe.init(
-//                                          "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
-//                                          returnUrlForSca:
-//                                              "stripesdk://3ds.stripesdk.io");
-//
-//                                      final paymentIntent = await Stripe
-//                                          .instance
-//                                          .confirmPayment(clientsecret,
-//                                              paymentMethodId:
-//                                                  paymentresponse['error']
-//                                                              ['payment_intent']
-//                                                          ['charges']['data'][0]
-//                                                      ['payment_method']);
-//
-//                                      if (paymentIntent['status'] ==
-//                                          'succeeded') {
-//                                        var messageurl =
-//                                            'https://api.sellship.co/api/payment/' +
-//                                                messageid +
-//                                                '/' +
-//                                                item.itemid +
-//                                                '/' +
-//                                                offer.toString() +
-//                                                '/' +
-//                                                totalrate.toString() +
-//                                                '/' +
-//                                                totalpayable.toString() +
-//                                                '/' +
-//                                                deliveryaddress +
-//                                                '/' +
-//                                                cardresult.paymentid.toString();
-//
-//                                        final response =
-//                                            await http.get(messageurl);
-//
-//                                        if (response.statusCode == 200) {
-////                                          Navigator.pushReplacement(
-////                                            context,
-////                                            MaterialPageRoute(
-////                                                builder: (context) =>
-////                                                    PaymentDone(
-////                                                      item: item,
-////                                                      messageid: messageid,
-////                                                    )),
-////                                          );
-//                                        }
-//                                      } else {
-//                                        showDialog(
-//                                            context: context,
-//                                            builder: (_) => AssetGiffyDialog(
-//                                                  image: Image.asset(
-//                                                    'assets/oops.gif',
-//                                                    fit: BoxFit.cover,
-//                                                  ),
-//                                                  title: Text(
-//                                                    'Oops!',
-//                                                    style: TextStyle(
-//                                                        fontSize: 22.0,
-//                                                        fontWeight:
-//                                                            FontWeight.w600),
-//                                                  ),
-//                                                  description: Text(
-//                                                    'Looks like your card has been declined! Please try another payment method',
-//                                                    textAlign: TextAlign.center,
-//                                                    style: TextStyle(),
-//                                                  ),
-//                                                  onlyOkButton: true,
-//                                                  entryAnimation:
-//                                                      EntryAnimation.DEFAULT,
-//                                                  onOkButtonPressed: () {
-//                                                    Navigator.of(context,
-//                                                            rootNavigator: true)
-//                                                        .pop('dialog');
-//                                                  },
-//                                                ));
-//                                      }
-//                                    }
-//                                  } else {
-//                                    if (response.statusCode == 200) {
-//                                      var messageurl =
-//                                          'https://api.sellship.co/api/payment/' +
-//                                              messageid +
-//                                              '/' +
-//                                              item.itemid +
-//                                              '/' +
-//                                              offer.toString() +
-//                                              '/' +
-//                                              totalrate.toString() +
-//                                              '/' +
-//                                              totalpayable.toString() +
-//                                              '/' +
-//                                              deliveryaddress +
-//                                              '/' +
-//                                              cardresult.paymentid.toString();
-//
-//                                      final response =
-//                                          await http.get(messageurl);
-//
-//                                      if (response.statusCode == 200) {
-//                                        Navigator.pushReplacement(
-//                                          context,
-//                                          MaterialPageRoute(
-//                                              builder: (context) => PaymentDone(
-//                                                    item: item,
-//                                                    messageid: messageid,
-//                                                  )),
-//                                        );
-//
-//                                        await dialog.hide();
-//                                      }
-//                                    } else {
-//                                      await dialog.hide();
-//                                      showDialog(
-//                                          context: context,
-//                                          builder: (_) => AssetGiffyDialog(
-//                                                image: Image.asset(
-//                                                  'assets/oops.gif',
-//                                                  fit: BoxFit.cover,
-//                                                ),
-//                                                title: Text(
-//                                                  'Oops!',
-//                                                  style: TextStyle(
-//                                                      fontSize: 22.0,
-//                                                      fontWeight:
-//                                                          FontWeight.w600),
-//                                                ),
-//                                                description: Text(
-//                                                  'The transaction failed! Try again!',
-//                                                  textAlign: TextAlign.center,
-//                                                  style: TextStyle(),
-//                                                ),
-//                                                onlyOkButton: true,
-//                                                entryAnimation:
-//                                                    EntryAnimation.DEFAULT,
-//                                                onOkButtonPressed: () {
-//                                                  Navigator.of(context,
-//                                                          rootNavigator: true)
-//                                                      .pop('dialog');
-//                                                },
-//                                              ));
-//                                    }
-//                                  }
-//                                } else {
-//                                  var messageurl =
-//                                      'https://api.sellship.co/api/stripe/pay/' +
-//                                          userid.toString() +
-//                                          '/' +
-//                                          cardresult['id'].toString() +
-//                                          '/' +
-//                                          totalpayable.toString() +
-//                                          '/' +
-//                                          stripecurrency;
-//                                  final response = await http.get(messageurl);
-//
-//                                  var paymentresponse =
-//                                      json.decode(response.body);
-//
-//                                  if (paymentresponse['done'] == null) {
-//                                    if (paymentresponse['error']['code'] ==
-//                                        'card_declined') {
-//                                      await dialog.hide();
-//                                      showDialog(
-//                                          context: context,
-//                                          builder: (_) => AssetGiffyDialog(
-//                                                image: Image.asset(
-//                                                  'assets/oops.gif',
-//                                                  fit: BoxFit.cover,
-//                                                ),
-//                                                title: Text(
-//                                                  'Oops!',
-//                                                  style: TextStyle(
-//                                                      fontSize: 22.0,
-//                                                      fontWeight:
-//                                                          FontWeight.w600),
-//                                                ),
-//                                                description: Text(
-//                                                  'Looks like your card has been declined! Please try another payment method',
-//                                                  textAlign: TextAlign.center,
-//                                                  style: TextStyle(),
-//                                                ),
-//                                                onlyOkButton: true,
-//                                                entryAnimation:
-//                                                    EntryAnimation.DEFAULT,
-//                                                onOkButtonPressed: () {
-//                                                  Navigator.of(context,
-//                                                          rootNavigator: true)
-//                                                      .pop('dialog');
-//                                                },
-//                                              ));
-//                                    } else if (paymentresponse['error']
-//                                            ['code'] ==
-//                                        'authentication_required') {
-//                                      var clientsecret =
-//                                          paymentresponse['error']
-//                                                  ['payment_intent']
-//                                              ['client_secret'];
-//                                      await dialog.hide();
-//
-//                                      Stripe.init(
-//                                          "pk_live_CWGvDZru8fXBNVdXnhahkBoY00pzoyQfkz",
-//                                          returnUrlForSca:
-//                                              "stripesdk://3ds.stripesdk.io");
-//
-//                                      final paymentIntent = await Stripe
-//                                          .instance
-//                                          .confirmPayment(clientsecret,
-//                                              paymentMethodId:
-//                                                  paymentresponse['error']
-//                                                              ['payment_intent']
-//                                                          ['charges']['data'][0]
-//                                                      ['payment_method']);
-//
-//                                      if (paymentIntent['status'] ==
-//                                          'succeeded') {
-//                                        var messageurl =
-//                                            'https://api.sellship.co/api/payment/' +
-//                                                messageid +
-//                                                '/' +
-//                                                item.itemid +
-//                                                '/' +
-//                                                offer.toString() +
-//                                                '/' +
-//                                                totalrate.toString() +
-//                                                '/' +
-//                                                totalpayable.toString() +
-//                                                '/' +
-//                                                deliveryaddress +
-//                                                '/' +
-//                                                cardresult['id'].toString();
-//
-//                                        final response =
-//                                            await http.get(messageurl);
-//
-//                                        if (response.statusCode == 200) {
-//                                          Navigator.pushReplacement(
-//                                            context,
-//                                            MaterialPageRoute(
-//                                                builder: (context) =>
-//                                                    PaymentDone(
-//                                                      item: item,
-//                                                      messageid: messageid,
-//                                                    )),
-//                                          );
-//                                        }
-//                                      } else {
-//                                        showDialog(
-//                                            context: context,
-//                                            builder: (_) => AssetGiffyDialog(
-//                                                  image: Image.asset(
-//                                                    'assets/oops.gif',
-//                                                    fit: BoxFit.cover,
-//                                                  ),
-//                                                  title: Text(
-//                                                    'Oops!',
-//                                                    style: TextStyle(
-//                                                        fontSize: 22.0,
-//                                                        fontWeight:
-//                                                            FontWeight.w600),
-//                                                  ),
-//                                                  description: Text(
-//                                                    'Looks like your card has been declined! Please try another payment method',
-//                                                    textAlign: TextAlign.center,
-//                                                    style: TextStyle(),
-//                                                  ),
-//                                                  onlyOkButton: true,
-//                                                  entryAnimation:
-//                                                      EntryAnimation.DEFAULT,
-//                                                  onOkButtonPressed: () {
-//                                                    Navigator.of(context,
-//                                                            rootNavigator: true)
-//                                                        .pop('dialog');
-//                                                  },
-//                                                ));
-//                                      }
-//                                    }
-//                                  } else {
-//                                    if (response.statusCode == 200) {
-//                                      var messageurl =
-//                                          'https://api.sellship.co/api/payment/' +
-//                                              messageid +
-//                                              '/' +
-//                                              item.itemid +
-//                                              '/' +
-//                                              offer.toString() +
-//                                              '/' +
-//                                              totalrate.toString() +
-//                                              '/' +
-//                                              totalpayable.toString() +
-//                                              '/' +
-//                                              deliveryaddress +
-//                                              '/' +
-//                                              cardresult['id'].toString();
-//
-//                                      final response =
-//                                          await http.get(messageurl);
-//
-//                                      if (response.statusCode == 200) {
-//                                        Navigator.pushReplacement(
-//                                          context,
-//                                          MaterialPageRoute(
-//                                              builder: (context) => PaymentDone(
-//                                                    item: item,
-//                                                    messageid: messageid,
-//                                                  )),
-//                                        );
-//
-//                                        await dialog.hide();
-//                                      }
-//                                    } else {
-//                                      await dialog.hide();
-//                                      showDialog(
-//                                          context: context,
-//                                          builder: (_) => AssetGiffyDialog(
-//                                                image: Image.asset(
-//                                                  'assets/oops.gif',
-//                                                  fit: BoxFit.cover,
-//                                                ),
-//                                                title: Text(
-//                                                  'Oops!',
-//                                                  style: TextStyle(
-//                                                      fontSize: 22.0,
-//                                                      fontWeight:
-//                                                          FontWeight.w600),
-//                                                ),
-//                                                description: Text(
-//                                                  'The transaction failed! Try again!',
-//                                                  textAlign: TextAlign.center,
-//                                                  style: TextStyle(),
-//                                                ),
-//                                                onlyOkButton: true,
-//                                                entryAnimation:
-//                                                    EntryAnimation.DEFAULT,
-//                                                onOkButtonPressed: () {
-//                                                  Navigator.of(context,
-//                                                          rootNavigator: true)
-//                                                      .pop('dialog');
-//                                                },
-//                                              ));
-//                                    }
-//                                  }
-//                                }
-//                              }
-//                            }
-                        },
+                        onTap: () async {},
                         child: Container(
-                          height: 48,
+                          height: 52,
                           decoration: BoxDecoration(
-                            color: Colors.deepOrange,
+                            color: Color.fromRGBO(255, 115, 0, 1),
                             borderRadius: const BorderRadius.all(
-                              Radius.circular(10.0),
+                              Radius.circular(25.0),
                             ),
                             boxShadow: <BoxShadow>[
                               BoxShadow(
-                                  color: Colors.deepOrange.withOpacity(0.4),
+                                  color: Color.fromRGBO(255, 115, 0, 1)
+                                      .withOpacity(0.4),
                                   offset: const Offset(1.1, 1.1),
                                   blurRadius: 10.0),
                             ],

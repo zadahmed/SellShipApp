@@ -1113,7 +1113,7 @@ class _CategoryDetailState extends State<CategoryDetail>
       subcategory = widget.subcategory;
       loading = true;
       notifbadge = false;
-      tabcontrollerlength = widget.subcategory.length + 1;
+      tabcontrollerlength = widget.subcategory.length;
     });
 
     _tabController =
@@ -1122,29 +1122,19 @@ class _CategoryDetailState extends State<CategoryDetail>
     gettabs();
     getnotification();
     getfavourites();
-    fetchItems(skip, limit);
+    var subname = subcategorytabs[_tabController.index].text;
+    fetchsubcategories(skip, limit, subname);
 
     _tabController.addListener(() {
-      if (_tabController.index != 0) {
-        setState(() {
-          skip = 0;
-          limit = 40;
+      setState(() {
+        skip = 0;
+        limit = 40;
 
-          loading = true;
-        });
+        loading = true;
+      });
 
-        var subname = subcategorytabs[_tabController.index].text;
-        fetchsubcategories(skip, limit, subname);
-      } else {
-        setState(() {
-          skip = 0;
-          limit = 40;
-
-          loading = true;
-        });
-
-        fetchItems(skip, limit);
-      }
+      var subname = subcategorytabs[_tabController.index].text;
+      fetchsubcategories(skip, limit, subname);
     });
 
     super.initState();
@@ -1227,9 +1217,7 @@ class _CategoryDetailState extends State<CategoryDetail>
 
   gettabs() {
     var subcat = widget.subcategory;
-    subcategorytabs.add(Tab(
-      text: 'All',
-    ));
+
     for (int i = 0; i < subcat.length; i++) {
       subcategorytabs.add(Tab(
         text: subcat[i]['name'],
@@ -1270,6 +1258,88 @@ class _CategoryDetailState extends State<CategoryDetail>
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldState,
+        floatingActionButton: InkWell(
+          onTap: () {
+            showModalBottomSheet(
+                backgroundColor: Colors.transparent,
+                context: context,
+                isScrollControlled: true,
+                useRootNavigator: false,
+                isDismissible: true,
+                builder: (BuildContext context) {
+                  return DraggableScrollableSheet(
+                      initialChildSize: 0.85, //set this as you want
+                      maxChildSize: 0.85, //set this as you want
+                      minChildSize: 0.85, //set this as you want
+                      expand: true,
+                      builder: (context, scrollController) {
+                        return Container(
+                            decoration: new BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: new BorderRadius.only(
+                                    topLeft: const Radius.circular(20.0),
+                                    topRight: const Radius.circular(20.0))),
+                            child: Column(children: [
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 20, bottom: 10),
+                                    child: Text(
+                                      "Filter",
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 22,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            right: 15, bottom: 10),
+                                        child: Text(
+                                          "Done",
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 18,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                      ))
+                                ],
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                              ),
+                            ])); //whatever you're returning, does not have to be a Container
+                      });
+                });
+          },
+          child: Container(
+            width: 80,
+            height: 40,
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                offset: Offset(0.0, 2.0), //(x,y)
+                blurRadius: 4.0,
+              ),
+            ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+            child: Icon(
+              Feather.sliders,
+              size: 18,
+              color: Colors.deepOrange,
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         backgroundColor: Colors.white,
         body: DefaultTabController(
             length: tabcontrollerlength,

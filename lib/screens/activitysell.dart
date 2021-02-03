@@ -170,11 +170,11 @@ class _ActivitySellState extends State<ActivitySell>
               sold: itemmap[i]['item']['sold']);
           ites.add(ite);
         }
-        if (mounted)
-          setState(() {
-            sellingItem = ites;
-            loading = false;
-          });
+        if (mounted) print(ites.length);
+        setState(() {
+          sellingItem = ites;
+          loading = false;
+        });
       }
     }
   }
@@ -184,7 +184,7 @@ class _ActivitySellState extends State<ActivitySell>
 
   Widget offerstatus(BuildContext context, offerstage, itemid, senderuserid,
       recieveruserid, offerprice) {
-    if (offerstage == 0 && _tabController.index == 0) {
+    if (offerstage == 0 && widget.index == 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -214,7 +214,7 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == 2 && _tabController.index == 0) {
+    } else if (offerstage == 2 && widget.index == 0) {
       return Container(
           width: 120,
           height: 27,
@@ -228,7 +228,7 @@ class _ActivitySellState extends State<ActivitySell>
             style: TextStyle(
                 fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
           )));
-    } else if (offerstage == -1 && _tabController.index == 0) {
+    } else if (offerstage == -1 && widget.index == 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -258,7 +258,7 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == 1 && _tabController.index == 0) {
+    } else if (offerstage == 1 && widget.index == 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -293,7 +293,12 @@ class _ActivitySellState extends State<ActivitySell>
 
   Widget offerstatusseller(BuildContext context, offerstage, itemid,
       senderuserid, recieveruserid, offerprice) {
-    if (offerstage == 0 && _tabController.index == 1) {
+    print(offerstage);
+    print(itemid);
+    print(senderuserid);
+    print(recieveruserid);
+    print(offerprice);
+    if (offerstage == 0 && widget.index == 1) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -323,7 +328,7 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == -1 && _tabController.index == 1) {
+    } else if (offerstage == -1 && widget.index == 1) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -353,7 +358,7 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == 2 && _tabController.index == 1) {
+    } else if (offerstage == 2 && widget.index == 1) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -383,7 +388,7 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == 1 && _tabController.index == 1) {
+    } else if (offerstage == 1 && widget.index == 1) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -412,38 +417,11 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == 2 && _tabController.index == 0) {
+    } else {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Checkout(itemid: itemid)),
-                );
-              },
-              child: Container(
-                  width: 120,
-                  height: 27,
-                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                  decoration: BoxDecoration(
-                      color: Color.fromRGBO(119, 221, 119, 1),
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Center(
-                      child: Text(
-                    'Pay',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14.0,
-                        color: Colors.white),
-                  )))),
-          SizedBox(
-            height: 10,
-          ),
           Icon(
             Icons.chevron_right,
             size: 20,
@@ -1015,8 +993,16 @@ class _ActivitySellState extends State<ActivitySell>
                                                                   builder:
                                                                       (context) =>
                                                                           Details(
+                                                                            source:
+                                                                                'activity',
+                                                                            item:
+                                                                                sellingItem[index],
                                                                             itemid:
                                                                                 sellingItem[index].itemid,
+                                                                            image:
+                                                                                sellingItem[index].image,
+                                                                            name:
+                                                                                sellingItem[index].name,
                                                                             sold:
                                                                                 sellingItem[index].sold,
                                                                           )),
@@ -1030,13 +1016,34 @@ class _ActivitySellState extends State<ActivitySell>
                                                                   BorderRadius
                                                                       .circular(
                                                                           5),
-                                                              child:
-                                                                  Image.network(
-                                                                sellingItem[
-                                                                        index]
-                                                                    .image,
-                                                                fit: BoxFit
-                                                                    .cover,
+                                                              child: Hero(
+                                                                tag:
+                                                                    'activity${sellingItem[index].itemid}',
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      sellingItem[
+                                                                              index]
+                                                                          .image,
+                                                                  height: 200,
+                                                                  width: 300,
+                                                                  fadeInDuration:
+                                                                      Duration(
+                                                                          microseconds:
+                                                                              5),
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      SpinKitChasingDots(
+                                                                          color:
+                                                                              Colors.deepOrange),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                ),
                                                               ),
                                                             ),
                                                           ),

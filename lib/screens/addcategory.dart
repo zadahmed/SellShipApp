@@ -39,7 +39,6 @@ class _AddCategoryState extends State<AddCategory> {
     'Sport & Leisure',
     'Handmade',
     'Books',
-    'Motors',
     'Other'
   ];
 

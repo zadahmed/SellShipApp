@@ -3020,6 +3020,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   getItemData() async {
     var userid = await storage.read(key: 'userid');
+    print(userid);
     var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
 
     final itemresponse = await http.get(itemurl);
