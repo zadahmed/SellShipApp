@@ -8,6 +8,7 @@ import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/paymentdone.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
@@ -134,76 +135,111 @@ class _CheckoutState extends State<Checkout> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: Colors.white),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 80,
-                        width: 80,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: newItem.image.isNotEmpty
-                                ? Hero(
-                                    tag: 'activity${newItem.itemid}',
-                                    child: CachedNetworkImage(
-                                      imageUrl: newItem.image,
-                                      height: 200,
-                                      width: 300,
-                                      fadeInDuration: Duration(microseconds: 5),
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          SpinKitChasingDots(
-                                              color: Colors.deepOrange),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Items',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w800),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Details(
+                                          itemid: itemid,
+                                          name: newItem.name,
+                                          sold: newItem.sold,
+                                          source: 'activity',
+                                          image: newItem.image,
+                                        )),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 80,
+                                  width: 80,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: newItem.image.isNotEmpty
+                                          ? Hero(
+                                              tag: 'activity${newItem.itemid}',
+                                              child: CachedNetworkImage(
+                                                imageUrl: newItem.image,
+                                                height: 200,
+                                                width: 300,
+                                                fadeInDuration:
+                                                    Duration(microseconds: 5),
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    SpinKitChasingDots(
+                                                        color:
+                                                            Colors.deepOrange),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Icon(Icons.error),
+                                              ),
+                                            )
+                                          : SpinKitFadingCircle(
+                                              color: Colors.deepOrange,
+                                            )),
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      height: 25,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          10,
+                                      child: Text(
+                                        newItem.name,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      ),
                                     ),
-                                  )
-                                : SpinKitFadingCircle(
-                                    color: Colors.deepOrange,
-                                  )),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            height: 25,
-                            width: MediaQuery.of(context).size.width / 2 - 10,
-                            child: Text(
-                              newItem.name,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            ),
-                          ),
-                          Text(
-                            '@' + newItem.username,
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 14,
-                                color: Colors.grey),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            currency + ' ' + newItem.price,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 14.0,
-                                color: Colors.black),
-                          )
-                        ],
-                      ),
-                    ],
-                  ))),
+                                    Text(
+                                      '@' + newItem.username,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 14,
+                                          color: Colors.grey),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      currency + ' ' + newItem.price,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 14.0,
+                                          color: Colors.black),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            )),
+                      ]))),
           Padding(
               padding: EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
               child: Container(
@@ -273,14 +309,32 @@ class _CheckoutState extends State<Checkout> {
                                 color: Colors.black,
                                 fontWeight: FontWeight.w800),
                           ),
-                          Text(
-                            'Choose Address',
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
+                          InkWell(
+                              onTap: () async {
+                                final addressresult = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Address()),
+                                );
+                                print(addressresult);
+                              },
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Choose Address',
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.chevron_right,
+                                    size: 16,
+                                    color: Colors.blueGrey,
+                                  )
+                                ],
+                              )),
                         ],
                       ),
                       SizedBox(
@@ -297,14 +351,23 @@ class _CheckoutState extends State<Checkout> {
                                 color: Colors.black,
                                 fontWeight: FontWeight.w800),
                           ),
-                          Text(
-                            'Choose Payment Method',
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Choose Payment Method',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
+                              Icon(
+                                Icons.chevron_right,
+                                size: 16,
+                                color: Colors.blueGrey,
+                              )
+                            ],
+                          )
                         ],
                       )
                     ],
