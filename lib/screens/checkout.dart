@@ -14,6 +14,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stripe_sdk/stripe_sdk.dart';
 
 class Checkout extends StatefulWidget {
@@ -28,18 +29,15 @@ class Checkout extends StatefulWidget {
 }
 
 class _CheckoutState extends State<Checkout> {
-  String itemid;
-
   var cardresult;
+  double total;
+  double subtotal = 0.0;
   @override
   void initState() {
     super.initState();
     getcurrency();
 
-    setState(() {
-      //TODO CHANGE
-      itemid = '5ea35b603383d1370dd3713d';
-    });
+    setState(() {});
   }
 
   GlobalKey _toolTipKey = GlobalKey();
@@ -48,6 +46,8 @@ class _CheckoutState extends State<Checkout> {
   var stripecurrency;
 
   final storage = new FlutterSecureStorage();
+
+  var selectedaddress;
 
   List<Item> listitems = List<Item>();
 
@@ -59,38 +59,33 @@ class _CheckoutState extends State<Checkout> {
         stripecurrency = 'AED';
       });
     }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List cartitems = prefs.getStringList('cartitems');
 
-    var url = 'https://api.sellship.co/api/getitem/' + itemid;
-    final response = await http.get(url);
+    if (cartitems != null) {
+      for (int i = 0; i < cartitems.length; i++) {
+        var decodeditem = json.decode(cartitems[i]);
 
-    var jsonbody = json.decode(response.body);
+        print(decodeditem);
+        Item newItem = Item(
+            name: decodeditem['name'],
+            itemid: decodeditem['itemid'],
+            price: decodeditem['price'].toString(),
+            image: decodeditem['image'],
+            userid: decodeditem['userid'],
+            username: decodeditem['username']);
 
-    newItem = Item(
-        name: jsonbody[0]['name'],
-        itemid: jsonbody[0]['_id']['\$oid'].toString(),
-        price: jsonbody[0]['price'].toString(),
-        description: jsonbody[0]['description'],
-        category: jsonbody[0]['category'],
-        image: jsonbody[0]['image'],
-        sold: jsonbody[0]['sold'] == null ? false : jsonbody[0]['sold'],
-        likes: jsonbody[0]['likes'] == null ? 0 : jsonbody[0]['likes'],
-        city: jsonbody[0]['city'],
-        username: jsonbody[0]['username'],
-        brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
-        size: jsonbody[0]['size'] == null ? '' : jsonbody[0]['size'],
-        useremail: jsonbody[0]['useremail'],
-        usernumber: jsonbody[0]['usernumber'],
-        userid: jsonbody[0]['userid'],
-        latitude: jsonbody[0]['latitude'],
-        comments: jsonbody[0]['comments'] == null
-            ? 0
-            : jsonbody[0]['comments'].length,
-        longitude: jsonbody[0]['longitude'],
-        subsubcategory: jsonbody[0]['subsubcategory'],
-        subcategory: jsonbody[0]['subcategory']);
+        subtotal = subtotal + double.parse(newItem.price);
+        print(subtotal);
 
+        listitems.add(newItem);
+      }
+    }
+
+    print(listitems.length);
     setState(() {
-      newItem = newItem;
+      subtotal = subtotal;
+      listitems = listitems;
     });
   }
 
@@ -150,95 +145,151 @@ class _CheckoutState extends State<Checkout> {
                         SizedBox(
                           height: 10,
                         ),
-                        InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Details(
-                                          itemid: itemid,
-                                          name: newItem.name,
-                                          sold: newItem.sold,
-                                          source: 'activity',
-                                          image: newItem.image,
-                                        )),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 80,
-                                  width: 80,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(5),
-                                      child: newItem.image.isNotEmpty
-                                          ? Hero(
-                                              tag: 'activity${newItem.itemid}',
-                                              child: CachedNetworkImage(
-                                                imageUrl: newItem.image,
-                                                height: 200,
-                                                width: 300,
-                                                fadeInDuration:
-                                                    Duration(microseconds: 5),
-                                                fit: BoxFit.cover,
-                                                placeholder: (context, url) =>
-                                                    SpinKitChasingDots(
-                                                        color:
-                                                            Colors.deepOrange),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                              ),
-                                            )
-                                          : SpinKitFadingCircle(
-                                              color: Colors.deepOrange,
-                                            )),
+                        listitems.isNotEmpty
+                            ? Container(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: listitems.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Details(
+                                                          itemid:
+                                                              listitems[index]
+                                                                  .itemid,
+                                                          name: listitems[index]
+                                                              .name,
+                                                          sold: listitems[index]
+                                                              .sold,
+                                                          source: 'activity',
+                                                          image:
+                                                              listitems[index]
+                                                                  .image,
+                                                        )),
+                                              );
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  height: 80,
+                                                  width: 80,
+                                                  child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      child: listitems[index]
+                                                              .image
+                                                              .isNotEmpty
+                                                          ? Hero(
+                                                              tag:
+                                                                  'activity${listitems[index].itemid}',
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    listitems[
+                                                                            index]
+                                                                        .image,
+                                                                height: 200,
+                                                                width: 300,
+                                                                fadeInDuration:
+                                                                    Duration(
+                                                                        microseconds:
+                                                                            5),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    SpinKitChasingDots(
+                                                                        color: Colors
+                                                                            .deepOrange),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                              ),
+                                                            )
+                                                          : SpinKitFadingCircle(
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            )),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      height: 25,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                      .size
+                                                                      .width /
+                                                                  2 -
+                                                              10,
+                                                      child: Text(
+                                                        listitems[index].name,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '@' +
+                                                          listitems[index]
+                                                              .username,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14,
+                                                          color: Colors.grey),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Text(
+                                                      currency +
+                                                          ' ' +
+                                                          listitems[index]
+                                                              .price,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14.0,
+                                                          color: Colors.black),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            )));
+                                  },
                                 ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      height: 25,
-                                      width: MediaQuery.of(context).size.width /
-                                              2 -
-                                          10,
-                                      child: Text(
-                                        newItem.name,
-                                        overflow: TextOverflow.ellipsis,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black),
-                                      ),
-                                    ),
-                                    Text(
-                                      '@' + newItem.username,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 14,
-                                          color: Colors.grey),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      currency + ' ' + newItem.price,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 14.0,
-                                          color: Colors.black),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            )),
+                              )
+                            : Center(
+                                child: Text('Cart is Empty'),
+                              )
                       ]))),
           Padding(
               padding: EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
@@ -262,7 +313,9 @@ class _CheckoutState extends State<Checkout> {
                                 fontWeight: FontWeight.w800),
                           ),
                           Text(
-                            currency + ' ' + newItem.price,
+                            subtotal != 0.0
+                                ? currency + ' ' + subtotal.toString()
+                                : 'AED 0',
                             style: TextStyle(
                               fontFamily: 'Helvetica',
                               fontSize: 16,
@@ -316,12 +369,23 @@ class _CheckoutState extends State<Checkout> {
                                   MaterialPageRoute(
                                       builder: (context) => Address()),
                                 );
-                                print(addressresult);
+                                if (addressresult != null) {
+                                  setState(() {
+                                    selectedaddress = addressresult;
+                                  });
+                                } else {
+                                  setState(() {
+                                    selectedaddress = null;
+                                  });
+                                }
                               },
                               child: Row(
                                 children: [
                                   Text(
-                                    'Choose Address',
+                                    selectedaddress == null
+                                        ? 'Choose Address'
+                                        : selectedaddress,
+                                    textAlign: TextAlign.right,
                                     style: TextStyle(
                                       fontFamily: 'Helvetica',
                                       fontSize: 16,
@@ -336,39 +400,38 @@ class _CheckoutState extends State<Checkout> {
                                 ],
                               )),
                         ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Pay Using',
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'Choose Payment Method',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.blueGrey,
-                                ),
-                              ),
-                              Icon(
-                                Icons.chevron_right,
-                                size: 16,
-                                color: Colors.blueGrey,
-                              )
-                            ],
-                          )
-                        ],
+//                      ),
+//                      SizedBox(
+//                        height: 15,
+//                      ),
+//                      Row(
+//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                        children: [
+//                          Text(
+//                            'Pay Using',
+//                            style: TextStyle(
+//                                fontFamily: 'Helvetica',
+//                                fontSize: 18,
+//                                color: Colors.black,
+//                                fontWeight: FontWeight.w800),
+//                          ),
+//                          Row(
+//                            children: [
+//                              Text(
+//                                'Choose Payment Method',
+//                                style: TextStyle(
+//                                  fontFamily: 'Helvetica',
+//                                  fontSize: 16,
+//                                  color: Colors.blueGrey,
+//                                ),
+//                              ),
+//                              Icon(
+//                                Icons.chevron_right,
+//                                size: 16,
+//                                color: Colors.blueGrey,
+//                              )
+//                            ],
+//                          )
                       )
                     ],
                   ))),
@@ -440,7 +503,7 @@ class _CheckoutState extends State<Checkout> {
                             color: Colors.black45,
                           ),
                         ),
-                        Text(currency + ' ' + newItem.price,
+                        Text(currency + ' ' + subtotal.toString(),
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 20,

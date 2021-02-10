@@ -37,7 +37,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController PasswordController = new TextEditingController();
 
   final storage = new FlutterSecureStorage();
-  var firebasetoken;
   var userid;
 
   @override
@@ -276,7 +275,6 @@ class _LoginPageState extends State<LoginPage> {
     Map<String, String> body = {
       'email': EmailController.text,
       'password': PasswordController.text,
-      'fcmtoken': firebasetoken,
     };
 
     final response = await http.post(url, body: body);

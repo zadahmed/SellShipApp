@@ -20,6 +20,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
 
@@ -74,13 +75,323 @@ class _AddressState extends State<Address> {
 
   var selectedCity;
 
-  var selectedaddress;
+  int radiovalue = 0;
 
-  Widget newAddress(BuildContext context) {}
+  var selectedaddress;
+  var selectedarea;
 
   List<AddressModel> addresseslist = List<AddressModel>();
 
+  bool loading = true;
+
+  List<String> adareas = [
+    'MANGROVE',
+    'KHALIFA PARK',
+    'ZAYED SPORTS CITY',
+    'SAS AL NAKHL',
+    'AL GURM',
+    'AL MUZOON',
+    'SAADIYAT ISLAND',
+    'YAS ISLAND',
+    'AL MAQTA',
+    'KHALIFA A',
+    'KHALIFA B',
+    'MASDAR CITY',
+    'AL RAHA',
+    'AL BAHYA',
+    'AL SHAHMA',
+    'AL RAHBA',
+    'AL SHELEILAH',
+    'KHALIFA IND ZONE',
+    'AL SAMHA',
+    'ZAYED MILITARY CITY',
+    'AL FALAH NEW',
+    'AL FALAH OLD',
+    'AL SHAMKHA',
+    'MBZ',
+    'BANIYAS EAST',
+    'BANIYAS WEST',
+    'MAFRAQ IND AREA',
+    'AL SHAMKHA SOUTH',
+    'AL NAHDA',
+    'AL ME`RAD',
+    'AL ADLA',
+    'AL FAYA',
+    'AL WATHBA',
+    'AL WATHBA SOUTH',
+    'AL DHAFRA',
+    'ICAD 3',
+    'MUSSAFAH SOUTH',
+    'I CAD 1',
+    'MUSSAFAH IND',
+    'MUSSAFAH',
+    'KIZAD',
+    'AL BATEIN',
+    'AL MUSHRIF',
+    'AL NAHYAN',
+    'AL ZAFRANAH',
+    'AL MUSALLA',
+    'AL ETHIHAD',
+    'AL KHALIDYA',
+    'TOURIST CLUB AREA',
+    'AL MARYAH ISLAND',
+    'AL REEM ISLAND',
+    'EMASSIES DISTRICT',
+    'AL HOSN',
+    'AL MANHAL',
+    'AL DHAFRAH',
+    'AL MARINA',
+    'SHAKHBOUT CITY',
+    'AL SHAWAMIKH',
+  ];
+
+  List<String> ajmanareas = [
+    'ALCOURNISH',
+    'AL RUMAILAH',
+    'AL RUMAILAH 3',
+    'AL RASHIDIYA',
+    'AL RASHIDIYA 2',
+    'AL RASHIDIYA 3',
+    'AL NAKHIL',
+    'AL BUSTAN',
+    'AL BATAIN',
+    'AL NUAIMIA',
+    'AL NUAIMIA 1',
+    'AJM INDUSTRIAL AREA',
+    'AL MWAIHAT',
+    'AL MWAIHAT 2',
+    'AL MWAIHAT 3',
+    'AL TALLA 1',
+    'AL TALLA 2',
+    'AL MUNTAZI 1',
+    'AL MUNTAZI 2',
+    'HAMIDIYA',
+    'AL RAWDA 2',
+    'AL RAWDA 1',
+    'AL JERF IND AREA 3',
+    'AL JERF IND AREA 2',
+    'AL JERF IND AREA 1',
+    'AL BAHIA',
+    'AJM INDUSTRIAL AREA 2',
+    'AL HAMRIYAH FZ',
+    'MESHAIREF',
+  ];
+
+  List<String> alainareas = [
+    'AL DHAHIR',
+    'UM GHAFA',
+    'AL KHRAIR',
+    'MALAGIT',
+    'JEBAL HAFEET',
+    'AL SAROOJ',
+    'AL SANAIYA',
+    'FALAJ HAZZAA',
+    'AL GRAYYEH',
+    'GAFAT AL NAYYAR',
+    'ZAKHER',
+    'AL SALAMAT',
+    'AL BATEEN',
+    'AL MAQAM',
+    'AL KHABISI',
+    'AL MUWAIJI',
+    'AL TOWAYYA',
+    'AL JIMI',
+    'CENTRAL DISTRICT',
+    'AL MASOUDI',
+    'AL QATTARA',
+    'AL HILI',
+    'AL FOAH',
+    'AL HAYER',
+    'AL FAQA',
+    'AL SHUWAIB',
+    'AL MARKHANIA',
+  ];
+
+  List<String> dxbareas = [
+    'AL GHARHOUD',
+    'AL MAMZAR',
+    'BUR DUBAI',
+    'AL BARSHA',
+    'AL RIGGA',
+    'ABU HAIL',
+    'JUMERAH 1',
+    'JUMERAH 2',
+    'UMM SUQUEIM',
+    'UMM SUQUEIM 2',
+    'UMM SUQUEIM 3',
+    'MEDIA CITY',
+    'PALM JUMEIRAH',
+    'JEBAL ALI IND AREA',
+    'TECOM',
+    'DEIRA',
+    'Dubai Far Area',
+    'JEBAL ALI FZ',
+    'MOTOR CITY',
+    'AL SUFOUH',
+    'JUMEIRAH VILL CIRCLE',
+    'ARABIAN RANCHES',
+    'DIP',
+    'NAD AL SHEBA',
+    'DXB SILICON OASIS',
+    'ACADEMIC CITY',
+    'BUKADRA',
+    'RAS AL KHOUR',
+    'RAS AL KHOUR IND 1',
+    'RAS AL KHOUR IND',
+    'NADD AL HAMAR',
+    'AL WARQA 1',
+    'AL WARQA',
+    'WARSAN 2',
+    'AL KHAWANEEJ',
+    'MIRDIF',
+    'AL RASHIDYA',
+    'DFC',
+    'DAFZA',
+    'JAFZA',
+    'AL MIZHAR',
+    'AL MIZHAR 2',
+    'OUD AL MUTEENA',
+    'MUHAISNAH',
+    'UMM RAMOOL',
+    'PORT SAEED',
+    'NAIF',
+    'AL NAHDA 1',
+    'AL NAHDA 2',
+    'AL QUSAIS IND',
+    'AL QUSAIS',
+    'AL TWAR 1',
+    'AL TWAR 2',
+    'AL TWAR 3',
+    'AL QUSAIS 2',
+    'AL QUSAIS 3',
+    'MUHAISNAH 3',
+    'AL QUSAIS IND 5',
+    'HUR AL ANZ',
+    'AL JAFFILIYA',
+    'ZA`ABEEL',
+    'ZA`ABEEL 1',
+    'AL WASEL',
+    'AL SAFA',
+    'AL SAFA 2',
+    'UMM AL SHEIF',
+    'AL QOUZ',
+    'AL QOUZ 4',
+    'EMIRATES HILLS',
+    'INTERNET CITY',
+    'AL SATWA',
+  ];
+
+  List<String> fujairahareas = [
+    'FUJAIRAH',
+    'AL DHAID',
+    'AL MANAMA',
+    'MASSAFI',
+  ];
+
+  List<String> rakares = [
+    'AL KHARAN',
+    'AL QIR',
+    'SHA`AM',
+    'GHALILAH',
+    'JULPHAR',
+    'AL MATAF',
+    'SEIH AL HARF',
+    'AL DHAIT SOUTH',
+    'AL DHAIT NORTH',
+    'KHUZAM',
+    'DAFAN AL KHOUR',
+    'AL MAMMOURAH',
+    'AL NAKHEEL',
+    'AL ZAHRA',
+    'AL JUWAIS',
+    'AL QURM',
+    'AL KHARRAN',
+    'AL RAMS',
+    'AL SHARISHA',
+    'AL SALL',
+    'AL DARBIJANYAH',
+    'RAS AL SELAAB',
+    'SIDROH',
+    'DAHAN',
+    'DAFAN AL KHOR',
+    'AL NADIYAH',
+  ];
+
+  List<String> sharjahareas = [
+    'AL KHAN',
+    'ABU SHAGARA',
+    'SHJ INDUSTRIAL AREA',
+    'AL FALAH',
+    'AL NOOF',
+    'AL JURAINAH',
+    'UNIVERSITY CITY',
+    'MUWAILIH COMMERCIAL',
+    'WASIT',
+    'MUGHAIDIR',
+    'INDUSTRIAL AREA',
+    'AL MAMZAR',
+    'AL MAJAZ',
+    'AL KHALIDYA',
+    'AL LAYYEH',
+    'HALWAN',
+    'AL SHARQ',
+    'AL BU DANIQ',
+    'AL QASMIYA',
+    'AL MAHATAH',
+    'UMM AL TARAFFA',
+    'AL MARERJA',
+    'AL SHUWAIHEAN',
+    'AL NABBA',
+    'AL MUJARRAH',
+    'BU TINA',
+    'AL NASSERYA',
+    'AL RAMLA EAST',
+    'AL RAMLA WEST',
+    'AL YARMOOK',
+    'AL GHUBAIBA',
+    'SAMNAN',
+    'AL SHAHBA',
+    'EMIRATES INDUSTRIAL CITY',
+    'AL SAJA`A IND SUBURB',
+    'AL RAHMANIYA',
+    'AL KHEZAMIA',
+    'AL ABAR',
+    'DASMAN',
+    'AL FALAJ',
+    'AL QOAZ',
+    'AL RAMTHA',
+    'AL RAMAQYA',
+    'MUWAFJAH',
+    'AL YASH',
+    'AL AZRA',
+    'AL RIQA',
+    'AL JAZZAT',
+    'AL HAZANNAH',
+    'AL SABKHA',
+    'AL GHAFIA',
+    'AL NEKHAILAT',
+    'AL HEERAH',
+    'SHARQAN',
+    'AL RIFA`AH',
+    'AL FISHT',
+    'AL GHARAYEN',
+  ];
+
+  List<String> uaqareas = [
+    'EMIRATES MODERN IND AREA',
+    'AL SALAMAH',
+    'AL HAMRIYA',
+    'AL RAAS',
+    'AL RAUDAH',
+    'OLD TOWN AREA',
+    'AL HUMRAH'
+  ];
+
+  var addressreturned;
+
+  String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
   loadaddresses() async {
+    addresseslist.clear();
     var user = await storage.read(key: 'userid');
 
     var url = "https://api.sellship.co/api/getaddresses/" + user;
@@ -95,6 +406,8 @@ class _AddressState extends State<Address> {
                 '\n' +
                 jsonbody[i]['addressline2'] +
                 '\n' +
+                capitalize(jsonbody[i]['area'].toString().toLowerCase()) +
+                '\n' +
                 jsonbody[i]['city'] +
                 '\n' +
                 jsonbody[i]['country'],
@@ -102,15 +415,20 @@ class _AddressState extends State<Address> {
       }
 
       setState(() {
+        loading = false;
+        addressreturned = addresseslist[0].address;
         addresseslist = addresseslist;
       });
     } else {
       print(response.statusCode);
       setState(() {
+        loading = false;
         addresseslist = [];
       });
     }
   }
+
+  List<String> areas = List();
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +436,15 @@ class _AddressState extends State<Address> {
         backgroundColor: Color.fromRGBO(242, 244, 248, 1),
         appBar: AppBar(
           elevation: 0,
+          leading: InkWell(
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+            onTap: () {
+              Navigator.pop(context, addressreturned);
+            },
+          ),
           iconTheme: IconThemeData(color: Colors.black),
           backgroundColor: Colors.white,
           title: Text(
@@ -129,7 +456,7 @@ class _AddressState extends State<Address> {
                 fontWeight: FontWeight.w800),
           ),
         ),
-        body: ListView(children: [
+        body: Column(children: [
           SizedBox(
             height: 10,
           ),
@@ -276,6 +603,269 @@ class _AddressState extends State<Address> {
                                                 ),
                                                 Padding(
                                                   child: Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(
+                                                          color: Colors
+                                                              .grey.shade300),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          offset: Offset(
+                                                              0.0, 1.0), //(x,y)
+                                                          blurRadius: 6.0,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Center(
+                                                      child:
+                                                          DropdownButtonHideUnderline(
+                                                        child: DropdownButton(
+                                                          autofocus: true,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                          ),
+                                                          icon: Icon(Icons
+                                                              .keyboard_arrow_down),
+                                                          hint: Center(
+                                                            child: Text(
+                                                              'City',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          value: selectedCity,
+                                                          onChanged: (value) {
+                                                            updateState(() {
+                                                              selectedCity =
+                                                                  value;
+                                                            });
+
+                                                            if (value ==
+                                                                'Abu Dhabi') {
+                                                              selectedarea =
+                                                                  null;
+                                                              updateState(() {
+                                                                adareas.sort((String
+                                                                            a,
+                                                                        String
+                                                                            b) =>
+                                                                    a.compareTo(
+                                                                        b));
+                                                                areas = adareas;
+                                                              });
+                                                            } else if (value ==
+                                                                'Dubai') {
+                                                              selectedarea =
+                                                                  null;
+                                                              updateState(() {
+                                                                dxbareas.sort((String
+                                                                            a,
+                                                                        String
+                                                                            b) =>
+                                                                    a.compareTo(
+                                                                        b));
+                                                                areas =
+                                                                    dxbareas;
+                                                              });
+                                                            } else if (value ==
+                                                                'Sharjah') {
+                                                              selectedarea =
+                                                                  null;
+                                                              updateState(() {
+                                                                sharjahareas.sort((String
+                                                                            a,
+                                                                        String
+                                                                            b) =>
+                                                                    a.compareTo(
+                                                                        b));
+                                                                areas =
+                                                                    sharjahareas;
+                                                              });
+                                                            } else if (value ==
+                                                                'Alain') {
+                                                              selectedarea =
+                                                                  null;
+                                                              updateState(() {
+                                                                alainareas.sort((String
+                                                                            a,
+                                                                        String
+                                                                            b) =>
+                                                                    a.compareTo(
+                                                                        b));
+                                                                areas =
+                                                                    alainareas;
+                                                              });
+                                                            } else if (value ==
+                                                                'Fujairah') {
+                                                              selectedarea =
+                                                                  null;
+                                                              updateState(() {
+                                                                fujairahareas.sort((String
+                                                                            a,
+                                                                        String
+                                                                            b) =>
+                                                                    a.compareTo(
+                                                                        b));
+                                                                areas =
+                                                                    fujairahareas;
+                                                              });
+                                                            } else if (value ==
+                                                                'Ras Al Khaimah') {
+                                                              selectedarea =
+                                                                  null;
+                                                              updateState(() {
+                                                                rakares.sort((String
+                                                                            a,
+                                                                        String
+                                                                            b) =>
+                                                                    a.compareTo(
+                                                                        b));
+                                                                areas = rakares;
+                                                              });
+                                                            } else if (value ==
+                                                                'Umm Al Quwain') {
+                                                              selectedarea =
+                                                                  null;
+                                                              updateState(() {
+                                                                uaqareas.sort((String
+                                                                            a,
+                                                                        String
+                                                                            b) =>
+                                                                    a.compareTo(
+                                                                        b));
+                                                                areas =
+                                                                    uaqareas;
+                                                              });
+                                                            }
+                                                          },
+                                                          items: <String>[
+                                                            'Abu Dhabi',
+                                                            'Alain',
+                                                            'Dubai',
+                                                            'Sharjah',
+                                                            'Ajman',
+                                                            'Umm Al Quwain',
+                                                            'Ras Al Khaimah',
+                                                            'Fujairah'
+                                                          ].map((String value) {
+                                                            return new DropdownMenuItem<
+                                                                    String>(
+                                                                value: value,
+                                                                child:
+                                                                    Container(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width -
+                                                                      200,
+                                                                  child:
+                                                                      ListTile(
+                                                                    title: Text(
+                                                                        value),
+                                                                  ),
+                                                                ));
+                                                          }).toList(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  padding: EdgeInsets.only(
+                                                      left: 10,
+                                                      top: 5,
+                                                      right: 10),
+                                                ),
+                                                Padding(
+                                                  child: Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      border: Border.all(
+                                                          color: Colors
+                                                              .grey.shade300),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors
+                                                              .grey.shade300,
+                                                          offset: Offset(
+                                                              0.0, 1.0), //(x,y)
+                                                          blurRadius: 6.0,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Center(
+                                                      child:
+                                                          DropdownButtonHideUnderline(
+                                                        child: DropdownButton(
+                                                          autofocus: true,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                          ),
+                                                          icon: Icon(Icons
+                                                              .keyboard_arrow_down),
+                                                          hint: Center(
+                                                            child: Text(
+                                                              'Area',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          value: selectedarea,
+                                                          onChanged: (value) {
+                                                            updateState(() {
+                                                              selectedarea =
+                                                                  value;
+                                                            });
+                                                          },
+                                                          items: areas.map(
+                                                              (String value) {
+                                                            return new DropdownMenuItem<
+                                                                    String>(
+                                                                value: value,
+                                                                child:
+                                                                    Container(
+                                                                  width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width -
+                                                                      200,
+                                                                  child:
+                                                                      ListTile(
+                                                                    title: Text(
+                                                                        capitalize(
+                                                                            value.toLowerCase())),
+                                                                  ),
+                                                                ));
+                                                          }).toList(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  padding: EdgeInsets.only(
+                                                      left: 10,
+                                                      top: 5,
+                                                      right: 10),
+                                                ),
+                                                Padding(
+                                                  child: Container(
                                                     decoration: BoxDecoration(
                                                       color: Colors.white,
                                                       boxShadow: [
@@ -390,7 +980,7 @@ class _AddressState extends State<Address> {
                                                       decoration:
                                                           InputDecoration(
                                                               labelText:
-                                                                  "Street Name/Area",
+                                                                  "Street/Apartment/Villa Name",
                                                               labelStyle:
                                                                   TextStyle(
                                                                 fontFamily:
@@ -456,92 +1046,6 @@ class _AddressState extends State<Address> {
                                                 ),
                                                 Padding(
                                                   child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      border: Border.all(
-                                                          color: Colors
-                                                              .grey.shade300),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors
-                                                              .grey.shade300,
-                                                          offset: Offset(
-                                                              0.0, 1.0), //(x,y)
-                                                          blurRadius: 6.0,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Center(
-                                                      child:
-                                                          DropdownButtonHideUnderline(
-                                                        child: DropdownButton(
-                                                          autofocus: true,
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 16,
-                                                          ),
-                                                          icon: Icon(Icons
-                                                              .keyboard_arrow_down),
-                                                          hint: Center(
-                                                            child: Text(
-                                                              'City',
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          value: selectedCity,
-                                                          onChanged: (value) {
-                                                            updateState(() {
-                                                              selectedCity =
-                                                                  value;
-                                                            });
-                                                          },
-                                                          items: <String>[
-                                                            'Abu Dhabi',
-                                                            'Alain',
-                                                            'Dubai',
-                                                            'Sharjah',
-                                                            'Ajman',
-                                                            'Umm Al Quwain',
-                                                            'Ras Al Khaimah',
-                                                            'Fujairah'
-                                                          ].map((String value) {
-                                                            return new DropdownMenuItem<
-                                                                    String>(
-                                                                value: value,
-                                                                child:
-                                                                    Container(
-                                                                  width: MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width -
-                                                                      200,
-                                                                  child:
-                                                                      ListTile(
-                                                                    title: Text(
-                                                                        value),
-                                                                  ),
-                                                                ));
-                                                          }).toList(),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  padding: EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 5,
-                                                      right: 10),
-                                                ),
-                                                Padding(
-                                                  child: Container(
                                                     padding: EdgeInsets.only(
                                                         left: 10,
                                                         right: 10,
@@ -596,7 +1100,8 @@ class _AddressState extends State<Address> {
                                                 Padding(
                                                   child: Container(
                                                     decoration: BoxDecoration(
-                                                      color: Colors.white,
+                                                      color:
+                                                          Colors.grey.shade100,
                                                       boxShadow: [
                                                         BoxShadow(
                                                           color: Colors
@@ -611,6 +1116,9 @@ class _AddressState extends State<Address> {
                                                       enabled: false,
                                                       cursorColor:
                                                           Color(0xFF979797),
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
                                                       controller:
                                                           countrycontroller,
                                                       enableSuggestions: true,
@@ -621,12 +1129,13 @@ class _AddressState extends State<Address> {
                                                           InputDecoration(
                                                               labelText:
                                                                   "Country",
-                                                              labelStyle:
-                                                                  TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                              ),
+                                                              labelStyle: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
                                                               focusColor:
                                                                   Colors.black,
                                                               enabledBorder:
@@ -790,6 +1299,8 @@ class _AddressState extends State<Address> {
                                                             '/' +
                                                             selectedaddress +
                                                             '/' +
+                                                            selectedarea +
+                                                            '/' +
                                                             addresslinecontroller
                                                                 .text
                                                                 .trim() +
@@ -843,6 +1354,12 @@ class _AddressState extends State<Address> {
                                                                             .DEFAULT,
                                                                     onOkButtonPressed:
                                                                         () {
+                                                                      setState(
+                                                                          () {
+                                                                        loading =
+                                                                            true;
+                                                                      });
+                                                                      loadaddresses();
                                                                       Navigator.of(
                                                                               context)
                                                                           .pop(
@@ -931,78 +1448,135 @@ class _AddressState extends State<Address> {
                   ],
                 )),
           ),
-          addresseslist.isNotEmpty
-              ? Container(
-                  height: 300,
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: addresseslist.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.white),
-                            height: 300,
-                            width: MediaQuery.of(context).size.width / 2,
-                            padding: EdgeInsets.all(5),
-                            child: Column(
-                              children: [
-                                Row(
+          loading == false
+              ? addresseslist.isNotEmpty
+                  ? Expanded(
+                      child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: addresseslist.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Colors.white),
+                              height: 210,
+                              width: MediaQuery.of(context).size.width / 2,
+                              padding: EdgeInsets.all(5),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Radio(
+                                          value: index,
+                                          groupValue: radiovalue,
+                                          onChanged: (intvalue) {
+                                            setState(() {
+                                              addressreturned =
+                                                  addresseslist[intvalue]
+                                                      .address;
+                                              radiovalue = intvalue;
+                                            });
+                                          }),
+                                      Text(
+                                        addresseslist[index].addresstype,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 15,
+                                      top: 5,
+                                      bottom: 5,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        addresseslist[index].address,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.blueGrey),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 15,
+                                      top: 5,
+                                      bottom: 5,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        addresseslist[index].phonenumber,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.deepOrangeAccent),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ));
+                      },
+                    ))
+                  : Container()
+              : Container(
+                  height: 280,
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 16.0),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.grey[100],
+                    child: ListView(
+                      children: [0]
+                          .map((_) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                        child: RadioListTile(
-                                            value: index,
-                                            groupValue: index,
-                                            title: Text(addresseslist[index]
-                                                .addresstype),
-                                            onChanged: (intvalue) {})),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          30,
+                                      height: 300.0,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          30,
+                                      height: 280.0,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 15,
-                                    top: 15,
-                                    bottom: 10,
-                                  ),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      addresseslist[index].address,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.blueGrey),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 15,
-                                    top: 15,
-                                    bottom: 10,
-                                  ),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      addresseslist[index].phonenumber,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w800,
-                                          color: Colors.deepOrangeAccent),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ));
-                    },
-                  ))
-              : Container()
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                )
         ]));
   }
 }

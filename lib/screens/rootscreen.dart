@@ -161,7 +161,6 @@ class _RootScreenState extends State<RootScreen> {
       theme: new ThemeData(fontFamily: 'Helvetica'),
       title: 'SellShip',
       home: Scaffold(
-        extendBody: true,
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white.withOpacity(0.85),

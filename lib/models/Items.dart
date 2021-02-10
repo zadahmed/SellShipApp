@@ -84,19 +84,35 @@ class Item {
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
-      itemid: json['_id']['\$oid'],
+      itemid: json['itemid'],
       name: json['name'],
-      image: json['image']['\$binary'],
+      image: json['image'],
+      userid: json['userid'],
       price: json['price'],
       category: json['category'],
-      subcategory: json['subcategory'],
-      subsubcategory: json['subsubcategory'],
-      distance: json['distance'],
     );
   }
+
+  Map toJson() => {
+        'itemid': itemid,
+        'name': name,
+        'image': image,
+        'userid': userid,
+        'price': price,
+        'username': username,
+      };
 
   int compareTo(Item other) {
     int order = other.date.compareTo(date);
     return order;
   }
+
+  // inside Item class
+  @override
+  bool operator ==(other) {
+    return this.itemid == other.itemid;
+  }
+
+  @override
+  int get hashCode => itemid.hashCode;
 }

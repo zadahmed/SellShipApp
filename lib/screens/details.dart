@@ -26,6 +26,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/useritems.dart';
 import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -678,12 +679,12 @@ class _DetailsState extends State<Details> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'Helvetica',
-          fontSize: 16,
-          color: Colors.white,
-        ),
+            fontFamily: 'Helvetica',
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.deepOrange,
       duration: Duration(seconds: 3),
     ));
   }
@@ -943,6 +944,18 @@ class _DetailsState extends State<Details> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, bottom: 5, top: 2),
+                                child: Text(
+                                  currency + ' ' + newItem.price.toString(),
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(
                                     left: 15, bottom: 5, top: 2),
@@ -2222,6 +2235,8 @@ class _DetailsState extends State<Details> {
             ? newItem.sold == false
                 ? Container(
                     width: MediaQuery.of(context).size.width,
+                    color: Colors.white.withOpacity(0.7),
+                    height: 80,
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 10, bottom: 10, right: 10, top: 10),
@@ -2274,9 +2289,9 @@ class _DetailsState extends State<Details> {
                               height: 48,
                               width: MediaQuery.of(context).size.width / 2 - 20,
                               decoration: BoxDecoration(
-                                color: Colors.deepPurple,
+                                color: Colors.deepOrange,
                                 borderRadius: const BorderRadius.all(
-                                  Radius.circular(20.0),
+                                  Radius.circular(10.0),
                                 ),
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(
@@ -2300,31 +2315,194 @@ class _DetailsState extends State<Details> {
                               ),
                             ),
                           ),
-                          Container(
-                            height: 48,
-                            width: MediaQuery.of(context).size.width / 2 - 20,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20.0),
+                          InkWell(
+                            onTap: () async {
+                              if (userid != null) {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+
+                                List cartitems =
+                                    prefs.getStringList('cartitems');
+                                print(cartitems);
+
+                                if (cartitems == null) {
+                                  String item = jsonEncode(newItem);
+                                  prefs.setStringList('cartitems', [item]);
+                                  showInSnackBar(
+                                      newItem.name + ' added to Cart!');
+                                } else {
+                                  List<Item> carts = new List<Item>();
+                                  for (int i = 0; i < cartitems.length; i++) {
+                                    var decodeditem = json.decode(cartitems[i]);
+                                    Item item = new Item(
+                                        name: decodeditem['name'],
+                                        image: decodeditem['image'],
+                                        userid: decodeditem['userid'],
+                                        price: decodeditem['price'],
+                                        username: decodeditem['username'],
+                                        itemid: decodeditem['itemid']);
+
+                                    carts.add(item);
+                                  }
+
+                                  Item testitem = new Item(
+                                      name: newItem.name,
+                                      image: newItem.image,
+                                      username: newItem.username,
+                                      userid: newItem.userid,
+                                      price: newItem.price,
+                                      itemid: newItem.itemid);
+
+
+
+                                  var existingItem = carts.firstWhere(
+                                      (itemToCheck) =>
+                                          itemToCheck.userid == testitem.userid,
+                                      orElse: () => null);
+                                  if (existingItem != null) {
+
+                                    if (carts.contains(testitem)) {
+                                      showInSnackBar(
+                                          newItem.name + ' is already added to your cart.');                                    }
+                                    else {
+                                      String item = jsonEncode(newItem);
+                                      cartitems.add(item);
+
+                                      showInSnackBar(
+                                          newItem.name + ' added to Cart!');
+                                      prefs.setStringList('cartitems',
+                                          cartitems.toSet().toList());
+                                    }
+                                  } else {
+                                    showDialog<void>(
+                                      context: context,
+                                      barrierDismissible:
+                                          false, // user must tap button!
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            'Oops',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                          content: Text(
+                                            'You have an item of another seller in your cart already.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.w200),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text(
+                                                'Add to Cart',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16.0,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              onPressed: () async {
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.remove('cartitems');
+
+                                                String item =
+                                                    jsonEncode(newItem);
+                                                prefs.setStringList(
+                                                    'cartitems', [item]);
+                                                showInSnackBar(newItem.name +
+                                                    ' added to Cart!');
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text(
+                                                'Close',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 16.0,
+                                                    color: Colors.red,
+                                                    fontWeight:
+                                                        FontWeight.w800),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                }
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AssetGiffyDialog(
+                                          image: Image.asset(
+                                            'assets/oops.gif',
+                                            fit: BoxFit.cover,
+                                          ),
+                                          title: Text(
+                                            'Oops!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'You need to login to add to cart!',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(),
+                                          ),
+                                          onlyOkButton: true,
+                                          entryAnimation:
+                                              EntryAnimation.DEFAULT,
+                                          onOkButtonPressed: () {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RootScreen(index: 4)),
+                                            );
+                                          },
+                                        ));
+                              }
+                            },
+                            child: Container(
+                              height: 48,
+                              width: MediaQuery.of(context).size.width / 2 - 20,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.grey.withOpacity(0.4),
+                                      offset: const Offset(0.0, 0.8),
+                                      blurRadius: 5.0),
+                                ],
                               ),
-                              boxShadow: <BoxShadow>[
-                                BoxShadow(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    offset: const Offset(0.0, 0.8),
-                                    blurRadius: 5.0),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                currency + ' ' + newItem.price.toString(),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                  fontFamily: 'Helvetica',
-                                  letterSpacing: 1.0,
-                                  color: Colors.deepPurple,
+                              child: Center(
+                                child: Text(
+                                  'Add to Cart',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    fontFamily: 'Helvetica',
+                                    letterSpacing: 0.0,
+                                    color: Colors.deepOrange,
+                                  ),
                                 ),
                               ),
                             ),
@@ -2391,6 +2569,7 @@ class ImageDisplay extends StatefulWidget {
 class ImageDisplayState extends State<ImageDisplay> {
   var inde = 0;
   int _current = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

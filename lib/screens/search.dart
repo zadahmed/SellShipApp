@@ -1238,6 +1238,10 @@ class _SearchState extends State<Search>
                                       mainAxisSpacing: 4.0,
                                       crossAxisSpacing: 4.0,
                                     ),
+                                    SliverToBoxAdapter(
+                                        child: SizedBox(
+                                      height: 100,
+                                    )),
                                   ],
                                 ),
                           searchcontroller.text.isNotEmpty

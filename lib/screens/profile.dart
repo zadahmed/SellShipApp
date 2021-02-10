@@ -2841,7 +2841,7 @@ class _ProfilePageState extends State<ProfilePage>
                           fit: BoxFit.fitWidth,
                         ))
                       ],
-                    )))
+                    ))),
         ]);
   }
 

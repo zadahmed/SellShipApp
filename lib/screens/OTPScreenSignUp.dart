@@ -3,6 +3,7 @@ import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/providers/userProvider.dart';
 import 'package:SellShip/screens/otpinput.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:SellShip/username.dart';
 import 'package:SellShip/verification/verifyemailsignup.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -332,10 +333,10 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => VerifyEmailSignUp(
-                          userid: userid,
-                          email: widget.email,
-                        )));
+                  builder: (context) => Username(
+                    userid: userid,
+                  ),
+                ));
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('seen', true);
           } else {
