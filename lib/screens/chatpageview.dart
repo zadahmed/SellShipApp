@@ -246,20 +246,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CheckoutUAE(
-                                      messageid: widget.messageid,
-                                      offer: widget.offer,
-                                      image: widget.itemimage,
-                                      itemname: widget.itemname,
-                                      itemid: widget.itemid,
-                                      price: widget.itemprice,
-                                    )),
-                          );
-                        },
+                        onTap: () {},
                         child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -838,15 +825,6 @@ class _ChatPageViewState extends State<ChatPageView> {
         });
 
         Navigator.pop(context);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CheckoutUAE(
-                    messageid: widget.messageid,
-                    offer: widget.offer,
-                  )),
-        );
       }
     }
   }

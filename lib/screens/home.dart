@@ -47,7 +47,6 @@ import 'package:location/location.dart' as Location;
 import 'package:numeral/numeral.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:search_map_place/search_map_place.dart';
-import 'package:search_page/search_page.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -2502,8 +2501,8 @@ class _HomeScreenState extends State<HomeScreen>
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               child: Hero(
-                                                  tag: subcategoryList[index]
-                                                      .name,
+                                                  tag:
+                                                      'cat${subcategoryList[index].name}',
                                                   child: CachedNetworkImage(
                                                     height: 200,
                                                     width: 300,
@@ -3531,9 +3530,8 @@ class _HomeScreenState extends State<HomeScreen>
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               child: Hero(
-                                                  tag: subcategoryListsecond[
-                                                          index]
-                                                      .name,
+                                                  tag:
+                                                      '${subcategoryListsecond[index].name}',
                                                   child: CachedNetworkImage(
                                                     height: 200,
                                                     width: 300,

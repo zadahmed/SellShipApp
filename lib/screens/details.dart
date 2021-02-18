@@ -2331,114 +2331,107 @@ class _DetailsState extends State<Details> {
                                   showInSnackBar(
                                       newItem.name + ' added to Cart!');
                                 } else {
-                                  List<Item> carts = new List<Item>();
-                                  for (int i = 0; i < cartitems.length; i++) {
-                                    var decodeditem = json.decode(cartitems[i]);
-                                    Item item = new Item(
-                                        name: decodeditem['name'],
-                                        image: decodeditem['image'],
-                                        userid: decodeditem['userid'],
-                                        price: decodeditem['price'],
-                                        username: decodeditem['username'],
-                                        itemid: decodeditem['itemid']);
-
-                                    carts.add(item);
-                                  }
-
-                                  Item testitem = new Item(
-                                      name: newItem.name,
-                                      image: newItem.image,
-                                      username: newItem.username,
-                                      userid: newItem.userid,
-                                      price: newItem.price,
-                                      itemid: newItem.itemid);
-
-
-
-                                  var existingItem = carts.firstWhere(
-                                      (itemToCheck) =>
-                                          itemToCheck.userid == testitem.userid,
-                                      orElse: () => null);
-                                  if (existingItem != null) {
-
-                                    if (carts.contains(testitem)) {
-                                      showInSnackBar(
-                                          newItem.name + ' is already added to your cart.');                                    }
-                                    else {
-                                      String item = jsonEncode(newItem);
-                                      cartitems.add(item);
-
-                                      showInSnackBar(
-                                          newItem.name + ' added to Cart!');
-                                      prefs.setStringList('cartitems',
-                                          cartitems.toSet().toList());
-                                    }
-                                  } else {
-                                    showDialog<void>(
-                                      context: context,
-                                      barrierDismissible:
-                                          false, // user must tap button!
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            'Oops',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.w800),
-                                          ),
-                                          content: Text(
-                                            'You have an item of another seller in your cart already.',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.w200),
-                                          ),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text(
-                                                'Add to Cart',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16.0,
-                                                    fontWeight:
-                                                        FontWeight.w800),
-                                              ),
-                                              onPressed: () async {
-                                                SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                prefs.remove('cartitems');
-
-                                                String item =
-                                                    jsonEncode(newItem);
-                                                prefs.setStringList(
-                                                    'cartitems', [item]);
-                                                showInSnackBar(newItem.name +
-                                                    ' added to Cart!');
-                                                Navigator.of(context).pop();
-                                              },
+//                                  List<Item> carts = new List<Item>();
+//                                  for (int i = 0; i < cartitems.length; i++) {
+//                                    var decodeditem = json.decode(cartitems[i]);
+//                                    Item item = new Item(
+//                                        name: decodeditem['name'],
+//                                        image: decodeditem['image'],
+//                                        userid: decodeditem['userid'],
+//                                        price: decodeditem['price'],
+//                                        username: decodeditem['username'],
+//                                        itemid: decodeditem['itemid']);
+//
+//                                    carts.add(item);
+//                                  }
+//
+//                                  Item testitem = new Item(
+//                                      name: newItem.name,
+//                                      image: newItem.image,
+//                                      username: newItem.username,
+//                                      userid: newItem.userid,
+//                                      price: newItem.price,
+//                                      itemid: newItem.itemid);
+//
+//                                  var existingItem = carts.firstWhere(
+//                                      (itemToCheck) =>
+//                                          itemToCheck.userid == testitem.userid,
+//                                      orElse: () => null);
+//                                  if (existingItem != null) {
+//                                    if (carts.contains(testitem)) {
+//                                      showInSnackBar(newItem.name +
+//                                          ' is already added to your cart.');
+//                                    } else {
+//                                      String item = jsonEncode(newItem);
+//                                      cartitems.add(item);
+//
+//                                      showInSnackBar(
+//                                          newItem.name + ' added to Cart!');
+//                                      prefs.setStringList('cartitems',
+//                                          cartitems.toSet().toList());
+//                                    }
+//                                  } else {
+                                  showDialog<void>(
+                                    context: context,
+                                    barrierDismissible:
+                                        false, // user must tap button!
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Oops',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 18.0,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                        content: Text(
+                                          'You have an item in your cart already.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w200),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: Text(
+                                              'Add to Cart',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.w800),
                                             ),
-                                            TextButton(
-                                              child: Text(
-                                                'Close',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 16.0,
-                                                    color: Colors.red,
-                                                    fontWeight:
-                                                        FontWeight.w800),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
+                                            onPressed: () async {
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              prefs.remove('cartitems');
+
+                                              String item = jsonEncode(newItem);
+                                              prefs.setStringList(
+                                                  'cartitems', [item]);
+                                              showInSnackBar(newItem.name +
+                                                  ' added to Cart!');
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: Text(
+                                              'Close',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.w800),
                                             ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
                                 }
                               } else {
                                 showDialog(

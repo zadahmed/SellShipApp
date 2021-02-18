@@ -37,7 +37,7 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
   }
 
   List<String> categoryimages = [
-    'assets/women/jumpsuit.jpeg',
+    'assets/interests/women.jpg',
     'assets/interests/men.jpg',
     'assets/interests/beauty.jpg',
     'assets/interests/electronics.jpg',
@@ -72,57 +72,118 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Feather.arrow_left)),
-        iconTheme: IconThemeData(color: Colors.black),
-        elevation: 0,
-        title: Text(
-          'Choose Interests',
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Helvetica'),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.only(left: 16, top: 10, right: 16, bottom: 20),
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: () async {
+                    final storage = new FlutterSecureStorage();
+                    var userid = await storage.read(key: 'userid');
+                    if (selectedinterests.length >= 2) {
+                      var url =
+                          'https://api.sellship.co/api/interests/' + userid;
+
+                      FormData formData = FormData.fromMap({
+                        'interests': selectedinterests,
+                      });
+
+                      Dio dio = new Dio();
+                      var response = await dio.post(url, data: formData);
+
+                      if (response.statusCode == 200) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RootScreen()));
+                      } else {
+                        print(response.statusCode);
+                      }
+                    }
+                  },
+                  child: Container(
+                    height: 50,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    width: MediaQuery.of(context).size.width - 50,
+                    decoration: BoxDecoration(
+                      color: selectedinterests.length >= 2
+                          ? Color.fromRGBO(255, 115, 0, 1)
+                          : Colors.grey,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(
+                        child: Text(
+                      'Start SellShipping',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    )),
+                  ),
+                ),
+              ]),
         ),
         backgroundColor: Colors.white,
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding:
-                EdgeInsets.only(left: 16.0, bottom: 10, top: 30, right: 16),
-            child: Text(
-              "Let's get to know you better",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  fontSize: 30.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Helvetica'),
-            ),
+        appBar: AppBar(
+          leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Feather.arrow_left)),
+          iconTheme: IconThemeData(color: Colors.black),
+          elevation: 0,
+          title: Text(
+            'Choose Interests',
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Helvetica'),
           ),
-          Padding(
-            padding:
-                EdgeInsets.only(left: 16.0, bottom: 20, top: 10, right: 16),
-            child: Text(
-              "Please select atleast two categories that you are interested in.",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  fontSize: 18.0, color: Colors.black, fontFamily: 'Helvetica'),
-            ),
-          ),
-          Expanded(
-            child: GridView.builder(
-              itemCount: categoryimages.length,
+          backgroundColor: Colors.white,
+        ),
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 16.0, bottom: 10, top: 30, right: 16),
+                    child: Text(
+                      "Let's get to know you better",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 30.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Helvetica'),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 16.0, bottom: 20, top: 10, right: 16),
+                    child: Text(
+                      "Please select atleast two categories that you are interested in.",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.black,
+                          fontFamily: 'Helvetica'),
+                    ),
+                  ),
+                ])),
+            SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2, childAspectRatio: 1.5),
-              itemBuilder: (BuildContext context, int index) {
+              delegate:
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
                 return new InkWell(
                     onTap: () {
                       if (selectedinterests.contains(categories[index])) {
@@ -170,87 +231,9 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                             : Container(),
                       ],
                     )));
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 36, top: 20, right: 36, bottom: 10),
-            child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  InkWell(
-                    onTap: () async {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          useRootNavigator: false,
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      20.0)), //this right here
-                              child: Container(
-                                height: 100,
-                                child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: SpinKitChasingDots(
-                                        color: Colors.deepOrange)),
-                              ),
-                            );
-                          });
-                      final storage = new FlutterSecureStorage();
-                      var userid = await storage.read(key: 'userid');
-                      if (selectedinterests.length >= 2) {
-                        var url =
-                            'https://api.sellship.co/api/interests/' + userid;
-
-                        FormData formData = FormData.fromMap({
-                          'interests': selectedinterests,
-                        });
-
-                        Dio dio = new Dio();
-                        var response = await dio.post(url, data: formData);
-
-                        if (response.statusCode == 200) {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RootScreen()));
-                        } else {
-                          Navigator.pop(context);
-                          print(response.statusCode);
-                        }
-                      }
-                    },
-                    child: Container(
-                      height: 60,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                      width: MediaQuery.of(context).size.width - 150,
-                      decoration: BoxDecoration(
-                        color: selectedinterests.length >= 2
-                            ? Color.fromRGBO(255, 115, 0, 1)
-                            : Colors.grey,
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Center(
-                          child: Text(
-                        'Start SellShipping',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      )),
-                    ),
-                  ),
-                ]),
-          ),
-        ],
-      ),
-    );
+              }, childCount: categoryimages.length),
+            )
+          ],
+        ));
   }
 }

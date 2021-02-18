@@ -5,7 +5,6 @@ import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/starterscreen.dart';
 import 'package:SellShip/screens/subcategory.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -58,7 +57,6 @@ class _MyAppState extends State<MyApp> {
         ],
         child: MaterialApp(
           theme: ThemeData(fontFamily: 'Helvetica'),
-          builder: BotToastInit(),
           routes: {
             Routes.addBrands: (context) => Brands(),
             Routes.addCategory: (context) => AddCategory(),
@@ -72,7 +70,6 @@ class _MyAppState extends State<MyApp> {
             Routes.changeCountry: (context) => ChangeCountry(),
             Routes.chatPageView: (context) => ChatPageView(),
             Routes.checkout: (context) => Checkout(),
-            Routes.checkoutUAE: (context) => CheckoutUAE(),
             Routes.comments: (context) => CommentsPage(),
             Routes.details: (context) => Details(),
             Routes.editItem: (context) => EditItem(),

@@ -5,12 +5,14 @@ import 'package:SellShip/screens/balance.dart';
 import 'package:SellShip/screens/changecountry.dart';
 import 'package:SellShip/screens/favourites.dart';
 import 'package:SellShip/screens/myitems.dart';
+import 'package:SellShip/screens/onboardinginterests.dart';
 import 'package:SellShip/screens/privacypolicy.dart';
 import 'package:SellShip/screens/reviews.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/search.dart';
 
 import 'package:SellShip/screens/termscondition.dart';
+import 'package:SellShip/usernamesettings.dart';
 
 import 'package:SellShip/verification/verifyemail.dart';
 import 'package:SellShip/verification/verifyphone.dart';
@@ -135,7 +137,9 @@ class _SettingsState extends State<Settings> {
                 Navigator.pop(context);
               },
               child: Icon(Icons.arrow_back_ios)),
-          iconTheme: IconThemeData(color: Colors.deepOrange),
+          iconTheme: IconThemeData(
+            color: Color.fromRGBO(28, 45, 65, 1),
+          ),
           elevation: 0,
           title: Text(
             'Settings',
@@ -156,10 +160,10 @@ class _SettingsState extends State<Settings> {
                       child: Text(
                         'Account Settings',
                         style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   )
@@ -173,7 +177,7 @@ class _SettingsState extends State<Settings> {
                         color: Colors.deepOrange,
                       ),
                       trailing: Icon(
-                        Feather.arrow_right,
+                        Icons.chevron_right,
                         size: 16,
                         color: Colors.deepOrange,
                       ),
@@ -202,7 +206,7 @@ class _SettingsState extends State<Settings> {
                         color: Colors.deepOrange,
                       ),
                       trailing: Icon(
-                        Feather.arrow_right,
+                        Icons.chevron_right,
                         size: 16,
                         color: Colors.deepOrange,
                       ),
@@ -218,6 +222,70 @@ class _SettingsState extends State<Settings> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => EditProfile()),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        Feather.user,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Change Username',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UsernameSettings(
+                                    userid: userid,
+                                  )),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        Feather.heart,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Change Interests',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OnboardingInterests(
+                                    userid: userid,
+                                  )),
                         );
                       },
                     ),
@@ -245,7 +313,7 @@ class _SettingsState extends State<Settings> {
                           color: Colors.deepOrange,
                         ),
                         trailing: Icon(
-                          Feather.arrow_right,
+                          Icons.chevron_right,
                           size: 16,
                           color: Colors.deepOrange,
                         ),
@@ -272,10 +340,10 @@ class _SettingsState extends State<Settings> {
                       child: Text(
                         'Verification',
                         style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   )
@@ -290,7 +358,7 @@ class _SettingsState extends State<Settings> {
                       ),
                       trailing: confirmedemail == false
                           ? Icon(
-                              Feather.arrow_right,
+                              Icons.chevron_right,
                               size: 16,
                               color: Colors.deepOrange,
                             )
@@ -333,7 +401,7 @@ class _SettingsState extends State<Settings> {
                       ),
                       trailing: confirmedphone == false
                           ? Icon(
-                              Feather.arrow_right,
+                              Icons.chevron_right,
                               size: 16,
                               color: Colors.deepOrange,
                             )
@@ -375,7 +443,7 @@ class _SettingsState extends State<Settings> {
                       ),
                       trailing: confirmedfb == false
                           ? Icon(
-                              Feather.arrow_right,
+                              Icons.chevron_right,
                               size: 16,
                               color: Colors.deepOrange,
                             )
@@ -430,10 +498,10 @@ class _SettingsState extends State<Settings> {
                 child: Text(
                   'Other Settings',
                   style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
+                      fontFamily: 'Helvetica',
+                      fontSize: 16,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -445,7 +513,7 @@ class _SettingsState extends State<Settings> {
                   color: Colors.deepOrange,
                 ),
                 trailing: Icon(
-                  Feather.arrow_right,
+                  Icons.chevron_right,
                   size: 16,
                   color: Colors.deepOrange,
                 ),
@@ -469,41 +537,11 @@ class _SettingsState extends State<Settings> {
               color: Colors.white,
               child: ListTile(
                 leading: Icon(
-                  Icons.insert_drive_file,
-                  color: Colors.deepOrange,
-                ),
-                trailing: Icon(
-                  Feather.arrow_right,
-                  size: 16,
-                  color: Colors.deepOrange,
-                ),
-                title: Text(
-                  'Licenses',
-                  style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16.0,
-                  ),
-                ),
-                onTap: () {
-                  showLicensePage(
-                      context: context,
-                      applicationName: 'SellShip',
-                      applicationIcon: Image.asset(
-                        'assets/logotransparent.png',
-                        scale: 0.5,
-                      ));
-                },
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              child: ListTile(
-                leading: Icon(
                   Feather.eye,
                   color: Colors.deepOrange,
                 ),
                 trailing: Icon(
-                  Feather.arrow_right,
+                  Icons.chevron_right,
                   size: 16,
                   color: Colors.deepOrange,
                 ),
@@ -531,7 +569,7 @@ class _SettingsState extends State<Settings> {
                         color: Colors.deepOrange,
                       ),
                       trailing: Icon(
-                        Feather.arrow_right,
+                        Icons.chevron_right,
                         size: 16,
                         color: Colors.deepOrange,
                       ),

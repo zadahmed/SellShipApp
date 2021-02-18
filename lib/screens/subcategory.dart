@@ -1135,7 +1135,7 @@ class _SubCategoryState extends State<SubCategory> {
                           ],
                           collapseMode: CollapseMode.parallax,
                           background: Hero(
-                              tag: widget.subcategory,
+                              tag: 'subcat' + widget.subcategory,
                               child: CachedNetworkImage(
                                 height: 200,
                                 width: 300,

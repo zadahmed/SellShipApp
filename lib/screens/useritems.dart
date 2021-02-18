@@ -1090,6 +1090,11 @@ class _UserItemsState extends State<UserItems> {
                                                           .itemid,
                                                       sold:
                                                           itemsgrid[index].sold,
+                                                      image: itemsgrid[index]
+                                                          .image,
+                                                      name:
+                                                          itemsgrid[index].name,
+                                                      source: 'my',
                                                     )),
                                           );
                                         },
@@ -1846,6 +1851,10 @@ class _UserItemsState extends State<UserItems> {
                                                     itemid:
                                                         itemsgrid[index].itemid,
                                                     sold: itemsgrid[index].sold,
+                                                    image:
+                                                        itemsgrid[index].image,
+                                                    name: itemsgrid[index].name,
+                                                    source: 'my',
                                                   )),
                                         );
                                       },

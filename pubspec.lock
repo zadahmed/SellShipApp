@@ -36,13 +36,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.4"
-  awesome_card:
-    dependency: transitive
-    description:
-      name: awesome_card
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   badges:
     dependency: "direct main"
     description:
@@ -57,13 +50,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.1"
-  bot_toast:
-    dependency: "direct main"
-    description:
-      name: bot_toast
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.4"
   cached_network_image:
     dependency: "direct main"
     description:
@@ -356,6 +342,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  flutter_inappwebview:
+    dependency: "direct main"
+    description:
+      name: flutter_inappwebview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0+4"
   flutter_local_notifications:
     dependency: transitive
     description:
@@ -604,13 +597,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  mask_text_input_formatter:
-    dependency: transitive
-    description:
-      name: mask_text_input_formatter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   matcher:
     dependency: transitive
     description:
@@ -856,13 +842,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
-  search_page:
-    dependency: "direct main"
-    description:
-      name: search_page
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.3.0"
   share:
     dependency: "direct main"
     description:
@@ -994,20 +973,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0-nullsafety.1"
-  stripe_payment:
-    dependency: "direct main"
-    description:
-      name: stripe_payment
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.8"
-  stripe_sdk:
-    dependency: "direct main"
-    description:
-      name: stripe_sdk
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.1+1"
   substring_highlight:
     dependency: "direct main"
     description:
@@ -1064,13 +1029,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0-nullsafety.3"
-  uni_links:
-    dependency: transitive
-    description:
-      name: uni_links
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0"
   url_launcher:
     dependency: "direct main"
     description:

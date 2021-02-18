@@ -21,7 +21,6 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
 
 class Address extends StatefulWidget {
@@ -414,11 +413,19 @@ class _AddressState extends State<Address> {
             phonenumber: jsonbody[i]['phonenumber']));
       }
 
-      setState(() {
-        loading = false;
-        addressreturned = addresseslist[0].address;
-        addresseslist = addresseslist;
-      });
+      if (addresseslist != null) {
+        setState(() {
+          loading = false;
+          addressreturned = "";
+          addresseslist = addresseslist;
+        });
+      } else {
+        setState(() {
+          loading = false;
+          addressreturned = addresseslist[0].address;
+          addresseslist = addresseslist;
+        });
+      }
     } else {
       print(response.statusCode);
       setState(() {

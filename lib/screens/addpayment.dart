@@ -20,7 +20,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
 
 class Payments {
@@ -263,7 +262,7 @@ class _AddPaymentState extends State<AddPayment> {
                                     color: Colors.deepOrangeAccent)),
                           );
                         });
-                    addpaymentmethod();
+//                    addpaymentmethod();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -304,49 +303,49 @@ class _AddPaymentState extends State<AddPayment> {
 
   final storage = new FlutterSecureStorage();
 
-  void addpaymentmethod() async {
-    var slash = expiryDate.indexOf('/');
-
-    CreditCard stripeCard = CreditCard(
-      number: cardNumber,
-      expMonth: int.parse(expiryDate.substring(0, slash)),
-      expYear: int.parse(expiryDate.substring(
-        slash + 1,
-      )),
-    );
-
-    var paymentMethod = await StripePayment.createPaymentMethod(
-        PaymentMethodRequest(card: stripeCard));
-    var userid = await storage.read(key: 'userid');
-
-    var url = 'https://api.sellship.co/api/addpaymentintent/' +
-        userid +
-        '/' +
-        paymentMethod.id;
-
-    final response = await http.get(url);
-
-    var jsonbody = json.decode(response.body);
-    showDialog(
-        context: context,
-        builder: (_) => AssetGiffyDialog(
-              image: Image.asset(
-                'assets/yay.gif',
-                fit: BoxFit.cover,
-              ),
-              title: Text(
-                'Card Added!',
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
-              ),
-              onlyOkButton: true,
-              entryAnimation: EntryAnimation.DEFAULT,
-              onOkButtonPressed: () {
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-                Navigator.of(context, rootNavigator: true).pop('dialog');
-                Navigator.pop(context, jsonbody);
-              },
-            ));
-  }
+//  void addpaymentmethod() async {
+//    var slash = expiryDate.indexOf('/');
+//
+//    CreditCard stripeCard = CreditCard(
+//      number: cardNumber,
+//      expMonth: int.parse(expiryDate.substring(0, slash)),
+//      expYear: int.parse(expiryDate.substring(
+//        slash + 1,
+//      )),
+//    );
+//
+//    var paymentMethod = await StripePayment.createPaymentMethod(
+//        PaymentMethodRequest(card: stripeCard));
+//    var userid = await storage.read(key: 'userid');
+//
+//    var url = 'https://api.sellship.co/api/addpaymentintent/' +
+//        userid +
+//        '/' +
+//        paymentMethod.id;
+//
+//    final response = await http.get(url);
+//
+//    var jsonbody = json.decode(response.body);
+//    showDialog(
+//        context: context,
+//        builder: (_) => AssetGiffyDialog(
+//              image: Image.asset(
+//                'assets/yay.gif',
+//                fit: BoxFit.cover,
+//              ),
+//              title: Text(
+//                'Card Added!',
+//                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+//              ),
+//              onlyOkButton: true,
+//              entryAnimation: EntryAnimation.DEFAULT,
+//              onOkButtonPressed: () {
+//                Navigator.of(context, rootNavigator: true).pop('dialog');
+//                Navigator.of(context, rootNavigator: true).pop('dialog');
+//                Navigator.pop(context, jsonbody);
+//              },
+//            ));
+//  }
 
   void onCreditCardModelChange(CreditCardModel creditCardModel) {
     setState(() {

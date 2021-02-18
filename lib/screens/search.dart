@@ -1177,9 +1177,10 @@ class _SearchState extends State<Search>
                                                                       .circular(
                                                                           10),
                                                               child: Hero(
-                                                                  tag: categoryList[
-                                                                          index]
-                                                                      .categoryname,
+                                                                  tag: 'cat' +
+                                                                      categoryList[
+                                                                              index]
+                                                                          .categoryname,
                                                                   child:
                                                                       CachedNetworkImage(
                                                                     height: 200,

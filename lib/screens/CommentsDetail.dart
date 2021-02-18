@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/messages.dart';
-import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -59,7 +58,7 @@ class _CommentsDetaileState extends State<CommentsDetail> {
   int seconds = 5;
   int animationMilliseconds = 200;
   int animationReverseMilliseconds = 200;
-  BackButtonBehavior backButtonBehavior = BackButtonBehavior.none;
+
 
   @override
   void initState() {

@@ -169,18 +169,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                     padding: EdgeInsets.all(10),
                     child: InkWell(
                         onTap: () {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              useRootNavigator: false,
-                              builder: (_) => Container(
-                                  height: 50,
-                                  width: 50,
-                                  child: SpinKitChasingDots(
-                                    color: Colors.deepOrange,
-                                  )));
-
-                          acceptoffer();
+                          acceptoffer(context);
                         },
                         child: Container(
                             decoration: BoxDecoration(
@@ -846,7 +835,17 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
     super.dispose();
   }
 
-  acceptoffer() async {
+  acceptoffer(context) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        useRootNavigator: false,
+        builder: (_) => Container(
+            height: 50,
+            width: 50,
+            child: SpinKitChasingDots(
+              color: Colors.deepOrange,
+            )));
     if (offerstage != null) {
       var url = 'https://api.sellship.co/api/acceptoffer/' +
           widget.messageid +

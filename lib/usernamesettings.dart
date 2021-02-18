@@ -12,19 +12,19 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 
-class Username extends StatefulWidget {
+class UsernameSettings extends StatefulWidget {
   final String userid;
 
-  Username({
+  UsernameSettings({
     Key key,
     this.userid,
   }) : super(key: key);
 
   @override
-  _UsernameState createState() => new _UsernameState();
+  _UsernameSettingsState createState() => new _UsernameSettingsState();
 }
 
-class _UsernameState extends State<Username> {
+class _UsernameSettingsState extends State<UsernameSettings> {
   String userid;
 
   @override
@@ -213,10 +213,9 @@ class _UsernameState extends State<Username> {
                   InkWell(
                     onTap: () async {
                       if (allgood) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => OnboardingInterests()));
+                        Navigator.pop(
+                          context,
+                        );
                       } else {
                         showDialog(
                             context: context,

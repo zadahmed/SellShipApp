@@ -114,13 +114,18 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => Details(
-                                                      itemid:
-                                                          item[index].itemid)),
+                                                builder: (context) => Details(
+                                                  itemid: item[index].itemid,
+                                                  sold: item[index].sold,
+                                                  image: item[index].image,
+                                                  name: item[index].name,
+                                                  source: 'my',
+                                                ),
+                                              ),
                                             );
                                           },
                                           child: Hero(
-                                              tag: item[index].itemid,
+                                              tag: 'my' + item[index].itemid,
                                               child: Container(
                                                 child: Column(
                                                   children: <Widget>[

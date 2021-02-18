@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/controllers/customslider.dart';
+import 'package:SellShip/screens/filterpage.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
@@ -1254,73 +1256,33 @@ class _CategoryDetailState extends State<CategoryDetail>
   ScrollController _scrollController = ScrollController();
   final scaffoldState = GlobalKey<ScaffoldState>();
 
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => FilterPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
+  var filterscreen = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldState,
         floatingActionButton: InkWell(
           onTap: () {
-            showModalBottomSheet(
-                backgroundColor: Colors.transparent,
-                context: context,
-                isScrollControlled: true,
-                useRootNavigator: false,
-                isDismissible: true,
-                builder: (BuildContext context) {
-                  return DraggableScrollableSheet(
-                      initialChildSize: 0.85, //set this as you want
-                      maxChildSize: 0.85, //set this as you want
-                      minChildSize: 0.85, //set this as you want
-                      expand: true,
-                      builder: (context, scrollController) {
-                        return Container(
-                            decoration: new BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: new BorderRadius.only(
-                                    topLeft: const Radius.circular(20.0),
-                                    topRight: const Radius.circular(20.0))),
-                            child: Column(children: [
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 20, bottom: 10),
-                                    child: Text(
-                                      "Filter",
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 22,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  InkWell(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            right: 15, bottom: 10),
-                                        child: Text(
-                                          "Done",
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 18,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w300),
-                                        ),
-                                      ))
-                                ],
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                              ),
-                            ])); //whatever you're returning, does not have to be a Container
-                      });
-                });
+            Navigator.of(context).push(_createRoute());
           },
           child: Container(
             width: 80,
@@ -1379,7 +1341,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                           ],
                           collapseMode: CollapseMode.parallax,
                           background: Hero(
-                              tag: widget.category,
+                              tag: 'cat' + widget.category,
                               child: CachedNetworkImage(
                                 height: 200,
                                 width: 300,

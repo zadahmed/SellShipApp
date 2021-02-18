@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/payments/stripeservice.dart';
@@ -6,23 +7,26 @@ import 'package:SellShip/screens/addpayment.dart';
 import 'package:SellShip/screens/address.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/paymentdone.dart';
+import 'package:SellShip/screens/paymentweb.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stripe_sdk/stripe_sdk.dart';
 
 class Checkout extends StatefulWidget {
   String itemid;
+  String messageid;
 
   Checkout({
     Key key,
     this.itemid,
+    this.messageid,
   }) : super(key: key);
   @override
   _CheckoutState createState() => _CheckoutState();
@@ -517,7 +521,74 @@ class _CheckoutState extends State<Checkout> {
                         const EdgeInsets.only(left: 15, bottom: 10, right: 15),
                     child: Container(
                       child: InkWell(
-                        onTap: () async {},
+                        onTap: () async {
+                          var uuid = uuidGenerator.v1();
+                          var trref = ('SS' + uuid);
+
+                          var messageid;
+                          if (widget.messageid == null) {
+                            messageid = uuidGenerator.v4();
+                          } else {
+                            messageid = widget.messageid;
+                          }
+
+                          var userid = await storage.read(key: 'userid');
+
+                          Map<String, Object> body = {
+                            "apiOperation": "INITIATE",
+                            "order": {
+                              "name": "SellShip Purchase",
+                              "channel": "web",
+                              "reference": trref,
+                              "amount": subtotal,
+                              "currency": "AED",
+                              "category": "pay",
+                            },
+                            "configuration": {
+                              "locale": "en",
+                              "paymentAction": "Sale",
+                              "returnUrl":
+                                  'https://api.sellship.co/api/payment/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${trref}'
+                            },
+                          };
+
+                          var url =
+                              "https://api-stg.noonpayments.com/payment/v1/order";
+
+                          var key =
+                              "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
+                          List encodedText = utf8.encode(key);
+                          String base64Str = base64Encode(encodedText);
+                          print('Key_Test $base64Str');
+                          var heade = 'Key_Test $base64Str';
+
+                          Map<String, String> headers = {
+                            'Authorization': heade,
+                            'Content-type': 'application/json',
+                            'Accept': 'application/json',
+                          };
+                          final response = await http.post(
+                            url,
+                            body: json.encode(body),
+                            headers: headers,
+                          );
+
+                          print(response.body);
+                          if (response.statusCode == 200) {
+                            var jsonmessage = json.decode(response.body);
+
+                            var url = jsonmessage['result']['checkoutData']
+                                ['postUrl'];
+                            print(url);
+                            final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PaymentWeb(
+                                          url: url,
+                                        )));
+                            print(result);
+                          }
+                        },
                         child: Container(
                           height: 52,
                           decoration: BoxDecoration(

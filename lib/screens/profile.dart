@@ -441,10 +441,20 @@ class _ProfilePageState extends State<ProfilePage>
                         Stack(
                           children: [
                             Align(
+                                alignment: Alignment.topCenter,
+                                child: Container(
+                                    height: 80,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: SvgPicture.asset(
+                                      'assets/LoginBG.svg',
+                                      semanticsLabel: 'SellShip BG',
+                                      fit: BoxFit.cover,
+                                    ))),
+                            Align(
                               alignment: Alignment.center,
                               child: Padding(
                                   padding: EdgeInsets.only(
-                                      left: 15, top: 15, right: 20),
+                                      left: 15, top: 40, right: 20),
                                   child: Container(
                                       width: MediaQuery.of(context).size.width,
                                       child: Row(
@@ -469,6 +479,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                               height: 100,
                                                               width: 100,
                                                               decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
                                                                   border: Border.all(
                                                                       color: Colors
                                                                           .grey
