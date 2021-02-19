@@ -201,7 +201,10 @@ class _NotifcationPageState extends State<NotifcationPage>
             'Notifications',
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: 'Helvetica', fontSize: 18, color: Colors.black),
+                fontFamily: 'Helvetica',
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold),
           ),
         ),
         body: loading == false

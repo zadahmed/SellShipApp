@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,8 +7,8 @@ import 'package:SellShip/screens/activity.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/onboardinginterests.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:SellShip/screens/additem.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,28 @@ class _RootScreenState extends State<RootScreen> {
     pageController.dispose();
 
     super.dispose();
+  }
+
+  StreamSubscription<Map> streamSubscription;
+
+  deeplinks() async {
+    streamSubscription = FlutterBranchSdk.initSession().listen((data) {
+      if (data.containsKey('+clicked_branch_link')) {
+        if (data['source'] == 'item') {
+          if (data['itemid'] != null) {
+            Navigator.pushNamed(context, Routes.details, arguments: {
+              "itemid": data['itemid'],
+              "image": data['itemimage'],
+              "name": data['itemname'],
+              "sold": data['itemsold'],
+              "source": 'dynamic'
+            });
+          }
+        }
+      }
+    }, onError: (error) {
+      print('InitSession error: ');
+    });
   }
 
   var profilepicture;
@@ -95,7 +118,7 @@ class _RootScreenState extends State<RootScreen> {
   void initState() {
     super.initState();
     getuser();
-
+    deeplinks();
     setState(() {
       if (widget.index != null) {
         _currentPage = widget.index;

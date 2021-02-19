@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="io.flutter.app.FlutterApplication"
@@ -37,14 +38,32 @@
 
 
 
+            <!-- Branch URI Scheme -->
             <intent-filter>
+                <data
+                    android:scheme="sellship"
+                    android:host="open" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="stripesdk"
-                    android:host="3ds.stripesdk.io" />
             </intent-filter>
+            <!-- Branch App Links -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="sellship-alternate.app.link" />
+                <data
+                    android:scheme="https"
+                    android:host="sellship.app.link" />
+
+            </intent-filter>
+
+
+
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -97,5 +116,12 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- Branch init -->
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_baMGZ4gFiKELxMJaHMkhekdoszjixZJT" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_odSU91pvdKqNwTRgKOcOdihdsrbhD6J1" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
+
+
     </application>
 </manifest>

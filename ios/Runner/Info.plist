@@ -26,16 +26,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb212796279954587</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>3ds.stripesdk.io</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>stripesdk</string>
+				 <string>sellship</string>
 			</array>
 		</dict>
 		<dict>
@@ -57,6 +48,16 @@
 			</array>
 		</dict>
 	</array>
+	<key>branch_key</key>
+    <string>key_live_baMGZ4gFiKELxMJaHMkhekdoszjixZJT</string>
+    <key>branch_check_apple_ads</key>
+    <true/>
+    <key>branch_universal_link_domains</key>
+    <array>
+        <string>sellship-alternate.app.link</string>
+        <string>sellship.app.link</string>
+    </array>
+
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>

@@ -10,9 +10,9 @@ import 'package:SellShip/screens/profile.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
@@ -699,26 +699,6 @@ class _DetailsState extends State<Details> {
   }
 
   int _current = 0;
-  Future<String> createFirstPostLink(String id) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://sellship.page.link',
-      link: Uri.parse('https://api.sellship.co/items?id=$id'),
-      androidParameters: AndroidParameters(
-        packageName: 'com.zafra.sellship',
-      ),
-      iosParameters: IosParameters(
-        bundleId: 'com.zafra.sellship',
-        appStoreId: '1506496966',
-      ),
-      socialMetaTagParameters: SocialMetaTagParameters(
-        title: 'Check out what I found on SellShip!',
-        description: 'Found this awesome ${newItem.name} on SellShip',
-      ),
-    );
-
-    final Uri dynamicUrl = await parameters.buildUrl();
-    return dynamicUrl.toString();
-  }
 
   ScrollController _scrollController = ScrollController();
 
@@ -754,10 +734,48 @@ class _DetailsState extends State<Details> {
               padding: EdgeInsets.only(right: 10, bottom: 5),
               child: InkWell(
                   onTap: () async {
-                    var s = await createFirstPostLink(itemid);
-                    Share.share('Check out what I found $s',
-                        subject:
-                            'Look at this awesome item I found on SellShip!');
+                    BranchUniversalObject buo = BranchUniversalObject(
+                        canonicalIdentifier: widget.itemid,
+                        title: widget.name,
+                        imageUrl: widget.image,
+                        contentDescription: newItem.description,
+                        contentMetadata: BranchContentMetaData()
+                          ..addCustomMetadata(
+                            'itemname',
+                            widget.name,
+                          )
+                          ..addCustomMetadata(
+                            'source',
+                            'item',
+                          )
+                          ..addCustomMetadata('itemimage', widget.itemid)
+                          ..addCustomMetadata('itemsold', newItem.sold)
+                          ..addCustomMetadata('itemid', widget.itemid),
+                        publiclyIndex: true,
+                        locallyIndex: true,
+                        expirationDateInMilliSec: DateTime.now()
+                            .add(Duration(days: 365))
+                            .millisecondsSinceEpoch);
+
+                    FlutterBranchSdk.registerView(buo: buo);
+
+                    BranchLinkProperties lp = BranchLinkProperties(
+                      channel: 'facebook',
+                      feature: 'sharing',
+                      stage: 'new share',
+                    );
+                    lp.addControlParam('\$uri_redirect_mode', '1');
+                    BranchResponse response =
+                        await FlutterBranchSdk.getShortUrl(
+                            buo: buo, linkProperties: lp);
+                    if (response.success) {
+                      final RenderBox box = context.findRenderObject();
+                      Share.share(response.result,
+                          subject: widget.name,
+                          sharePositionOrigin:
+                              box.localToGlobal(Offset.zero) & box.size);
+                      print('${response.result}');
+                    }
                   },
                   child: Icon(
                     Feather.share,
