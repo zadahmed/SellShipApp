@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
+import 'package:SellShip/main.dart';
 import 'package:SellShip/screens/balance.dart';
 import 'package:SellShip/screens/changecountry.dart';
 import 'package:SellShip/screens/favourites.dart';
@@ -614,8 +615,7 @@ class _SettingsState extends State<Settings> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    RootScreen()),
+                                builder: (BuildContext context) => MyApp()),
                             ModalRoute.withName(Routes.settings));
                       },
                     ))

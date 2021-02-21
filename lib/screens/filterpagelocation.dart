@@ -37,6 +37,13 @@ class Location {
   bool selected = false;
 
   Location(this.title);
+
+  Map<String, dynamic> toJson() => _$SubcategoriesToJson(this);
+
+  Map<String, dynamic> _$SubcategoriesToJson(Location instance) =>
+      <String, dynamic>{
+        'title': instance.title,
+      };
 }
 
 class FilterPageLocationState extends State<FilterPageLocation> {

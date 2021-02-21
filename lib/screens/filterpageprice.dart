@@ -91,7 +91,7 @@ class FilterPagePriceState extends State<FilterPagePrice> {
                   ),
                   child: Slider(
                       value: _minvalue,
-                      divisions: 200,
+                      divisions: 2000,
                       onChanged: (value) {
                         setState(() {
                           _minvalue = value;
@@ -170,7 +170,7 @@ class FilterPagePriceState extends State<FilterPagePrice> {
                   ),
                   child: Slider(
                       value: _maxvalue,
-                      divisions: 200,
+                      divisions: 2000,
                       onChanged: (value) {
                         setState(() {
                           _maxvalue = value;

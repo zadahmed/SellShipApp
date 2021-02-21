@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/screens/filterpage.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
@@ -1092,11 +1093,52 @@ class _SubCategoryState extends State<SubCategory> {
   ScrollController _scrollController = ScrollController();
   final scaffoldState = GlobalKey<ScaffoldState>();
 
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => FilterPage(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldState,
         backgroundColor: Colors.white,
+        floatingActionButton: InkWell(
+          onTap: () {
+            Navigator.of(context).push(_createRoute());
+          },
+          child: Container(
+            width: 80,
+            height: 40,
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                offset: Offset(0.0, 2.0), //(x,y)
+                blurRadius: 4.0,
+              ),
+            ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+            child: Icon(
+              Feather.sliders,
+              size: 18,
+              color: Colors.deepOrange,
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: DefaultTabController(
             length: 3,
             child: NestedScrollView(

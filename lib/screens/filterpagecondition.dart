@@ -37,6 +37,13 @@ class Conditions {
   bool selected = false;
 
   Conditions(this.title);
+
+  Map<String, dynamic> toJson() => _$SubcategoriesToJson(this);
+
+  Map<String, dynamic> _$SubcategoriesToJson(Conditions instance) =>
+      <String, dynamic>{
+        'title': instance.title,
+      };
 }
 
 class FilterPageConditionState extends State<FilterPageCondition> {

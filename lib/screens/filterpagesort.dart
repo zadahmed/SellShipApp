@@ -37,13 +37,18 @@ class Sort {
   bool selected = false;
 
   Sort(this.title);
+  Map<String, dynamic> toJson() => _$SubcategoriesToJson(this);
+
+  Map<String, dynamic> _$SubcategoriesToJson(Sort instance) =>
+      <String, dynamic>{
+        'title': instance.title,
+      };
 }
 
 class FilterPageSortState extends State<FilterPageSort> {
   List<Sort> sortoptions = [
     Sort('Recently Added'),
     Sort('Lowest Price'),
-    Sort('Near Me'),
     Sort('Highest Price'),
   ];
 

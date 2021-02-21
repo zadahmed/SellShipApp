@@ -23,6 +23,7 @@ import 'package:SellShip/screens/details.dart';
 import 'package:numeral/numeral.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:json_annotation/json_annotation.dart';
 
 class FilterPageCategory extends StatefulWidget {
   FilterPageCategory({Key key}) : super(key: key);
@@ -30,11 +31,18 @@ class FilterPageCategory extends StatefulWidget {
   FilterPageCategoryState createState() => FilterPageCategoryState();
 }
 
+@JsonSerializable()
 class Subcategories {
   final String title;
   bool selected = false;
 
   Subcategories(this.title);
+  Map<String, dynamic> toJson() => _$SubcategoriesToJson(this);
+
+  Map<String, dynamic> _$SubcategoriesToJson(Subcategories instance) =>
+      <String, dynamic>{
+        'title': instance.title,
+      };
 }
 
 class FilterPageCategoryState extends State<FilterPageCategory> {
