@@ -223,6 +223,8 @@ class _ProfilePageState extends State<ProfilePage>
 
     if (response.statusCode == 200) {
       print(response.data);
+    } else {
+      print(response.statusCode);
     }
 
     if (mounted)
@@ -230,7 +232,8 @@ class _ProfilePageState extends State<ProfilePage>
         profilepicture = response.data;
       });
 
-    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   bool profileloading = true;
@@ -287,15 +290,19 @@ class _ProfilePageState extends State<ProfilePage>
     });
     var response = await dio.post(url, data: formData);
 
+    print(response.statusCode);
     if (response.statusCode == 200) {
       print(response.data);
+    } else {
+      print(response.statusCode);
     }
 
     if (mounted)
       setState(() {
         profilepicture = response.data;
       });
-    Navigator.of(context, rootNavigator: true).pop();
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   var currency;
@@ -556,6 +563,27 @@ class _ProfilePageState extends State<ProfilePage>
                                                                         true,
                                                                     onPressed:
                                                                         () {
+                                                                      showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          barrierDismissible:
+                                                                              false,
+                                                                          useRootNavigator:
+                                                                              false,
+                                                                          builder: (_) =>
+                                                                              new AlertDialog(
+                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                                content: Builder(
+                                                                                  builder: (context) {
+                                                                                    return Container(
+                                                                                        height: 50,
+                                                                                        width: 50,
+                                                                                        child: SpinKitChasingDots(
+                                                                                          color: Colors.deepOrange,
+                                                                                        ));
+                                                                                  },
+                                                                                ),
+                                                                              ));
                                                                       getImageCamera();
                                                                     },
                                                                   ),
@@ -571,6 +599,27 @@ class _ProfilePageState extends State<ProfilePage>
                                                                         true,
                                                                     onPressed:
                                                                         () {
+                                                                      showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          barrierDismissible:
+                                                                              false,
+                                                                          useRootNavigator:
+                                                                              false,
+                                                                          builder: (_) =>
+                                                                              new AlertDialog(
+                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                                content: Builder(
+                                                                                  builder: (context) {
+                                                                                    return Container(
+                                                                                        height: 50,
+                                                                                        width: 50,
+                                                                                        child: SpinKitChasingDots(
+                                                                                          color: Colors.deepOrange,
+                                                                                        ));
+                                                                                  },
+                                                                                ),
+                                                                              ));
                                                                       getImageGallery();
                                                                     },
                                                                   )

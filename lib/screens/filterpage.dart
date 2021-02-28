@@ -77,11 +77,9 @@ class FilterPageState extends State<FilterPage> {
               'category': jsonEncode(selectedsubcategory),
               'minprice': minprice.toString(),
               'maxprice': maxprice.toString(),
-//              'colors': (selectedColors),
               'city': jsonEncode(selectedcities),
               'conditions': jsonEncode(selectedconditions),
               'sort': jsonEncode(selectedsorts),
-//              'size': _selectedsize
             };
 
             Navigator.push(

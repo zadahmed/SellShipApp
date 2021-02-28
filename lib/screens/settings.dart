@@ -615,7 +615,8 @@ class _SettingsState extends State<Settings> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) => MyApp()),
+                                builder: (BuildContext context) =>
+                                    OnboardingScreen()),
                             ModalRoute.withName(Routes.settings));
                       },
                     ))

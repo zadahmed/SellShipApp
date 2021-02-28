@@ -6,6 +6,8 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/activity.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/onboardinginterests.dart';
+import 'package:SellShip/screens/store/createstore.dart';
+import 'package:SellShip/screens/store/createstorename.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
@@ -39,7 +41,8 @@ class _RootScreenState extends State<RootScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     Search(),
-    AddItem(),
+    CreateStoreName(),
+    // AddItem(),
     Activity(),
     ProfilePage(),
   ];
@@ -57,15 +60,17 @@ class _RootScreenState extends State<RootScreen> {
     streamSubscription = FlutterBranchSdk.initSession().listen((data) {
       if (data.containsKey('+clicked_branch_link')) {
         if (data['source'] == 'item') {
-          if (data['itemid'] != null) {
-            Navigator.pushNamed(context, Routes.details, arguments: {
-              "itemid": data['itemid'],
-              "image": data['itemimage'],
-              "name": data['itemname'],
-              "sold": data['itemsold'],
-              "source": 'dynamic'
-            });
-          }
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => Details(
+                      itemid: data['itemid'],
+                      image: data['itemimage'],
+                      name: data['itemname'],
+                      sold: data['itemsold'],
+                      source: 'dynamic',
+                    )),
+          );
         }
       }
     }, onError: (error) {

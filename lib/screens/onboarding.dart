@@ -609,22 +609,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: FadeAnimation(
-                    1,
-                    Padding(
-                      padding: EdgeInsets.only(top: 50, left: 20),
-                      child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
-                            Feather.arrow_left,
-                            color: Colors.white,
-                          )),
-                    )),
-              ),
             ],
           )),
     );
