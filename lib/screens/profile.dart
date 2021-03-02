@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
+import 'package:SellShip/models/stores.dart';
+import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -110,6 +112,8 @@ class _ProfilePageState extends State<ProfilePage>
   TextEditingController EmailController = new TextEditingController();
   TextEditingController PasswordController = new TextEditingController();
 
+  List<Stores> storeslist = List<Stores>();
+
   var notcount;
 
   void getnotification() async {
@@ -150,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-
+    getStoreData();
     getnotification();
     if (mounted)
       setState(() {
@@ -164,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage>
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     getProfileData();
-    getItemData();
+    // getItemData();
 
     _tabController.addListener(() {
       var tab = _tabController.index;
@@ -784,213 +788,6 @@ class _ProfilePageState extends State<ProfilePage>
                             )
                           ],
                         ),
-                        firstname != null
-                            ? Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Padding(
-                                    padding: EdgeInsets.only(top: 10),
-                                    child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              right: 10,
-                                            ),
-                                            child: Container(
-                                              height: 50,
-                                              padding:
-                                                  EdgeInsets.only(right: 5),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                              ),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 5),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          itemssold == null
-                                                              ? '0'
-                                                              : itemssold
-                                                                  .toString(),
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 19,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        Text(
-                                                          'Sold',
-                                                          style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              color: Colors
-                                                                  .blueGrey),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 5),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          following == null
-                                                              ? '0'
-                                                              : following
-                                                                  .toString(),
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 19,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        Text(
-                                                          'Likes',
-                                                          style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              color: Colors
-                                                                  .blueGrey),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 5),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          followers == null
-                                                              ? '0'
-                                                              : followers
-                                                                  .toString(),
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 19,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        Text(
-                                                          'Followers',
-                                                          style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              color: Colors
-                                                                  .blueGrey),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 5),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: <Widget>[
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
-                                                          children: <Widget>[
-                                                            Icon(
-                                                              Feather.star,
-                                                              color:
-                                                                  Colors.black,
-                                                              size: 18,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 2,
-                                                            ),
-                                                            Text(
-                                                              reviewrating !=
-                                                                      null
-                                                                  ? reviewrating
-                                                                      .toStringAsFixed(
-                                                                          1)
-                                                                  : '0.0',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 19,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(height: 5.0),
-                                                        Text(
-                                                          'Rating',
-                                                          style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              color: Colors
-                                                                  .blueGrey),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start)))
-                            : Container(
-                                child: SpinKitChasingDots(
-                                    color: Colors.deepOrangeAccent),
-                              ),
                         SizedBox(
                           height: 10,
                         ),
@@ -1032,7 +829,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     labelColor: Colors.black,
                                     tabs: [
                                       new Tab(
-                                        text: 'Items',
+                                        text: 'Stores',
                                       ),
                                       new Tab(
                                         text: 'Favourites',
@@ -2733,18 +2530,8 @@ class _ProfilePageState extends State<ProfilePage>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.only(left: 36, top: 10, bottom: 10, right: 36),
-            child: Text(
-              item.length.toString() + ' Items',
-              style: TextStyle(
-                  fontFamily: 'Helvetica',
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
           Expanded(
-              child: item.isNotEmpty
+              child: storeslist.isNotEmpty
                   ? EasyRefresh(
                       header: CustomHeader(
                           extent: 40.0,
@@ -2769,114 +2556,161 @@ class _ProfilePageState extends State<ProfilePage>
                       onRefresh: () {
                         getProfileData();
 
-                        return getItemData();
+                        return getStoreData();
                       },
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 1,
-                        ),
+                      child: ListView.builder(
                         itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Details(
-                                          itemid: item[index].itemid,
-                                          sold: item[index].sold,
-                                          image: item[index].image,
-                                          name: item[index].name,
-                                          source: 'detail',
-                                        )),
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Stack(
-                                children: <Widget>[
-                                  Container(
-                                    height: 195,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Hero(
-                                        tag: 'detail' + item[index].itemid,
-                                        child: CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          fadeInDuration:
-                                              Duration(microseconds: 5),
-                                          imageUrl: item[index].image,
-                                          fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitChasingDots(
-                                                  color: Colors.deepOrange),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                      alignment: Alignment.topRight,
-                                      child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          EditItem(
-                                                            itemid: item[index]
-                                                                .itemid,
-                                                            itemname:
-                                                                item[index]
-                                                                    .name,
-                                                          )),
-                                                );
-                                              },
-                                              child: CircleAvatar(
-                                                radius: 18,
-                                                backgroundColor: Colors.white,
-                                                child: Icon(
-                                                  Feather.edit_2,
-                                                  color: Colors.blueGrey,
-                                                  size: 16,
-                                                ),
-                                              )))),
-                                  item[index].sold == true
-                                      ? Positioned(
-                                          top: 60,
-                                          child: Container(
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(0.4),
+                          return Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 10),
+                              child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => StorePage(
+                                              storename:
+                                                  storeslist[index].storename,
+                                              storeid:
+                                                  storeslist[index].storeid)),
+                                    );
+                                  },
+                                  child: Container(
+                                      height: 100,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
                                             ),
-                                            width: 210,
-                                            child: Center(
-                                              child: Text(
-                                                'Sold',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  color: Colors.white,
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {},
+                                                  child: Container(
+                                                    height: 80,
+                                                    width: 80,
+                                                    child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        child: storeslist[index]
+                                                                .storelogo
+                                                                .isNotEmpty
+                                                            ? Hero(
+                                                                tag:
+                                                                    'store${storeslist[index].storeid}',
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl: storeslist[
+                                                                          index]
+                                                                      .storelogo,
+                                                                  height: 200,
+                                                                  width: 300,
+                                                                  fadeInDuration:
+                                                                      Duration(
+                                                                          microseconds:
+                                                                              5),
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      SpinKitChasingDots(
+                                                                          color:
+                                                                              Colors.deepOrange),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      Icon(Icons
+                                                                          .error),
+                                                                ),
+                                                              )
+                                                            : SpinKitFadingCircle(
+                                                                color: Colors
+                                                                    .deepOrange,
+                                                              )),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ))
-                                      : Container(),
-                                ],
-                              ),
-                            ),
-                          );
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      height: 25,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                      .size
+                                                                      .width /
+                                                                  3 -
+                                                              10,
+                                                      child: Text(
+                                                        storeslist[index]
+                                                            .storename,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      storeslist[index]
+                                                          .storecategory,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14.0,
+                                                          color: Colors.black),
+                                                    )
+                                                  ],
+                                                ),
+                                              ]),
+                                          Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Icon(
+                                                  Feather.chevron_right,
+                                                  color: Colors.grey,
+                                                )
+                                              ])
+                                        ],
+                                      ))));
                         },
-                        itemCount: item.length,
+                        itemCount: storeslist.length,
                       ))
                   : Container(
                       child: Column(
@@ -3079,50 +2913,35 @@ class _ProfilePageState extends State<ProfilePage>
   var username;
   double reviewrating;
 
-  getItemData() async {
+  getStoreData() async {
     var userid = await storage.read(key: 'userid');
-    print(userid);
-    var itemurl = 'https://api.sellship.co/api/useritems/' + userid;
+    var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
 
-    final itemresponse = await http.get(itemurl);
-    if (itemresponse.statusCode == 200) {
-      var itemrespons = json.decode(itemresponse.body);
-      Map<String, dynamic> itemmap = itemrespons;
+    final storeresponse = await http.get(storeurl);
 
-      List<Item> ites = List<Item>();
-      var productmap = itemmap['products'];
+    if (storeresponse.statusCode == 200) {
+      var jsonbody = json.decode(storeresponse.body);
+      List<Stores> ites = List<Stores>();
+      for (int i = 0; i < jsonbody.length; i++) {
+        Stores store = Stores(
+            storeid: jsonbody[i]['_id']['\$oid'],
+            storecategory: jsonbody[i]['storecategory'],
+            storelogo: jsonbody[i]['storelogo'],
+            storename: jsonbody[i]['storename']);
 
-      if (productmap != null) {
-        for (var i = 0; i < productmap.length; i++) {
-          Item ite = Item(
-              itemid: productmap[i]['_id']['\$oid'],
-              name: productmap[i]['name'],
-              image: productmap[i]['image'],
-              price: productmap[i]['price'].toString(),
-              views:
-                  productmap[i]['views'] == null ? 0 : productmap[i]['views'],
-              likes:
-                  productmap[i]['likes'] == null ? 0 : productmap[i]['likes'],
-              comments: productmap[i]['comments'] == null
-                  ? 0
-                  : productmap[i]['comments'].length,
-              sold:
-                  productmap[i]['sold'] == null ? false : productmap[i]['sold'],
-              category: productmap[i]['category']);
-          ites.add(ite);
-        }
-        if (mounted)
-          setState(() {
-            item = ites;
-            profileloading = false;
-          });
-      } else {
-        if (mounted)
-          setState(() {
-            item = [];
-            profileloading = false;
-          });
+        ites.add(store);
       }
+
+      setState(() {
+        storeslist = ites;
+        profileloading = false;
+      });
+    } else {
+      setState(() {
+        storeslist = [];
+        profileloading = false;
+      });
+      print(storeresponse.statusCode);
     }
   }
 }

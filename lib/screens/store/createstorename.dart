@@ -121,6 +121,9 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                       ),
                       child: TextField(
                         onChanged: (text) {},
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[^-\s]'))
+                        ],
                         controller: storenamecontroller,
                         cursorColor: Colors.black,
                         decoration: InputDecoration(

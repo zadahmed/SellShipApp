@@ -8,6 +8,7 @@ import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/onboardinginterests.dart';
 import 'package:SellShip/screens/store/createstore.dart';
 import 'package:SellShip/screens/store/createstorename.dart';
+import 'package:SellShip/screens/storepage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
@@ -47,6 +48,15 @@ class _RootScreenState extends State<RootScreen> {
     ProfilePage(),
   ];
 
+  final List<Widget> _storepages = [
+    HomeScreen(),
+    Search(),
+    // CreateStoreName(),
+    AddItem(),
+    Activity(),
+    ProfilePage(),
+  ];
+
   @override
   void dispose() {
     pageController.dispose();
@@ -71,6 +81,15 @@ class _RootScreenState extends State<RootScreen> {
                       source: 'dynamic',
                     )),
           );
+        } else if (data['source'] == 'store') {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => Store(
+                      storename: data['storename'],
+                      storeid: data['storeid'],
+                    )),
+          );
         }
       }
     }, onError: (error) {
@@ -82,6 +101,7 @@ class _RootScreenState extends State<RootScreen> {
 
   getuser() async {
     var userid = await storage.read(key: 'userid');
+    storeid = await storage.read(key: 'storeid');
 
     await OneSignal.shared.setExternalUserId(userid);
 
@@ -106,6 +126,7 @@ class _RootScreenState extends State<RootScreen> {
       if (profilepic != null) {
         setState(() {
           profilepicture = profilepic;
+          storeid = storeid;
         });
       } else {
         setState(() {
@@ -134,9 +155,11 @@ class _RootScreenState extends State<RootScreen> {
 
   bool seenadditem;
 
-  onselected() {
+  onselected() async {
+    storeid = await storage.read(key: 'storeid');
     if (_currentPage == 0) {
       setState(() {
+        storeid = storeid;
         home = 'assets/bottomnavbar/Home.svg';
 
         chat = 'assets/bottomnavbar/Chat.svg';
@@ -145,6 +168,7 @@ class _RootScreenState extends State<RootScreen> {
       });
     } else if (_currentPage == 1) {
       setState(() {
+        storeid = storeid;
         home = 'assets/bottomnavbar/Homeselect.svg';
         selectedsearchColor = Color.fromRGBO(28, 45, 65, 1);
         chat = 'assets/bottomnavbar/Chat.svg';
@@ -152,6 +176,7 @@ class _RootScreenState extends State<RootScreen> {
       });
     } else if (_currentPage == 2) {
       setState(() {
+        storeid = storeid;
         home = 'assets/bottomnavbar/Homeselect.svg';
         selectedsearchColor = Colors.grey[400];
         chat = 'assets/bottomnavbar/Chat.svg';
@@ -159,6 +184,7 @@ class _RootScreenState extends State<RootScreen> {
       });
     } else if (_currentPage == 3) {
       setState(() {
+        storeid = storeid;
         home = 'assets/bottomnavbar/Homeselect.svg';
 
         chat = 'assets/bottomnavbar/Chatselect.svg';
@@ -167,6 +193,7 @@ class _RootScreenState extends State<RootScreen> {
       });
     } else if (_currentPage == 4) {
       setState(() {
+        storeid = storeid;
         home = 'assets/bottomnavbar/Homeselect.svg';
 
         chat = 'assets/bottomnavbar/Chat.svg';
@@ -180,6 +207,7 @@ class _RootScreenState extends State<RootScreen> {
   var selectedsearchColor;
   var home = 'assets/bottomnavbar/Home.svg';
   var discover = 'assets/bottomnavbar/Discover.svg';
+  var storeid;
   var chat = 'assets/bottomnavbar/Chat.svg';
 
   @override
@@ -350,7 +378,7 @@ class _RootScreenState extends State<RootScreen> {
       ),
       body: PageView(
           physics: NeverScrollableScrollPhysics(),
-          children: _pages,
+          children: storeid == null ? _pages : _storepages,
           controller: pageController),
     );
   }

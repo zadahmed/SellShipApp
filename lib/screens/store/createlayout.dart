@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/screens/store/createstorepage.dart';
+import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:permission_handler/permission_handler.dart' as Permission;
@@ -462,19 +465,40 @@ class _CreateLayoutState extends State<CreateLayout> {
                   children: [
                     InkWell(
                       onTap: () async {
-                        print(widget.storetype);
+                        showDialog(
+                            context: context,
+                            useRootNavigator: true,
+                            barrierDismissible: true,
+                            builder: (_) => new AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0))),
+                                  content: Builder(
+                                    builder: (context) {
+                                      return Container(
+                                          height: 50,
+                                          width: 50,
+                                          child: SpinKitChasingDots(
+                                            color: Colors.deepOrange,
+                                          ));
+                                    },
+                                  ),
+                                ));
                         if (widget.storetype.contains('Secondhand Seller')) {
                           Dio dio = new Dio();
                           FormData formData;
-                          var addurl =
-                              'https://api.sellship.co/create/store/name/';
+                          var addurl = 'https://api.sellship.co/create/store';
                           String fileName =
                               widget.storelogo.path.split('/').last;
+                          var userid = await storage.read(key: 'userid');
+
                           formData = FormData.fromMap({
-                            'storecategory': widget.storecategory,
+                            'storecategory': widget.storecategory == null
+                                ? widget.storetype
+                                : widget.storecategory,
                             'storetype': widget.storetype,
                             'storename': widget.storename,
-                            'userid': widget.userid,
+                            'userid': userid,
                             'layout': 'default',
                             'storebio': widget.storeabout,
                             'storelogo': await MultipartFile.fromFile(
@@ -482,8 +506,24 @@ class _CreateLayoutState extends State<CreateLayout> {
                                 filename: fileName)
                           });
                           var response = await dio.post(addurl, data: formData);
-                          print(response.statusCode);
+
+                          if (response.statusCode == 200) {
+                            var storeid = response.data['id']['\$oid'];
+                            await storage.write(key: 'storeid', value: storeid);
+                            Navigator.of(context, rootNavigator: false).pop();
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        CreateStorePage(
+                                          storeid: storeid,
+                                        )),
+                                ModalRoute.withName('/'));
+                          } else {
+                            print('I am here');
+                          }
                         } else {
+                          Navigator.pop(context);
                           //Choose Subscription
                         }
                       },
@@ -515,4 +555,6 @@ class _CreateLayoutState extends State<CreateLayout> {
       ),
     );
   }
+
+  final storage = new FlutterSecureStorage();
 }

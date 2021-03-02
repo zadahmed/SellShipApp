@@ -11,6 +11,7 @@ import 'package:SellShip/screens/privacypolicy.dart';
 import 'package:SellShip/screens/reviews.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/search.dart';
+import 'package:SellShip/screens/store/createstorename.dart';
 
 import 'package:SellShip/screens/termscondition.dart';
 import 'package:SellShip/usernamesettings.dart';
@@ -586,6 +587,36 @@ class _SettingsState extends State<Settings> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ChangeCountry()),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
+            email == 'test@test.com' || email == 'zadahmed@outlook.com'
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.business,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Create a Store',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateStoreName()),
                         );
                       },
                     ),

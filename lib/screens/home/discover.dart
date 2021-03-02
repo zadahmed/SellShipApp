@@ -97,9 +97,9 @@ class _DiscoverState extends State<Discover>
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        if (response.body != 'Empty') {
-          var respons = json.decode(response.body);
-
+        var respons = json.decode(response.body);
+        if (respons != 'Empty') {
+          print(respons);
           List<String> ites = List<String>();
 
           if (respons != null) {
