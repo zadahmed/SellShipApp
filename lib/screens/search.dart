@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/models/user.dart';
+import 'package:SellShip/screens/storepage.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 //import 'package:dropdown_search/dropdown_search.dart';
@@ -53,6 +55,8 @@ class _SearchState extends State<Search>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   List<Item> itemsgrid = [];
 
+  List<Item> hashtagitemsgrid = [];
+
   var skip;
   var limit;
 
@@ -72,6 +76,8 @@ class _SearchState extends State<Search>
   bool gridtoggle;
 
   final scaffoldState = GlobalKey<ScaffoldState>();
+
+  bool categoryloading = true;
 
   void showInSnackBar(String value) {
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -116,9 +122,11 @@ class _SearchState extends State<Search>
     });
   }
 
-  List<User> userList = new List<User>();
+  List<Stores> storeList = new List<Stores>();
 
   List<Category> categoryList = new List<Category>();
+
+  List<String> hashtagList = [];
 
   getCategories() async {
     var url = 'https://api.sellship.co/api/categories/view';
@@ -138,6 +146,7 @@ class _SearchState extends State<Search>
     }
 
     setState(() {
+      categoryloading = false;
       categoryList = categoryList;
     });
   }
@@ -186,9 +195,34 @@ class _SearchState extends State<Search>
     });
   }
 
+  onSearchHashtags(textsearch) async {
+    storeList.clear();
+    var url = 'https://api.sellship.co/api/searchhashtags/' +
+        capitalize(textsearch).trim() +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+    print(response.statusCode);
+
+    var jsonbody = json.decode(response.body);
+    print(jsonbody);
+
+    for (var jsondata in jsonbody) {
+      hashtagList.add(jsondata);
+    }
+
+    setState(() {
+      hashtagList = hashtagList.toSet().toList();
+      loading = false;
+    });
+  }
+
   onSearchUsers(textsearch) async {
-    userList.clear();
-    var url = 'https://api.sellship.co/api/searchusers/' +
+    storeList.clear();
+    var url = 'https://api.sellship.co/api/searchstores/' +
         capitalize(textsearch).trim() +
         '/' +
         skip.toString() +
@@ -200,32 +234,16 @@ class _SearchState extends State<Search>
     var jsonbody = json.decode(response.body);
 
     for (var jsondata in jsonbody) {
-      var lastname;
-      var username;
-      if (jsondata.containsKey('last_name')) {
-        lastname = jsondata['last_name'];
-      } else {
-        lastname = '';
-      }
-
-      if (jsondata.containsKey('username')) {
-        username = jsondata['username'];
-      } else {
-        username = jsondata['first_name'];
-      }
-
-      print(jsondata);
-
-      User user = new User(
-          firstName: capitalize(jsondata['first_name']) + ' ' + lastname,
-          username: username,
-          userid: jsondata['_id']['\$oid'],
-          profilepicture: jsondata['profilepicture']);
-      userList.add(user);
+      Stores store = new Stores(
+          storename: jsondata['storename'],
+          storeid: jsondata['storeid'],
+          storelogo: jsondata['storelogo'],
+          storecategory: jsondata['storecategory']);
+      storeList.add(store);
     }
 
     setState(() {
-      userList = userList.toSet().toList();
+      storeList = storeList.toSet().toList();
       loading = false;
     });
   }
@@ -629,6 +647,344 @@ class _SearchState extends State<Search>
     );
   }
 
+  loadhashtagresults(textsearch) async {
+    var url = 'https://api.sellship.co/api/searchhashtagsresults/' +
+        textsearch.trim() +
+        '/' +
+        skip.toString() +
+        '/' +
+        limit.toString();
+
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var jsondata in jsonbody) {
+      var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
+      Item item = Item(
+        itemid: jsondata['_id']['\$oid'],
+        name: jsondata['name'],
+        date: dateuploaded,
+        likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+        comments:
+            jsondata['comments'] == null ? 0 : jsondata['comments'].length,
+        image: jsondata['image'],
+        price: jsondata['price'].toString(),
+        category: jsondata['category'],
+        sold: jsondata['sold'] == null ? false : jsondata['sold'],
+      );
+      hashtagitemsgrid.add(item);
+    }
+
+    setState(() {
+      hashtagitemsgrid = hashtagitemsgrid.toSet().toList();
+      loading = false;
+    });
+  }
+
+  Widget searchhashtagresults(BuildContext context) {
+    return EasyRefresh.custom(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Search Hashtags',
+                style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900),
+              ),
+            ),
+          ),
+        ),
+        SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              mainAxisSpacing: 1.0,
+              crossAxisSpacing: 1.0,
+              crossAxisCount: 2,
+              childAspectRatio: 0.9),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              if (index != 0 && index % 8 == 0) {
+                return Platform.isIOS == true
+                    ? Padding(
+                        padding: EdgeInsets.all(7),
+                        child: Container(
+                          height: 220,
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 0.2, color: Colors.grey),
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: NativeAdmob(
+                            adUnitID: _iosadUnitID,
+                            controller: _controller,
+                          ),
+                        ))
+                    : Padding(
+                        padding: EdgeInsets.all(7),
+                        child: Container(
+                          height: 220,
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 0.2, color: Colors.grey),
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: NativeAdmob(
+                            adUnitID: _androidadUnitID,
+                            controller: _controller,
+                          ),
+                        ));
+              }
+
+              return new Padding(
+                padding: EdgeInsets.all(7),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Details(
+                                itemid: hashtagitemsgrid[index].itemid,
+                                sold: hashtagitemsgrid[index].sold,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 0.2, color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.shade300,
+                          offset: Offset(0.0, 1.0), //(x,y)
+                          blurRadius: 6.0,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        new Stack(
+                          children: <Widget>[
+                            Container(
+                              height: 215,
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  height: 200,
+                                  width: 300,
+                                  fadeInDuration: Duration(microseconds: 5),
+                                  imageUrl:
+                                      hashtagitemsgrid[index].image.isEmpty
+                                          ? SpinKitChasingDots(
+                                              color: Colors.deepOrange)
+                                          : hashtagitemsgrid[index].image,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      SpinKitChasingDots(
+                                          color: Colors.deepOrange),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                            hashtagitemsgrid[index].sold == true
+                                ? Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepPurpleAccent
+                                            .withOpacity(0.8),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Center(
+                                        child: Text(
+                                          'Sold',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ))
+                                : favourites != null
+                                    ? favourites.contains(
+                                            hashtagitemsgrid[index].itemid)
+                                        ? InkWell(
+                                            enableFeedback: true,
+                                            onTap: () async {
+                                              var userid = await storage.read(
+                                                  key: 'userid');
+
+                                              if (userid != null) {
+                                                var url =
+                                                    'https://api.sellship.co/api/favourite/' +
+                                                        userid;
+
+                                                Map<String, String> body = {
+                                                  'itemid':
+                                                      hashtagitemsgrid[index]
+                                                          .itemid,
+                                                };
+
+                                                favourites.remove(
+                                                    hashtagitemsgrid[index]
+                                                        .itemid);
+                                                setState(() {
+                                                  favourites = favourites;
+                                                  hashtagitemsgrid[index]
+                                                          .likes =
+                                                      hashtagitemsgrid[index]
+                                                              .likes -
+                                                          1;
+                                                });
+                                                final response = await http
+                                                    .post(url, body: body);
+
+                                                if (response.statusCode ==
+                                                    200) {
+                                                } else {
+                                                  print(response.statusCode);
+                                                }
+                                              } else {
+                                                showInSnackBar(
+                                                    'Please Login to use Favourites');
+                                              }
+                                            },
+                                            child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: Padding(
+                                                    padding: EdgeInsets.all(10),
+                                                    child: CircleAvatar(
+                                                      radius: 18,
+                                                      backgroundColor:
+                                                          Colors.deepPurple,
+                                                      child: Icon(
+                                                        FontAwesome.heart,
+                                                        color: Colors.white,
+                                                        size: 16,
+                                                      ),
+                                                    ))))
+                                        : InkWell(
+                                            enableFeedback: true,
+                                            onTap: () async {
+                                              var userid = await storage.read(
+                                                  key: 'userid');
+
+                                              if (userid != null) {
+                                                var url =
+                                                    'https://api.sellship.co/api/favourite/' +
+                                                        userid;
+
+                                                Map<String, String> body = {
+                                                  'itemid':
+                                                      hashtagitemsgrid[index]
+                                                          .itemid,
+                                                };
+
+                                                favourites.add(
+                                                    hashtagitemsgrid[index]
+                                                        .itemid);
+                                                setState(() {
+                                                  favourites = favourites;
+                                                  hashtagitemsgrid[index]
+                                                          .likes =
+                                                      hashtagitemsgrid[index]
+                                                              .likes +
+                                                          1;
+                                                });
+                                                final response = await http
+                                                    .post(url, body: body);
+
+                                                if (response.statusCode ==
+                                                    200) {
+                                                } else {
+                                                  print(response.statusCode);
+                                                }
+                                              } else {
+                                                showInSnackBar(
+                                                    'Please Login to use Favourites');
+                                              }
+                                            },
+                                            child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: Padding(
+                                                    padding: EdgeInsets.all(10),
+                                                    child: CircleAvatar(
+                                                      radius: 18,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        Feather.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    ))))
+                                    : Align(
+                                        alignment: Alignment.topRight,
+                                        child: Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: CircleAvatar(
+                                              radius: 18,
+                                              backgroundColor: Colors.white,
+                                              child: Icon(
+                                                Feather.heart,
+                                                color: Colors.blueGrey,
+                                                size: 16,
+                                              ),
+                                            ))),
+                          ],
+                        ),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+                ),
+              );
+            },
+            childCount: hashtagitemsgrid.length,
+          ),
+        )
+      ],
+      onLoad: () async {
+//
+//         _getmoreData(searchcontroller.text);
+      },
+    );
+  }
+
   TabController _tabController;
   bool searched = false;
 
@@ -682,10 +1038,20 @@ class _SearchState extends State<Search>
                             searched = false;
                             skip = 0;
                             limit = 20;
-                            userList.clear();
+                            storeList.clear();
                             loading = true;
                           });
                           onSearchUsers(text);
+                          _getRecentSearches();
+                        } else if (_tabController.index == 3) {
+                          setState(() {
+                            searched = false;
+                            skip = 0;
+                            limit = 20;
+                            hashtagList.clear();
+                            loading = true;
+                          });
+                          onSearchHashtags(text);
                           _getRecentSearches();
                         }
                       },
@@ -747,7 +1113,7 @@ class _SearchState extends State<Search>
                                   text: 'Products',
                                 ),
                                 new Tab(
-                                  text: 'Users',
+                                  text: 'Stores',
                                 ),
                                 new Tab(
                                   text: 'Hashtags',
@@ -774,10 +1140,6 @@ class _SearchState extends State<Search>
                               blurRadius: 6.0,
                             ),
                           ],
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
                         ),
                         child:
                             TabBarView(controller: _tabController, children: [
@@ -866,9 +1228,9 @@ class _SearchState extends State<Search>
                                                                   ),
                                                           childCount: itemsgrid
                                                                       .length <=
-                                                                  15
+                                                                  30
                                                               ? itemsgrid.length
-                                                              : 15,
+                                                              : 30,
                                                         ),
                                                       )
                                                     : SliverToBoxAdapter(
@@ -1126,119 +1488,134 @@ class _SearchState extends State<Search>
                                         ),
                                       ),
                                     ),
-                                    SliverStaggeredGrid.countBuilder(
-                                      crossAxisCount: 3,
-                                      itemBuilder:
-                                          (BuildContext context, index) {
-                                        return InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      CategoryDetail(
-                                                        categoryimage:
-                                                            categoryList[index]
-                                                                .categoryimage,
-                                                        category:
-                                                            categoryList[index]
-                                                                .categoryname,
-                                                        subcategory:
-                                                            categoryList[index]
-                                                                .subcategories,
-                                                      )),
-                                            );
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.all(5),
-                                            child: Container(
-                                                height: 160,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
+                                    categoryloading == false
+                                        ? SliverStaggeredGrid.countBuilder(
+                                            crossAxisCount: 3,
+                                            itemBuilder:
+                                                (BuildContext context, index) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CategoryDetail(
+                                                              categoryimage:
+                                                                  categoryList[
+                                                                          index]
+                                                                      .categoryimage,
+                                                              category:
+                                                                  categoryList[
+                                                                          index]
+                                                                      .categoryname,
+                                                              subcategory:
+                                                                  categoryList[
+                                                                          index]
+                                                                      .subcategories,
+                                                            )),
+                                                  );
+                                                },
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(5),
+                                                  child: Container(
                                                       height: 160,
-                                                      width: 180,
+                                                      width: 100,
                                                       decoration: BoxDecoration(
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
                                                                       10)),
-                                                      child: categoryList[index]
-                                                                  .categoryimage !=
-                                                              null
-                                                          ? ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              child: Hero(
-                                                                  tag: 'cat' +
-                                                                      categoryList[
-                                                                              index]
-                                                                          .categoryname,
-                                                                  child:
-                                                                      CachedNetworkImage(
-                                                                    height: 200,
-                                                                    width: 300,
-                                                                    imageUrl: categoryList[
+                                                      child: Stack(
+                                                        children: [
+                                                          Container(
+                                                            height: 160,
+                                                            width: 180,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            child: categoryList[
                                                                             index]
-                                                                        .categoryimage,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  )))
-                                                          : Container(),
-                                                    ),
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: Container(
-                                                        height: 50,
-                                                        width: 100,
-                                                        padding:
-                                                            EdgeInsets.all(5),
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.5),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10)),
-                                                        child: Center(
-                                                          child: Text(
-                                                            categoryList[index]
-                                                                .categoryname,
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w900),
+                                                                        .categoryimage !=
+                                                                    null
+                                                                ? ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    child: Hero(
+                                                                        tag: 'cat' +
+                                                                            categoryList[index]
+                                                                                .categoryname,
+                                                                        child:
+                                                                            CachedNetworkImage(
+                                                                          height:
+                                                                              200,
+                                                                          width:
+                                                                              300,
+                                                                          imageUrl:
+                                                                              categoryList[index].categoryimage,
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        )))
+                                                                : Container(),
                                                           ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
-                                        );
-                                      },
-                                      itemCount: categoryList.length,
-                                      staggeredTileBuilder: (int index) =>
-                                          new StaggeredTile.fit(1),
-                                      mainAxisSpacing: 4.0,
-                                      crossAxisSpacing: 4.0,
-                                    ),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Container(
+                                                              height: 50,
+                                                              width: 100,
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(5),
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10)),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  categoryList[
+                                                                          index]
+                                                                      .categoryname,
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w900),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      )),
+                                                ),
+                                              );
+                                            },
+                                            itemCount: categoryList.length,
+                                            staggeredTileBuilder: (int index) =>
+                                                new StaggeredTile.fit(1),
+                                            mainAxisSpacing: 4.0,
+                                            crossAxisSpacing: 4.0,
+                                          )
+                                        : SliverFillRemaining(
+                                            child: Center(
+                                                child: SpinKitFadingCircle(
+                                            color: Colors.deepOrange,
+                                          ))),
                                     SliverToBoxAdapter(
                                         child: SizedBox(
                                       height: 100,
@@ -1596,7 +1973,7 @@ class _SearchState extends State<Search>
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Text(
-                                                        'Search Users',
+                                                        'Search Stores',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Helvetica',
@@ -1608,7 +1985,7 @@ class _SearchState extends State<Search>
                                                     ),
                                                   ),
                                                 ),
-                                                userList.isNotEmpty
+                                                storeList.isNotEmpty
                                                     ? SliverList(
                                                         delegate:
                                                             new SliverChildBuilderDelegate(
@@ -1618,18 +1995,20 @@ class _SearchState extends State<Search>
                                                               Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                    builder: (context) => UserItems(
-                                                                        userid: userList[index]
-                                                                            .userid,
-                                                                        username:
-                                                                            userList[index].username)),
+                                                                    builder:
+                                                                        (context) =>
+                                                                            Store(
+                                                                              storename: storeList[index].storename,
+                                                                              storeid: storeList[index].storeid,
+                                                                            )),
                                                               );
                                                             },
-                                                            leading: userList[index]
-                                                                            .profilepicture !=
+                                                            leading: storeList[index]
+                                                                            .storelogo !=
                                                                         null &&
-                                                                    userList[index]
-                                                                        .profilepicture
+                                                                    storeList[
+                                                                            index]
+                                                                        .storelogo
                                                                         .isNotEmpty
                                                                 ? Container(
                                                                     height: 50,
@@ -1642,7 +2021,7 @@ class _SearchState extends State<Search>
                                                                           width:
                                                                               300,
                                                                           imageUrl:
-                                                                              userList[index].profilepicture,
+                                                                              storeList[index].storelogo,
                                                                           fit: BoxFit
                                                                               .cover,
                                                                         )),
@@ -1667,9 +2046,9 @@ class _SearchState extends State<Search>
                                                                     )),
                                                             title:
                                                                 SubstringHighlight(
-                                                              text: userList[
+                                                              text: storeList[
                                                                       index]
-                                                                  .firstName,
+                                                                  .storename,
                                                               term:
                                                                   searchcontroller
                                                                       .text,
@@ -1691,10 +2070,9 @@ class _SearchState extends State<Search>
                                                             ),
                                                             subtitle:
                                                                 SubstringHighlight(
-                                                              text: '@' +
-                                                                  userList[
-                                                                          index]
-                                                                      .username,
+                                                              text: storeList[
+                                                                      index]
+                                                                  .storecategory,
                                                               term:
                                                                   searchcontroller
                                                                       .text,
@@ -1716,10 +2094,10 @@ class _SearchState extends State<Search>
                                                             ),
 //
                                                           ),
-                                                          childCount: userList
+                                                          childCount: storeList
                                                                       .length <=
                                                                   15
-                                                              ? userList.length
+                                                              ? storeList.length
                                                               : 15,
                                                         ),
                                                       )
@@ -1972,143 +2350,147 @@ class _SearchState extends State<Search>
                                             FocusScope.of(context)
                                                 .requestFocus(new FocusNode());
                                           },
-                                          child: CustomScrollView(
-                                              slivers: <Widget>[
-                                                SliverToBoxAdapter(
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 15, top: 10),
-                                                    child: Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        'Search Results',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w900),
-                                                      ),
-                                                    ),
+                                          child: CustomScrollView(slivers: <
+                                              Widget>[
+                                            SliverToBoxAdapter(
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 15, top: 10),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                    'Search Hashtags',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w900),
                                                   ),
                                                 ),
-                                                itemsgrid.isNotEmpty
-                                                    ? SliverList(
-                                                        delegate:
-                                                            new SliverChildBuilderDelegate(
-                                                          (context, index) =>
-                                                              ListTile(
-                                                                  onTap:
-                                                                      () async {
-                                                                    await _saveToRecentSearches(
-                                                                        itemsgrid[index]
-                                                                            .name);
-                                                                    setState(
-                                                                        () {
-                                                                      loading =
-                                                                          true;
-                                                                      onSearch(itemsgrid[
-                                                                              index]
-                                                                          .name);
-                                                                      searched =
-                                                                          true;
-                                                                    });
-                                                                  },
-                                                                  leading: Icon(
-                                                                      Feather
-                                                                          .search),
-                                                                  title:
-                                                                      SubstringHighlight(
-                                                                    text: itemsgrid[
-                                                                            index]
-                                                                        .name,
-                                                                    term: searchcontroller
+                                              ),
+                                            ),
+                                            hashtagList.isNotEmpty
+                                                ? SliverList(
+                                                    delegate:
+                                                        new SliverChildBuilderDelegate(
+                                                      (context, index) =>
+                                                          ListTile(
+                                                              onTap: () async {
+                                                                await _saveToRecentSearches(
+                                                                    hashtagList[
+                                                                        index]);
+                                                                loadhashtagresults(
+                                                                    hashtagList[
+                                                                        index]);
+                                                                setState(() {
+                                                                  loading =
+                                                                      true;
+                                                                  onSearchHashtags(
+                                                                      searchcontroller
+                                                                          .text);
+                                                                  searched =
+                                                                      true;
+                                                                });
+                                                              },
+                                                              leading: Icon(
+                                                                  Feather
+                                                                      .search),
+                                                              title:
+                                                                  SubstringHighlight(
+                                                                text: '#' +
+                                                                    hashtagList[
+                                                                        index],
+                                                                term:
+                                                                    searchcontroller
                                                                         .text,
-                                                                    textStyle: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontSize:
-                                                                            18,
-                                                                        color: Colors
-                                                                            .black),
-                                                                    textStyleHighlight: TextStyle(
-                                                                        fontFamily:
-                                                                            'Helvetica',
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        fontSize:
-                                                                            18,
-                                                                        color: Colors
-                                                                            .black),
-                                                                  )
+                                                                textStyle: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        18,
+                                                                    color: Colors
+                                                                        .black),
+                                                                textStyleHighlight: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        18,
+                                                                    color: Colors
+                                                                        .black),
+                                                              )
 
 //
-                                                                  ),
-                                                          childCount: itemsgrid
-                                                                      .length <=
-                                                                  15
-                                                              ? itemsgrid.length
-                                                              : 15,
-                                                        ),
-                                                      )
-                                                    : SliverToBoxAdapter(
-                                                        child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 15,
-                                                                    top: 10),
-                                                            child: Column(
-                                                              children: [
-                                                                Container(
-                                                                    height:
-                                                                        MediaQuery.of(context).size.height /
-                                                                                2 -
-                                                                            200,
-                                                                    width: MediaQuery.of(context)
+                                                              ),
+                                                      childCount: hashtagList
+                                                                  .length <=
+                                                              15
+                                                          ? hashtagList.length
+                                                          : 15,
+                                                    ),
+                                                  )
+                                                : SliverToBoxAdapter(
+                                                    child: Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 15,
+                                                                top: 10),
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                                height: MediaQuery.of(context)
                                                                             .size
-                                                                            .width -
-                                                                        50,
-                                                                    child: Image
-                                                                        .asset(
-                                                                      'assets/184.png',
-                                                                      fit: BoxFit
-                                                                          .fitHeight,
-                                                                    )),
-                                                                SizedBox(
-                                                                  height: 30,
-                                                                ),
-                                                                searchcontroller
-                                                                            .text
-                                                                            .length >
-                                                                        3
-                                                                    ? Text(
-                                                                        'Oops. Can\'t find any results for that search.',
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'Helvetica',
-                                                                            fontSize:
-                                                                                18,
-                                                                            color:
-                                                                                Colors.grey.shade500),
-                                                                      )
-                                                                    : Text(
-                                                                        'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                'Helvetica',
-                                                                            fontSize:
-                                                                                18,
-                                                                            color:
-                                                                                Colors.grey.shade500),
-                                                                      )
-                                                              ],
-                                                            )),
-                                                      ),
-                                              ]))
-                                      : searchresults(context)
+                                                                            .height /
+                                                                        2 -
+                                                                    200,
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width -
+                                                                    50,
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/184.png',
+                                                                  fit: BoxFit
+                                                                      .fitHeight,
+                                                                )),
+                                                            SizedBox(
+                                                              height: 30,
+                                                            ),
+                                                            searchcontroller
+                                                                        .text
+                                                                        .length >
+                                                                    3
+                                                                ? Text(
+                                                                    'Oops. Can\'t find any results for that search.',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade500),
+                                                                  )
+                                                                : Text(
+                                                                    'Woah. That\'s way few letters to search for, Please ellaborate on what you are searching for, to get better results',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            18,
+                                                                        color: Colors
+                                                                            .grey
+                                                                            .shade500),
+                                                                  )
+                                                          ],
+                                                        )),
+                                                  ),
+                                          ]))
+                                      : searchhashtagresults(context)
                                   : Container(
                                       height:
                                           MediaQuery.of(context).size.height,

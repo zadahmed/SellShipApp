@@ -224,7 +224,7 @@ class FilteredState extends State<Filtered> {
           footer: CustomFooter(
               extent: 40.0,
               enableHapticFeedback: true,
-              triggerDistance: 50.0,
+              enableInfiniteLoad: true,
               footerBuilder: (context,
                   loadState,
                   pulledExtent,

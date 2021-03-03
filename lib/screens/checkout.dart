@@ -51,10 +51,29 @@ class _CheckoutState extends State<Checkout> {
 
   final storage = new FlutterSecureStorage();
 
-  var selectedaddress;
+  AddressModel selectedaddress;
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    scaffoldState.currentState?.removeCurrentSnackBar();
+    scaffoldState.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontFamily: 'Helvetica',
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
+      backgroundColor: Colors.blue,
+      duration: Duration(seconds: 3),
+    ));
+  }
 
   List<Item> listitems = List<Item>();
 
+  var phonenumber;
   getcurrency() async {
     var countr = await storage.read(key: 'country');
     if (countr.toLowerCase() == 'united arab emirates') {
@@ -375,11 +394,13 @@ class _CheckoutState extends State<Checkout> {
                                 );
                                 if (addressresult != null) {
                                   setState(() {
-                                    selectedaddress = addressresult;
+                                    selectedaddress = addressresult['address'];
+                                    phonenumber = addressresult['phonenumber'];
                                   });
                                 } else {
                                   setState(() {
                                     selectedaddress = null;
+                                    phonenumber = null;
                                   });
                                 }
                               },
@@ -388,7 +409,9 @@ class _CheckoutState extends State<Checkout> {
                                   Text(
                                     selectedaddress == null
                                         ? 'Choose Address'
-                                        : selectedaddress,
+                                        : selectedaddress.address +
+                                            '\n' +
+                                            phonenumber,
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       fontFamily: 'Helvetica',
@@ -439,43 +462,43 @@ class _CheckoutState extends State<Checkout> {
                       )
                     ],
                   ))),
-          Padding(
-            padding: EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
-            child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15), color: Colors.white),
-              child: ListTile(
-                leading: Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.deepOrangeAccent.withOpacity(0.2)),
-                  child: Center(
-                    child: Icon(
-                      Icons.warning,
-                      color: Colors.deepOrangeAccent,
-                    ),
-                  ),
-                ),
-                title: Text(
-                  'On tapping \'Pay\', you hereby accept the terms and conditions of service from SellShip and our payment provider Telr.',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 12,
-                      color: Colors.blueGrey),
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+          //   child: Container(
+          //     padding: EdgeInsets.all(10),
+          //     decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.circular(15), color: Colors.white),
+          //     child: ListTile(
+          //       leading: Container(
+          //         height: 50,
+          //         width: 50,
+          //         decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.circular(15),
+          //             color: Colors.deepOrangeAccent.withOpacity(0.2)),
+          //         child: Center(
+          //           child: Icon(
+          //             Icons.warning,
+          //             color: Colors.deepOrangeAccent,
+          //           ),
+          //         ),
+          //       ),
+          //       title: Text(
+          //         'On tapping \'Pay\', you hereby accept the terms and conditions ',
+          //         style: TextStyle(
+          //             fontFamily: 'Helvetica',
+          //             fontSize: 12,
+          //             color: Colors.blueGrey),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
       bottomNavigationBar: AnimatedOpacity(
         duration: const Duration(milliseconds: 500),
         opacity: 1,
         child: Container(
-            height: 200,
+            height: 160,
             decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: <BoxShadow>[
@@ -522,71 +545,79 @@ class _CheckoutState extends State<Checkout> {
                     child: Container(
                       child: InkWell(
                         onTap: () async {
-                          var uuid = uuidGenerator.v1();
-                          var trref = ('SS' + uuid);
-
-                          var messageid;
-                          if (widget.messageid == null) {
-                            messageid = uuidGenerator.v4();
+                          if (phonenumber == null || selectedaddress == null) {
+                            showInSnackBar('Please choose your address');
                           } else {
-                            messageid = widget.messageid;
-                          }
+                            var uuid = uuidGenerator.v1();
+                            var trref = ('SS' + uuid);
 
-                          var userid = await storage.read(key: 'userid');
+                            var messageid;
+                            if (widget.messageid == null) {
+                              messageid = uuidGenerator.v4();
+                            } else {
+                              messageid = widget.messageid;
+                            }
 
-                          Map<String, Object> body = {
-                            "apiOperation": "INITIATE",
-                            "order": {
-                              "name": "SellShip Purchase",
-                              "channel": "web",
-                              "reference": trref,
-                              "amount": subtotal,
-                              "currency": "AED",
-                              "category": "pay",
-                            },
-                            "configuration": {
-                              "locale": "en",
-                              "paymentAction": "Sale",
-                              "returnUrl":
-                                  'https://api.sellship.co/api/payment/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${trref}'
-                            },
-                          };
+                            var userid = await storage.read(key: 'userid');
 
-                          var url =
-                              "https://api-stg.noonpayments.com/payment/v1/order";
+                            Map<String, Object> body = {
+                              "apiOperation": "INITIATE",
+                              "order": {
+                                "name": "SellShip Purchase",
+                                "channel": "web",
+                                "reference": trref,
+                                "amount": subtotal,
+                                "currency": "AED",
+                                "category": "pay",
+                              },
+                              "configuration": {
+                                "locale": "en",
+                                "paymentAction": "Sale",
+                                "returnUrl":
+                                    'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}'
+                              },
+                            };
 
-                          var key =
-                              "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
-                          List encodedText = utf8.encode(key);
-                          String base64Str = base64Encode(encodedText);
-                          print('Key_Test $base64Str');
-                          var heade = 'Key_Test $base64Str';
+                            var returnurl =
+                                'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}';
 
-                          Map<String, String> headers = {
-                            'Authorization': heade,
-                            'Content-type': 'application/json',
-                            'Accept': 'application/json',
-                          };
-                          final response = await http.post(
-                            url,
-                            body: json.encode(body),
-                            headers: headers,
-                          );
+                            var url =
+                                "https://api-stg.noonpayments.com/payment/v1/order";
 
-                          print(response.body);
-                          if (response.statusCode == 200) {
-                            var jsonmessage = json.decode(response.body);
+                            var key =
+                                "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
+                            List encodedText = utf8.encode(key);
+                            String base64Str = base64Encode(encodedText);
+                            print('Key_Test $base64Str');
+                            var heade = 'Key_Test $base64Str';
 
-                            var url = jsonmessage['result']['checkoutData']
-                                ['postUrl'];
-                            print(url);
-                            final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PaymentWeb(
-                                          url: url,
-                                        )));
-                            print(result);
+                            Map<String, String> headers = {
+                              'Authorization': heade,
+                              'Content-type': 'application/json',
+                              'Accept': 'application/json',
+                            };
+                            final response = await http.post(
+                              url,
+                              body: json.encode(body),
+                              headers: headers,
+                            );
+
+                            print(response.body);
+                            if (response.statusCode == 200) {
+                              var jsonmessage = json.decode(response.body);
+
+                              var url = jsonmessage['result']['checkoutData']
+                                  ['postUrl'];
+                              print(url);
+                              final result = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PaymentWeb(
+                                            returnurl: returnurl,
+                                            url: url,
+                                          )));
+                              print(result);
+                            }
                           }
                         },
                         child: Container(
@@ -622,326 +653,6 @@ class _CheckoutState extends State<Checkout> {
               ],
             )),
       ),
-//        body: SingleChildScrollView(
-//          child: Column(
-//            children: <Widget>[
-//              Padding(
-//                  padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-//                  child: InkWell(
-//                      onTap: () {
-//                        Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                              builder: (context) =>
-//                                  Details(itemid: item.itemid)),
-//                        );
-//                      },
-//                      child: Container(
-//                          height: 70,
-//                          width: MediaQuery.of(context).size.width,
-//                          decoration: BoxDecoration(
-//                            boxShadow: [
-//                              BoxShadow(
-//                                color: Colors.grey.shade300,
-//                                offset: Offset(0.0, 1.0), //(x,y)
-//                                blurRadius: 6.0,
-//                              ),
-//                            ],
-//                            color: Colors.white,
-//                          ),
-//                          child: ListTile(
-//                            title: Text(
-//                              item.name,
-//                              style: TextStyle(
-//                                  fontFamily: 'Helvetica',
-//                                  fontSize: 16,
-//                                  color: Colors.black,
-//                                  fontWeight: FontWeight.w800),
-//                            ),
-//                            leading: Container(
-//                              height: 70,
-//                              width: 70,
-//                              decoration: BoxDecoration(
-//                                  borderRadius: BorderRadius.circular(10)),
-//                              child: ClipRRect(
-//                                borderRadius: BorderRadius.circular(10),
-//                                child: CachedNetworkImage( height: 200, width: 300,
-//                                  imageUrl: item.image,
-//                                ),
-//                              ),
-//                            ),
-//                            subtitle: Text(
-//                              item.price.toString() + ' ' + currency,
-//                              style: TextStyle(
-//                                  fontFamily: 'Helvetica',
-//                                  fontSize: 14,
-//                                  color: Colors.deepOrange,
-//                                  fontWeight: FontWeight.bold),
-//                            ),
-//                          )))),
-//              Padding(
-//                padding:
-//                    EdgeInsets.only(left: 15, bottom: 10, top: 10, right: 15),
-//                child: Align(
-//                  alignment: Alignment.centerLeft,
-//                  child: Text(
-//                    'Your seller will ship out the item once the payment has been completed. Don\'t worry, we will only release the payment to the seller, once you confirm that you have recieved the item as listed.',
-//                    style: TextStyle(
-//                        fontFamily: 'Helvetica',
-//                        fontSize: 12,
-//                        color: Colors.blueGrey),
-//                  ),
-//                ),
-//              ),
-//              Padding(
-//                padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-//                child: Align(
-//                  alignment: Alignment.centerLeft,
-//                  child: Text(
-//                    'Total Amount',
-//                    style: TextStyle(
-//                        fontFamily: 'Helvetica',
-//                        fontSize: 16,
-//                        fontWeight: FontWeight.w700),
-//                  ),
-//                ),
-//              ),
-//              Container(
-//                decoration: BoxDecoration(
-//                  color: Colors.white,
-//                  boxShadow: <BoxShadow>[
-//                    BoxShadow(
-//                        color: Colors.grey.withOpacity(0.2),
-//                        offset: const Offset(0.0, 0.6),
-//                        blurRadius: 5.0),
-//                  ],
-//                ),
-//                child: ListTile(
-//                    onTap: () async {
-////                      final result = await Navigator.push(
-////                        context,
-////                        MaterialPageRoute(builder: (context) => Address()),
-////                      );
-////
-////                      showDialog(
-////                          context: context,
-////                          barrierDismissible: false,
-////                          builder: (BuildContext context) {
-////                            return Container(
-////                              height: 100,
-////                              child: Padding(
-////                                  padding: const EdgeInsets.all(12.0),
-////                                  child: SpinKitChasingDots(
-////                                      color: Colors.deepOrangeAccent)),
-////                            );
-////                          });
-////
-////                      setState(() {
-////                        addressline1 = result['addrLine1'];
-////                        city = result['city'];
-////                        state = result['state'];
-////                        zipcode = result['zip_code'];
-////
-////                        deliveryaddress = result['addrLine1'] +
-////                            ' ,\n' +
-////                            result['city'] +
-////                            ' ,' +
-////                            result['state'] +
-////                            ' ,' +
-////                            result['zip_code'];
-////                        addressreturned = true;
-////                      });
-////
-////                      var userid = await storage.read(key: 'userid');
-////                      var ratesurl = 'https://api.sellship.co/api/rates/' +
-////                          addressline1 +
-////                          '/' +
-////                          city +
-////                          '/' +
-////                          state +
-////                          '/' +
-////                          zipcode +
-////                          '/' +
-////                          item.itemid +
-////                          '/' +
-////                          userid;
-////                      final response = await http.get(ratesurl);
-////                      var jsonrates = json.decode(response.body);
-////
-////                      print(jsonrates);
-////                      var totalrat = jsonrates['rates']
-////                              ['RatingServiceSelectionResponse']
-////                          ['RatedShipment']['TotalCharges']['MonetaryValue'];
-////                      setState(() {
-////                        totalrate = totalrat;
-////                      });
-////                      calculatefees();
-////                      Navigator.of(context, rootNavigator: true).pop('dialog');
-//                    },
-//                    title: Text(
-//                      'Deliver To',
-//                      style: TextStyle(
-//                          fontFamily: 'Helvetica',
-//                          fontSize: 16,
-//                          fontWeight: FontWeight.w700),
-//                    ),
-//                    trailing: addressreturned == false
-//                        ? Icon(
-//                            Icons.arrow_forward_ios,
-//                            size: 10,
-//                          )
-//                        : Text(
-//                            deliveryaddress,
-//                            textAlign: TextAlign.end,
-//                            style: TextStyle(
-//                                fontFamily: 'Helvetica',
-//                                fontSize: 13,
-//                                fontWeight: FontWeight.w500),
-//                          )),
-//              ),
-//              Container(
-//                decoration: BoxDecoration(
-//                  color: Colors.white,
-//                  boxShadow: <BoxShadow>[
-//                    BoxShadow(
-//                        color: Colors.grey.withOpacity(0.2),
-//                        offset: const Offset(0.0, 0.6),
-//                        blurRadius: 5.0),
-//                  ],
-//                ),
-//                child: ListTile(
-//                    onTap: () async {
-//                      final result = await Navigator.push(
-//                        context,
-//                        MaterialPageRoute(builder: (context) => AddPayment()),
-//                      );
-//
-//                      if (result is String) {
-//                        print(result);
-//                        if (result == 'applepay') {
-//                          setState(() {
-//                            paymentby = 'Apple Pay';
-//                          });
-//                        } else if (result == 'googlepay') {
-//                          setState(() {
-//                            paymentby = 'Google Pay';
-//                          });
-//                        }
-//                      } else if (result is Payments) {
-//                        setState(() {
-//                          paymentby = result.cardnumber;
-//                          cardresult = result;
-//                        });
-//                      } else if (result.containsKey("card")) {
-//                        var paymentmethod = result['card']['card']['last4'];
-//                        setState(() {
-//                          paymentby = paymentmethod;
-//                          cardresult = result['card'];
-//                        });
-//                      } else {
-//                        setState(() {
-//                          paymentby = null;
-//                        });
-//                      }
-//                    },
-//                    title: Text(
-//                      'Pay using',
-//                      style: TextStyle(
-//                          fontFamily: 'Helvetica',
-//                          fontSize: 16,
-//                          fontWeight: FontWeight.w700),
-//                    ),
-//                    trailing: paymentby == null
-//                        ? Icon(
-//                            Icons.arrow_forward_ios,
-//                            size: 10,
-//                          )
-//                        : Text(paymentby.toString())),
-//              ),
-//              SizedBox(
-//                height: 20,
-//              ),
-//              Padding(
-//                  padding:
-//                      EdgeInsets.only(left: 10, bottom: 10, top: 20, right: 10),
-//                  child: Column(
-//                    children: <Widget>[
-//                      Row(
-//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                        children: <Widget>[
-//                          Container(
-//                            width: 250,
-//                            child: Text(
-//                              item.name,
-//                              style: TextStyle(
-//                                  fontFamily: 'Helvetica',
-//                                  fontSize: 16,
-//                                  color: Colors.black),
-//                            ),
-//                          ),
-//                          Text(
-//                            offer.toString() + ' ' + currency,
-//                            style: TextStyle(
-//                                fontFamily: 'Helvetica',
-//                                fontSize: 16,
-//                                color: Colors.black),
-//                          )
-//                        ],
-//                      ),
-//                      SizedBox(
-//                        height: 5,
-//                      ),
-//                      totalrate != null
-//                          ? Row(
-//                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                              children: <Widget>[
-//                                Text(
-//                                  'Delivery',
-//                                  style: TextStyle(
-//                                      fontFamily: 'Helvetica',
-//                                      fontSize: 16,
-//                                      color: Colors.black),
-//                                ),
-//                                Text(
-//                                  totalrate.toString() + ' ' + currency,
-//                                  style: TextStyle(
-//                                      fontFamily: 'Helvetica',
-//                                      fontSize: 16,
-//                                      color: Colors.black),
-//                                )
-//                              ],
-//                            )
-//                          : Container(),
-//                      SizedBox(
-//                        height: 5,
-//                      ),
-//                      SizedBox(
-//                        height: 10,
-//                      ),
-//                      Row(
-//                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                        children: <Widget>[
-//                          Text(
-//                            'Total',
-//                            style: TextStyle(
-//                                fontFamily: 'Helvetica',
-//                                fontSize: 16,
-//                                color: Colors.black),
-//                          ),
-//                          Text(
-//                            totalpayable.toStringAsFixed(2) + ' ' + currency,
-//                            style: TextStyle(
-//                                fontFamily: 'Helvetica',
-//                                fontSize: 16,
-//                                color: Colors.black),
-//                          )
-//                        ],
-//                      ),
-//                    ],
-//                  )),
-//            ],
-//          ),
-//        ));
     );
   }
 }

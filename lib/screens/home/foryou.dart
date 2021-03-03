@@ -1058,7 +1058,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                 footer: CustomFooter(
                     extent: 40.0,
                     enableHapticFeedback: true,
-                    triggerDistance: 50.0,
+                    enableInfiniteLoad: true,
                     footerBuilder: (context,
                         loadState,
                         pulledExtent,
@@ -1309,7 +1309,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                 footer: CustomFooter(
                     extent: 40.0,
                     enableHapticFeedback: true,
-                    triggerDistance: 50.0,
+                    enableInfiniteLoad: true,
                     footerBuilder: (context,
                         loadState,
                         pulledExtent,
@@ -1534,13 +1534,17 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                             SizedBox(
                                               height: 5,
                                             ),
-                                            Text(
-                                              '@' + userList[index].username,
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  color: Colors.black),
+                                            Container(
+                                              height: 20,
+                                              child: Text(
+                                                '@' + userList[index].username,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 16,
+                                                    color: Colors.black),
+                                              ),
                                             ),
                                             SizedBox(
                                               height: 5,
@@ -1937,7 +1941,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
             footer: CustomFooter(
                 extent: 40.0,
                 enableHapticFeedback: true,
-                triggerDistance: 50.0,
+                enableInfiniteLoad: true,
                 footerBuilder: (context,
                     loadState,
                     pulledExtent,

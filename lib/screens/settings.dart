@@ -640,6 +640,7 @@ class _SettingsState extends State<Settings> {
                       ),
                       onTap: () {
                         storage.delete(key: 'userid');
+                        storage.delete(key: 'storeid');
                         setState(() {
                           userid = null;
                         });

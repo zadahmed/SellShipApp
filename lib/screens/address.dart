@@ -10,6 +10,7 @@ import 'package:SellShip/screens/rootscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
@@ -31,9 +32,22 @@ class Address extends StatefulWidget {
 class AddressModel {
   String addresstype;
   String address;
+  String addressline1;
+  String addressline2;
+  String city;
+  String country;
+  String area;
   String phonenumber;
 
-  AddressModel({this.addresstype, this.address, this.phonenumber});
+  AddressModel(
+      {this.addresstype,
+      this.address,
+      this.phonenumber,
+      this.addressline1,
+      this.addressline2,
+      this.area,
+      this.city,
+      this.country});
 }
 
 class _AddressState extends State<Address> {
@@ -74,7 +88,7 @@ class _AddressState extends State<Address> {
 
   var selectedCity;
 
-  int radiovalue = 0;
+  int radiovalue = -1;
 
   var selectedaddress;
   var selectedarea;
@@ -401,6 +415,11 @@ class _AddressState extends State<Address> {
       for (int i = 0; i < jsonbody.length; i++) {
         addresseslist.add(AddressModel(
             addresstype: jsonbody[i]['addresstype'],
+            addressline1: jsonbody[i]['addressline1'],
+            addressline2: jsonbody[i]['addressline2'],
+            city: jsonbody[i]['city'],
+            country: jsonbody[i]['country'],
+            area: jsonbody[i]['area'],
             address: jsonbody[i]['addressline1'] +
                 '\n' +
                 jsonbody[i]['addressline2'] +
@@ -449,7 +468,7 @@ class _AddressState extends State<Address> {
               color: Colors.black,
             ),
             onTap: () {
-              Navigator.pop(context, addressreturned);
+              Navigator.pop(context);
             },
           ),
           iconTheme: IconThemeData(color: Colors.black),
@@ -1464,77 +1483,90 @@ class _AddressState extends State<Address> {
                       itemBuilder: (context, index) {
                         return Padding(
                             padding: EdgeInsets.all(10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Colors.white),
-                              height: 210,
-                              width: MediaQuery.of(context).size.width / 2,
-                              padding: EdgeInsets.all(5),
-                              child: Column(
-                                children: [
-                                  Row(
+                            child: InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  addressreturned =
+                                      addresseslist[index].address;
+
+                                  var returnedaddress = {
+                                    'address': addresseslist[index],
+                                    'phonenumber':
+                                        addresseslist[index].phonenumber,
+                                  };
+                                  Navigator.pop(context, returnedaddress);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: Colors.white),
+                                  height: 210,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  padding: EdgeInsets.all(5),
+                                  child: Column(
                                     children: [
-                                      Radio(
-                                          value: index,
-                                          groupValue: radiovalue,
-                                          onChanged: (intvalue) {
-                                            setState(() {
-                                              addressreturned =
-                                                  addresseslist[intvalue]
-                                                      .address;
-                                              radiovalue = intvalue;
-                                            });
-                                          }),
-                                      Text(
-                                        addresseslist[index].addresstype,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w800,
-                                            color: Colors.black),
+                                      Row(
+                                        children: [
+                                          Radio(
+                                              value: index,
+                                              groupValue: radiovalue,
+                                              onChanged: (intvalue) {
+                                                setState(() {
+                                                  addressreturned =
+                                                      addresseslist[index]
+                                                          .address;
+                                                  radiovalue = intvalue;
+                                                });
+                                              }),
+                                          Text(
+                                            addresseslist[index].addresstype,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 15,
+                                          top: 5,
+                                          bottom: 5,
+                                        ),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            addresseslist[index].address,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.blueGrey),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 15,
+                                          top: 5,
+                                          bottom: 5,
+                                        ),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            addresseslist[index].phonenumber,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.deepOrangeAccent),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 15,
-                                      top: 5,
-                                      bottom: 5,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        addresseslist[index].address,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.blueGrey),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 15,
-                                      top: 5,
-                                      bottom: 5,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        addresseslist[index].phonenumber,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w800,
-                                            color: Colors.deepOrangeAccent),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ));
+                                )));
                       },
                     ))
                   : Container()

@@ -83,6 +83,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       if (jsondata['id'] != null) {
         await storage.write(key: 'userid', value: jsondata['id']);
+
+        var userid = await storage.read(key: 'userid');
+        var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
+        final storeresponse = await http.get(storeurl);
+        var storejsonbody = json.decode(storeresponse.body);
+        var storeid = storejsonbody[0]['_id']['\$oid'];
+        await storage.write(key: 'storeid', value: storeid);
+
         if (jsondata['businessid'] != null) {
           await storage.write(key: 'businessid', value: jsondata['businessid']);
         }

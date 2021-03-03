@@ -14,7 +14,6 @@ export 'package:SellShip/screens/categorydetail.dart';
 export 'package:SellShip/screens/changecountry.dart';
 export 'package:SellShip/screens/chatpageview.dart';
 export 'package:SellShip/screens/checkout.dart';
-export 'package:SellShip/screens/checkoutuae.dart';
 export 'package:SellShip/screens/comments.dart';
 export 'package:SellShip/screens/details.dart';
 export 'package:SellShip/screens/edititem.dart';

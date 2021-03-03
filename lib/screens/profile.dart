@@ -800,6 +800,7 @@ class _ProfilePageState extends State<ProfilePage>
                     children: <Widget>[
                       Container(
                           height: 60,
+                          padding: EdgeInsets.only(left: 16),
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               color: Color.fromRGBO(229, 233, 242, 1)
@@ -809,7 +810,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   topLeft: Radius.circular(20))),
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   child: TabBar(

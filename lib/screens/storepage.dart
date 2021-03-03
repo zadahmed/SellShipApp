@@ -65,6 +65,7 @@ class _StoreState extends State<Store> {
 
   getItemData() async {
     var itemurl = 'https://api.sellship.co/store/products/' + widget.storeid;
+    print(itemurl);
 
     final itemresponse = await http.get(itemurl);
     if (itemresponse.statusCode == 200) {
@@ -110,6 +111,7 @@ class _StoreState extends State<Store> {
   }
 
   Stores mystore;
+
   getuser() async {
     var url = 'https://api.sellship.co/api/store/' + widget.storeid;
     final response = await http.get(url);

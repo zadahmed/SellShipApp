@@ -4,7 +4,6 @@ import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/CommentsDetail.dart';
 import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/checkout.dart';
-import 'package:SellShip/screens/checkoutuae.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/profile.dart';
 import 'package:SellShip/screens/rootscreen.dart';

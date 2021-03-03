@@ -336,6 +336,51 @@ class _ChatPageViewState extends State<ChatPageView> {
         ),
       );
     }
+    if (offerstage == 3) {
+      return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+                padding: EdgeInsets.all(10),
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.deepPurpleAccent.withOpacity(0.2)),
+                      color: Colors.deepPurpleAccent.withOpacity(0.2),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                    ),
+                    height: 40,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.delivery_dining,
+                            color: Colors.deepPurpleAccent, size: 16),
+                        SizedBox(width: 5),
+                        Text(
+                          'Picking up Delivery',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.deepPurpleAccent,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    )))),
+          ],
+        ),
+      );
+    }
   }
 
   void showMe(BuildContext context) {

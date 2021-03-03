@@ -4,10 +4,12 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class PaymentWeb extends StatefulWidget {
   String url;
+  String returnurl;
 
   PaymentWeb({
     Key key,
     this.url,
+    this.returnurl,
   }) : super(key: key);
 
   @override
@@ -58,12 +60,13 @@ class PaymentWebState extends State<PaymentWeb> {
             print(consoleMessage.toJson());
             print(consoleMessage.message);
           },
-          onLoadStart: (InAppWebViewController controller, String url) {
-            if (url == "return_url") {
+          onLoadStart: (InAppWebViewController controller, String url) {},
+          onLoadStop: (InAppWebViewController controller, String url) {
+            if (url.substring(0, 20) == widget.returnurl.substring(0, 20)) {
+              print('Nop');
               Navigator.pop(context, 'Done');
             }
           },
-          onLoadStop: (InAppWebViewController controller, String url) {},
           androidOnPermissionRequest: (InAppWebViewController controller,
               String origin, List<String> resources) async {
             return PermissionRequestResponse(

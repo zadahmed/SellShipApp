@@ -95,19 +95,46 @@ class _ActivityBuyState extends State<ActivityBuy>
       List<Item> ites = List<Item>();
 
       if (itemmap != null) {
-        print(itemmap);
         for (var i = 0; i < itemmap.length; i++) {
+          print(itemmap[i]);
+          var buyerid;
+          if (itemmap[i]['buyerid'].containsKey('\$oid')) {
+            buyerid = itemmap[i]['buyerid']['\$oid'];
+          } else {
+            buyerid = itemmap[i]['buyerid'];
+          }
+
+          var buyername;
+          if (itemmap[i].containsKey('buyername')) {
+            buyername = itemmap[i]['buyername'];
+          } else {
+            buyername = 's';
+          }
+
+          var sellerid;
+          if (itemmap[i]['sellerid'].containsKey('\$oid')) {
+            sellerid = itemmap[i]['sellerid']['\$oid'];
+          } else {
+            sellerid = itemmap[i]['sellerid'];
+          }
+
+          var sellername;
+          if (itemmap[i].containsKey('sellername')) {
+            sellername = itemmap[i]['sellername'];
+          } else {
+            sellername = 's';
+          }
           Item ite = Item(
               itemid: itemmap[i]['item']['_id']['\$oid'],
               name: itemmap[i]['item']['name'],
               image: itemmap[i]['item']['image'],
               price: itemmap[i]['offer'].toString(),
               offerstage: itemmap[i]['offerstage'],
-              buyerid: itemmap[i]['buyerid']['\$oid'].toString(),
-              buyername: itemmap[i]['buyername'],
+              buyerid: buyerid,
+              buyername: buyername,
               messageid: itemmap[i]['messageid'].toString(),
-              sellername: itemmap[i]['sellername'],
-              sellerid: itemmap[i]['sellerid']['\$oid'].toString(),
+              sellername: sellername,
+              sellerid: sellerid,
               sold: itemmap[i]['item']['sold']);
           ites.add(ite);
         }
@@ -224,6 +251,21 @@ class _ActivityBuyState extends State<ActivityBuy>
           child: Center(
               child: Text(
             'Pay',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+          )));
+    } else if (offerstage == 3 && widget.index == 0) {
+      return Container(
+          width: 120,
+          height: 47,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          decoration: BoxDecoration(
+              color: Colors.deepOrange,
+              borderRadius: BorderRadius.circular(20)),
+          child: Center(
+              child: Text(
+            'Payment Completed',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
@@ -902,7 +944,7 @@ class _ActivityBuyState extends State<ActivityBuy>
                     header: CustomHeader(
                         extent: 40.0,
                         enableHapticFeedback: true,
-                        triggerDistance: 50.0,
+                        triggerDistance: 150.0,
                         headerBuilder: (context,
                             loadState,
                             pulledExtent,
@@ -1038,26 +1080,24 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                                             index]
                                                                         .image
                                                                         .isNotEmpty
-                                                                    ? Hero(
-                                                                        tag:
-                                                                            'activity${buyingItem[index].itemid}',
-                                                                        child:
-                                                                            CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              buyingItem[index].image,
-                                                                          height:
-                                                                              200,
-                                                                          width:
-                                                                              300,
-                                                                          fadeInDuration:
-                                                                              Duration(microseconds: 5),
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                          placeholder: (context, url) =>
-                                                                              SpinKitChasingDots(color: Colors.deepOrange),
-                                                                          errorWidget: (context, url, error) =>
-                                                                              Icon(Icons.error),
-                                                                        ),
+                                                                    ? CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            buyingItem[index].image,
+                                                                        height:
+                                                                            200,
+                                                                        width:
+                                                                            300,
+                                                                        fadeInDuration:
+                                                                            Duration(microseconds: 5),
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        placeholder:
+                                                                            (context, url) =>
+                                                                                SpinKitChasingDots(color: Colors.deepOrange),
+                                                                        errorWidget: (context,
+                                                                                url,
+                                                                                error) =>
+                                                                            Icon(Icons.error),
                                                                       )
                                                                     : SpinKitFadingCircle(
                                                                         color: Colors
@@ -1106,18 +1146,18 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                                         .black),
                                                               ),
                                                             ),
-                                                            Text(
-                                                              '@' +
-                                                                  buyingItem[
-                                                                          index]
-                                                                      .sellername,
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      'Helvetica',
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .grey),
-                                                            ),
+                                                            // Text(
+                                                            //   '@' +
+                                                            //       buyingItem[
+                                                            //               index]
+                                                            //           .sellername,
+                                                            //   style: TextStyle(
+                                                            //       fontFamily:
+                                                            //           'Helvetica',
+                                                            //       fontSize: 14,
+                                                            //       color: Colors
+                                                            //           .grey),
+                                                            // ),
                                                             SizedBox(
                                                               height: 5,
                                                             ),
@@ -1192,7 +1232,7 @@ class _ActivityBuyState extends State<ActivityBuy>
                     header: CustomHeader(
                         extent: 40.0,
                         enableHapticFeedback: true,
-                        triggerDistance: 50.0,
+                        triggerDistance: 150.0,
                         headerBuilder: (context,
                             loadState,
                             pulledExtent,

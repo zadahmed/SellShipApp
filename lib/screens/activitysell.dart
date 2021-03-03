@@ -880,7 +880,7 @@ class _ActivitySellState extends State<ActivitySell>
                     header: CustomHeader(
                         extent: 40.0,
                         enableHapticFeedback: true,
-                        triggerDistance: 50.0,
+                        triggerDistance: 150.0,
                         headerBuilder: (context,
                             loadState,
                             pulledExtent,
@@ -1016,34 +1016,30 @@ class _ActivitySellState extends State<ActivitySell>
                                                                   BorderRadius
                                                                       .circular(
                                                                           5),
-                                                              child: Hero(
-                                                                tag:
-                                                                    'activity${sellingItem[index].itemid}',
-                                                                child:
-                                                                    CachedNetworkImage(
-                                                                  imageUrl:
-                                                                      sellingItem[
-                                                                              index]
-                                                                          .image,
-                                                                  height: 200,
-                                                                  width: 300,
-                                                                  fadeInDuration:
-                                                                      Duration(
-                                                                          microseconds:
-                                                                              5),
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  placeholder: (context,
-                                                                          url) =>
-                                                                      SpinKitChasingDots(
-                                                                          color:
-                                                                              Colors.deepOrange),
-                                                                  errorWidget: (context,
-                                                                          url,
-                                                                          error) =>
-                                                                      Icon(Icons
-                                                                          .error),
-                                                                ),
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                imageUrl:
+                                                                    sellingItem[
+                                                                            index]
+                                                                        .image,
+                                                                height: 200,
+                                                                width: 300,
+                                                                fadeInDuration:
+                                                                    Duration(
+                                                                        microseconds:
+                                                                            5),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    SpinKitChasingDots(
+                                                                        color: Colors
+                                                                            .deepOrange),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
                                                               ),
                                                             ),
                                                           ),
@@ -1175,7 +1171,7 @@ class _ActivitySellState extends State<ActivitySell>
                     header: CustomHeader(
                         extent: 40.0,
                         enableHapticFeedback: true,
-                        triggerDistance: 50.0,
+                        triggerDistance: 150.0,
                         headerBuilder: (context,
                             loadState,
                             pulledExtent,
