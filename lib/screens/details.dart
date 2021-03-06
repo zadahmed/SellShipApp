@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/CommentsDetail.dart';
+import 'package:SellShip/screens/categorydynamic.dart';
 import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/comments.dart';
@@ -12,6 +14,7 @@ import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
@@ -69,6 +72,52 @@ class _DetailsState extends State<Details> {
   final scaffoldState = GlobalKey<ScaffoldState>();
   bool sold;
 
+  getfavourites() async {
+    if (favourites != null) {
+      if (favourites.isNotEmpty) favourites.clear();
+    }
+
+    var userid = await storage.read(key: 'userid');
+    if (userid != null) {
+      var url = 'https://api.sellship.co/api/favourites/' + userid;
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        if (response.body != 'Empty') {
+          var respons = json.decode(response.body);
+          Map<String, dynamic> profilemap = respons;
+          List<String> ites = List<String>();
+
+          if (profilemap != null) {
+            for (var i = 0; i < profilemap.length; i++) {
+              if (profilemap[i] != null) {
+                ites.add(profilemap[i]['_id']['\$oid']);
+              }
+            }
+
+            if (ites.contains(newItem.itemid)) {
+              setState(() {
+                favourited = true;
+              });
+            } else {
+              favourited = false;
+            }
+
+            Iterable inReverse = ites.reversed;
+            List<String> jsoninreverse = inReverse.toList();
+
+            favourites = jsoninreverse;
+          } else {
+            favourites = [];
+          }
+        }
+      }
+    } else {
+      favourites = [];
+    }
+  }
+
+  List<String> favourites;
+
   bool upDirection = true, flag = true;
 
   @override
@@ -81,10 +130,76 @@ class _DetailsState extends State<Details> {
 
       sold = widget.sold;
     });
+    getsimilaritems();
+    getfavourites();
     fetchItem();
   }
 
+  getcategory() async {
+    var url = "https://api.sellship.co/api/category/" + newItem.category;
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    setState(() {
+      categoryimage = jsonbody[0]['categoryimage'];
+      subcategory = jsonbody[0]['subcategories'].toList();
+    });
+  }
+
+  var subcategory;
+  var categoryimage;
+
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
+  List<Item> similaritems = List<Item>();
+
+  getsimilaritems() async {
+    var url = 'https://api.sellship.co/api/similar/products/' + widget.itemid;
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+
+      for (var i = 0; i < jsonbody.length; i++) {
+        var q = Map<String, dynamic>.from(jsonbody[i]['dateuploaded']);
+
+        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+        var dateuploaded = timeago.format(dateuploade);
+        Item item = Item(
+          itemid: jsonbody[i]['_id']['\$oid'],
+          date: dateuploaded,
+          name: jsonbody[i]['name'],
+          condition: jsonbody[i]['condition'] == null
+              ? 'Like New'
+              : jsonbody[i]['condition'],
+          username: jsonbody[i]['username'],
+          image: jsonbody[i]['image'],
+          userid: jsonbody[i]['userid'],
+          likes: jsonbody[i]['likes'] == null ? 0 : jsonbody[i]['likes'],
+          comments: jsonbody[i]['comments'] == null
+              ? 0
+              : jsonbody[i]['comments'].length,
+          price: jsonbody[i]['price'].toString(),
+          category: jsonbody[i]['category'],
+          sold: jsonbody[i]['sold'] == null ? false : jsonbody[i]['sold'],
+        );
+        similaritems.add(item);
+      }
+
+      if (similaritems != null) {
+        if (mounted)
+          setState(() {
+            similaritems = similaritems;
+          });
+      } else {
+        if (mounted)
+          setState(() {
+            similaritems = [];
+          });
+      }
+    }
+  }
 
   TextEditingController offercontroller = TextEditingController();
 
@@ -446,43 +561,6 @@ class _DetailsState extends State<Details> {
   var currency;
   bool favourited;
 
-  getfavourites() async {
-    var userid = await storage.read(key: 'userid');
-    if (userid != null) {
-      var url = 'https://api.sellship.co/api/favourites/' + userid;
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        if (response.body != 'Empty') {
-          var respons = json.decode(response.body);
-
-          List<String> ites = List<String>();
-
-          if (respons != null) {
-            for (var i = 0; i < respons.length; i++) {
-              if (respons[i] != null) {
-                ites.add(respons[i]['_id']['\$oid']);
-              }
-            }
-
-            if (ites.contains(newItem.itemid)) {
-              setState(() {
-                favourited = true;
-              });
-            } else {
-              favourited = false;
-            }
-          } else {
-            favourited = false;
-          }
-        }
-      }
-    } else {
-      setState(() {
-        favourited = false;
-      });
-    }
-  }
-
   List<String> images = [];
   String dateuploaded;
 
@@ -781,7 +859,9 @@ class _DetailsState extends State<Details> {
                             buo: buo, linkProperties: lp);
                     if (response.success) {
                       final RenderBox box = context.findRenderObject();
-                      Share.share(response.result,
+                      Share.share(
+                          'Check out this listing on SellShip: \n' +
+                              response.result,
                           subject: widget.name,
                           sharePositionOrigin:
                               box.localToGlobal(Offset.zero) & box.size);
@@ -998,6 +1078,82 @@ class _DetailsState extends State<Details> {
                                 ),
                               ),
                               Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 15, bottom: 5, top: 2),
+                                  child: Wrap(
+                                    children: [
+                                      InkWell(
+                                        child: Text(
+                                          newItem.category,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 2,
+                                      ),
+                                      Text(
+                                        '/',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 2,
+                                      ),
+                                      InkWell(
+                                        child: Text(
+                                          newItem.subcategory,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 2,
+                                      ),
+                                      Text(
+                                        '/',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 14,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 2,
+                                      ),
+                                      InkWell(
+                                        child: Text(
+                                          newItem.subsubcategory,
+                                          textAlign: TextAlign.left,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            decoration:
+                                                TextDecoration.underline,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                              Padding(
                                 padding: EdgeInsets.only(
                                     left: 15, bottom: 5, top: 2),
                                 child: Text(
@@ -1064,16 +1220,34 @@ class _DetailsState extends State<Details> {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
-                                                width: 200,
-                                                child: Text(
-                                                  newItem.category,
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    color: Colors.deepOrange,
-                                                    fontWeight: FontWeight.w500,
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CategoryDetail(
+                                                              category: newItem
+                                                                  .category,
+                                                              categoryimage:
+                                                                  categoryimage,
+                                                              subcategory:
+                                                                  subcategory,
+                                                            )),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: 200,
+                                                  child: Text(
+                                                    newItem.category,
+                                                    textAlign: TextAlign.right,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.deepOrange,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -2067,24 +2241,6 @@ class _DetailsState extends State<Details> {
                                       ],
                                     ),
                                   )),
-                              SizedBox(height: 5),
-                              InkWell(
-                                onTap: () {
-                                  reportitem(context);
-                                },
-                                child: Center(
-                                  child: Text(
-                                    'Report this Item',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 12,
-                                        color: Colors.blueGrey,
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 5),
                               Container(
                                 height: 320,
                                 child: DefaultTabController(
@@ -2169,7 +2325,368 @@ class _DetailsState extends State<Details> {
                               ),
                             ],
                           )),
-                      SizedBox(height: 80),
+                      similaritems.isNotEmpty
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                left: 15,
+                                bottom: 5,
+                                top: 10,
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Similar Items',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      similaritems.isNotEmpty
+                          ? Container(
+                              height: 280,
+                              width: MediaQuery.of(context).size.width,
+                              child: ListView.builder(
+                                itemCount: similaritems.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return new Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Container(
+                                      height: 280,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 -
+                                          20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          new InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                    builder: (context) =>
+                                                        Details(
+                                                            itemid:
+                                                                similaritems[
+                                                                        index]
+                                                                    .itemid,
+                                                            image: similaritems[
+                                                                    index]
+                                                                .image,
+                                                            name: similaritems[
+                                                                    index]
+                                                                .name,
+                                                            sold: similaritems[
+                                                                    index]
+                                                                .sold,
+                                                            source: 'similar')),
+                                              );
+                                            },
+                                            child: Stack(children: <Widget>[
+                                              Container(
+                                                height: 220,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      offset: Offset(
+                                                          0.0, 1.0), //(x,y)
+                                                      blurRadius: 6.0,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Hero(
+                                                    tag:
+                                                        'similar${similaritems[index].itemid}',
+                                                    child: CachedNetworkImage(
+                                                      height: 200,
+                                                      width: 300,
+                                                      fadeInDuration: Duration(
+                                                          microseconds: 5),
+                                                      imageUrl: similaritems[
+                                                                  index]
+                                                              .image
+                                                              .isEmpty
+                                                          ? SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange)
+                                                          : similaritems[index]
+                                                              .image,
+                                                      fit: BoxFit.cover,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              similaritems[index].sold == true
+                                                  ? Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Container(
+                                                        height: 50,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.black
+                                                              .withOpacity(0.4),
+                                                        ),
+                                                        width: 210,
+                                                        child: Center(
+                                                          child: Text(
+                                                            'Sold',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ))
+                                                  : Container(),
+                                            ]),
+                                          ),
+                                          SizedBox(
+                                            height: 4,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                  child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    similaritems[index].name,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 1,
+                                                  ),
+                                                  Text(
+                                                    currency +
+                                                        ' ' +
+                                                        similaritems[index]
+                                                            .price,
+                                                  )
+                                                ],
+                                              )),
+                                              favourites != null
+                                                  ? favourites.contains(
+                                                          similaritems[index]
+                                                              .itemid)
+                                                      ? InkWell(
+                                                          enableFeedback: true,
+                                                          onTap: () async {
+                                                            var userid =
+                                                                await storage.read(
+                                                                    key:
+                                                                        'userid');
+
+                                                            if (userid !=
+                                                                null) {
+                                                              var url =
+                                                                  'https://api.sellship.co/api/favourite/' +
+                                                                      userid;
+
+                                                              Map<String,
+                                                                      String>
+                                                                  body = {
+                                                                'itemid':
+                                                                    similaritems[
+                                                                            index]
+                                                                        .itemid,
+                                                              };
+
+                                                              favourites.remove(
+                                                                  similaritems[
+                                                                          index]
+                                                                      .itemid);
+                                                              setState(() {
+                                                                favourites =
+                                                                    favourites;
+                                                                similaritems[
+                                                                        index]
+                                                                    .likes = similaritems[
+                                                                            index]
+                                                                        .likes -
+                                                                    1;
+                                                              });
+                                                              final response =
+                                                                  await http.post(
+                                                                      url,
+                                                                      body:
+                                                                          body);
+
+                                                              if (response
+                                                                      .statusCode ==
+                                                                  200) {
+                                                              } else {
+                                                                print(response
+                                                                    .statusCode);
+                                                              }
+                                                            } else {
+                                                              showInSnackBar(
+                                                                  'Please Login to use Favourites');
+                                                            }
+                                                          },
+                                                          child: CircleAvatar(
+                                                            radius: 18,
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .deepPurple,
+                                                            child: Icon(
+                                                              FontAwesome.heart,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 16,
+                                                            ),
+                                                          ))
+                                                      : InkWell(
+                                                          enableFeedback: true,
+                                                          onTap: () async {
+                                                            var userid =
+                                                                await storage.read(
+                                                                    key:
+                                                                        'userid');
+
+                                                            if (userid !=
+                                                                null) {
+                                                              var url =
+                                                                  'https://api.sellship.co/api/favourite/' +
+                                                                      userid;
+
+                                                              Map<String,
+                                                                      String>
+                                                                  body = {
+                                                                'itemid':
+                                                                    similaritems[
+                                                                            index]
+                                                                        .itemid,
+                                                              };
+
+                                                              favourites.add(
+                                                                  similaritems[
+                                                                          index]
+                                                                      .itemid);
+                                                              setState(() {
+                                                                favourites =
+                                                                    favourites;
+                                                                similaritems[
+                                                                        index]
+                                                                    .likes = similaritems[
+                                                                            index]
+                                                                        .likes +
+                                                                    1;
+                                                              });
+                                                              final response =
+                                                                  await http.post(
+                                                                      url,
+                                                                      body:
+                                                                          body);
+
+                                                              if (response
+                                                                      .statusCode ==
+                                                                  200) {
+                                                              } else {
+                                                                print(response
+                                                                    .statusCode);
+                                                              }
+                                                            } else {
+                                                              showInSnackBar(
+                                                                  'Please Login to use Favourites');
+                                                            }
+                                                          },
+                                                          child: CircleAvatar(
+                                                            radius: 18,
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            child: Icon(
+                                                              Feather.heart,
+                                                              color: Colors
+                                                                  .blueGrey,
+                                                              size: 16,
+                                                            ),
+                                                          ))
+                                                  : CircleAvatar(
+                                                      radius: 18,
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      child: Icon(
+                                                        Feather.heart,
+                                                        color: Colors.blueGrey,
+                                                        size: 16,
+                                                      ),
+                                                    )
+                                            ],
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                          )
+                                        ],
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(height: 10),
+                      InkWell(
+                        onTap: () {
+                          reportitem(context);
+                        },
+                        child: Center(
+                          child: Text(
+                            'Report this Item',
+                            style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 12,
+                                color: Colors.blueGrey,
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.w300),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      SizedBox(height: 120),
                     ],
                   )
                 : Column(
@@ -2271,13 +2788,13 @@ class _DetailsState extends State<Details> {
                               ]))
                     ],
                   )),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: loading == false
             ? newItem.sold == false
                 ? Container(
                     width: MediaQuery.of(context).size.width,
                     color: Colors.white.withOpacity(0.7),
-                    height: 80,
+                    height: 70,
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 10, bottom: 10, right: 10, top: 10),
@@ -2372,46 +2889,6 @@ class _DetailsState extends State<Details> {
                                   showInSnackBar(
                                       newItem.name + ' added to Cart!');
                                 } else {
-//                                  List<Item> carts = new List<Item>();
-//                                  for (int i = 0; i < cartitems.length; i++) {
-//                                    var decodeditem = json.decode(cartitems[i]);
-//                                    Item item = new Item(
-//                                        name: decodeditem['name'],
-//                                        image: decodeditem['image'],
-//                                        userid: decodeditem['userid'],
-//                                        price: decodeditem['price'],
-//                                        username: decodeditem['username'],
-//                                        itemid: decodeditem['itemid']);
-//
-//                                    carts.add(item);
-//                                  }
-//
-//                                  Item testitem = new Item(
-//                                      name: newItem.name,
-//                                      image: newItem.image,
-//                                      username: newItem.username,
-//                                      userid: newItem.userid,
-//                                      price: newItem.price,
-//                                      itemid: newItem.itemid);
-//
-//                                  var existingItem = carts.firstWhere(
-//                                      (itemToCheck) =>
-//                                          itemToCheck.userid == testitem.userid,
-//                                      orElse: () => null);
-//                                  if (existingItem != null) {
-//                                    if (carts.contains(testitem)) {
-//                                      showInSnackBar(newItem.name +
-//                                          ' is already added to your cart.');
-//                                    } else {
-//                                      String item = jsonEncode(newItem);
-//                                      cartitems.add(item);
-//
-//                                      showInSnackBar(
-//                                          newItem.name + ' added to Cart!');
-//                                      prefs.setStringList('cartitems',
-//                                          cartitems.toSet().toList());
-//                                    }
-//                                  } else {
                                   showDialog<void>(
                                     context: context,
                                     barrierDismissible:

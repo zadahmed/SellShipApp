@@ -456,7 +456,8 @@ class _StoreState extends State<Store> {
                       buo: buo, linkProperties: lp);
                   if (response.success) {
                     final RenderBox box = context.findRenderObject();
-                    Share.share(response.result,
+                    Share.share(
+                        'Check out My Store on SellShip: \n' + response.result,
                         subject: widget.storename,
                         sharePositionOrigin:
                             box.localToGlobal(Offset.zero) & box.size);
