@@ -152,7 +152,7 @@ class _MyItemsState extends State<MyItems> with SingleTickerProviderStateMixin {
                                                               fit: BoxFit.cover,
                                                               placeholder: (context,
                                                                       url) =>
-                                                                  SpinKitChasingDots(
+                                                                  SpinKitDoubleBounce(
                                                                       color: Colors
                                                                           .deepOrange),
                                                               errorWidget: (context,

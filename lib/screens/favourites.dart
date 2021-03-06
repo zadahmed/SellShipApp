@@ -231,7 +231,7 @@ class FavouritesScreenState extends State<FavouritesScreen> {
                                                             fit: BoxFit.cover,
                                                             placeholder: (context,
                                                                     url) =>
-                                                                SpinKitChasingDots(
+                                                                SpinKitDoubleBounce(
                                                                     color: Colors
                                                                         .deepOrange),
                                                             errorWidget:

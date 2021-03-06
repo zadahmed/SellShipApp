@@ -311,7 +311,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                       .cover,
                                                                   placeholder: (context,
                                                                           url) =>
-                                                                      SpinKitChasingDots(
+                                                                      SpinKitDoubleBounce(
                                                                           color:
                                                                               Colors.deepOrange),
                                                                   errorWidget: (context,
@@ -607,7 +607,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                       .cover,
                                                                   placeholder: (context,
                                                                           url) =>
-                                                                      SpinKitChasingDots(
+                                                                      SpinKitDoubleBounce(
                                                                           color:
                                                                               Colors.deepOrange),
                                                                   errorWidget: (context,

@@ -951,7 +951,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                                           child: Padding(
                                               padding:
                                                   const EdgeInsets.all(12.0),
-                                              child: SpinKitChasingDots(
+                                              child: SpinKitDoubleBounce(
                                                   color: Colors.deepOrange)),
                                         ),
                                       );
@@ -987,7 +987,7 @@ class _OrderSellerUAEState extends State<OrderSellerUAE> {
                                           child: Padding(
                                               padding:
                                                   const EdgeInsets.all(12.0),
-                                              child: SpinKitChasingDots(
+                                              child: SpinKitDoubleBounce(
                                                   color: Colors.deepOrange)),
                                         ),
                                       );

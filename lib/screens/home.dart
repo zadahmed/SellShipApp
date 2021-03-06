@@ -808,6 +808,7 @@ class _HomeScreenState extends State<HomeScreen>
         notbadge = false;
       });
     }
+    _controller.setNonPersonalizedAds(true);
     _tabController = new TabController(length: 2, vsync: this);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
@@ -1798,6 +1799,10 @@ class _HomeScreenState extends State<HomeScreen>
                                   child: NativeAdmob(
                                     adUnitID: _iosadUnitID,
                                     controller: _controller,
+                                    loading: Center(
+                                        child: SpinKitDoubleBounce(
+                                            color: Colors.deepOrange)),
+                                    type: NativeAdmobType.full,
                                   ),
                                 )
                               : Container(
@@ -1835,12 +1840,12 @@ class _HomeScreenState extends State<HomeScreen>
                                     width: 300,
                                     fadeInDuration: Duration(microseconds: 5),
                                     imageUrl: foryoulist[index].image.isEmpty
-                                        ? SpinKitChasingDots(
+                                        ? SpinKitDoubleBounce(
                                             color: Colors.deepOrange)
                                         : foryoulist[index].image,
                                     fit: BoxFit.cover,
                                     placeholder: (context, url) =>
-                                        SpinKitChasingDots(
+                                        SpinKitDoubleBounce(
                                             color: Colors.deepOrange),
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.error),
@@ -2060,6 +2065,10 @@ class _HomeScreenState extends State<HomeScreen>
                                   child: NativeAdmob(
                                     adUnitID: _iosadUnitID,
                                     controller: _controller,
+                                    loading: Center(
+                                        child: SpinKitDoubleBounce(
+                                            color: Colors.deepOrange)),
+                                    type: NativeAdmobType.full,
                                   ),
                                 )
                               : Container(
@@ -2110,12 +2119,12 @@ class _HomeScreenState extends State<HomeScreen>
                                     width: 300,
                                     fadeInDuration: Duration(microseconds: 5),
                                     imageUrl: foryouscroll[index].image.isEmpty
-                                        ? SpinKitChasingDots(
+                                        ? SpinKitDoubleBounce(
                                             color: Colors.deepOrange)
                                         : foryouscroll[index].image,
                                     fit: BoxFit.cover,
                                     placeholder: (context, url) =>
-                                        SpinKitChasingDots(
+                                        SpinKitDoubleBounce(
                                             color: Colors.deepOrange),
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.error),
@@ -2656,12 +2665,12 @@ class _HomeScreenState extends State<HomeScreen>
                                               imageUrl: topitems[index]
                                                       .image
                                                       .isEmpty
-                                                  ? SpinKitChasingDots(
+                                                  ? SpinKitDoubleBounce(
                                                       color: Colors.deepOrange)
                                                   : topitems[index].image,
                                               fit: BoxFit.cover,
                                               placeholder: (context, url) =>
-                                                  SpinKitChasingDots(
+                                                  SpinKitDoubleBounce(
                                                       color: Colors.deepOrange),
                                               errorWidget:
                                                   (context, url, error) =>
@@ -2968,12 +2977,12 @@ class _HomeScreenState extends State<HomeScreen>
                                               imageUrl: below100list[index]
                                                       .image
                                                       .isEmpty
-                                                  ? SpinKitChasingDots(
+                                                  ? SpinKitDoubleBounce(
                                                       color: Colors.deepOrange)
                                                   : below100list[index].image,
                                               fit: BoxFit.cover,
                                               placeholder: (context, url) =>
-                                                  SpinKitChasingDots(
+                                                  SpinKitDoubleBounce(
                                                       color: Colors.deepOrange),
                                               errorWidget:
                                                   (context, url, error) =>
@@ -3283,12 +3292,12 @@ class _HomeScreenState extends State<HomeScreen>
                                               imageUrl: nearmeItems[index]
                                                       .image
                                                       .isEmpty
-                                                  ? SpinKitChasingDots(
+                                                  ? SpinKitDoubleBounce(
                                                       color: Colors.deepOrange)
                                                   : nearmeItems[index].image,
                                               fit: BoxFit.cover,
                                               placeholder: (context, url) =>
-                                                  SpinKitChasingDots(
+                                                  SpinKitDoubleBounce(
                                                       color: Colors.deepOrange),
                                               errorWidget:
                                                   (context, url, error) =>
@@ -3621,6 +3630,10 @@ class _HomeScreenState extends State<HomeScreen>
                                 child: NativeAdmob(
                                   adUnitID: _iosadUnitID,
                                   controller: _controller,
+                                  loading: Center(
+                                      child: SpinKitDoubleBounce(
+                                          color: Colors.deepOrange)),
+                                  type: NativeAdmobType.full,
                                 ),
                               ))
                           : Padding(
@@ -3696,12 +3709,12 @@ class _HomeScreenState extends State<HomeScreen>
                                         fadeInDuration:
                                             Duration(microseconds: 5),
                                         imageUrl: itemsgrid[index].image.isEmpty
-                                            ? SpinKitChasingDots(
+                                            ? SpinKitDoubleBounce(
                                                 color: Colors.deepOrange)
                                             : itemsgrid[index].image,
                                         fit: BoxFit.cover,
                                         placeholder: (context, url) =>
-                                            SpinKitChasingDots(
+                                            SpinKitDoubleBounce(
                                                 color: Colors.deepOrange),
                                         errorWidget: (context, url, error) =>
                                             Icon(Icons.error),
@@ -4345,6 +4358,10 @@ class UserSearchDelegate extends SearchDelegate {
                                   child: NativeAdmob(
                                     adUnitID: _iosadUnitID,
                                     controller: _controller,
+                                    loading: Center(
+                                        child: SpinKitDoubleBounce(
+                                            color: Colors.deepOrange)),
+                                    type: NativeAdmobType.full,
                                   ),
                                 ))
                             : Padding(
@@ -4430,14 +4447,14 @@ class UserSearchDelegate extends SearchDelegate {
                                                     Duration(microseconds: 5),
                                                 imageUrl: snapshot.data[index]
                                                         .image.isEmpty
-                                                    ? SpinKitChasingDots(
+                                                    ? SpinKitDoubleBounce(
                                                         color:
                                                             Colors.deepOrange)
                                                     : snapshot
                                                         .data[index].image,
                                                 fit: BoxFit.cover,
                                                 placeholder: (context, url) =>
-                                                    SpinKitChasingDots(
+                                                    SpinKitDoubleBounce(
                                                         color:
                                                             Colors.deepOrange),
                                                 errorWidget:
@@ -4819,6 +4836,10 @@ class UserSearchDelegate extends SearchDelegate {
                                       child: NativeAdmob(
                                         adUnitID: _iosadUnitID,
                                         controller: _controller,
+                                        loading: Center(
+                                            child: SpinKitDoubleBounce(
+                                                color: Colors.deepOrange)),
+                                        type: NativeAdmobType.full,
                                       ),
                                     ))
                                 : Padding(
@@ -4843,6 +4864,10 @@ class UserSearchDelegate extends SearchDelegate {
                                       child: NativeAdmob(
                                         adUnitID: _androidadUnitID,
                                         controller: _controller,
+                                        loading: Center(
+                                            child: SpinKitDoubleBounce(
+                                                color: Colors.deepOrange)),
+                                        type: NativeAdmobType.full,
                                       ),
                                     ));
                           }
@@ -4912,7 +4937,7 @@ class UserSearchDelegate extends SearchDelegate {
                                                             .data[index]
                                                             .image
                                                             .isEmpty
-                                                        ? SpinKitChasingDots(
+                                                        ? SpinKitDoubleBounce(
                                                             color: Colors
                                                                 .deepOrange)
                                                         : snapshot
@@ -4920,7 +4945,7 @@ class UserSearchDelegate extends SearchDelegate {
                                                     fit: BoxFit.cover,
                                                     placeholder: (context,
                                                             url) =>
-                                                        SpinKitChasingDots(
+                                                        SpinKitDoubleBounce(
                                                             color: Colors
                                                                 .deepOrange),
                                                     errorWidget:

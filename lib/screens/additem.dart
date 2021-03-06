@@ -2850,7 +2850,7 @@ class _AddItemState extends State<AddItem> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .all(12.0),
-                                                        child: SpinKitChasingDots(
+                                                        child: SpinKitDoubleBounce(
                                                             color: Colors
                                                                 .deepOrange)),
                                                   ),

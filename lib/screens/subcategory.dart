@@ -1267,6 +1267,12 @@ class _SubCategoryState extends State<SubCategory> {
                                             child: NativeAdmob(
                                               adUnitID: _iosadUnitID,
                                               controller: _controller,
+                                              loading: Center(
+                                                  child: SpinKitDoubleBounce(
+                                                      color:
+                                                          Colors.deepOrange)),
+                                              error: Text("  "),
+                                              type: NativeAdmobType.full,
                                             ),
                                           ))
                                       : Padding(
@@ -1295,6 +1301,12 @@ class _SubCategoryState extends State<SubCategory> {
                                             child: NativeAdmob(
                                               adUnitID: _androidadUnitID,
                                               controller: _controller,
+                                              loading: Center(
+                                                  child: SpinKitDoubleBounce(
+                                                      color:
+                                                          Colors.deepOrange)),
+                                              error: Text("  "),
+                                              type: NativeAdmobType.full,
                                             ),
                                           ));
                                 }
@@ -1357,7 +1369,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                     imageUrl: itemsgrid[index]
                                                             .image
                                                             .isEmpty
-                                                        ? SpinKitChasingDots(
+                                                        ? SpinKitDoubleBounce(
                                                             color: Colors
                                                                 .deepOrange)
                                                         : itemsgrid[index]
@@ -1365,7 +1377,7 @@ class _SubCategoryState extends State<SubCategory> {
                                                     fit: BoxFit.cover,
                                                     placeholder: (context,
                                                             url) =>
-                                                        SpinKitChasingDots(
+                                                        SpinKitDoubleBounce(
                                                             color: Colors
                                                                 .deepOrange),
                                                     errorWidget:

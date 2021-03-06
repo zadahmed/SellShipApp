@@ -257,12 +257,12 @@ class _NotifcationPageState extends State<NotifcationPage>
                                             imageUrl: notifs[index]
                                                     .image
                                                     .isEmpty
-                                                ? SpinKitChasingDots(
+                                                ? SpinKitDoubleBounce(
                                                     color: Colors.deepOrange)
                                                 : notifs[index].image,
                                             fit: BoxFit.cover,
                                             placeholder: (context, url) =>
-                                                SpinKitChasingDots(
+                                                SpinKitDoubleBounce(
                                                     color: Colors.deepOrange),
                                             errorWidget:
                                                 (context, url, error) =>

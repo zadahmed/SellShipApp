@@ -326,6 +326,10 @@ class RecentlyAddedState extends State<RecentlyAdded> {
                           child: NativeAdmob(
                             adUnitID: _iosadUnitID,
                             controller: _controller,
+                            loading: Center(
+                                child: SpinKitDoubleBounce(
+                                    color: Colors.deepOrange)),
+                            type: NativeAdmobType.full,
                           ),
                         ))
                     : Padding(
@@ -349,6 +353,10 @@ class RecentlyAddedState extends State<RecentlyAdded> {
                           child: NativeAdmob(
                             adUnitID: _androidadUnitID,
                             controller: _controller,
+                            loading: Center(
+                                child: SpinKitDoubleBounce(
+                                    color: Colors.deepOrange)),
+                            type: NativeAdmobType.full,
                           ),
                         ));
               }
@@ -393,12 +401,12 @@ class RecentlyAddedState extends State<RecentlyAdded> {
                                   width: 300,
                                   fadeInDuration: Duration(microseconds: 5),
                                   imageUrl: itemsgrid[index].image.isEmpty
-                                      ? SpinKitChasingDots(
+                                      ? SpinKitDoubleBounce(
                                           color: Colors.deepOrange)
                                       : itemsgrid[index].image,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) =>
-                                      SpinKitChasingDots(
+                                      SpinKitDoubleBounce(
                                           color: Colors.deepOrange),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),

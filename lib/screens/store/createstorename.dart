@@ -163,7 +163,7 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                                   height: 100,
                                   child: Padding(
                                       padding: const EdgeInsets.all(12.0),
-                                      child: SpinKitChasingDots(
+                                      child: SpinKitDoubleBounce(
                                           color: Colors.deepOrange)),
                                 ),
                               );

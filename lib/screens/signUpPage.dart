@@ -325,7 +325,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                                   return Container(
                                                       height: 50,
                                                       width: 50,
-                                                      child: SpinKitChasingDots(
+                                                      child:
+                                                          SpinKitDoubleBounce(
                                                         color:
                                                             Colors.deepOrange,
                                                       ));

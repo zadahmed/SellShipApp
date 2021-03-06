@@ -744,7 +744,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                       setState(() {
                         brand = brands[index];
                         skip = 0;
-                        limit = 20;
+                        limit = 40;
                         loading = true;
                       });
                       itemsgrid.clear();
@@ -1050,8 +1050,10 @@ class _CategoryDetailState extends State<CategoryDetail>
       skip = skip + 20;
     });
 
-    var url = 'https://api.sellship.co/api/categories/all/' +
-        category +
+    var subname = subcategorytabs[_tabController.index].text;
+
+    var url = 'https://api.sellship.co/api/home/subcategories/' +
+        subname +
         '/' +
         country +
         '/' +
@@ -1435,7 +1437,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                                     mainAxisSpacing: 1.0,
                                     crossAxisSpacing: 1.0,
                                     crossAxisCount: 2,
-                                    childAspectRatio: 0.9),
+                                    childAspectRatio: 0.75),
                             delegate: SliverChildBuilderDelegate(
                               (BuildContext context, int index) {
                                 if (index != 0 && index % 8 == 0) {
@@ -1466,6 +1468,12 @@ class _CategoryDetailState extends State<CategoryDetail>
                                             child: NativeAdmob(
                                               adUnitID: _iosadUnitID,
                                               controller: _controller,
+                                              loading: Center(
+                                                  child: SpinKitDoubleBounce(
+                                                      color:
+                                                          Colors.deepOrange)),
+                                              error: Text("  "),
+                                              type: NativeAdmobType.full,
                                             ),
                                           ))
                                       : Padding(
@@ -1494,6 +1502,12 @@ class _CategoryDetailState extends State<CategoryDetail>
                                             child: NativeAdmob(
                                               adUnitID: _androidadUnitID,
                                               controller: _controller,
+                                              loading: Center(
+                                                  child: SpinKitDoubleBounce(
+                                                      color:
+                                                          Colors.deepOrange)),
+                                              error: Text("  "),
+                                              type: NativeAdmobType.full,
                                             ),
                                           ));
                                 }
@@ -1527,7 +1541,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                                           },
                                           child: Stack(children: <Widget>[
                                             Container(
-                                              height: 150,
+                                              height: 195,
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
@@ -1556,7 +1570,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                     imageUrl: itemsgrid[index]
                                                             .image
                                                             .isEmpty
-                                                        ? SpinKitChasingDots(
+                                                        ? SpinKitDoubleBounce(
                                                             color: Colors
                                                                 .deepOrange)
                                                         : itemsgrid[index]
@@ -1564,7 +1578,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                     fit: BoxFit.cover,
                                                     placeholder: (context,
                                                             url) =>
-                                                        SpinKitChasingDots(
+                                                        SpinKitDoubleBounce(
                                                             color: Colors
                                                                 .deepOrange),
                                                     errorWidget:

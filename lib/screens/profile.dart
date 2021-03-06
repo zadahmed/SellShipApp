@@ -527,7 +527,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                                             .cover,
                                                                         placeholder:
                                                                             (context, url) =>
-                                                                                SpinKitChasingDots(color: Colors.deepOrange),
+                                                                                SpinKitDoubleBounce(color: Colors.deepOrange),
                                                                         errorWidget: (context,
                                                                                 url,
                                                                                 error) =>
@@ -582,7 +582,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                                                     return Container(
                                                                                         height: 50,
                                                                                         width: 50,
-                                                                                        child: SpinKitChasingDots(
+                                                                                        child: SpinKitDoubleBounce(
                                                                                           color: Colors.deepOrange,
                                                                                         ));
                                                                                   },
@@ -618,7 +618,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                                                     return Container(
                                                                                         height: 50,
                                                                                         width: 50,
-                                                                                        child: SpinKitChasingDots(
+                                                                                        child: SpinKitDoubleBounce(
                                                                                           color: Colors.deepOrange,
                                                                                         ));
                                                                                   },
@@ -1056,7 +1056,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                   favouritelist[index].image,
                                               fit: BoxFit.cover,
                                               placeholder: (context, url) =>
-                                                  SpinKitChasingDots(
+                                                  SpinKitDoubleBounce(
                                                       color: Colors.deepOrange),
                                               errorWidget:
                                                   (context, url, error) =>
@@ -2048,7 +2048,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                 return Container(
                                                     height: 50,
                                                     width: 50,
-                                                    child: SpinKitChasingDots(
+                                                    child: SpinKitDoubleBounce(
                                                       color: Colors.deepOrange,
                                                     ));
                                               },
@@ -2191,7 +2191,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                 return Container(
                                                     height: 50,
                                                     width: 50,
-                                                    child: SpinKitChasingDots(
+                                                    child: SpinKitDoubleBounce(
                                                       color: Colors.deepOrange,
                                                     ));
                                               },
@@ -2633,7 +2633,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                                       .cover,
                                                                   placeholder: (context,
                                                                           url) =>
-                                                                      SpinKitChasingDots(
+                                                                      SpinKitDoubleBounce(
                                                                           color:
                                                                               Colors.deepOrange),
                                                                   errorWidget: (context,

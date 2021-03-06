@@ -304,7 +304,7 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
               height: 100,
               child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: SpinKitChasingDots(color: Colors.deepOrange)),
+                  child: SpinKitDoubleBounce(color: Colors.deepOrange)),
             ),
           );
         });

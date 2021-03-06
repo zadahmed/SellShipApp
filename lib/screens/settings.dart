@@ -478,7 +478,7 @@ class _SettingsState extends State<Settings> {
                                       return Container(
                                           height: 50,
                                           width: 50,
-                                          child: SpinKitChasingDots(
+                                          child: SpinKitDoubleBounce(
                                             color: Colors.deepOrange,
                                           ));
                                     },

@@ -229,7 +229,7 @@ class _CheckoutState extends State<Checkout> {
                                                                     .cover,
                                                                 placeholder: (context,
                                                                         url) =>
-                                                                    SpinKitChasingDots(
+                                                                    SpinKitDoubleBounce(
                                                                         color: Colors
                                                                             .deepOrange),
                                                                 errorWidget: (context,

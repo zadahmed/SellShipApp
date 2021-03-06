@@ -5,6 +5,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/models/user.dart';
 import 'package:SellShip/screens/storepage.dart';
+import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 //import 'package:dropdown_search/dropdown_search.dart';
@@ -208,7 +209,6 @@ class _SearchState extends State<Search>
     print(response.statusCode);
 
     var jsonbody = json.decode(response.body);
-    print(jsonbody);
 
     for (var jsondata in jsonbody) {
       hashtagList.add(jsondata);
@@ -236,7 +236,7 @@ class _SearchState extends State<Search>
     for (var jsondata in jsonbody) {
       Stores store = new Stores(
           storename: jsondata['storename'],
-          storeid: jsondata['storeid'],
+          storeid: jsondata['_id']['\$oid'],
           storelogo: jsondata['storelogo'],
           storecategory: jsondata['storecategory']);
       storeList.add(store);
@@ -405,6 +405,10 @@ class _SearchState extends State<Search>
                           child: NativeAdmob(
                             adUnitID: _iosadUnitID,
                             controller: _controller,
+                            loading: Center(
+                                child: SpinKitDoubleBounce(
+                                    color: Colors.deepOrange)),
+                            type: NativeAdmobType.full,
                           ),
                         ))
                     : Padding(
@@ -472,12 +476,12 @@ class _SearchState extends State<Search>
                                   width: 300,
                                   fadeInDuration: Duration(microseconds: 5),
                                   imageUrl: itemsgrid[index].image.isEmpty
-                                      ? SpinKitChasingDots(
+                                      ? SpinKitDoubleBounce(
                                           color: Colors.deepOrange)
                                       : itemsgrid[index].image,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) =>
-                                      SpinKitChasingDots(
+                                      SpinKitDoubleBounce(
                                           color: Colors.deepOrange),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),
@@ -734,6 +738,10 @@ class _SearchState extends State<Search>
                           child: NativeAdmob(
                             adUnitID: _iosadUnitID,
                             controller: _controller,
+                            loading: Center(
+                                child: SpinKitDoubleBounce(
+                                    color: Colors.deepOrange)),
+                            type: NativeAdmobType.full,
                           ),
                         ))
                     : Padding(
@@ -757,6 +765,10 @@ class _SearchState extends State<Search>
                           child: NativeAdmob(
                             adUnitID: _androidadUnitID,
                             controller: _controller,
+                            loading: Center(
+                                child: SpinKitDoubleBounce(
+                                    color: Colors.deepOrange)),
+                            type: NativeAdmobType.full,
                           ),
                         ));
               }
@@ -802,12 +814,12 @@ class _SearchState extends State<Search>
                                   fadeInDuration: Duration(microseconds: 5),
                                   imageUrl:
                                       hashtagitemsgrid[index].image.isEmpty
-                                          ? SpinKitChasingDots(
+                                          ? SpinKitDoubleBounce(
                                               color: Colors.deepOrange)
                                           : hashtagitemsgrid[index].image,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) =>
-                                      SpinKitChasingDots(
+                                      SpinKitDoubleBounce(
                                           color: Colors.deepOrange),
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),
@@ -1613,7 +1625,7 @@ class _SearchState extends State<Search>
                                           )
                                         : SliverFillRemaining(
                                             child: Center(
-                                                child: SpinKitFadingCircle(
+                                                child: SpinKitDoubleBounce(
                                             color: Colors.deepOrange,
                                           ))),
                                     SliverToBoxAdapter(
@@ -1997,7 +2009,7 @@ class _SearchState extends State<Search>
                                                                 MaterialPageRoute(
                                                                     builder:
                                                                         (context) =>
-                                                                            Store(
+                                                                            StorePublic(
                                                                               storename: storeList[index].storename,
                                                                               storeid: storeList[index].storeid,
                                                                             )),
@@ -2785,7 +2797,7 @@ class _SearchState extends State<Search>
       });
     }
 
-    return itemsgrid;
+    return itemsgrid.toSet().toList();
   }
 
   Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
@@ -2831,7 +2843,7 @@ class _SearchState extends State<Search>
       print(response.statusCode);
     }
 
-    return itemsgrid;
+    return itemsgrid.toSet().toList();
   }
 
   Future<List<Item>> fetchHighestPrice(int skip, int limit) async {
@@ -2877,7 +2889,7 @@ class _SearchState extends State<Search>
       print(response.statusCode);
     }
 
-    return itemsgrid;
+    return itemsgrid.toSet().toList();
   }
 
   Future<List<Item>> fetchbrands(String brand) async {
@@ -2921,7 +2933,7 @@ class _SearchState extends State<Search>
         itemsgrid = itemsgrid;
       });
 
-      return itemsgrid;
+      return itemsgrid.toSet().toList();
     } else {
       print(categoryresponse.statusCode);
     }
@@ -2968,7 +2980,7 @@ class _SearchState extends State<Search>
         itemsgrid = itemsgrid;
       });
 
-      return itemsgrid;
+      return itemsgrid.toSet().toList();
     } else {
       print(categoryresponse.statusCode);
     }
@@ -3017,7 +3029,7 @@ class _SearchState extends State<Search>
         itemsgrid = itemsgrid;
       });
 
-      return itemsgrid;
+      return itemsgrid.toSet().toList();
     } else {
       print(categoryresponse.statusCode);
     }
@@ -3068,7 +3080,7 @@ class _SearchState extends State<Search>
         itemsgrid = itemsgrid;
       });
 
-      return itemsgrid;
+      return itemsgrid.toSet().toList();
     } else {
       print(categoryresponse.statusCode);
     }
@@ -3121,7 +3133,7 @@ class _SearchState extends State<Search>
         itemsgrid = itemsgrid;
       });
 
-      return itemsgrid;
+      return itemsgrid.toSet().toList();
     } else {
       print(categoryresponse.statusCode);
     }
@@ -3173,7 +3185,7 @@ class _SearchState extends State<Search>
         itemsgrid = itemsgrid;
       });
 
-      return itemsgrid;
+      return itemsgrid.toSet().toList();
     } else {
       print(categoryresponse.statusCode);
     }
@@ -3224,7 +3236,7 @@ class _SearchState extends State<Search>
       print(response.statusCode);
     }
 
-    return itemsgrid;
+    return itemsgrid.toSet().toList();
   }
 
   loadbrands() async {
@@ -3573,6 +3585,6 @@ class _SearchState extends State<Search>
       });
     }
 
-    return itemsgrid;
+    return itemsgrid.toSet().toList();
   }
 }

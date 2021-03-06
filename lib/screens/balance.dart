@@ -305,7 +305,7 @@ class _BalanceState extends State<Balance> {
                   ]))
             : Container(
                 child: Center(
-                  child: SpinKitChasingDots(
+                  child: SpinKitDoubleBounce(
                     color: Colors.deepOrange,
                   ),
                 ),

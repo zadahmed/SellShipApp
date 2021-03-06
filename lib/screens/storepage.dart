@@ -205,7 +205,7 @@ class _StoreState extends State<Store> {
                                           imageUrl: item[index].image,
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>
-                                              SpinKitChasingDots(
+                                              SpinKitDoubleBounce(
                                                   color: Colors.deepOrange),
                                           errorWidget: (context, url, error) =>
                                               Icon(Icons.error),
@@ -570,7 +570,7 @@ class _StoreState extends State<Store> {
                                                                           .cover,
                                                                       placeholder: (context,
                                                                               url) =>
-                                                                          SpinKitChasingDots(
+                                                                          SpinKitDoubleBounce(
                                                                               color: Colors.deepOrange),
                                                                       errorWidget: (context,
                                                                               url,
@@ -627,7 +627,7 @@ class _StoreState extends State<Store> {
                                                                                     return Container(
                                                                                         height: 50,
                                                                                         width: 50,
-                                                                                        child: SpinKitChasingDots(
+                                                                                        child: SpinKitDoubleBounce(
                                                                                           color: Colors.deepOrange,
                                                                                         ));
                                                                                   },
@@ -663,7 +663,7 @@ class _StoreState extends State<Store> {
                                                                                     return Container(
                                                                                         height: 50,
                                                                                         width: 50,
-                                                                                        child: SpinKitChasingDots(
+                                                                                        child: SpinKitDoubleBounce(
                                                                                           color: Colors.deepOrange,
                                                                                         ));
                                                                                   },
@@ -933,7 +933,7 @@ class _StoreState extends State<Store> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start)))
                         : Container(
-                            child: SpinKitChasingDots(
+                            child: SpinKitDoubleBounce(
                                 color: Colors.deepOrangeAccent),
                           ),
                     SizedBox(

@@ -175,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                               return Container(
                                   height: 50,
                                   width: 50,
-                                  child: SpinKitChasingDots(
+                                  child: SpinKitDoubleBounce(
                                     color: Colors.deepOrange,
                                   ));
                             },

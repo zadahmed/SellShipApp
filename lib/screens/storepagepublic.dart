@@ -26,24 +26,26 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
 
-class CreateStorePage extends StatefulWidget {
+class StorePublic extends StatefulWidget {
   final String storeid;
   final String storename;
 
-  CreateStorePage({
+  StorePublic({
     Key key,
     this.storeid,
     this.storename,
   }) : super(key: key);
 
   @override
-  _CreateStorePageState createState() => new _CreateStorePageState();
+  _StorePublicState createState() => new _StorePublicState();
 }
 
-class _CreateStorePageState extends State<CreateStorePage> {
+class _StorePublicState extends State<StorePublic> {
   @override
   void initState() {
     super.initState();
+    print(widget.storename);
+    print(widget.storeid);
     getuser();
     getItemData();
   }
@@ -60,16 +62,22 @@ class _CreateStorePageState extends State<CreateStorePage> {
   var followers;
   var storename;
   var reviewrating;
+
+  var follow = false;
+
+  Color followcolor = Colors.white;
   final storage = new FlutterSecureStorage();
 
   getItemData() async {
     var itemurl = 'https://api.sellship.co/store/products/' + widget.storeid;
+    print(itemurl);
 
     final itemresponse = await http.get(itemurl);
     if (itemresponse.statusCode == 200) {
       var itemrespons = json.decode(itemresponse.body);
-      print(itemrespons);
 
+      print('item');
+      print(itemrespons);
       List<Item> ites = List<Item>();
       if (itemrespons != null) {
         for (var i = 0; i < itemrespons.length; i++) {
@@ -109,11 +117,33 @@ class _CreateStorePageState extends State<CreateStorePage> {
   }
 
   Stores mystore;
+
   getuser() async {
     var url = 'https://api.sellship.co/api/store/' + widget.storeid;
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
+
+      print('user');
+      print(jsonbody);
+      var follower = jsonbody['follower'];
+
+      if (follower != null) {
+        followers = follower.length;
+        for (int i = 0; i < follower.length; i++) {
+          var meuser = await storage.read(key: 'userid');
+          if (meuser == follower[i]['\$oid']) {
+            setState(() {
+              follow = true;
+              followcolor = Colors.deepOrange;
+            });
+          }
+        }
+      } else {
+        followers = 0;
+        follower = [];
+      }
+
       Stores store = Stores(
           storeid: jsonbody['_id']['\$oid'],
           storecategory: jsonbody['storecategory'],
@@ -161,13 +191,11 @@ class _CreateStorePageState extends State<CreateStorePage> {
                             );
                           }),
                       onRefresh: () {
-                        // getProfileData();
-                        //
-                        // return getItemData();
+                        return getItemData();
                       },
                       child: GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
+                          crossAxisCount: 3,
                           childAspectRatio: 1,
                         ),
                         itemBuilder: (context, index) {
@@ -195,7 +223,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(15),
                                       child: Hero(
-                                        tag: 'store' + mystore.storeid,
+                                        tag: 'detail' + item[index].itemid,
                                         child: CachedNetworkImage(
                                           height: 200,
                                           width: 300,
@@ -212,34 +240,6 @@ class _CreateStorePageState extends State<CreateStorePage> {
                                       ),
                                     ),
                                   ),
-                                  Align(
-                                      alignment: Alignment.topRight,
-                                      child: Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: InkWell(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          EditItem(
-                                                            itemid: item[index]
-                                                                .itemid,
-                                                            itemname:
-                                                                item[index]
-                                                                    .name,
-                                                          )),
-                                                );
-                                              },
-                                              child: CircleAvatar(
-                                                radius: 18,
-                                                backgroundColor: Colors.white,
-                                                child: Icon(
-                                                  Feather.edit_2,
-                                                  color: Colors.blueGrey,
-                                                  size: 16,
-                                                ),
-                                              )))),
                                   item[index].sold == true
                                       ? Positioned(
                                           top: 60,
@@ -270,14 +270,14 @@ class _CreateStorePageState extends State<CreateStorePage> {
                         itemCount: item.length,
                       ))
                   : Container(
-                      child: Column(
+                      child: ListView(
                       children: <Widget>[
                         Container(
                             height: MediaQuery.of(context).size.height / 3,
                             width: MediaQuery.of(context).size.width - 100,
                             child: Image.asset(
                               'assets/little_theologians_4x.png',
-                              fit: BoxFit.fill,
+                              fit: BoxFit.fitHeight,
                             )),
                         SizedBox(
                           height: 10,
@@ -342,64 +342,6 @@ class _CreateStorePageState extends State<CreateStorePage> {
         ]);
   }
 
-  Future getImageCamera() async {
-    var image = await ImagePicker.pickImage(
-        source: ImageSource.camera, maxHeight: 400, maxWidth: 400);
-
-    var url = 'https://api.sellship.co/api/store/imageupload/' + widget.storeid;
-    Dio dio = new Dio();
-    FormData formData;
-    String fileName = image.path.split('/').last;
-    formData = FormData.fromMap({
-      'profilepicture':
-          await MultipartFile.fromFile(image.path, filename: fileName)
-    });
-    var response = await dio.post(url, data: formData);
-
-    if (response.statusCode == 200) {
-      print(response.data);
-    } else {
-      print(response.statusCode);
-    }
-
-    if (mounted)
-      setState(() {
-        profilepicture = response.data;
-      });
-
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-  }
-
-  Future getImageGallery() async {
-    var image = await ImagePicker.pickImage(
-        source: ImageSource.gallery, maxHeight: 400, maxWidth: 400);
-
-    var url = 'https://api.sellship.co/api/imageupload/' + widget.storeid;
-    Dio dio = new Dio();
-    FormData formData;
-    String fileName = image.path.split('/').last;
-    formData = FormData.fromMap({
-      'profilepicture':
-          await MultipartFile.fromFile(image.path, filename: fileName)
-    });
-    var response = await dio.post(url, data: formData);
-
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print(response.data);
-    } else {
-      print(response.statusCode);
-    }
-
-    if (mounted)
-      setState(() {
-        profilepicture = response.data;
-      });
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -413,21 +355,8 @@ class _CreateStorePageState extends State<CreateStorePage> {
                 color: Color.fromRGBO(28, 45, 65, 1),
               ),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RootScreen()),
-                );
+                Navigator.pop(context);
               }),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: Text(
-          'My Store',
-          style: TextStyle(
-              fontFamily: 'Helvetica',
-              fontSize: 20.0,
-              color: Colors.black,
-              fontWeight: FontWeight.bold),
         ),
         actions: <Widget>[
           Padding(
@@ -481,6 +410,16 @@ class _CreateStorePageState extends State<CreateStorePage> {
                 )),
           ),
         ],
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          widget.storename,
+          style: TextStyle(
+              fontFamily: 'Helvetica',
+              fontSize: 20.0,
+              color: Colors.black,
+              fontWeight: FontWeight.bold),
+        ),
       ),
       key: _scaffoldKey,
       body: loading == false
@@ -585,136 +524,6 @@ class _CreateStorePageState extends State<CreateStorePage> {
                                                         ),
                                                       ),
                                                     ),
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.bottomRight,
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          final action =
-                                                              CupertinoActionSheet(
-                                                            message: Text(
-                                                              "Upload an Image",
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      15.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .normal),
-                                                            ),
-                                                            actions: <Widget>[
-                                                              CupertinoActionSheetAction(
-                                                                child: Text(
-                                                                    "Upload from Camera",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            15.0,
-                                                                        fontWeight:
-                                                                            FontWeight.normal)),
-                                                                isDefaultAction:
-                                                                    true,
-                                                                onPressed: () {
-                                                                  showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      barrierDismissible:
-                                                                          false,
-                                                                      useRootNavigator:
-                                                                          false,
-                                                                      builder:
-                                                                          (_) =>
-                                                                              new AlertDialog(
-                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                                content: Builder(
-                                                                                  builder: (context) {
-                                                                                    return Container(
-                                                                                        height: 50,
-                                                                                        width: 50,
-                                                                                        child: SpinKitDoubleBounce(
-                                                                                          color: Colors.deepOrange,
-                                                                                        ));
-                                                                                  },
-                                                                                ),
-                                                                              ));
-                                                                  getImageCamera();
-                                                                },
-                                                              ),
-                                                              CupertinoActionSheetAction(
-                                                                child: Text(
-                                                                    "Upload from Gallery",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            15.0,
-                                                                        fontWeight:
-                                                                            FontWeight.normal)),
-                                                                isDefaultAction:
-                                                                    true,
-                                                                onPressed: () {
-                                                                  showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      barrierDismissible:
-                                                                          false,
-                                                                      useRootNavigator:
-                                                                          false,
-                                                                      builder:
-                                                                          (_) =>
-                                                                              new AlertDialog(
-                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                                content: Builder(
-                                                                                  builder: (context) {
-                                                                                    return Container(
-                                                                                        height: 50,
-                                                                                        width: 50,
-                                                                                        child: SpinKitDoubleBounce(
-                                                                                          color: Colors.deepOrange,
-                                                                                        ));
-                                                                                  },
-                                                                                ),
-                                                                              ));
-                                                                  getImageGallery();
-                                                                },
-                                                              )
-                                                            ],
-                                                            cancelButton:
-                                                                CupertinoActionSheetAction(
-                                                              child: Text(
-                                                                  "Cancel",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          15.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal)),
-                                                              isDestructiveAction:
-                                                                  true,
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true)
-                                                                    .pop();
-                                                              },
-                                                            ),
-                                                          );
-                                                          showCupertinoModalPopup(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) =>
-                                                                      action);
-                                                        },
-                                                        child: CircleAvatar(
-                                                          radius: 16,
-                                                          backgroundColor:
-                                                              Color.fromRGBO(28,
-                                                                  45, 65, 1),
-                                                          child: Icon(
-                                                            Feather.camera,
-                                                            color: Colors.white,
-                                                            size: 16,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )
                                                   ],
                                                 ),
                                               ),
@@ -747,11 +556,11 @@ class _CreateStorePageState extends State<CreateStorePage> {
                         )
                       ],
                     ),
-                    mystore.storename != null
+                    widget.storename != null
                         ? Align(
                             alignment: Alignment.bottomLeft,
                             child: Padding(
-                                padding: EdgeInsets.only(top: 10),
+                                padding: EdgeInsets.only(top: 5),
                                 child: Column(
                                     children: [
                                       Padding(
@@ -952,6 +761,71 @@ class _CreateStorePageState extends State<CreateStorePage> {
                               fontSize: 14.0,
                               color: Colors.black),
                         )),
+                    InkWell(
+                      onTap: () async {
+                        var user1 = await storage.read(key: 'userid');
+                        if (follow == true) {
+                          setState(() {
+                            follow = false;
+                            followcolor = Colors.white;
+                            followers = followers - 1;
+                          });
+                          var followurl =
+                              'https://api.sellship.co/api/follow/' +
+                                  user1 +
+                                  '/' +
+                                  widget.storeid;
+
+                          final followresponse = await http.get(followurl);
+                          if (followresponse.statusCode == 200) {
+                            print('UnFollowed');
+                          }
+                        } else {
+                          var followurl =
+                              'https://api.sellship.co/api/follow/' +
+                                  user1 +
+                                  '/' +
+                                  widget.storeid;
+                          setState(() {
+                            follow = true;
+                            followcolor = Colors.deepOrange;
+                            followers = followers + 1;
+                          });
+
+                          final followresponse = await http.get(followurl);
+                          if (followresponse.statusCode == 200) {
+                            print('Followed');
+                          }
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Container(
+                          height: 50,
+                          width: 400,
+                          decoration: BoxDecoration(
+                              color: followcolor,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(
+                                  color: follow == true
+                                      ? Colors.deepOrange
+                                      : Colors.blueGrey.shade200
+                                          .withOpacity(0.5))),
+                          child: Center(
+                            child: Text(
+                              follow == true ? 'Following' : 'Follow',
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: follow == true
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ]))
                 ];
               },

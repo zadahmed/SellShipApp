@@ -611,7 +611,7 @@ class _ActivitySellState extends State<ActivitySell>
                                     height: 100,
                                     child: Padding(
                                         padding: const EdgeInsets.all(12.0),
-                                        child: SpinKitChasingDots(
+                                        child: SpinKitDoubleBounce(
                                             color: Colors.deepOrangeAccent)),
                                   );
                                 });
@@ -804,7 +804,7 @@ class _ActivitySellState extends State<ActivitySell>
                                   height: 100,
                                   child: Padding(
                                       padding: const EdgeInsets.all(12.0),
-                                      child: SpinKitChasingDots(
+                                      child: SpinKitDoubleBounce(
                                           color: Colors.deepOrangeAccent)),
                                 );
                               });
@@ -1032,7 +1032,7 @@ class _ActivitySellState extends State<ActivitySell>
                                                                     .cover,
                                                                 placeholder: (context,
                                                                         url) =>
-                                                                    SpinKitChasingDots(
+                                                                    SpinKitDoubleBounce(
                                                                         color: Colors
                                                                             .deepOrange),
                                                                 errorWidget: (context,

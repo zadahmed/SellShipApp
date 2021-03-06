@@ -483,7 +483,7 @@ class _UserItemsState extends State<UserItems> {
                                           imageUrl: profilepicture,
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>
-                                              SpinKitChasingDots(
+                                              SpinKitDoubleBounce(
                                                   color: Colors.deepOrange),
                                           errorWidget: (context, url, error) =>
                                               Icon(Icons.error),
@@ -1045,6 +1045,13 @@ class _UserItemsState extends State<UserItems> {
                                                 child: NativeAdmob(
                                                   adUnitID: _iosadUnitID,
                                                   controller: _controller,
+                                                  loading: Center(
+                                                      child:
+                                                          SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange)),
+                                                  error: Text("  "),
+                                                  type: NativeAdmobType.full,
                                                 ),
                                               ))
                                           : Padding(
@@ -1146,7 +1153,7 @@ class _UserItemsState extends State<UserItems> {
                                                                     index]
                                                                 .image
                                                                 .isEmpty
-                                                            ? SpinKitChasingDots(
+                                                            ? SpinKitDoubleBounce(
                                                                 color: Colors
                                                                     .deepOrange)
                                                             : itemsgrid[index]
@@ -1154,7 +1161,7 @@ class _UserItemsState extends State<UserItems> {
                                                         fit: BoxFit.cover,
                                                         placeholder: (context,
                                                                 url) =>
-                                                            SpinKitChasingDots(
+                                                            SpinKitDoubleBounce(
                                                                 color: Colors
                                                                     .deepOrange),
                                                         errorWidget: (context,
@@ -1811,6 +1818,12 @@ class _UserItemsState extends State<UserItems> {
                                               child: NativeAdmob(
                                                 adUnitID: _iosadUnitID,
                                                 controller: _controller,
+                                                loading: Center(
+                                                    child: SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)),
+                                                error: Text("  "),
+                                                type: NativeAdmobType.full,
                                               ),
                                             ))
                                         : Padding(
@@ -1839,6 +1852,12 @@ class _UserItemsState extends State<UserItems> {
                                               child: NativeAdmob(
                                                 adUnitID: _androidadUnitID,
                                                 controller: _controller,
+                                                loading: Center(
+                                                    child: SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange)),
+                                                error: Text("  "),
+                                                type: NativeAdmobType.full,
                                               ),
                                             ));
                                   }
@@ -1993,7 +2012,7 @@ class _UserItemsState extends State<UserItems> {
                                                           fit: BoxFit.cover,
                                                           placeholder: (context,
                                                                   url) =>
-                                                              SpinKitChasingDots(
+                                                              SpinKitDoubleBounce(
                                                                   color: Colors
                                                                       .deepOrange),
                                                           errorWidget: (context,

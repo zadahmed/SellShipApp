@@ -201,7 +201,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                               builder: (_) => Container(
                                   height: 50,
                                   width: 50,
-                                  child: SpinKitChasingDots(
+                                  child: SpinKitDoubleBounce(
                                     color: Colors.deepOrange,
                                   )));
                           canceloffer();
@@ -727,7 +727,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                 builder: (_) => Container(
                                     height: 50,
                                     width: 50,
-                                    child: SpinKitChasingDots(
+                                    child: SpinKitDoubleBounce(
                                       color: Colors.deepOrange,
                                     )));
                             var recieverid = widget.recipentid;
@@ -843,7 +843,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
         builder: (_) => Container(
             height: 50,
             width: 50,
-            child: SpinKitChasingDots(
+            child: SpinKitDoubleBounce(
               color: Colors.deepOrange,
             )));
     if (offerstage != null) {
@@ -942,7 +942,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                             imageUrl: profilepicture,
                                             fit: BoxFit.cover,
                                             placeholder: (context, url) =>
-                                                SpinKitChasingDots(
+                                                SpinKitDoubleBounce(
                                                     color: Colors.deepOrange),
                                             errorWidget:
                                                 (context, url, error) =>
@@ -1106,7 +1106,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                       } else {
                                         return Container(
                                           height: 100,
-                                          child: SpinKitChasingDots(
+                                          child: SpinKitDoubleBounce(
                                               color: Colors.deepOrange),
                                         );
                                       }

@@ -359,7 +359,7 @@ class _RootScreenState extends State<RootScreen> {
                                 imageUrl: profilepicture,
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) =>
-                                    SpinKitChasingDots(
+                                    SpinKitDoubleBounce(
                                         color: Colors.deepOrange),
                                 errorWidget: (context, url, error) =>
                                     Icon(Icons.error),

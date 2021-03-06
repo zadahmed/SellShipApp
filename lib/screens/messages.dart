@@ -288,7 +288,7 @@ class MessagesState extends State<Messages> {
                                                     fit: BoxFit.cover,
                                                     placeholder: (context,
                                                             url) =>
-                                                        SpinKitChasingDots(
+                                                        SpinKitDoubleBounce(
                                                             color: Colors
                                                                 .deepOrange),
                                                     errorWidget:

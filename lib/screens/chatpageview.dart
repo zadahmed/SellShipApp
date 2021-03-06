@@ -169,7 +169,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   context: context,
                                   useRootNavigator: false,
                                   barrierDismissible: false,
-                                  builder: (_) => SpinKitChasingDots(
+                                  builder: (_) => SpinKitDoubleBounce(
                                         color: Colors.deepOrange,
                                       ));
 
@@ -203,7 +203,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   context: context,
                                   useRootNavigator: false,
                                   barrierDismissible: false,
-                                  builder: (_) => SpinKitChasingDots(
+                                  builder: (_) => SpinKitDoubleBounce(
                                         color: Colors.deepOrange,
                                       ));
                               canceloffer();
@@ -562,7 +562,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                     height: 100,
                                     child: Padding(
                                         padding: const EdgeInsets.all(12.0),
-                                        child: SpinKitChasingDots(
+                                        child: SpinKitDoubleBounce(
                                             color: Colors.deepOrangeAccent)),
                                   );
                                 });
@@ -949,7 +949,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                             imageUrl: profilepicture,
                                             fit: BoxFit.cover,
                                             placeholder: (context, url) =>
-                                                SpinKitChasingDots(
+                                                SpinKitDoubleBounce(
                                                     color: Colors.deepOrange),
                                             errorWidget:
                                                 (context, url, error) =>
@@ -1113,7 +1113,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                       } else {
                                         return Container(
                                           height: 100,
-                                          child: SpinKitChasingDots(
+                                          child: SpinKitDoubleBounce(
                                               color: Colors.deepOrange),
                                         );
                                       }

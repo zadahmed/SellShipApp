@@ -203,7 +203,7 @@ class _StorePageState extends State<StorePage> {
                                           imageUrl: item[index].image,
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>
-                                              SpinKitChasingDots(
+                                              SpinKitDoubleBounce(
                                                   color: Colors.deepOrange),
                                           errorWidget: (context, url, error) =>
                                               Icon(Icons.error),
@@ -568,7 +568,7 @@ class _StorePageState extends State<StorePage> {
                                                                           .cover,
                                                                       placeholder: (context,
                                                                               url) =>
-                                                                          SpinKitChasingDots(
+                                                                          SpinKitDoubleBounce(
                                                                               color: Colors.deepOrange),
                                                                       errorWidget: (context,
                                                                               url,
@@ -625,7 +625,7 @@ class _StorePageState extends State<StorePage> {
                                                                                     return Container(
                                                                                         height: 50,
                                                                                         width: 50,
-                                                                                        child: SpinKitChasingDots(
+                                                                                        child: SpinKitDoubleBounce(
                                                                                           color: Colors.deepOrange,
                                                                                         ));
                                                                                   },
@@ -661,7 +661,7 @@ class _StorePageState extends State<StorePage> {
                                                                                     return Container(
                                                                                         height: 50,
                                                                                         width: 50,
-                                                                                        child: SpinKitChasingDots(
+                                                                                        child: SpinKitDoubleBounce(
                                                                                           color: Colors.deepOrange,
                                                                                         ));
                                                                                   },
@@ -931,7 +931,7 @@ class _StorePageState extends State<StorePage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start)))
                         : Container(
-                            child: SpinKitChasingDots(
+                            child: SpinKitDoubleBounce(
                                 color: Colors.deepOrangeAccent),
                           ),
                     SizedBox(

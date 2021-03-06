@@ -1313,7 +1313,7 @@ class _AddressState extends State<Address> {
                                                                       padding: const EdgeInsets
                                                                               .all(
                                                                           12.0),
-                                                                      child: SpinKitChasingDots(
+                                                                      child: SpinKitDoubleBounce(
                                                                           color:
                                                                               Colors.deepPurpleAccent)),
                                                                 ),

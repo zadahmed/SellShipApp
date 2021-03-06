@@ -7,6 +7,9 @@ import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/profile.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:SellShip/screens/store/mystorepage.dart';
+import 'package:SellShip/screens/storepage.dart';
+import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -260,7 +263,7 @@ class _DetailsState extends State<Details> {
                                     height: 100,
                                     child: Padding(
                                         padding: const EdgeInsets.all(12.0),
-                                        child: SpinKitChasingDots(
+                                        child: SpinKitDoubleBounce(
                                             color: Colors.deepOrangeAccent)),
                                   );
                                 });
@@ -600,18 +603,21 @@ class _DetailsState extends State<Details> {
   }
 
   getuserDetails(user) async {
-    var userurl = 'https://api.sellship.co/api/user/' + user;
+    var userurl = 'https://api.sellship.co/api/store/' + user;
     final userresponse = await http.get(userurl);
+
+    print(userresponse.body);
 
     var userjsonbody = json.decode(userresponse.body);
 
     var rating;
-    if (userjsonbody['reviewrating'] == null) {
+    if (userjsonbody['reviews'] == null) {
       rating = 0.0;
     } else {
-      rating = userjsonbody['reviewrating'];
+      rating = double.parse(userjsonbody['reviews'].toString());
     }
 
+    print(rating);
     var revie;
     if (userjsonbody['reviewnumber'] == null) {
       review = 0;
@@ -622,10 +628,16 @@ class _DetailsState extends State<Details> {
     setState(() {
       review = revie;
       reviewrating = rating;
-      verifiedfb = userjsonbody['confirmedfb'];
-      verifiedphone = userjsonbody['confirmedphone'];
-      verifiedemail = userjsonbody['confirmedemail'];
-      profilepicture = userjsonbody['profilepicture'];
+      profilepicture = userjsonbody['storelogo'];
+    });
+    var url = 'https://api.sellship.co/api/user/' + user;
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+    setState(() {
+      verifiedfb = jsonbody['confirmedfb'];
+      verifiedphone = jsonbody['confirmedphone'];
+      verifiedemail = jsonbody['confirmedemail'];
     });
   }
 
@@ -823,7 +835,7 @@ class _DetailsState extends State<Details> {
                                               .size
                                               .height,
                                           placeholder: (context, url) =>
-                                              SpinKitChasingDots(
+                                              SpinKitDoubleBounce(
                                                   color: Colors.deepOrange),
                                           errorWidget: (context, url, error) =>
                                               Icon(Icons.error),
@@ -955,7 +967,7 @@ class _DetailsState extends State<Details> {
                       ),
                       Container(
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(242, 244, 248, 0.9),
+                            color: Color.fromRGBO(242, 244, 248, 1),
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -1504,19 +1516,28 @@ class _DetailsState extends State<Details> {
                                     ),
                                     child: Platform.isIOS == true
                                         ? Container(
-                                            height: 300,
+                                            height: 200,
                                             padding: EdgeInsets.all(5),
                                             child: NativeAdmob(
                                               adUnitID: _iosadUnitID,
                                               controller: _controller,
+                                              loading: Center(
+                                                  child: SpinKitDoubleBounce(
+                                                      color:
+                                                          Colors.deepOrange)),
+                                              error: Container(),
                                             ),
                                           )
                                         : Container(
-                                            height: 300,
+                                            height: 200,
                                             padding: EdgeInsets.all(5),
                                             child: NativeAdmob(
                                               adUnitID: _androidadUnitID,
                                               controller: _controller,
+                                              loading: Center(
+                                                  child: SpinKitDoubleBounce(
+                                                      color:
+                                                          Colors.deepOrange)),
                                             ),
                                           ),
                                   )),
@@ -1538,11 +1559,12 @@ class _DetailsState extends State<Details> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        UserItems(
-                                                            userid:
-                                                                newItem.userid,
-                                                            username: newItem
-                                                                .username)),
+                                                        StorePublic(
+                                                          storeid:
+                                                              newItem.userid,
+                                                          storename:
+                                                              newItem.username,
+                                                        )),
                                               );
                                             },
                                             dense: true,
@@ -1935,9 +1957,8 @@ class _DetailsState extends State<Details> {
                                                             .spaceBetween,
                                                   ),
                                                 )
-                                              : SpinKitChasingDots(
-                                                  color: Colors.deepOrange,
-                                                ),
+                                              : SpinKitDoubleBounce(
+                                                  color: Colors.deepOrange),
                                           SizedBox(
                                             height: 5,
                                           ),
@@ -2065,7 +2086,7 @@ class _DetailsState extends State<Details> {
                               ),
                               SizedBox(height: 5),
                               Container(
-                                height: 450,
+                                height: 320,
                                 child: DefaultTabController(
                                     length: 2,
                                     child: Scaffold(
@@ -2078,6 +2099,9 @@ class _DetailsState extends State<Details> {
                                             radius: 4),
                                         isScrollable: true,
                                         labelColor: Colors.black,
+                                        labelStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Helvetica'),
                                         tabs: <Widget>[
                                           Tab(text: 'Description'),
                                           Tab(
@@ -2087,7 +2111,7 @@ class _DetailsState extends State<Details> {
                                         ],
                                       ),
                                       body: Container(
-                                          height: 400,
+                                          height: 320,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           decoration: BoxDecoration(
@@ -2159,7 +2183,7 @@ class _DetailsState extends State<Details> {
                               imageUrl: widget.image,
                               height: MediaQuery.of(context).size.height,
                               placeholder: (context, url) =>
-                                  SpinKitChasingDots(color: Colors.deepOrange),
+                                  SpinKitDoubleBounce(color: Colors.deepOrange),
                               errorWidget: (context, url, error) =>
                                   Icon(Icons.error),
                               width: MediaQuery.of(context).size.width,
@@ -2616,7 +2640,7 @@ class ImageDisplayState extends State<ImageDisplay> {
                         imageUrl: widget.image[index],
                         height: MediaQuery.of(context).size.height,
                         placeholder: (context, url) =>
-                            SpinKitChasingDots(color: Colors.deepOrange),
+                            SpinKitDoubleBounce(color: Colors.deepOrange),
                         errorWidget: (context, url, error) => Icon(Icons.error),
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.contain,

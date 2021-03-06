@@ -1305,7 +1305,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                                   Text(
                                                       'Preparing and Sending Label to Email'),
                                                   SizedBox(height: 5),
-                                                  SpinKitChasingDots(
+                                                  SpinKitDoubleBounce(
                                                       color: Colors
                                                           .deepOrangeAccent)
                                                 ],
@@ -1386,7 +1386,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                               children: [
                                                 Text('Loading'),
                                                 SizedBox(height: 5),
-                                                SpinKitChasingDots(
+                                                SpinKitDoubleBounce(
                                                     color:
                                                         Colors.deepOrangeAccent)
                                               ],
@@ -1427,7 +1427,7 @@ class _OrderSellerState extends State<OrderSeller> {
                                               children: [
                                                 Text('Loading'),
                                                 SizedBox(height: 5),
-                                                SpinKitChasingDots(
+                                                SpinKitDoubleBounce(
                                                     color:
                                                         Colors.deepOrangeAccent)
                                               ],
