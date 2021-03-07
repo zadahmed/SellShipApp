@@ -1124,7 +1124,7 @@ class _CategoryDetailState extends State<CategoryDetail>
         new TabController(length: tabcontrollerlength, vsync: this);
 
     gettabs();
-    getnotification();
+
     getfavourites();
     var subname = subcategorytabs[_tabController.index].text;
     fetchsubcategories(skip, limit, subname);

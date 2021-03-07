@@ -28,7 +28,6 @@ import 'package:permission_handler/permission_handler.dart' as Permission;
 import 'package:random_string/random_string.dart';
 
 import 'package:shimmer/shimmer.dart';
-import 'package:stepper_counter_swipe/stepper_counter_swipe.dart';
 
 class AddItem extends StatefulWidget {
   AddItem({Key key}) : super(key: key);
@@ -404,7 +403,7 @@ class _AddItemState extends State<AddItem> {
                 width: MediaQuery.of(context).size.width - 50,
                 lineHeight: 8.0,
                 percent: percentindictor,
-                progressColor: Colors.orange,
+                progressColor: Colors.deepOrange,
               ),
             )),
         body: loading == false
@@ -2850,9 +2849,10 @@ class _AddItemState extends State<AddItem> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .all(12.0),
-                                                        child: SpinKitDoubleBounce(
-                                                            color: Colors
-                                                                .deepOrange)),
+                                                        child:
+                                                            SpinKitDoubleBounce(
+                                                                color: Colors
+                                                                    .deepOrange)),
                                                   ),
                                                 );
                                               });

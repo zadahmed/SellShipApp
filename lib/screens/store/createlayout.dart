@@ -28,6 +28,8 @@ class CreateLayout extends StatefulWidget {
   final String storecategory;
   final String storeabout;
   final String storetype;
+  final String storeaddress;
+  final String storecity;
 
   CreateLayout(
       {Key key,
@@ -36,6 +38,8 @@ class CreateLayout extends StatefulWidget {
       this.username,
       this.storelogo,
       this.storetype,
+      this.storeaddress,
+      this.storecity,
       this.storecategory,
       this.storeabout})
       : super(key: key);
@@ -48,6 +52,7 @@ class _CreateLayoutState extends State<CreateLayout> {
   @override
   void initState() {
     super.initState();
+    // print(widget.storeaddress);
   }
 
   bool disabled = true;
@@ -72,9 +77,30 @@ class _CreateLayoutState extends State<CreateLayout> {
 
   var selectedlayout;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontFamily: 'Helvetica',
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.deepOrange,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: InkWell(
@@ -464,67 +490,79 @@ class _CreateLayoutState extends State<CreateLayout> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     InkWell(
+                      enableFeedback: true,
                       onTap: () async {
-                        showDialog(
-                            context: context,
-                            useRootNavigator: true,
-                            barrierDismissible: true,
-                            builder: (_) => new AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  content: Builder(
-                                    builder: (context) {
-                                      return Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: SpinKitDoubleBounce(
-                                            color: Colors.deepOrange,
-                                          ));
-                                    },
-                                  ),
-                                ));
-                        if (widget.storetype.contains('Secondhand Seller')) {
-                          Dio dio = new Dio();
-                          FormData formData;
-                          var addurl = 'https://api.sellship.co/create/store';
-                          String fileName =
-                              widget.storelogo.path.split('/').last;
-                          var userid = await storage.read(key: 'userid');
+                        if (selectedlayout == 1) {
+                          showDialog(
+                              context: context,
+                              useRootNavigator: true,
+                              barrierDismissible: true,
+                              builder: (_) => new AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0))),
+                                    content: Builder(
+                                      builder: (context) {
+                                        return Container(
+                                            height: 50,
+                                            width: 50,
+                                            child: SpinKitDoubleBounce(
+                                              color: Colors.deepOrange,
+                                            ));
+                                      },
+                                    ),
+                                  ));
 
-                          formData = FormData.fromMap({
-                            'storecategory': widget.storecategory == null
-                                ? widget.storetype
-                                : widget.storecategory,
-                            'storetype': widget.storetype,
-                            'storename': widget.storename,
-                            'userid': userid,
-                            'layout': 'default',
-                            'storebio': widget.storeabout,
-                            'storelogo': await MultipartFile.fromFile(
-                                widget.storelogo.path,
-                                filename: fileName)
-                          });
-                          var response = await dio.post(addurl, data: formData);
+                          if (widget.storetype.contains('Secondhand Seller')) {
+                            Dio dio = new Dio();
+                            FormData formData;
+                            var addurl = 'https://api.sellship.co/create/store';
+                            String fileName =
+                                widget.storelogo.path.split('/').last;
+                            var userid = await storage.read(key: 'userid');
 
-                          if (response.statusCode == 200) {
-                            var storeid = response.data['id']['\$oid'];
-                            await storage.write(key: 'storeid', value: storeid);
-                            Navigator.of(context, rootNavigator: false).pop();
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        CreateStorePage(
-                                          storeid: storeid,
-                                        )),
-                                ModalRoute.withName('/'));
+                            formData = FormData.fromMap({
+                              'storecategory': widget.storecategory == null
+                                  ? widget.storetype
+                                  : widget.storecategory,
+                              'storetype': widget.storetype,
+                              'storename': widget.storename,
+                              'userid': userid,
+                              'layout': 'default',
+                              'storeaddress': widget.storeaddress,
+                              'storecity': widget.storecity,
+                              'storebio': widget.storeabout,
+                              'storelogo': await MultipartFile.fromFile(
+                                  widget.storelogo.path,
+                                  filename: fileName)
+                            });
+
+                            var response =
+                                await dio.post(addurl, data: formData);
+
+                            if (response.statusCode == 200) {
+                              var storeid = response.data['id']['\$oid'];
+                              await storage.write(
+                                  key: 'storeid', value: storeid);
+                              Navigator.of(context, rootNavigator: false).pop();
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          CreateStorePage(
+                                            storeid: storeid,
+                                          )),
+                                  ModalRoute.withName('/'));
+                            } else {
+                              print('I am here');
+                            }
                           } else {
-                            print('I am here');
+                            Navigator.pop(context);
+                            //Choose Subscription
                           }
                         } else {
-                          Navigator.pop(context);
-                          //Choose Subscription
+                          showInSnackBar(
+                              'Please choose a layout for your store');
                         }
                       },
                       child: Container(

@@ -29,18 +29,19 @@ import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/details.dart';
 import 'package:shimmer/shimmer.dart';
 
-class SubCategory extends StatefulWidget {
-  final String subcategory;
-  final String categoryimage;
+class Brand extends StatefulWidget {
+  final String brand;
 
-  SubCategory({Key key, this.subcategory, this.categoryimage})
-      : super(key: key);
+  Brand({
+    Key key,
+    this.brand,
+  }) : super(key: key);
 
   @override
-  _SubCategoryState createState() => _SubCategoryState();
+  _BrandState createState() => _BrandState();
 }
 
-class _SubCategoryState extends State<SubCategory> {
+class _BrandState extends State<Brand> {
   List<Item> itemsgrid = [];
 
   var categoryimage;
@@ -67,8 +68,8 @@ class _SubCategoryState extends State<SubCategory> {
       skip = skip + 20;
     });
 
-    var url = 'https://api.sellship.co/api/subcategories/' +
-        subcategory +
+    var url = 'https://api.sellship.co/api/home/condition/' +
+        condition +
         '/' +
         country +
         '/' +
@@ -136,16 +137,14 @@ class _SubCategoryState extends State<SubCategory> {
       });
     }
 
-    var url = 'https://api.sellship.co/api/home/subcategories/' +
-        subcategory +
+    var url = 'https://api.sellship.co/api/home/brand/' +
+        brand +
         '/' +
         country +
         '/' +
         skip.toString() +
         '/' +
         limit.toString();
-
-    print(url);
 
     final response = await http.get(url);
 
@@ -173,158 +172,6 @@ class _SubCategoryState extends State<SubCategory> {
         );
         itemsgrid.add(item);
       }
-
-      setState(() {
-        itemsgrid = itemsgrid;
-        loading = false;
-      });
-    } else {
-      print(response.statusCode);
-    }
-
-    return itemsgrid;
-  }
-
-  Future<List<Item>> fetchRecentlyAdded(int skip, int limit) async {
-    var url = 'https://api.sellship.co/api/categories/recent/' +
-        category +
-        '/' +
-        subcategory[0] +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-      itemsgrid.clear();
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      if (itemsgrid == null) {
-        itemsgrid = [];
-      }
-
-      setState(() {
-        itemsgrid = itemsgrid;
-        loading = false;
-      });
-    } else {
-      print(response.statusCode);
-    }
-
-    return itemsgrid;
-  }
-
-  Future<List<Item>> fetchbelowhundred(int skip, int limit) async {
-    var url = 'https://api.sellship.co/api/categories/belowhundred/' +
-        category +
-        '/' +
-        subcategory[0] +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-      itemsgrid.clear();
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      print(itemsgrid);
-
-      setState(() {
-        itemsgrid = itemsgrid;
-        loading = false;
-      });
-    } else {
-      print(response.statusCode);
-    }
-
-    return itemsgrid;
-  }
-
-  Future<List<Item>> fetchHighestPrice(int skip, int limit) async {
-    var url = 'https://api.sellship.co/api/categories/highestprice/' +
-        category +
-        '/' +
-        subcategory[0] +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-      itemsgrid.clear();
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      print(itemsgrid);
 
       setState(() {
         itemsgrid = itemsgrid;
@@ -637,56 +484,6 @@ class _SubCategoryState extends State<SubCategory> {
     }
   }
 
-  Future<List<Item>> fetchLowestPrice(int skip, int limit) async {
-    var url = 'https://api.sellship.co/api/categories/lowestprice/' +
-        category +
-        '/' +
-        subcategory[0] +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-      itemsgrid.clear();
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      print(itemsgrid);
-
-      setState(() {
-        itemsgrid = itemsgrid;
-        loading = false;
-      });
-    } else {
-      print(response.statusCode);
-    }
-
-    return itemsgrid;
-  }
-
   loadbrands() async {
     brands.clear();
     var categoryurl = 'https://api.sellship.co/api/getbrands/' + category;
@@ -777,183 +574,6 @@ class _SubCategoryState extends State<SubCategory> {
   ];
   String _selectedCondition;
 
-  _getmorehighestprice() async {
-    setState(() {
-      limit = limit + 20;
-      skip = skip + 20;
-    });
-
-    var url = 'https://api.sellship.co/api/categories/highestprice/' +
-        category +
-        '/' +
-        subcategory[0] +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      setState(() {
-        itemsgrid = itemsgrid;
-      });
-    } else {
-      print(response.statusCode);
-    }
-  }
-
-  void getnotification() async {
-    var userid = await storage.read(key: 'userid');
-    if (userid != null) {
-      var url = 'https://api.sellship.co/api/getnotification/' + userid;
-      print(url);
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        var notificationinfo = json.decode(response.body);
-        var notif = notificationinfo['notification'];
-        if (notif <= 0) {
-          setState(() {
-            notifcount = notif;
-            notifbadge = false;
-          });
-          FlutterAppBadger.removeBadge();
-        } else if (notif > 0) {
-          setState(() {
-            notifcount = notif;
-            notifbadge = true;
-          });
-        }
-      } else {
-        print(response.statusCode);
-      }
-    }
-  }
-
-  var notifcount;
-  var notifbadge;
-
-  _getmorelowestprice() async {
-    setState(() {
-      limit = limit + 20;
-      skip = skip + 20;
-    });
-
-    var url = 'https://api.sellship.co/api/categories/lowestprice/' +
-        category +
-        '/' +
-        subcategory[0] +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      setState(() {
-        itemsgrid = itemsgrid;
-      });
-    } else {
-      print(response.statusCode);
-    }
-  }
-
-  _getmorebelowhundred() async {
-    setState(() {
-      limit = limit + 20;
-      skip = skip + 20;
-    });
-
-    var url = 'https://api.sellship.co/api/categories/belowhundred/' +
-        category +
-        '/' +
-        subcategory[0] +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      setState(() {
-        itemsgrid = itemsgrid;
-      });
-    } else {
-      print(response.statusCode);
-    }
-  }
-
   getfavourites() async {
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
@@ -998,8 +618,8 @@ class _SubCategoryState extends State<SubCategory> {
       skip = skip + 20;
     });
 
-    var url = 'https://api.sellship.co/api/home/subcategories/' +
-        subcategory +
+    var url = 'https://api.sellship.co/api/home/brand/' +
+        brand +
         '/' +
         country +
         '/' +
@@ -1045,21 +665,19 @@ class _SubCategoryState extends State<SubCategory> {
   String brand;
   String minprice;
   String maxprice;
-  String condition;
+
   String category;
-  String subcategory;
+  String condition;
 
   @override
   void initState() {
     setState(() {
       skip = 0;
       limit = 20;
-      categoryimage = widget.categoryimage;
-      subcategory = widget.subcategory;
-      loading = true;
-      notifbadge = false;
-    });
 
+      brand = widget.brand;
+      loading = true;
+    });
     getfavourites();
     fetchItems(skip, limit);
 
@@ -1144,45 +762,20 @@ class _SubCategoryState extends State<SubCategory> {
                 headerSliverBuilder: (context, _) {
                   return [
                     SliverAppBar(
-                      expandedHeight: 200.0,
+                      title: Text(
+                        widget.brand,
+                        style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
                       floating: false,
                       elevation: 0,
                       centerTitle: true,
                       pinned: true,
                       backgroundColor: Colors.white,
                       iconTheme: IconThemeData(color: Colors.black),
-                      flexibleSpace: FlexibleSpaceBar(
-                          titlePadding: EdgeInsets.only(bottom: 10),
-                          centerTitle: true,
-                          title: Container(
-                            height: 40,
-                            width: 190,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.white),
-                            padding: EdgeInsets.all(10),
-                            child: Center(
-                              child: Text(widget.subcategory,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w700)),
-                            ),
-                          ),
-                          stretchModes: [
-                            StretchMode.zoomBackground,
-                            StretchMode.fadeTitle,
-                          ],
-                          collapseMode: CollapseMode.parallax,
-                          background: Hero(
-                              tag: 'subcat' + widget.subcategory,
-                              child: CachedNetworkImage(
-                                height: 200,
-                                width: 300,
-                                imageUrl: categoryimage,
-                                fit: BoxFit.cover,
-                              ))),
                     ),
                   ];
                 },

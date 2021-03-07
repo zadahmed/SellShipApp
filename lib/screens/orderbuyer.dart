@@ -4,30 +4,156 @@ import 'package:SellShip/models/Items.dart';
 
 import 'package:SellShip/screens/ReviewSeller.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:app_review/app_review.dart';
+import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderBuyer extends StatefulWidget {
   String messageid;
-  Item item;
+  String itemid;
 
-  OrderBuyer({Key key, this.messageid, this.item}) : super(key: key);
+  OrderBuyer({Key key, this.messageid, this.itemid}) : super(key: key);
   @override
   _OrderBuyerState createState() => _OrderBuyerState();
 }
 
 class _OrderBuyerState extends State<OrderBuyer> {
-  Item item;
+  String itemid;
   String messageid;
 
+  var country;
+
+  getuserDetails() async {
+    var userurl = 'https://api.sellship.co/api/store/' + user;
+    final userresponse = await http.get(userurl);
+
+    print(userresponse.body);
+
+    var userjsonbody = json.decode(userresponse.body);
+
+    var rating;
+    if (userjsonbody['reviews'] == null) {
+      rating = 0.0;
+    } else {
+      rating = double.parse(userjsonbody['reviews'].toString());
+    }
+
+    print(rating);
+    var revie;
+    if (userjsonbody['reviewnumber'] == null) {
+      review = 0;
+    } else {
+      review = userjsonbody['reviewnumber'];
+    }
+
+    setState(() {
+      review = revie;
+      reviewrating = rating;
+      profilepicture = userjsonbody['storelogo'];
+    });
+    var url = 'https://api.sellship.co/api/user/' + user;
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+  }
+
+  var review;
+  double reviewrating;
+  bool verifiedfb;
+  bool verifiedphone;
+  bool verifiedemail;
+  var profilepicture;
+
+  fetchItem() async {
+    var countr = await storage.read(key: 'country');
+    userid = await storage.read(key: 'userid');
+
+    if (countr.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+        country = countr;
+      });
+    } else if (countr.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = '\$';
+        country = countr;
+      });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+        country = countr;
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+        country = countr;
+      });
+    }
+
+    var url = 'https://api.sellship.co/api/getitem/' + widget.itemid;
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    item = Item(
+        name: jsonbody[0]['name'],
+        itemid: jsonbody[0]['_id']['\$oid'].toString(),
+        price: jsonbody[0]['price'].toString(),
+        description: jsonbody[0]['description'],
+        category: jsonbody[0]['category'],
+        condition: jsonbody[0]['condition'] == null
+            ? 'Like New'
+            : jsonbody[0]['condition'],
+        image: jsonbody[0]['image'],
+        image1: jsonbody[0]['image1'],
+        image2: jsonbody[0]['image2'],
+        image3: jsonbody[0]['image3'],
+        image4: jsonbody[0]['image4'],
+        image5: jsonbody[0]['image5'],
+        sellerid: jsonbody[0]['selleruserid'],
+        sellername: jsonbody[0]['sellerusername'],
+        sold: jsonbody[0]['sold'] == null ? false : jsonbody[0]['sold'],
+        likes: jsonbody[0]['likes'] == null ? 0 : jsonbody[0]['likes'],
+        city: jsonbody[0]['city'],
+        username: jsonbody[0]['username'],
+        brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
+        size: jsonbody[0]['size'] == null ? '' : jsonbody[0]['size'],
+        useremail: jsonbody[0]['useremail'],
+        usernumber: jsonbody[0]['usernumber'],
+        userid: jsonbody[0]['userid'],
+        latitude: jsonbody[0]['latitude'],
+        comments: jsonbody[0]['comments'] == null
+            ? 0
+            : jsonbody[0]['comments'].length,
+        longitude: jsonbody[0]['longitude'],
+        subsubcategory: jsonbody[0]['subsubcategory'],
+        subcategory: jsonbody[0]['subcategory']);
+
+    setState(() {
+      user = jsonbody[0]['userid'];
+      item = item;
+    });
+
+    getuserDetails();
+    return item;
+  }
+
+  var user;
+  Item item;
   GlobalKey _toolTipKey = GlobalKey();
 
   @override
@@ -36,9 +162,12 @@ class _OrderBuyerState extends State<OrderBuyer> {
 
     setState(() {
       loading = true;
-      item = widget.item;
+      itemid = widget.itemid;
       messageid = widget.messageid;
     });
+    print(itemid);
+    print(messageid);
+    fetchItem();
     getDetails();
   }
 
@@ -78,6 +207,8 @@ class _OrderBuyerState extends State<OrderBuyer> {
     final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
+
+    print(jsonbody);
     final f = new DateFormat('dd-MM-yyyy hh:mm');
     DateTime datet =
         new DateTime.fromMillisecondsSinceEpoch(jsonbody['date']['\$date']);
@@ -108,40 +239,42 @@ class _OrderBuyerState extends State<OrderBuyer> {
     }
 
     var track;
-    if (jsonbody['shipping_details'] == null) {
+    if (jsonbody['awbno'] == null) {
       track = '';
     } else {
-      track = jsonbody['shipping_details']['tracking_no'];
-    }
-
-    var wight;
-    if (jsonbody['itemobject']['weight'] == null) {
-      wight = 5;
-    } else {
-      wight = int.parse(jsonbody['itemobject']['weight']);
+      track = jsonbody['awbno'];
     }
 
     setState(() {
-      itemprice = jsonbody['offer'];
+      itemprice = jsonbody['totalpayable'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
       cancelled = cancell;
+      orderid = jsonbody['paymentid'];
       trackingnumber = track;
       deliverystage = delstage;
-      newitem = Item(weight: wight);
-      itemfees = jsonbody['delivery'];
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];
       loading = false;
+      addressline1 = jsonbody['deliveryaddress']['addressline1'];
+      addressline2 = jsonbody['deliveryaddress']['addressline2'];
+      area = jsonbody['deliveryaddress']['area'];
+      city = jsonbody['deliveryaddress']['city'];
+      country = jsonbody['deliveryaddress']['country'];
     });
   }
 
   Item newitem;
 
   var deliveredtext;
-
+  var orderid;
   var itemprice;
   var totalpaid;
+  var addressline1;
+  var addressline2;
+  var area;
+  var city;
+
   var buyerid;
   var itemfees;
   var date;
@@ -163,7 +296,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
                 color: Colors.white,
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.blueGrey.withOpacity(0.2),
                       offset: const Offset(0.0, 0.6),
                       blurRadius: 5.0),
                 ],
@@ -210,7 +343,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
                 color: Colors.white,
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.blueGrey.withOpacity(0.2),
                       offset: const Offset(0.0, 0.6),
                       blurRadius: 5.0),
                 ],
@@ -257,7 +390,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
                 color: Colors.white,
                 boxShadow: <BoxShadow>[
                   BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.blueGrey.withOpacity(0.2),
                       offset: const Offset(0.0, 0.6),
                       blurRadius: 5.0),
                 ],
@@ -297,266 +430,156 @@ class _OrderBuyerState extends State<OrderBuyer> {
     }
   }
 
+  double percentindicator = 0.20;
+
   Widget deliveryinformation(BuildContext context) {
     if (deliverystage == 0) {
-      return Container(
-        height: 160,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              offset: Offset(0.0, 1.0), //(x,y)
-              blurRadius: 6.0,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  'Preparing',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Have a sip of that coffee and layback! Your item is being prepared by the seller, we will notify you when the item has been shipped',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 14,
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.w400),
+                ),
+              ],
             ),
-          ],
-          color: Colors.white,
-        ),
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Icon(
-                      Feather.box,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  ),
-                ]),
-            Container(
-              padding: const EdgeInsets.all(15.0),
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    'Preparing',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        color: Colors.deepPurpleAccent,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    'Have a sip of that coffee and layback! Your item is being prepared by the seller, we will notify you when the item has been shipped',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     } else if (deliverystage == 1) {
-      return Container(
-        height: 160,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              offset: Offset(0.0, 1.0), //(x,y)
-              blurRadius: 6.0,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  'Shipping',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'The seller is going to drop off your item, you can track the status of your item using the Tracking Number.',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 14,
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.w400),
+                ),
+              ],
             ),
-          ],
-          color: Colors.white,
-        ),
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Icon(
-                      Icons.local_shipping,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  ),
-                ]),
-            Container(
-              padding: const EdgeInsets.all(15.0),
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    'Shipping',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        color: Colors.deepPurpleAccent,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    'The seller is going to drop off your item, you can track the status of your item using the Tracking Number.',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     } else if (deliverystage == 2) {
-      return Container(
-        height: 160,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              offset: Offset(0.0, 1.0), //(x,y)
-              blurRadius: 6.0,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  'Waiting for Delivery',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Keep a lookout for the postman! Your item is on the way! Deliveries normally take 3-5 business days once dropped off by the seller!',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 14,
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.w400),
+                ),
+              ],
             ),
-          ],
-          color: Colors.white,
-        ),
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Icon(
-                      Feather.mail,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  ),
-                ]),
-            Container(
-              padding: const EdgeInsets.all(15.0),
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    'Waiting for Delivery',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        color: Colors.deepPurpleAccent,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    'Keep a lookout for the postman! Your item is on the way! Deliveries normally take 3-5 business days once dropped off by the seller!',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     } else if (deliverystage == 3) {
-      return Container(
-        height: 160,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              offset: Offset(0.0, 1.0), //(x,y)
-              blurRadius: 6.0,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  'Hooray!',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  'Congratulations on recieving your item! Make sure to confirm the item is as described and review your seller! This helps build the SellShip community!',
+                  style: TextStyle(
+                      fontFamily: 'Helvetica',
+                      fontSize: 14,
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.w400),
+                ),
+              ],
             ),
-          ],
-          color: Colors.white,
-        ),
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Icon(
-                      FontAwesome.magic,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  ),
-                ]),
-            Container(
-              padding: const EdgeInsets.all(15.0),
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    'Hooray!',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        color: Colors.deepPurpleAccent,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    'Congratulations on recieving your item! Make sure to confirm the item is as described and review your seller! This helps build the SellShip community!',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     }
   }
@@ -564,208 +587,480 @@ class _OrderBuyerState extends State<OrderBuyer> {
   Widget deliverystagewidget(BuildContext context) {
     if (deliverystage == 0) {
       return Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.timer,
+          height: 110,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.timer,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Waiting for Pickup',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Waiting')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.blueGrey,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.blueGrey,
+                            child: Icon(
+                              Icons.local_shipping_rounded,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Delivered',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
                     ),
-                  ),
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.blueGrey,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.blueGrey,
+                            child: Icon(
+                              Icons.local_shipping_rounded,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Review',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Review')
-              ],
-            ),
-          ],
-        ),
-      );
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(
+                            bottom: 5,
+                            top: 10,
+                          ),
+                          child: Center(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15)),
+                              ),
+                              child: LinearPercentIndicator(
+                                width: MediaQuery.of(context).size.width / 1.4,
+                                lineHeight: 8.0,
+                                percent: 0.25,
+                                progressColor: Colors.deepOrange,
+                              ),
+                            ),
+                          )),
+                    ])
+              ]));
     } else if (deliverystage == 1) {
       return Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.timer,
+          height: 110,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.timer,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Item Picked',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Waiting')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.local_shipping_rounded,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Waiting for Delivery',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
                     ),
-                  ),
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.blueGrey,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.blueGrey,
+                            child: Icon(
+                              Icons.local_shipping_rounded,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Review',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Review')
-              ],
-            ),
-          ],
-        ),
-      );
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(
+                            bottom: 5,
+                            top: 10,
+                          ),
+                          child: Center(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15)),
+                              ),
+                              child: LinearPercentIndicator(
+                                width: MediaQuery.of(context).size.width / 1.4,
+                                lineHeight: 8.0,
+                                percent: 0.40,
+                                progressColor: Colors.deepOrange,
+                              ),
+                            ),
+                          )),
+                    ])
+              ]));
     } else if (deliverystage == 2) {
       return Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.timer,
+          height: 110,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.timer,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Picked Up',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Waiting')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.local_shipping_rounded,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Delivered',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
                     ),
-                  ),
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.local_shipping_rounded,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Review',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Review')
-              ],
-            ),
-          ],
-        ),
-      );
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(
+                            bottom: 5,
+                            top: 10,
+                          ),
+                          child: Center(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15)),
+                              ),
+                              child: LinearPercentIndicator(
+                                width: MediaQuery.of(context).size.width / 1.4,
+                                lineHeight: 8.0,
+                                percent: 0.80,
+                                progressColor: Colors.deepOrange,
+                              ),
+                            ),
+                          )),
+                    ])
+              ]));
     } else if (deliverystage == 3) {
       return Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.check,
+          height: 110,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.timer,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Picked Up',
+                          style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Waiting')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.star,
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.local_shipping_rounded,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Delivered',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
                     ),
-                  ),
+                    Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.deepOrange,
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.deepOrange,
+                            child: Icon(
+                              Icons.local_shipping_rounded,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          'Reviewed',
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Review')
-              ],
-            ),
-          ],
-        ),
-      );
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(
+                            bottom: 5,
+                            top: 10,
+                          ),
+                          child: Center(
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15)),
+                              ),
+                              child: LinearPercentIndicator(
+                                width: MediaQuery.of(context).size.width / 1.4,
+                                lineHeight: 8.0,
+                                percent: 1.00,
+                                progressColor: Colors.deepOrange,
+                              ),
+                            ),
+                          )),
+                    ])
+              ]));
     }
   }
 
@@ -776,365 +1071,163 @@ class _OrderBuyerState extends State<OrderBuyer> {
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 0,
           title: Text(
-            'Order Detail',
+            'Order',
             style: TextStyle(
-                color: Colors.black, fontSize: 16, fontFamily: 'Helvetica'),
+                color: Colors.black,
+                fontSize: 18,
+                fontFamily: 'Helvetica',
+                fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
         ),
-        body: SingleChildScrollView(
-            child: loading == false
-                ? Column(children: <Widget>[
-                    SizedBox(height: 10),
-                    deliverystagewidget(context),
-                    Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                        child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Details(
-                                          itemid: item.itemid,
-                                        )),
-                              );
-                            },
-                            child: Container(
-                                height: 70,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                  color: Colors.white,
-                                ),
-                                child: ListTile(
-                                  title: Text(
-                                    item.name,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w800),
-                                  ),
-                                  leading: Container(
-                                    height: 70,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: CachedNetworkImage(
-                                        height: 200,
-                                        width: 300,
-                                        imageUrl: item.image,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    item.category,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 14,
-                                        color: Colors.deepOrange,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  trailing: Text(
-                                    currency + ' ' + item.price.toString(),
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 14,
-                                        color: Colors.deepOrange,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )))),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    cancelled != null
-                        ? Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, bottom: 10, top: 20),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Transaction has been cancelled',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700),
-                              ),
+        body: loading == false
+            ? ListView(children: <Widget>[
+                SizedBox(height: 10),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+                  child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
                             ),
-                          )
-                        : deliveryinformation(context),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    cancelled != null ? Container() : shipfrom(context),
-                    cancelled != null
-                        ? Container()
-                        : InkWell(
-                            onTap: () async {
-                              if (deliverystage == 2) {
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (BuildContext context) =>
-                                        CupertinoAlertDialog(
-                                          title: new Text(
-                                            "Confirm you have recieved the item",
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w700),
-                                          ),
-                                          content: new Text(
-                                            "Please confirm if the item has been delivered!",
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          actions: <Widget>[
-                                            CupertinoDialogAction(
-                                              isDefaultAction: true,
-                                              onPressed: () async {
-                                                var url =
-                                                    'https://api.sellship.co/api/delivered/' +
-                                                        messageid;
-
-                                                final response =
-                                                    await http.get(url);
-
-                                                var jsonbody =
-                                                    json.decode(response.body);
-
-                                                setState(() {
-                                                  deliverystage =
-                                                      jsonbody['deliverystage'];
-                                                  deliveredtext =
-                                                      'Review Seller';
-                                                });
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text(
-                                                'Yes',
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                              ),
-                                            ),
-                                            CupertinoDialogAction(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text(
-                                                "No",
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                              ),
-                                            )
-                                          ],
-                                        ));
-                              } else if (deliverystage == 3) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ReviewSeller(
-                                            reviewuserid: item.userid,
-                                            messageid: messageid,
-                                          )),
-                                );
-                              }
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Container(
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  color: Colors.deepPurpleAccent,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0),
-                                  ),
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                        color: Colors.deepPurpleAccent
-                                            .withOpacity(0.4),
-                                        offset: const Offset(1.1, 1.1),
-                                        blurRadius: 10.0),
-                                  ],
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    deliveredtext,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                      letterSpacing: 0.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Transaction Details',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(
-                            left: 10, bottom: 10, top: 5, right: 10),
-                        child: Column(
-                          children: <Widget>[
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(
-                                  item.name,
+                                  'Order ID: ',
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
                                       fontSize: 16,
-                                      color: Colors.black),
+                                      color: Colors.blueGrey),
                                 ),
-                                Text(
-                                  itemprice.toString() + ' ' + currency,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
                                 Container(
-                                  width: 115,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        'Delivery',
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Text(
-                                  itemfees.toStringAsFixed(2) + ' ' + currency,
+                                    child: Text(
+                                  orderid,
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                )
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(27, 44, 64, 1)),
+                                )),
                               ],
                             ),
-                            SizedBox(
-                              height: 5,
+                            Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 10,
+                                  top: 20,
+                                ),
+                                child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color:
+                                            Color.fromRGBO(27, 44, 64, 0.03)),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Delivered to:',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              child: Text(
+                                            addressline1 +
+                                                ' ' +
+                                                addressline2 +
+                                                ' ' +
+                                                area +
+                                                ' ' +
+                                                city +
+                                                ' ' +
+                                                country,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    27, 44, 64, 1)),
+                                          )),
+                                        ])))
+                          ])),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 10, top: 5, right: 15),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
                             ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text(
-                                  'Total',
+                                  'Tracking ID: ',
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
                                       fontSize: 16,
-                                      color: Colors.black),
+                                      color: Colors.blueGrey),
                                 ),
-                                Text(
-                                  totalpaid.toStringAsFixed(2) + ' ' + currency,
+                                Container(
+                                    child: Text(
+                                  trackingnumber,
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                )
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(27, 44, 64, 1)),
+                                )),
                               ],
                             ),
                             SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  'Transaction Status',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.black),
-                                ),
-                                cancelled != null
-                                    ? Text(
-                                        'Cancelled',
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black),
-                                      )
-                                    : Text(
-                                        'Paid',
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black),
-                                      )
-                              ],
+                            deliveryinformation(context),
+                            SizedBox(
+                              height: 20,
                             ),
-                          ],
-                        )),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Seller Information',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: InkWell(
-                        child: Container(
-                          height: 70,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            deliverystagewidget(context),
+                          ]),
+                    )),
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 10, top: 5, right: 15),
+                    child: Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.shade300,
@@ -1142,119 +1235,691 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                 blurRadius: 6.0,
                               ),
                             ],
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserItems(
-                                          userid: item.userid,
-                                          username: item.username)),
-                                );
-                              },
-                              dense: true,
-                              leading: Icon(FontAwesome.user_circle),
-                              title: Text(
-                                item.username,
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Items: ',
                                 style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     fontSize: 16,
-                                    color: Colors.black),
+                                    color: Colors.blueGrey),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    deliverystage == 0
-                        ? InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) =>
-                                      CupertinoAlertDialog(
-                                        title: new Text(
-                                          "Cancel this transaction",
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        content: new Text(
-                                          "Are you sure you want to cancel this transaction?",
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                        actions: <Widget>[
-                                          CupertinoDialogAction(
-                                            isDefaultAction: true,
-                                            onPressed: () async {
-                                              var url =
-                                                  'https://api.sellship.co/api/cancelbuyer/' +
-                                                      messageid;
-
-                                              final response =
-                                                  await http.get(url);
-
-                                              if (response.statusCode == 200) {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              }
-                                            },
-                                            child: Text(
-                                              'Yes',
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                          CupertinoDialogAction(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text(
-                                              "No",
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          )
-                                        ],
-                                      ));
-                            },
-                            child: cancelled != null
-                                ? Container()
-                                : Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 10, bottom: 10, top: 20),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Cancel this transaction',
+                              Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                  itemid: widget.itemid,
+                                                  name: item.name,
+                                                  sold: item.sold,
+                                                  source: 'order',
+                                                  image: item.image,
+                                                )),
+                                      );
+                                    },
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      dense: true,
+                                      title: Text(
+                                        item.name,
                                         style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          color: Colors.red,
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      leading: Container(
+                                        height: 70,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                            height: 200,
+                                            width: 300,
+                                            imageUrl: item.image,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
+                                      subtitle: Text(
+                                        item.category,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      trailing: Text(
+                                        currency + ' ' + item.price.toString(),
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                  ))
-                        : Container(),
-                    SizedBox(
-                      height: 5,
-                    ),
-                  ])
-                : Center(child: CupertinoActivityIndicator())));
+                                  )),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Delivery',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      letterSpacing: 0.0,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                  Text('Free',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        letterSpacing: 0.0,
+                                        color: Colors.green,
+                                      )),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Total',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      letterSpacing: 0.0,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(currency + ' ' + totalpaid.toString(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 20,
+                                        letterSpacing: 0.0,
+                                        color: Colors.black,
+                                      )),
+                                ],
+                              )
+                            ]))),
+
+                // cancelled != null
+                //     ? Padding(
+                //         padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
+                //         child: Align(
+                //           alignment: Alignment.centerLeft,
+                //           child: Text(
+                //             'Transaction has been cancelled',
+                //             style: TextStyle(
+                //                 fontFamily: 'Helvetica',
+                //                 fontSize: 16,
+                //                 fontWeight: FontWeight.w700),
+                //           ),
+                //         ),
+                //       )
+                //     : deliveryinformation(context),
+
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 10, top: 5, right: 15),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Seller: ',
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey),
+                            ),
+                            Column(
+                              children: [
+                                ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => StorePublic(
+                                                  storeid: item.userid,
+                                                  storename: item.username,
+                                                )),
+                                      );
+                                    },
+                                    dense: true,
+                                    leading: profilepicture != null &&
+                                            profilepicture.isNotEmpty
+                                        ? Container(
+                                            height: 50,
+                                            width: 50,
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                child: CachedNetworkImage(
+                                                  height: 200,
+                                                  width: 300,
+                                                  imageUrl: profilepicture,
+                                                  fit: BoxFit.cover,
+                                                )),
+                                          )
+                                        : CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: Colors.deepOrange,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              child: Image.asset(
+                                                'assets/personplaceholder.png',
+                                                fit: BoxFit.fitWidth,
+                                              ),
+                                            )),
+                                    title: Text(
+                                      item.username,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    subtitle: Column(children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 5, bottom: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            InkWell(
+                                              child: verifiedemail == true
+                                                  ? Badge(
+                                                      showBadge: true,
+                                                      badgeColor: Colors
+                                                          .deepOrangeAccent,
+                                                      position: BadgePosition
+                                                          .bottomEnd(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      badgeContent: Icon(
+                                                        FontAwesome
+                                                            .check_circle,
+                                                        size: 10,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                                width: 0.2,
+                                                                color: Colors
+                                                                    .grey),
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          child: CircleAvatar(
+                                                            radius: 13,
+                                                            child: Icon(
+                                                              Feather.mail,
+                                                              size: 13,
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            ),
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                          )))
+                                                  : Badge(
+                                                      showBadge: false,
+                                                      badgeColor: Colors.grey,
+                                                      position: BadgePosition
+                                                          .bottomEnd(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color:
+                                                                  Colors.grey),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 13,
+                                                          child: Icon(
+                                                            Feather.mail,
+                                                            size: 13,
+                                                            color: Colors
+                                                                .deepOrange,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            InkWell(
+                                              child: verifiedphone == true
+                                                  ? Badge(
+                                                      showBadge: true,
+                                                      badgeColor: Colors
+                                                          .deepOrangeAccent,
+                                                      position: BadgePosition
+                                                          .bottomEnd(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      badgeContent: Icon(
+                                                        FontAwesome
+                                                            .check_circle,
+                                                        size: 10,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                                width: 0.2,
+                                                                color: Colors
+                                                                    .grey),
+                                                            shape:
+                                                                BoxShape.circle,
+                                                          ),
+                                                          child: CircleAvatar(
+                                                            radius: 13,
+                                                            child: Icon(
+                                                              Feather.phone,
+                                                              size: 13,
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            ),
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                          )))
+                                                  : Badge(
+                                                      showBadge: false,
+                                                      badgeColor: Colors.grey,
+                                                      position: BadgePosition
+                                                          .bottomEnd(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color:
+                                                                  Colors.grey),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 13,
+                                                          child: Icon(
+                                                            Feather.phone,
+                                                            size: 13,
+                                                            color: Colors
+                                                                .deepOrange,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            InkWell(
+                                              child: verifiedfb == true
+                                                  ? Badge(
+                                                      showBadge: true,
+                                                      badgeColor:
+                                                          Colors.deepOrange,
+                                                      position: BadgePosition
+                                                          .bottomEnd(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      badgeContent: Icon(
+                                                        FontAwesome
+                                                            .check_circle,
+                                                        size: 10,
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color: Colors
+                                                                  .deepOrange),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 13,
+                                                          child: Icon(
+                                                            Feather.facebook,
+                                                            size: 13,
+                                                            color: Colors.white,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.blueAccent,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Badge(
+                                                      showBadge: false,
+                                                      badgeColor: Colors.grey,
+                                                      position: BadgePosition
+                                                          .bottomEnd(),
+                                                      animationType:
+                                                          BadgeAnimationType
+                                                              .slide,
+                                                      child: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                              width: 0.2,
+                                                              color:
+                                                                  Colors.grey),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: CircleAvatar(
+                                                          radius: 13,
+                                                          child: Icon(
+                                                            Feather.facebook,
+                                                            size: 13,
+                                                            color: Colors
+                                                                .blueAccent,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    ]),
+                                    contentPadding: EdgeInsets.zero),
+                                reviewrating != null
+                                    ? Padding(
+                                        padding: EdgeInsets.only(
+                                          top: 10,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                SmoothStarRating(
+                                                    allowHalfRating: true,
+                                                    starCount: 5,
+                                                    isReadOnly: true,
+                                                    rating: reviewrating,
+                                                    size: 20.0,
+                                                    color: Colors.deepOrange,
+                                                    borderColor: Colors.grey,
+                                                    spacing: 0.0),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  reviewrating
+                                                      .toStringAsFixed(1),
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color.fromRGBO(
+                                                          27, 44, 64, 1)),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              review != null
+                                                  ? '${review} Reviews'
+                                                  : '0 Reviews',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromRGBO(
+                                                      27, 44, 64, 1)),
+                                            )
+                                          ],
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                        ),
+                                      )
+                                    : SpinKitDoubleBounce(
+                                        color: Colors.deepOrange),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                              ],
+                            ),
+                          ]),
+                    )),
+
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 10, top: 5, right: 15),
+                    child: Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                  padding: EdgeInsets.only(top: 0),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      await Intercom.initialize(
+                                        'z4m2b833',
+                                        androidApiKey:
+                                            'android_sdk-78eb7d5e9dd5f4b508ddeec4b3c54d7491676661',
+                                        iosApiKey:
+                                            'ios_sdk-2744ef1f27a14461bfda4cb07e8fc44364a38005',
+                                      );
+                                      await Intercom.registerIdentifiedUser(
+                                          userId: buyerid);
+
+                                      Intercom.displayMessenger();
+                                    },
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      dense: true,
+                                      title: Text(
+                                        'Need Support?',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      leading: Container(
+                                        height: 70,
+                                        width: 70,
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 5),
+                                        decoration: BoxDecoration(
+                                            color: Color.fromRGBO(
+                                                255, 115, 0, 0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: SvgPicture.asset(
+                                            'assets/support.svg',
+                                            fit: BoxFit.fitHeight,
+                                          ),
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Chat with us',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      trailing: Icon(
+                                        Icons.chevron_right,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  )),
+                            ]))),
+                SizedBox(
+                  height: 5,
+                ),
+                //     deliverystage == 0
+                //         ? InkWell(
+                //             onTap: () {
+                //               showDialog(
+                //                   context: context,
+                //                   barrierDismissible: false,
+                //                   builder: (BuildContext context) =>
+                //                       CupertinoAlertDialog(
+                //                         title: new Text(
+                //                           "Cancel this transaction",
+                //                           style: TextStyle(
+                //                               fontFamily: 'Helvetica',
+                //                               fontSize: 16,
+                //                               fontWeight: FontWeight.w700),
+                //                         ),
+                //                         content: new Text(
+                //                           "Are you sure you want to cancel this transaction?",
+                //                           style: TextStyle(
+                //                               fontFamily: 'Helvetica',
+                //                               fontSize: 16,
+                //                               fontWeight: FontWeight.w400),
+                //                         ),
+                //                         actions: <Widget>[
+                //                           CupertinoDialogAction(
+                //                             isDefaultAction: true,
+                //                             onPressed: () async {
+                //                               var url =
+                //                                   'https://api.sellship.co/api/cancelbuyer/' +
+                //                                       messageid;
+                //
+                //                               final response = await http.get(url);
+                //
+                //                               if (response.statusCode == 200) {
+                //                                 Navigator.of(context).pop();
+                //                                 Navigator.of(context).pop();
+                //                               }
+                //                             },
+                //                             child: Text(
+                //                               'Yes',
+                //                               style: TextStyle(
+                //                                   fontFamily: 'Helvetica',
+                //                                   fontSize: 16,
+                //                                   fontWeight: FontWeight.w700),
+                //                             ),
+                //                           ),
+                //                           CupertinoDialogAction(
+                //                             onPressed: () {
+                //                               Navigator.of(context).pop();
+                //                             },
+                //                             child: Text(
+                //                               "No",
+                //                               style: TextStyle(
+                //                                   fontFamily: 'Helvetica',
+                //                                   fontSize: 16,
+                //                                   fontWeight: FontWeight.w700),
+                //                             ),
+                //                           )
+                //                         ],
+                //                       ));
+                //             },
+                //             child: cancelled != null
+                //                 ? Container()
+                //                 : Padding(
+                //                     padding: EdgeInsets.only(
+                //                         left: 10, bottom: 10, top: 20),
+                //                     child: Align(
+                //                       alignment: Alignment.centerLeft,
+                //                       child: Text(
+                //                         'Cancel this transaction',
+                //                         style: TextStyle(
+                //                           fontFamily: 'Helvetica',
+                //                           fontSize: 16,
+                //                           color: Colors.red,
+                //                         ),
+                //                       ),
+                //                     ),
+                //                   ))
+                //         : Container(),
+                //     SizedBox(
+                //       height: 5,
+                //     ),
+                //   ])
+                // : Center(
+                //     child: SpinKitDoubleBounce(
+                //     color: Colors.deepOrange,
+                //   )));
+              ])
+            : Center(
+                child: SpinKitDoubleBounce(
+                  color: Colors.deepOrange,
+                ),
+              ));
   }
 }

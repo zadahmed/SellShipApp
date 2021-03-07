@@ -29,6 +29,26 @@ class CreateStoreName extends StatefulWidget {
 class _CreateStoreNameState extends State<CreateStoreName> {
   String userid;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontFamily: 'Helvetica',
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.deepOrange,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -40,11 +60,11 @@ class _CreateStoreNameState extends State<CreateStoreName> {
   bool disabled = true;
 
   TextEditingController storenamecontroller = TextEditingController();
-  TextEditingController usernamecontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
@@ -150,73 +170,77 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                   children: [
                     InkWell(
                       onTap: () async {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            useRootNavigator: false,
-                            builder: (BuildContext context) {
-                              return Dialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        20.0)), //this right here
-                                child: Container(
-                                  height: 100,
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: SpinKitDoubleBounce(
-                                          color: Colors.deepOrange)),
-                                ),
-                              );
-                            });
-                        var url = 'https://api.sellship.co/check/store/name/' +
-                            storenamecontroller.text;
-
-                        final response = await http.get(url);
-                        print(response.statusCode);
-                        if (response.statusCode == 200) {
-                          var jsondeco = json.decode(response.body);
-                          if (jsondeco['Status'] == 'Success') {
-                            Navigator.pop(context);
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateStoreBusinessDetail(
-                                    userid: widget.userid,
-                                    username: usernamecontroller.text,
-                                    storename: storenamecontroller.text,
+                        if (storenamecontroller.text.isEmpty) {
+                          showInSnackBar('Please Enter A Store Name');
+                        } else {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              useRootNavigator: false,
+                              builder: (BuildContext context) {
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          20.0)), //this right here
+                                  child: Container(
+                                    height: 100,
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: SpinKitDoubleBounce(
+                                            color: Colors.deepOrange)),
                                   ),
-                                ));
-                          } else {
-                            Navigator.pop(context);
-                            showDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                useRootNavigator: false,
-                                builder: (_) => AssetGiffyDialog(
-                                      image: Image.asset(
-                                        'assets/oops.gif',
-                                        fit: BoxFit.cover,
-                                      ),
-                                      title: Text(
-                                        'Oops!',
-                                        style: TextStyle(
-                                            fontSize: 22.0,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      description: Text(
-                                        'Looks like that Store Username Exists',
-                                        textAlign: TextAlign.center,
-                                        style:
-                                            TextStyle(fontFamily: 'Helvetica'),
-                                      ),
-                                      onlyOkButton: true,
-                                      entryAnimation: EntryAnimation.DEFAULT,
-                                      onOkButtonPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ));
+                                );
+                              });
+                          var url =
+                              'https://api.sellship.co/check/store/name/' +
+                                  storenamecontroller.text;
+
+                          final response = await http.get(url);
+                          print(response.statusCode);
+                          if (response.statusCode == 200) {
+                            var jsondeco = json.decode(response.body);
+                            if (jsondeco['Status'] == 'Success') {
+                              Navigator.pop(context);
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreateStoreBusinessDetail(
+                                      userid: widget.userid,
+                                      storename: storenamecontroller.text,
+                                    ),
+                                  ));
+                            } else {
+                              Navigator.pop(context);
+                              showDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  useRootNavigator: false,
+                                  builder: (_) => AssetGiffyDialog(
+                                        image: Image.asset(
+                                          'assets/oops.gif',
+                                          fit: BoxFit.cover,
+                                        ),
+                                        title: Text(
+                                          'Oops!',
+                                          style: TextStyle(
+                                              fontSize: 22.0,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        description: Text(
+                                          'Looks like that Store Username Exists',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica'),
+                                        ),
+                                        onlyOkButton: true,
+                                        entryAnimation: EntryAnimation.DEFAULT,
+                                        onOkButtonPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ));
+                            }
                           }
                         }
                       },

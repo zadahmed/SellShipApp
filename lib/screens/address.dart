@@ -420,14 +420,15 @@ class _AddressState extends State<Address> {
             city: jsonbody[i]['city'],
             country: jsonbody[i]['country'],
             area: jsonbody[i]['area'],
-            address: jsonbody[i]['addressline1'] +
-                '\n' +
+            address: ' ' +
+                jsonbody[i]['addressline1'] +
+                ',\n ' +
                 jsonbody[i]['addressline2'] +
-                '\n' +
+                ',\n ' +
                 capitalize(jsonbody[i]['area'].toString().toLowerCase()) +
-                '\n' +
+                ',\n ' +
                 jsonbody[i]['city'] +
-                '\n' +
+                ',\n ' +
                 jsonbody[i]['country'],
             phonenumber: jsonbody[i]['phonenumber']));
       }
@@ -1538,6 +1539,7 @@ class _AddressState extends State<Address> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             addresseslist[index].address,
+                                            textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 16,

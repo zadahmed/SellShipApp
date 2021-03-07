@@ -88,12 +88,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
         final storeresponse = await http.get(storeurl);
         var storejsonbody = json.decode(storeresponse.body);
-        var storeid = storejsonbody[0]['_id']['\$oid'];
-        await storage.write(key: 'storeid', value: storeid);
-
-        if (jsondata['businessid'] != null) {
-          await storage.write(key: 'businessid', value: jsondata['businessid']);
+        print(storejsonbody);
+        if (storejsonbody.isNotEmpty) {
+          var storeid = storejsonbody[0]['_id']['\$oid'];
+          await storage.write(key: 'storeid', value: storeid);
         }
+
         print('Loggd in ');
         Navigator.of(context).pop();
         setState(() {
@@ -223,6 +223,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('seen', true);
             await storage.write(key: 'userid', value: jsondata['status']['id']);
+            var userid = await storage.read(key: 'userid');
+            var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
+            final storeresponse = await http.get(storeurl);
+            var storejsonbody = json.decode(storeresponse.body);
+            print(storejsonbody);
+            if (storejsonbody.isNotEmpty) {
+              var storeid = storejsonbody[0]['_id']['\$oid'];
+              await storage.write(key: 'storeid', value: storeid);
+            }
+
             Navigator.of(context).pop();
 
             Navigator.pushNamedAndRemoveUntil(
@@ -469,6 +479,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                                   key: 'userid',
                                                   value: jsondata['status']
                                                       ['id']);
+
+                                              var userid = await storage.read(
+                                                  key: 'userid');
+                                              var storeurl =
+                                                  'https://api.sellship.co/api/userstores/' +
+                                                      userid;
+                                              final storeresponse =
+                                                  await http.get(storeurl);
+                                              var storejsonbody = json
+                                                  .decode(storeresponse.body);
+                                              var storeid = storejsonbody[0]
+                                                  ['_id']['\$oid'];
+                                              await storage.write(
+                                                  key: 'storeid',
+                                                  value: storeid);
+
                                               Navigator.of(context).pop();
 
                                               Navigator.pushNamedAndRemoveUntil(

@@ -63,10 +63,11 @@ class _CheckoutState extends State<Checkout> {
         style: TextStyle(
           fontFamily: 'Helvetica',
           fontSize: 16,
+          fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.deepOrange,
       duration: Duration(seconds: 3),
     ));
   }
@@ -95,11 +96,11 @@ class _CheckoutState extends State<Checkout> {
             itemid: decodeditem['itemid'],
             price: decodeditem['price'].toString(),
             image: decodeditem['image'],
-            userid: decodeditem['userid'],
-            username: decodeditem['username']);
+            userid: decodeditem['sellerid'],
+            username: decodeditem['sellername']);
 
         subtotal = subtotal + double.parse(newItem.price);
-        print(subtotal);
+        print(newItem.itemid);
 
         listitems.add(newItem);
       }
@@ -544,6 +545,7 @@ class _CheckoutState extends State<Checkout> {
                         const EdgeInsets.only(left: 15, bottom: 10, right: 15),
                     child: Container(
                       child: InkWell(
+                        enableFeedback: true,
                         onTap: () async {
                           if (phonenumber == null || selectedaddress == null) {
                             showInSnackBar('Please choose your address');
@@ -615,6 +617,8 @@ class _CheckoutState extends State<Checkout> {
                                       builder: (context) => PaymentWeb(
                                             returnurl: returnurl,
                                             url: url,
+                                            itemid: listitems[0].itemid,
+                                            messageid: messageid,
                                           )));
                               print(result);
                             }
@@ -623,14 +627,13 @@ class _CheckoutState extends State<Checkout> {
                         child: Container(
                           height: 52,
                           decoration: BoxDecoration(
-                            color: Color.fromRGBO(255, 115, 0, 1),
+                            color: Colors.deepOrange,
                             borderRadius: const BorderRadius.all(
                               Radius.circular(25.0),
                             ),
                             boxShadow: <BoxShadow>[
                               BoxShadow(
-                                  color: Color.fromRGBO(255, 115, 0, 1)
-                                      .withOpacity(0.4),
+                                  color: Colors.deepOrange.withOpacity(0.4),
                                   offset: const Offset(1.1, 1.1),
                                   blurRadius: 10.0),
                             ],

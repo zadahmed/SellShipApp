@@ -960,11 +960,8 @@ class _ActivityState extends State<Activity>
                         )),
                   ];
                 },
-                body: TabBarView(controller: _tabController, children: [
-                  ActivityBuy(
-                    index: _tabController.index,
-                  ),
-                  ActivitySell()
-                ]))));
+                body: TabBarView(
+                    controller: _tabController,
+                    children: [ActivityBuy(), ActivitySell()]))));
   }
 }

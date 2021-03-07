@@ -1589,7 +1589,8 @@ class _ProfilePageState extends State<ProfilePage>
                                                       OrderBuyer(
                                                           messageid: item[index]
                                                               .description,
-                                                          item: item[index])),
+                                                          itemid: item[index]
+                                                              .itemid)),
                                             );
                                           }
                                         } else {
@@ -1616,9 +1617,11 @@ class _ProfilePageState extends State<ProfilePage>
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       OrderSeller(
-                                                          messageid: item[index]
-                                                              .description,
-                                                          item: item[index])),
+                                                          messageid:
+                                                              item[index]
+                                                                  .description,
+                                                          itemid: item[index]
+                                                              .itemid)),
                                             );
                                           }
                                         }
@@ -2715,27 +2718,73 @@ class _ProfilePageState extends State<ProfilePage>
                       ))
                   : Container(
                       child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            child: Image.asset(
+                              'assets/little_theologians_4x.png',
+                              fit: BoxFit.fitWidth,
+                            )),
                         SizedBox(
                           height: 10,
                         ),
                         Center(
                           child: Text(
-                              'Looks like you\'re the first one here! \n Don\'t be shy add an Item!',
+                              'Looks like you dont have a store setup. Let\'s get you started with your first store',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
+                                fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               )),
                         ),
                         SizedBox(
                           height: 5,
                         ),
-                        Expanded(
-                            child: Image.asset(
-                          'assets/little_theologians_4x.png',
-                          fit: BoxFit.fitWidth,
-                        ))
+                        InkWell(
+                          child: Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Container(
+                              height: 45,
+                              width: MediaQuery.of(context).size.width / 2,
+                              decoration: BoxDecoration(
+                                color: Colors.deepOrange,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(25.0),
+                                ),
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: Colors.deepOrange.withOpacity(0.4),
+                                      offset: const Offset(1.1, 1.1),
+                                      blurRadius: 5.0),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Create a Store',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                    letterSpacing: 0.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RootScreen(
+                                        index: 2,
+                                      )),
+                            );
+                          },
+                        ),
                       ],
                     ))),
         ]);

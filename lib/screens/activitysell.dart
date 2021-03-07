@@ -15,8 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:shimmer/shimmer.dart';
 
 class ActivitySell extends StatefulWidget {
-  final int index;
-  ActivitySell({Key key, this.index}) : super(key: key);
+  ActivitySell({Key key}) : super(key: key);
 
   @override
   _ActivitySellState createState() => new _ActivitySellState();
@@ -182,115 +181,6 @@ class _ActivitySellState extends State<ActivitySell>
   List<Item> buyingItem = new List<Item>();
   List<Item> sellingItem = new List<Item>();
 
-  Widget offerstatus(BuildContext context, offerstage, itemid, senderuserid,
-      recieveruserid, offerprice) {
-    if (offerstage == 0 && widget.index == 0) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                color: Color.fromRGBO(69, 80, 163, 1),
-                borderRadius: BorderRadius.circular(20)),
-            child: Center(
-                child: Text(
-              'Pending Offer',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
-            )),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
-        ],
-      );
-    } else if (offerstage == 2 && widget.index == 0) {
-      return Container(
-          width: 120,
-          height: 27,
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(20)),
-          child: Center(
-              child: Text(
-            'Pay',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
-          )));
-    } else if (offerstage == -1 && widget.index == 0) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(20)),
-            child: Center(
-                child: Text(
-              'Offer Declined',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
-            )),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
-        ],
-      );
-    } else if (offerstage == 1 && widget.index == 0) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Container(
-            width: 125,
-            height: 35,
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-                color: Color.fromRGBO(69, 80, 163, 1),
-                borderRadius: BorderRadius.circular(20)),
-            child: Center(
-                child: Text(
-              'Counteroffer',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
-            )),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          Icon(
-            Icons.chevron_right,
-            size: 20,
-            color: Colors.blueGrey,
-          )
-        ],
-      );
-    }
-  }
-
   Widget offerstatusseller(BuildContext context, offerstage, itemid,
       senderuserid, recieveruserid, offerprice) {
     print(offerstage);
@@ -298,7 +188,7 @@ class _ActivitySellState extends State<ActivitySell>
     print(senderuserid);
     print(recieveruserid);
     print(offerprice);
-    if (offerstage == 0 && widget.index == 1) {
+    if (offerstage == 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -328,7 +218,7 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == -1 && widget.index == 1) {
+    } else if (offerstage == -1) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -358,7 +248,7 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == 2 && widget.index == 1) {
+    } else if (offerstage == 2) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -388,7 +278,7 @@ class _ActivitySellState extends State<ActivitySell>
           )
         ],
       );
-    } else if (offerstage == 1 && widget.index == 1) {
+    } else if (offerstage == 1) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -402,6 +292,35 @@ class _ActivitySellState extends State<ActivitySell>
                 borderRadius: BorderRadius.circular(20)),
             child: Text(
               'Counteroffer Pending',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 20,
+            color: Colors.blueGrey,
+          )
+        ],
+      );
+    } else if (offerstage == 3) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            width: 120,
+            height: 47,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            decoration: BoxDecoration(
+                color: Color.fromRGBO(239, 190, 125, 1),
+                borderRadius: BorderRadius.circular(20)),
+            child: Text(
+              'Payment Completed',
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),

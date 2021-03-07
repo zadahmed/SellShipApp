@@ -400,7 +400,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                                 'united states') {
                                                                               Navigator.push(
                                                                                 context,
-                                                                                MaterialPageRoute(builder: (context) => OrderBuyer(messageid: item[index].description, item: item[index])),
+                                                                                MaterialPageRoute(builder: (context) => OrderBuyer(messageid: item[index].description, itemid: item[index].itemid)),
                                                                               );
                                                                             }
                                                                           },
@@ -696,7 +696,7 @@ class OrdersScreenState extends State<OrdersScreen>
                                                                                 'united states') {
                                                                               Navigator.push(
                                                                                 context,
-                                                                                MaterialPageRoute(builder: (context) => OrderSeller(messageid: sellingitem[index].description, item: sellingitem[index])),
+                                                                                MaterialPageRoute(builder: (context) => OrderSeller(messageid: sellingitem[index].description, itemid: sellingitem[index].itemid)),
                                                                               );
                                                                             }
                                                                           },

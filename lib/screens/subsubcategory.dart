@@ -29,18 +29,18 @@ import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/details.dart';
 import 'package:shimmer/shimmer.dart';
 
-class SubCategory extends StatefulWidget {
+class SubSubCategory extends StatefulWidget {
   final String subcategory;
   final String categoryimage;
 
-  SubCategory({Key key, this.subcategory, this.categoryimage})
+  SubSubCategory({Key key, this.subcategory, this.categoryimage})
       : super(key: key);
 
   @override
-  _SubCategoryState createState() => _SubCategoryState();
+  _SubSubCategoryState createState() => _SubSubCategoryState();
 }
 
-class _SubCategoryState extends State<SubCategory> {
+class _SubSubCategoryState extends State<SubSubCategory> {
   List<Item> itemsgrid = [];
 
   var categoryimage;
@@ -136,7 +136,7 @@ class _SubCategoryState extends State<SubCategory> {
       });
     }
 
-    var url = 'https://api.sellship.co/api/home/subcategories/' +
+    var url = 'https://api.sellship.co/api/home/subsubcategories/' +
         subcategory +
         '/' +
         country +
@@ -998,7 +998,7 @@ class _SubCategoryState extends State<SubCategory> {
       skip = skip + 20;
     });
 
-    var url = 'https://api.sellship.co/api/home/subcategories/' +
+    var url = 'https://api.sellship.co/api/home/subsubcategories/' +
         subcategory +
         '/' +
         country +

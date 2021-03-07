@@ -41,6 +41,29 @@ class CreateStore extends StatefulWidget {
 class _CreateStoreState extends State<CreateStore> {
   String userid;
   String storename;
+  var phonenumber;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontFamily: 'Helvetica',
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.deepOrange,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
+  AddressModel selectedaddress;
 
   @override
   void initState() {
@@ -74,6 +97,7 @@ class _CreateStoreState extends State<CreateStore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
@@ -131,7 +155,7 @@ class _CreateStoreState extends State<CreateStore> {
                   height: 200,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Colors.blueGrey.shade50,
+                    color: Colors.grey.shade50,
                   ),
                   width: MediaQuery.of(context).size.width - 250,
                   child: GestureDetector(
@@ -222,7 +246,7 @@ class _CreateStoreState extends State<CreateStore> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: TextField(
-                        maxLines: 100,
+                        maxLines: 10,
                         onChanged: (text) {},
                         controller: usernamecontroller,
                         cursorColor: Colors.black,
@@ -241,6 +265,91 @@ class _CreateStoreState extends State<CreateStore> {
                 )),
           ),
           FadeAnimation(
+              1,
+              Padding(
+                  padding: EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 140,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          width: MediaQuery.of(context).size.width - 80,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(131, 146, 165, 0.1),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width / 3,
+                                child: Text(
+                                  'Delivery Pick-Up Address',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                              Expanded(
+                                child: InkWell(
+                                    onTap: () async {
+                                      final addressresult =
+                                          await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Address()),
+                                      );
+                                      if (addressresult != null) {
+                                        setState(() {
+                                          selectedaddress =
+                                              addressresult['address'];
+                                          phonenumber =
+                                              addressresult['phonenumber'];
+                                        });
+                                      } else {
+                                        setState(() {
+                                          selectedaddress = null;
+                                          phonenumber = null;
+                                        });
+                                      }
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            selectedaddress == null
+                                                ? 'Choose Address'
+                                                : selectedaddress.address,
+                                            textAlign: TextAlign.right,
+                                            style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 16,
+                                              color: Colors.blueGrey,
+                                            ),
+                                          ),
+                                        ),
+                                        Icon(
+                                          Icons.chevron_right,
+                                          size: 16,
+                                          color: Colors.blueGrey,
+                                        )
+                                      ],
+                                    )),
+                              ),
+                            ],
+                          ),
+                        )
+                      ]))),
+          FadeAnimation(
             1,
             Padding(
               padding: EdgeInsets.only(left: 36, top: 20, right: 36),
@@ -250,34 +359,51 @@ class _CreateStoreState extends State<CreateStore> {
                   children: [
                     InkWell(
                       onTap: () async {
-                        if (widget.category == 'Secondhand Seller') {
-                          //move to store page. create a store and move to store page.
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateLayout(
-                                  userid: widget.userid,
-                                  username: widget.username,
-                                  storename: widget.storename,
-                                  storelogo: _image,
-                                  storecategory: widget.category,
-                                  storeabout: usernamecontroller.text,
-                                ),
-                              ));
+                        if (widget.storetype == 'Secondhand Seller') {
+                          if (selectedaddress == null ||
+                              _image == null ||
+                              usernamecontroller.text.isEmpty) {
+                            showInSnackBar(
+                                'Looks like something is missing. Please ensure all your store information has been entered');
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateLayout(
+                                    userid: widget.userid,
+                                    username: widget.username,
+                                    storename: widget.storename,
+                                    storelogo: _image,
+                                    storecategory: widget.category,
+                                    storeabout: usernamecontroller.text,
+                                    storeaddress: selectedaddress.address,
+                                    storetype: widget.storetype,
+                                  ),
+                                ));
+                          }
                         } else {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateLayout(
-                                  userid: widget.userid,
-                                  username: widget.username,
-                                  storetype: widget.storetype,
-                                  storename: widget.storename,
-                                  storelogo: _image,
-                                  storecategory: widget.category,
-                                  storeabout: usernamecontroller.text,
-                                ),
-                              ));
+                          if (selectedaddress == null ||
+                              _image == null ||
+                              usernamecontroller.text.isEmpty) {
+                            showInSnackBar(
+                                'Looks like something is missing. Please ensure all your store information has been entered');
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateLayout(
+                                    userid: widget.userid,
+                                    username: widget.username,
+                                    storetype: widget.storetype,
+                                    storename: widget.storename,
+                                    storelogo: _image,
+                                    storecategory: widget.category,
+                                    storeabout: usernamecontroller.text,
+                                    storeaddress: selectedaddress.address,
+                                    storecity: selectedaddress.city,
+                                  ),
+                                ));
+                          }
                         }
                       },
                       child: Container(

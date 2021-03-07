@@ -1,16 +1,18 @@
 import 'dart:io';
+import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/models/Items.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentWeb extends StatefulWidget {
   String url;
   String returnurl;
+  String itemid;
+  String messageid;
 
-  PaymentWeb({
-    Key key,
-    this.url,
-    this.returnurl,
-  }) : super(key: key);
+  PaymentWeb({Key key, this.url, this.returnurl, this.itemid, this.messageid})
+      : super(key: key);
 
   @override
   PaymentWebState createState() => PaymentWebState();
@@ -61,10 +63,18 @@ class PaymentWebState extends State<PaymentWeb> {
             print(consoleMessage.message);
           },
           onLoadStart: (InAppWebViewController controller, String url) {},
-          onLoadStop: (InAppWebViewController controller, String url) {
+          onLoadStop: (InAppWebViewController controller, String url) async {
             if (url.substring(0, 20) == widget.returnurl.substring(0, 20)) {
-              print('Nop');
-              Navigator.pop(context, 'Done');
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.remove('cartitems');
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OrderBuyer(
+                          itemid: widget.itemid,
+                          messageid: widget.messageid,
+                        )),
+              );
             }
           },
           androidOnPermissionRequest: (InAppWebViewController controller,

@@ -3,15 +3,20 @@ import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/screens/CommentsDetail.dart';
+import 'package:SellShip/screens/brand.dart';
 import 'package:SellShip/screens/categorydynamic.dart';
 import 'package:SellShip/screens/chatpageview.dart';
 import 'package:SellShip/screens/checkout.dart';
 import 'package:SellShip/screens/comments.dart';
+import 'package:SellShip/screens/condition.dart';
 import 'package:SellShip/screens/profile.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:SellShip/screens/size.dart';
 import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
+import 'package:SellShip/screens/subcategory.dart';
+import 'package:SellShip/screens/subsubcategory.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +28,7 @@ import 'package:flutter_native_admob/flutter_native_admob.dart';
 import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:jiffy/jiffy.dart';
@@ -130,6 +136,7 @@ class _DetailsState extends State<Details> {
 
       sold = widget.sold;
     });
+
     getsimilaritems();
     getfavourites();
     fetchItem();
@@ -138,6 +145,7 @@ class _DetailsState extends State<Details> {
   getcategory() async {
     var url = "https://api.sellship.co/api/category/" + newItem.category;
     final response = await http.get(url);
+    print(response.statusCode);
 
     var jsonbody = json.decode(response.body);
 
@@ -397,6 +405,12 @@ class _DetailsState extends State<Details> {
                               final response = await http.get(itemurl);
 
                               if (response.statusCode == 200) {
+                                showInSnackBar(
+                                    'Awesome! You made an offer for ' +
+                                        newItem.name +
+                                        ' for ' +
+                                        currency +
+                                        newItem.price);
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               } else {
@@ -617,6 +631,8 @@ class _DetailsState extends State<Details> {
         image3: jsonbody[0]['image3'],
         image4: jsonbody[0]['image4'],
         image5: jsonbody[0]['image5'],
+        sellerid: jsonbody[0]['selleruserid'],
+        sellername: jsonbody[0]['sellerusername'],
         sold: jsonbody[0]['sold'] == null ? false : jsonbody[0]['sold'],
         likes: jsonbody[0]['likes'] == null ? 0 : jsonbody[0]['likes'],
         city: jsonbody[0]['city'],
@@ -676,7 +692,7 @@ class _DetailsState extends State<Details> {
 
     getfavourites();
     getuserDetails(jsonbody[0]['userid']);
-
+    getcategory();
     return newItem;
   }
 
@@ -1083,6 +1099,20 @@ class _DetailsState extends State<Details> {
                                   child: Wrap(
                                     children: [
                                       InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CategoryDetail(
+                                                      category:
+                                                          newItem.category,
+                                                      categoryimage:
+                                                          categoryimage,
+                                                      subcategory: subcategory,
+                                                    )),
+                                          );
+                                        },
                                         child: Text(
                                           newItem.category,
                                           textAlign: TextAlign.left,
@@ -1111,6 +1141,19 @@ class _DetailsState extends State<Details> {
                                         width: 2,
                                       ),
                                       InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    SubCategory(
+                                                      subcategory:
+                                                          newItem.subcategory,
+                                                      categoryimage:
+                                                          newItem.image,
+                                                    )),
+                                          );
+                                        },
                                         child: Text(
                                           newItem.subcategory,
                                           textAlign: TextAlign.left,
@@ -1139,6 +1182,19 @@ class _DetailsState extends State<Details> {
                                         width: 2,
                                       ),
                                       InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    SubSubCategory(
+                                                      subcategory: newItem
+                                                          .subsubcategory,
+                                                      categoryimage:
+                                                          newItem.image,
+                                                    )),
+                                          );
+                                        },
                                         child: Text(
                                           newItem.subsubcategory,
                                           textAlign: TextAlign.left,
@@ -1291,16 +1347,31 @@ class _DetailsState extends State<Details> {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
-                                                width: 200,
-                                                child: Text(
-                                                  newItem.condition.toString(),
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    color: Colors.deepOrange,
-                                                    fontWeight: FontWeight.w500,
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    CupertinoPageRoute(
+                                                        builder: (context) =>
+                                                            Condition(
+                                                              condition: newItem
+                                                                  .condition,
+                                                            )),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: 200,
+                                                  child: Text(
+                                                    newItem.condition
+                                                        .toString(),
+                                                    textAlign: TextAlign.right,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.deepOrange,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -1344,16 +1415,30 @@ class _DetailsState extends State<Details> {
                                                   ),
                                                 ],
                                               ),
-                                              Container(
-                                                width: 200,
-                                                child: Text(
-                                                  newItem.brand.toString(),
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    color: Colors.deepOrange,
-                                                    fontWeight: FontWeight.w500,
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    CupertinoPageRoute(
+                                                        builder: (context) =>
+                                                            Brand(
+                                                              brand:
+                                                                  newItem.brand,
+                                                            )),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: 200,
+                                                  child: Text(
+                                                    newItem.brand.toString(),
+                                                    textAlign: TextAlign.right,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 16,
+                                                      color: Colors.deepOrange,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -1374,30 +1459,67 @@ class _DetailsState extends State<Details> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: <Widget>[
-                                                    Icon(
-                                                      Icons
-                                                          .signal_cellular_null,
-                                                      color: Color.fromRGBO(
-                                                          60, 72, 88, 1),
-                                                      size: 18,
+                                                    Row(
+                                                      children: [
+                                                        Icon(
+                                                          FontAwesomeIcons
+                                                              .tshirt,
+                                                          color: Color.fromRGBO(
+                                                              60, 72, 88, 1),
+                                                          size: 18,
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          'Size',
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    60,
+                                                                    72,
+                                                                    88,
+                                                                    1),
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                    SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Container(
-                                                      width: 200,
-                                                      child: Text(
-                                                        newItem.size.toString(),
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                        style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 16,
-                                                          color:
-                                                              Colors.deepOrange,
-                                                          fontWeight:
-                                                              FontWeight.w500,
+                                                    InkWell(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          CupertinoPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      Size(
+                                                                        size: newItem
+                                                                            .size,
+                                                                      )),
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        width: 200,
+                                                        child: Text(
+                                                          newItem.size
+                                                              .toString(),
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color: Colors
+                                                                .deepOrange,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -1425,43 +1547,39 @@ class _DetailsState extends State<Details> {
                                         child: ListTile(
                                             onTap: () {
                                               showModalBottomSheet(
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.vertical(
-                                                              top: Radius
-                                                                  .circular(
-                                                                      25.0))),
-                                                  backgroundColor: Colors.white,
+                                                  backgroundColor: Color(
+                                                      0xFF737373),
                                                   context: context,
                                                   isScrollControlled: true,
                                                   builder: (context) =>
                                                       Container(
-                                                          height: 700,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.only(
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          20))),
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height /
+                                                              2,
+                                                          padding: EdgeInsets
+                                                              .only(
+                                                                  left: 10,
+                                                                  right: 10,
+                                                                  top: 20),
+                                                          decoration: new BoxDecoration(
+                                                              color: Colors
+                                                                  .white,
+                                                              borderRadius: new BorderRadius
+                                                                      .only(
+                                                                  topLeft:
+                                                                      const Radius.circular(
+                                                                          20.0),
+                                                                  topRight:
+                                                                      const Radius.circular(
+                                                                          20.0))),
                                                           child: Scaffold(
+                                                            backgroundColor:
+                                                                Colors.white,
                                                             body: ListView(
                                                               children: <
                                                                   Widget>[
-                                                                Container(
-                                                                  height: 260,
-                                                                  decoration:
-                                                                      new BoxDecoration(
-                                                                    image:
-                                                                        new DecorationImage(
-                                                                      image: new ExactAssetImage(
-                                                                          'assets/secure.png'),
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 10,
-                                                                ),
                                                                 ListTile(
                                                                   title: Text(
                                                                     'Buyer Protection',
@@ -1494,13 +1612,16 @@ class _DetailsState extends State<Details> {
                                                                           'Helvetica',
                                                                       fontSize:
                                                                           16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
                                                                       color: Colors
                                                                           .black,
                                                                     ),
                                                                   ),
                                                                   subtitle:
                                                                       Text(
-                                                                    'All transcations within SellShip are secured and encrypted and kept safe using our trusted payment provider Stripe. Payment information is not available to sellers nor stored by us.',
+                                                                    'All transcations within SellShip are secure and encrypted.',
                                                                     style:
                                                                         TextStyle(
                                                                       fontFamily:

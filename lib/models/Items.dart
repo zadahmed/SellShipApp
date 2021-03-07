@@ -100,6 +100,8 @@ class Item {
         'userid': userid,
         'price': price,
         'username': username,
+        'sellerid': sellerid,
+        'sellername': sellername,
       };
 
   int compareTo(Item other) {

@@ -308,39 +308,39 @@ class _CommentsPageState extends State<CommentsPage> {
                                 ],
                               ));
                         }))
-                : GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Center(
-                          child: Text(
-                            'No comments ',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              color: Colors.grey,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                            child: Image.asset(
-                          'assets/messages.png',
-                          fit: BoxFit.fitWidth,
-                        ))
-                      ],
+                : Center(
+                    child: SpinKitDoubleBounce(
+                    color: Colors.deepOrange,
+                  ))
+            : GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 15,
                     ),
-                  )
-            : Center(
-                child: SpinKitDoubleBounce(
-                color: Colors.deepOrange,
-              )),
+                    Center(
+                      child: Text(
+                        'No comments ',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        child: Image.asset(
+                      'assets/messages.png',
+                      fit: BoxFit.fitWidth,
+                    ))
+                  ],
+                ),
+              ),
         bottomNavigationBar: Padding(
           padding:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),

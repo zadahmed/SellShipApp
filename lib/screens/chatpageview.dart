@@ -23,6 +23,7 @@ import 'package:flutter_easyrefresh/phoenix_header.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 
 import 'package:http/http.dart' as http;
@@ -347,36 +348,89 @@ class _ChatPageViewState extends State<ChatPageView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.deepPurpleAccent.withOpacity(0.2)),
-                      color: Colors.deepPurpleAccent.withOpacity(0.2),
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
-                    ),
-                    height: 40,
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.delivery_dining,
-                            color: Colors.deepPurpleAccent, size: 16),
-                        SizedBox(width: 5),
-                        Text(
-                          'Picking up Delivery',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: Colors.deepPurpleAccent,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )))),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color:
+                                    Colors.deepPurpleAccent.withOpacity(0.2)),
+                            color: Colors.deepPurpleAccent.withOpacity(0.2),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          height: 40,
+                          child: Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.delivery_dining,
+                                  color: Colors.deepPurpleAccent, size: 16),
+                              SizedBox(width: 5),
+                              Text(
+                                'Picking up Delivery',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          )))),
+                ),
+                Expanded(
+                  child: InkWell(
+                      enableFeedback: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderBuyer(
+                                    itemid: widget.itemid,
+                                    messageid: widget.messageid,
+                                  )),
+                        );
+                      },
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 5, right: 20, top: 10, bottom: 10),
+                          child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Colors.black.withOpacity(0.2)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                              height: 40,
+                              child: Center(
+                                  child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(FontAwesomeIcons.receipt,
+                                      color: Colors.black, size: 16),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'View Order',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ))))),
+                ),
+              ],
+            )
           ],
         ),
       );

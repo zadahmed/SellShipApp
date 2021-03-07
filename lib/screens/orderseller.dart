@@ -20,9 +20,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 class OrderSeller extends StatefulWidget {
   String messageid;
-  Item item;
+  String itemid;
 
-  OrderSeller({Key key, this.messageid, this.item}) : super(key: key);
+  OrderSeller({Key key, this.messageid, this.itemid}) : super(key: key);
   @override
   _OrderSellerState createState() => _OrderSellerState();
 }
@@ -35,7 +35,7 @@ class _OrderSellerState extends State<OrderSeller> {
   var state;
   var paymentby;
   var payment;
-
+  String itemid;
   var deliveryaddress;
 
   var zipcode;
@@ -48,7 +48,7 @@ class _OrderSellerState extends State<OrderSeller> {
 
     setState(() {
       loading = true;
-      item = widget.item;
+      itemid = widget.itemid;
       messageid = widget.messageid;
     });
     getDetails();

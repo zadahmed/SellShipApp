@@ -90,7 +90,7 @@ class _PaymentDoneState extends State<PaymentDone> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => OrderBuyer(
-                            item: item,
+                            itemid: item.itemid,
                             messageid: messageid,
                           )),
                 );

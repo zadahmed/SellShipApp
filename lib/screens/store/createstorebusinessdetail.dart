@@ -43,12 +43,33 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
   var storetype;
   var storecategory;
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontFamily: 'Helvetica',
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.deepOrange,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
   TextEditingController storenamecontroller = TextEditingController();
   TextEditingController usernamecontroller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: InkWell(
@@ -98,7 +119,7 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                   EdgeInsets.only(left: 56.0, bottom: 10, top: 20, right: 36),
               child: Center(
                 child: Text(
-                  "Tell us more about " + widget.storename,
+                  "Tell us more about @" + widget.storename,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 30.0,
@@ -243,17 +264,26 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                   children: [
                     InkWell(
                       onTap: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateStore(
-                                userid: widget.userid,
-                                username: widget.username,
-                                storename: widget.storename,
-                                storetype: storetype,
-                                category: storecategory,
-                              ),
-                            ));
+                        if (storetype == null) {
+                          showInSnackBar('Please choose your store type');
+                        } else {
+                          if (storetype != 'Secondhand Seller' &&
+                              storecategory == null) {
+                            showInSnackBar('Please choose your store category');
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateStore(
+                                    userid: widget.userid,
+                                    username: widget.username,
+                                    storename: widget.storename,
+                                    storetype: storetype,
+                                    category: storecategory,
+                                  ),
+                                ));
+                          }
+                        }
                       },
                       child: Container(
                         height: 60,
