@@ -113,7 +113,6 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
 
     finalfees = fees - weightfees;
 
-
     setState(() {
       finalfees = finalfees;
     });
@@ -1081,7 +1080,12 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Details(
-                                                itemid: itemselling.itemid)),
+                                                  itemid: widget.itemid,
+                                                  name: widget.itemname,
+                                                  sold: itemselling.sold,
+                                                  source: 'chat',
+                                                  image: widget.itemimage,
+                                                )),
                                       );
                                     },
                                     child: Container(

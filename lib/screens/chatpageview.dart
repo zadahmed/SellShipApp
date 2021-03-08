@@ -4,11 +4,13 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/checkout.dart';
+import 'package:SellShip/screens/checkoutoffer.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/orderbuyer.dart';
 import 'package:SellShip/screens/orderbuyeruae.dart';
 import 'package:SellShip/screens/orderseller.dart';
 import 'package:SellShip/screens/orderselleruae.dart';
+import 'package:SellShip/screens/paymentweb.dart';
 import 'package:SellShip/screens/rootscreen.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -21,6 +23,7 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_easyrefresh/material_header.dart';
 import 'package:flutter_easyrefresh/phoenix_header.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,6 +31,7 @@ import 'package:giffy_dialog/giffy_dialog.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatPageView extends StatefulWidget {
   final String recipentname;
@@ -178,6 +182,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                             },
                             child: Container(
                                 decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black.withOpacity(0.2)),
                                     borderRadius: BorderRadius.circular(15),
                                     color: Colors.white),
                                 height: 40,
@@ -211,6 +217,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                             },
                             child: Container(
                                 decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black.withOpacity(0.2)),
                                     borderRadius: BorderRadius.circular(15),
                                     color: Colors.white),
                                 height: 40,
@@ -247,7 +255,24 @@ class _ChatPageViewState extends State<ChatPageView> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: InkWell(
-                        onTap: () {},
+                        enableFeedback: true,
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          prefs.remove('cartitems');
+
+                          String item = jsonEncode(itemselling);
+                          prefs.setStringList('cartitems', [item]);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CheckoutOffer(
+                                    itemid: itemselling.itemid,
+                                    offer: widget.offer,
+                                    messageid: widget.messageid)),
+                          );
+                        },
                         child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -315,6 +340,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                   },
                   child: Container(
                       decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Colors.black.withOpacity(0.2)),
                           borderRadius: BorderRadius.circular(15),
                           color: Colors.white),
                       height: 40,
@@ -373,7 +400,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   color: Colors.deepPurpleAccent, size: 16),
                               SizedBox(width: 5),
                               Text(
-                                'Picking up Delivery',
+                                'Order Completed',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.deepPurpleAccent,
@@ -1043,7 +1070,12 @@ class _ChatPageViewState extends State<ChatPageView> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => Details(
-                                                itemid: itemselling.itemid)),
+                                                  itemid: widget.itemid,
+                                                  name: widget.itemname,
+                                                  sold: itemselling.sold,
+                                                  source: 'chat',
+                                                  image: widget.itemimage,
+                                                )),
                                       );
                                     },
                                     child: Container(
