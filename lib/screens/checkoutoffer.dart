@@ -551,6 +551,16 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                           if (phonenumber == null || selectedaddress == null) {
                             showInSnackBar('Please choose your address');
                           } else {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                useRootNavigator: false,
+                                builder: (_) => Container(
+                                    height: 50,
+                                    width: 50,
+                                    child: SpinKitDoubleBounce(
+                                      color: Colors.deepOrange,
+                                    )));
                             var uuid = uuidGenerator.v1();
                             var trref = ('SS' + uuid);
 
@@ -611,7 +621,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
 
                               var url = jsonmessage['result']['checkoutData']
                                   ['postUrl'];
-                              print(url);
+                              Navigator.of(context, rootNavigator: true).pop();
                               final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(

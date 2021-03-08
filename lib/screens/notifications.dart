@@ -247,28 +247,29 @@ class _NotifcationPageState extends State<NotifcationPage>
                                         height: 60,
                                         width: 60,
                                         child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          child: CachedNetworkImage(
-                                            height: 200,
-                                            width: 300,
-                                            fadeInDuration:
-                                                Duration(microseconds: 5),
-                                            imageUrl: notifs[index]
-                                                    .image
-                                                    .isEmpty
-                                                ? SpinKitDoubleBounce(
-                                                    color: Colors.deepOrange)
-                                                : notifs[index].image,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                SpinKitDoubleBounce(
-                                                    color: Colors.deepOrange),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Icon(Icons.error),
-                                          ),
-                                        )),
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            child: notifs[index].image.isEmpty
+                                                ? CachedNetworkImage(
+                                                    height: 200,
+                                                    width: 300,
+                                                    fadeInDuration: Duration(
+                                                        microseconds: 5),
+                                                    imageUrl:
+                                                        notifs[index].image,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        SpinKitDoubleBounce(
+                                                            color: Colors
+                                                                .deepOrange),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
+                                                  )
+                                                : SpinKitDoubleBounce(
+                                                    color: Colors.deepOrange,
+                                                  ))),
                                     trailing: Icon(
                                       Icons.chevron_right,
                                       size: 20,

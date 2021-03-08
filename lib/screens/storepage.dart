@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/controllers/expandabletext.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/stores.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -943,13 +944,9 @@ class _StoreState extends State<Store> {
                     Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 18.0, vertical: 5.0),
-                        child: Text(
+                        child: ExpandableText(
                           mystore.storebio,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 14.0,
-                              color: Colors.black),
+                          trimLines: 2,
                         )),
                   ]))
                 ];

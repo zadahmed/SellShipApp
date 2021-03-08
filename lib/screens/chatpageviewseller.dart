@@ -153,12 +153,14 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                 color: Colors.white, size: 16),
                             SizedBox(width: 5),
                             Text(
-                              'You Earn ' + currency + finalfees.toString(),
+                              'You Earn ' +
+                                  currency +
+                                  finalfees.toStringAsFixed(2),
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                              ),
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
                             )
                           ],
                         ))))
@@ -174,6 +176,8 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                         child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                    color: Colors.black.withOpacity(0.2)),
                                 color: Colors.white),
                             height: 40,
                             width: MediaQuery.of(context).size.width / 2 - 20,
@@ -187,6 +191,10 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                 Text(
                                   'Accept Offer',
                                   textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 )
                               ],
                             ))))),
@@ -209,6 +217,8 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                         child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                    color: Colors.black.withOpacity(0.2)),
                                 color: Colors.white),
                             height: 40,
                             width: MediaQuery.of(context).size.width / 2 - 20,
@@ -222,6 +232,10 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                 Text(
                                   'Cancel Offer',
                                   textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 )
                               ],
                             ))))),
@@ -236,6 +250,8 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                     child: Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                                color: Colors.black.withOpacity(0.2)),
                             color: Colors.white),
                         height: 40,
                         width: MediaQuery.of(context).size.width,
@@ -249,6 +265,10 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                             Text(
                               'Counter Offer',
                               textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
                             )
                           ],
                         ))))),
@@ -285,6 +305,10 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                         Text(
                           'Pending Payment',
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
                         )
                       ],
                     )))),
@@ -419,6 +443,10 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                         Text(
                           'Pending Payment',
                           textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
                         )
                       ],
                     )))),
@@ -581,6 +609,81 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                     ),
                   ],
                 ))));
+      } else if (jsonResponse[i]['sender'] == 'SELLSHIP') {
+        final f = new DateFormat('hh:mm');
+        DateTime date = new DateTime.fromMillisecondsSinceEpoch(
+            jsonResponse[i]['date']['\$date']);
+        var s = f.format(date);
+
+        childList.add(Padding(
+            padding: const EdgeInsets.only(
+                right: 8.0, left: 8.0, top: 4.0, bottom: 4.0),
+            child: Container(
+                alignment: Alignment.center,
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: Image.asset(
+                            'assets/logonew.png',
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 3 / 4,
+                                minWidth: 100),
+                            padding: EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                border: Border.all(
+                                  style: BorderStyle.solid,
+                                  color: Colors.grey.shade300,
+                                )),
+                            child: Stack(children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 2.0, left: 2.0),
+                                child: Text(jsonResponse[i]['message'],
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black)),
+                              ),
+                            ]),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              s,
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 12,
+                                  color: Colors.black.withOpacity(0.6)),
+                            ),
+                          ),
+                        ],
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                      ),
+                    ]))));
       } else {
         final f = new DateFormat('hh:mm');
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
@@ -829,7 +932,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                       color: Colors.deepOrange,
                                     )));
                             var recieverid = widget.recipentid;
-                            if (recieverid != userid) {
+                            if (recieverid == userid) {
                               var itemurl =
                                   'https://api.sellship.co/api/counteroffer/' +
                                       widget.messageid +
@@ -850,11 +953,13 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                   itemprice = offercontroller.text.trim();
                                 });
                                 Navigator.pop(context);
-                                Navigator.pop(context);
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
                               } else {
                                 print(response.statusCode);
                                 Navigator.pop(context);
-                                Navigator.pop(context);
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
                               }
                             } else {
                               showDialog(
@@ -955,7 +1060,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
           widget.recipentid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
         setState(() {
           offerstage = 1;
         });
@@ -977,7 +1082,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
       final response = await http.get(url);
       print(response.statusCode);
       if (response.statusCode == 200) {
-        Navigator.pop(context);
+        Navigator.of(context, rootNavigator: true).pop();
         print('Success');
         setState(() {
           offerstage = -1;

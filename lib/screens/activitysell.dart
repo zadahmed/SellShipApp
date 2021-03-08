@@ -154,6 +154,41 @@ class _ActivitySellState extends State<ActivitySell>
       if (itemmap != null) {
         print(itemmap);
         for (var i = 0; i < itemmap.length; i++) {
+          var buyerid;
+          if (itemmap[i]['buyerid'].containsKey('\$oid')) {
+            buyerid = itemmap[i]['buyerid']['\$oid'];
+          } else {
+            buyerid = itemmap[i]['buyerid'];
+          }
+
+          var buyername;
+          if (itemmap[i].containsKey('buyername')) {
+            buyername = itemmap[i]['buyername'];
+          } else {
+            buyername = 'Unknown';
+          }
+
+          var sellerid;
+          if (itemmap[i]['sellerid'].containsKey('\$oid')) {
+            sellerid = itemmap[i]['sellerid']['\$oid'];
+          } else {
+            sellerid = itemmap[i]['sellerid'];
+          }
+
+          var date;
+          if (itemmap[i]['offerdate'].containsKey('\$date')) {
+            date = itemmap[i]['offerdate']['\$date'];
+          } else {
+            date = 0;
+          }
+
+          var sellername;
+          if (itemmap[i].containsKey('sellername')) {
+            sellername = itemmap[i]['sellername'];
+          } else {
+            buyername = 'Unknown';
+          }
+
           Item ite = Item(
               itemid: itemmap[i]['item']['_id']['\$oid'],
               name: itemmap[i]['item']['name'],
@@ -162,13 +197,15 @@ class _ActivitySellState extends State<ActivitySell>
               price: itemmap[i]['offer'].toString(),
               messageid: itemmap[i]['messageid'].toString(),
               offerstage: itemmap[i]['offerstage'],
-              buyerid: itemmap[i]['buyerid']['\$oid'].toString(),
-              buyername: itemmap[i]['buyername'],
-              sellername: itemmap[i]['sellername'],
-              sellerid: itemmap[i]['sellerid']['\$oid'].toString(),
+              buyerid: buyerid,
+              date: date.toString(),
+              buyername: buyername,
+              sellername: sellername,
+              sellerid: sellerid,
               sold: itemmap[i]['item']['sold']);
           ites.add(ite);
         }
+        ites.sort((a, b) => int.parse(b.date).compareTo((int.parse(a.date))));
         if (mounted) print(ites.length);
         setState(() {
           sellingItem = ites;
@@ -228,8 +265,7 @@ class _ActivitySellState extends State<ActivitySell>
             height: 35,
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(20)),
+                color: Colors.red, borderRadius: BorderRadius.circular(20)),
             child: Center(
                 child: Text(
               'Offer Declined',
@@ -255,11 +291,10 @@ class _ActivitySellState extends State<ActivitySell>
         children: [
           Container(
             width: 120,
-            height: 27,
+            height: 45,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-                color: Color.fromRGBO(239, 190, 125, 1),
-                borderRadius: BorderRadius.circular(20)),
+                color: Colors.amber, borderRadius: BorderRadius.circular(20)),
             child: Center(
                 child: Text(
               'Payment Pending',
@@ -317,7 +352,7 @@ class _ActivitySellState extends State<ActivitySell>
             height: 47,
             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             decoration: BoxDecoration(
-                color: Color.fromRGBO(239, 190, 125, 1),
+                color: Colors.deepOrange,
                 borderRadius: BorderRadius.circular(20)),
             child: Text(
               'Payment Completed',

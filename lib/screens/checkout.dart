@@ -96,8 +96,12 @@ class _CheckoutState extends State<Checkout> {
             itemid: decodeditem['itemid'],
             price: decodeditem['price'].toString(),
             image: decodeditem['image'],
-            userid: decodeditem['sellerid'],
-            username: decodeditem['sellername']);
+            userid: decodeditem['sellerid'] == null
+                ? decodeditem['userid']
+                : decodeditem['sellerid'],
+            username: decodeditem['sellername'] == null
+                ? decodeditem['username']
+                : decodeditem['sellername']);
 
         subtotal = subtotal + double.parse(newItem.price);
         print(newItem.itemid);
@@ -531,7 +535,7 @@ class _CheckoutState extends State<Checkout> {
                             color: Colors.black45,
                           ),
                         ),
-                        Text(currency + ' ' + subtotal.toString(),
+                        Text('AED' + ' ' + subtotal.toString(),
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
                               fontSize: 20,
@@ -550,6 +554,16 @@ class _CheckoutState extends State<Checkout> {
                           if (phonenumber == null || selectedaddress == null) {
                             showInSnackBar('Please choose your address');
                           } else {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                useRootNavigator: false,
+                                builder: (_) => Container(
+                                    height: 50,
+                                    width: 50,
+                                    child: SpinKitDoubleBounce(
+                                      color: Colors.deepOrange,
+                                    )));
                             var uuid = uuidGenerator.v1();
                             var trref = ('SS' + uuid);
 
@@ -610,7 +624,8 @@ class _CheckoutState extends State<Checkout> {
 
                               var url = jsonmessage['result']['checkoutData']
                                   ['postUrl'];
-                              print(url);
+
+                              Navigator.of(context, rootNavigator: true).pop();
                               final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(

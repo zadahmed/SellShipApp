@@ -95,7 +95,6 @@ class _ActivityBuyState extends State<ActivityBuy>
 
       if (itemmap != null) {
         for (var i = 0; i < itemmap.length; i++) {
-          print(itemmap[i]);
           var buyerid;
           if (itemmap[i]['buyerid'].containsKey('\$oid')) {
             buyerid = itemmap[i]['buyerid']['\$oid'];
@@ -107,7 +106,7 @@ class _ActivityBuyState extends State<ActivityBuy>
           if (itemmap[i].containsKey('buyername')) {
             buyername = itemmap[i]['buyername'];
           } else {
-            buyername = 's';
+            buyername = 'Unknown';
           }
 
           var sellerid;
@@ -117,11 +116,20 @@ class _ActivityBuyState extends State<ActivityBuy>
             sellerid = itemmap[i]['sellerid'];
           }
 
+          var date;
+          if (itemmap[i]['offerdate'].containsKey('\$date')) {
+            date = itemmap[i]['offerdate']['\$date'];
+          } else {
+            date = 0;
+          }
+
+          print(date);
+
           var sellername;
           if (itemmap[i].containsKey('sellername')) {
             sellername = itemmap[i]['sellername'];
           } else {
-            sellername = 's';
+            sellername = 'Unknown';
           }
           Item ite = Item(
               itemid: itemmap[i]['item']['_id']['\$oid'],
@@ -129,6 +137,7 @@ class _ActivityBuyState extends State<ActivityBuy>
               image: itemmap[i]['item']['image'],
               price: itemmap[i]['offer'].toString(),
               offerstage: itemmap[i]['offerstage'],
+              date: date.toString(),
               buyerid: buyerid,
               buyername: buyername,
               messageid: itemmap[i]['messageid'].toString(),
@@ -137,6 +146,7 @@ class _ActivityBuyState extends State<ActivityBuy>
               sold: itemmap[i]['item']['sold']);
           ites.add(ite);
         }
+        ites.sort((a, b) => int.parse(b.date).compareTo((int.parse(a.date))));
 
         if (mounted)
           setState(() {
@@ -279,8 +289,7 @@ class _ActivityBuyState extends State<ActivityBuy>
             height: 35,
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(20)),
+                color: Colors.red, borderRadius: BorderRadius.circular(20)),
             child: Center(
                 child: Text(
               'Offer Declined',
@@ -815,38 +824,34 @@ class _ActivityBuyState extends State<ActivityBuy>
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ChatPageView(
-                                                        itemid:
-                                                            buyingItem[index]
-                                                                .itemid,
-                                                        recipentid:
-                                                            buyingItem[index]
-                                                                .sellerid,
-                                                        senderid:
-                                                            buyingItem[index]
-                                                                .buyerid,
-                                                        recipentname:
-                                                            buyingItem[index]
-                                                                .sellername,
-                                                        itemprice:
-                                                            buyingItem[index]
-                                                                .price,
-                                                        messageid:
-                                                            buyingItem[index]
-                                                                .messageid,
-                                                        offer: buyingItem[index]
-                                                            .price,
-                                                        offerstage:
-                                                            buyingItem[index]
-                                                                .offerstage,
-                                                        itemimage:
-                                                            buyingItem[index]
-                                                                .image,
-                                                        itemname:
-                                                            buyingItem[index]
-                                                                .name,
-                                                      )),
+                                                  builder: (context) => ChatPageView(
+                                                      itemid: buyingItem[index]
+                                                          .itemid,
+                                                      recipentid:
+                                                          buyingItem[index]
+                                                              .sellerid,
+                                                      senderid: buyingItem[index]
+                                                          .buyerid,
+                                                      recipentname:
+                                                          buyingItem[index]
+                                                              .sellername,
+                                                      itemprice: buyingItem[index]
+                                                          .price,
+                                                      messageid:
+                                                          buyingItem[index]
+                                                              .messageid,
+                                                      offer: buyingItem[index]
+                                                          .price,
+                                                      offerstage:
+                                                          buyingItem[index]
+                                                              .offerstage,
+                                                      itemimage:
+                                                          buyingItem[index]
+                                                              .image,
+                                                      itemname:
+                                                          buyingItem[index]
+                                                              .name,
+                                                      item: buyingItem[index])),
                                             );
                                           },
                                           child: Container(
