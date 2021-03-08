@@ -45,24 +45,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
 
     var userjsonbody = json.decode(userresponse.body);
 
-    var rating;
-    if (userjsonbody['reviews'] == null) {
-      rating = 0.0;
-    } else {
-      rating = double.parse(userjsonbody['reviews'].toString());
-    }
-
-    print(rating);
-    var revie;
-    if (userjsonbody['reviewnumber'] == null) {
-      review = 0;
-    } else {
-      review = userjsonbody['reviewnumber'];
-    }
-
     setState(() {
-      review = revie;
-      reviewrating = rating;
       profilepicture = userjsonbody['storelogo'];
     });
     var url = 'https://api.sellship.co/api/user/' + user;
@@ -71,11 +54,6 @@ class _OrderBuyerState extends State<OrderBuyer> {
     var jsonbody = json.decode(response.body);
   }
 
-  var review;
-  double reviewrating;
-  bool verifiedfb;
-  bool verifiedphone;
-  bool verifiedemail;
   var profilepicture;
 
   fetchItem() async {
@@ -165,8 +143,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
       itemid = widget.itemid;
       messageid = widget.messageid;
     });
-    print(itemid);
-    print(messageid);
+
     fetchItem();
     getDetails();
   }
@@ -282,153 +259,6 @@ class _OrderBuyerState extends State<OrderBuyer> {
   bool loading;
 
   int deliverystage;
-
-  Widget shipfrom(BuildContext context) {
-    if (deliverystage == 0) {
-      return Container();
-    } else if (deliverystage == 1) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.blueGrey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-          ]);
-    } else if (deliverystage == 2) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.blueGrey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-          ]);
-    } else if (deliverystage == 3) {
-      return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.blueGrey.withOpacity(0.2),
-                      offset: const Offset(0.0, 0.6),
-                      blurRadius: 5.0),
-                ],
-              ),
-              child: ListTile(
-                onTap: () async {
-                  var url =
-                      'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=' +
-                          trackingnumber;
-
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                leading: Text(
-                  'Tracking Number',
-                  style: TextStyle(
-                      fontFamily: 'Helvetica',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700),
-                ),
-                trailing: Text(
-                  trackingnumber,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    letterSpacing: 0.0,
-                    color: Colors.deepPurple,
-                  ),
-                ),
-              ),
-            ),
-          ]);
-    }
-  }
 
   double percentindicator = 0.20;
 
@@ -1404,6 +1234,9 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                   fontSize: 16,
                                   color: Colors.blueGrey),
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Column(
                               children: [
                                 ListTile(
@@ -1445,299 +1278,18 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                               ),
                                             )),
                                     title: Text(
-                                      item.username,
+                                      '@' + item.username,
                                       style: TextStyle(
                                           fontFamily: 'Helvetica',
                                           fontSize: 18,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w400),
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    subtitle: Column(children: <Widget>[
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 5, bottom: 10),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            InkWell(
-                                              child: verifiedemail == true
-                                                  ? Badge(
-                                                      showBadge: true,
-                                                      badgeColor: Colors
-                                                          .deepOrangeAccent,
-                                                      position: BadgePosition
-                                                          .bottomEnd(),
-                                                      animationType:
-                                                          BadgeAnimationType
-                                                              .slide,
-                                                      badgeContent: Icon(
-                                                        FontAwesome
-                                                            .check_circle,
-                                                        size: 10,
-                                                        color: Colors.white,
-                                                      ),
-                                                      child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 0.2,
-                                                                color: Colors
-                                                                    .grey),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          child: CircleAvatar(
-                                                            radius: 13,
-                                                            child: Icon(
-                                                              Feather.mail,
-                                                              size: 13,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                            ),
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                          )))
-                                                  : Badge(
-                                                      showBadge: false,
-                                                      badgeColor: Colors.grey,
-                                                      position: BadgePosition
-                                                          .bottomEnd(),
-                                                      animationType:
-                                                          BadgeAnimationType
-                                                              .slide,
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              width: 0.2,
-                                                              color:
-                                                                  Colors.grey),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child: CircleAvatar(
-                                                          radius: 13,
-                                                          child: Icon(
-                                                            Feather.mail,
-                                                            size: 13,
-                                                            color: Colors
-                                                                .deepOrange,
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            InkWell(
-                                              child: verifiedphone == true
-                                                  ? Badge(
-                                                      showBadge: true,
-                                                      badgeColor: Colors
-                                                          .deepOrangeAccent,
-                                                      position: BadgePosition
-                                                          .bottomEnd(),
-                                                      animationType:
-                                                          BadgeAnimationType
-                                                              .slide,
-                                                      badgeContent: Icon(
-                                                        FontAwesome
-                                                            .check_circle,
-                                                        size: 10,
-                                                        color: Colors.white,
-                                                      ),
-                                                      child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 0.2,
-                                                                color: Colors
-                                                                    .grey),
-                                                            shape:
-                                                                BoxShape.circle,
-                                                          ),
-                                                          child: CircleAvatar(
-                                                            radius: 13,
-                                                            child: Icon(
-                                                              Feather.phone,
-                                                              size: 13,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                            ),
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                          )))
-                                                  : Badge(
-                                                      showBadge: false,
-                                                      badgeColor: Colors.grey,
-                                                      position: BadgePosition
-                                                          .bottomEnd(),
-                                                      animationType:
-                                                          BadgeAnimationType
-                                                              .slide,
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              width: 0.2,
-                                                              color:
-                                                                  Colors.grey),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child: CircleAvatar(
-                                                          radius: 13,
-                                                          child: Icon(
-                                                            Feather.phone,
-                                                            size: 13,
-                                                            color: Colors
-                                                                .deepOrange,
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            InkWell(
-                                              child: verifiedfb == true
-                                                  ? Badge(
-                                                      showBadge: true,
-                                                      badgeColor:
-                                                          Colors.deepOrange,
-                                                      position: BadgePosition
-                                                          .bottomEnd(),
-                                                      animationType:
-                                                          BadgeAnimationType
-                                                              .slide,
-                                                      badgeContent: Icon(
-                                                        FontAwesome
-                                                            .check_circle,
-                                                        size: 10,
-                                                        color: Colors.white,
-                                                      ),
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              width: 0.2,
-                                                              color: Colors
-                                                                  .deepOrange),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child: CircleAvatar(
-                                                          radius: 13,
-                                                          child: Icon(
-                                                            Feather.facebook,
-                                                            size: 13,
-                                                            color: Colors.white,
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors.blueAccent,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : Badge(
-                                                      showBadge: false,
-                                                      badgeColor: Colors.grey,
-                                                      position: BadgePosition
-                                                          .bottomEnd(),
-                                                      animationType:
-                                                          BadgeAnimationType
-                                                              .slide,
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              width: 0.2,
-                                                              color:
-                                                                  Colors.grey),
-                                                          shape:
-                                                              BoxShape.circle,
-                                                        ),
-                                                        child: CircleAvatar(
-                                                          radius: 13,
-                                                          child: Icon(
-                                                            Feather.facebook,
-                                                            size: 13,
-                                                            color: Colors
-                                                                .blueAccent,
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ]),
+                                    trailing: Icon(
+                                      Icons.chevron_right,
+                                      color: Colors.black,
+                                    ),
                                     contentPadding: EdgeInsets.zero),
-                                reviewrating != null
-                                    ? Padding(
-                                        padding: EdgeInsets.only(
-                                          top: 10,
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: <Widget>[
-                                                SmoothStarRating(
-                                                    allowHalfRating: true,
-                                                    starCount: 5,
-                                                    isReadOnly: true,
-                                                    rating: reviewrating,
-                                                    size: 20.0,
-                                                    color: Colors.deepOrange,
-                                                    borderColor: Colors.grey,
-                                                    spacing: 0.0),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  reviewrating
-                                                      .toStringAsFixed(1),
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color.fromRGBO(
-                                                          27, 44, 64, 1)),
-                                                ),
-                                              ],
-                                            ),
-                                            Text(
-                                              review != null
-                                                  ? '${review} Reviews'
-                                                  : '0 Reviews',
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromRGBO(
-                                                      27, 44, 64, 1)),
-                                            )
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                        ),
-                                      )
-                                    : SpinKitDoubleBounce(
-                                        color: Colors.deepOrange),
                                 SizedBox(
                                   height: 5,
                                 ),
@@ -1776,8 +1328,10 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                         iosApiKey:
                                             'ios_sdk-2744ef1f27a14461bfda4cb07e8fc44364a38005',
                                       );
+                                      userid =
+                                          await storage.read(key: 'userid');
                                       await Intercom.registerIdentifiedUser(
-                                          userId: buyerid);
+                                          userId: userid);
 
                                       Intercom.displayMessenger();
                                     },

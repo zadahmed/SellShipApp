@@ -2375,28 +2375,31 @@ class _AddItemState extends State<AddItem> {
                                                         0) {
                                                       fees = 0;
                                                     } else {
-                                                      var s = 0.15 *
-                                                          int.parse(
+                                                      var s = (int.parse(
                                                               businesspricecontroller
-                                                                  .text);
+                                                                  .text) +
+                                                          weightfees);
+                                                      s = s * 0.15;
                                                       fees = int.parse(
                                                               businesspricecontroller
                                                                   .text) +
-                                                          s +
-                                                          weightfees;
+                                                          weightfees +
+                                                          s;
                                                     }
                                                   } else {
+                                                    var s = (int.parse(
+                                                            businesspricecontroller
+                                                                .text) +
+                                                        weightfees);
+                                                    s = s * 0.15;
                                                     fees = int.parse(
                                                             businesspricecontroller
                                                                 .text) +
                                                         weightfees +
-                                                        0.15 *
-                                                            int.parse(
-                                                                businesspricecontroller
-                                                                    .text);
+                                                        s;
                                                   }
 
-                                                  print(fees);
+
                                                   setState(() {
                                                     totalpayable = totalpayable;
                                                     fees = fees;

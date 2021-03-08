@@ -109,11 +109,11 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
       weightfees = 110;
     }
 
-    var fees = double.parse(offer.toString()) - weightfees;
+    var fees = double.parse(offer.toString()) / 1.15;
 
-    finalfees = fees - (0.15 * fees);
+    finalfees = fees - weightfees;
 
-    print(finalfees);
+
     setState(() {
       finalfees = finalfees;
     });

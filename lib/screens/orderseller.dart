@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/screens/ReviewBuyer.dart';
 import 'package:SellShip/screens/address.dart';
 import 'package:SellShip/screens/details.dart';
+import 'package:SellShip/screens/storepage.dart';
+import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:app_review/app_review.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,9 +16,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
+import 'package:intercom_flutter/intercom_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderSeller extends StatefulWidget {
@@ -42,6 +48,131 @@ class _OrderSellerState extends State<OrderSeller> {
 
   bool addressreturned = false;
 
+  getuserDetails() async {
+    var userurl = 'https://api.sellship.co/api/store/' + user;
+    final userresponse = await http.get(userurl);
+
+    print(userresponse.body);
+
+    var userjsonbody = json.decode(userresponse.body);
+
+    setState(() {
+      profilepicture = userjsonbody['storelogo'];
+    });
+    var url = 'https://api.sellship.co/api/user/' + user;
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+  }
+
+  var country;
+  var profilepicture;
+
+  fetchItem() async {
+    var countr = await storage.read(key: 'country');
+    userid = await storage.read(key: 'userid');
+
+    if (countr.trim().toLowerCase() == 'united arab emirates') {
+      setState(() {
+        currency = 'AED';
+        country = countr;
+      });
+    } else if (countr.trim().toLowerCase() == 'united states') {
+      setState(() {
+        currency = '\$';
+        country = countr;
+      });
+    } else if (countr.trim().toLowerCase() == 'canada') {
+      setState(() {
+        currency = '\$';
+        country = countr;
+      });
+    } else if (countr.trim().toLowerCase() == 'united kingdom') {
+      setState(() {
+        currency = '\£';
+        country = countr;
+      });
+    }
+
+    var url = 'https://api.sellship.co/api/getitem/' + widget.itemid;
+    final response = await http.get(url);
+
+    var jsonbody = json.decode(response.body);
+
+    item = Item(
+        name: jsonbody[0]['name'],
+        itemid: jsonbody[0]['_id']['\$oid'].toString(),
+        price: jsonbody[0]['price'].toString(),
+        description: jsonbody[0]['description'],
+        category: jsonbody[0]['category'],
+        condition: jsonbody[0]['condition'] == null
+            ? 'Like New'
+            : jsonbody[0]['condition'],
+        image: jsonbody[0]['image'],
+        image1: jsonbody[0]['image1'],
+        image2: jsonbody[0]['image2'],
+        image3: jsonbody[0]['image3'],
+        image4: jsonbody[0]['image4'],
+        image5: jsonbody[0]['image5'],
+        sellerid: jsonbody[0]['selleruserid'],
+        sellername: jsonbody[0]['sellerusername'],
+        sold: jsonbody[0]['sold'] == null ? false : jsonbody[0]['sold'],
+        likes: jsonbody[0]['likes'] == null ? 0 : jsonbody[0]['likes'],
+        city: jsonbody[0]['city'],
+        username: jsonbody[0]['username'],
+        brand: jsonbody[0]['brand'] == null ? 'Other' : jsonbody[0]['brand'],
+        size: jsonbody[0]['size'] == null ? '' : jsonbody[0]['size'],
+        useremail: jsonbody[0]['useremail'],
+        usernumber: jsonbody[0]['usernumber'],
+        userid: jsonbody[0]['userid'],
+        latitude: jsonbody[0]['latitude'],
+        comments: jsonbody[0]['comments'] == null
+            ? 0
+            : jsonbody[0]['comments'].length,
+        longitude: jsonbody[0]['longitude'],
+        subsubcategory: jsonbody[0]['subsubcategory'],
+        subcategory: jsonbody[0]['subcategory']);
+
+    var offerprice = totalpaid;
+    var _selectedweight = int.parse(jsonbody[0]['weight']);
+    var weightfees;
+    if (_selectedweight == 5) {
+      weightfees = 20;
+    } else if (_selectedweight == 10) {
+      weightfees = 30;
+    } else if (_selectedweight == 20) {
+      weightfees = 50;
+    } else if (_selectedweight == 50) {
+      weightfees = 110;
+    }
+
+    fees = totalpaid / 1.15;
+
+    fees = fees - weightfees;
+
+    print(fees);
+    print('sss');
+    print(jsonbody[0]['originalprice'].toString());
+
+    getuserDetails();
+    getstore(jsonbody[0]['userid']);
+
+    setState(() {
+      storeid = jsonbody[0]['userid'];
+      user = jsonbody[0]['selleruserid'];
+      username = jsonbody[0]['sellerusername'];
+      item = item;
+      fees = fees;
+    });
+
+    return item;
+  }
+
+  var fees;
+  var storeid;
+  var user;
+  var username;
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +182,7 @@ class _OrderSellerState extends State<OrderSeller> {
       itemid = widget.itemid;
       messageid = widget.messageid;
     });
+
     getDetails();
   }
 
@@ -120,28 +252,59 @@ class _OrderSellerState extends State<OrderSeller> {
       deliveredtext = 'Review Buyer';
     }
 
-    var trackingno;
-    if (jsonbody['shipping_details'] == null) {
-      trackingno = null;
+    var track;
+    if (jsonbody['awbno'] == null) {
+      track = '';
     } else {
-      trackingno = jsonbody['shipping_details']['tracking_no'];
+      track = jsonbody['awbno'];
     }
 
     setState(() {
-      itemprice = jsonbody['offer'];
+      itemprice = jsonbody['totalpayable'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
       cancelled = cancell;
-      trackingnumber = trackingno;
+      orderid = jsonbody['paymentid'];
+      trackingnumber = track;
       deliverystage = delstage;
-      newitem = Item(weight: jsonbody['itemobject']['weight']);
-      itemfees = jsonbody['fees'];
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];
-
-      loading = false;
+      addressline1 = jsonbody['deliveryaddress']['addressline1'];
+      addressline2 = jsonbody['deliveryaddress']['addressline2'];
+      area = jsonbody['deliveryaddress']['area'];
+      city = jsonbody['deliveryaddress']['city'];
+      country = jsonbody['deliveryaddress']['country'];
     });
+
+    fetchItem();
   }
+
+  getstore(storeid) async {
+    var url = 'https://api.sellship.co/api/store/' + storeid;
+    final response = await http.get(url);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var jsonbody = json.decode(response.body);
+
+      print(jsonbody);
+
+      Stores store = Stores(
+          storeid: jsonbody['_id']['\$oid'],
+          storelogo: jsonbody['storelogo'],
+          storebio: jsonbody['address'],
+          storename: jsonbody['storename']);
+
+      setState(() {
+        mystore = store;
+        loading = false;
+      });
+    }
+  }
+
+  Stores mystore;
+  var orderid;
+  var addressline2;
+  var area;
 
   var itemprice;
   var totalpaid;
@@ -483,38 +646,13 @@ class _OrderSellerState extends State<OrderSeller> {
   Widget deliveryinformation(BuildContext context) {
     if (deliverystage == 0) {
       return Container(
-        height: 230,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade300,
-              offset: Offset(0.0, 1.0), //(x,y)
-              blurRadius: 6.0,
-            ),
-          ],
-          color: Colors.white,
-        ),
+        height: 100,
         width: MediaQuery.of(context).size.width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Icon(
-                      Feather.box,
-                      color: Colors.deepPurpleAccent,
-                    ),
-                  ),
-                ]),
-            Container(
-              padding: const EdgeInsets.all(15.0),
-              width: MediaQuery.of(context).size.width * 0.85,
+            Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -526,7 +664,7 @@ class _OrderSellerState extends State<OrderSeller> {
                     'Prepare and Print',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
-                        color: Colors.deepPurpleAccent,
+                        color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w700),
                   ),
@@ -534,30 +672,11 @@ class _OrderSellerState extends State<OrderSeller> {
                     height: 5,
                   ),
                   Text(
-                    '1. Prepare your delivery by packaging your item in a safe and contained box or envelope.',
+                    'Please prepare your delivery by packaging your item in a safe and contained box or envelope. The delivery pickup team will be in touch with you shortly, to arrange a pickup.',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
                         fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    '2. Create a shipping label for your item by tapping on \'Create Label\'.The label will be emailed to your registered email',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  SizedBox(
-                    height: 2,
-                  ),
-                  Text(
-                    '3. Print the label and stick it on a visible side of your box',
-                    style: TextStyle(
-                        fontFamily: 'Helvetica',
-                        fontSize: 14,
+                        color: Colors.blueGrey,
                         fontWeight: FontWeight.w400),
                   ),
                 ],
@@ -787,368 +906,524 @@ class _OrderSellerState extends State<OrderSeller> {
   Widget deliverystagewidget(BuildContext context) {
     if (deliverystage == 0) {
       return Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
+          height: 110,
+          width: MediaQuery.of(context).size.width,
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.label,
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(Icons.label_rounded),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Waiting for Pickup',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blueGrey,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blueGrey,
+                        child: Icon(
+                          Icons.local_shipping_sharp,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('In Transit')
+                  ],
                 ),
-                Text('Prepare')
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blueGrey,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blueGrey,
+                        child: Icon(
+                          Icons.check_box,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('Delivered')
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blueGrey,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blueGrey,
+                        child: Icon(
+                          Icons.star,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('Review')
+                  ],
+                ),
               ],
             ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Ship')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Delivered')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Review')
-              ],
-            ),
-          ],
-        ),
-      );
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 5,
+                        top: 10,
+                      ),
+                      child: Center(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width / 1.4,
+                            lineHeight: 8.0,
+                            percent: 0.25,
+                            progressColor: Colors.deepOrange,
+                          ),
+                        ),
+                      )),
+                ])
+          ]));
     } else if (deliverystage == 1) {
       return Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
+          height: 110,
+          width: MediaQuery.of(context).size.width,
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.check,
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(Icons.label_rounded),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Picked-up',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(
+                          Icons.local_shipping_sharp,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'In Transit',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                Text('Prepare')
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blueGrey,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blueGrey,
+                        child: Icon(
+                          Icons.check_box,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('Delivered')
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blueGrey,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blueGrey,
+                        child: Icon(
+                          Icons.star,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('Review')
+                  ],
+                ),
               ],
             ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.local_shipping,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Ship')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Delivered')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Review')
-              ],
-            ),
-          ],
-        ),
-      );
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 5,
+                        top: 10,
+                      ),
+                      child: Center(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width / 1.4,
+                            lineHeight: 8.0,
+                            percent: 0.55,
+                            progressColor: Colors.deepOrange,
+                          ),
+                        ),
+                      )),
+                ])
+          ]));
     } else if (deliverystage == 2) {
       return Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
+          height: 110,
+          width: MediaQuery.of(context).size.width,
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.check,
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(Icons.label_rounded),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Picked-up',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(
+                          Icons.local_shipping_sharp,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'In Transit',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                Text('Prepare')
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(
+                          Icons.check_box,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Delivered',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.blueGrey,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.blueGrey,
+                        child: Icon(
+                          Icons.star,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('Review')
+                  ],
+                ),
               ],
             ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Ship')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.access_time,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Delivered')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.grey,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.white,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Review')
-              ],
-            ),
-          ],
-        ),
-      );
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 5,
+                        top: 10,
+                      ),
+                      child: Center(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width / 1.4,
+                            lineHeight: 8.0,
+                            percent: 0.75,
+                            progressColor: Colors.deepOrange,
+                          ),
+                        ),
+                      )),
+                ])
+          ]));
     } else if (deliverystage == 3) {
       return Container(
-        height: 70,
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
+          height: 110,
+          width: MediaQuery.of(context).size.width,
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.check,
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(Icons.label_rounded),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Picked-up',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: 5,
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(
+                          Icons.local_shipping_sharp,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'In Transit',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
-                Text('Prepare')
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(
+                          Icons.check_box,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Delivered',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+                Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.deepOrange,
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.deepOrange,
+                        child: Icon(
+                          Icons.star,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Review',
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
               ],
             ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Ship')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.check,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Delivered')
-              ],
-            ),
-            Column(
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.deepOrange,
-                  child: CircleAvatar(
-                    radius: 19,
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    child: Icon(
-                      Icons.star,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Text('Review')
-              ],
-            ),
-          ],
-        ),
-      );
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 5,
+                        top: 10,
+                      ),
+                      child: Center(
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width / 1.4,
+                            lineHeight: 8.0,
+                            percent: 0.85,
+                            progressColor: Colors.deepOrange,
+                          ),
+                        ),
+                      )),
+                ])
+          ]));
     }
   }
 
@@ -1156,351 +1431,206 @@ class _OrderSellerState extends State<OrderSeller> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.deepOrange),
+          iconTheme: IconThemeData(color: Colors.black),
           elevation: 0,
           title: Text(
-            'Order Detail',
+            'Order',
             style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
                 fontFamily: 'Helvetica',
-                fontSize: 16,
-                color: Colors.deepOrange,
                 fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
         ),
-        body: SingleChildScrollView(
-            child: loading == false
-                ? Column(children: <Widget>[
-                    SizedBox(height: 10),
-                    deliverystagewidget(context),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Purchase Information',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                        ),
-                        child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Details(
-                                          itemid: item.itemid,
-                                        )),
-                              );
-                            },
-                            child: Container(
-                                height: 70,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                  color: Colors.white,
-                                ),
-                                child: ListTile(
-                                  title: Text(
-                                    item.name,
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w800),
-                                  ),
-                                  leading: Container(
-                                    height: 70,
-                                    width: 70,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: CachedNetworkImage(
-                                        height: 200,
-                                        width: 300,
-                                        imageUrl: item.image,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    'Purchased on ' + date.toString(),
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 14,
-                                        color: Colors.deepOrange,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  trailing: Text(
-                                    currency + ' ' + item.price.toString(),
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 14,
-                                        color: Colors.deepOrange,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )))),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    cancelled != null ? Container() : shipfrom(context),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    cancelled != null
-                        ? Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, bottom: 10, top: 20),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Transaction has been cancelled',
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700),
-                              ),
+        body: loading == false
+            ? ListView(children: <Widget>[
+                SizedBox(height: 10),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+                  child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
                             ),
-                          )
-                        : deliveryinformation(context),
-                    cancelled != null
-                        ? Container()
-                        : InkWell(
-                            onTap: () async {
-                              if (deliverystage == 0) {
-                                if (addressline1 != null) {
-                                  showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return Container(
-                                          height: 100,
-                                          width: 150,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(12.0),
-                                              child: Column(
-                                                children: [
-                                                  Text(
-                                                      'Preparing and Sending Label to Email'),
-                                                  SizedBox(height: 5),
-                                                  SpinKitDoubleBounce(
-                                                      color: Colors
-                                                          .deepOrangeAccent)
-                                                ],
-                                              )),
-                                        );
-                                      });
-
-                                  var url =
-                                      'https://api.sellship.co/api/shipitem/' +
-                                          messageid +
-                                          '/' +
-                                          addressline1 +
-                                          '/' +
-                                          city +
-                                          '/' +
-                                          state +
-                                          '/' +
-                                          zipcode;
-
-                                  final response = await http.get(url);
-
-                                  var jsonbody = json.decode(response.body);
-
-                                  setState(() {
-                                    deliverystage = jsonbody['deliverystage'];
-                                    trackingnumber =
-                                        jsonbody['shipping_details']
-                                            ['tracking_no'];
-                                    deliveredtext = 'Item Shipped';
-                                  });
-
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop('dialog');
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => AssetGiffyDialog(
-                                            image: Image.asset(
-                                              'assets/oops.gif',
-                                              fit: BoxFit.cover,
-                                            ),
-                                            title: Text(
-                                              'Oops!',
-                                              style: TextStyle(
-                                                  fontSize: 22.0,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            description: Text(
-                                              'Please enter a valid ship from address!',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(),
-                                            ),
-                                            onlyOkButton: true,
-                                            entryAnimation:
-                                                EntryAnimation.DEFAULT,
-                                            onOkButtonPressed: () {
-                                              Navigator.of(context,
-                                                      rootNavigator: true)
-                                                  .pop('dialog');
-                                            },
-                                          ));
-                                }
-                              } else if (deliverystage == 1) {
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                        height: 100,
-                                        width: 150,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Column(
-                                              children: [
-                                                Text('Loading'),
-                                                SizedBox(height: 5),
-                                                SpinKitDoubleBounce(
-                                                    color:
-                                                        Colors.deepOrangeAccent)
-                                              ],
-                                            )),
-                                      );
-                                    });
-                                var url =
-                                    'https://api.sellship.co/api/shipped/' +
-                                        messageid;
-
-                                final response = await http.get(url);
-
-                                var jsonbody = json.decode(response.body);
-
-                                setState(() {
-                                  deliverystage = jsonbody['deliverystage'];
-                                  trackingnumber = jsonbody['shipping_details']
-                                      ['tracking_no'];
-                                  deliveredtext = "Waiting for Delivery";
-                                });
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop('dialog');
-                              } else if (deliverystage == 3) {
-                                showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (BuildContext context) {
-                                      return Container(
-                                        height: 100,
-                                        width: 150,
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Column(
-                                              children: [
-                                                Text('Loading'),
-                                                SizedBox(height: 5),
-                                                SpinKitDoubleBounce(
-                                                    color:
-                                                        Colors.deepOrangeAccent)
-                                              ],
-                                            )),
-                                      );
-                                    });
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop('dialog');
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ReviewBuyer(
-                                            reviewuserid: buyerid,
-                                            messageid: messageid,
-                                          )),
-                                );
-                              }
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Container(
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  color: Colors.deepPurpleAccent,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(10.0),
-                                  ),
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                        color: Colors.deepPurpleAccent
-                                            .withOpacity(0.4),
-                                        offset: const Offset(1.1, 1.1),
-                                        blurRadius: 10.0),
-                                  ],
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    deliveredtext,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Order ID: ',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
                                       fontSize: 16,
-                                      letterSpacing: 0.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                      color: Colors.blueGrey),
                                 ),
-                              ),
-                            )),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, top: 20),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Buyer Information',
-                          style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 10,
-                        right: 10,
-                      ),
-                      child: InkWell(
-                        child: Container(
-                          height: 70,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                                Container(
+                                    child: Text(
+                                  orderid,
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(27, 44, 64, 1)),
+                                )),
+                              ],
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 10,
+                                  top: 20,
+                                ),
+                                child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color:
+                                            Color.fromRGBO(27, 44, 64, 0.03)),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Pickup from:',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              child: Text(
+                                            mystore.storebio,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    27, 44, 64, 1)),
+                                          )),
+                                        ]))),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 10,
+                                  top: 5,
+                                ),
+                                child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color:
+                                            Color.fromRGBO(27, 44, 64, 0.03)),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Delivered to:',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              child: Text(
+                                            addressline1 +
+                                                '\n' +
+                                                addressline2 +
+                                                '\n' +
+                                                area +
+                                                '\n' +
+                                                city +
+                                                '\n' +
+                                                country,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    27, 44, 64, 1)),
+                                          )),
+                                        ])))
+                          ])),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 10, top: 5, right: 15),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Tracking ID: ',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.blueGrey),
+                                ),
+                                Container(
+                                    child: Text(
+                                  trackingnumber,
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(27, 44, 64, 1)),
+                                )),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            deliveryinformation(context),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            deliverystagewidget(context),
+                          ]),
+                    )),
+
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 10, top: 5, right: 15),
+                    child: Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.shade300,
@@ -1508,119 +1638,421 @@ class _OrderSellerState extends State<OrderSeller> {
                                 blurRadius: 6.0,
                               ),
                             ],
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: ListTile(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserItems(
-                                          userid: buyerid,
-                                          username: buyername)),
-                                );
-                              },
-                              dense: true,
-                              leading: Icon(FontAwesome.user_circle),
-                              title: Text(
-                                buyername,
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Items: ',
                                 style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     fontSize: 16,
-                                    color: Colors.black),
+                                    color: Colors.blueGrey),
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    deliverystage == 0
-                        ? InkWell(
-                            onTap: () {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) =>
-                                      CupertinoAlertDialog(
-                                        title: new Text(
-                                          "Cancel this transaction",
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                        content: new Text(
-                                          "Are you sure you want to cancel this transaction?",
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400),
-                                        ),
-                                        actions: <Widget>[
-                                          CupertinoDialogAction(
-                                            isDefaultAction: true,
-                                            onPressed: () async {
-                                              var url =
-                                                  'https://api.sellship.co/api/cancelbuyer/' +
-                                                      messageid;
-
-                                              final response =
-                                                  await http.get(url);
-
-                                              if (response.statusCode == 200) {
-                                                Navigator.of(context).pop();
-                                                Navigator.of(context).pop();
-                                              }
-                                            },
-                                            child: Text(
-                                              'Yes',
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                          CupertinoDialogAction(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text(
-                                              "No",
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700),
-                                            ),
-                                          )
-                                        ],
-                                      ));
-                            },
-                            child: cancelled != null
-                                ? Container()
-                                : Padding(
-                                    padding: EdgeInsets.only(
-                                        left: 10, bottom: 10, top: 20),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Cancel this transaction',
+                              Padding(
+                                  padding: EdgeInsets.only(top: 10),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Details(
+                                                  itemid: widget.itemid,
+                                                  name: item.name,
+                                                  sold: item.sold,
+                                                  source: 'order',
+                                                  image: item.image,
+                                                )),
+                                      );
+                                    },
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      dense: true,
+                                      title: Text(
+                                        item.name,
                                         style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          color: Colors.red,
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      leading: Container(
+                                        height: 70,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: CachedNetworkImage(
+                                            height: 200,
+                                            width: 300,
+                                            imageUrl: item.image,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
+                                      subtitle: Text(
+                                        item.category,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      trailing: Text(
+                                        currency + ' ' + item.price.toString(),
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                  ))
-                        : Container(),
-                    SizedBox(
-                      height: 5,
-                    ),
-                  ])
-                : Center(child: CupertinoActivityIndicator())));
+                                  )),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Delivery',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      letterSpacing: 0.0,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                  Text('Free',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        letterSpacing: 0.0,
+                                        color: Colors.green,
+                                      )),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Total',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      letterSpacing: 0.0,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                  Text(currency + ' ' + totalpaid.toString(),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        letterSpacing: 0.0,
+                                        color: Colors.blueGrey,
+                                      )),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'You Earn',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      letterSpacing: 0.0,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(currency + ' ' + fees.toStringAsFixed(2),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 20,
+                                        letterSpacing: 0.0,
+                                        color: Colors.black,
+                                      )),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ]))),
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 10, top: 5, right: 15),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Buyer: ',
+                              style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 16,
+                                  color: Colors.blueGrey),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Column(
+                              children: [
+                                ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => UserItems(
+                                                  userid: user,
+                                                  username: username,
+                                                )),
+                                      );
+                                    },
+                                    dense: true,
+                                    leading: profilepicture != null &&
+                                            profilepicture.isNotEmpty
+                                        ? Container(
+                                            height: 50,
+                                            width: 50,
+                                            child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(25),
+                                                child: CachedNetworkImage(
+                                                  height: 200,
+                                                  width: 300,
+                                                  imageUrl: profilepicture,
+                                                  fit: BoxFit.cover,
+                                                )),
+                                          )
+                                        : CircleAvatar(
+                                            radius: 25,
+                                            backgroundColor: Colors.deepOrange,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              child: Image.asset(
+                                                'assets/personplaceholder.png',
+                                                fit: BoxFit.fitWidth,
+                                              ),
+                                            )),
+                                    title: Text(
+                                      '@' + username,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Icon(
+                                      Icons.chevron_right,
+                                      color: Colors.black,
+                                    ),
+                                    contentPadding: EdgeInsets.zero),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                              ],
+                            ),
+                          ]),
+                    )),
+
+                Padding(
+                    padding: EdgeInsets.only(
+                        left: 15, bottom: 20, top: 5, right: 15),
+                    child: Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                  padding: EdgeInsets.only(top: 0),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      await Intercom.initialize(
+                                        'z4m2b833',
+                                        androidApiKey:
+                                            'android_sdk-78eb7d5e9dd5f4b508ddeec4b3c54d7491676661',
+                                        iosApiKey:
+                                            'ios_sdk-2744ef1f27a14461bfda4cb07e8fc44364a38005',
+                                      );
+
+                                      userid =
+                                          await storage.read(key: 'userid');
+                                      await Intercom.registerIdentifiedUser(
+                                          userId: userid);
+
+                                      Intercom.displayMessenger();
+                                    },
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      dense: true,
+                                      title: Text(
+                                        'Need Support?',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w800),
+                                      ),
+                                      leading: Container(
+                                        height: 70,
+                                        width: 70,
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 5),
+                                        decoration: BoxDecoration(
+                                            color: Color.fromRGBO(
+                                                255, 115, 0, 0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: SvgPicture.asset(
+                                            'assets/support.svg',
+                                            fit: BoxFit.fitHeight,
+                                          ),
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        'Chat with us',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 14,
+                                            color: Colors.deepOrange,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      trailing: Icon(
+                                        Icons.chevron_right,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  )),
+                            ]))),
+                SizedBox(
+                  height: 5,
+                ),
+                // deliverystage == 0
+                //     ? InkWell(
+                //         onTap: () {
+                //           showDialog(
+                //               context: context,
+                //               barrierDismissible: false,
+                //               builder: (BuildContext context) =>
+                //                   CupertinoAlertDialog(
+                //                     title: new Text(
+                //                       "Cancel this transaction",
+                //                       style: TextStyle(
+                //                           fontFamily: 'Helvetica',
+                //                           fontSize: 16,
+                //                           fontWeight: FontWeight.w700),
+                //                     ),
+                //                     content: new Text(
+                //                       "Are you sure you want to cancel this transaction?",
+                //                       style: TextStyle(
+                //                           fontFamily: 'Helvetica',
+                //                           fontSize: 16,
+                //                           fontWeight: FontWeight.w400),
+                //                     ),
+                //                     actions: <Widget>[
+                //                       CupertinoDialogAction(
+                //                         isDefaultAction: true,
+                //                         onPressed: () async {
+                //                           var url =
+                //                               'https://api.sellship.co/api/cancelbuyer/' +
+                //                                   messageid;
+                //
+                //                           final response =
+                //                               await http.get(url);
+                //
+                //                           if (response.statusCode == 200) {
+                //                             Navigator.of(context).pop();
+                //                             Navigator.of(context).pop();
+                //                           }
+                //                         },
+                //                         child: Text(
+                //                           'Yes',
+                //                           style: TextStyle(
+                //                               fontFamily: 'Helvetica',
+                //                               fontSize: 16,
+                //                               fontWeight: FontWeight.w700),
+                //                         ),
+                //                       ),
+                //                       CupertinoDialogAction(
+                //                         onPressed: () {
+                //                           Navigator.of(context).pop();
+                //                         },
+                //                         child: Text(
+                //                           "No",
+                //                           style: TextStyle(
+                //                               fontFamily: 'Helvetica',
+                //                               fontSize: 16,
+                //                               fontWeight: FontWeight.w700),
+                //                         ),
+                //                       )
+                //                     ],
+                //                   ));
+                //         },
+                //         child: cancelled != null
+                //             ? Container()
+                //             : Padding(
+                //                 padding: EdgeInsets.only(
+                //                     left: 10, bottom: 10, top: 20),
+                //                 child: Align(
+                //                   alignment: Alignment.centerLeft,
+                //                   child: Text(
+                //                     'Cancel this transaction',
+                //                     style: TextStyle(
+                //                       fontFamily: 'Helvetica',
+                //                       fontSize: 16,
+                //                       color: Colors.red,
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ))
+                //     : Container(),
+                SizedBox(
+                  height: 5,
+                ),
+              ])
+            : Center(
+                child: SpinKitDoubleBounce(
+                color: Colors.deepOrange,
+              )));
   }
 }

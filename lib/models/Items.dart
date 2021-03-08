@@ -39,6 +39,7 @@ class Item {
   final String buyername;
   final String sellername;
   final String country;
+  final String originalprice;
 
   Item(
       {this.itemid,
@@ -46,6 +47,7 @@ class Item {
       this.views,
       this.image,
       this.tags,
+      this.originalprice,
       this.country,
       this.quantity,
       this.image1,
