@@ -65,159 +65,163 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      key: _scaffoldKey,
-      appBar: AppBar(
-        leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Feather.arrow_left)),
-        iconTheme: IconThemeData(color: Colors.black),
-        elevation: 0,
-        title: Text(
-          'Verify Phone Number',
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Helvetica'),
-        ),
         backgroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.only(
-                  top: 10,
-                ),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                          height: 400,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.asset(
-                            'assets/165.png',
-                            fit: BoxFit.cover,
-                          ))
-                    ])),
-            Container(
-              padding: EdgeInsets.only(left: 16.0, bottom: 10, top: 30),
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        key: _scaffoldKey,
+        appBar: AppBar(
+          leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(Feather.arrow_left)),
+          iconTheme: IconThemeData(color: Colors.black),
+          elevation: 0,
+          title: Text(
+            'Verify Phone Number',
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Helvetica'),
+          ),
+          backgroundColor: Colors.white,
+        ),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                    ),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                              height: 400,
+                              width: MediaQuery.of(context).size.width,
+                              child: Image.asset(
+                                'assets/165.png',
+                                fit: BoxFit.cover,
+                              ))
+                        ])),
+                Container(
+                  padding: EdgeInsets.only(left: 16.0, bottom: 10, top: 30),
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Center(
-                        child: Text(
-                          "Verification code sent to ${widget.phonenumber}",
-                          style: TextStyle(
-                              fontSize: 20.0,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Center(
+                            child: Text(
+                              "Verification code sent to ${widget.phonenumber}",
+                              style: TextStyle(
+                                  fontSize: 20.0,
 //                            fontWeight: FontWeight.bold,
-                              fontFamily: 'Helvetica'),
-                        ),
+                                  fontFamily: 'Helvetica'),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            Padding(
-                padding: EdgeInsets.only(left: 30, top: 10, right: 30),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        height: 70,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        width: MediaQuery.of(context).size.width - 100,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(131, 146, 165, 0.1),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: PinInputTextField(
-                          pinLength: 6,
-                          decoration: _pinDecoration,
-                          controller: _pinEditingController,
-                          autoFocus: true,
-                          textInputAction: TextInputAction.done,
-                          onSubmit: (pin) {
-                            if (pin.length == 6) {
-                              _onFormSubmitted();
-                            } else {
-                              showInSnackBar("Invalid OTP");
-                            }
+                ),
+                Padding(
+                    padding: EdgeInsets.only(left: 30, top: 10, right: 30),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            height: 70,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            width: MediaQuery.of(context).size.width - 100,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(131, 146, 165, 0.1),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: PinInputTextField(
+                              pinLength: 6,
+                              decoration: _pinDecoration,
+                              controller: _pinEditingController,
+                              autoFocus: true,
+                              textInputAction: TextInputAction.done,
+                              onSubmit: (pin) {
+                                if (pin.length == 6) {
+                                  _onFormSubmitted();
+                                } else {
+                                  showInSnackBar("Invalid OTP");
+                                }
+                              },
+                            ),
+                          ),
+                        ])),
+                Padding(
+                  padding: EdgeInsets.only(left: 36, top: 30, right: 36),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            _onFormSubmitted();
                           },
+                          child: Container(
+                            height: 60,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            width: MediaQuery.of(context).size.width - 250,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(255, 115, 0, 1),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Center(
+                                child: Text(
+                              'Verify Phone',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            )),
+                          ),
                         ),
-                      ),
-                    ])),
-            Padding(
-              padding: EdgeInsets.only(left: 36, top: 30, right: 36),
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+                      ]),
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
                     InkWell(
                       onTap: () {
-                        _onFormSubmitted();
+                        setState(() {
+                          _onVerifyCode();
+                        });
                       },
-                      child: Container(
-                        height: 60,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        width: MediaQuery.of(context).size.width - 250,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(255, 115, 0, 1),
-                          borderRadius: BorderRadius.circular(25),
+                      child: Text(
+                        "Resent OTP",
+                        style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 14,
                         ),
-                        child: Center(
-                            child: Text(
-                          'Verify Phone',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        )),
                       ),
                     ),
-                  ]),
-            ),
-            SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      _onVerifyCode();
-                    });
-                  },
-                  child: Text(
-                    "Resent OTP",
-                    style: TextStyle(
-                      color: Colors.blueGrey,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-      ),
-    );
+            ),
+          ),
+        ));
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();

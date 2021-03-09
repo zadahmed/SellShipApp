@@ -1078,7 +1078,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                 header: CustomHeader(
                     extent: 40.0,
                     enableHapticFeedback: true,
-                    triggerDistance: 50.0,
+                    triggerDistance: 100.0,
                     headerBuilder: (context,
                         loadState,
                         pulledExtent,
@@ -1100,6 +1100,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                     setState(() {
                       alive = false;
                       foryouloading = true;
+                      foryoulimit = 0;
+                      foryouskip = 40;
                       foryou();
 
                       foryoupagescroll();
@@ -1177,122 +1179,166 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
-                                            child: Column(
-                                              children: [
-                                                userList[index].profilepicture !=
-                                                            null &&
-                                                        userList[index]
-                                                            .profilepicture
-                                                            .isNotEmpty
-                                                    ? Container(
-                                                        height: 80,
-                                                        width: 80,
-                                                        child: ClipRRect(
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UserItems(
+                                                            userid:
+                                                                userList[index]
+                                                                    .userid,
+                                                            username:
+                                                                userList[index]
+                                                                    .username,
+                                                          )),
+                                                );
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  userList[index].profilepicture !=
+                                                              null &&
+                                                          userList[index]
+                                                              .profilepicture
+                                                              .isNotEmpty
+                                                      ? Container(
+                                                          height: 80,
+                                                          width: 80,
+                                                          child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          50),
+                                                              child:
+                                                                  CachedNetworkImage(
+                                                                height: 200,
+                                                                width: 300,
+                                                                imageUrl: userList[
+                                                                        index]
+                                                                    .profilepicture,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              )),
+                                                        )
+                                                      : CircleAvatar(
+                                                          radius: 40,
+                                                          backgroundColor: Colors
+                                                              .deepOrangeAccent
+                                                              .withOpacity(0.3),
+                                                          child: ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         50),
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              height: 200,
-                                                              width: 300,
-                                                              imageUrl: userList[
-                                                                      index]
-                                                                  .profilepicture,
-                                                              fit: BoxFit.cover,
-                                                            )),
-                                                      )
-                                                    : CircleAvatar(
-                                                        radius: 40,
-                                                        backgroundColor: Colors
-                                                            .deepOrangeAccent
-                                                            .withOpacity(0.3),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(50),
-                                                          child: Image.asset(
-                                                            'assets/personplaceholder.png',
-                                                            fit:
-                                                                BoxFit.fitWidth,
-                                                          ),
-                                                        )),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  '@' +
-                                                      userList[index].username,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 16,
-                                                      color: Colors.black),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  userList[index]
-                                                              .productsnumber !=
-                                                          null
-                                                      ? userList[index]
-                                                              .productsnumber +
-                                                          ' Listings'
-                                                      : '0 Listings',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 14,
-                                                      color: Colors.black),
-                                                ),
-                                                SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(5),
-                                                  child: Container(
-                                                    height: 30,
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                      color: followingusers
-                                                              .contains(
-                                                                  userList[
-                                                                      index])
-                                                          ? Colors.black
-                                                          : Colors.deepOrange,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
+                                                            child: Image.asset(
+                                                              'assets/personplaceholder.png',
+                                                              fit: BoxFit
+                                                                  .fitWidth,
+                                                            ),
+                                                          )),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Container(
+                                                    child: Text(
+                                                      '@' +
+                                                          userList[index]
+                                                              .username,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16,
+                                                          color: Colors.black),
                                                     ),
-                                                    child: InkWell(
-                                                      onTap: () async {
-                                                        followuser(
-                                                            userList[index]);
-                                                      },
-                                                      child: Center(
-                                                        child: Text(
-                                                          followingusers
-                                                                  .contains(
-                                                                      userList[
-                                                                          index])
-                                                              ? 'Following'
-                                                              : 'Follow',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 16,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    userList[index]
+                                                                .productsnumber !=
+                                                            null
+                                                        ? userList[index]
+                                                                .productsnumber +
+                                                            ' Listings'
+                                                        : '0 Listings',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 14,
+                                                        color: Colors.black),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(5),
+                                                    child: Container(
+                                                      height: 30,
+                                                      width: 100,
+                                                      decoration: BoxDecoration(
+                                                        border: followingusers
+                                                                .contains(
+                                                                    userList[
+                                                                        index])
+                                                            ? Border.all(
+                                                                color: Colors
+                                                                    .white)
+                                                            : Border.all(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.2)),
+                                                        color: followingusers
+                                                                .contains(
+                                                                    userList[
+                                                                        index])
+                                                            ? Colors.deepOrange
+                                                            : Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                      ),
+                                                      child: InkWell(
+                                                        onTap: () async {
+                                                          followuser(
+                                                              userList[index]);
+                                                        },
+                                                        child: Center(
+                                                          child: Text(
+                                                            followingusers.contains(
+                                                                    userList[
+                                                                        index])
+                                                                ? 'Following'
+                                                                : 'Follow',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color: followingusers.contains(
+                                                                        userList[
+                                                                            index])
+                                                                    ? Colors
+                                                                        .white
+                                                                    : Colors
+                                                                        .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
@@ -1329,7 +1375,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                 header: CustomHeader(
                     extent: 40.0,
                     enableHapticFeedback: true,
-                    triggerDistance: 50.0,
+                    triggerDistance: 100.0,
                     headerBuilder: (context,
                         loadState,
                         pulledExtent,
@@ -1350,6 +1396,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                   if (mounted) {
                     setState(() {
                       foryouloading = true;
+                      foryoulimit = 0;
+                      foryouskip = 40;
                       foryou();
 
                       foryoupagescroll();
@@ -1486,7 +1534,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                       (BuildContext context, int index) {
                                     return new Padding(
                                       padding: EdgeInsets.only(
-                                          right: 5, top: 10, bottom: 5),
+                                          right: 5, top: 10, bottom: 10),
                                       child: Container(
                                         height: 205,
                                         width:
@@ -1497,115 +1545,152 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
-                                        child: Column(
-                                          children: [
-                                            userList[index].profilepicture !=
-                                                        null &&
-                                                    userList[index]
-                                                        .profilepicture
-                                                        .isNotEmpty
-                                                ? Container(
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: ClipRRect(
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserItems(
+                                                        userid: userList[index]
+                                                            .userid,
+                                                        username:
+                                                            userList[index]
+                                                                .username,
+                                                      )),
+                                            );
+                                          },
+                                          child: Column(
+                                            children: [
+                                              userList[index].profilepicture !=
+                                                          null &&
+                                                      userList[index]
+                                                          .profilepicture
+                                                          .isNotEmpty
+                                                  ? Container(
+                                                      height: 80,
+                                                      width: 80,
+                                                      child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(50),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            height: 200,
+                                                            width: 300,
+                                                            imageUrl: userList[
+                                                                    index]
+                                                                .profilepicture,
+                                                            fit: BoxFit.cover,
+                                                          )),
+                                                    )
+                                                  : CircleAvatar(
+                                                      radius: 40,
+                                                      backgroundColor: Colors
+                                                          .deepOrangeAccent
+                                                          .withOpacity(0.3),
+                                                      child: ClipRRect(
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(50),
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          height: 200,
-                                                          width: 300,
-                                                          imageUrl: userList[
-                                                                  index]
-                                                              .profilepicture,
-                                                          fit: BoxFit.cover,
-                                                        )),
-                                                  )
-                                                : CircleAvatar(
-                                                    radius: 40,
-                                                    backgroundColor: Colors
-                                                        .deepOrangeAccent
-                                                        .withOpacity(0.3),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              50),
-                                                      child: Image.asset(
-                                                        'assets/personplaceholder.png',
-                                                        fit: BoxFit.fitWidth,
-                                                      ),
-                                                    )),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Container(
-                                              height: 20,
-                                              child: Text(
-                                                '@' + userList[index].username,
-                                                overflow: TextOverflow.ellipsis,
+                                                        child: Image.asset(
+                                                          'assets/personplaceholder.png',
+                                                          fit: BoxFit.fitWidth,
+                                                        ),
+                                                      )),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                  '@' +
+                                                      userList[index].username,
+                                                  textAlign: TextAlign.center,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(
+                                                userList[index]
+                                                            .productsnumber !=
+                                                        null
+                                                    ? userList[index]
+                                                            .productsnumber +
+                                                        ' Listings'
+                                                    : '0 Listings',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                     fontFamily: 'Helvetica',
-                                                    fontSize: 16,
+                                                    fontSize: 14,
                                                     color: Colors.black),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              userList[index].productsnumber !=
-                                                      null
-                                                  ? userList[index]
-                                                          .productsnumber +
-                                                      ' Listings'
-                                                  : '0 Listings',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 14,
-                                                  color: Colors.black),
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(5),
-                                              child: Container(
-                                                height: 30,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                      followingusers.contains(
-                                                              userList[index])
-                                                          ? Colors.black
-                                                          : Colors.deepOrange,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: InkWell(
-                                                  onTap: () async {
-                                                    followuser(userList[index]);
-                                                  },
-                                                  child: Center(
-                                                    child: Text(
-                                                      followingusers.contains(
-                                                              userList[index])
-                                                          ? 'Following'
-                                                          : 'Follow',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 16,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 100,
+                                                  decoration: BoxDecoration(
+                                                    border: followingusers
+                                                            .contains(
+                                                                userList[index])
+                                                        ? Border.all(
+                                                            color: Colors.white)
+                                                        : Border.all(
+                                                            color: Colors.black
+                                                                .withOpacity(
+                                                                    0.2)),
+                                                    color:
+                                                        followingusers.contains(
+                                                                userList[index])
+                                                            ? Colors.deepOrange
+                                                            : Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                  child: InkWell(
+                                                    onTap: () async {
+                                                      followuser(
+                                                          userList[index]);
+                                                    },
+                                                    child: Center(
+                                                      child: Text(
+                                                        followingusers.contains(
+                                                                userList[index])
+                                                            ? 'Following'
+                                                            : 'Follow',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color: followingusers
+                                                                    .contains(
+                                                                        userList[
+                                                                            index])
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     );
@@ -1736,7 +1821,6 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                     ),
                   )
                 ],
-                enableControlFinishLoad: true,
                 onLoad: () {
                   setState(() {
                     foryouskip = foryouskip + 30;
@@ -1805,6 +1889,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         if (mounted)
           setState(() {
             testforoyou = [];
+            foryouloading = false;
           });
       } else {
         var jsonbody = json.decode(response.body);
@@ -1821,9 +1906,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         if (mounted)
           setState(() {
             alive = true;
-            foryoulist = testforoyou.toSet().toList();
             foryouloading = false;
-            loading = false;
+            foryoulist = testforoyou.toSet().toList();
           });
       }
     } else {
@@ -1848,10 +1932,12 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
       print(response.body);
       var jsonbody = json.decode(response.body);
       if (jsonbody.isEmpty) {
-        if (mounted)
-          setState(() {
-            foryouscroll = [];
-          });
+        if (foryouskip == 10) {
+          if (mounted)
+            setState(() {
+              foryouscroll = [];
+            });
+        }
       } else {
         var jsonbody = json.decode(response.body);
 
@@ -1967,9 +2053,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                   );
                 }),
             header: CustomHeader(
-                extent: 160.0,
+                extent: 50.0,
                 enableHapticFeedback: true,
-                triggerDistance: 160.0,
+                triggerDistance: 100.0,
                 headerBuilder: (context,
                     loadState,
                     pulledExtent,

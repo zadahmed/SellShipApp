@@ -135,6 +135,7 @@ class _AddItemState extends State<AddItem> {
   List<Stores> storeslist = List<Stores>();
 
   getuser() async {
+    // await storage.delete(key: 'storeid');
     var countr = await storage.read(key: 'country');
 
     if (countr.trim().toLowerCase() == 'united arab emirates') {
@@ -2398,7 +2399,6 @@ class _AddItemState extends State<AddItem> {
                                                         weightfees +
                                                         s;
                                                   }
-
 
                                                   setState(() {
                                                     totalpayable = totalpayable;

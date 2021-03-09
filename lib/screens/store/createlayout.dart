@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/screens/store/createstorepage.dart';
+import 'package:SellShip/screens/store/createstoretier.dart';
 import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -558,6 +559,21 @@ class _CreateLayoutState extends State<CreateLayout> {
                             }
                           } else {
                             Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateStoreTier(
+                                    userid: widget.userid,
+                                    username: widget.username,
+                                    storename: widget.storename,
+                                    storelogo: widget.storelogo,
+                                    storecategory: widget.storecategory,
+                                    storeabout: widget.storeabout,
+                                    storeaddress: widget.storeaddress,
+                                    storecity: widget.storecity,
+                                    storetype: widget.storetype,
+                                  ),
+                                ));
                             //Choose Subscription
                           }
                         } else {

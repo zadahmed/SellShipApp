@@ -933,7 +933,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Text(
                                   'Order ID: ',
@@ -942,12 +942,15 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                       fontSize: 16,
                                       color: Colors.blueGrey),
                                 ),
+                                SizedBox(
+                                  width: 2,
+                                ),
                                 Container(
                                     child: Text(
                                   orderid,
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Color.fromRGBO(27, 44, 64, 1)),
                                 )),
@@ -1078,68 +1081,74 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                     fontSize: 16,
                                     color: Colors.blueGrey),
                               ),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => Details(
-                                                  itemid: widget.itemid,
-                                                  name: item.name,
-                                                  sold: item.sold,
-                                                  source: 'order',
-                                                  image: item.image,
-                                                )),
-                                      );
-                                    },
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      dense: true,
-                                      title: Text(
-                                        item.name,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w800),
-                                      ),
-                                      leading: Container(
-                                        height: 70,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: CachedNetworkImage(
-                                            height: 200,
-                                            width: 300,
-                                            imageUrl: item.image,
-                                            fit: BoxFit.cover,
+                              item != null
+                                  ? Padding(
+                                      padding: EdgeInsets.only(top: 10),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Details(
+                                                      itemid: widget.itemid,
+                                                      name: item.name,
+                                                      sold: item.sold,
+                                                      source: 'order',
+                                                      image: item.image,
+                                                    )),
+                                          );
+                                        },
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.zero,
+                                          dense: true,
+                                          title: Text(
+                                            item.name,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                          leading: Container(
+                                            height: 70,
+                                            width: 70,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: CachedNetworkImage(
+                                                height: 200,
+                                                width: 300,
+                                                imageUrl: item.image,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            item.category,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                                color: Colors.deepOrange,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          trailing: Text(
+                                            currency +
+                                                ' ' +
+                                                item.price.toString(),
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                                color: Colors.deepOrange,
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                      ),
-                                      subtitle: Text(
-                                        item.category,
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 14,
-                                            color: Colors.deepOrange,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      trailing: Text(
-                                        currency + ' ' + item.price.toString(),
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 14,
-                                            color: Colors.deepOrange,
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                      ))
+                                  : SpinKitDoubleBounce(
+                                      color: Colors.deepOrange,
                                     ),
-                                  )),
                               SizedBox(
                                 height: 5,
                               ),
@@ -1208,95 +1217,102 @@ class _OrderBuyerState extends State<OrderBuyer> {
                 //       )
                 //     : deliveryinformation(context),
 
-                Padding(
-                    padding: EdgeInsets.only(
-                        left: 15, bottom: 10, top: 5, right: 15),
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Seller: ',
-                              style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                  color: Colors.blueGrey),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Column(
-                              children: [
-                                ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => StorePublic(
-                                                  storeid: item.userid,
-                                                  storename: item.username,
-                                                )),
-                                      );
-                                    },
-                                    dense: true,
-                                    leading: profilepicture != null &&
-                                            profilepicture.isNotEmpty
-                                        ? Container(
-                                            height: 50,
-                                            width: 50,
-                                            child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(25),
-                                                child: CachedNetworkImage(
-                                                  height: 200,
-                                                  width: 300,
-                                                  imageUrl: profilepicture,
-                                                  fit: BoxFit.cover,
-                                                )),
-                                          )
-                                        : CircleAvatar(
-                                            radius: 25,
-                                            backgroundColor: Colors.deepOrange,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(25),
-                                              child: Image.asset(
-                                                'assets/personplaceholder.png',
-                                                fit: BoxFit.fitWidth,
-                                              ),
-                                            )),
-                                    title: Text(
-                                      '@' + item.username,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    trailing: Icon(
-                                      Icons.chevron_right,
-                                      color: Colors.black,
-                                    ),
-                                    contentPadding: EdgeInsets.zero),
-                                SizedBox(
-                                  height: 5,
+                item != null
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            left: 15, bottom: 10, top: 5, right: 15),
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  blurRadius: 6.0,
                                 ),
                               ],
-                            ),
-                          ]),
-                    )),
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Seller: ',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.blueGrey),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Column(
+                                  children: [
+                                    ListTile(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    StorePublic(
+                                                      storeid: item.userid,
+                                                      storename: item.username,
+                                                    )),
+                                          );
+                                        },
+                                        dense: true,
+                                        leading: profilepicture != null &&
+                                                profilepicture.isNotEmpty
+                                            ? Container(
+                                                height: 50,
+                                                width: 50,
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25),
+                                                    child: CachedNetworkImage(
+                                                      height: 200,
+                                                      width: 300,
+                                                      imageUrl: profilepicture,
+                                                      fit: BoxFit.cover,
+                                                    )),
+                                              )
+                                            : CircleAvatar(
+                                                radius: 25,
+                                                backgroundColor:
+                                                    Colors.deepOrange,
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(25),
+                                                  child: Image.asset(
+                                                    'assets/personplaceholder.png',
+                                                    fit: BoxFit.fitWidth,
+                                                  ),
+                                                )),
+                                        title: Text(
+                                          '@' + item.username,
+                                          style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 18,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        trailing: Icon(
+                                          Icons.chevron_right,
+                                          color: Colors.black,
+                                        ),
+                                        contentPadding: EdgeInsets.zero),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                  ],
+                                ),
+                              ]),
+                        ))
+                    : SpinKitDoubleBounce(
+                        color: Colors.deepOrange,
+                      ),
 
                 Padding(
                     padding: EdgeInsets.only(

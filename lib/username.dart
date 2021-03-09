@@ -153,7 +153,7 @@ class _UsernameState extends State<Username> {
                             if (jsondeco['Status'] == 'Success') {
                               setState(() {
                                 usernamemessage =
-                                    'Awesome! Thats available @' + text + '.';
+                                    'Awesome! Thats available @' + text;
                                 allgood = true;
                               });
                             } else {
@@ -192,13 +192,13 @@ class _UsernameState extends State<Username> {
               )),
           Padding(
             padding:
-                EdgeInsets.only(left: 16.0, bottom: 20, top: 30, right: 16),
+                EdgeInsets.only(left: 16.0, bottom: 20, top: 20, right: 16),
             child: Center(
               child: Text(
                 usernamemessage,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 16.0,
                     color: allgood == true ? Colors.green : Colors.red,
                     fontFamily: 'Helvetica'),
               ),
@@ -212,6 +212,27 @@ class _UsernameState extends State<Username> {
                 children: [
                   InkWell(
                     onTap: () async {
+                      var url = 'https://api.sellship.co/check/username/' +
+                          userid +
+                          '/' +
+                          usernamecontroller.text;
+
+                      final response = await http.get(url);
+                      if (response.statusCode == 200) {
+                        var jsondeco = json.decode(response.body);
+                        if (jsondeco['Status'] == 'Success') {
+                          setState(() {
+                            usernamemessage = 'Awesome! Thats available @' +
+                                usernamecontroller.text;
+                            allgood = true;
+                          });
+                        } else {
+                          setState(() {
+                            usernamemessage = 'Username already exists';
+                            allgood = false;
+                          });
+                        }
+                      }
                       if (allgood) {
                         Navigator.push(
                             context,
@@ -234,7 +255,7 @@ class _UsernameState extends State<Username> {
                                         fontWeight: FontWeight.w600),
                                   ),
                                   description: Text(
-                                    'Looks like something went wrong',
+                                    'Looks like that username is not available',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(fontFamily: 'Helvetica'),
                                   ),

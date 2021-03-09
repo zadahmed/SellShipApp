@@ -83,7 +83,8 @@ class _CreateStoreState extends State<CreateStore> {
   final picker = ImagePicker();
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, maxHeight: 300, maxWidth: 400);
 
     setState(() {
       if (pickedFile != null) {

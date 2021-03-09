@@ -1466,7 +1466,7 @@ class _OrderSellerState extends State<OrderSeller> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Text(
                                   'Order ID: ',
@@ -1475,12 +1475,15 @@ class _OrderSellerState extends State<OrderSeller> {
                                       fontSize: 16,
                                       color: Colors.blueGrey),
                                 ),
+                                SizedBox(
+                                  width: 2,
+                                ),
                                 Container(
                                     child: Text(
                                   orderid,
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Color.fromRGBO(27, 44, 64, 1)),
                                 )),

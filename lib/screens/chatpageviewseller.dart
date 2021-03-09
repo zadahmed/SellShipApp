@@ -624,17 +624,20 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: Image.asset(
-                            'assets/logonew.png',
-                            fit: BoxFit.cover,
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: Image.asset(
+                              'assets/logonew.png',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
