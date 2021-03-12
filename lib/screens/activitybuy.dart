@@ -123,8 +123,6 @@ class _ActivityBuyState extends State<ActivityBuy>
             date = 0;
           }
 
-          print(date);
-
           var sellername;
           if (itemmap[i].containsKey('sellername')) {
             sellername = itemmap[i]['sellername'];
@@ -189,7 +187,6 @@ class _ActivityBuyState extends State<ActivityBuy>
       List<Item> ites = List<Item>();
 
       if (itemmap != null) {
-        print(itemmap);
         for (var i = 0; i < itemmap.length; i++) {
           Item ite = Item(
               itemid: itemmap[i]['item']['_id']['\$oid'],

@@ -100,11 +100,11 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
-                              height: 400,
+                              height: 300,
                               width: MediaQuery.of(context).size.width,
                               child: Image.asset(
                                 'assets/165.png',
-                                fit: BoxFit.cover,
+                                fit: BoxFit.fitHeight,
                               ))
                         ])),
                 Container(
@@ -172,6 +172,47 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
                       children: [
                         InkWell(
                           onTap: () {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (_) => new AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      content: Builder(
+                                        builder: (context) {
+                                          return Container(
+                                              height: 100,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    'Loading..',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child:
+                                                          SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange,
+                                                      )),
+                                                ],
+                                              ));
+                                        },
+                                      ),
+                                    ));
                             _onFormSubmitted();
                           },
                           child: Container(
@@ -296,23 +337,6 @@ class _OTPScreenSignUpState extends State<OTPScreenSignUp> {
 
   var authvalue;
   void _onFormSubmitted() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        useRootNavigator: false,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0)), //this right here
-            child: Container(
-              height: 100,
-              child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: SpinKitDoubleBounce(color: Colors.deepOrange)),
-            ),
-          );
-        });
-
     Provider.of<UserProvider>(context, listen: false).signUpUser(
         firstName: widget.fullname,
         lastName: '',

@@ -179,14 +179,24 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(
+                                value,
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
                             );
                           }).toList(),
                         )),
                   ],
                 )),
           ),
-          storetype != null && storetype != 'Secondhand Seller'
+          storetype != null &&
+                  storetype != 'Secondhand Seller' &&
+                  storetype != 'Reseller'
               ? FadeAnimation(
                   1,
                   Padding(
@@ -238,7 +248,6 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                                   'Kids',
                                   'Sport & Leisure',
                                   'Books',
-                                  'Motors',
                                   'Vintage',
                                   'Luxury',
                                   'Garden',
@@ -246,7 +255,15 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                                 ].map<DropdownMenuItem<String>>((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
-                                    child: Text(value),
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
                                   );
                                 }).toList(),
                               )),
@@ -268,6 +285,7 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                           showInSnackBar('Please choose your store type');
                         } else {
                           if (storetype != 'Secondhand Seller' &&
+                              storetype != 'Reseller' &&
                               storecategory == null) {
                             showInSnackBar('Please choose your store category');
                           } else {

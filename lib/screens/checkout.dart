@@ -587,6 +587,7 @@ class _CheckoutState extends State<Checkout> {
                                 "category": "pay",
                               },
                               "configuration": {
+                                "tokenizeCC": true,
                                 "locale": "en",
                                 "paymentAction": "Sale",
                                 "returnUrl":
@@ -612,20 +613,21 @@ class _CheckoutState extends State<Checkout> {
                               'Content-type': 'application/json',
                               'Accept': 'application/json',
                             };
+
                             final response = await http.post(
                               url,
                               body: json.encode(body),
                               headers: headers,
                             );
 
-                            print(response.body);
                             if (response.statusCode == 200) {
+                              Navigator.of(context, rootNavigator: true).pop();
                               var jsonmessage = json.decode(response.body);
 
                               var url = jsonmessage['result']['checkoutData']
                                   ['postUrl'];
 
-                              Navigator.of(context, rootNavigator: true).pop();
+                              // Navigator.of(context, rootNavigator: true).pop();
                               final result = await Navigator.push(
                                   context,
                                   MaterialPageRoute(

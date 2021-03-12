@@ -31,8 +31,7 @@ import 'package:flutter_easyrefresh/ball_pulse_footer.dart';
 import 'package:flutter_easyrefresh/bezier_circle_header.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_native_admob/flutter_native_admob.dart';
-import 'package:flutter_native_admob/native_admob_controller.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -79,12 +78,6 @@ class _DiscoverState extends State<Discover>
 
   @override
   bool get wantKeepAlive => alive;
-
-  static const _iosadUnitID = "ca-app-pub-9959700192389744/8038471619";
-
-  static const _androidadUnitID = "ca-app-pub-9959700192389744/4861643935";
-
-  final _controller = NativeAdmobController();
 
   ScrollController _scrollController = ScrollController();
 
@@ -1360,28 +1353,6 @@ class _DiscoverState extends State<Discover>
                         crossAxisCount: 3, childAspectRatio: 1),
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                        if (index != 0 && index % 8 == 0) {
-                          return Platform.isIOS == true
-                              ? Container(
-                                  height: 200,
-                                  child: NativeAdmob(
-                                    adUnitID: _iosadUnitID,
-                                    controller: _controller,
-                                    loading: Center(
-                                        child: SpinKitDoubleBounce(
-                                            color: Colors.deepOrange)),
-                                    type: NativeAdmobType.full,
-                                  ),
-                                )
-                              : Container(
-                                  height: 200,
-                                  child: NativeAdmob(
-                                    adUnitID: _androidadUnitID,
-                                    controller: _controller,
-                                  ),
-                                );
-                        }
-
                         return InkWell(
                           onTap: () {
                             Navigator.push(
@@ -1613,54 +1584,6 @@ class _DiscoverState extends State<Discover>
                         crossAxisCount: 3, childAspectRatio: 1),
                     delegate: SliverChildBuilderDelegate(
                       (BuildContext context, int index) {
-                        if (index != 0 && index % 8 == 0) {
-                          return Platform.isIOS == true
-                              ? Container(
-                                  height: 200,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.2, color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: NativeAdmob(
-                                    adUnitID: _iosadUnitID,
-                                    controller: _controller,
-                                    loading: Center(
-                                        child: SpinKitDoubleBounce(
-                                            color: Colors.deepOrange)),
-                                    type: NativeAdmobType.full,
-                                  ),
-                                )
-                              : Container(
-                                  height: 200,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.2, color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: NativeAdmob(
-                                    adUnitID: _androidadUnitID,
-                                    controller: _controller,
-                                  ),
-                                );
-                        }
-
                         return InkWell(
                           onTap: () {
                             Navigator.push(
@@ -3177,62 +3100,6 @@ class _DiscoverState extends State<Discover>
                     childAspectRatio: 0.75),
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    if (index != 0 && index % 8 == 0) {
-                      return Platform.isIOS == true
-                          ? Padding(
-                              padding: EdgeInsets.all(7),
-                              child: Container(
-                                height: 200,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(bottom: 20.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 0.2, color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: NativeAdmob(
-                                  adUnitID: _iosadUnitID,
-                                  controller: _controller,
-                                  loading: Center(
-                                      child: SpinKitDoubleBounce(
-                                          color: Colors.deepOrange)),
-                                  type: NativeAdmobType.full,
-                                ),
-                              ))
-                          : Padding(
-                              padding: EdgeInsets.all(7),
-                              child: Container(
-                                height: 200,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(bottom: 20.0),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 0.2, color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300,
-                                      offset: Offset(0.0, 1.0), //(x,y)
-                                      blurRadius: 6.0,
-                                    ),
-                                  ],
-                                ),
-                                child: NativeAdmob(
-                                  adUnitID: _androidadUnitID,
-                                  controller: _controller,
-                                ),
-                              ));
-                    }
-
                     return new Padding(
                       padding: EdgeInsets.all(10),
                       child: Container(
@@ -3884,11 +3751,7 @@ class UserSearchDelegate extends SearchDelegate {
     );
   }
 
-  static const _iosadUnitID = "ca-app-pub-9959700192389744/8038471619";
-
   static const _androidadUnitID = "ca-app-pub-9959700192389744/4861643935";
-
-  final _controller = NativeAdmobController();
 
   @override
   Widget buildResults(BuildContext context) {
@@ -3912,66 +3775,6 @@ class UserSearchDelegate extends SearchDelegate {
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (BuildContext context, int index) {
-                      if (index != 0 && index % 8 == 0) {
-                        return Platform.isIOS == true
-                            ? Padding(
-                                padding: EdgeInsets.all(7),
-                                child: Container(
-                                  height: 220,
-                                  padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.only(bottom: 20.0),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.2, color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: NativeAdmob(
-                                    adUnitID: _iosadUnitID,
-                                    controller: _controller,
-                                    loading: Center(
-                                        child: SpinKitDoubleBounce(
-                                            color: Colors.deepOrange)),
-                                    type: NativeAdmobType.full,
-                                  ),
-                                ))
-                            : Padding(
-                                padding: EdgeInsets.all(7),
-                                child: Container(
-                                  height: 220,
-                                  padding: EdgeInsets.all(10),
-                                  margin: EdgeInsets.only(bottom: 20.0),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 0.2, color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: NativeAdmob(
-                                    adUnitID: _androidadUnitID,
-                                    controller: _controller,
-                                    loading: Center(
-                                        child: SpinKitDoubleBounce(
-                                            color: Colors.deepOrange)),
-                                    type: NativeAdmobType.full,
-                                  ),
-                                ));
-                      }
-
                       return StatefulBuilder(
                         builder: (BuildContext context, StateSetter setState) {
                           return new Padding(
@@ -4394,66 +4197,6 @@ class UserSearchDelegate extends SearchDelegate {
                       ),
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
-                          if (index != 0 && index % 8 == 0) {
-                            return Platform.isIOS == true
-                                ? Padding(
-                                    padding: EdgeInsets.all(7),
-                                    child: Container(
-                                      height: 220,
-                                      padding: EdgeInsets.all(10),
-                                      margin: EdgeInsets.only(bottom: 20.0),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 0.2, color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: Offset(0.0, 1.0), //(x,y)
-                                            blurRadius: 6.0,
-                                          ),
-                                        ],
-                                      ),
-                                      child: NativeAdmob(
-                                        adUnitID: _iosadUnitID,
-                                        controller: _controller,
-                                        loading: Center(
-                                            child: SpinKitDoubleBounce(
-                                                color: Colors.deepOrange)),
-                                        type: NativeAdmobType.full,
-                                      ),
-                                    ))
-                                : Padding(
-                                    padding: EdgeInsets.all(7),
-                                    child: Container(
-                                      height: 220,
-                                      padding: EdgeInsets.all(10),
-                                      margin: EdgeInsets.only(bottom: 20.0),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 0.2, color: Colors.grey),
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: Offset(0.0, 1.0), //(x,y)
-                                            blurRadius: 6.0,
-                                          ),
-                                        ],
-                                      ),
-                                      child: NativeAdmob(
-                                        adUnitID: _androidadUnitID,
-                                        controller: _controller,
-                                        loading: Center(
-                                            child: SpinKitDoubleBounce(
-                                                color: Colors.deepOrange)),
-                                        type: NativeAdmobType.full,
-                                      ),
-                                    ));
-                          }
-
                           return StatefulBuilder(
                             builder:
                                 (BuildContext context, StateSetter setState) {

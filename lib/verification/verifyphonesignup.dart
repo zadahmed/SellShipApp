@@ -59,106 +59,109 @@ class _VerifyPhoneSignUpState extends State<VerifyPhoneSignUp> {
                 fontWeight: FontWeight.bold),
           ),
         ),
-        body: ListView(
-          children: [
-            Padding(
-                padding: EdgeInsets.only(
-                  top: 10,
-                ),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                          height: 400,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.asset(
-                            'assets/184.png',
-                            fit: BoxFit.cover,
-                          ))
-                    ])),
-            Padding(
-                padding: EdgeInsets.only(left: 30, top: 30, right: 30),
-                child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        height: 85,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-                        width: MediaQuery.of(context).size.width - 100,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(131, 146, 165, 0.1),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 0),
-                          child: InternationalPhoneNumberInput(
-                            isEnabled: true,
-                            onInputChanged: (PhoneNumber number) async {
-                              if (number != null) {
-                                setState(() {
-                                  numberphone = number.toString();
-                                });
-                              }
-                            },
-                            focusNode: myFocusNodePhone,
-                            autoValidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            countries: ['US', 'AE'],
-                            textFieldController: _phoneNumberController,
-                            inputDecoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              hintText: "501234567",
-                            ),
-                          ),
-                        ),
-                      )
-                    ])),
-            SizedBox(
-              height: 20,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 36, top: 20, right: 36),
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OTPScreen(
-                                phonenumber: numberphone,
-                                userid: widget.userid,
-                              ),
-                            ));
-                      },
-                      child: Container(
-                        height: 60,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        width: MediaQuery.of(context).size.width - 250,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(255, 115, 0, 1),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Center(
-                            child: Text(
-                          'Verify Phone',
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        )),
-                      ),
+        body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: ListView(
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
                     ),
-                  ]),
-            ),
-          ],
-        ));
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                              height: 310,
+                              width: MediaQuery.of(context).size.width,
+                              child: Image.asset(
+                                'assets/184.png',
+                                fit: BoxFit.fitHeight,
+                              ))
+                        ])),
+                Padding(
+                    padding: EdgeInsets.only(left: 30, top: 30, right: 30),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            height: 85,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 2),
+                            width: MediaQuery.of(context).size.width - 100,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(131, 146, 165, 0.1),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 0),
+                              child: InternationalPhoneNumberInput(
+                                isEnabled: true,
+                                onInputChanged: (PhoneNumber number) async {
+                                  if (number != null) {
+                                    setState(() {
+                                      numberphone = number.toString();
+                                    });
+                                  }
+                                },
+                                focusNode: myFocusNodePhone,
+                                autoValidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                textFieldController: _phoneNumberController,
+                                inputDecoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  hintText: "501234567",
+                                ),
+                              ),
+                            ),
+                          )
+                        ])),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 36, top: 20, right: 36),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OTPScreen(
+                                    phonenumber: numberphone,
+                                    userid: widget.userid,
+                                  ),
+                                ));
+                          },
+                          child: Container(
+                            height: 60,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            width: MediaQuery.of(context).size.width - 250,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(255, 115, 0, 1),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Center(
+                                child: Text(
+                              'Verify Phone',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            )),
+                          ),
+                        ),
+                      ]),
+                ),
+              ],
+            )));
   }
 }

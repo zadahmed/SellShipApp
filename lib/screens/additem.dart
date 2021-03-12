@@ -330,8 +330,10 @@ class _AddItemState extends State<AddItem> {
         maxImages: 6,
         enableCamera: true,
         selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "camera"),
+        cupertinoOptions: CupertinoOptions(
+            takePhotoIcon: "camera", autoCloseOnSelectionLimit: true),
         materialOptions: MaterialOptions(
+          autoCloseOnSelectionLimit: true,
           actionBarColor: "#abcdef",
           actionBarTitle: "SellShip",
           allViewTitle: "All Photos",

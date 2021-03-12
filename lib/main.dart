@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -117,16 +118,19 @@ class Splash extends StatefulWidget {
 }
 
 class SplashState extends State<Splash> {
+  final storage = new FlutterSecureStorage();
+
   void navigatetoscreen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _seen = (prefs.getBool('seen') ?? false);
+    await storage.write(key: 'country', value: 'United Arab Emirates');
 
     if (_seen) {
       Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => new RootScreen()));
     } else {
       Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new StarterPage()));
+          new MaterialPageRoute(builder: (context) => new OnboardingScreen()));
     }
   }
 
@@ -134,7 +138,7 @@ class SplashState extends State<Splash> {
   void initState() {
     super.initState();
 
-    new Timer(new Duration(milliseconds: 4), () {
+    new Timer(new Duration(milliseconds: 1), () {
       if (mounted) {
         navigatetoscreen();
       }

@@ -505,16 +505,37 @@ class _CreateLayoutState extends State<CreateLayout> {
                                     content: Builder(
                                       builder: (context) {
                                         return Container(
-                                            height: 50,
-                                            width: 50,
-                                            child: SpinKitDoubleBounce(
-                                              color: Colors.deepOrange,
+                                            height: 100,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Setting up your shiny new Store..',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: SpinKitDoubleBounce(
+                                                      color: Colors.deepOrange,
+                                                    )),
+                                              ],
                                             ));
                                       },
                                     ),
                                   ));
 
-                          if (widget.storetype.contains('Secondhand Seller')) {
+                          if (widget.storetype.contains('Secondhand Seller') ||
+                              widget.storetype.contains('Reseller')) {
                             Dio dio = new Dio();
                             FormData formData;
                             var addurl = 'https://api.sellship.co/create/store';

@@ -79,14 +79,14 @@ class _StarterPageState extends State<StarterPage>
     );
   }
 
-  final items = {'AE': 'United Arab Emirates', 'US': 'United States'};
+  final items = {'AE': 'United Arab Emirates'};
 
   var selectedItem;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
+        body: ListView(
       children: <Widget>[
         Container(
             height: MediaQuery.of(context).size.height / 1.5,
@@ -245,13 +245,6 @@ class _StarterPageState extends State<StarterPage>
 //                        await SharedPreferences.getInstance();
 //                    await prefs.setBool('seen', true);
 
-                    await storage
-                        .write(key: 'country', value: selectedItem)
-                        .whenComplete(() => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => OnboardingScreen()),
-                            ));
                   } else {
                     showDialog(
                         context: context,
@@ -310,7 +303,6 @@ class _StarterPageState extends State<StarterPage>
           padding: EdgeInsets.only(bottom: 40),
         ),
       ],
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
     ));
   }
 }

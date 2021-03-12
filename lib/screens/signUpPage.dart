@@ -87,12 +87,13 @@ class _SignUpPageState extends State<SignUpPage> {
                         Align(
                             alignment: Alignment.topLeft,
                             child: Padding(
-                                padding: EdgeInsets.only(left: 20, top: 150),
+                                padding: EdgeInsets.only(left: 35, top: 150),
                                 child: Text(
-                                  'Create an Account',
+                                  'Sign Up',
                                   style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     fontSize: 40,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
                                 ))),
@@ -392,6 +393,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.w300,
                                     fontSize: 16,
+                                    fontFamily: 'Helvetica',
                                   ),
                                 ),
                               ),
@@ -409,8 +411,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                 child: Text(
                                   "Login",
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.bold,
                                     fontSize: 16,
+                                    fontFamily: 'Helvetica',
                                   ),
                                 ),
                               ),

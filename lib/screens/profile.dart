@@ -362,6 +362,17 @@ class _ProfilePageState extends State<ProfilePage>
             SharedPreferences prefs = await SharedPreferences.getInstance();
             prefs.setBool('seen', true);
             await storage.write(key: 'userid', value: jsondata['status']['id']);
+            var userid = await storage.read(key: 'userid');
+            var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
+            final storeresponse = await http.get(storeurl);
+            var storejsonbody = json.decode(storeresponse.body);
+
+            if (storejsonbody.isNotEmpty) {
+              var storeid = storejsonbody[0]['_id']['\$oid'];
+              print(storeid);
+              await storage.write(key: 'storeid', value: storeid);
+            }
+
             Navigator.of(context).pop();
 
             Navigator.pushReplacement(
@@ -369,6 +380,18 @@ class _ProfilePageState extends State<ProfilePage>
                 MaterialPageRoute(
                     builder: (BuildContext context) => RootScreen()));
           } else {
+            await storage.write(key: 'userid', value: jsondata['id']);
+            var userid = await storage.read(key: 'userid');
+            var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
+            final storeresponse = await http.get(storeurl);
+            var storejsonbody = json.decode(storeresponse.body);
+
+            if (storejsonbody.isNotEmpty) {
+              var storeid = storejsonbody[0]['_id']['\$oid'];
+              print(storeid);
+              await storage.write(key: 'storeid', value: storeid);
+            }
+
             Navigator.of(context).pop();
 
             Navigator.push(
@@ -2049,10 +2072,35 @@ class _ProfilePageState extends State<ProfilePage>
                                             content: Builder(
                                               builder: (context) {
                                                 return Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange,
+                                                    height: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Loading..',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Container(
+                                                            height: 50,
+                                                            width: 50,
+                                                            child:
+                                                                SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            )),
+                                                      ],
                                                     ));
                                               },
                                             ),
@@ -2083,6 +2131,55 @@ class _ProfilePageState extends State<ProfilePage>
                               Platform.isIOS
                                   ? AppleAuthButton(
                                       onPressed: () async {
+                                        showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            useRootNavigator: false,
+                                            builder: (_) => new AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  10.0))),
+                                                  content: Builder(
+                                                    builder: (context) {
+                                                      return Container(
+                                                          height: 100,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                'Loading..',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 15,
+                                                              ),
+                                                              Container(
+                                                                  height: 50,
+                                                                  width: 50,
+                                                                  child:
+                                                                      SpinKitDoubleBounce(
+                                                                    color: Colors
+                                                                        .deepOrange,
+                                                                  )),
+                                                            ],
+                                                          ));
+                                                    },
+                                                  ),
+                                                ));
                                         await FirebaseAuthOAuth()
                                             .openSignInFlow("apple.com", [
                                           "email",
@@ -2090,6 +2187,7 @@ class _ProfilePageState extends State<ProfilePage>
                                         ], {
                                           "locale": "en"
                                         }).then((user) async {
+                                          print(user);
                                           var url =
                                               'https://api.sellship.co/api/signup';
 
@@ -2103,7 +2201,6 @@ class _ProfilePageState extends State<ProfilePage>
                                             'email': user.email,
                                             'phonenumber': '000',
                                             'password': user.uid,
-                                            'fcmtoken': '000',
                                           };
 
                                           final response =
@@ -2118,6 +2215,26 @@ class _ProfilePageState extends State<ProfilePage>
                                                   key: 'userid',
                                                   value: jsondata['status']
                                                       ['id']);
+
+                                              var userid = await storage.read(
+                                                  key: 'userid');
+                                              var storeurl =
+                                                  'https://api.sellship.co/api/userstores/' +
+                                                      userid;
+                                              final storeresponse =
+                                                  await http.get(storeurl);
+                                              var storejsonbody = json
+                                                  .decode(storeresponse.body);
+
+                                              if (storejsonbody.isNotEmpty) {
+                                                var storeid = storejsonbody[0]
+                                                    ['_id']['\$oid'];
+                                                print(storeid);
+                                                await storage.write(
+                                                    key: 'storeid',
+                                                    value: storeid);
+                                              }
+
                                               Navigator.of(context).pop();
 
                                               Navigator.pushReplacement(
@@ -2127,6 +2244,30 @@ class _ProfilePageState extends State<ProfilePage>
                                                               context) =>
                                                           RootScreen()));
                                             } else {
+                                              await storage.write(
+                                                  key: 'userid',
+                                                  value: jsondata['status']
+                                                      ['id']);
+
+                                              var userid = await storage.read(
+                                                  key: 'userid');
+                                              var storeurl =
+                                                  'https://api.sellship.co/api/userstores/' +
+                                                      userid;
+                                              final storeresponse =
+                                                  await http.get(storeurl);
+                                              var storejsonbody = json
+                                                  .decode(storeresponse.body);
+
+                                              if (storejsonbody.isNotEmpty) {
+                                                var storeid = storejsonbody[0]
+                                                    ['_id']['\$oid'];
+                                                print(storeid);
+                                                await storage.write(
+                                                    key: 'storeid',
+                                                    value: storeid);
+                                              }
+
                                               Navigator.of(context).pop();
 
                                               Navigator.push(
@@ -2134,8 +2275,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         VerifyPhoneSignUp(
-                                                      userid: jsondata['status']
-                                                          ['id'],
+                                                      userid: jsondata['id'],
                                                     ),
                                                   ));
                                             }
@@ -2192,10 +2332,35 @@ class _ProfilePageState extends State<ProfilePage>
                                             content: Builder(
                                               builder: (context) {
                                                 return Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange,
+                                                    height: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Loading..',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Container(
+                                                            height: 50,
+                                                            width: 50,
+                                                            child:
+                                                                SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            )),
+                                                      ],
                                                     ));
                                               },
                                             ),

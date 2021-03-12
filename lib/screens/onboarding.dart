@@ -217,39 +217,85 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
         if (response.statusCode == 200) {
           var jsondata = json.decode(response.body);
+
           print(jsondata);
 
-          if (jsondata['status']['message'] == 'User already exists') {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setBool('seen', true);
-            await storage.write(key: 'userid', value: jsondata['status']['id']);
+          if (jsondata.containsKey('status')) {
+            if (jsondata['status']['message'] == 'User already exists') {
+              print(' hellooo user exists');
+              await storage.write(
+                  key: 'userid', value: jsondata['status']['id']);
+
+              var userid = await storage.read(key: 'userid');
+              var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
+              final storeresponse = await http.get(storeurl);
+              var storejsonbody = json.decode(storeresponse.body);
+
+              if (storejsonbody.isNotEmpty) {
+                var storeid = storejsonbody[0]['_id']['\$oid'];
+                print(storeid);
+                await storage.write(key: 'storeid', value: storeid);
+              }
+
+              Navigator.of(context).pop();
+
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => RootScreen()));
+            }
+          } else {
+            print('Dude new user');
+            await storage.write(key: 'userid', value: jsondata['id']);
+
             var userid = await storage.read(key: 'userid');
             var storeurl = 'https://api.sellship.co/api/userstores/' + userid;
             final storeresponse = await http.get(storeurl);
             var storejsonbody = json.decode(storeresponse.body);
-            print(storejsonbody);
+
             if (storejsonbody.isNotEmpty) {
-              var storeid = storejsonbody[0]['_id']['\$oid'];
+              var storeid = storejsonbody[0]['_id'];
+
               await storage.write(key: 'storeid', value: storeid);
             }
 
+            print(userid);
             Navigator.of(context).pop();
 
-            Navigator.pushNamedAndRemoveUntil(
-                context, Routes.rootScreen, (route) => false);
-          } else {
-            Navigator.of(context).pop();
-
+            print('I am here');
             Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => VerifyPhoneSignUp(
-                    userid: jsondata['status']['id'],
+                    userid: userid,
                   ),
                 ));
           }
         } else {
-          print(response.statusCode);
+          showDialog(
+              context: context,
+              useRootNavigator: false,
+              builder: (_) => AssetGiffyDialog(
+                    image: Image.asset(
+                      'assets/oops.gif',
+                      fit: BoxFit.cover,
+                    ),
+                    title: Text(
+                      'Oops!',
+                      style: TextStyle(
+                          fontSize: 22.0, fontWeight: FontWeight.w600),
+                    ),
+                    description: Text(
+                      'Looks like something went wrong!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(),
+                    ),
+                    onlyOkButton: true,
+                    entryAnimation: EntryAnimation.DEFAULT,
+                    onOkButtonPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ));
         }
 
         setState(() {
@@ -295,12 +341,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Align(
                             alignment: Alignment.topLeft,
                             child: Padding(
-                                padding: EdgeInsets.only(left: 20, top: 150),
+                                padding: EdgeInsets.only(left: 35, top: 150),
                                 child: Text(
                                   'Welcome\nBack',
                                   style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     fontSize: 40,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
                                 ))),
@@ -411,10 +458,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             content: Builder(
                                               builder: (context) {
                                                 return Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange,
+                                                    height: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Loading..',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        ),
+                                                        Container(
+                                                            height: 50,
+                                                            width: 50,
+                                                            child:
+                                                                SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            )),
+                                                      ],
                                                     ));
                                               },
                                             ),
@@ -452,6 +524,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                         ], {
                                           "locale": "en"
                                         }).then((user) async {
+                                          print(user);
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              useRootNavigator: false,
+                                              builder: (_) => new AlertDialog(
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10.0))),
+                                                    content: Builder(
+                                                      builder: (context) {
+                                                        return Container(
+                                                            height: 100,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  'Loading..',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 15,
+                                                                ),
+                                                                Container(
+                                                                    height: 50,
+                                                                    width: 50,
+                                                                    child:
+                                                                        SpinKitDoubleBounce(
+                                                                      color: Colors
+                                                                          .deepOrange,
+                                                                    )),
+                                                              ],
+                                                            ));
+                                                      },
+                                                    ),
+                                                  ));
                                           var url =
                                               'https://api.sellship.co/api/signup';
 
@@ -464,7 +587,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             'email': user.email,
                                             'phonenumber': '000',
                                             'password': user.uid,
-                                            'fcmtoken': '000',
                                           };
 
                                           final response =
@@ -473,12 +595,53 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                           if (response.statusCode == 200) {
                                             var jsondata =
                                                 json.decode(response.body);
-                                            if (jsondata['status']['message'] ==
-                                                'User already exists') {
+
+                                            print(jsondata);
+
+                                            if (jsondata
+                                                .containsKey('status')) {
+                                              if (jsondata['status']
+                                                      ['message'] ==
+                                                  'User already exists') {
+                                                print(' hellooo user exists');
+                                                await storage.write(
+                                                    key: 'userid',
+                                                    value: jsondata['status']
+                                                        ['id']);
+
+                                                var userid = await storage.read(
+                                                    key: 'userid');
+                                                var storeurl =
+                                                    'https://api.sellship.co/api/userstores/' +
+                                                        userid;
+                                                final storeresponse =
+                                                    await http.get(storeurl);
+                                                var storejsonbody = json
+                                                    .decode(storeresponse.body);
+
+                                                if (storejsonbody.isNotEmpty) {
+                                                  var storeid = storejsonbody[0]
+                                                      ['_id']['\$oid'];
+                                                  print(storeid);
+                                                  await storage.write(
+                                                      key: 'storeid',
+                                                      value: storeid);
+                                                }
+
+                                                Navigator.of(context).pop();
+
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            RootScreen()));
+                                              }
+                                            } else {
+                                              print('Dude new user');
                                               await storage.write(
                                                   key: 'userid',
-                                                  value: jsondata['status']
-                                                      ['id']);
+                                                  value: jsondata['id']);
 
                                               var userid = await storage.read(
                                                   key: 'userid');
@@ -489,34 +652,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                                   await http.get(storeurl);
                                               var storejsonbody = json
                                                   .decode(storeresponse.body);
-                                              var storeid = storejsonbody[0]
-                                                  ['_id']['\$oid'];
-                                              await storage.write(
-                                                  key: 'storeid',
-                                                  value: storeid);
 
+                                              if (storejsonbody.isNotEmpty) {
+                                                var storeid =
+                                                    storejsonbody[0]['_id'];
+
+                                                await storage.write(
+                                                    key: 'storeid',
+                                                    value: storeid);
+                                              }
+
+                                              print(userid);
                                               Navigator.of(context).pop();
 
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  Routes.rootScreen,
-                                                  (route) => false);
-                                            } else {
-                                              Navigator.of(context).pop();
-
+                                              print('I am here');
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         VerifyPhoneSignUp(
-                                                      userid: jsondata['status']
-                                                          ['id'],
+                                                      userid: userid,
                                                     ),
                                                   ));
                                             }
                                           } else {
                                             showDialog(
                                                 context: context,
+                                                useRootNavigator: false,
                                                 builder: (_) =>
                                                     AssetGiffyDialog(
                                                       image: Image.asset(
@@ -542,10 +704,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                                           EntryAnimation
                                                               .DEFAULT,
                                                       onOkButtonPressed: () {
-                                                        Navigator.of(context,
-                                                                rootNavigator:
-                                                                    true)
-                                                            .pop('dialog');
+                                                        Navigator.of(context)
+                                                            .pop();
                                                       },
                                                     ));
                                           }
@@ -568,10 +728,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             content: Builder(
                                               builder: (context) {
                                                 return Container(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: SpinKitDoubleBounce(
-                                                      color: Colors.deepOrange,
+                                                    height: 100,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'Loading..',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Container(
+                                                            height: 50,
+                                                            width: 50,
+                                                            child:
+                                                                SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            )),
+                                                      ],
                                                     ));
                                               },
                                             ),
@@ -610,9 +795,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 child: Text(
                                   "Forgot Password?",
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 16,
-                                  ),
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 16,
+                                      fontFamily: 'Helvetica'),
                                 ),
                               ),
                             ],
@@ -632,9 +817,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 child: Text(
                                   "Create an Account",
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                  ),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      fontFamily: 'Helvetica'),
                                 ),
                               ),
                             ],

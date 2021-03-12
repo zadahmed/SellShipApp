@@ -1124,6 +1124,9 @@ class _AddressState extends State<Address> {
                                                       top: 5,
                                                       right: 10),
                                                 ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
                                                 Padding(
                                                   child: Container(
                                                     decoration: BoxDecoration(
@@ -1302,23 +1305,43 @@ class _AddressState extends State<Address> {
                                                                 (BuildContext
                                                                     context) {
                                                               return Dialog(
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20.0)),
-                                                                //this right here
-                                                                child:
-                                                                    Container(
-                                                                  height: 100,
-                                                                  child: Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .all(
-                                                                          12.0),
-                                                                      child: SpinKitDoubleBounce(
-                                                                          color:
-                                                                              Colors.deepPurpleAccent)),
-                                                                ),
-                                                              );
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              20.0)), //this right here
+                                                                  child: Container(
+                                                                      height: 170,
+                                                                      padding: EdgeInsets.all(15),
+                                                                      child: Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          SizedBox(
+                                                                            height:
+                                                                                10,
+                                                                          ),
+                                                                          Text(
+                                                                            'Adding New Address..',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 18,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                10,
+                                                                          ),
+                                                                          Container(
+                                                                              height: 50,
+                                                                              width: 50,
+                                                                              child: SpinKitDoubleBounce(
+                                                                                color: Colors.deepOrange,
+                                                                              )),
+                                                                        ],
+                                                                      )));
                                                             });
 
                                                         var url = 'https://api.sellship.co/api/addaddress/' +

@@ -94,7 +94,6 @@ class _ActivitySellState extends State<ActivitySell>
       List<Item> ites = List<Item>();
 
       if (itemmap != null) {
-        print(itemmap);
         for (var i = 0; i < itemmap.length; i++) {
           Item ite = Item(
               itemid: itemmap[i]['item']['_id']['\$oid'],
@@ -152,7 +151,6 @@ class _ActivitySellState extends State<ActivitySell>
       List<Item> ites = List<Item>();
 
       if (itemmap != null) {
-        print(itemmap);
         for (var i = 0; i < itemmap.length; i++) {
           var buyerid;
           if (itemmap[i]['buyerid'].containsKey('\$oid')) {
@@ -220,11 +218,6 @@ class _ActivitySellState extends State<ActivitySell>
 
   Widget offerstatusseller(BuildContext context, offerstage, itemid,
       senderuserid, recieveruserid, offerprice) {
-    print(offerstage);
-    print(itemid);
-    print(senderuserid);
-    print(recieveruserid);
-    print(offerprice);
     if (offerstage == 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,

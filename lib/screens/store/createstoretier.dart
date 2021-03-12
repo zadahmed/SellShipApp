@@ -228,19 +228,11 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "- 50 Listings",
+                        "- Unlimited Listings",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             fontSize: 16.0,
                             color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      Text(
-                        "Upload upto 50 free listings.",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
                             fontFamily: 'Helvetica'),
                       ),
                       SizedBox(
@@ -386,19 +378,11 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "- 700 Listings",
+                        "- Unlimited Listings",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             fontSize: 16.0,
                             color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      Text(
-                        "Upload upto 700 free listings.",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
                             fontFamily: 'Helvetica'),
                       ),
                       SizedBox(
@@ -736,6 +720,31 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                           var response = await dio.post(addurl, data: formData);
 
                           if (response.statusCode == 200) {
+                            //
+                            // Map<String, Object> body = {
+                            //   "apiOperation": "INITIATE",
+                            //   "order": {
+                            //     "name": "SellShip Purchase",
+                            //     "channel": "web",
+                            //     "reference": trref,
+                            //     "amount": subtotal,
+                            //     "currency": "AED",
+                            //     "category": "pay",
+                            //   },
+                            //   "configuration": {
+                            //     "tokenizeCC": true,
+                            //     "paymentAction": "Sale",
+                            //     "returnUrl":
+                            //     'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}'
+                            //   },
+                            //   "subscription": {
+                            //     "type": "Recurring",
+                            //     "amount": subtotal,
+                            //     "name": "SellShip Purchase",
+                            //     "validTill": "2025-09-25T11:59:59"
+                            //   }
+                            // };
+
                             var storeid = response.data['id']['\$oid'];
                             await storage.write(key: 'storeid', value: storeid);
 

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -64,212 +65,240 @@ class _CreateStoreNameState extends State<CreateStoreName> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        elevation: 0,
-        title: Text(
-          'Create My Store',
-          style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Helvetica'),
-        ),
+        key: _scaffoldKey,
         backgroundColor: Colors.white,
-      ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              child: Image.asset(
-                'assets/storename.jpg',
-                fit: BoxFit.fitWidth,
-              )),
-          FadeAnimation(
-            1,
-            Padding(
-              padding:
-                  EdgeInsets.only(left: 56.0, bottom: 10, top: 30, right: 36),
-              child: Center(
-                child: LinearPercentIndicator(
-                  width: MediaQuery.of(context).size.width - 100,
-                  lineHeight: 10.0,
-                  percent: 0.15,
-                  progressColor: Color.fromRGBO(255, 115, 0, 1),
-                ),
-              ),
-            ),
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.black),
+          elevation: 0,
+          title: Text(
+            'Create My Store',
+            style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Helvetica'),
           ),
-          FadeAnimation(
-            1,
-            Padding(
-              padding:
-                  EdgeInsets.only(left: 56.0, bottom: 10, top: 20, right: 36),
-              child: Center(
-                child: Text(
-                  "What\'s your new store name?",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: 30.0,
-                      color: Color.fromRGBO(28, 45, 65, 1),
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Helvetica'),
-                ),
-              ),
-            ),
-          ),
-          FadeAnimation(
-            1,
-            Padding(
-                padding: EdgeInsets.only(
-                  top: 10,
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      height: 60,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          backgroundColor: Colors.white,
+        ),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: ListView(
+            children: <Widget>[
+              Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset(
+                    'assets/storename.jpg',
+                    fit: BoxFit.fitWidth,
+                  )),
+              FadeAnimation(
+                1,
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: 56.0, bottom: 10, top: 30, right: 36),
+                  child: Center(
+                    child: LinearPercentIndicator(
                       width: MediaQuery.of(context).size.width - 100,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(131, 146, 165, 0.1),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: TextField(
-                        onChanged: (text) {},
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'[^-\s]'))
-                        ],
-                        controller: storenamecontroller,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          hintText: "Store Name",
-                          hintStyle: TextStyle(fontFamily: 'Helvetica'),
-                          icon: Icon(
-                            Icons.store,
-                            color: Colors.blueGrey,
-                          ),
-                          border: InputBorder.none,
-                        ),
-                      ),
+                      lineHeight: 10.0,
+                      percent: 0.15,
+                      progressColor: Color.fromRGBO(255, 115, 0, 1),
                     ),
-                  ],
-                )),
-          ),
-          FadeAnimation(
-            1,
-            Padding(
-              padding: EdgeInsets.only(left: 36, top: 20, right: 36),
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    InkWell(
-                      onTap: () async {
-                        if (storenamecontroller.text.isEmpty) {
-                          showInSnackBar('Please Enter A Store Name');
-                        } else {
-                          showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              useRootNavigator: false,
-                              builder: (BuildContext context) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          20.0)), //this right here
-                                  child: Container(
-                                    height: 100,
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: SpinKitDoubleBounce(
-                                            color: Colors.deepOrange)),
-                                  ),
-                                );
-                              });
-                          var url =
-                              'https://api.sellship.co/check/store/name/' +
-                                  storenamecontroller.text;
-
-                          final response = await http.get(url);
-                          print(response.statusCode);
-                          if (response.statusCode == 200) {
-                            var jsondeco = json.decode(response.body);
-                            if (jsondeco['Status'] == 'Success') {
-                              Navigator.pop(context);
-
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateStoreBusinessDetail(
-                                      userid: widget.userid,
-                                      storename: storenamecontroller.text,
-                                    ),
-                                  ));
+                  ),
+                ),
+              ),
+              FadeAnimation(
+                1,
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: 56.0, bottom: 10, top: 20, right: 36),
+                  child: Center(
+                    child: Text(
+                      "What\'s your new store name?",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 30.0,
+                          color: Color.fromRGBO(28, 45, 65, 1),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Helvetica'),
+                    ),
+                  ),
+                ),
+              ),
+              FadeAnimation(
+                1,
+                Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 60,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                          width: MediaQuery.of(context).size.width - 100,
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(131, 146, 165, 0.1),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: TextField(
+                            onChanged: (text) {},
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[^-\s]'))
+                            ],
+                            controller: storenamecontroller,
+                            cursorColor: Colors.black,
+                            decoration: InputDecoration(
+                              hintText: "Store Name",
+                              hintStyle: TextStyle(fontFamily: 'Helvetica'),
+                              icon: Icon(
+                                Icons.alternate_email,
+                                color: Colors.blueGrey,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+              FadeAnimation(
+                1,
+                Padding(
+                  padding: EdgeInsets.only(left: 36, top: 20, right: 36),
+                  child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            if (storenamecontroller.text.isEmpty) {
+                              showInSnackBar('Please Enter A Store Name');
                             } else {
-                              Navigator.pop(context);
                               showDialog(
                                   context: context,
-                                  barrierDismissible: true,
+                                  barrierDismissible: false,
                                   useRootNavigator: false,
-                                  builder: (_) => AssetGiffyDialog(
-                                        image: Image.asset(
-                                          'assets/oops.gif',
-                                          fit: BoxFit.cover,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                20.0)), //this right here
+                                        child: Container(
+                                            height: 170,
+                                            padding: EdgeInsets.all(15),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Text(
+                                                  'Checking Store Username Availability..',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: SpinKitDoubleBounce(
+                                                      color: Colors.deepOrange,
+                                                    )),
+                                              ],
+                                            )));
+                                  });
+                              var url =
+                                  'https://api.sellship.co/check/store/name/' +
+                                      storenamecontroller.text;
+
+                              final response = await http.get(url);
+                              print(response.statusCode);
+                              if (response.statusCode == 200) {
+                                var jsondeco = json.decode(response.body);
+                                if (jsondeco['Status'] == 'Success') {
+                                  Navigator.pop(context);
+
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateStoreBusinessDetail(
+                                          userid: widget.userid,
+                                          storename: storenamecontroller.text,
                                         ),
-                                        title: Text(
-                                          'Oops!',
-                                          style: TextStyle(
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        description: Text(
-                                          'Looks like that Store Username Exists',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica'),
-                                        ),
-                                        onlyOkButton: true,
-                                        entryAnimation: EntryAnimation.DEFAULT,
-                                        onOkButtonPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
                                       ));
+                                } else {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: true,
+                                      useRootNavigator: false,
+                                      builder: (_) => AssetGiffyDialog(
+                                            image: Image.asset(
+                                              'assets/oops.gif',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            title: Text(
+                                              'Oops!',
+                                              style: TextStyle(
+                                                  fontSize: 22.0,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            description: Text(
+                                              'Looks like that Store Username Exists',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica'),
+                                            ),
+                                            onlyOkButton: true,
+                                            entryAnimation:
+                                                EntryAnimation.DEFAULT,
+                                            onOkButtonPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ));
+                                }
+                              }
                             }
-                          }
-                        }
-                      },
-                      child: Container(
-                        height: 60,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                        width: MediaQuery.of(context).size.width - 100,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(255, 115, 0, 1),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Center(
-                            child: Text(
-                          'Next',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 18,
-                            color: Colors.white,
+                          },
+                          child: Container(
+                            height: 60,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            width: MediaQuery.of(context).size.width - 100,
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(255, 115, 0, 1),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Center(
+                                child: Text(
+                              'Next',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            )),
                           ),
-                        )),
-                      ),
-                    ),
-                  ]),
-            ),
+                        ),
+                      ]),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

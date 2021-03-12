@@ -24,8 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_native_admob/flutter_native_admob.dart';
-import 'package:flutter_native_admob/native_admob_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -70,11 +68,6 @@ class _DetailsState extends State<Details> {
 
   var loading;
 
-  static const _iosadUnitID = "ca-app-pub-9959700192389744/8038471619";
-
-  static const _androidadUnitID = "ca-app-pub-9959700192389744/4861643935";
-
-  final _controller = NativeAdmobController();
   final scaffoldState = GlobalKey<ScaffoldState>();
   bool sold;
 
@@ -562,7 +555,6 @@ class _DetailsState extends State<Details> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _controller.dispose();
     super.dispose();
   }
 
@@ -1798,43 +1790,6 @@ class _DetailsState extends State<Details> {
                                               Feather.info,
                                               size: 16,
                                             ))),
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 15, bottom: 5, top: 10, right: 15),
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(20)),
-                                    ),
-                                    child: Platform.isIOS == true
-                                        ? Container(
-                                            height: 200,
-                                            padding: EdgeInsets.all(5),
-                                            child: NativeAdmob(
-                                              adUnitID: _iosadUnitID,
-                                              controller: _controller,
-                                              loading: Center(
-                                                  child: SpinKitDoubleBounce(
-                                                      color:
-                                                          Colors.deepOrange)),
-                                              error: Container(),
-                                            ),
-                                          )
-                                        : Container(
-                                            height: 200,
-                                            padding: EdgeInsets.all(5),
-                                            child: NativeAdmob(
-                                              adUnitID: _androidadUnitID,
-                                              controller: _controller,
-                                              loading: Center(
-                                                  child: SpinKitDoubleBounce(
-                                                      color:
-                                                          Colors.deepOrange)),
-                                            ),
-                                          ),
                                   )),
                               Padding(
                                   padding: EdgeInsets.only(
@@ -3157,13 +3112,13 @@ class _DetailsState extends State<Details> {
                             child: Container(
                               height: 48,
                               decoration: BoxDecoration(
-                                color: Colors.deepPurpleAccent,
+                                color: Color.fromRGBO(255, 115, 0, 1),
                                 borderRadius: const BorderRadius.all(
                                   Radius.circular(5.0),
                                 ),
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(
-                                      color: Colors.deepPurple.withOpacity(0.4),
+                                      color: Color.fromRGBO(255, 115, 0, 0.4),
                                       offset: const Offset(1.1, 1.1),
                                       blurRadius: 10.0),
                                 ],
