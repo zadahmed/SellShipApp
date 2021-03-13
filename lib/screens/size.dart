@@ -922,8 +922,9 @@ class _SizeState extends State<Size> {
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
-
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
                                                             if (response
                                                                     .statusCode ==
                                                                 200) {
@@ -982,7 +983,9 @@ class _SizeState extends State<Size> {
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
 
                                                             if (response
                                                                     .statusCode ==

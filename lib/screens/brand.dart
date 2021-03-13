@@ -997,7 +997,9 @@ class _BrandState extends State<Brand> {
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
 
                                                             if (response
                                                                     .statusCode ==
@@ -1057,7 +1059,9 @@ class _BrandState extends State<Brand> {
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
 
                                                             if (response
                                                                     .statusCode ==

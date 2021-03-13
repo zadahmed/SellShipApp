@@ -1606,8 +1606,9 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
-
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
                                                             if (response
                                                                     .statusCode ==
                                                                 200) {
@@ -1666,8 +1667,9 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
-
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
                                                             if (response
                                                                     .statusCode ==
                                                                 200) {

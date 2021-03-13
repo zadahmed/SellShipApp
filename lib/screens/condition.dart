@@ -999,7 +999,9 @@ class _ConditionState extends State<Condition> {
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
 
                                                             if (response
                                                                     .statusCode ==
@@ -1059,7 +1061,9 @@ class _ConditionState extends State<Condition> {
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
 
                                                             if (response
                                                                     .statusCode ==

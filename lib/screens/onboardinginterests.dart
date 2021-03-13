@@ -94,10 +94,12 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                       var response = await dio.post(url, data: formData);
 
                       if (response.statusCode == 200) {
-                        Navigator.pushReplacement(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => RootScreen()));
+                                builder: (BuildContext context) =>
+                                    RootScreen()),
+                            ModalRoute.withName(Routes.settings));
                       } else {
                         print(response.statusCode);
                       }

@@ -101,7 +101,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         });
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setBool('seen', true);
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => RootScreen()));
       } else if (jsondata['status']['message'].toString().trim() ==
           'User does not exist, please sign up') {

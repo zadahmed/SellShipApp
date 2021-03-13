@@ -1404,7 +1404,9 @@ class _SubSubCategoryState extends State<SubSubCategory> {
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
 
                                                             if (response
                                                                     .statusCode ==
@@ -1464,7 +1466,9 @@ class _SubSubCategoryState extends State<SubSubCategory> {
                                                             final response =
                                                                 await http.post(
                                                                     url,
-                                                                    body: body);
+                                                                    body: json
+                                                                        .encode(
+                                                                            body));
 
                                                             if (response
                                                                     .statusCode ==

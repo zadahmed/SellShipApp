@@ -142,27 +142,6 @@ class _UsernameState extends State<Username> {
                     child: TextField(
                       onChanged: (text) async {
                         if (text.length >= 3) {
-                          var url = 'https://api.sellship.co/check/username/' +
-                              userid +
-                              '/' +
-                              text;
-
-                          final response = await http.get(url);
-                          if (response.statusCode == 200) {
-                            var jsondeco = json.decode(response.body);
-                            if (jsondeco['Status'] == 'Success') {
-                              setState(() {
-                                usernamemessage =
-                                    'Awesome! Thats available @' + text;
-                                allgood = true;
-                              });
-                            } else {
-                              setState(() {
-                                usernamemessage = 'Username already exists';
-                                allgood = false;
-                              });
-                            }
-                          }
                         } else {
                           setState(() {
                             usernamemessage =
@@ -191,20 +170,6 @@ class _UsernameState extends State<Username> {
                 ],
               )),
           Padding(
-            padding:
-                EdgeInsets.only(left: 16.0, bottom: 20, top: 20, right: 16),
-            child: Center(
-              child: Text(
-                usernamemessage,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16.0,
-                    color: allgood == true ? Colors.green : Colors.red,
-                    fontFamily: 'Helvetica'),
-              ),
-            ),
-          ),
-          Padding(
             padding: EdgeInsets.only(left: 36, top: 20, right: 36),
             child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,6 +177,45 @@ class _UsernameState extends State<Username> {
                 children: [
                   InkWell(
                     onTap: () async {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          useRootNavigator: false,
+                          builder: (_) => new AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0))),
+                                content: Builder(
+                                  builder: (context) {
+                                    return Container(
+                                        height: 100,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Loading..',
+                                              style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            Container(
+                                                height: 50,
+                                                width: 50,
+                                                child: SpinKitDoubleBounce(
+                                                  color: Colors.deepOrange,
+                                                )),
+                                          ],
+                                        ));
+                                  },
+                                ),
+                              ));
                       var url = 'https://api.sellship.co/check/username/' +
                           userid +
                           '/' +
@@ -222,23 +226,22 @@ class _UsernameState extends State<Username> {
                         var jsondeco = json.decode(response.body);
                         if (jsondeco['Status'] == 'Success') {
                           setState(() {
-                            usernamemessage = 'Awesome! Thats available @' +
-                                usernamecontroller.text;
                             allgood = true;
                           });
                         } else {
                           setState(() {
-                            usernamemessage = 'Username already exists';
                             allgood = false;
                           });
                         }
                       }
                       if (allgood) {
+                        Navigator.of(context).pop();
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => OnboardingInterests()));
                       } else {
+                        Navigator.of(context).pop();
                         showDialog(
                             context: context,
                             barrierDismissible: true,

@@ -2353,8 +2353,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                       });
                                                       final response =
                                                           await http.post(url,
-                                                              body: body);
-
+                                                              body: json.encode(
+                                                                  body));
                                                       if (response.statusCode ==
                                                           200) {
                                                       } else {
@@ -2406,7 +2406,8 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                       });
                                                       final response =
                                                           await http.post(url,
-                                                              body: body);
+                                                              body: json.encode(
+                                                                  body));
 
                                                       if (response.statusCode ==
                                                           200) {

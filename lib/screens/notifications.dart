@@ -185,6 +185,7 @@ class _NotifcationPageState extends State<NotifcationPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
@@ -338,26 +339,30 @@ class _NotifcationPageState extends State<NotifcationPage>
                     },
                   )
                 : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       SizedBox(
-                        height: 15,
+                        height: 10,
+                      ),
+                      Container(
+                          height: 300,
+                          child: Image.asset(
+                            'assets/messages.png',
+                            fit: BoxFit.fitHeight,
+                          )),
+                      SizedBox(
+                        height: 40,
                       ),
                       Center(
                         child: Text(
-                          'View your Notifications here ',
+                          'Looks like no new updates so far! ',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Helvetica',
-                            fontSize: 16,
+                            fontSize: 18.0,
                           ),
                         ),
                       ),
-                      Expanded(
-                          child: Image.asset(
-                        'assets/messages.png',
-                        fit: BoxFit.fitWidth,
-                      ))
                     ],
                   )
             : Container(
@@ -383,7 +388,7 @@ class _NotifcationPageState extends State<NotifcationPage>
                                       ),
                                       width: MediaQuery.of(context).size.width -
                                           32,
-                                      height: 60.0,
+                                      height: 100.0,
                                     ),
                                   ],
                                 ),

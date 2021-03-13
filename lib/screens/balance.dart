@@ -20,7 +20,6 @@ class Balance extends StatefulWidget {
 class _BalanceState extends State<Balance> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(() {
       loading = true;
@@ -87,7 +86,7 @@ class _BalanceState extends State<Balance> {
         currency = '\$';
       });
     }
-    var url = 'https://api.sellship.co/api/getbalance/' + userid;
+    var url = 'https://api.sellship.co/api/user/' + userid;
 
     final response = await http.get(url);
 
@@ -99,7 +98,15 @@ class _BalanceState extends State<Balance> {
       } else {
         bal = jsonbody['balance'];
       }
+
+      var pending;
+      if (jsonbody['pendingbalance'] == null) {
+        pending = 0;
+      } else {
+        pending = jsonbody['pendingbalance'];
+      }
       setState(() {
+        pendingbalance = pending;
         balance = bal;
         loading = false;
       });
@@ -107,6 +114,8 @@ class _BalanceState extends State<Balance> {
       print(response.statusCode);
     }
   }
+
+  var pendingbalance;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -118,11 +127,9 @@ class _BalanceState extends State<Balance> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'Helvetica',
-          fontSize: 16,
-        ),
+            fontFamily: 'Helvetica', fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.deepOrange,
       duration: Duration(seconds: 3),
     ));
   }
@@ -153,7 +160,10 @@ class _BalanceState extends State<Balance> {
           elevation: 0,
           title: Text(
             'Balance',
-            style: TextStyle(color: Colors.black, fontFamily: 'Helvetica'),
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'Helvetica',
+                fontWeight: FontWeight.bold),
           ),
           backgroundColor: Colors.white,
         ),
@@ -200,6 +210,44 @@ class _BalanceState extends State<Balance> {
                             ],
                           )),
                     ),
+                    Padding(
+                        padding:
+                            EdgeInsets.only(left: 15, bottom: 5, right: 15),
+                        child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                            ),
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Pending Balance',
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    currency +
+                                        ' ' +
+                                        pendingbalance.toStringAsFixed(2),
+                                    style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        color: Colors.blueGrey,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ]))),
                     SizedBox(
                       height: 5,
                     ),
@@ -208,13 +256,19 @@ class _BalanceState extends State<Balance> {
                     ),
                     InkWell(
                       onTap: () {
-                        withdraw();
+                        if (double.parse(balance.toString()) != 0.00 &&
+                            double.parse(balance.toString()) > 100) {
+                          withdraw();
+                        } else {
+                          showInSnackBar(
+                              'You need a minimum balance of AED 100 to be able to request a withdrawal');
+                        }
                       },
                       child: Container(
                         height: 48,
                         width: MediaQuery.of(context).size.width - 30,
                         decoration: BoxDecoration(
-                          color: Colors.deepPurple,
+                          color: Color.fromRGBO(255, 115, 0, 1),
                           borderRadius: const BorderRadius.all(
                             Radius.circular(10.0),
                           ),
@@ -222,9 +276,9 @@ class _BalanceState extends State<Balance> {
                         child: Center(
                           child: Text(
                             'Withdraw',
-                            textAlign: TextAlign.left,
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.bold,
                               fontSize: 16,
                               letterSpacing: 0.0,
                               color: Colors.white,
@@ -245,7 +299,7 @@ class _BalanceState extends State<Balance> {
                           style: TextStyle(
                               fontFamily: 'Helvetica',
                               fontSize: 18,
-                              fontWeight: FontWeight.w300),
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),

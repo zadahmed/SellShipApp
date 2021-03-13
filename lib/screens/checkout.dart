@@ -575,6 +575,7 @@ class _CheckoutState extends State<Checkout> {
                             }
 
                             var userid = await storage.read(key: 'userid');
+                            print(listitems[0].userid);
 
                             Map<String, Object> body = {
                               "apiOperation": "INITIATE",

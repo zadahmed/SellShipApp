@@ -72,46 +72,55 @@ class _DetailsState extends State<Details> {
   bool sold;
 
   getfavourites() async {
-    if (favourites != null) {
-      if (favourites.isNotEmpty) favourites.clear();
-    }
-
     var userid = await storage.read(key: 'userid');
     if (userid != null) {
       var url = 'https://api.sellship.co/api/favourites/' + userid;
       final response = await http.get(url);
+
       if (response.statusCode == 200) {
-        if (response.body != 'Empty') {
-          var respons = json.decode(response.body);
-          Map<String, dynamic> profilemap = respons;
+        var respons = json.decode(response.body);
+        if (respons != 'Empty') {
+          print(respons);
           List<String> ites = List<String>();
 
-          if (profilemap != null) {
-            for (var i = 0; i < profilemap.length; i++) {
-              if (profilemap[i] != null) {
-                ites.add(profilemap[i]['_id']['\$oid']);
+          if (respons != null) {
+            for (var i = 0; i < respons.length; i++) {
+              if (respons[i] != null) {
+                ites.add(respons[i]['_id']['\$oid']);
               }
             }
 
-            if (ites.contains(newItem.itemid)) {
+            if (ites.contains(widget.itemid)) {
               setState(() {
                 favourited = true;
               });
             } else {
-              favourited = false;
+              setState(() {
+                favourited = true;
+              });
             }
 
             Iterable inReverse = ites.reversed;
             List<String> jsoninreverse = inReverse.toList();
-
-            favourites = jsoninreverse;
+            setState(() {
+              favourites = jsoninreverse;
+            });
           } else {
-            favourites = [];
+            setState(() {
+              favourites = [];
+            });
           }
+        } else {
+          setState(() {
+            favourites = [];
+          });
         }
+      } else {
+        setState(() {
+          favourites = [];
+        });
       }
-    } else {
-      favourites = [];
+      print(favourites);
     }
   }
 
@@ -682,7 +691,6 @@ class _DetailsState extends State<Details> {
       images.add(newItem.image5);
     }
 
-    getfavourites();
     getuserDetails(jsonbody[0]['userid']);
     getcategory();
     return newItem;
@@ -978,18 +986,11 @@ class _DetailsState extends State<Details> {
                               alignment: Alignment.bottomRight,
                               child: Padding(
                                   padding: EdgeInsets.only(right: 20),
-                                  child: CircleAvatar(
-                                      radius: 25,
-                                      backgroundColor: Colors.white,
-                                      child: favourited == true
+                                  child: favourites != null
+                                      ? favourites.contains(newItem.itemid)
                                           ? InkWell(
                                               enableFeedback: true,
                                               onTap: () async {
-                                                setState(() {
-                                                  favourited = false;
-                                                  newItem.likes =
-                                                      newItem.likes + 1;
-                                                });
                                                 var userid = await storage.read(
                                                     key: 'userid');
 
@@ -1002,27 +1003,41 @@ class _DetailsState extends State<Details> {
                                                     'itemid': newItem.itemid,
                                                   };
 
+                                                  favourites
+                                                      .remove(newItem.itemid);
+                                                  setState(() {
+                                                    favourites = favourites;
+                                                    newItem.likes =
+                                                        newItem.likes - 1;
+                                                  });
                                                   final response = await http
-                                                      .post(url, body: body);
+                                                      .post(url,
+                                                          body: json
+                                                              .encode(body));
+
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                  } else {
+                                                    print(response.statusCode);
+                                                  }
                                                 } else {
                                                   showInSnackBar(
                                                       'Please Login to use Favourites');
                                                 }
                                               },
-                                              child: Icon(
-                                                FontAwesome.heart,
-                                                size: 22,
-                                                color: Colors.deepPurple,
-                                              ),
-                                            )
+                                              child: CircleAvatar(
+                                                radius: 24,
+                                                backgroundColor:
+                                                    Colors.deepPurple,
+                                                child: Icon(
+                                                  FontAwesome.heart,
+                                                  color: Colors.white,
+                                                  size: 20,
+                                                ),
+                                              ))
                                           : InkWell(
                                               enableFeedback: true,
                                               onTap: () async {
-                                                setState(() {
-                                                  favourited = true;
-                                                  newItem.likes =
-                                                      newItem.likes + 1;
-                                                });
                                                 var userid = await storage.read(
                                                     key: 'userid');
 
@@ -1035,19 +1050,46 @@ class _DetailsState extends State<Details> {
                                                     'itemid': newItem.itemid,
                                                   };
 
+                                                  favourites
+                                                      .add(newItem.itemid);
+                                                  setState(() {
+                                                    favourites = favourites;
+                                                    newItem.likes =
+                                                        newItem.likes + 1;
+                                                  });
                                                   final response = await http
-                                                      .post(url, body: body);
+                                                      .post(url,
+                                                          body: json
+                                                              .encode(body));
+
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                  } else {
+                                                    print(response.statusCode);
+                                                  }
                                                 } else {
                                                   showInSnackBar(
                                                       'Please Login to use Favourites');
                                                 }
                                               },
-                                              child: Icon(
-                                                Feather.heart,
-                                                size: 22,
-                                                color: Colors.grey,
-                                              ),
-                                            ))),
+                                              child: CircleAvatar(
+                                                radius: 24,
+                                                backgroundColor: Colors.white,
+                                                child: Icon(
+                                                  Feather.heart,
+                                                  color: Colors.blueGrey,
+                                                  size: 20,
+                                                ),
+                                              ))
+                                      : CircleAvatar(
+                                          radius: 24,
+                                          backgroundColor: Colors.white,
+                                          child: Icon(
+                                            Feather.heart,
+                                            color: Colors.blueGrey,
+                                            size: 20,
+                                          ),
+                                        )),
                             ),
                           ],
                         ),
@@ -1626,8 +1668,12 @@ class _DetailsState extends State<Details> {
                                                                   ),
                                                                   leading: Icon(
                                                                     Icons.lock,
-                                                                    color: Colors
-                                                                        .deepPurpleAccent,
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            255,
+                                                                            115,
+                                                                            0,
+                                                                            1),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
@@ -1635,10 +1681,23 @@ class _DetailsState extends State<Details> {
                                                                 ),
                                                                 ListTile(
                                                                   title: Text(
-                                                                      'Money Back Guarantee'),
+                                                                    'Money Back Guarantee',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
                                                                   subtitle:
                                                                       Text(
-                                                                    'Item\'s that are not described as listed by the seller, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 3 days of confirmed delivery',
+                                                                    'Product\'s that are not described as listed by the seller in the listing, that has undisclosed damage or if the seller has not shipped the item. The buyer can receive a refund for the item, as long as the refund request is made within 2 days of confirmed delivery or order',
                                                                     style:
                                                                         TextStyle(
                                                                       fontFamily:
@@ -1652,8 +1711,12 @@ class _DetailsState extends State<Details> {
                                                                   leading: Icon(
                                                                     FontAwesome
                                                                         .money,
-                                                                    color: Colors
-                                                                        .deepPurpleAccent,
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            255,
+                                                                            115,
+                                                                            0,
+                                                                            1),
                                                                   ),
                                                                 ),
                                                                 SizedBox(
@@ -1661,10 +1724,23 @@ class _DetailsState extends State<Details> {
                                                                 ),
                                                                 ListTile(
                                                                   title: Text(
-                                                                      'SellShip Support'),
+                                                                    '24/7 Support',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
                                                                   subtitle:
                                                                       Text(
-                                                                    'The SellShip support team works 24/7 around the clock to deal with all issues, queries and doubts.',
+                                                                    'The SellShip support team works 24/7 around the clock to deal with all support requests, queries and concerns.',
                                                                     style:
                                                                         TextStyle(
                                                                       fontFamily:
@@ -1678,8 +1754,12 @@ class _DetailsState extends State<Details> {
                                                                   leading: Icon(
                                                                     Icons
                                                                         .live_help,
-                                                                    color: Colors
-                                                                        .deepPurpleAccent,
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            255,
+                                                                            115,
+                                                                            0,
+                                                                            1),
                                                                   ),
                                                                 ),
                                                               ],
@@ -1688,7 +1768,7 @@ class _DetailsState extends State<Details> {
                                                                 Padding(
                                                               padding:
                                                                   EdgeInsets
-                                                                      .all(30),
+                                                                      .all(20),
                                                               child: InkWell(
                                                                 onTap: () {
                                                                   Navigator.of(
@@ -1702,11 +1782,15 @@ class _DetailsState extends State<Details> {
                                                                               context)
                                                                           .size
                                                                           .width -
-                                                                      20,
+                                                                      10,
                                                                   decoration:
                                                                       BoxDecoration(
-                                                                    color: Colors
-                                                                        .deepPurple,
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            255,
+                                                                            115,
+                                                                            0,
+                                                                            1),
                                                                     borderRadius:
                                                                         const BorderRadius
                                                                             .all(
@@ -1716,7 +1800,10 @@ class _DetailsState extends State<Details> {
                                                                     boxShadow: <
                                                                         BoxShadow>[
                                                                       BoxShadow(
-                                                                          color: Colors.deepPurple.withOpacity(
+                                                                          color: Color.fromRGBO(
+                                                                              255,
+                                                                              115,
+                                                                              0,
                                                                               0.4),
                                                                           offset: const Offset(
                                                                               1.1,
@@ -2623,8 +2710,9 @@ class _DetailsState extends State<Details> {
                                                               final response =
                                                                   await http.post(
                                                                       url,
-                                                                      body:
-                                                                          body);
+                                                                      body: json
+                                                                          .encode(
+                                                                              body));
 
                                                               if (response
                                                                       .statusCode ==
@@ -2690,8 +2778,9 @@ class _DetailsState extends State<Details> {
                                                               final response =
                                                                   await http.post(
                                                                       url,
-                                                                      body:
-                                                                          body);
+                                                                      body: json
+                                                                          .encode(
+                                                                              body));
 
                                                               if (response
                                                                       .statusCode ==

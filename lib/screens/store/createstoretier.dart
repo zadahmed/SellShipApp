@@ -685,79 +685,123 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                                     content: Builder(
                                       builder: (context) {
                                         return Container(
-                                            height: 50,
-                                            width: 50,
-                                            child: SpinKitDoubleBounce(
-                                              color: Colors.deepOrange,
+                                            height: 100,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Creating your shiny new store..',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                Container(
+                                                    height: 50,
+                                                    width: 50,
+                                                    child: SpinKitDoubleBounce(
+                                                      color: Colors.deepOrange,
+                                                    )),
+                                              ],
                                             ));
                                       },
                                     ),
                                   ));
 
-                          Dio dio = new Dio();
-                          FormData formData;
-                          var addurl = 'https://api.sellship.co/create/store';
-                          String fileName =
-                              widget.storelogo.path.split('/').last;
-                          var userid = await storage.read(key: 'userid');
-
+                          // Dio dio = new Dio();
+                          // FormData formData;
+                          // var addurl = 'https://api.sellship.co/create/store';
+                          // String fileName =
+                          //     widget.storelogo.path.split('/').last;
+                          // var userid = await storage.read(key: 'userid');
                           //
-                          formData = FormData.fromMap({
-                            'storecategory': widget.storecategory,
-                            'storetype': widget.storetype,
-                            'storename': widget.storename,
-                            'userid': userid,
-                            'layout': 'default',
-                            'businesstier': businesstier.toString(),
-                            'storeaddress': widget.storeaddress,
-                            'storecity': widget.storecity,
-                            'storebio': widget.storeabout,
-                            'storelogo': await MultipartFile.fromFile(
-                                widget.storelogo.path,
-                                filename: fileName)
-                          });
+                          // //
+                          // formData = FormData.fromMap({
+                          //   'storecategory': widget.storecategory,
+                          //   'storetype': widget.storetype,
+                          //   'storename': widget.storename,
+                          //   'userid': userid,
+                          //   'layout': 'default',
+                          //   'businesstier': businesstier.toString(),
+                          //   'storeaddress': widget.storeaddress,
+                          //   'storecity': widget.storecity,
+                          //   'storebio': widget.storeabout,
+                          //   'storelogo': await MultipartFile.fromFile(
+                          //       widget.storelogo.path,
+                          //       filename: fileName)
+                          // });
+                          //
+                          // var response = await dio.post(addurl, data: formData);
+                          //
+                          // if (response.statusCode == 200) {
 
-                          var response = await dio.post(addurl, data: formData);
+                          Map<String, Object> body = {
+                            "apiOperation": "INITIATE",
+                            "order": {
+                              "name": "SellShip Purchase",
+                              "channel": "web",
+                              "reference": 'Reference',
+                              "amount": '2000',
+                              "currency": "AED",
+                              "category": "pay",
+                            },
+                            "configuration": {
+                              "tokenizeCC": true,
+                              "paymentAction": "Authorize",
+                              "returnUrl":
+                                  'https://api.sellship.co/api/payment/NEW/'
+                            },
+                            "subscription": {
+                              "type": "Recurring",
+                              "amount": '2000',
+                              "name": "SellShip Purchase",
+                              "validTill": "2025-09-25T11:59:59"
+                            }
+                          };
 
-                          if (response.statusCode == 200) {
-                            //
-                            // Map<String, Object> body = {
-                            //   "apiOperation": "INITIATE",
-                            //   "order": {
-                            //     "name": "SellShip Purchase",
-                            //     "channel": "web",
-                            //     "reference": trref,
-                            //     "amount": subtotal,
-                            //     "currency": "AED",
-                            //     "category": "pay",
-                            //   },
-                            //   "configuration": {
-                            //     "tokenizeCC": true,
-                            //     "paymentAction": "Sale",
-                            //     "returnUrl":
-                            //     'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}'
-                            //   },
-                            //   "subscription": {
-                            //     "type": "Recurring",
-                            //     "amount": subtotal,
-                            //     "name": "SellShip Purchase",
-                            //     "validTill": "2025-09-25T11:59:59"
-                            //   }
-                            // };
+                          var url =
+                              "https://api-stg.noonpayments.com/payment/v1/order";
 
-                            var storeid = response.data['id']['\$oid'];
-                            await storage.write(key: 'storeid', value: storeid);
+                          var key =
+                              "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
+                          List encodedText = utf8.encode(key);
+                          String base64Str = base64Encode(encodedText);
+                          print('Key_Test $base64Str');
+                          var heade = 'Key_Test $base64Str';
 
-                            Navigator.of(context, rootNavigator: false).pop();
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        CreateStorePage(
-                                          storeid: storeid,
-                                        )),
-                                ModalRoute.withName('/'));
-                          }
+                          Map<String, String> headers = {
+                            'Authorization': heade,
+                            'Content-type': 'application/json',
+                            'Accept': 'application/json',
+                          };
+
+                          final response = await http.post(
+                            url,
+                            body: json.encode(body),
+                            headers: headers,
+                          );
+
+                          print(response.body);
+
+                          // var storeid = response.data['id']['\$oid'];
+                          // await storage.write(key: 'storeid', value: storeid);
+
+                          Navigator.of(context, rootNavigator: false).pop();
+                          // Navigator.pushAndRemoveUntil(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (BuildContext context) =>
+                          //             CreateStorePage(
+                          //               storeid: storeid,
+                          //             )),
+                          //     ModalRoute.withName('/'));
+                          // }
                         } else {
                           showInSnackBar('Please choose a plan for your store');
                         }

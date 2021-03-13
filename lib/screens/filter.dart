@@ -106,7 +106,7 @@ class FilteredState extends State<Filtered> {
     });
     fetchData();
     itemsgrid.clear();
-//    getfavourites();
+    getfavourites();
   }
 
   getfavourites() async {
@@ -133,7 +133,9 @@ class FilteredState extends State<Filtered> {
               favourites = jsoninreverse;
             });
           } else {
-            favourites = [];
+            setState(() {
+              favourites = [];
+            });
           }
         }
       }
@@ -365,6 +367,9 @@ class FilteredState extends State<Filtered> {
                           ),
                           Row(
                             children: [
+                              SizedBox(
+                                width: 5,
+                              ),
                               Expanded(
                                   child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -411,8 +416,9 @@ class FilteredState extends State<Filtered> {
                                                 itemsgrid[index].likes =
                                                     itemsgrid[index].likes - 1;
                                               });
-                                              final response = await http
-                                                  .post(url, body: body);
+                                              final response = await http.post(
+                                                  url,
+                                                  body: json.encode(body));
 
                                               if (response.statusCode == 200) {
                                               } else {
@@ -455,8 +461,9 @@ class FilteredState extends State<Filtered> {
                                                 itemsgrid[index].likes =
                                                     itemsgrid[index].likes + 1;
                                               });
-                                              final response = await http
-                                                  .post(url, body: body);
+                                              final response = await http.post(
+                                                  url,
+                                                  body: json.encode(body));
 
                                               if (response.statusCode == 200) {
                                               } else {

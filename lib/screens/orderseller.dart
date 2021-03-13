@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/stores.dart';
+import 'package:SellShip/models/tracking.dart';
 import 'package:SellShip/screens/ReviewBuyer.dart';
 import 'package:SellShip/screens/address.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
+import 'package:SellShip/screens/tracking.dart';
 import 'package:SellShip/screens/useritems.dart';
 import 'package:app_review/app_review.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -259,11 +261,19 @@ class _OrderSellerState extends State<OrderSeller> {
       track = jsonbody['awbno'];
     }
 
+    var deliver;
+    if (jsonbody['delivered'] == null) {
+      deliver = false;
+    } else {
+      deliver = jsonbody['delivered'];
+    }
+
     setState(() {
       itemprice = jsonbody['totalpayable'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
       cancelled = cancell;
+      delivered = deliver;
       orderid = jsonbody['paymentid'];
       trackingnumber = track;
       deliverystage = delstage;
@@ -279,6 +289,7 @@ class _OrderSellerState extends State<OrderSeller> {
     fetchItem();
   }
 
+  var delivered;
   getstore(storeid) async {
     var url = 'https://api.sellship.co/api/store/' + storeid;
     final response = await http.get(url);
@@ -1577,57 +1588,67 @@ class _OrderSellerState extends State<OrderSeller> {
                                         ])))
                           ])),
                 ),
-                Padding(
-                    padding: EdgeInsets.only(
-                        left: 15, bottom: 10, top: 5, right: 15),
-                    child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  'Tracking ID: ',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey),
+                trackingnumber.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                            left: 15, bottom: 10, top: 5, right: 15),
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  blurRadius: 6.0,
                                 ),
-                                Container(
-                                    child: Text(
-                                  trackingnumber,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromRGBO(27, 44, 64, 1)),
-                                )),
                               ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            deliveryinformation(context),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            deliverystagewidget(context),
-                          ]),
-                    )),
-
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      'Tracking ID: ',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.blueGrey),
+                                    ),
+                                    Container(
+                                      child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      TrackingDetails(
+                                                        trackingnumber:
+                                                            trackingnumber,
+                                                      )),
+                                            );
+                                          },
+                                          child: Text(
+                                            trackingnumber,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.deepOrange),
+                                          )),
+                                    ),
+                                  ],
+                                ),
+                              ]),
+                        ))
+                    : Container(),
+                SizedBox(
+                  height: 10,
+                ),
                 Padding(
                     padding: EdgeInsets.only(
                         left: 15, bottom: 10, top: 5, right: 15),

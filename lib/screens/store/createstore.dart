@@ -395,6 +395,7 @@ class _CreateStoreState extends State<CreateStore> {
                                         storeabout: usernamecontroller.text,
                                         storeaddress: selectedaddress.address,
                                         storetype: widget.storetype,
+                                        storecity: selectedaddress.city,
                                       ),
                                     ));
                               }
