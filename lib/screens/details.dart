@@ -700,8 +700,6 @@ class _DetailsState extends State<Details> {
     var userurl = 'https://api.sellship.co/api/store/' + user;
     final userresponse = await http.get(userurl);
 
-    print(userresponse.body);
-
     var userjsonbody = json.decode(userresponse.body);
 
     var rating;
@@ -711,12 +709,11 @@ class _DetailsState extends State<Details> {
       rating = double.parse(userjsonbody['reviewrating'].toString());
     }
 
-    print(rating);
     var revie;
     if (userjsonbody['reviewnumber'] == null) {
-      review = 0;
+      revie = 0;
     } else {
-      review = userjsonbody['reviewnumber'];
+      revie = int.parse(userjsonbody['reviewnumber'].toString());
     }
 
     setState(() {
@@ -735,7 +732,7 @@ class _DetailsState extends State<Details> {
     });
   }
 
-  double review;
+  int review;
 
   final storage = new FlutterSecureStorage();
   var userid;

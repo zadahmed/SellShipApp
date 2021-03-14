@@ -45,8 +45,6 @@ class _StorePublicState extends State<StorePublic> {
   @override
   void initState() {
     super.initState();
-    print(widget.storename);
-    print(widget.storeid);
     getuser();
     getItemData();
   }
@@ -125,39 +123,46 @@ class _StorePublicState extends State<StorePublic> {
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
-      // var follower = jsonbody['follower'];
-      //
-      // if (follower != null) {
-      //   for (int i = 0; i < follower.length; i++) {
-      //     var meuser = await storage.read(key: 'userid');
-      //     if (meuser == follower[i]['\$oid']) {
-      //       setState(() {
-      //         follow = true;
-      //         followcolor = Colors.deepOrange;
-      //       });
-      //     }
-      //   }
-      // } else {
-      //   follower = [];
-      // }
+      var follower = jsonbody['follower'];
 
-      Stores store = Stores(
+      if (follower != null) {
+        for (int i = 0; i < follower.length; i++) {
+          var meuser = await storage.read(key: 'userid');
+          if (meuser == follower[i]['\$oid']) {
+            setState(() {
+              follow = true;
+              followcolor = Colors.deepOrange;
+            });
+          }
+        }
+      } else {
+        setState(() {
+          follower = [];
+          follow = false;
+        });
+      }
+
+      var s = jsonbody['storename'];
+      print(s);
+
+      mystore = Stores(
           storeid: jsonbody['_id']['\$oid'],
-          // followers: jsonbody['followers'] == null ? 0 : jsonbody['followers'],
-          // reviews:
-          //     jsonbody['reviewnumber'] == null ? 0 : jsonbody['reviewnumber'],
-          // sold: jsonbody['sold'] == null ? 0 : jsonbody['sold'],
+          followers: follower.length.toString(),
+          reviews: jsonbody['reviewnumber'] == null
+              ? '0'
+              : jsonbody['reviewnumber'].toString(),
+          sold: jsonbody['sold'] == null ? '0' : jsonbody['sold'].toString(),
           storecategory: jsonbody['storecategory'],
-          storelogo: jsonbody['storelogo'],
+          storelogo: jsonbody['storelogo'] == null ? '' : jsonbody['storelogo'],
           storebio: jsonbody['storebio'],
           storename: jsonbody['storename']);
 
-      print(mystore.sold);
-      print(mystore.reviews);
-      print(mystore.followers);
+      print(mystore.storelogo);
+      print(mystore.storecategory);
+      print(mystore.storename);
 
       setState(() {
-        mystore = store;
+        mystore = mystore;
         loading = false;
       });
     }

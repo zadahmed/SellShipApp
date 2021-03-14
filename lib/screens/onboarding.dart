@@ -222,7 +222,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
           if (jsondata.containsKey('status')) {
             if (jsondata['status']['message'] == 'User already exists') {
-              print(' hellooo user exists');
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setBool('seen', true);
               await storage.write(
                   key: 'userid', value: jsondata['status']['id']);
 
@@ -245,7 +246,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       builder: (BuildContext context) => RootScreen()));
             }
           } else {
-            print('Dude new user');
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.setBool('seen', true);
             await storage.write(key: 'userid', value: jsondata['id']);
 
             var userid = await storage.read(key: 'userid');
@@ -259,10 +261,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               await storage.write(key: 'storeid', value: storeid);
             }
 
-            print(userid);
             Navigator.of(context).pop();
 
-            print('I am here');
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -596,14 +596,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             var jsondata =
                                                 json.decode(response.body);
 
-                                            print(jsondata);
-
                                             if (jsondata
                                                 .containsKey('status')) {
                                               if (jsondata['status']
                                                       ['message'] ==
                                                   'User already exists') {
-                                                print(' hellooo user exists');
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.setBool('seen', true);
                                                 await storage.write(
                                                     key: 'userid',
                                                     value: jsondata['status']
@@ -639,7 +640,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                                             RootScreen()));
                                               }
                                             } else {
-                                              print('Dude new user');
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              prefs.setBool('seen', true);
                                               await storage.write(
                                                   key: 'userid',
                                                   value: jsondata['id']);
