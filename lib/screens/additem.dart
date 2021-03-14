@@ -2900,9 +2900,16 @@ class _AddItemState extends State<AddItem> {
                                                 json.decode(userresponse.body);
                                             var profilemap = userrespons;
 
-                                            setState(() {
+                                            if (profilemap['username'] ==
+                                                null) {
+                                              firstname =
+                                                  profilemap['first_name'];
+                                            } else {
                                               firstname =
                                                   profilemap['username'];
+                                            }
+                                            setState(() {
+                                              firstname = firstname;
                                               phonenumber =
                                                   profilemap['phonenumber'];
                                               email = profilemap['email'];

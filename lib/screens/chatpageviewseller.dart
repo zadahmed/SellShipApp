@@ -484,6 +484,202 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                 ],
               ))));
     }
+    if (offerstage == 4) {
+      return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color:
+                                    Colors.deepPurpleAccent.withOpacity(0.2)),
+                            color: Colors.deepPurpleAccent.withOpacity(0.2),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          height: 40,
+                          child: Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.delivery_dining,
+                                  color: Colors.deepPurpleAccent, size: 16),
+                              SizedBox(width: 5),
+                              Text(
+                                'Item Delivered',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          )))),
+                ),
+                Expanded(
+                  child: InkWell(
+                      enableFeedback: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderSeller(
+                                    itemid: widget.itemid,
+                                    messageid: widget.messageid,
+                                  )),
+                        );
+                      },
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 5, right: 20, top: 10, bottom: 10),
+                          child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Colors.black.withOpacity(0.2)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                              height: 40,
+                              child: Center(
+                                  child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(FontAwesomeIcons.receipt,
+                                      color: Colors.black, size: 16),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'View Order',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ))))),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    }
+    if (offerstage == 5) {
+      return Container(
+        height: 60,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color:
+                                    Colors.deepPurpleAccent.withOpacity(0.2)),
+                            color: Colors.deepPurpleAccent.withOpacity(0.2),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          height: 40,
+                          child: Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.check,
+                                  color: Colors.deepPurpleAccent, size: 16),
+                              SizedBox(width: 5),
+                              Text(
+                                'Order Completed',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.deepPurpleAccent,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          )))),
+                ),
+                Expanded(
+                  child: InkWell(
+                      enableFeedback: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderSeller(
+                                    itemid: widget.itemid,
+                                    messageid: widget.messageid,
+                                  )),
+                        );
+                      },
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 5, right: 20, top: 10, bottom: 10),
+                          child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Colors.black.withOpacity(0.2)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                              height: 40,
+                              child: Center(
+                                  child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(FontAwesomeIcons.receipt,
+                                      color: Colors.black, size: 16),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'View Order',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ))))),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
+    }
   }
 
   var profilepicture;

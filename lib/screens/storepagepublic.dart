@@ -125,32 +125,36 @@ class _StorePublicState extends State<StorePublic> {
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
-      print('user');
-      print(jsonbody);
-      var follower = jsonbody['follower'];
-
-      if (follower != null) {
-        followers = follower.length;
-        for (int i = 0; i < follower.length; i++) {
-          var meuser = await storage.read(key: 'userid');
-          if (meuser == follower[i]['\$oid']) {
-            setState(() {
-              follow = true;
-              followcolor = Colors.deepOrange;
-            });
-          }
-        }
-      } else {
-        followers = 0;
-        follower = [];
-      }
+      // var follower = jsonbody['follower'];
+      //
+      // if (follower != null) {
+      //   for (int i = 0; i < follower.length; i++) {
+      //     var meuser = await storage.read(key: 'userid');
+      //     if (meuser == follower[i]['\$oid']) {
+      //       setState(() {
+      //         follow = true;
+      //         followcolor = Colors.deepOrange;
+      //       });
+      //     }
+      //   }
+      // } else {
+      //   follower = [];
+      // }
 
       Stores store = Stores(
           storeid: jsonbody['_id']['\$oid'],
+          // followers: jsonbody['followers'] == null ? 0 : jsonbody['followers'],
+          // reviews:
+          //     jsonbody['reviewnumber'] == null ? 0 : jsonbody['reviewnumber'],
+          // sold: jsonbody['sold'] == null ? 0 : jsonbody['sold'],
           storecategory: jsonbody['storecategory'],
           storelogo: jsonbody['storelogo'],
           storebio: jsonbody['storebio'],
           storename: jsonbody['storename']);
+
+      print(mystore.sold);
+      print(mystore.reviews);
+      print(mystore.followers);
 
       setState(() {
         mystore = store;
@@ -285,8 +289,7 @@ class _StorePublicState extends State<StorePublic> {
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                              'You have no items added to your store yet! Go ahead list your first listing now. Lets get selling! ',
+                          child: Text('Looks like its all empty here! ',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
@@ -294,49 +297,6 @@ class _StorePublicState extends State<StorePublic> {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               )),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        InkWell(
-                          child: Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Container(
-                              height: 45,
-                              width: MediaQuery.of(context).size.width / 2,
-                              decoration: BoxDecoration(
-                                color: Colors.deepOrange,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(25.0),
-                                ),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Colors.deepOrange.withOpacity(0.4),
-                                      offset: const Offset(1.1, 1.1),
-                                      blurRadius: 5.0),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Sell an Item',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    letterSpacing: 0.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddItem()),
-                            );
-                          },
                         ),
                       ],
                     ))),
@@ -592,9 +552,9 @@ class _StorePublicState extends State<StorePublic> {
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      itemssold == null
+                                                      mystore.sold == null
                                                           ? '0'
-                                                          : itemssold
+                                                          : mystore.sold
                                                               .toString(),
                                                       style: TextStyle(
                                                           fontFamily:
@@ -626,9 +586,9 @@ class _StorePublicState extends State<StorePublic> {
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      following == null
+                                                      mystore.reviews == null
                                                           ? '0'
-                                                          : following
+                                                          : mystore.reviews
                                                               .toString(),
                                                       style: TextStyle(
                                                           fontFamily:
@@ -660,9 +620,9 @@ class _StorePublicState extends State<StorePublic> {
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      followers == null
+                                                      mystore.followers == null
                                                           ? '0'
-                                                          : followers
+                                                          : mystore.followers
                                                               .toString(),
                                                       style: TextStyle(
                                                           fontFamily:

@@ -6,6 +6,7 @@ import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
 import 'package:SellShip/global.dart';
 import 'package:SellShip/models/Items.dart';
+import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/models/user.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:SellShip/screens/details.dart';
@@ -16,6 +17,8 @@ import 'package:SellShip/screens/home/toppicks.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/notifications.dart';
 import 'package:SellShip/screens/search.dart';
+import 'package:SellShip/screens/storepage.dart';
+import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:SellShip/screens/subcategory.dart';
 import 'package:alphabet_list_scroll_view/alphabet_list_scroll_view.dart';
 import 'package:badges/badges.dart';
@@ -1014,17 +1017,19 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
 
   String view = 'home';
 
-  List<User> followingusers = List<User>();
+  List<Stores> followingusers = List<Stores>();
 
   followuser(user) async {
-    User foluser = user;
+    Stores foluser = user;
     var userid = await storage.read(key: 'userid');
     if (followingusers.contains(user)) {
       setState(() {
         followingusers.remove(foluser);
       });
-      var followurl =
-          'https://api.sellship.co/api/follow/' + userid + '/' + foluser.userid;
+      var followurl = 'https://api.sellship.co/api/follow/' +
+          userid +
+          '/' +
+          foluser.storeid;
 
       final followresponse = await http.get(followurl);
       if (followresponse.statusCode == 200) {
@@ -1034,8 +1039,10 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
       setState(() {
         followingusers.add(foluser);
       });
-      var followurl =
-          'https://api.sellship.co/api/follow/' + userid + '/' + foluser.userid;
+      var followurl = 'https://api.sellship.co/api/follow/' +
+          userid +
+          '/' +
+          foluser.storeid;
 
       final followresponse = await http.get(followurl);
       if (followresponse.statusCode == 200) {
@@ -1178,22 +1185,22 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          UserItems(
-                                                            userid:
+                                                          StorePublic(
+                                                            storeid:
                                                                 userList[index]
-                                                                    .userid,
-                                                            username:
+                                                                    .storeid,
+                                                            storename:
                                                                 userList[index]
-                                                                    .username,
+                                                                    .storename,
                                                           )),
                                                 );
                                               },
                                               child: Column(
                                                 children: [
-                                                  userList[index].profilepicture !=
+                                                  userList[index].storelogo !=
                                                               null &&
                                                           userList[index]
-                                                              .profilepicture
+                                                              .storelogo
                                                               .isNotEmpty
                                                       ? Container(
                                                           height: 80,
@@ -1209,7 +1216,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                                 width: 300,
                                                                 imageUrl: userList[
                                                                         index]
-                                                                    .profilepicture,
+                                                                    .storelogo,
                                                                 fit: BoxFit
                                                                     .cover,
                                                               )),
@@ -1237,7 +1244,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                     child: Text(
                                                       '@' +
                                                           userList[index]
-                                                              .username,
+                                                              .storename,
                                                       textAlign:
                                                           TextAlign.center,
                                                       overflow:
@@ -1254,19 +1261,21 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                   SizedBox(
                                                     height: 5,
                                                   ),
-                                                  Text(
-                                                    userList[index]
-                                                                .productsnumber !=
-                                                            null
-                                                        ? userList[index]
-                                                                .productsnumber +
-                                                            ' Listings'
-                                                        : '0 Listings',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 14,
-                                                        color: Colors.black),
+                                                  Container(
+                                                    height: 15,
+                                                    child: Text(
+                                                      userList[index]
+                                                          .storecategory,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 14,
+                                                          color: Colors.black),
+                                                    ),
                                                   ),
                                                   SizedBox(
                                                     height: 5,
@@ -1522,21 +1531,21 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      UserItems(
-                                                        userid: userList[index]
-                                                            .userid,
-                                                        username:
+                                                      StorePublic(
+                                                        storeid: userList[index]
+                                                            .storeid,
+                                                        storename:
                                                             userList[index]
-                                                                .username,
+                                                                .storename,
                                                       )),
                                             );
                                           },
                                           child: Column(
                                             children: [
-                                              userList[index].profilepicture !=
+                                              userList[index].storelogo !=
                                                           null &&
                                                       userList[index]
-                                                          .profilepicture
+                                                          .storelogo
                                                           .isNotEmpty
                                                   ? Container(
                                                       height: 80,
@@ -1549,9 +1558,9 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                                               CachedNetworkImage(
                                                             height: 200,
                                                             width: 300,
-                                                            imageUrl: userList[
-                                                                    index]
-                                                                .profilepicture,
+                                                            imageUrl:
+                                                                userList[index]
+                                                                    .storelogo,
                                                             fit: BoxFit.cover,
                                                           )),
                                                     )
@@ -1575,7 +1584,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                               Container(
                                                 child: Text(
                                                   '@' +
-                                                      userList[index].username,
+                                                      userList[index].storename,
                                                   textAlign: TextAlign.center,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -1590,19 +1599,18 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
                                               SizedBox(
                                                 height: 5,
                                               ),
-                                              Text(
-                                                userList[index]
-                                                            .productsnumber !=
-                                                        null
-                                                    ? userList[index]
-                                                            .productsnumber +
-                                                        ' Listings'
-                                                    : '0 Listings',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 14,
-                                                    color: Colors.black),
+                                              Container(
+                                                height: 15,
+                                                child: Text(
+                                                  userList[index].storecategory,
+                                                  textAlign: TextAlign.center,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 14,
+                                                      color: Colors.black),
+                                                ),
                                               ),
                                               SizedBox(
                                                 height: 5,
@@ -1896,49 +1904,28 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
         '/' +
         country;
 
-    List<User> testList = new List<User>();
+    List<Stores> testList = new List<Stores>();
     final response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
 
+      print('ssss');
+      print(jsonbody.length);
       for (var jsondata in jsonbody) {
-        var lastname;
-        var username;
-        if (jsondata.containsKey('last_name')) {
-          lastname = jsondata['last_name'];
-        } else {
-          lastname = '';
+        print(jsondata);
+        Stores store = new Stores(
+            storeid: jsondata['_id']['\$oid'],
+            storename: jsondata['storename'],
+            storecategory: jsondata['storecategory'],
+            storelogo: jsondata['storelogo']);
+
+        if (!testList.contains(store)) {
+          testList.add(store);
         }
 
-        if (jsondata.containsKey('username')) {
-          username = jsondata['username'];
-        } else {
-          username = jsondata['first_name'];
-        }
-
-        int products;
-        if (jsondata.containsKey('products')) {
-          products = jsondata['products'].length;
-          print(products.toString());
-        } else {
-          products = 0;
-        }
-
-        User user = new User(
-            firstName: capitalize(jsondata['first_name']) + ' ' + lastname,
-            username: username,
-            userid: jsondata['_id']['\$oid'],
-            productsnumber: products.toString(),
-            profilepicture: jsondata['profilepicture']);
-
-        if (!testList.contains(user)) {
-          testList.add(user);
-        }
+        print('sss');
+        print(testList.length);
       }
-
-      testList.sort((a, b) {
-        return a.compareTo(b);
-      });
 
       if (mounted)
         setState(() {
@@ -1950,7 +1937,7 @@ class _ForYouState extends State<ForYou> with AutomaticKeepAliveClientMixin {
 
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 
-  List<User> userList = new List<User>();
+  List<Stores> userList = new List<Stores>();
 
   Widget homePage(BuildContext context) {
     return loading == false

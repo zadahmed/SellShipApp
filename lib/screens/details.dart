@@ -705,10 +705,10 @@ class _DetailsState extends State<Details> {
     var userjsonbody = json.decode(userresponse.body);
 
     var rating;
-    if (userjsonbody['reviews'] == null) {
+    if (userjsonbody['reviewrating'] == null) {
       rating = 0.0;
     } else {
-      rating = double.parse(userjsonbody['reviews'].toString());
+      rating = double.parse(userjsonbody['reviewrating'].toString());
     }
 
     print(rating);

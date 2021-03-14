@@ -23,10 +23,12 @@ class CheckoutOffer extends StatefulWidget {
   String itemid;
   String offer;
   String messageid;
+  String ordertype;
 
   CheckoutOffer({
     Key key,
     this.messageid,
+    this.ordertype,
     this.itemid,
     this.offer,
   }) : super(key: key);
@@ -573,6 +575,15 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
 
                             var userid = await storage.read(key: 'userid');
 
+                            var returnurl;
+                            if (widget.ordertype == 'EXISTING') {
+                              returnurl =
+                                  'https://api.sellship.co/api/payment/EXISTING/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}';
+                            } else {
+                              returnurl =
+                                  'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}';
+                            }
+
                             Map<String, Object> body = {
                               "apiOperation": "INITIATE",
                               "order": {
@@ -586,13 +597,9 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                               "configuration": {
                                 "locale": "en",
                                 "paymentAction": "Sale",
-                                "returnUrl":
-                                    'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}'
+                                "returnUrl": returnurl
                               },
                             };
-
-                            var returnurl =
-                                'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}';
 
                             var url =
                                 "https://api-stg.noonpayments.com/payment/v1/order";

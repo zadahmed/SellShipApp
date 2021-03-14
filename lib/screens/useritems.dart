@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/screens/comments.dart';
 import 'package:badges/badges.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -470,16 +469,9 @@ class _UserItemsState extends State<UserItems> {
                                           'assets/personplaceholder.png',
                                           fit: BoxFit.fitWidth,
                                         )
-                                      : CachedNetworkImage(
-                                          height: 200,
-                                          width: 300,
-                                          imageUrl: profilepicture,
+                                      : Image.network(
+                                          profilepicture,
                                           fit: BoxFit.cover,
-                                          placeholder: (context, url) =>
-                                              SpinKitDoubleBounce(
-                                                  color: Colors.deepOrange),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
                                         ),
                                 ),
                               ),
@@ -1066,31 +1058,9 @@ class _UserItemsState extends State<UserItems> {
                                                                   Radius
                                                                       .circular(
                                                                           10)),
-                                                      child: CachedNetworkImage(
-                                                        height: 200,
-                                                        width: 300,
-                                                        fadeInDuration:
-                                                            Duration(
-                                                                microseconds:
-                                                                    5),
-                                                        imageUrl: itemsgrid[
-                                                                    index]
-                                                                .image
-                                                                .isEmpty
-                                                            ? SpinKitDoubleBounce(
-                                                                color: Colors
-                                                                    .deepOrange)
-                                                            : itemsgrid[index]
-                                                                .image,
+                                                      child: Image.network(
+                                                        itemsgrid[index].image,
                                                         fit: BoxFit.cover,
-                                                        placeholder: (context,
-                                                                url) =>
-                                                            SpinKitDoubleBounce(
-                                                                color: Colors
-                                                                    .deepOrange),
-                                                        errorWidget: (context,
-                                                                url, error) =>
-                                                            Icon(Icons.error),
                                                       ),
                                                     ),
                                                   ),
@@ -1851,26 +1821,10 @@ class _UserItemsState extends State<UserItems> {
                                                               Radius.circular(
                                                                   5),
                                                         ),
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          height: 200,
-                                                          width: 300,
-                                                          fadeInDuration:
-                                                              Duration(
-                                                                  microseconds:
-                                                                      10),
-                                                          imageUrl:
-                                                              itemsgrid[index]
-                                                                  .image,
+                                                        child: Image.network(
+                                                          itemsgrid[index]
+                                                              .image,
                                                           fit: BoxFit.cover,
-                                                          placeholder: (context,
-                                                                  url) =>
-                                                              SpinKitDoubleBounce(
-                                                                  color: Colors
-                                                                      .deepOrange),
-                                                          errorWidget: (context,
-                                                                  url, error) =>
-                                                              Icon(Icons.error),
                                                         ),
                                                       ),
                                                     ),

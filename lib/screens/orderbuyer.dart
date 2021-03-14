@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/tracking.dart';
 
@@ -185,6 +186,69 @@ class _OrderBuyerState extends State<OrderBuyer> {
     var url = 'https://api.sellship.co/api/transactionhistory/' + messageid;
 
     final response = await http.get(url);
+    if (response.statusCode != 200) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          useRootNavigator: false,
+          builder: (_) => new AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                content: Builder(
+                  builder: (context) {
+                    return Container(
+                        height: 150,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Oops. Looks like the payment did not go through. Please try again.',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            InkWell(
+                              child: Container(
+                                height: 60,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 5),
+                                width: MediaQuery.of(context).size.width - 80,
+                                decoration: BoxDecoration(
+                                  color: Color.fromRGBO(255, 115, 0, 1),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Center(
+                                    child: Text(
+                                  'Close',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                )),
+                              ),
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RootScreen()),
+                                );
+                              },
+                            ),
+                          ],
+                        ));
+                  },
+                ),
+              ));
+    }
 
     var jsonbody = json.decode(response.body);
 
@@ -224,13 +288,29 @@ class _OrderBuyerState extends State<OrderBuyer> {
       track = jsonbody['awbno'];
     }
 
+    var deliver;
+    if (jsonbody['delivered'] == null) {
+      deliver = false;
+    } else {
+      deliver = jsonbody['delivered'];
+    }
+
+    var comple;
+    if (jsonbody['sellerreviewed'] == null) {
+      comple = false;
+    } else {
+      comple = jsonbody['sellerreviewed'];
+    }
+
     setState(() {
       itemprice = jsonbody['totalpayable'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
       cancelled = cancell;
-      orderid = jsonbody['paymentid'];
+      orderid = jsonbody['orderid'];
       trackingnumber = track;
+      completed = comple;
+      delivered = deliver;
       deliverystage = delstage;
       buyerid = jsonbody['senderid'];
       buyername = jsonbody['buyername'];
@@ -244,7 +324,8 @@ class _OrderBuyerState extends State<OrderBuyer> {
   }
 
   Item newitem;
-
+  var delivered;
+  var completed;
   var deliveredtext;
   var orderid;
   var itemprice;
@@ -902,6 +983,18 @@ class _OrderBuyerState extends State<OrderBuyer> {
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 0,
+          leading: InkWell(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => RootScreen()),
+              );
+            },
+            child: Icon(
+              Icons.chevron_left,
+              color: Colors.black,
+            ),
+          ),
           title: Text(
             'Order',
             style: TextStyle(
@@ -915,98 +1008,7 @@ class _OrderBuyerState extends State<OrderBuyer> {
         body: loading == false
             ? ListView(children: <Widget>[
                 SizedBox(height: 10),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
-                  child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'Order ID: ',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Container(
-                                    child: Text(
-                                  orderid,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromRGBO(27, 44, 64, 1)),
-                                )),
-                              ],
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: 10,
-                                  top: 20,
-                                ),
-                                child: Container(
-                                    padding: EdgeInsets.all(20),
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color:
-                                            Color.fromRGBO(27, 44, 64, 0.03)),
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Delivered to:',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.blueGrey),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                              child: Text(
-                                            addressline1 +
-                                                ' ' +
-                                                addressline2 +
-                                                ' ' +
-                                                area +
-                                                ' ' +
-                                                city +
-                                                ' ' +
-                                                country,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color.fromRGBO(
-                                                    27, 44, 64, 1)),
-                                          )),
-                                        ])))
-                          ])),
-                ),
+
                 trackingnumber.isNotEmpty
                     ? Padding(
                         padding: EdgeInsets.only(
@@ -1062,6 +1064,109 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                     ),
                                   ],
                                 ),
+                                completed == true
+                                    ? delivered == true
+                                        ? SizedBox(
+                                            height: 20,
+                                          )
+                                        : Container()
+                                    : Container(),
+                                completed == false
+                                    ? delivered == true
+                                        ? InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReviewSeller(
+                                                          messageid: messageid,
+                                                          reviewuserid:
+                                                              item.userid,
+                                                        )),
+                                              );
+                                            },
+                                            enableFeedback: true,
+                                            child: Container(
+                                              height: 52,
+                                              decoration: BoxDecoration(
+                                                color: Colors.deepOrange,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(5.0),
+                                                ),
+                                                boxShadow: <BoxShadow>[
+                                                  BoxShadow(
+                                                      color: Colors.deepOrange
+                                                          .withOpacity(0.4),
+                                                      offset: const Offset(
+                                                          1.1, 1.1),
+                                                      blurRadius: 10.0),
+                                                ],
+                                              ),
+                                              child: Center(
+                                                  child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.star,
+                                                    color: Colors.white,
+                                                    size: 18,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 2,
+                                                  ),
+                                                  Text(
+                                                    'Review Seller',
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.0,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                            ))
+                                        : Container()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                            Icon(
+                                              Icons.check,
+                                              color: Colors.green,
+                                              size: 18,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              'The Order has been Completed',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green),
+                                            ),
+                                          ]),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                completed == false
+                                    ? delivered == true
+                                        ? Text(
+                                            'On tapping \'Review Seller\' you hereby confirm the order as complete and agree to the terms and conditions. On accepting the order as complete, Buyers Protection will no longer be applicable. ',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 13,
+                                                color: Colors.blueGrey),
+                                          )
+                                        : Container()
+                                    : Container()
                               ]),
                         ))
                     : Container(),
@@ -1328,6 +1433,112 @@ class _OrderBuyerState extends State<OrderBuyer> {
                         color: Colors.deepOrange,
                       ),
 
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+                  child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            completed == false
+                                ? delivered == true
+                                    ? Text(
+                                        'This order will automatically be marked complete once the Buyer\'s Protection period ends.',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 13,
+                                            color: Colors.blueGrey),
+                                      )
+                                    : Container()
+                                : Container(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Order ID: ',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.blueGrey),
+                                ),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Container(
+                                    child: Text(
+                                  orderid,
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(27, 44, 64, 1)),
+                                )),
+                              ],
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 10,
+                                  top: 20,
+                                ),
+                                child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color:
+                                            Color.fromRGBO(27, 44, 64, 0.03)),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Delivered to:',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              child: Text(
+                                            addressline1 +
+                                                ' ' +
+                                                addressline2 +
+                                                ' ' +
+                                                area +
+                                                ' ' +
+                                                city +
+                                                ' ' +
+                                                country,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    27, 44, 64, 1)),
+                                          )),
+                                        ])))
+                          ])),
+                ),
                 Padding(
                     padding: EdgeInsets.only(
                         left: 15, bottom: 10, top: 5, right: 15),

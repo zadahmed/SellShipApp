@@ -217,6 +217,7 @@ class _ActivityBuyState extends State<ActivityBuy>
 
   Widget offerstatus(BuildContext context, offerstage, itemid, senderuserid,
       recieveruserid, offerprice) {
+    print(offerstage);
     if (offerstage == 0) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -228,7 +229,7 @@ class _ActivityBuyState extends State<ActivityBuy>
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(10)),
             child: Center(
                 child: Text(
               'Pending Offer',
@@ -253,7 +254,7 @@ class _ActivityBuyState extends State<ActivityBuy>
           height: 27,
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(20)),
+              color: Colors.green, borderRadius: BorderRadius.circular(10)),
           child: Center(
               child: Text(
             'Pay',
@@ -268,10 +269,39 @@ class _ActivityBuyState extends State<ActivityBuy>
           padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
               color: Colors.deepOrange,
-              borderRadius: BorderRadius.circular(20)),
+              borderRadius: BorderRadius.circular(10)),
           child: Center(
               child: Text(
             'Payment Completed',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+          )));
+    } else if (offerstage == 4) {
+      return Container(
+          width: 120,
+          height: 47,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          decoration: BoxDecoration(
+              color: Colors.deepOrange,
+              borderRadius: BorderRadius.circular(10)),
+          child: Center(
+              child: Text(
+            'Item Delivered',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
+          )));
+    } else if (offerstage == 5) {
+      return Container(
+          width: 120,
+          height: 47,
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          decoration: BoxDecoration(
+              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+          child: Center(
+              child: Text(
+            'Order Completed',
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),
@@ -286,7 +316,7 @@ class _ActivityBuyState extends State<ActivityBuy>
             height: 35,
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
-                color: Colors.red, borderRadius: BorderRadius.circular(20)),
+                color: Colors.red, borderRadius: BorderRadius.circular(10)),
             child: Center(
                 child: Text(
               'Offer Declined',
@@ -316,10 +346,10 @@ class _ActivityBuyState extends State<ActivityBuy>
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(
                 color: Color.fromRGBO(69, 80, 163, 1),
-                borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(10)),
             child: Center(
                 child: Text(
-              'Counteroffer',
+              'Counter Offer',
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: 'Helvetica', fontSize: 14.0, color: Colors.white),

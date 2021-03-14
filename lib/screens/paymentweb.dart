@@ -10,8 +10,15 @@ class PaymentWeb extends StatefulWidget {
   String returnurl;
   String itemid;
   String messageid;
+  String errorurl;
 
-  PaymentWeb({Key key, this.url, this.returnurl, this.itemid, this.messageid})
+  PaymentWeb(
+      {Key key,
+      this.url,
+      this.returnurl,
+      this.itemid,
+      this.messageid,
+      this.errorurl})
       : super(key: key);
 
   @override
@@ -75,6 +82,11 @@ class PaymentWebState extends State<PaymentWeb> {
                           messageid: widget.messageid,
                         )),
               );
+            } else if (url.substring(0, 20) ==
+                widget.errorurl.substring(0, 20)) {
+              print('error');
+              print(url);
+              Navigator.pop(context);
             }
           },
           androidOnPermissionRequest: (InAppWebViewController controller,

@@ -616,6 +616,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                                         userid;
                                                 final storeresponse =
                                                     await http.get(storeurl);
+                                                print(storeresponse);
                                                 var storejsonbody = json
                                                     .decode(storeresponse.body);
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/payments/stripeservice.dart';
 import 'package:SellShip/screens/addpayment.dart';
@@ -607,6 +608,7 @@ class _CheckoutState extends State<Checkout> {
                             List encodedText = utf8.encode(key);
                             String base64Str = base64Encode(encodedText);
                             print('Key_Test $base64Str');
+
                             var heade = 'Key_Test $base64Str';
 
                             Map<String, String> headers = {
@@ -622,23 +624,44 @@ class _CheckoutState extends State<Checkout> {
                             );
 
                             if (response.statusCode == 200) {
-                              Navigator.of(context, rootNavigator: true).pop();
                               var jsonmessage = json.decode(response.body);
 
                               var url = jsonmessage['result']['checkoutData']
                                   ['postUrl'];
 
-                              // Navigator.of(context, rootNavigator: true).pop();
-                              final result = await Navigator.push(
+                              var orderid =
+                                  jsonmessage['result']['order']['id'];
+
+                              final orderresponse = await http.get(
+                                'https://api.sellship.co/api/noon/save/orderid/${messageid}/${orderid}/${userid}',
+                              );
+
+                              if (orderresponse.statusCode == 200) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => PaymentWeb(
+                                      builder: (BuildContext context) =>
+                                          PaymentWeb(
                                             returnurl: returnurl,
                                             url: url,
                                             itemid: listitems[0].itemid,
                                             messageid: messageid,
-                                          )));
-                              print(result);
+                                          )),
+                                );
+                                // Navigator.pushReplacement(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => PaymentWeb(
+                                //               returnurl: returnurl,
+                                //               url: url,
+                                //               itemid: listitems[0].itemid,
+                                //               messageid: messageid,
+                                //             )));
+                              }
                             }
                           }
                         },

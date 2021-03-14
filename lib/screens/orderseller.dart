@@ -268,13 +268,21 @@ class _OrderSellerState extends State<OrderSeller> {
       deliver = jsonbody['delivered'];
     }
 
+    var comple;
+    if (jsonbody['buyerreviewed'] == null) {
+      comple = false;
+    } else {
+      comple = jsonbody['buyerreviewed'];
+    }
+
     setState(() {
       itemprice = jsonbody['totalpayable'];
       totalpaid = jsonbody['totalpayable'];
       date = s;
       cancelled = cancell;
+      completed = comple;
       delivered = deliver;
-      orderid = jsonbody['paymentid'];
+      orderid = jsonbody['orderid'];
       trackingnumber = track;
       deliverystage = delstage;
       buyerid = jsonbody['senderid'];
@@ -290,6 +298,7 @@ class _OrderSellerState extends State<OrderSeller> {
   }
 
   var delivered;
+  var completed;
   getstore(storeid) async {
     var url = 'https://api.sellship.co/api/store/' + storeid;
     final response = await http.get(url);
@@ -1457,137 +1466,7 @@ class _OrderSellerState extends State<OrderSeller> {
         body: loading == false
             ? ListView(children: <Widget>[
                 SizedBox(height: 10),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
-                  child: Container(
-                      padding: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              offset: Offset(0.0, 1.0), //(x,y)
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Text(
-                                  'Order ID: ',
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 16,
-                                      color: Colors.blueGrey),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Container(
-                                    child: Text(
-                                  orderid,
-                                  style: TextStyle(
-                                      fontFamily: 'Helvetica',
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromRGBO(27, 44, 64, 1)),
-                                )),
-                              ],
-                            ),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: 10,
-                                  top: 20,
-                                ),
-                                child: Container(
-                                    padding: EdgeInsets.all(20),
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color:
-                                            Color.fromRGBO(27, 44, 64, 0.03)),
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Pickup from:',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.blueGrey),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                              child: Text(
-                                            mystore.storebio,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color.fromRGBO(
-                                                    27, 44, 64, 1)),
-                                          )),
-                                        ]))),
-                            Padding(
-                                padding: EdgeInsets.only(
-                                  bottom: 10,
-                                  top: 5,
-                                ),
-                                child: Container(
-                                    padding: EdgeInsets.all(20),
-                                    width: MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color:
-                                            Color.fromRGBO(27, 44, 64, 0.03)),
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Delivered to:',
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.blueGrey),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Container(
-                                              child: Text(
-                                            addressline1 +
-                                                '\n' +
-                                                addressline2 +
-                                                '\n' +
-                                                area +
-                                                '\n' +
-                                                city +
-                                                '\n' +
-                                                country,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color.fromRGBO(
-                                                    27, 44, 64, 1)),
-                                          )),
-                                        ])))
-                          ])),
-                ),
+
                 trackingnumber.isNotEmpty
                     ? Padding(
                         padding: EdgeInsets.only(
@@ -1642,6 +1521,104 @@ class _OrderSellerState extends State<OrderSeller> {
                                           )),
                                     ),
                                   ],
+                                ),
+                                completed == true
+                                    ? delivered == true
+                                        ? SizedBox(
+                                            height: 20,
+                                          )
+                                        : Container()
+                                    : Container(),
+                                completed == false
+                                    ? delivered == true
+                                        ? SizedBox(
+                                            height: 20,
+                                          )
+                                        : Container()
+                                    : Container(),
+                                completed == false
+                                    ? delivered == true
+                                        ? InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReviewBuyer(
+                                                          messageid: messageid,
+                                                          reviewuserid: user,
+                                                        )),
+                                              );
+                                            },
+                                            enableFeedback: true,
+                                            child: Container(
+                                              height: 52,
+                                              decoration: BoxDecoration(
+                                                color: Colors.deepOrange,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(5.0),
+                                                ),
+                                                boxShadow: <BoxShadow>[
+                                                  BoxShadow(
+                                                      color: Colors.deepOrange
+                                                          .withOpacity(0.4),
+                                                      offset: const Offset(
+                                                          1.1, 1.1),
+                                                      blurRadius: 10.0),
+                                                ],
+                                              ),
+                                              child: Center(
+                                                  child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.star,
+                                                    color: Colors.white,
+                                                    size: 18,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 2,
+                                                  ),
+                                                  Text(
+                                                    'Review Buyer',
+                                                    textAlign: TextAlign.left,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 16,
+                                                      letterSpacing: 0.0,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )),
+                                            ))
+                                        : Container()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                            Icon(
+                                              Icons.check,
+                                              color: Colors.green,
+                                              size: 18,
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              'The Order has been Completed',
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green),
+                                            ),
+                                          ]),
+                                SizedBox(
+                                  height: 5,
                                 ),
                               ]),
                         ))
@@ -1815,6 +1792,137 @@ class _OrderSellerState extends State<OrderSeller> {
                                 height: 10,
                               ),
                             ]))),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 15, bottom: 10, top: 5, right: 15),
+                  child: Container(
+                      padding: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: Offset(0.0, 1.0), //(x,y)
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.white),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Order ID: ',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 16,
+                                      color: Colors.blueGrey),
+                                ),
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Container(
+                                    child: Text(
+                                  orderid,
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromRGBO(27, 44, 64, 1)),
+                                )),
+                              ],
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 10,
+                                  top: 20,
+                                ),
+                                child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color:
+                                            Color.fromRGBO(27, 44, 64, 0.03)),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Pickup from:',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              child: Text(
+                                            mystore.storebio,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    27, 44, 64, 1)),
+                                          )),
+                                        ]))),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: 10,
+                                  top: 5,
+                                ),
+                                child: Container(
+                                    padding: EdgeInsets.all(20),
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color:
+                                            Color.fromRGBO(27, 44, 64, 0.03)),
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Delivered to:',
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.blueGrey),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              child: Text(
+                                            addressline1 +
+                                                '\n' +
+                                                addressline2 +
+                                                '\n' +
+                                                area +
+                                                '\n' +
+                                                city +
+                                                '\n' +
+                                                country,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    27, 44, 64, 1)),
+                                          )),
+                                        ])))
+                          ])),
+                ),
                 Padding(
                     padding: EdgeInsets.only(
                         left: 15, bottom: 10, top: 5, right: 15),
