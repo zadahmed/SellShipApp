@@ -80,6 +80,45 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
               children: [
                 InkWell(
                   onTap: () async {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        useRootNavigator: false,
+                        builder: (_) => new AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0))),
+                              content: Builder(
+                                builder: (context) {
+                                  return Container(
+                                      height: 100,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Loading..',
+                                            style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container(
+                                              height: 50,
+                                              width: 50,
+                                              child: SpinKitDoubleBounce(
+                                                color: Colors.deepOrange,
+                                              )),
+                                        ],
+                                      ));
+                                },
+                              ),
+                            ));
                     final storage = new FlutterSecureStorage();
                     var userid = await storage.read(key: 'userid');
                     if (selectedinterests.length >= 2) {
@@ -94,6 +133,7 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                       var response = await dio.post(url, data: formData);
 
                       if (response.statusCode == 200) {
+                        Navigator.of(context).pop();
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
@@ -107,7 +147,6 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                   },
                   child: Container(
                     height: 50,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     width: MediaQuery.of(context).size.width - 50,
                     decoration: BoxDecoration(
                       color: selectedinterests.length >= 2
@@ -206,6 +245,10 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                           child: Image.asset(
                             categoryimages[index],
                             fit: BoxFit.cover,
+                            height: 300,
+                            width: 300,
+                            cacheHeight: 300,
+                            cacheWidth: 300,
                           ),
                         ),
                         Align(

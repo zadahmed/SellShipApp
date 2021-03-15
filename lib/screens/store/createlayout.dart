@@ -31,12 +31,14 @@ class CreateLayout extends StatefulWidget {
   final String storetype;
   final String storeaddress;
   final String storecity;
+  final String storedescription;
 
   CreateLayout(
       {Key key,
       this.userid,
       this.storename,
       this.username,
+      this.storedescription,
       this.storelogo,
       this.storetype,
       this.storeaddress,
@@ -552,6 +554,7 @@ class _CreateLayoutState extends State<CreateLayout> {
                               'userid': userid,
                               'layout': 'default',
                               'storeaddress': widget.storeaddress,
+                              'storedescription': widget.storedescription,
                               'storecity': widget.storecity,
                               'storebio': widget.storeabout,
                               'storelogo': await MultipartFile.fromFile(
@@ -585,6 +588,7 @@ class _CreateLayoutState extends State<CreateLayout> {
                                 MaterialPageRoute(
                                   builder: (context) => CreateStoreTier(
                                     userid: widget.userid,
+                                    storedescription: widget.storedescription,
                                     username: widget.username,
                                     storename: widget.storename,
                                     storelogo: widget.storelogo,

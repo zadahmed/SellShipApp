@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/screens/paymentsubs.dart';
 import 'package:SellShip/screens/store/createstorepage.dart';
 import 'package:SellShip/screens/store/mystorepage.dart';
 import 'package:dio/dio.dart';
@@ -30,6 +31,7 @@ class CreateStoreTier extends StatefulWidget {
   final String storetype;
   final String storeaddress;
   final String storecity;
+  final String storedescription;
 
   CreateStoreTier(
       {Key key,
@@ -38,6 +40,7 @@ class CreateStoreTier extends StatefulWidget {
       this.username,
       this.storelogo,
       this.storetype,
+      this.storedescription,
       this.storeaddress,
       this.storecity,
       this.storecategory,
@@ -307,7 +310,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "AED 85 per month after trial",
+                        "AED 115 per month after trial",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 22.0,
@@ -367,7 +370,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                             fontFamily: 'Helvetica'),
                       ),
                       Text(
-                        "Include ecommerce store for web and app",
+                        "Include Ecommerce store for web and app",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             fontSize: 14.0,
@@ -457,7 +460,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "AED 220 per month after trial",
+                        "AED 320 per month after trial",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 22.0,
@@ -634,7 +637,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "AED 950 per month after trial",
+                        "AED 1250 per month after trial",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 22.0,
@@ -653,7 +656,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
             Padding(
               padding: EdgeInsets.only(left: 36, top: 40, right: 36),
               child: Text(
-                "Credit/Debit card not required to begin trial.",
+                "Credit/Debit card will be charged the amount and refunded to begin the Trial.",
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     fontSize: 16.0,
@@ -714,94 +717,120 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                                     ),
                                   ));
 
-                          // Dio dio = new Dio();
-                          // FormData formData;
-                          // var addurl = 'https://api.sellship.co/create/store';
-                          // String fileName =
-                          //     widget.storelogo.path.split('/').last;
-                          // var userid = await storage.read(key: 'userid');
-                          //
-                          // //
-                          // formData = FormData.fromMap({
-                          //   'storecategory': widget.storecategory,
-                          //   'storetype': widget.storetype,
-                          //   'storename': widget.storename,
-                          //   'userid': userid,
-                          //   'layout': 'default',
-                          //   'businesstier': businesstier.toString(),
-                          //   'storeaddress': widget.storeaddress,
-                          //   'storecity': widget.storecity,
-                          //   'storebio': widget.storeabout,
-                          //   'storelogo': await MultipartFile.fromFile(
-                          //       widget.storelogo.path,
-                          //       filename: fileName)
-                          // });
-                          //
-                          // var response = await dio.post(addurl, data: formData);
-                          //
-                          // if (response.statusCode == 200) {
+                          Dio dio = new Dio();
+                          FormData formData;
+                          var addurl = 'https://api.sellship.co/create/store';
+                          String fileName =
+                              widget.storelogo.path.split('/').last;
+                          var userid = await storage.read(key: 'userid');
 
-                          Map<String, Object> body = {
-                            "apiOperation": "INITIATE",
-                            "order": {
-                              "name": "SellShip Purchase",
-                              "channel": "web",
-                              "reference": 'Reference',
-                              "amount": '2000',
-                              "currency": "AED",
-                              "category": "pay",
-                            },
-                            "configuration": {
-                              "tokenizeCC": true,
-                              "paymentAction": "Authorize",
-                              "returnUrl":
-                                  'https://api.sellship.co/api/payment/NEW/'
-                            },
-                            "subscription": {
-                              "type": "Recurring",
-                              "amount": '2000',
-                              "name": "SellShip Purchase",
-                              "validTill": "2025-09-25T11:59:59"
+                          formData = FormData.fromMap({
+                            'storecategory': widget.storecategory,
+                            'storetype': widget.storetype,
+                            'storename': widget.storename,
+                            'userid': userid,
+                            'layout': 'default',
+                            'storeaddress': widget.storeaddress,
+                            'storecity': widget.storecity,
+                            'storedescription': widget.storedescription,
+                            'storebio': widget.storeabout,
+                            'storelogo': await MultipartFile.fromFile(
+                                widget.storelogo.path,
+                                filename: fileName)
+                          });
+
+                          var response = await dio.post(addurl, data: formData);
+
+                          var jsoni = response.data;
+
+                          var storeid = jsoni['id']['\$oid'];
+
+                          if (response.statusCode == 200) {
+                            var amount;
+                            if (selectedlayout == 1) {
+                              amount = 115;
+                            } else if (selectedlayout == 2) {
+                              amount = 320;
+                            } else if (selectedlayout == 3) {
+                              amount = 1250;
                             }
-                          };
 
-                          var url =
-                              "https://api-stg.noonpayments.com/payment/v1/order";
+                            Map<String, Object> noonbody = {
+                              "apiOperation": "INITIATE",
+                              "order": {
+                                "name": businesstier + '/' + storeid.toString(),
+                                "channel": "web",
+                                "reference": storeid.toString(),
+                                "amount": amount.toString(),
+                                "currency": "AED",
+                                "category": "pay",
+                              },
+                              "configuration": {
+                                "tokenizeCC": true,
+                                "paymentAction": "Sale",
+                                "returnUrl":
+                                    'https://api.sellship.co/api/payment/trial/subscription/${storeid}/${businesstier}/${amount.toString()}'
+                              },
+                              "subscription": {
+                                "type": "Recurring",
+                                "amount": amount.toString(),
+                                "name": "SellShip Purchase",
+                              }
+                            };
 
-                          var key =
-                              "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
-                          List encodedText = utf8.encode(key);
-                          String base64Str = base64Encode(encodedText);
-                          print('Key_Test $base64Str');
-                          var heade = 'Key_Test $base64Str';
+                            var returnurl =
+                                'https://api.sellship.co/api/payment/trial/subscription/${storeid}/${businesstier}/${amount.toString()}';
+                            var noonurl =
+                                "https://api-stg.noonpayments.com/payment/v1/order";
 
-                          Map<String, String> headers = {
-                            'Authorization': heade,
-                            'Content-type': 'application/json',
-                            'Accept': 'application/json',
-                          };
+                            var key =
+                                "SellShip.SellShipApp:7d016fdd70a64b68bc99d2cece27b48d";
+                            List encodedText = utf8.encode(key);
+                            String base64Str = base64Encode(encodedText);
 
-                          final response = await http.post(
-                            url,
-                            body: json.encode(body),
-                            headers: headers,
-                          );
+                            var heade = 'Key_Test $base64Str';
 
-                          print(response.body);
+                            Map<String, String> headers = {
+                              'Authorization': heade,
+                              'Content-type': 'application/json',
+                              'Accept': 'application/json',
+                            };
 
-                          // var storeid = response.data['id']['\$oid'];
-                          // await storage.write(key: 'storeid', value: storeid);
+                            final noonresponse = await http.post(
+                              noonurl,
+                              body: json.encode(noonbody),
+                              headers: headers,
+                            );
 
-                          Navigator.of(context, rootNavigator: false).pop();
-                          // Navigator.pushAndRemoveUntil(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (BuildContext context) =>
-                          //             CreateStorePage(
-                          //               storeid: storeid,
-                          //             )),
-                          //     ModalRoute.withName('/'));
-                          // }
+                            var jsonmessage = json.decode(noonresponse.body);
+                            print(jsonmessage['result']);
+
+                            var posturl = jsonmessage['result']['checkoutData']
+                                ['postUrl'];
+
+                            var orderid = jsonmessage['result']['order']['id'];
+
+                            final orderresponse = await http.get(
+                              'https://api.sellship.co/api/noon/save/orderid/subscription/${orderid}/${storeid}',
+                            );
+
+                            await storage.write(key: 'storeid', value: storeid);
+
+                            Navigator.of(context, rootNavigator: false).pop();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      Paymentsubs(
+                                          storeid: storeid,
+                                          businesstier: businesstier,
+                                          url: posturl,
+                                          returnurl: returnurl)),
+                            );
+                          } else {
+                            Navigator.of(context, rootNavigator: false).pop();
+                            showInSnackBar('Looks like something went wrong');
+                          }
                         } else {
                           showInSnackBar('Please choose a plan for your store');
                         }

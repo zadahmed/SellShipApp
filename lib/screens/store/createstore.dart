@@ -24,10 +24,12 @@ class CreateStore extends StatefulWidget {
   final String username;
   final String storetype;
   final String category;
+  final String storedescription;
 
   CreateStore({
     Key key,
     this.userid,
+    this.storedescription,
     this.storename,
     this.storetype,
     this.category,
@@ -396,6 +398,8 @@ class _CreateStoreState extends State<CreateStore> {
                                         storeaddress: selectedaddress.address,
                                         storetype: widget.storetype,
                                         storecity: selectedaddress.city,
+                                        storedescription:
+                                            widget.storedescription,
                                       ),
                                     ));
                               }
@@ -419,6 +423,8 @@ class _CreateStoreState extends State<CreateStore> {
                                         storeabout: usernamecontroller.text,
                                         storeaddress: selectedaddress.address,
                                         storecity: selectedaddress.city,
+                                        storedescription:
+                                            widget.storedescription,
                                       ),
                                     ));
                               }

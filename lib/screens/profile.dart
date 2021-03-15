@@ -538,7 +538,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                                       )
                                                                     : CachedNetworkImage(
                                                                         height:
-                                                                            200,
+                                                                            300,
                                                                         width:
                                                                             300,
                                                                         imageUrl:
@@ -600,10 +600,29 @@ class _ProfilePageState extends State<ProfilePage>
                                                                                 content: Builder(
                                                                                   builder: (context) {
                                                                                     return Container(
-                                                                                        height: 50,
-                                                                                        width: 50,
-                                                                                        child: SpinKitDoubleBounce(
-                                                                                          color: Colors.deepOrange,
+                                                                                        height: 100,
+                                                                                        child: Column(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                          children: [
+                                                                                            Text(
+                                                                                              'Updating Profile Picture..',
+                                                                                              style: TextStyle(
+                                                                                                fontFamily: 'Helvetica',
+                                                                                                fontSize: 18,
+                                                                                                fontWeight: FontWeight.bold,
+                                                                                                color: Colors.black,
+                                                                                              ),
+                                                                                            ),
+                                                                                            SizedBox(
+                                                                                              height: 15,
+                                                                                            ),
+                                                                                            Container(
+                                                                                                height: 50,
+                                                                                                width: 50,
+                                                                                                child: SpinKitDoubleBounce(
+                                                                                                  color: Colors.deepOrange,
+                                                                                                )),
+                                                                                          ],
                                                                                         ));
                                                                                   },
                                                                                 ),
@@ -636,10 +655,29 @@ class _ProfilePageState extends State<ProfilePage>
                                                                                 content: Builder(
                                                                                   builder: (context) {
                                                                                     return Container(
-                                                                                        height: 50,
-                                                                                        width: 50,
-                                                                                        child: SpinKitDoubleBounce(
-                                                                                          color: Colors.deepOrange,
+                                                                                        height: 100,
+                                                                                        child: Column(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                          children: [
+                                                                                            Text(
+                                                                                              'Updating Profile Picture..',
+                                                                                              style: TextStyle(
+                                                                                                fontFamily: 'Helvetica',
+                                                                                                fontSize: 18,
+                                                                                                fontWeight: FontWeight.bold,
+                                                                                                color: Colors.black,
+                                                                                              ),
+                                                                                            ),
+                                                                                            SizedBox(
+                                                                                              height: 15,
+                                                                                            ),
+                                                                                            Container(
+                                                                                                height: 50,
+                                                                                                width: 50,
+                                                                                                child: SpinKitDoubleBounce(
+                                                                                                  color: Colors.deepOrange,
+                                                                                                )),
+                                                                                          ],
                                                                                         ));
                                                                                   },
                                                                                 ),
@@ -2198,7 +2236,7 @@ class _ProfilePageState extends State<ProfilePage>
                                               if (storejsonbody.isNotEmpty) {
                                                 var storeid = storejsonbody[0]
                                                     ['_id']['\$oid'];
-                                                print(storeid);
+
                                                 await storage.write(
                                                     key: 'storeid',
                                                     value: storeid);
@@ -2714,140 +2752,310 @@ class _ProfilePageState extends State<ProfilePage>
                                                   storeslist[index].storeid)),
                                     );
                                   },
-                                  child: Container(
-                                      height: 100,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 5),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                InkWell(
-                                                  onTap: () {},
-                                                  child: Container(
-                                                    height: 80,
-                                                    width: 80,
-                                                    child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(5),
-                                                        child: storeslist[index]
-                                                                .storelogo
-                                                                .isNotEmpty
-                                                            ? Hero(
-                                                                tag:
-                                                                    'store${storeslist[index].storeid}',
-                                                                child:
-                                                                    CachedNetworkImage(
-                                                                  imageUrl: storeslist[
-                                                                          index]
-                                                                      .storelogo,
-                                                                  height: 200,
-                                                                  width: 300,
-                                                                  fadeInDuration:
-                                                                      Duration(
-                                                                          microseconds:
-                                                                              5),
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  placeholder: (context,
-                                                                          url) =>
-                                                                      SpinKitDoubleBounce(
-                                                                          color:
-                                                                              Colors.deepOrange),
-                                                                  errorWidget: (context,
-                                                                          url,
-                                                                          error) =>
-                                                                      Icon(Icons
-                                                                          .error),
-                                                                ),
-                                                              )
-                                                            : SpinKitFadingCircle(
-                                                                color: Colors
-                                                                    .deepOrange,
-                                                              )),
-                                                  ),
+                                  child: storeslist[index].approved == true
+                                      ? Container(
+                                          height: 100,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15, vertical: 5),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.shade300,
+                                                  offset:
+                                                      Offset(0.0, 1.0), //(x,y)
+                                                  blurRadius: 6.0,
                                                 ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                              ],
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                      CrossAxisAlignment.center,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
                                                   children: [
-                                                    Container(
-                                                      height: 25,
-                                                      width:
-                                                          MediaQuery.of(context)
+                                                    InkWell(
+                                                      onTap: () {},
+                                                      child: Container(
+                                                        height: 80,
+                                                        width: 80,
+                                                        child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                            child: storeslist[
+                                                                        index]
+                                                                    .storelogo
+                                                                    .isNotEmpty
+                                                                ? Hero(
+                                                                    tag:
+                                                                        'store${storeslist[index].storeid}',
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      imageUrl:
+                                                                          storeslist[index]
+                                                                              .storelogo,
+                                                                      height:
+                                                                          200,
+                                                                      width:
+                                                                          300,
+                                                                      fadeInDuration:
+                                                                          Duration(
+                                                                              microseconds: 5),
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      placeholder: (context,
+                                                                              url) =>
+                                                                          SpinKitDoubleBounce(
+                                                                              color: Colors.deepOrange),
+                                                                      errorWidget: (context,
+                                                                              url,
+                                                                              error) =>
+                                                                          Icon(Icons
+                                                                              .error),
+                                                                    ),
+                                                                  )
+                                                                : SpinKitFadingCircle(
+                                                                    color: Colors
+                                                                        .deepOrange,
+                                                                  )),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          height: 25,
+                                                          width: MediaQuery.of(
+                                                                          context)
                                                                       .size
                                                                       .width /
                                                                   3 -
                                                               10,
-                                                      child: Text(
-                                                        storeslist[index]
-                                                            .storename,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
+                                                          child: Text(
+                                                            storeslist[index]
+                                                                .storename,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          storeslist[index]
+                                                              .storecategory,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 14.0,
+                                                              color:
+                                                                  Colors.black),
+                                                        )
+                                                      ],
                                                     ),
-                                                    Text(
-                                                      storeslist[index]
-                                                          .storecategory,
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Helvetica',
-                                                          fontSize: 14.0,
-                                                          color: Colors.black),
+                                                  ]),
+                                              Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Icon(
+                                                      Feather.chevron_right,
+                                                      color: Colors.grey,
                                                     )
+                                                  ])
+                                            ],
+                                          ))
+                                      : Stack(children: [
+                                          Container(
+                                              height: 100,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 15, vertical: 5),
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      offset: Offset(
+                                                          0.0, 1.0), //(x,y)
+                                                      blurRadius: 6.0,
+                                                    ),
                                                   ],
-                                                ),
-                                              ]),
-                                          Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Feather.chevron_right,
-                                                  color: Colors.grey,
-                                                )
-                                              ])
-                                        ],
-                                      ))));
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: () {},
+                                                          child: Container(
+                                                            height: 80,
+                                                            width: 80,
+                                                            child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                                child: storeslist[
+                                                                            index]
+                                                                        .storelogo
+                                                                        .isNotEmpty
+                                                                    ? Hero(
+                                                                        tag:
+                                                                            'store${storeslist[index].storeid}',
+                                                                        child:
+                                                                            CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              storeslist[index].storelogo,
+                                                                          height:
+                                                                              200,
+                                                                          width:
+                                                                              300,
+                                                                          fadeInDuration:
+                                                                              Duration(microseconds: 5),
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                          placeholder: (context, url) =>
+                                                                              SpinKitDoubleBounce(color: Colors.deepOrange),
+                                                                          errorWidget: (context, url, error) =>
+                                                                              Icon(Icons.error),
+                                                                        ),
+                                                                      )
+                                                                    : SpinKitFadingCircle(
+                                                                        color: Colors
+                                                                            .deepOrange,
+                                                                      )),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Container(
+                                                              height: 25,
+                                                              width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width /
+                                                                      3 -
+                                                                  10,
+                                                              child: Text(
+                                                                storeslist[
+                                                                        index]
+                                                                    .storename,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .start,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              storeslist[index]
+                                                                  .storecategory,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize:
+                                                                      14.0,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons
+                                                                      .lock_clock,
+                                                                  color: Colors
+                                                                      .grey,
+                                                                ),
+                                                                Text(
+                                                                  'Store Under Review',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontSize:
+                                                                          14.0,
+                                                                      color: Colors
+                                                                          .grey),
+                                                                )
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ]),
+                                                ],
+                                              )),
+                                        ])));
                         },
                         itemCount: storeslist.length,
                       ))
@@ -3108,7 +3316,14 @@ class _ProfilePageState extends State<ProfilePage>
       var jsonbody = json.decode(storeresponse.body);
       List<Stores> ites = List<Stores>();
       for (int i = 0; i < jsonbody.length; i++) {
+        var approved;
+        if (jsonbody[i]['approved'] == null) {
+          approved = false;
+        } else {
+          approved = jsonbody[i]['approved'];
+        }
         Stores store = Stores(
+            approved: approved,
             storeid: jsonbody[i]['_id']['\$oid'],
             storecategory: jsonbody[i]['storecategory'],
             storelogo: jsonbody[i]['storelogo'],

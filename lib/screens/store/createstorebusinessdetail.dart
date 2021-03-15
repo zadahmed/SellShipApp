@@ -274,6 +274,62 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
           FadeAnimation(
             1,
             Padding(
+                padding: EdgeInsets.only(
+                  top: 20,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      height: 140,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      width: MediaQuery.of(context).size.width - 100,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(131, 146, 165, 0.1),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TextField(
+                        maxLines: 10,
+                        onChanged: (text) {},
+                        controller: usernamecontroller,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          hintText: "Describe your store",
+                          hintStyle: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 16,
+                            color: Colors.blueGrey,
+                          ),
+                          icon: Icon(
+                            Icons.store,
+                            color: Colors.blueGrey,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 56, right: 56, top: 10, bottom: 10),
+            width: MediaQuery.of(context).size.width - 100,
+            child: Center(
+              child: Text(
+                'Tell us more about your new store. A great store description would include a paragraph on what your store is about and what products you are planning to sell in your new store. This description helps us understand your store better and approve it quicker!',
+                style: TextStyle(
+                  fontFamily: 'Helvetica',
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          ),
+          FadeAnimation(
+            1,
+            Padding(
               padding: EdgeInsets.only(left: 36, top: 20, right: 36),
               child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,6 +339,9 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                       onTap: () async {
                         if (storetype == null) {
                           showInSnackBar('Please choose your store type');
+                        } else if (usernamecontroller.text.isEmpty) {
+                          showInSnackBar(
+                              'Please enter a description for your store');
                         } else {
                           if (storetype != 'Secondhand Seller' &&
                               storetype != 'Reseller' &&
@@ -293,6 +352,7 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CreateStore(
+                                    storedescription: usernamecontroller.text,
                                     userid: widget.userid,
                                     username: widget.username,
                                     storename: widget.storename,

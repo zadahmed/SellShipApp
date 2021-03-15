@@ -131,12 +131,26 @@ class _RootScreenState extends State<RootScreen> {
       } else {
         setState(() {
           profilepicture = null;
+          storeid = null;
         });
       }
+      var businesstier = profilemap['businesstier'];
+      if (businesstier != null) {
+        setState(() {
+          businesstier = businesstier;
+        });
+      } else {
+        setState(() {
+          businesstier = 'secondhand';
+        });
+      }
+
+      await storage.write(key: 'tier', value: businesstier);
     } else {
       setState(() {
         profilepicture = null;
       });
+      await storage.write(key: 'tier', value: 'secondhand');
     }
   }
 

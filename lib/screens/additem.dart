@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -107,13 +108,28 @@ class _AddItemState extends State<AddItem> {
       var jsonbody = json.decode(storeresponse.body);
       List<Stores> ites = List<Stores>();
       for (int i = 0; i < jsonbody.length; i++) {
-        Stores store = Stores(
-            storeid: jsonbody[i]['_id']['\$oid'],
-            storecategory: jsonbody[i]['storecategory'],
-            storelogo: jsonbody[i]['storelogo'],
-            storename: jsonbody[i]['storename']);
+        var approved;
+        if (jsonbody[i]['approved'] == null) {
+          approved = false;
+        } else {
+          approved = jsonbody[i]['approved'];
+        }
 
-        ites.add(store);
+        if (approved == true) {
+          Stores store = Stores(
+              storeid: jsonbody[i]['_id']['\$oid'],
+              storecategory: jsonbody[i]['storecategory'],
+              storelogo: jsonbody[i]['storelogo'],
+              storename: jsonbody[i]['storename']);
+
+          ites.add(store);
+        } else {
+          setState(() {
+            storeslist = [];
+            _selectedStore = null;
+            loading = false;
+          });
+        }
       }
 
       setState(() {
@@ -377,45 +393,70 @@ class _AddItemState extends State<AddItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
-        resizeToAvoidBottomPadding: false,
-        backgroundColor: Color.fromRGBO(248, 248, 248, 1),
-        appBar: AppBar(
-          title: Text(
-            "Add an Item",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: 'Helvetica',
-                fontSize: 20,
-                color: Colors.black,
-                fontWeight: FontWeight.bold),
-          ),
-          elevation: 0.5,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
+      key: _scaffoldKey,
+      resizeToAvoidBottomPadding: false,
+      backgroundColor: Color.fromRGBO(248, 248, 248, 1),
+      appBar: AppBar(
+        title: Text(
+          "Add an Item",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: 'Helvetica',
+              fontSize: 20,
+              color: Colors.black,
+              fontWeight: FontWeight.bold),
         ),
-        bottomNavigationBar: Padding(
-            padding: EdgeInsets.only(left: 15, bottom: 5, top: 10, right: 15),
-            child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(15)),
-              ),
-              child: LinearPercentIndicator(
-                width: MediaQuery.of(context).size.width - 50,
-                lineHeight: 8.0,
-                percent: percentindictor,
-                progressColor: Colors.deepOrange,
-              ),
-            )),
-        body: loading == false
-            ? GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).requestFocus(new FocusNode());
-                },
-                child: userid != null
-                    ? CustomScrollView(
+        elevation: 0.5,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+      bottomNavigationBar: Padding(
+          padding: EdgeInsets.only(left: 15, bottom: 5, top: 10, right: 15),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            child: LinearPercentIndicator(
+              width: MediaQuery.of(context).size.width - 50,
+              lineHeight: 8.0,
+              percent: percentindictor,
+              progressColor: Colors.deepOrange,
+            ),
+          )),
+      body: loading == false
+          ? GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child: userid != null
+                  ? EasyRefresh(
+                      header: CustomHeader(
+                          extent: 40.0,
+                          enableHapticFeedback: true,
+                          triggerDistance: 50.0,
+                          headerBuilder: (context,
+                              loadState,
+                              pulledExtent,
+                              loadTriggerPullDistance,
+                              loadIndicatorExtent,
+                              axisDirection,
+                              float,
+                              completeDuration,
+                              enableInfiniteLoad,
+                              success,
+                              noMore) {
+                            return SpinKitFadingCircle(
+                              color: Colors.deepOrange,
+                              size: 30.0,
+                            );
+                          }),
+                      onRefresh: () {
+                        getuser();
+                        return getStoreData();
+                      },
+                      child: CustomScrollView(
                         slivers: <Widget>[
                           SliverList(
                             delegate: SliverChildListDelegate(
@@ -2771,16 +2812,16 @@ class _AddItemState extends State<AddItem> {
                                 ? Padding(
                                     child: InkWell(
                                       onTap: () async {
-                                        if (images.isEmpty) {
+                                        if (_selectedStore == null) {
+                                          showInSnackBar(
+                                              'Please choose your store');
+                                        } else if (images.isEmpty) {
                                           showInSnackBar(
                                               'Please upload a picture for your item!');
                                         } else if (businessnameController
                                             .text.isEmpty) {
                                           showInSnackBar(
                                               'Oops looks like your missing a title for your item!');
-                                        } else if (_selectedStore == null) {
-                                          showInSnackBar(
-                                              'Please choose your store');
                                         } else if (_selectedCategory == null) {
                                           showInSnackBar(
                                               'Please choose a category for your item!');
@@ -3625,38 +3666,38 @@ class _AddItemState extends State<AddItem> {
                             height: 20,
                           ))
                         ],
-                      )
-                    : Scaffold(
-                        backgroundColor: Colors.white,
-                        body: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Center(
-                              child: Text(
-                                'Look\'s like you need to \n login to Add an Item️',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                                child: Image.asset(
-                              'assets/little_theologians_4x.png',
-                              fit: BoxFit.fitWidth,
-                            ))
-                          ],
-                        ),
-                      ),
-              )
-            : Center(
-                child: SpinKitFadingCircle(
-                color: Colors.deepOrange,
-              )));
+                      ))
+                  : Center(
+                      child: SpinKitDoubleBounce(
+                      color: Colors.deepOrange,
+                    )))
+          : Scaffold(
+              backgroundColor: Colors.white,
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                    child: Text(
+                      'Please Login to \n Login to Start Selling',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                      child: Image.asset(
+                    'assets/little_theologians_4x.png',
+                    fit: BoxFit.fitWidth,
+                  ))
+                ],
+              ),
+            ),
+    );
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -3669,12 +3710,10 @@ class _AddItemState extends State<AddItem> {
         value,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontFamily: 'Helvetica',
-          fontSize: 16,
-        ),
+            fontFamily: 'Helvetica', fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      backgroundColor: Colors.blue,
-      duration: Duration(seconds: 3),
+      backgroundColor: Colors.deepOrange,
+      duration: Duration(seconds: 1),
     ));
   }
 

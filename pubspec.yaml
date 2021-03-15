@@ -154,6 +154,7 @@ flutter:
     - assets/interests/
     - assets/storename.jpg
     - assets/storedetails.jpg
+    - assets/celebration.png
 
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg

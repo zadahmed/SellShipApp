@@ -233,12 +233,21 @@ class _SearchState extends State<Search>
     var jsonbody = json.decode(response.body);
 
     for (var jsondata in jsonbody) {
-      Stores store = new Stores(
-          storename: jsondata['storename'],
-          storeid: jsondata['_id']['\$oid'],
-          storelogo: jsondata['storelogo'],
-          storecategory: jsondata['storecategory']);
-      storeList.add(store);
+      var approved;
+      if (jsondata['approved'] == null) {
+        approved = false;
+      } else {
+        approved = jsondata['approved'];
+      }
+      if (approved == true) {
+        Stores store = Stores(
+            approved: approved,
+            storename: jsondata['storename'],
+            storeid: jsondata['_id']['\$oid'],
+            storelogo: jsondata['storelogo'],
+            storecategory: jsondata['storecategory']);
+        storeList.add(store);
+      }
     }
 
     setState(() {
@@ -1517,7 +1526,7 @@ class _SearchState extends State<Search>
                                           ))),
                                     SliverToBoxAdapter(
                                         child: SizedBox(
-                                      height: 100,
+                                      height: 10,
                                     )),
                                   ],
                                 ),

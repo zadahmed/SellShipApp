@@ -3508,7 +3508,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 )),
                           ),
                         );
-                      }, childCount: 4))
+                      }, childCount: 6))
                   : SliverToBoxAdapter(),
               SliverToBoxAdapter(
                 child: Padding(
