@@ -3646,53 +3646,82 @@ class _AddItemState extends State<AddItem> {
                                               if (response.statusCode == 200) {
                                                 showDialog(
                                                     context: context,
-                                                    builder: (_) =>
-                                                        AssetGiffyDialog(
-                                                          image: Image.asset(
-                                                            'assets/yay.gif',
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                          title: Text(
-                                                            'Hooray!',
-                                                            style: TextStyle(
-                                                                fontSize: 22.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                          ),
-                                                          description: Text(
-                                                            'Your Item\'s Uploaded',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(),
-                                                          ),
-                                                          onlyOkButton: true,
-                                                          entryAnimation:
-                                                              EntryAnimation
-                                                                  .DEFAULT,
-                                                          onOkButtonPressed:
-                                                              () {
-                                                            Navigator.of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                        true)
-                                                                .pop('dialog');
-                                                            Navigator.of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                        true)
-                                                                .pop('dialog');
-
-                                                            Navigator
-                                                                .pushReplacement(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          RootScreen()),
-                                                            );
-                                                          },
-                                                        ));
+                                                    barrierDismissible: false,
+                                                    useRootNavigator: false,
+                                                    builder:
+                                                        (_) => new AlertDialog(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10.0))),
+                                                              content: Builder(
+                                                                builder:
+                                                                    (context) {
+                                                                  return Container(
+                                                                      height:
+                                                                          280,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.center,
+                                                                        children: [
+                                                                          Container(
+                                                                            height:
+                                                                                150,
+                                                                            width:
+                                                                                MediaQuery.of(context).size.width,
+                                                                            child:
+                                                                                ClipRRect(
+                                                                              borderRadius: BorderRadius.circular(15),
+                                                                              child: Image.asset(
+                                                                                'assets/yay.gif',
+                                                                                fit: BoxFit.cover,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                10,
+                                                                          ),
+                                                                          Text(
+                                                                            'Hooray! Your Item has been send for review! We will keep you updated when the Item has been approved!',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'Helvetica',
+                                                                              fontSize: 16,
+                                                                              color: Colors.black,
+                                                                            ),
+                                                                          ),
+                                                                          SizedBox(
+                                                                            height:
+                                                                                10,
+                                                                          ),
+                                                                          InkWell(
+                                                                            child:
+                                                                                Container(
+                                                                              width: MediaQuery.of(context).size.width - 30,
+                                                                              height: 50,
+                                                                              decoration: BoxDecoration(color: Color.fromRGBO(255, 115, 0, 1), borderRadius: BorderRadius.circular(10), boxShadow: [
+                                                                                BoxShadow(color: Color(0xFF9DA3B4).withOpacity(0.1), blurRadius: 65.0, offset: Offset(0.0, 15.0))
+                                                                              ]),
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                  "Close",
+                                                                                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                            onTap:
+                                                                                () {
+                                                                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RootScreen()));
+                                                                            },
+                                                                          ),
+                                                                        ],
+                                                                      ));
+                                                                },
+                                                              ),
+                                                            ));
                                               } else {
                                                 Navigator.of(context,
                                                         rootNavigator: true)
@@ -3728,7 +3757,7 @@ class _AddItemState extends State<AddItem> {
                                                   fontFamily: 'Helvetica',
                                                   fontSize: 18,
                                                   color: Colors.white,
-                                                  fontWeight: FontWeight.w300),
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ),

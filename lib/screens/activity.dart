@@ -911,8 +911,7 @@ class _ActivityState extends State<Activity>
                     SliverAppBar(
                         backgroundColor: Colors.white,
                         elevation: 0,
-                        snap: true,
-                        floating: true,
+                        pinned: true,
                         title: Container(
                           height: 60,
                           width: MediaQuery.of(context).size.width,
