@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
-import 'package:SellShip/controllers/customslider.dart';
 import 'package:SellShip/screens/filterpage.dart';
 import 'package:SellShip/screens/home.dart';
 import 'package:SellShip/screens/messages.dart';
@@ -29,23 +28,21 @@ import 'package:http/http.dart' as http;
 import 'package:SellShip/screens/details.dart';
 import 'package:shimmer/shimmer.dart';
 
-class CategoryDetail extends StatefulWidget {
-  final String category;
-  final String categoryimage;
-  final List<dynamic> subcategory;
+class Hashtags extends StatefulWidget {
+  final String hashtag;
 
-  CategoryDetail({Key key, this.category, this.subcategory, this.categoryimage})
-      : super(key: key);
+  Hashtags({
+    Key key,
+    this.hashtag,
+  }) : super(key: key);
 
   @override
-  _CategoryDetailState createState() => _CategoryDetailState();
+  _HashtagsState createState() => _HashtagsState();
 }
 
-class _CategoryDetailState extends State<CategoryDetail>
-    with SingleTickerProviderStateMixin {
+class _HashtagsState extends State<Hashtags> {
   List<Item> itemsgrid = [];
 
-  var categoryimage;
   var skip;
   var limit;
 
@@ -63,10 +60,8 @@ class _CategoryDetailState extends State<CategoryDetail>
       skip = skip + 20;
     });
 
-    var url = 'https://api.sellship.co/api/categories/' +
-        category +
-        '/' +
-        subcategory[0] +
+    var url = 'https://api.sellship.co/api/subcategories/' +
+        subcategory +
         '/' +
         country +
         '/' +
@@ -134,10 +129,8 @@ class _CategoryDetailState extends State<CategoryDetail>
       });
     }
 
-    var url = 'https://api.sellship.co/api/categories/all/' +
-        category.trim() +
-        '/' +
-        country +
+    var url = 'https://api.sellship.co/api/searchhashtagsresults/' +
+        widget.hashtag.trim() +
         '/' +
         skip.toString() +
         '/' +
@@ -146,7 +139,9 @@ class _CategoryDetailState extends State<CategoryDetail>
     print(url);
 
     final response = await http.get(url);
+
     if (response.statusCode == 200) {
+      print(response.body);
       var jsonbody = json.decode(response.body);
       itemsgrid.clear();
 
@@ -737,7 +732,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                       setState(() {
                         brand = brands[index];
                         skip = 0;
-                        limit = 40;
+                        limit = 20;
                         loading = true;
                       });
                       itemsgrid.clear();
@@ -988,67 +983,13 @@ class _CategoryDetailState extends State<CategoryDetail>
 
   List<String> favourites;
 
-  _getmoreRecentData() async {
-    setState(() {
-      limit = limit + 20;
-      skip = skip + 20;
-    });
-
-    var url = 'https://api.sellship.co/api/categories/' +
-        category +
-        '/' +
-        subcategory[0] +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      var jsonbody = json.decode(response.body);
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      setState(() {
-        itemsgrid = itemsgrid;
-      });
-    } else {
-      print(response.statusCode);
-    }
-  }
-
   getmorealldata() async {
     setState(() {
       limit = limit + 20;
       skip = skip + 20;
     });
-
-    var subname = subcategorytabs[_tabController.index].text;
-
-    var url = 'https://api.sellship.co/api/home/subcategories/' +
-        subname +
-        '/' +
-        country +
+    var url = 'https://api.sellship.co/api/searchhashtagsresults/' +
+        widget.hashtag.trim() +
         '/' +
         skip.toString() +
         '/' +
@@ -1094,138 +1035,24 @@ class _CategoryDetailState extends State<CategoryDetail>
   String maxprice;
   String condition;
   String category;
-  List<dynamic> subcategory;
-
-  TabController _tabController;
-
-  List<Tab> subcategorytabs = [];
+  String subcategory;
 
   @override
   void initState() {
     setState(() {
       skip = 0;
       limit = 40;
-      categoryimage = widget.categoryimage;
-      category = widget.category;
-      subcategory = widget.subcategory;
+      subcategory = widget.hashtag;
       loading = true;
-      notifbadge = false;
-      tabcontrollerlength = widget.subcategory.length;
     });
-
-    _tabController =
-        new TabController(length: tabcontrollerlength, vsync: this);
-
-    gettabs();
 
     getfavourites();
-    var subname = subcategorytabs[_tabController.index].text;
-    fetchsubcategories(skip, limit, subname);
-
-    _tabController.addListener(() {
-      setState(() {
-        skip = 0;
-        limit = 40;
-
-        loading = true;
-      });
-
-      var subname = subcategorytabs[_tabController.index].text;
-      fetchsubcategories(skip, limit, subname);
-    });
+    fetchItems(skip, limit);
 
     super.initState();
   }
 
-  Future<List<Item>> fetchsubcategories(
-      int skip, int limit, String subcategor) async {
-    country = await storage.read(key: 'country');
-
-    if (country.trim().toLowerCase() == 'united arab emirates') {
-      setState(() {
-        currency = 'AED';
-        country = country;
-      });
-    } else if (country.trim().toLowerCase() == 'united states') {
-      setState(() {
-        currency = '\$';
-        country = country;
-      });
-    } else if (country.trim().toLowerCase() == 'canada') {
-      setState(() {
-        currency = '\$';
-        country = country;
-      });
-    } else if (country.trim().toLowerCase() == 'united kingdom') {
-      setState(() {
-        currency = '\£';
-        country = country;
-      });
-    }
-
-    var url = 'https://api.sellship.co/api/home/subcategories/' +
-        subcategor +
-        '/' +
-        country +
-        '/' +
-        skip.toString() +
-        '/' +
-        limit.toString();
-
-    print(url);
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      print(response.body);
-      var jsonbody = json.decode(response.body);
-      itemsgrid.clear();
-
-      for (var jsondata in jsonbody) {
-        var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
-
-        DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
-        var dateuploaded = timeago.format(dateuploade);
-        Item item = Item(
-          itemid: jsondata['_id']['\$oid'],
-          name: jsondata['name'],
-          date: dateuploaded,
-          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-          comments:
-              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-          image: jsondata['image'],
-          price: jsondata['price'].toString(),
-          category: jsondata['category'],
-          sold: jsondata['sold'] == null ? false : jsondata['sold'],
-        );
-        itemsgrid.add(item);
-      }
-
-      setState(() {
-        itemsgrid = itemsgrid;
-        loading = false;
-      });
-    } else {
-      print(response.statusCode);
-    }
-
-    return itemsgrid;
-  }
-
-  gettabs() {
-    var subcat = widget.subcategory;
-
-    for (int i = 0; i < subcat.length; i++) {
-      subcategorytabs.add(Tab(
-        text: subcat[i]['name'],
-      ));
-    }
-    setState(() {
-      subcategorytabs = subcategorytabs;
-    });
-  }
-
-  var tabcontrollerlength = 0;
+  TabController _tabController;
 
   void showInSnackBar(String value) {
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -1270,11 +1097,11 @@ class _CategoryDetailState extends State<CategoryDetail>
     );
   }
 
-  var filterscreen = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: scaffoldState,
+        backgroundColor: Colors.white,
         floatingActionButton: InkWell(
           onTap: () {
             Navigator.of(context).push(_createRoute());
@@ -1297,87 +1124,27 @@ class _CategoryDetailState extends State<CategoryDetail>
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        backgroundColor: Colors.white,
         body: DefaultTabController(
-            length: tabcontrollerlength,
+            length: 3,
             child: NestedScrollView(
                 headerSliverBuilder: (context, _) {
                   return [
                     SliverAppBar(
-                      expandedHeight: 200.0,
+                      title: Text(
+                        widget.hashtag,
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
                       floating: false,
                       elevation: 0,
                       centerTitle: true,
                       pinned: true,
                       backgroundColor: Colors.white,
                       iconTheme: IconThemeData(color: Colors.black),
-                      flexibleSpace: FlexibleSpaceBar(
-                          titlePadding: EdgeInsets.only(bottom: 10),
-                          centerTitle: true,
-                          title: Container(
-                            height: 40,
-                            width: 150,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.white),
-                            padding: EdgeInsets.all(10),
-                            child: Center(
-                              child: Text(widget.category,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w700)),
-                            ),
-                          ),
-                          stretchModes: [
-                            StretchMode.zoomBackground,
-                            StretchMode.fadeTitle,
-                          ],
-                          collapseMode: CollapseMode.parallax,
-                          background: Hero(
-                              tag: 'cat' + widget.category,
-                              child: CachedNetworkImage(
-                                height: 200,
-                                width: 300,
-                                imageUrl: categoryimage,
-                                fit: BoxFit.cover,
-                              ))),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                          height: 50,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(229, 233, 242, 1)
-                                  .withOpacity(0.5),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20))),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 50,
-                                  child: TabBar(
-                                      controller: _tabController,
-                                      labelStyle: tabTextStyle,
-                                      unselectedLabelStyle: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                        fontFamily: 'Helvetica',
-                                      ),
-                                      indicatorSize: TabBarIndicatorSize.tab,
-                                      indicator: UnderlineTabIndicator(
-                                          borderSide: BorderSide(
-                                              width: 2.0,
-                                              color: Colors.deepOrange)),
-                                      isScrollable: true,
-                                      labelColor: Colors.black,
-                                      tabs: subcategorytabs),
-                                ),
-                              ])),
                     ),
                   ];
                 },
@@ -1517,14 +1284,6 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                       decoration: BoxDecoration(
                                                         color: Colors.black
                                                             .withOpacity(0.4),
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                                topLeft: Radius
-                                                                    .circular(
-                                                                        10),
-                                                                topRight: Radius
-                                                                    .circular(
-                                                                        10)),
                                                       ),
                                                       width: 210,
                                                       child: Center(
@@ -1617,6 +1376,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                                     body: json
                                                                         .encode(
                                                                             body));
+
                                                             if (response
                                                                     .statusCode ==
                                                                 200) {
@@ -1678,6 +1438,7 @@ class _CategoryDetailState extends State<CategoryDetail>
                                                                     body: json
                                                                         .encode(
                                                                             body));
+
                                                             if (response
                                                                     .statusCode ==
                                                                 200) {

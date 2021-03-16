@@ -7,6 +7,7 @@ class Stores {
   final String sold;
   final String reviews;
   final String followers;
+  final String storetype;
   final bool approved;
 
   Stores({
@@ -17,6 +18,7 @@ class Stores {
     this.reviews,
     this.storename,
     this.storecategory,
+    this.storetype,
     this.storelogo,
     this.storebio,
   });

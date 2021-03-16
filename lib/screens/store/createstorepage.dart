@@ -414,7 +414,7 @@ class _CreateStorePageState extends State<CreateStorePage> {
                 color: Color.fromRGBO(28, 45, 65, 1),
               ),
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => RootScreen()),
                 );

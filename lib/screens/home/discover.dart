@@ -1404,17 +1404,21 @@ class _DiscoverState extends State<Discover>
                                     child: Container(
                                       height: 50,
                                       decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.4),
+                                        color: Colors.deepOrangeAccent
+                                            .withOpacity(0.8),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
                                       ),
-                                      width: 210,
+                                      width: MediaQuery.of(context).size.width,
                                       child: Center(
                                         child: Text(
                                           'Sold',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            color: Colors.white,
-                                          ),
+                                              fontFamily: 'Helvetica',
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ))
@@ -1635,17 +1639,21 @@ class _DiscoverState extends State<Discover>
                                     child: Container(
                                       height: 50,
                                       decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.4),
+                                        color: Colors.deepOrangeAccent
+                                            .withOpacity(0.8),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
                                       ),
-                                      width: 210,
+                                      width: MediaQuery.of(context).size.width,
                                       child: Center(
                                         child: Text(
                                           'Sold',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            color: Colors.white,
-                                          ),
+                                              fontFamily: 'Helvetica',
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ))
@@ -1930,7 +1938,7 @@ class _DiscoverState extends State<Discover>
                   ? SliverToBoxAdapter(
                       child: Padding(
                           padding: EdgeInsets.only(
-                              left: 16, top: 10, bottom: 10, right: 36),
+                              left: 16, top: 5, bottom: 10, right: 36),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1964,97 +1972,83 @@ class _DiscoverState extends State<Discover>
                           )),
                     )
                   : SliverToBoxAdapter(),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 10,
+                ),
+              ),
               subcategoryList.isNotEmpty
                   ? SliverGrid(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisSpacing: 1.0,
-                          crossAxisSpacing: 1.0,
+                          mainAxisSpacing: 0.2,
+                          crossAxisSpacing: 0.6,
                           crossAxisCount: 3,
-                          childAspectRatio: 0.70),
+                          childAspectRatio: 0.75),
                       delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                         return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => SubCategory(
-                                        subcategory:
-                                            subcategoryList[index].name,
-                                        categoryimage:
-                                            subcategoryList[index].image,
-                                      )),
-                            );
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Container(
-                                height: 200,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      height: 200,
-                                      width: 180,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: subcategoryList[index].image !=
-                                              null
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Hero(
-                                                  tag: 'subcat' +
-                                                      subcategoryList[index]
-                                                          .name,
-                                                  child: CachedNetworkImage(
-                                                    height: 200,
-                                                    width: 300,
-                                                    imageUrl:
-                                                        subcategoryList[index]
-                                                            .image,
-                                                    fit: BoxFit.cover,
-                                                  )))
-                                          : Container(),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => SubCategory(
+                                          subcategory:
+                                              subcategoryList[index].name,
+                                          categoryimage:
+                                              subcategoryList[index].image,
+                                        )),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 120,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color:
+                                              Color.fromRGBO(255, 115, 0, 0.7),
+                                          width: 5),
+                                      borderRadius: BorderRadius.circular(60)),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(60),
+                                      child: Hero(
+                                          tag: 'subcat' +
+                                              subcategoryList[index].name,
+                                          child: CachedNetworkImage(
+                                            height: 120,
+                                            width: 120,
+                                            imageUrl:
+                                                subcategoryList[index].image,
+                                            fit: BoxFit.cover,
+                                          ))),
+                                ),
+                                Container(
+                                  height: 50,
+                                  width: 120,
+                                  padding: EdgeInsets.all(5),
+                                  child: Center(
+                                    child: Text(
+                                      subcategoryList[index].name,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: 50,
-                                        width: 100,
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.5),
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Center(
-                                          child: Text(
-                                            subcategoryList[index].name,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w900),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        );
+                                  ),
+                                ),
+                              ],
+                            ));
                       }, childCount: 6))
                   : SliverToBoxAdapter(),
               topitems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 16, top: 10, bottom: 10, right: 36),
+                          padding:
+                              EdgeInsets.only(left: 16, bottom: 10, right: 36),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -2100,16 +2094,16 @@ class _DiscoverState extends State<Discover>
               topitems.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(
-                      height: 280,
+                      height: 285,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                         itemCount: 20,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
                           return new Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(5),
                             child: Container(
-                              height: 280,
+                              height: 285,
                               width: MediaQuery.of(context).size.width / 2 - 20,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -2132,20 +2126,13 @@ class _DiscoverState extends State<Discover>
                                     },
                                     child: Stack(children: <Widget>[
                                       Container(
-                                        height: 220,
+                                        height: 230,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
                                         ),
                                         child: ClipRRect(
                                           borderRadius:
@@ -2180,18 +2167,29 @@ class _DiscoverState extends State<Discover>
                                               child: Container(
                                                 height: 50,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.black
-                                                      .withOpacity(0.4),
+                                                  color: Colors.deepOrangeAccent
+                                                      .withOpacity(0.8),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10)),
                                                 ),
-                                                width: 210,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
                                                 child: Center(
                                                   child: Text(
                                                     'Sold',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      color: Colors.white,
-                                                    ),
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
                                               ))
@@ -2199,7 +2197,7 @@ class _DiscoverState extends State<Discover>
                                     ]),
                                   ),
                                   SizedBox(
-                                    height: 4,
+                                    height: 5,
                                   ),
                                   Row(
                                     children: [
@@ -2351,7 +2349,7 @@ class _DiscoverState extends State<Discover>
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                  )
+                                  ),
                                 ],
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -2493,18 +2491,29 @@ class _DiscoverState extends State<Discover>
                                               child: Container(
                                                 height: 50,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.black
-                                                      .withOpacity(0.4),
+                                                  color: Colors.deepOrangeAccent
+                                                      .withOpacity(0.8),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10)),
                                                 ),
-                                                width: 210,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
                                                 child: Center(
                                                   child: Text(
                                                     'Sold',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      color: Colors.white,
-                                                    ),
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
                                               ))
@@ -2810,18 +2819,29 @@ class _DiscoverState extends State<Discover>
                                               child: Container(
                                                 height: 50,
                                                 decoration: BoxDecoration(
-                                                  color: Colors.black
-                                                      .withOpacity(0.4),
+                                                  color: Colors.deepOrangeAccent
+                                                      .withOpacity(0.8),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  10),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  10)),
                                                 ),
-                                                width: 210,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
                                                 child: Center(
                                                   child: Text(
                                                     'Sold',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      color: Colors.white,
-                                                    ),
+                                                        fontFamily: 'Helvetica',
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
                                               ))
@@ -3005,86 +3025,67 @@ class _DiscoverState extends State<Discover>
                           mainAxisSpacing: 1.0,
                           crossAxisSpacing: 1.0,
                           crossAxisCount: 3,
-                          childAspectRatio: 0.70),
+                          childAspectRatio: 0.75),
                       delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {
                         return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => SubCategory(
-                                        subcategory:
-                                            subcategoryListsecond[index].name,
-                                        categoryimage:
-                                            subcategoryListsecond[index].image,
-                                      )),
-                            );
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Container(
-                                height: 200,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      height: 200,
-                                      width: 180,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child:
-                                          subcategoryList[index].image != null
-                                              ? ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: Hero(
-                                                      tag: 'cat' +
-                                                          subcategoryListsecond[
-                                                                  index]
-                                                              .name,
-                                                      child: CachedNetworkImage(
-                                                        height: 200,
-                                                        width: 300,
-                                                        imageUrl:
-                                                            subcategoryListsecond[
-                                                                    index]
-                                                                .image,
-                                                        fit: BoxFit.cover,
-                                                      )))
-                                              : Container(),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => SubCategory(
+                                          subcategory:
+                                              subcategoryListsecond[index].name,
+                                          categoryimage:
+                                              subcategoryListsecond[index]
+                                                  .image,
+                                        )),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: 120,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color:
+                                              Color.fromRGBO(255, 115, 0, 0.7),
+                                          width: 5),
+                                      borderRadius: BorderRadius.circular(60)),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(60),
+                                      child: Hero(
+                                          tag: 'subcatsecond' +
+                                              subcategoryListsecond[index].name,
+                                          child: CachedNetworkImage(
+                                            height: 120,
+                                            width: 120,
+                                            imageUrl:
+                                                subcategoryListsecond[index]
+                                                    .image,
+                                            fit: BoxFit.cover,
+                                          ))),
+                                ),
+                                Container(
+                                  height: 50,
+                                  width: 120,
+                                  padding: EdgeInsets.all(5),
+                                  child: Center(
+                                    child: Text(
+                                      subcategoryListsecond[index].name,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: 50,
-                                        width: 100,
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.5),
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Center(
-                                          child: Text(
-                                            subcategoryListsecond[index].name,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w900),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        );
+                                  ),
+                                ),
+                              ],
+                            ));
                       }, childCount: 6))
                   : SliverToBoxAdapter(),
               SliverToBoxAdapter(
@@ -3095,7 +3096,7 @@ class _DiscoverState extends State<Discover>
                     'New In',
                     style: TextStyle(
                         fontFamily: 'Helvetica',
-                        fontSize: 18.0,
+                        fontSize: 22.0,
                         fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -3105,7 +3106,7 @@ class _DiscoverState extends State<Discover>
                     mainAxisSpacing: 1.0,
                     crossAxisSpacing: 1.0,
                     crossAxisCount: 2,
-                    childAspectRatio: 0.75),
+                    childAspectRatio: 0.80),
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
                     return new Padding(
@@ -3174,18 +3175,22 @@ class _DiscoverState extends State<Discover>
                                         child: Container(
                                           height: 50,
                                           decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.4),
+                                            color: Colors.deepOrangeAccent
+                                                .withOpacity(0.8),
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                topRight: Radius.circular(10)),
                                           ),
-                                          width: 210,
+                                          width:
+                                              MediaQuery.of(context).size.width,
                                           child: Center(
                                             child: Text(
                                               'Sold',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                color: Colors.white,
-                                              ),
+                                                  fontFamily: 'Helvetica',
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ))

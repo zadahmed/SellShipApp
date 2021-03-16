@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/models/user.dart';
+import 'package:SellShip/screens/hashtags.dart';
 import 'package:SellShip/screens/storepage.dart';
 import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:substring_highlight/substring_highlight.dart';
@@ -120,6 +121,9 @@ class _SearchState extends State<Search>
       skip = 0;
       limit = 20;
     });
+    discoverstores();
+    discoverhashtags();
+    discoverproducts();
   }
 
   List<Stores> storeList = new List<Stores>();
@@ -148,6 +152,87 @@ class _SearchState extends State<Search>
     setState(() {
       categoryloading = false;
       categoryList = categoryList;
+    });
+  }
+
+  discoverhashtags() async {
+    var url = 'https://api.sellship.co/api/discover/hashtags/${skip}/${limit}';
+
+    final response = await http.get(url);
+    print(response.statusCode);
+
+    var jsonbody = json.decode(response.body);
+
+    for (var jsondata in jsonbody) {
+      hashtagList.add(jsondata);
+    }
+
+    setState(() {
+      hashtagList = hashtagList.toSet().toList();
+      loading = false;
+    });
+  }
+
+  discoverproducts() async {
+    var url = 'https://api.sellship.co/api/products/discover/${skip}/${limit}';
+
+    final response = await http.get(url);
+    var jsonbody = json.decode(response.body);
+    for (var jsondata in jsonbody) {
+      var q = Map<String, dynamic>.from(jsondata['dateuploaded']);
+
+      DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
+      var dateuploaded = timeago.format(dateuploade);
+      Item item = Item(
+        itemid: jsondata['_id']['\$oid'],
+        name: jsondata['name'],
+        date: dateuploaded,
+        likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+        comments:
+            jsondata['comments'] == null ? 0 : jsondata['comments'].length,
+        image: jsondata['image'],
+        price: jsondata['price'].toString(),
+        category: jsondata['category'],
+        sold: jsondata['sold'] == null ? false : jsondata['sold'],
+      );
+      itemsgrid.add(item);
+    }
+
+    print(itemsgrid);
+    setState(() {
+      itemsgrid = itemsgrid.toSet().toList();
+      loading = false;
+    });
+  }
+
+  discoverstores() async {
+    var url = 'https://api.sellship.co/api/stores/discover/${skip}/${limit}';
+
+    final response = await http.get(url);
+    var jsonbody = json.decode(response.body);
+
+    for (var jsondata in jsonbody) {
+      var approved;
+      if (jsondata['approved'] == null) {
+        approved = false;
+      } else {
+        approved = jsondata['approved'];
+      }
+      if (approved == true) {
+        Stores store = Stores(
+            approved: approved,
+            storename: jsondata['storename'],
+            storeid: jsondata['_id']['\$oid'],
+            storetype: jsondata['storetype'],
+            storelogo: jsondata['storelogo'],
+            storecategory: jsondata['storecategory']);
+        storeList.add(store);
+      }
+    }
+
+    setState(() {
+      storeList = storeList.toSet().toList();
+      loading = false;
     });
   }
 
@@ -448,7 +533,7 @@ class _SearchState extends State<Search>
                                     child: Container(
                                       height: 50,
                                       decoration: BoxDecoration(
-                                        color: Colors.deepPurpleAccent
+                                        color: Colors.deepOrangeAccent
                                             .withOpacity(0.8),
                                         borderRadius: BorderRadius.only(
                                             topLeft: Radius.circular(10),
@@ -941,6 +1026,7 @@ class _SearchState extends State<Search>
                           });
                           onSearch(text);
                           _getRecentSearches();
+                          discoverproducts();
                         } else if (_tabController.index == 2) {
                           setState(() {
                             searched = false;
@@ -951,6 +1037,7 @@ class _SearchState extends State<Search>
                           });
                           onSearchUsers(text);
                           _getRecentSearches();
+                          discoverstores();
                         } else if (_tabController.index == 3) {
                           setState(() {
                             searched = false;
@@ -961,6 +1048,7 @@ class _SearchState extends State<Search>
                           });
                           onSearchHashtags(text);
                           _getRecentSearches();
+                          discoverhashtags();
                         }
                       },
                       controller: searchcontroller,
@@ -1064,7 +1152,9 @@ class _SearchState extends State<Search>
                                                 SliverToBoxAdapter(
                                                   child: Padding(
                                                     padding: EdgeInsets.only(
-                                                        left: 15, top: 10),
+                                                        left: 15,
+                                                        top: 5,
+                                                        bottom: 10),
                                                     child: Align(
                                                       alignment:
                                                           Alignment.centerLeft,
@@ -1383,7 +1473,7 @@ class _SearchState extends State<Search>
                                     SliverToBoxAdapter(
                                       child: Padding(
                                         padding: EdgeInsets.only(
-                                            left: 15, top: 15, bottom: 10),
+                                            left: 15, top: 5, bottom: 20),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
@@ -1402,116 +1492,97 @@ class _SearchState extends State<Search>
                                             itemBuilder:
                                                 (BuildContext context, index) {
                                               return InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            CategoryDetail(
-                                                              categoryimage:
-                                                                  categoryList[
-                                                                          index]
-                                                                      .categoryimage,
-                                                              category:
-                                                                  categoryList[
-                                                                          index]
-                                                                      .categoryname,
-                                                              subcategory:
-                                                                  categoryList[
-                                                                          index]
-                                                                      .subcategories,
-                                                            )),
-                                                  );
-                                                },
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(5),
-                                                  child: Container(
-                                                      height: 160,
-                                                      width: 100,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10)),
-                                                      child: Stack(
-                                                        children: [
-                                                          Container(
-                                                            height: 160,
-                                                            width: 180,
-                                                            decoration: BoxDecoration(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              CategoryDetail(
+                                                                categoryimage:
+                                                                    categoryList[
+                                                                            index]
+                                                                        .categoryimage,
+                                                                category: categoryList[
+                                                                        index]
+                                                                    .categoryname,
+                                                                subcategory:
+                                                                    categoryList[
+                                                                            index]
+                                                                        .subcategories,
+                                                              )),
+                                                    );
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        height: 120,
+                                                        width: 120,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            border: Border.all(
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        255,
+                                                                        115,
+                                                                        0,
+                                                                        0.7),
+                                                                width: 5),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        60)),
+                                                        child: categoryList[
+                                                                        index]
+                                                                    .categoryimage !=
+                                                                null
+                                                            ? ClipRRect(
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                            10)),
-                                                            child: categoryList[
-                                                                            index]
-                                                                        .categoryimage !=
-                                                                    null
-                                                                ? ClipRRect(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10),
-                                                                    child: Hero(
-                                                                        tag: 'cat' +
-                                                                            categoryList[index]
-                                                                                .categoryname,
-                                                                        child:
-                                                                            CachedNetworkImage(
-                                                                          height:
-                                                                              200,
-                                                                          width:
-                                                                              300,
-                                                                          imageUrl:
-                                                                              categoryList[index].categoryimage,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        )))
-                                                                : Container(),
-                                                          ),
-                                                          Align(
-                                                            alignment: Alignment
+                                                                            60),
+                                                                child: Hero(
+                                                                    tag: 'cat' +
+                                                                        categoryList[index]
+                                                                            .categoryname,
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      height:
+                                                                          120,
+                                                                      width:
+                                                                          120,
+                                                                      imageUrl:
+                                                                          categoryList[index]
+                                                                              .categoryimage,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    )))
+                                                            : Container(),
+                                                      ),
+                                                      Container(
+                                                        height: 50,
+                                                        width: 120,
+                                                        padding:
+                                                            EdgeInsets.all(5),
+                                                        child: Center(
+                                                          child: Text(
+                                                            categoryList[index]
+                                                                .categoryname,
+                                                            textAlign: TextAlign
                                                                 .center,
-                                                            child: Container(
-                                                              height: 50,
-                                                              width: 100,
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(5),
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.5),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10)),
-                                                              child: Center(
-                                                                child: Text(
-                                                                  categoryList[
-                                                                          index]
-                                                                      .categoryname,
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          16,
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w900),
-                                                                ),
-                                                              ),
-                                                            ),
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
                                                           ),
-                                                        ],
-                                                      )),
-                                                ),
-                                              );
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ));
                                             },
                                             itemCount: categoryList.length,
                                             staggeredTileBuilder: (int index) =>
@@ -1747,8 +1818,72 @@ class _SearchState extends State<Search>
                                         ),
                                       ),
                                     )
-                              : CustomScrollView(
-                                  slivers: [
+                              : EasyRefresh.custom(
+                                  footer: CustomFooter(
+                                      extent: 80.0,
+                                      triggerDistance: 80.0,
+                                      enableHapticFeedback: true,
+                                      enableInfiniteLoad: true,
+                                      footerBuilder: (context,
+                                          loadState,
+                                          pulledExtent,
+                                          loadTriggerPullDistance,
+                                          loadIndicatorExtent,
+                                          axisDirection,
+                                          float,
+                                          completeDuration,
+                                          enableInfiniteLoad,
+                                          success,
+                                          noMore) {
+                                        return SpinKitFadingCircle(
+                                          color: Colors.deepOrange,
+                                          size: 30.0,
+                                        );
+                                      }),
+                                  header: CustomHeader(
+                                      extent: 160.0,
+                                      enableHapticFeedback: true,
+                                      triggerDistance: 160.0,
+                                      headerBuilder: (context,
+                                          loadState,
+                                          pulledExtent,
+                                          loadTriggerPullDistance,
+                                          loadIndicatorExtent,
+                                          axisDirection,
+                                          float,
+                                          completeDuration,
+                                          enableInfiniteLoad,
+                                          success,
+                                          noMore) {
+                                        return SpinKitFadingCircle(
+                                          color: Colors.deepOrange,
+                                          size: 30.0,
+                                        );
+                                      }),
+                                  onRefresh: () {
+                                    if (mounted) {
+                                      setState(() {
+                                        skip = 0;
+                                        limit = 20;
+                                        loading = true;
+                                      });
+                                    }
+
+                                    itemsgrid.clear();
+
+                                    return discoverproducts();
+                                  },
+                                  onLoad: () {
+                                    if (mounted) {
+                                      setState(() {
+                                        skip = skip + 20;
+                                        limit = limit + 20;
+                                        loading = true;
+                                      });
+                                    }
+                                    return discoverproducts();
+                                  },
+                                  slivers: <Widget>[
                                     recentsearches.isNotEmpty
                                         ? SliverToBoxAdapter(
                                             child: Padding(
@@ -1859,6 +1994,75 @@ class _SearchState extends State<Search>
                                             ),
                                           )
                                         : SliverToBoxAdapter(),
+                                    SliverToBoxAdapter(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 15, top: 5, bottom: 20),
+                                        child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Feather.trending_up,
+                                                  color:
+                                                      Colors.deepOrangeAccent,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  'Trending Products',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                    ),
+                                    SliverStaggeredGrid.countBuilder(
+                                      crossAxisCount: 4,
+                                      itemCount: itemsgrid.length,
+                                      itemBuilder: (context, index) =>
+                                          Container(
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                  builder: (context) => Details(
+                                                      itemid: itemsgrid[index]
+                                                          .itemid,
+                                                      image: itemsgrid[index]
+                                                          .image,
+                                                      name:
+                                                          itemsgrid[index].name,
+                                                      sold:
+                                                          itemsgrid[index].sold,
+                                                      source:
+                                                          'trendingproducts')),
+                                            );
+                                          },
+                                          child: Hero(
+                                            tag:
+                                                'trendingproducts${itemsgrid[index].itemid}',
+                                            child: Image(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(
+                                                itemsgrid[index].image,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      staggeredTileBuilder: (index) =>
+                                          StaggeredTile.count(
+                                              2, index.isEven ? 2 : 1),
+                                      mainAxisSpacing: 1,
+                                      crossAxisSpacing: 1,
+                                    ),
                                   ],
                                 ),
                           searchcontroller.text.isNotEmpty
@@ -2136,8 +2340,72 @@ class _SearchState extends State<Search>
                                         ),
                                       ),
                                     )
-                              : CustomScrollView(
-                                  slivers: [
+                              : EasyRefresh.custom(
+                                  footer: CustomFooter(
+                                      extent: 80.0,
+                                      triggerDistance: 80.0,
+                                      enableHapticFeedback: true,
+                                      enableInfiniteLoad: true,
+                                      footerBuilder: (context,
+                                          loadState,
+                                          pulledExtent,
+                                          loadTriggerPullDistance,
+                                          loadIndicatorExtent,
+                                          axisDirection,
+                                          float,
+                                          completeDuration,
+                                          enableInfiniteLoad,
+                                          success,
+                                          noMore) {
+                                        return SpinKitFadingCircle(
+                                          color: Colors.deepOrange,
+                                          size: 30.0,
+                                        );
+                                      }),
+                                  header: CustomHeader(
+                                      extent: 160.0,
+                                      enableHapticFeedback: true,
+                                      triggerDistance: 160.0,
+                                      headerBuilder: (context,
+                                          loadState,
+                                          pulledExtent,
+                                          loadTriggerPullDistance,
+                                          loadIndicatorExtent,
+                                          axisDirection,
+                                          float,
+                                          completeDuration,
+                                          enableInfiniteLoad,
+                                          success,
+                                          noMore) {
+                                        return SpinKitFadingCircle(
+                                          color: Colors.deepOrange,
+                                          size: 30.0,
+                                        );
+                                      }),
+                                  onRefresh: () {
+                                    if (mounted) {
+                                      setState(() {
+                                        skip = 0;
+                                        limit = 20;
+                                        loading = true;
+                                      });
+                                    }
+
+                                    itemsgrid.clear();
+
+                                    return discoverstores();
+                                  },
+                                  onLoad: () {
+                                    if (mounted) {
+                                      setState(() {
+                                        skip = skip + 20;
+                                        limit = limit + 20;
+                                        loading = true;
+                                      });
+                                    }
+                                    return discoverstores();
+                                  },
+                                  slivers: <Widget>[
                                     recentsearches.isNotEmpty
                                         ? SliverToBoxAdapter(
                                             child: Padding(
@@ -2248,6 +2516,160 @@ class _SearchState extends State<Search>
                                             ),
                                           )
                                         : SliverToBoxAdapter(),
+                                    SliverToBoxAdapter(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 15, top: 5, bottom: 20),
+                                        child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Feather.trending_up,
+                                                  color:
+                                                      Colors.deepOrangeAccent,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  'Trending Stores',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                    ),
+                                    loading == false
+                                        ? SliverStaggeredGrid.countBuilder(
+                                            crossAxisCount: 3,
+                                            itemBuilder:
+                                                (BuildContext context, index) {
+                                              return InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              StorePublic(
+                                                                storeid: storeList[
+                                                                        index]
+                                                                    .storeid,
+                                                                storename: storeList[
+                                                                        index]
+                                                                    .storename,
+                                                              )),
+                                                    );
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        height: 120,
+                                                        width: 120,
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white,
+                                                            border: Border.all(
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        255,
+                                                                        115,
+                                                                        0,
+                                                                        0.7),
+                                                                width: 5),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        60)),
+                                                        child: storeList[index]
+                                                                    .storelogo !=
+                                                                null
+                                                            ? ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            60),
+                                                                child: Hero(
+                                                                    tag: 'store' +
+                                                                        storeList[index]
+                                                                            .storeid,
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      height:
+                                                                          120,
+                                                                      width:
+                                                                          120,
+                                                                      imageUrl:
+                                                                          storeList[index]
+                                                                              .storelogo,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    )))
+                                                            : Container(),
+                                                      ),
+                                                      Container(
+                                                        width: 120,
+                                                        padding:
+                                                            EdgeInsets.all(5),
+                                                        child: Center(
+                                                          child: Text(
+                                                            storeList[index]
+                                                                .storename,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: 120,
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 10,
+                                                                left: 5,
+                                                                right: 5),
+                                                        child: Text(
+                                                          storeList[index]
+                                                              .storetype,
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 14,
+                                                            color: Colors.grey,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ));
+                                            },
+                                            itemCount: storeList.length,
+                                            staggeredTileBuilder: (int index) =>
+                                                new StaggeredTile.fit(1),
+                                            mainAxisSpacing: 4.0,
+                                            crossAxisSpacing: 4.0,
+                                          )
+                                        : SliverFillRemaining(
+                                            child: Center(
+                                                child: SpinKitDoubleBounce(
+                                            color: Colors.deepOrange,
+                                          ))),
+                                    SliverToBoxAdapter(
+                                        child: SizedBox(
+                                      height: 10,
+                                    )),
                                   ],
                                 ),
                           searchcontroller.text.isNotEmpty
@@ -2285,6 +2707,8 @@ class _SearchState extends State<Search>
                                                       (context, index) =>
                                                           ListTile(
                                                               onTap: () async {
+                                                                hashtagitemsgrid
+                                                                    .clear();
                                                                 await _saveToRecentSearches(
                                                                     hashtagList[
                                                                         index]);
@@ -2302,16 +2726,19 @@ class _SearchState extends State<Search>
                                                                 });
                                                               },
                                                               leading: Icon(
-                                                                  Feather
-                                                                      .search),
+                                                                Feather.hash,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
                                                               title:
                                                                   SubstringHighlight(
                                                                 text: '#' +
                                                                     hashtagList[
-                                                                        index],
-                                                                term:
-                                                                    searchcontroller
-                                                                        .text,
+                                                                            index]
+                                                                        .toLowerCase(),
+                                                                term: searchcontroller
+                                                                    .text
+                                                                    .toLowerCase(),
                                                                 textStyle: TextStyle(
                                                                     fontFamily:
                                                                         'Helvetica',
@@ -2583,6 +3010,69 @@ class _SearchState extends State<Search>
                                             ),
                                           )
                                         : SliverToBoxAdapter(),
+                                    SliverToBoxAdapter(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 15, top: 5, bottom: 5),
+                                        child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Feather.trending_up,
+                                                  color:
+                                                      Colors.deepOrangeAccent,
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  'Trending Hashtags',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                    ),
+                                    SliverList(
+                                      delegate: new SliverChildBuilderDelegate(
+                                        (context, index) => ListTile(
+                                            onTap: () async {
+                                              await _saveToRecentSearches(
+                                                  hashtagList[index]);
+
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Hashtags(
+                                                          hashtag: hashtagList[
+                                                              index],
+                                                        )),
+                                              );
+                                            },
+                                            leading: Icon(
+                                              Feather.hash,
+                                              color: Colors.black,
+                                            ),
+                                            title: Text(
+                                              '#' +
+                                                  hashtagList[index]
+                                                      .toLowerCase(),
+                                              style: TextStyle(
+                                                  fontFamily: 'Helvetica',
+                                                  fontSize: 18,
+                                                  color: Colors.black),
+                                            )),
+                                        childCount: hashtagList.length <= 15
+                                            ? hashtagList.length
+                                            : 15,
+                                      ),
+                                    )
                                   ],
                                 ),
                         ]))))));
