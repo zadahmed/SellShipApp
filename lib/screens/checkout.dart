@@ -600,6 +600,8 @@ class _CheckoutState extends State<Checkout> {
                             var returnurl =
                                 'https://api.sellship.co/api/payment/NEW/${messageid}/${userid}/${listitems[0].userid}/${listitems[0].itemid}/${subtotal}/${selectedaddress.addressline1}/${selectedaddress.addressline2}/${selectedaddress.area}/${selectedaddress.city}/${selectedaddress.phonenumber}/${trref}';
 
+                            print(returnurl);
+
                             var url =
                                 "https://api-stg.noonpayments.com/payment/v1/order";
 
@@ -636,11 +638,15 @@ class _CheckoutState extends State<Checkout> {
                                 'https://api.sellship.co/api/noon/save/orderid/${messageid}/${orderid}/${userid}',
                               );
 
+                              print(orderresponse.statusCode);
+                              print(orderresponse.body);
+
+                              Navigator.of(context, rootNavigator: true).pop();
+
                               if (orderresponse.statusCode == 200) {
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -652,15 +658,6 @@ class _CheckoutState extends State<Checkout> {
                                             messageid: messageid,
                                           )),
                                 );
-                                // Navigator.pushReplacement(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => PaymentWeb(
-                                //               returnurl: returnurl,
-                                //               url: url,
-                                //               itemid: listitems[0].itemid,
-                                //               messageid: messageid,
-                                //             )));
                               }
                             }
                           }

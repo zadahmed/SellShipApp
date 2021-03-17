@@ -1,6 +1,7 @@
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/otpinput.dart';
 import 'package:SellShip/screens/rootscreen.dart';
+import 'package:SellShip/username.dart';
 import 'package:SellShip/verification/verifyphone.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -380,8 +381,13 @@ class _OTPScreenState extends State<OTPScreen> {
                             Navigator.of(context).pop();
                             await storage.write(
                                 key: 'userid', value: widget.userid);
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, Routes.rootScreen, (route) => false);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Username(
+                                    userid: widget.userid,
+                                  ),
+                                ));
                           },
                           child: Container(
                             padding: EdgeInsets.only(top: 20.0, bottom: 20.0),

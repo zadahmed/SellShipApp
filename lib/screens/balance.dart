@@ -257,11 +257,11 @@ class _BalanceState extends State<Balance> {
                     InkWell(
                       onTap: () {
                         if (double.parse(balance.toString()) != 0.00 &&
-                            double.parse(balance.toString()) > 100) {
+                            double.parse(balance.toString()) > 50) {
                           withdraw();
                         } else {
                           showInSnackBar(
-                              'You need a minimum balance of AED 100 to be able to request a withdrawal');
+                              'You need a minimum balance of AED 50 to be able to request a withdrawal');
                         }
                       },
                       child: Container(

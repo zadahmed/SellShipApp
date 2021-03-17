@@ -40,12 +40,41 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    getuser();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.deepOrange, //or set color with: Color(0xFF0000FF)
     ));
   }
 
   FirebaseAnalytics analytics = FirebaseAnalytics();
+
+  getuser() async {
+    userid = await storage.read(key: 'userid');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
+    await storage.write(key: 'country', value: 'United Arab Emirates');
+    setState(() {
+      userid = userid;
+      seen = _seen;
+    });
+  }
+
+  var userid;
+  var seen;
+
+  Widget checkwidget() {
+    if (userid == null) {
+      return OnboardingScreen();
+    } else {
+      if (seen == false) {
+        return OnboardingScreen();
+      } else {
+        return RootScreen();
+      }
+    }
+  }
+
+  final storage = new FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -107,49 +136,7 @@ class _MyAppState extends State<MyApp> {
           },
           debugShowCheckedModeBanner: false,
           color: Colors.blue,
-          home: new Splash(),
+          home: checkwidget(),
         ));
-  }
-}
-
-class Splash extends StatefulWidget {
-  @override
-  SplashState createState() => new SplashState();
-}
-
-class SplashState extends State<Splash> {
-  final storage = new FlutterSecureStorage();
-
-  void navigatetoscreen() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _seen = (prefs.getBool('seen') ?? false);
-    await storage.write(key: 'country', value: 'United Arab Emirates');
-
-    if (_seen) {
-      Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new RootScreen()));
-    } else {
-      Navigator.of(context).pushReplacement(
-          new MaterialPageRoute(builder: (context) => new OnboardingScreen()));
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    new Timer(new Duration(milliseconds: 1), () {
-      if (mounted) {
-        navigatetoscreen();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    precacheImage(AssetImage('assets/logo.png'), context);
-    return new Scaffold(
-      backgroundColor: Colors.deepOrange,
-    );
   }
 }

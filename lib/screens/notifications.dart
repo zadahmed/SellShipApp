@@ -84,6 +84,8 @@ class _NotifcationPageState extends State<NotifcationPage>
               DateTime.fromMillisecondsSinceEpoch(q['\$date']);
           var dateuploaded = timeago.format(dateuploade);
 
+          print(jsonResponse[i]);
+
           Notifications withd = Notifications(
             message: jsonResponse[i]['message'],
             image: jsonResponse[i]['image'] != null
@@ -144,9 +146,7 @@ class _NotifcationPageState extends State<NotifcationPage>
 
           Notifications withd = Notifications(
             message: jsonResponse[i]['message'],
-            image: jsonResponse[i]['image'] != null
-                ? jsonResponse[i]['image']
-                : '',
+            image: jsonResponse[i]['image'],
             itemid: jsonResponse[i]['itemid'] != null
                 ? jsonResponse[i]['itemid']
                 : '',
@@ -250,10 +250,10 @@ class _NotifcationPageState extends State<NotifcationPage>
                                         child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(5),
-                                            child: notifs[index].image.isEmpty
+                                            child: notifs[index]
+                                                    .image
+                                                    .isNotEmpty
                                                 ? CachedNetworkImage(
-                                                    height: 200,
-                                                    width: 300,
                                                     fadeInDuration: Duration(
                                                         microseconds: 5),
                                                     imageUrl:

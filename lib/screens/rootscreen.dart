@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:SellShip/global.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -346,7 +347,7 @@ class _RootScreenState extends State<RootScreen> {
                       color: Colors.black))),
           BottomNavigationBarItem(
               icon: Icon(
-                Feather.bell,
+                FontAwesomeIcons.comments,
                 color: selectedActivityColor,
               ),
               title: Text('',

@@ -262,7 +262,7 @@ class _CreateStoreState extends State<CreateStore> {
                             controller: usernamecontroller,
                             cursorColor: Colors.black,
                             decoration: InputDecoration(
-                              hintText: "About My Store",
+                              hintText: "Store Bio",
                               hintStyle: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 16,

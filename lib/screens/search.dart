@@ -485,6 +485,9 @@ class _SearchState extends State<Search>
                           builder: (context) => Details(
                                 itemid: itemsgrid[index].itemid,
                                 sold: itemsgrid[index].sold,
+                                image: itemsgrid[index].image,
+                                name: itemsgrid[index].name,
+                                source: 'searchproducts',
                               )),
                     );
                   },
@@ -764,6 +767,9 @@ class _SearchState extends State<Search>
                           builder: (context) => Details(
                                 itemid: hashtagitemsgrid[index].itemid,
                                 sold: hashtagitemsgrid[index].sold,
+                                image: hashtagitemsgrid[index].image,
+                                name: hashtagitemsgrid[index].name,
+                                source: 'hashtag',
                               )),
                     );
                   },
@@ -1077,8 +1083,7 @@ class _SearchState extends State<Search>
                     SliverAppBar(
                         backgroundColor: Colors.white,
                         elevation: 0,
-                        snap: true,
-                        floating: true,
+                        pinned: true,
                         title: Padding(
                           padding: EdgeInsets.only(top: 10),
                           child: Container(
@@ -1464,9 +1469,9 @@ class _SearchState extends State<Search>
                                                 ),
                                               ),
                                               childCount:
-                                                  recentsearches.length <= 8
+                                                  recentsearches.length <= 3
                                                       ? recentsearches.length
-                                                      : 8,
+                                                      : 3,
                                             ),
                                           )
                                         : SliverToBoxAdapter(),
@@ -1988,9 +1993,9 @@ class _SearchState extends State<Search>
                                                 ),
                                               ),
                                               childCount:
-                                                  recentsearches.length <= 8
+                                                  recentsearches.length <= 3
                                                       ? recentsearches.length
-                                                      : 8,
+                                                      : 3,
                                             ),
                                           )
                                         : SliverToBoxAdapter(),
@@ -2048,11 +2053,9 @@ class _SearchState extends State<Search>
                                           child: Hero(
                                             tag:
                                                 'trendingproducts${itemsgrid[index].itemid}',
-                                            child: Image(
+                                            child: CachedNetworkImage(
+                                              imageUrl: itemsgrid[index].image,
                                               fit: BoxFit.cover,
-                                              image: NetworkImage(
-                                                itemsgrid[index].image,
-                                              ),
                                             ),
                                           ),
                                         ),
@@ -2510,9 +2513,9 @@ class _SearchState extends State<Search>
                                                 ),
                                               ),
                                               childCount:
-                                                  recentsearches.length <= 8
+                                                  recentsearches.length <= 3
                                                       ? recentsearches.length
-                                                      : 8,
+                                                      : 3,
                                             ),
                                           )
                                         : SliverToBoxAdapter(),
@@ -2592,22 +2595,16 @@ class _SearchState extends State<Search>
                                                                     BorderRadius
                                                                         .circular(
                                                                             60),
-                                                                child: Hero(
-                                                                    tag: 'store' +
-                                                                        storeList[index]
-                                                                            .storeid,
-                                                                    child:
-                                                                        CachedNetworkImage(
-                                                                      height:
-                                                                          120,
-                                                                      width:
-                                                                          120,
-                                                                      imageUrl:
-                                                                          storeList[index]
-                                                                              .storelogo,
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    )))
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  height: 120,
+                                                                  width: 120,
+                                                                  imageUrl: storeList[
+                                                                          index]
+                                                                      .storelogo,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ))
                                                             : Container(),
                                                       ),
                                                       Container(
@@ -3004,9 +3001,9 @@ class _SearchState extends State<Search>
                                                 ),
                                               ),
                                               childCount:
-                                                  recentsearches.length <= 8
+                                                  recentsearches.length <= 3
                                                       ? recentsearches.length
-                                                      : 8,
+                                                      : 3,
                                             ),
                                           )
                                         : SliverToBoxAdapter(),

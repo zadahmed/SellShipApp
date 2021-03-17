@@ -279,7 +279,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                 builder: (context) => CheckoutOffer(
                                     ordertype: 'EXISTING',
                                     itemid: widget.itemid,
-                                    offer: widget.offer,
+                                    offer: itemprice.toString(),
                                     messageid: widget.messageid)),
                           );
                         },
@@ -783,11 +783,9 @@ class _ChatPageViewState extends State<ChatPageView> {
                                       if (text.isNotEmpty) {
                                         var offer = double.parse(text);
                                         var minoffer =
-                                            double.parse(widget.itemprice) *
-                                                0.50;
+                                            double.parse(itemprice) * 0.50;
                                         minoffer =
-                                            double.parse(widget.itemprice) -
-                                                minoffer;
+                                            double.parse(itemprice) - minoffer;
 
                                         if (offer < minoffer) {
                                           updateState(() {
@@ -1003,9 +1001,11 @@ class _ChatPageViewState extends State<ChatPageView> {
       var jsonResponse = json.decode(response.body);
 
       offerstage = int.parse(jsonResponse['offerstage']);
+      itemprice = int.parse(jsonResponse['offer']);
 
       setState(() {
         offerstage = offerstage;
+        itemprice = itemprice;
       });
 
       List jsonChat = json.decode(jsonResponse['chats']);
@@ -1129,7 +1129,6 @@ class _ChatPageViewState extends State<ChatPageView> {
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold,
                                         color: Colors.black)),
                               ),
                             ]),
@@ -1414,8 +1413,8 @@ class _ChatPageViewState extends State<ChatPageView> {
                                             currency != null
                                                 ? currency +
                                                     ' ' +
-                                                    widget.itemprice.toString()
-                                                : widget.itemprice.toString(),
+                                                    itemprice.toString()
+                                                : itemprice.toString(),
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 16,

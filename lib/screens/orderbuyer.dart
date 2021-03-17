@@ -236,10 +236,11 @@ class _OrderBuyerState extends State<OrderBuyer> {
                                 )),
                               ),
                               onTap: () {
-                                Navigator.pushReplacement(
+                                Navigator.pop(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RootScreen()),
+                                );
+                                Navigator.pop(
+                                  context,
                                 );
                               },
                             ),

@@ -93,7 +93,6 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
     });
 
     getItem();
-    calculateearning();
   }
 
   calculateearning() {
@@ -109,7 +108,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
       weightfees = 110;
     }
 
-    var fees = double.parse(offer.toString()) / 1.15;
+    var fees = double.parse(itemprice.toString()) / 1.15;
 
     finalfees = fees - weightfees;
 
@@ -738,10 +737,13 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
       var jsonResponse = json.decode(response.body);
 
       offerstage = int.parse(jsonResponse['offerstage']);
+      itemprice = int.parse(jsonResponse['offer']);
 
       setState(() {
         offerstage = offerstage;
+        itemprice = itemprice.toString();
       });
+      calculateearning();
       List jsonChat = json.decode(jsonResponse['chats']);
       return jsonChat;
     } else {
@@ -863,7 +865,6 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                     style: TextStyle(
                                         fontFamily: 'Helvetica',
                                         fontSize: 16,
-                                        fontWeight: FontWeight.bold,
                                         color: Colors.black)),
                               ),
                             ]),
@@ -999,8 +1000,10 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                   itemprice == null
                                       ? 'Current Price ' +
                                           currency +
-                                          widget.itemprice
-                                      : 'Current Price ' + currency + itemprice,
+                                          itemprice.toString()
+                                      : 'Current Price ' +
+                                          currency +
+                                          itemprice.toString(),
                                   style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     color: Colors.deepOrange,
@@ -1057,11 +1060,9 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                       if (text.isNotEmpty) {
                                         var offer = double.parse(text);
                                         var minoffer =
-                                            double.parse(widget.itemprice) *
-                                                0.50;
+                                            double.parse(itemprice) * 0.50;
                                         minoffer =
-                                            double.parse(widget.itemprice) -
-                                                minoffer;
+                                            double.parse(itemprice) - minoffer;
 
                                         if (offer < minoffer) {
                                           updateState(() {
@@ -1130,7 +1131,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                     child: SpinKitDoubleBounce(
                                       color: Colors.deepOrange,
                                     )));
-                            var recieverid = widget.recipentid;
+                            var recieverid = widget.senderid;
                             if (recieverid == userid) {
                               var itemurl =
                                   'https://api.sellship.co/api/counteroffer/' +
@@ -1438,8 +1439,8 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                             currency != null
                                                 ? currency +
                                                     ' ' +
-                                                    widget.itemprice.toString()
-                                                : widget.itemprice.toString(),
+                                                    itemprice.toString()
+                                                : itemprice.toString(),
                                             style: TextStyle(
                                                 fontFamily: 'Helvetica',
                                                 fontSize: 16,

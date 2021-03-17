@@ -102,7 +102,7 @@ class _StoreCompletionState extends State<StoreCompletion> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
-                                'Hooray! Great job and Setting up your Store on SellShip. We are excited to have you onboard. No time to waste, Let\'s get Selling!',
+                                'Hooray! Great job on setting up your store on SellShip. We are excited to have you onboard. Now let\'s get Selling!',
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   fontFamily: 'Helvetica',

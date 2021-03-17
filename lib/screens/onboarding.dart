@@ -596,6 +596,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             var jsondata =
                                                 json.decode(response.body);
 
+                                            print(jsondata);
+
                                             if (jsondata
                                                 .containsKey('status')) {
                                               if (jsondata['status']

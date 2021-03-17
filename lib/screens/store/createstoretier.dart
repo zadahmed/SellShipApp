@@ -132,7 +132,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                   EdgeInsets.only(left: 36.0, bottom: 5, top: 20, right: 36),
               child: Center(
                 child: Text(
-                  "Set up your store, pick a plan later",
+                  "Set up your store, pay later",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 30.0,
@@ -191,8 +191,9 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                   decoration: BoxDecoration(
                       border: Border.all(
                         color: selectedlayout == 1
-                            ? Colors.black
+                            ? Colors.deepOrange
                             : Colors.blueGrey.shade100,
+                        width: selectedlayout == 1 ? 5 : 1,
                       ),
                       borderRadius: BorderRadius.circular(15)),
                   child: Column(
@@ -341,8 +342,9 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                   decoration: BoxDecoration(
                       border: Border.all(
                         color: selectedlayout == 2
-                            ? Colors.black
+                            ? Colors.deepOrange
                             : Colors.blueGrey.shade100,
+                        width: selectedlayout == 2 ? 5 : 1,
                       ),
                       borderRadius: BorderRadius.circular(15)),
                   child: Column(
@@ -491,8 +493,9 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                   decoration: BoxDecoration(
                       border: Border.all(
                         color: selectedlayout == 3
-                            ? Colors.black
+                            ? Colors.deepOrange
                             : Colors.blueGrey.shade100,
+                        width: selectedlayout == 3 ? 5 : 1,
                       ),
                       borderRadius: BorderRadius.circular(15)),
                   child: Column(

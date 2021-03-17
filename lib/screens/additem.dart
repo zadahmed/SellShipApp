@@ -115,31 +115,25 @@ class _AddItemState extends State<AddItem> {
           approved = jsonbody[i]['approved'];
         }
 
-        if (approved == true) {
-          Stores store = Stores(
-              storeid: jsonbody[i]['_id']['\$oid'],
-              storecategory: jsonbody[i]['storecategory'],
-              storelogo: jsonbody[i]['storelogo'],
-              storename: jsonbody[i]['storename']);
+        Stores store = Stores(
+            approved: approved,
+            storeid: jsonbody[i]['_id']['\$oid'],
+            storecategory: jsonbody[i]['storecategory'],
+            storelogo: jsonbody[i]['storelogo'],
+            storename: jsonbody[i]['storename']);
 
-          ites.add(store);
-        } else {
-          setState(() {
-            storeslist = [];
-            _selectedStore = null;
-            loading = false;
-          });
-        }
+        ites.add(store);
       }
 
       setState(() {
         storeslist = ites;
-        _selectedStore = storeslist[0];
+
         loading = false;
       });
     } else {
       setState(() {
         storeslist = [];
+
         loading = false;
       });
       print(storeresponse.statusCode);
@@ -508,9 +502,14 @@ class _AddItemState extends State<AddItem> {
                                               ),
                                               value: _selectedStore,
                                               onChanged: (Stores newValue) {
-                                                setState(() {
-                                                  _selectedStore = newValue;
-                                                });
+                                                if (newValue.approved == true) {
+                                                  setState(() {
+                                                    _selectedStore = newValue;
+                                                  });
+                                                } else {
+                                                  showInSnackBar(
+                                                      'Store is still under review. Please wait to start listing items.');
+                                                }
                                               },
                                               items: storeslist
                                                   .map((Stores store) {
@@ -520,7 +519,10 @@ class _AddItemState extends State<AddItem> {
                                                   child: new Text(
                                                     store.storename,
                                                     style: new TextStyle(
-                                                        color: Colors.black,
+                                                        color: store.approved ==
+                                                                true
+                                                            ? Colors.black
+                                                            : Colors.grey,
                                                         fontFamily: 'Helvetica',
                                                         fontSize: 16,
                                                         fontWeight:
@@ -2947,7 +2949,7 @@ class _AddItemState extends State<AddItem> {
                                                                         .center,
                                                                 children: [
                                                                   Text(
-                                                                    'Uploading Item..',
+                                                                    'Uploading Item.. Please hold on! Large images might take longer than expected.',
                                                                     style:
                                                                         TextStyle(
                                                                       fontFamily:

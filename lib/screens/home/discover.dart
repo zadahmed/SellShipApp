@@ -1947,7 +1947,7 @@ class _DiscoverState extends State<Discover>
                                 'Shop by Category',
                                 style: TextStyle(
                                     fontFamily: 'Helvetica',
-                                    fontSize: 18.0,
+                                    fontSize: 22.0,
                                     fontWeight: FontWeight.bold),
                               ),
                               InkWell(
@@ -1978,71 +1978,72 @@ class _DiscoverState extends State<Discover>
                 ),
               ),
               subcategoryList.isNotEmpty
-                  ? SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisSpacing: 0.2,
-                          crossAxisSpacing: 0.6,
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.75),
-                      delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                        return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => SubCategory(
-                                          subcategory:
-                                              subcategoryList[index].name,
-                                          categoryimage:
-                                              subcategoryList[index].image,
-                                        )),
-                              );
+                  ? SliverToBoxAdapter(
+                      child: Container(
+                          height: 160,
+                          width: MediaQuery.of(context).size.width,
+                          child: ListView.builder(
+                            itemCount: subcategoryList.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(
+                                          builder: (context) => SubCategory(
+                                                subcategory:
+                                                    subcategoryList[index].name,
+                                                categoryimage:
+                                                    subcategoryList[index]
+                                                        .image,
+                                              )),
+                                    );
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                                color: Color.fromRGBO(
+                                                    255, 115, 0, 0.7),
+                                                width: 5),
+                                            borderRadius:
+                                                BorderRadius.circular(60)),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(60),
+                                            child: CachedNetworkImage(
+                                              height: 120,
+                                              width: 120,
+                                              imageUrl:
+                                                  subcategoryList[index].image,
+                                              fit: BoxFit.cover,
+                                            )),
+                                      ),
+                                      Container(
+                                        height: 50,
+                                        width: 120,
+                                        padding: EdgeInsets.all(5),
+                                        child: Center(
+                                          child: Text(
+                                            subcategoryList[index].name,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ));
                             },
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 120,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color:
-                                              Color.fromRGBO(255, 115, 0, 0.7),
-                                          width: 5),
-                                      borderRadius: BorderRadius.circular(60)),
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(60),
-                                      child: Hero(
-                                          tag: 'subcat' +
-                                              subcategoryList[index].name,
-                                          child: CachedNetworkImage(
-                                            height: 120,
-                                            width: 120,
-                                            imageUrl:
-                                                subcategoryList[index].image,
-                                            fit: BoxFit.cover,
-                                          ))),
-                                ),
-                                Container(
-                                  height: 50,
-                                  width: 120,
-                                  padding: EdgeInsets.all(5),
-                                  child: Center(
-                                    child: Text(
-                                      subcategoryList[index].name,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ));
-                      }, childCount: 6))
+                          )))
                   : SliverToBoxAdapter(),
               topitems.isNotEmpty
                   ? SliverToBoxAdapter(
@@ -2066,7 +2067,7 @@ class _DiscoverState extends State<Discover>
                                   'Top Picks',
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
-                                      fontSize: 18.0,
+                                      fontSize: 22.0,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -2381,7 +2382,7 @@ class _DiscoverState extends State<Discover>
                             'Deals under 100',
                             style: TextStyle(
                                 fontFamily: 'Helvetica',
-                                fontSize: 18.0,
+                                fontSize: 22.0,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -2709,7 +2710,7 @@ class _DiscoverState extends State<Discover>
                                   'Near You',
                                   style: TextStyle(
                                       fontFamily: 'Helvetica',
-                                      fontSize: 18.0,
+                                      fontSize: 22.0,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -3014,79 +3015,6 @@ class _DiscoverState extends State<Discover>
                         },
                       ),
                     ))
-                  : SliverToBoxAdapter(),
-              SliverToBoxAdapter(
-                  child: SizedBox(
-                height: 4,
-              )),
-              subcategoryListsecond.isNotEmpty
-                  ? SliverGrid(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          mainAxisSpacing: 1.0,
-                          crossAxisSpacing: 1.0,
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.75),
-                      delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                        return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => SubCategory(
-                                          subcategory:
-                                              subcategoryListsecond[index].name,
-                                          categoryimage:
-                                              subcategoryListsecond[index]
-                                                  .image,
-                                        )),
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 120,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color:
-                                              Color.fromRGBO(255, 115, 0, 0.7),
-                                          width: 5),
-                                      borderRadius: BorderRadius.circular(60)),
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(60),
-                                      child: Hero(
-                                          tag: 'subcatsecond' +
-                                              subcategoryListsecond[index].name,
-                                          child: CachedNetworkImage(
-                                            height: 120,
-                                            width: 120,
-                                            imageUrl:
-                                                subcategoryListsecond[index]
-                                                    .image,
-                                            fit: BoxFit.cover,
-                                          ))),
-                                ),
-                                Container(
-                                  height: 50,
-                                  width: 120,
-                                  padding: EdgeInsets.all(5),
-                                  child: Center(
-                                    child: Text(
-                                      subcategoryListsecond[index].name,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontFamily: 'Helvetica',
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ));
-                      }, childCount: 6))
                   : SliverToBoxAdapter(),
               SliverToBoxAdapter(
                 child: Padding(

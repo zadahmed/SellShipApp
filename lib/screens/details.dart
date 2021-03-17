@@ -177,6 +177,7 @@ class _DetailsState extends State<Details> {
         DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
         var dateuploaded = timeago.format(dateuploade);
         Item item = Item(
+          approved: jsonbody[i]['approved'],
           itemid: jsonbody[i]['_id']['\$oid'],
           date: dateuploaded,
           name: jsonbody[i]['name'],
@@ -412,7 +413,7 @@ class _DetailsState extends State<Details> {
                                         newItem.name +
                                         ' for ' +
                                         currency +
-                                        newItem.price);
+                                        offercontroller.text);
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               } else {

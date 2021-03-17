@@ -579,14 +579,12 @@ class _AddressState extends State<Address> {
                                                           ),
                                                           icon: Icon(Icons
                                                               .keyboard_arrow_down),
-                                                          hint: Center(
-                                                            child: Text(
-                                                              'Address Type',
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                              ),
+                                                          hint: Text(
+                                                            'Address Type',
+                                                            style: TextStyle(
+                                                              color: Colors.grey
+                                                                  .shade300,
+                                                              fontSize: 16,
                                                             ),
                                                           ),
                                                           value:
@@ -661,14 +659,12 @@ class _AddressState extends State<Address> {
                                                           ),
                                                           icon: Icon(Icons
                                                               .keyboard_arrow_down),
-                                                          hint: Center(
-                                                            child: Text(
-                                                              'City',
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                              ),
+                                                          hint: Text(
+                                                            'City',
+                                                            style: TextStyle(
+                                                              color: Colors.grey
+                                                                  .shade300,
+                                                              fontSize: 16,
                                                             ),
                                                           ),
                                                           value: selectedCity,
@@ -845,14 +841,12 @@ class _AddressState extends State<Address> {
                                                           ),
                                                           icon: Icon(Icons
                                                               .keyboard_arrow_down),
-                                                          hint: Center(
-                                                            child: Text(
-                                                              'Area',
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                              ),
+                                                          hint: Text(
+                                                            'Area',
+                                                            style: TextStyle(
+                                                              color: Colors.grey
+                                                                  .shade300,
+                                                              fontSize: 16,
                                                             ),
                                                           ),
                                                           value: selectedarea,
@@ -922,6 +916,16 @@ class _AddressState extends State<Address> {
                                                                   TextStyle(
                                                                 fontFamily:
                                                                     'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                              ),
+                                                              hintStyle:
+                                                                  TextStyle(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
                                                                 fontSize: 16,
                                                               ),
                                                               focusColor:
@@ -1012,6 +1016,16 @@ class _AddressState extends State<Address> {
                                                                   TextStyle(
                                                                 fontFamily:
                                                                     'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                              ),
+                                                              hintStyle:
+                                                                  TextStyle(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
                                                                 fontSize: 16,
                                                               ),
                                                               focusColor:
@@ -1113,10 +1127,16 @@ class _AddressState extends State<Address> {
                                                           phonenumbercontroller,
                                                       inputDecoration:
                                                           InputDecoration(
-                                                        border:
-                                                            UnderlineInputBorder(),
-                                                        hintText: "501234567",
-                                                      ),
+                                                              border:
+                                                                  UnderlineInputBorder(),
+                                                              hintText:
+                                                                  "501234567",
+                                                              hintStyle:
+                                                                  TextStyle(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade300,
+                                                              )),
                                                     ),
                                                   ),
                                                   padding: EdgeInsets.only(

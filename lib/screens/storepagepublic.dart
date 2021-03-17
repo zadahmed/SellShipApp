@@ -81,6 +81,7 @@ class _StorePublicState extends State<StorePublic> {
       if (itemrespons != null) {
         for (var i = 0; i < itemrespons.length; i++) {
           Item ite = Item(
+              approved: itemrespons[i]['approved'],
               itemid: itemrespons[i]['_id']['\$oid'],
               name: itemrespons[i]['name'],
               image: itemrespons[i]['image'],
@@ -96,7 +97,9 @@ class _StorePublicState extends State<StorePublic> {
                   ? false
                   : itemrespons[i]['sold'],
               category: itemrespons[i]['category']);
-          ites.add(ite);
+          if (ite.approved == true) {
+            ites.add(ite);
+          }
         }
         if (mounted)
           setState(() {
@@ -126,33 +129,43 @@ class _StorePublicState extends State<StorePublic> {
       var follower = jsonbody['follower'];
 
       if (follower != null) {
+        print(follower);
+        print(follower.length);
         for (int i = 0; i < follower.length; i++) {
           var meuser = await storage.read(key: 'userid');
           if (meuser == follower[i]['\$oid']) {
             setState(() {
               follow = true;
+              followers = follower.length;
               followcolor = Colors.deepOrange;
+            });
+          } else {
+            setState(() {
+              followers = follower.length;
+              follow = false;
             });
           }
         }
       } else {
         setState(() {
-          follower = [];
+          followers = 0;
           follow = false;
         });
       }
 
+      print('sss');
+      print(followers);
+
       var s = jsonbody['storename'];
-      print(s);
 
       mystore = Stores(
           storeid: jsonbody['_id']['\$oid'],
-          followers: follower.length.toString(),
           reviews: jsonbody['reviewnumber'] == null
               ? '0'
               : jsonbody['reviewnumber'].toString(),
           sold: jsonbody['sold'] == null ? '0' : jsonbody['sold'].toString(),
           storecategory: jsonbody['storecategory'],
+          storetype: jsonbody['storetype'],
           storelogo: jsonbody['storelogo'] == null ? '' : jsonbody['storelogo'],
           storebio: jsonbody['storebio'],
           storename: jsonbody['storename']);
@@ -251,23 +264,30 @@ class _StorePublicState extends State<StorePublic> {
                                     ),
                                   ),
                                   item[index].sold == true
-                                      ? Positioned(
-                                          top: 60,
+                                      ? Align(
+                                          alignment: Alignment.center,
                                           child: Container(
                                             height: 50,
                                             decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(0.4),
+                                              color: Colors.deepOrangeAccent
+                                                  .withOpacity(0.8),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight:
+                                                      Radius.circular(10)),
                                             ),
-                                            width: 210,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             child: Center(
                                               child: Text(
                                                 'Sold',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  color: Colors.white,
-                                                ),
+                                                    fontFamily: 'Helvetica',
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                           ))
@@ -381,7 +401,7 @@ class _StorePublicState extends State<StorePublic> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          widget.storename,
+          '@' + widget.storename,
           style: TextStyle(
               fontFamily: 'Helvetica',
               fontSize: 20.0,
@@ -502,8 +522,7 @@ class _StorePublicState extends State<StorePublic> {
                                                 CrossAxisAlignment.start),
                                         Padding(
                                             padding: EdgeInsets.only(
-                                              left: 25,
-                                            ),
+                                                left: 20, top: 15),
                                             child: Column(
                                                 children: [
                                                   Text(
@@ -514,6 +533,14 @@ class _StorePublicState extends State<StorePublic> {
                                                         color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    mystore.storetype,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 18.0,
+                                                      color: Colors.grey,
+                                                    ),
                                                   ),
                                                 ],
                                                 mainAxisAlignment:
@@ -625,9 +652,9 @@ class _StorePublicState extends State<StorePublic> {
                                                       CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      mystore.followers == null
+                                                      followers == null
                                                           ? '0'
-                                                          : mystore.followers
+                                                          : followers
                                                               .toString(),
                                                       style: TextStyle(
                                                           fontFamily:
@@ -727,6 +754,8 @@ class _StorePublicState extends State<StorePublic> {
                         )),
                     InkWell(
                       onTap: () async {
+                        print(followers);
+                        print(follow);
                         var user1 = await storage.read(key: 'userid');
                         if (follow == true) {
                           setState(() {

@@ -77,6 +77,7 @@ class _StoreState extends State<Store> {
       if (itemrespons != null) {
         for (var i = 0; i < itemrespons.length; i++) {
           Item ite = Item(
+              approved: itemrespons[i]['approved'],
               itemid: itemrespons[i]['_id']['\$oid'],
               name: itemrespons[i]['name'],
               image: itemrespons[i]['image'],
@@ -119,6 +120,7 @@ class _StoreState extends State<Store> {
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       Stores store = Stores(
+          storetype: jsonbody['storetype'],
           storeid: jsonbody['_id']['\$oid'],
           storecategory: jsonbody['storecategory'],
           storelogo: jsonbody['storelogo'],
@@ -243,23 +245,60 @@ class _StoreState extends State<Store> {
                                                 ),
                                               )))),
                                   item[index].sold == true
-                                      ? Positioned(
-                                          top: 60,
+                                      ? Align(
+                                          alignment: Alignment.center,
                                           child: Container(
                                             height: 50,
                                             decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(0.4),
+                                              color: Colors.deepOrangeAccent
+                                                  .withOpacity(0.8),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  topRight:
+                                                      Radius.circular(10)),
                                             ),
-                                            width: 210,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             child: Center(
                                               child: Text(
                                                 'Sold',
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  color: Colors.white,
-                                                ),
+                                                    fontFamily: 'Helvetica',
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ))
+                                      : Container(),
+                                  item[index].approved == false
+                                      ? Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Container(
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.8),
+                                              borderRadius: BorderRadius.only(
+                                                  bottomRight:
+                                                      Radius.circular(10),
+                                                  bottomLeft:
+                                                      Radius.circular(10)),
+                                            ),
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Center(
+                                              child: Text(
+                                                'In Review',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ),
                                           ))
@@ -474,7 +513,7 @@ class _StoreState extends State<Store> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
-          widget.storename,
+          '@' + widget.storename,
           style: TextStyle(
               fontFamily: 'Helvetica',
               fontSize: 20.0,
@@ -725,8 +764,7 @@ class _StoreState extends State<Store> {
                                                 CrossAxisAlignment.start),
                                         Padding(
                                             padding: EdgeInsets.only(
-                                              left: 25,
-                                            ),
+                                                left: 20, top: 15),
                                             child: Column(
                                                 children: [
                                                   Text(
@@ -737,6 +775,14 @@ class _StoreState extends State<Store> {
                                                         color: Colors.black,
                                                         fontWeight:
                                                             FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    mystore.storetype,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 18.0,
+                                                      color: Colors.grey,
+                                                    ),
                                                   ),
                                                 ],
                                                 mainAxisAlignment:

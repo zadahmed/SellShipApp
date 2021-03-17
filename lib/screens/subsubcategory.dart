@@ -1110,23 +1110,27 @@ class _SubSubCategoryState extends State<SubSubCategory> {
         key: scaffoldState,
         backgroundColor: Colors.white,
         floatingActionButton: InkWell(
+          enableFeedback: true,
           onTap: () {
             Navigator.of(context).push(_createRoute());
           },
           child: Container(
-            width: 80,
+            width: 100,
             height: 40,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.2),
-                offset: Offset(0.0, 2.0), //(x,y)
-                blurRadius: 4.0,
-              ),
-            ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+            decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    offset: Offset(0.0, 2.0), //(x,y)
+                    blurRadius: 4.0,
+                  ),
+                ],
+                color: Colors.deepOrangeAccent,
+                borderRadius: BorderRadius.circular(25)),
             child: Icon(
               Feather.sliders,
               size: 18,
-              color: Colors.deepOrange,
+              color: Colors.white,
             ),
           ),
         ),

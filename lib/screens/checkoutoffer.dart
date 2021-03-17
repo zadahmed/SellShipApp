@@ -574,6 +574,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                             }
 
                             var userid = await storage.read(key: 'userid');
+                            print(listitems[0].userid);
 
                             var returnurl;
                             if (widget.ordertype == 'EXISTING') {
@@ -595,6 +596,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                                 "category": "pay",
                               },
                               "configuration": {
+                                "tokenizeCC": true,
                                 "locale": "en",
                                 "paymentAction": "Sale",
                                 "returnUrl": returnurl
@@ -609,6 +611,7 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                             List encodedText = utf8.encode(key);
                             String base64Str = base64Encode(encodedText);
                             print('Key_Test $base64Str');
+
                             var heade = 'Key_Test $base64Str';
 
                             Map<String, String> headers = {
@@ -616,29 +619,47 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                               'Content-type': 'application/json',
                               'Accept': 'application/json',
                             };
+
                             final response = await http.post(
                               url,
                               body: json.encode(body),
                               headers: headers,
                             );
 
-                            print(response.body);
                             if (response.statusCode == 200) {
                               var jsonmessage = json.decode(response.body);
 
                               var url = jsonmessage['result']['checkoutData']
                                   ['postUrl'];
+
+                              var orderid =
+                                  jsonmessage['result']['order']['id'];
+
+                              final orderresponse = await http.get(
+                                'https://api.sellship.co/api/noon/save/orderid/${messageid}/${orderid}/${userid}',
+                              );
+
+                              print(orderresponse.statusCode);
+                              print(orderresponse.body);
+
                               Navigator.of(context, rootNavigator: true).pop();
-                              final result = await Navigator.push(
+
+                              if (orderresponse.statusCode == 200) {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
+
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => PaymentWeb(
+                                      builder: (BuildContext context) =>
+                                          PaymentWeb(
                                             returnurl: returnurl,
                                             url: url,
                                             itemid: listitems[0].itemid,
                                             messageid: messageid,
-                                          )));
-                              print(result);
+                                          )),
+                                );
+                              }
                             }
                           }
                         },

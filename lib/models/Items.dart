@@ -40,10 +40,12 @@ class Item {
   final String sellername;
   final String country;
   final String originalprice;
+  final bool approved;
 
   Item(
       {this.itemid,
       this.name,
+      this.approved,
       this.views,
       this.image,
       this.tags,
