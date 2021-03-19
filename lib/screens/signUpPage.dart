@@ -201,7 +201,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                             focusNode: myFocusNodePhone,
                                             autoValidateMode: AutovalidateMode
                                                 .onUserInteraction,
-                                            countries: ['GB', 'US', 'AE'],
+                                            countries: ['AE'],
                                             textFieldController:
                                                 signupphonecontroller,
                                             inputDecoration: InputDecoration(

@@ -129,21 +129,26 @@ class _StorePublicState extends State<StorePublic> {
       var follower = jsonbody['follower'];
 
       if (follower != null) {
-        print(follower);
-        print(follower.length);
-        for (int i = 0; i < follower.length; i++) {
-          var meuser = await storage.read(key: 'userid');
-          if (meuser == follower[i]['\$oid']) {
-            setState(() {
-              follow = true;
-              followers = follower.length;
-              followcolor = Colors.deepOrange;
-            });
-          } else {
-            setState(() {
-              followers = follower.length;
-              follow = false;
-            });
+        if (follower.length == 0) {
+          setState(() {
+            followers = 0;
+            follow = false;
+          });
+        } else {
+          for (int i = 0; i < follower.length; i++) {
+            var meuser = await storage.read(key: 'userid');
+            if (meuser == follower[i]['\$oid']) {
+              setState(() {
+                follow = true;
+                followers = follower.length;
+                followcolor = Colors.deepOrange;
+              });
+            } else {
+              setState(() {
+                followers = follower.length;
+                follow = false;
+              });
+            }
           }
         }
       } else {

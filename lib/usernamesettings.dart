@@ -219,7 +219,7 @@ class _UsernameSettingsState extends State<UsernameSettings> {
                       } else {
                         showDialog(
                             context: context,
-                            barrierDismissible: true,
+                            barrierDismissible: false,
                             useRootNavigator: false,
                             builder: (_) => AssetGiffyDialog(
                                   image: Image.asset(

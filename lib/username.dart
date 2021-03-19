@@ -244,7 +244,7 @@ class _UsernameState extends State<Username> {
                         Navigator.of(context).pop();
                         showDialog(
                             context: context,
-                            barrierDismissible: true,
+                            barrierDismissible: false,
                             useRootNavigator: false,
                             builder: (_) => AssetGiffyDialog(
                                   image: Image.asset(

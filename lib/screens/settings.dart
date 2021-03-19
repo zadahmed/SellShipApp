@@ -45,10 +45,12 @@ class Settings extends StatefulWidget {
   final bool confirmedemail;
   final bool confirmedphone;
   final String userid;
+  final String tier;
   Settings(
       {Key key,
       this.email,
       this.confirmedfb,
+      this.tier,
       this.confirmedemail,
       this.confirmedphone,
       this.userid})
@@ -592,36 +594,37 @@ class _SettingsState extends State<Settings> {
                     ),
                   )
                 : Container(),
-            email == 'test@test.com' || email == 'zadahmed@outlook.com'
-                ? Container(
-                    color: Colors.white,
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.business,
-                        color: Colors.deepOrange,
-                      ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        size: 16,
-                        color: Colors.deepOrange,
-                      ),
-                      title: Text(
-                        'Create a Store',
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateStoreName()),
-                        );
-                      },
-                    ),
-                  )
-                : Container(),
+            Container(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(
+                  Icons.business,
+                  color: Colors.deepOrange,
+                ),
+                trailing: Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: Colors.deepOrange,
+                ),
+                title: Text(
+                  'Create a Store',
+                  style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  //TODO Send them to subscription based on Tier
+
+                  //
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => CreateStoreName()),
+                  // );
+                },
+              ),
+            ),
             Divider(),
             userid != null
                 ? Container(

@@ -243,7 +243,7 @@ class _CreateStoreNameState extends State<CreateStoreName> {
                                   Navigator.pop(context);
                                   showDialog(
                                       context: context,
-                                      barrierDismissible: true,
+                                      barrierDismissible: false,
                                       useRootNavigator: false,
                                       builder: (_) => AssetGiffyDialog(
                                             image: Image.asset(

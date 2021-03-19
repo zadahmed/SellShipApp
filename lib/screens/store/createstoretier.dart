@@ -132,28 +132,12 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                   EdgeInsets.only(left: 36.0, bottom: 5, top: 20, right: 36),
               child: Center(
                 child: Text(
-                  "Set up your store, pay later",
+                  "Set up and grow your store with the right plan.",
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 30.0,
                       color: Color.fromRGBO(28, 45, 65, 1),
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Helvetica'),
-                ),
-              ),
-            ),
-          ),
-          FadeAnimation(
-            1,
-            Padding(
-              padding: EdgeInsets.only(left: 36.0, bottom: 10, right: 36),
-              child: Center(
-                child: Text(
-                  "Try SellShip for Free for 2 Months!",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: 30.0,
-                      color: Color.fromRGBO(28, 45, 65, 1),
                       fontFamily: 'Helvetica'),
                 ),
               ),
@@ -182,6 +166,119 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                 onTap: () {
                   setState(() {
                     selectedlayout = 1;
+                    businesstier = 'free';
+                  });
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: selectedlayout == 1
+                            ? Colors.deepOrange
+                            : Colors.blueGrey.shade100,
+                        width: selectedlayout == 1 ? 5 : 1,
+                      ),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Free",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(28, 45, 65, 1),
+                            fontFamily: 'Helvetica'),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "-1 Online Store",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: Color.fromRGBO(28, 45, 65, 1),
+                            fontFamily: 'Helvetica'),
+                      ),
+                      Text(
+                        "Include ecommerce store for web and app",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
+                            fontFamily: 'Helvetica'),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "- 10 Listings",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: Color.fromRGBO(28, 45, 65, 1),
+                            fontFamily: 'Helvetica'),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "- 24/7 Support",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: Color.fromRGBO(28, 45, 65, 1),
+                            fontFamily: 'Helvetica'),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "- Standard themes and templates",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 16.0,
+                            color: Color.fromRGBO(28, 45, 65, 1),
+                            fontFamily: 'Helvetica'),
+                      ),
+                      Text(
+                        "Choose from a variety of our themes and templates",
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
+                            fontFamily: 'Helvetica'),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "AED 0 Forever",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(28, 45, 65, 1),
+                            fontFamily: 'Helvetica'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          FadeAnimation(
+            1,
+            Padding(
+              padding: EdgeInsets.only(left: 36, top: 20, right: 36),
+              child: InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedlayout = 2;
                     businesstier = 'startup';
                   });
                 },
@@ -657,20 +754,6 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
           FadeAnimation(
             1,
             Padding(
-              padding: EdgeInsets.only(left: 36, top: 40, right: 36),
-              child: Text(
-                "Credit/Debit card will be charged the amount and refunded to begin the Trial.",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.grey,
-                    fontFamily: 'Helvetica'),
-              ),
-            ),
-          ),
-          FadeAnimation(
-            1,
-            Padding(
               padding: EdgeInsets.only(left: 36, top: 10, right: 36),
               child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -683,7 +766,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                           showDialog(
                               context: context,
                               useRootNavigator: true,
-                              barrierDismissible: true,
+                              barrierDismissible: false,
                               builder: (_) => new AlertDialog(
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(

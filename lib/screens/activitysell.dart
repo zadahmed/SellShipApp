@@ -864,6 +864,9 @@ class _ActivitySellState extends State<ActivitySell>
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       ChatPageViewSeller(
+                                                        itemsold:
+                                                            sellingItem[index]
+                                                                .sold,
                                                         weight:
                                                             sellingItem[index]
                                                                 .weight,

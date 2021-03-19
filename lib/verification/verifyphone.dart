@@ -85,7 +85,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                     },
                     focusNode: myFocusNodePhone,
                     autoValidateMode: AutovalidateMode.onUserInteraction,
-                    countries: ['GB', 'US', 'AE'],
+                    countries: ['AE'],
                     textFieldController: _phoneNumberController,
                     inputDecoration: InputDecoration(
                       border: UnderlineInputBorder(),

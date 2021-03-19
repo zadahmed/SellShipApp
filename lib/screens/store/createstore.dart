@@ -238,48 +238,6 @@ class _CreateStoreState extends State<CreateStore> {
                     )),
               ),
               FadeAnimation(
-                1,
-                Padding(
-                    padding: EdgeInsets.only(
-                      top: 20,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          height: 140,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          width: MediaQuery.of(context).size.width - 80,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(131, 146, 165, 0.1),
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: TextField(
-                            maxLines: 10,
-                            onChanged: (text) {},
-                            controller: usernamecontroller,
-                            cursorColor: Colors.black,
-                            decoration: InputDecoration(
-                              hintText: "Store Bio",
-                              hintStyle: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 16,
-                                color: Colors.blueGrey,
-                              ),
-                              icon: Icon(
-                                Icons.store,
-                                color: Colors.blueGrey,
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
-              FadeAnimation(
                   1,
                   Padding(
                       padding: EdgeInsets.only(
@@ -305,7 +263,7 @@ class _CreateStoreState extends State<CreateStore> {
                                 children: [
                                   Container(
                                     width:
-                                        MediaQuery.of(context).size.width / 3,
+                                        MediaQuery.of(context).size.width / 2.5,
                                     child: Text(
                                       'Delivery Pick-Up Address',
                                       style: TextStyle(
@@ -379,9 +337,7 @@ class _CreateStoreState extends State<CreateStore> {
                         InkWell(
                           onTap: () async {
                             if (widget.storetype == 'Secondhand Seller') {
-                              if (selectedaddress == null ||
-                                  _image == null ||
-                                  usernamecontroller.text.isEmpty) {
+                              if (selectedaddress == null || _image == null) {
                                 showInSnackBar(
                                     'Looks like something is missing. Please ensure all your store information has been entered');
                               } else {
@@ -394,7 +350,7 @@ class _CreateStoreState extends State<CreateStore> {
                                         storename: widget.storename,
                                         storelogo: _image,
                                         storecategory: widget.category,
-                                        storeabout: usernamecontroller.text,
+                                        storeabout: '',
                                         storeaddress: selectedaddress.address,
                                         storetype: widget.storetype,
                                         storecity: selectedaddress.city,
@@ -404,9 +360,7 @@ class _CreateStoreState extends State<CreateStore> {
                                     ));
                               }
                             } else {
-                              if (selectedaddress == null ||
-                                  _image == null ||
-                                  usernamecontroller.text.isEmpty) {
+                              if (selectedaddress == null || _image == null) {
                                 showInSnackBar(
                                     'Looks like something is missing. Please ensure all your store information has been entered');
                               } else {
@@ -420,7 +374,7 @@ class _CreateStoreState extends State<CreateStore> {
                                         storename: widget.storename,
                                         storelogo: _image,
                                         storecategory: widget.category,
-                                        storeabout: usernamecontroller.text,
+                                        storeabout: '',
                                         storeaddress: selectedaddress.address,
                                         storecity: selectedaddress.city,
                                         storedescription:

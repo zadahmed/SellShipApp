@@ -225,7 +225,7 @@ class _VerifyEmailSignUpState extends State<VerifyEmailSignUp> {
                         onTap: () {
                           showDialog(
                               context: context,
-                              barrierDismissible: true,
+                              barrierDismissible: false,
                               useRootNavigator: false,
                               builder: (BuildContext context) {
                                 return AlertDialog(

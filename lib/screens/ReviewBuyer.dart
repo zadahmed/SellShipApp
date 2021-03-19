@@ -212,7 +212,7 @@ class _ReviewBuyerState extends State<ReviewBuyer> {
                           final response = await http.get(url);
 
                           if (response.statusCode == 200) {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => RootScreen()),

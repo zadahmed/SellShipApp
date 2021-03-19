@@ -428,19 +428,22 @@ class _SearchState extends State<Search>
 
       DateTime dateuploade = DateTime.fromMillisecondsSinceEpoch(q['\$date']);
       var dateuploaded = timeago.format(dateuploade);
-      Item item = Item(
-        itemid: jsondata['_id']['\$oid'],
-        name: jsondata['name'],
-        date: dateuploaded,
-        likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
-        comments:
-            jsondata['comments'] == null ? 0 : jsondata['comments'].length,
-        image: jsondata['image'],
-        price: jsondata['price'].toString(),
-        category: jsondata['category'],
-        sold: jsondata['sold'] == null ? false : jsondata['sold'],
-      );
-      itemsgrid.add(item);
+
+      if (jsondata['name'].contains(textsearch.trim())) {
+        Item item = Item(
+          itemid: jsondata['_id']['\$oid'],
+          name: jsondata['name'],
+          date: dateuploaded,
+          likes: jsondata['likes'] == null ? 0 : jsondata['likes'],
+          comments:
+              jsondata['comments'] == null ? 0 : jsondata['comments'].length,
+          image: jsondata['image'],
+          price: jsondata['price'].toString(),
+          category: jsondata['category'],
+          sold: jsondata['sold'] == null ? false : jsondata['sold'],
+        );
+        itemsgrid.add(item);
+      }
     }
 
     setState(() {

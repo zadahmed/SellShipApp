@@ -499,7 +499,7 @@ class _CreateLayoutState extends State<CreateLayout> {
                           showDialog(
                               context: context,
                               useRootNavigator: true,
-                              barrierDismissible: true,
+                              barrierDismissible: false,
                               builder: (_) => new AlertDialog(
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.all(

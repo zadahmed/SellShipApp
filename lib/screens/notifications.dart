@@ -214,107 +214,199 @@ class _NotifcationPageState extends State<NotifcationPage>
                     child: ListView.builder(
                         itemCount: notifs.length,
                         itemBuilder: (BuildContext ctxt, int index) {
-                          return new Card(
-                              child: Padding(
-                                  padding: EdgeInsets.all(5),
-                                  child: ListTile(
-                                    onTap: () {
-                                      if (notifs[index].navroute ==
-                                          ('activity')) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => RootScreen(
-                                                    index: 3,
-                                                  )),
-                                        );
-                                      } else if (notifs[index].navroute ==
-                                          ('item')) {
-                                        Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                              builder: (context) => Details(
-                                                    itemid:
-                                                        notifs[index].itemid,
-                                                    image: notifs[index].image,
-                                                    name: 'My Item',
-                                                    sold: false,
-                                                    source: 'notif',
-                                                  )),
-                                        );
-                                      }
-                                    },
-                                    leading: Container(
-                                        height: 60,
-                                        width: 60,
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            child: notifs[index]
-                                                    .image
-                                                    .isNotEmpty
-                                                ? CachedNetworkImage(
-                                                    fadeInDuration: Duration(
-                                                        microseconds: 5),
-                                                    imageUrl:
-                                                        notifs[index].image,
-                                                    fit: BoxFit.cover,
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        SpinKitDoubleBounce(
-                                                            color: Colors
-                                                                .deepOrange),
-                                                    errorWidget:
-                                                        (context, url, error) =>
-                                                            Icon(Icons.error),
-                                                  )
-                                                : SpinKitDoubleBounce(
-                                                    color: Colors.deepOrange,
-                                                  ))),
-                                    trailing: Icon(
-                                      Icons.chevron_right,
-                                      size: 20,
-                                      color: Colors.blueGrey,
-                                    ),
-                                    title: notifs[index].unread == false
-                                        ? Text(
-                                            notifs[index].message,
-                                            style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              fontSize: 14,
+                          return Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 10),
+                              child: InkWell(
+                                  onTap: () {
+                                    print(notifs[index].navigationid);
+                                    if (notifs[index].navroute ==
+                                        ('activity')) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => RootScreen(
+                                                  index: 3,
+                                                )),
+                                      );
+                                    } else if (notifs[index].navroute ==
+                                        ('item')) {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => Details(
+                                                  itemid: notifs[index].itemid,
+                                                  image: notifs[index].image,
+                                                  name: 'My Item',
+                                                  sold: false,
+                                                  source: 'notif',
+                                                )),
+                                      );
+                                    }
+                                  },
+                                  child: Container(
+                                      height: 90,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 5),
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
                                             ),
-                                          )
-                                        : Text(
-                                            notifs[index].message,
-                                            style: TextStyle(
-                                                fontFamily: 'Helvetica',
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                    subtitle: Padding(
-                                        padding: EdgeInsets.only(top: 5),
-                                        child: notifs[index].unread == false
-                                            ? Text(
-                                                notifs[index].date,
-                                                style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 10,
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  height: 70,
+                                                  width: 70,
+                                                  child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      child: notifs[index]
+                                                              .image
+                                                              .isNotEmpty
+                                                          ? CachedNetworkImage(
+                                                              fadeInDuration:
+                                                                  Duration(
+                                                                      microseconds:
+                                                                          5),
+                                                              imageUrl:
+                                                                  notifs[index]
+                                                                      .image,
+                                                              fit: BoxFit.cover,
+                                                              placeholder: (context,
+                                                                      url) =>
+                                                                  SpinKitDoubleBounce(
+                                                                      color: Colors
+                                                                          .deepOrange),
+                                                              errorWidget: (context,
+                                                                      url,
+                                                                      error) =>
+                                                                  Icon(Icons
+                                                                      .error),
+                                                            )
+                                                          : SpinKitDoubleBounce(
+                                                              color: Colors
+                                                                  .deepOrange,
+                                                            )),
                                                 ),
-                                              )
-                                            : Text(
-                                                notifs[index].date,
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 10,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              )),
-                                  )));
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding: EdgeInsets.only(
+                                                          top: 5),
+                                                      child: Container(
+                                                        height: 50,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width /
+                                                            1.6,
+                                                        child: notifs[index]
+                                                                    .unread ==
+                                                                false
+                                                            ? Text(
+                                                                notifs[index]
+                                                                    .message,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 14,
+                                                                ),
+                                                              )
+                                                            : Text(
+                                                                notifs[index]
+                                                                    .message,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                bottom: 5),
+                                                        child: notifs[index]
+                                                                    .unread ==
+                                                                false
+                                                            ? Text(
+                                                                notifs[index]
+                                                                    .date,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontFamily:
+                                                                      'Helvetica',
+                                                                  fontSize: 10,
+                                                                ),
+                                                              )
+                                                            : Text(
+                                                                notifs[index]
+                                                                    .date,
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        10,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )),
+                                                  ],
+                                                ),
+                                              ]),
+                                          Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Icon(
+                                                  Icons.chevron_right,
+                                                  size: 20,
+                                                  color: Colors.blueGrey,
+                                                ),
+                                              ])
+                                        ],
+                                      ))));
                         }),
                     header: CustomHeader(
                         extent: 40.0,
                         enableHapticFeedback: true,
-                        triggerDistance: 50.0,
+                        triggerDistance: 150.0,
                         headerBuilder: (context,
                             loadState,
                             pulledExtent,

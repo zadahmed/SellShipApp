@@ -216,7 +216,7 @@ class _ReviewSellerState extends State<ReviewSeller> {
 
                           if (response.statusCode == 200) {
                             Navigator.pop(context);
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => RootScreen()),

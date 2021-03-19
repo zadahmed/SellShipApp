@@ -852,6 +852,8 @@ class _ActivityBuyState extends State<ActivityBuy>
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) => ChatPageView(
+                                                      itemsold: buyingItem[index]
+                                                          .sold,
                                                       itemid: buyingItem[index]
                                                           .itemid,
                                                       recipentid:

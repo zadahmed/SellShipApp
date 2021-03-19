@@ -635,31 +635,29 @@ class _CheckoutOfferState extends State<CheckoutOffer> {
                               var orderid =
                                   jsonmessage['result']['order']['id'];
 
-                              final orderresponse = await http.get(
-                                'https://api.sellship.co/api/noon/save/orderid/${messageid}/${orderid}/${userid}',
-                              );
+                              // final orderresponse = await http.get(
+                              //   'https://api.sellship.co/api/noon/save/orderid/${messageid}/${orderid}/${userid}',
+                              // );
 
-                              print(orderresponse.statusCode);
-                              print(orderresponse.body);
-
+                              // print(orderresponse.statusCode);
+                              // print(orderresponse.body);
+                              //
+                              // Navigator.of(context, rootNavigator: true).pop();
+                              //
+                              // if (orderresponse.statusCode == 200) {
                               Navigator.of(context, rootNavigator: true).pop();
 
-                              if (orderresponse.statusCode == 200) {
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop();
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PaymentWeb(
-                                            returnurl: returnurl,
-                                            url: url,
-                                            itemid: listitems[0].itemid,
-                                            messageid: messageid,
-                                          )),
-                                );
-                              }
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        PaymentWeb(
+                                          returnurl: returnurl,
+                                          url: url,
+                                          itemid: listitems[0].itemid,
+                                          messageid: messageid,
+                                        )),
+                              );
                             }
                           }
                         },

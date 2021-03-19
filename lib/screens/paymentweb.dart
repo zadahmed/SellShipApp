@@ -71,6 +71,7 @@ class PaymentWebState extends State<PaymentWeb> {
           },
           onLoadStart: (InAppWebViewController controller, String url) {},
           onLoadStop: (InAppWebViewController controller, String url) async {
+            print(url);
             if (url.substring(0, 20) == widget.returnurl.substring(0, 20)) {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.remove('cartitems');

@@ -2098,7 +2098,7 @@ class _DiscoverState extends State<Discover>
                       height: 285,
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
-                        itemCount: 20,
+                        itemCount: topitems.length > 20 ? 20 : topitems.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
                           return new Padding(
@@ -2361,51 +2361,53 @@ class _DiscoverState extends State<Discover>
                       ),
                     ))
                   : SliverToBoxAdapter(),
-              SliverToBoxAdapter(
-                child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 16, top: 10, bottom: 10, right: 36),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          enableFeedback: true,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => Below100()),
-                            );
-                          },
-                          child: Text(
-                            'Deals under 100',
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (context) => Below100()),
-                            );
-                          },
-                          enableFeedback: true,
-                          child: Text(
-                            'See All',
-                            style: TextStyle(
-                              fontFamily: 'Helvetica',
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-              ),
+              below100list.isNotEmpty
+                  ? SliverToBoxAdapter(
+                      child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 16, top: 10, bottom: 10, right: 36),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                enableFeedback: true,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => Below100()),
+                                  );
+                                },
+                                child: Text(
+                                  'Deals under 100',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 22.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (context) => Below100()),
+                                  );
+                                },
+                                enableFeedback: true,
+                                child: Text(
+                                  'See All',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+                    )
+                  : SliverToBoxAdapter(),
               below100list.isNotEmpty
                   ? SliverToBoxAdapter(
                       child: Container(

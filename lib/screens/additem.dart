@@ -2942,7 +2942,7 @@ class _AddItemState extends State<AddItem> {
                                                       content: Builder(
                                                         builder: (context) {
                                                           return Container(
-                                                              height: 100,
+                                                              height: 140,
                                                               child: Column(
                                                                 crossAxisAlignment:
                                                                     CrossAxisAlignment

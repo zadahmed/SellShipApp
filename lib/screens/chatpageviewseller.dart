@@ -38,6 +38,7 @@ class ChatPageViewSeller extends StatefulWidget {
   final String itemimage;
   final String weight;
   final String itemprice;
+  final bool itemsold;
   final String itemid;
   final int offerstage;
 
@@ -47,6 +48,7 @@ class ChatPageViewSeller extends StatefulWidget {
     this.itemname,
     this.itemimage,
     this.messageid,
+    this.itemsold,
     this.offerstage,
     this.weight,
     this.itemprice,
@@ -152,9 +154,11 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                 color: Colors.white, size: 16),
                             SizedBox(width: 5),
                             Text(
-                              'You Earn ' +
-                                  currency +
-                                  finalfees.toStringAsFixed(2),
+                              finalfees != null
+                                  ? 'You Earn ' +
+                                      currency +
+                                      finalfees.toStringAsFixed(2)
+                                  : '',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: Colors.white,
@@ -731,14 +735,17 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
         userid +
         '/' +
         skip.toString();
+
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
 
       offerstage = int.parse(jsonResponse['offerstage']);
-      itemprice = int.parse(jsonResponse['offer']);
 
+      var d = double.parse(jsonResponse['offer'].toString()).round();
+
+      itemprice = int.parse(d.toString());
       setState(() {
         offerstage = offerstage;
         itemprice = itemprice.toString();
@@ -1155,6 +1162,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                 Navigator.pop(context);
                                 Navigator.of(context, rootNavigator: true)
                                     .pop();
+                                getRemoteMessages();
                               } else {
                                 print(response.statusCode);
                                 Navigator.pop(context);
@@ -1387,7 +1395,7 @@ class _ChatPageViewSellerState extends State<ChatPageViewSeller> {
                                             builder: (context) => Details(
                                                   itemid: widget.itemid,
                                                   name: widget.itemname,
-                                                  sold: itemselling.sold,
+                                                  sold: widget.itemsold,
                                                   source: 'chat',
                                                   image: widget.itemimage,
                                                 )),

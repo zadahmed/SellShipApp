@@ -45,12 +45,14 @@ class ChatPageView extends StatefulWidget {
   final String itemprice;
   final String itemid;
   final int offerstage;
+  final bool itemsold;
 
   const ChatPageView({
     Key key,
     this.recipentname,
     this.itemname,
     this.itemimage,
+    this.itemsold,
     this.messageid,
     this.offerstage,
     this.itemprice,
@@ -725,8 +727,10 @@ class _ChatPageViewState extends State<ChatPageView> {
                                   itemprice == null
                                       ? 'Current Price ' +
                                           currency +
-                                          widget.itemprice
-                                      : 'Current Price ' + currency + itemprice,
+                                          widget.itemprice.toString()
+                                      : 'Current Price ' +
+                                          currency +
+                                          itemprice.toString(),
                                   style: TextStyle(
                                     fontFamily: 'Helvetica',
                                     color: Colors.deepOrange,
@@ -737,23 +741,6 @@ class _ChatPageViewState extends State<ChatPageView> {
                             ),
                           ],
                         )),
-                    allowedoffer.isNotEmpty
-                        ? Padding(
-                            padding:
-                                EdgeInsets.only(left: 15, bottom: 5, top: 5),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                allowedoffer,
-                                style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 14,
-                                    color: Colors.red,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                          )
-                        : Container(),
                     SizedBox(
                       height: 8.0,
                     ),
@@ -780,31 +767,40 @@ class _ChatPageViewState extends State<ChatPageView> {
                                     cursorColor: Color(0xFF979797),
                                     controller: offercontroller,
                                     onChanged: (text) {
-                                      if (text.isNotEmpty) {
-                                        var offer = double.parse(text);
-                                        var minoffer =
-                                            double.parse(itemprice) * 0.50;
-                                        minoffer =
-                                            double.parse(itemprice) - minoffer;
-
-                                        if (offer < minoffer) {
-                                          updateState(() {
-                                            allowedoffer =
-                                                'The offer is too low compared to the selling price';
-                                            disabled = true;
-                                          });
-                                        } else {
-                                          updateState(() {
-                                            allowedoffer = '';
-                                            disabled = false;
-                                          });
-                                        }
-                                      } else {
-                                        updateState(() {
-                                          allowedoffer = '';
-                                          disabled = true;
-                                        });
-                                      }
+                                      // if (text.isNotEmpty) {
+                                      //   var offer = double.parse(text);
+                                      //   var minoffer =
+                                      //       double.parse(itemprice) * 0.50;
+                                      //   minoffer =
+                                      //       double.parse(itemprice) - minoffer;
+                                      //
+                                      //   if (offer < minoffer) {
+                                      //     updateState(() {
+                                      //       allowedoffer =
+                                      //           'The offer is too low compared to the selling price';
+                                      //       disabled = true;
+                                      //     });
+                                      //     setState(() {
+                                      //       disabled = true;
+                                      //     });
+                                      //   } else {
+                                      //     updateState(() {
+                                      //       allowedoffer = '';
+                                      //       disabled = false;
+                                      //     });
+                                      //     setState(() {
+                                      //       disabled = false;
+                                      //     });
+                                      //   }
+                                      // } else {
+                                      //   updateState(() {
+                                      //     allowedoffer = '';
+                                      //     disabled = true;
+                                      //   });
+                                      //   setState(() {
+                                      //     disabled = true;
+                                      //   });
+                                      // }
                                     },
                                     keyboardType:
                                         TextInputType.numberWithOptions(),
@@ -843,76 +839,75 @@ class _ChatPageViewState extends State<ChatPageView> {
                           left: 15, bottom: 5, top: 10, right: 15),
                       child: InkWell(
                         onTap: () async {
-                          if (disabled == false) {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              useRootNavigator: false,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height: 100,
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: SpinKitDoubleBounce(
+                                          color: Colors.deepOrangeAccent)),
+                                );
+                              });
+                          var recieverid = widget.recipentid;
+
+                          if (recieverid != userid) {
+                            var itemurl =
+                                'https://api.sellship.co/api/createoffer/' +
+                                    widget.senderid +
+                                    '/' +
+                                    recieverid +
+                                    '/' +
+                                    widget.itemid +
+                                    '/' +
+                                    offercontroller.text.trim();
+
+                            final response = await http.get(itemurl);
+
+                            if (response.statusCode == 200) {
+                              setState(() {
+                                offerstage = 0;
+                                itemprice = offercontroller.text.trim();
+                              });
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            } else {
+                              print(response.statusCode);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            }
+                          } else {
                             showDialog(
                                 context: context,
-                                barrierDismissible: false,
                                 useRootNavigator: false,
-                                builder: (BuildContext context) {
-                                  return Container(
-                                    height: 100,
-                                    child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: SpinKitDoubleBounce(
-                                            color: Colors.deepOrangeAccent)),
-                                  );
-                                });
-                            var recieverid = widget.recipentid;
-                            if (recieverid != userid) {
-                              var itemurl =
-                                  'https://api.sellship.co/api/createoffer/' +
-                                      widget.senderid +
-                                      '/' +
-                                      recieverid +
-                                      '/' +
-                                      widget.itemid +
-                                      '/' +
-                                      offercontroller.text.trim();
-
-                              final response = await http.get(itemurl);
-
-                              if (response.statusCode == 200) {
-                                setState(() {
-                                  offerstage = 0;
-                                  itemprice = offercontroller.text.trim();
-                                });
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              } else {
-                                print(response.statusCode);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              }
-                            } else {
-                              showDialog(
-                                  context: context,
-                                  useRootNavigator: false,
-                                  builder: (_) => AssetGiffyDialog(
-                                        image: Image.asset(
-                                          'assets/oops.gif',
-                                          fit: BoxFit.cover,
-                                        ),
-                                        title: Text(
-                                          'Oops!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 22.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        description: Text(
-                                          'You can\'t send an offer to yourself!',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(),
-                                        ),
-                                        onlyOkButton: true,
-                                        entryAnimation: EntryAnimation.DEFAULT,
-                                        onOkButtonPressed: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                      ));
-                            }
+                                builder: (_) => AssetGiffyDialog(
+                                      image: Image.asset(
+                                        'assets/oops.gif',
+                                        fit: BoxFit.cover,
+                                      ),
+                                      title: Text(
+                                        'Oops!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      description: Text(
+                                        'You can\'t send an offer to yourself!',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(),
+                                      ),
+                                      onlyOkButton: true,
+                                      entryAnimation: EntryAnimation.DEFAULT,
+                                      onOkButtonPressed: () {
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      },
+                                    ));
                           }
                         },
                         child: Container(
@@ -994,14 +989,16 @@ class _ChatPageViewState extends State<ChatPageView> {
         userid +
         '/' +
         skip.toString();
+
     final response = await http.get(url);
 
-    print(response.body);
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
 
       offerstage = int.parse(jsonResponse['offerstage']);
-      itemprice = int.parse(jsonResponse['offer']);
+      var d = double.parse(jsonResponse['offer'].toString()).round();
+
+      itemprice = int.parse(d.toString());
 
       setState(() {
         offerstage = offerstage;
@@ -1235,6 +1232,7 @@ class _ChatPageViewState extends State<ChatPageView> {
           widget.recipentid;
       final response = await http.get(url);
       if (response.statusCode == 200) {
+        getRemoteMessages();
         setState(() {
           offerstage = 2;
         });
@@ -1361,7 +1359,7 @@ class _ChatPageViewState extends State<ChatPageView> {
                                             builder: (context) => Details(
                                                   itemid: widget.itemid,
                                                   name: widget.itemname,
-                                                  sold: widget.item.sold,
+                                                  sold: widget.itemsold,
                                                   source: 'chat',
                                                   image: widget.itemimage,
                                                 )),
