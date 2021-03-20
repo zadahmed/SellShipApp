@@ -5,6 +5,8 @@ class Withdrawals {
   final String date;
   final double amount;
   final bool completed;
+  final String iban;
 
-  Withdrawals({this.withdrawalid, this.date, this.amount, this.completed});
+  Withdrawals(
+      {this.withdrawalid, this.date, this.iban, this.amount, this.completed});
 }

@@ -4,6 +4,7 @@ import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/withdrawals.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/useritems.dart';
+import 'package:SellShip/screens/withdrawal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -49,6 +50,7 @@ class _BalanceState extends State<Balance> {
     final response = await http.get(url);
 
     var jsonbody = json.decode(response.body);
+    print(jsonbody);
 
     for (int i = 0; i < jsonbody.length; i++) {
       var date = jsonbody[i]['date']['\$date'];
@@ -56,10 +58,12 @@ class _BalanceState extends State<Balance> {
       final f = new DateFormat('yyyy-MM-dd hh:mm');
       var s = f.format(dates);
 
+      print(s);
       Withdrawals withd = Withdrawals(
-        withdrawalid: jsonbody[i]['_id']['\$oid'],
+        withdrawalid: jsonbody[i]['withdrawalsid']['\$oid'],
         date: s.toString(),
-        amount: jsonbody[i]['withdrawrequested'],
+        iban: jsonbody[i]['withdrawaliban'],
+        amount: double.parse(jsonbody[i]['withdrawalamount'].toString()),
         completed: jsonbody[i]['completed'],
       );
       withdrawllist.add(withd);
@@ -134,26 +138,12 @@ class _BalanceState extends State<Balance> {
     ));
   }
 
-  withdraw() async {
-    userid = await storage.read(key: 'userid');
-    var url = 'https://api.sellship.co/api/withdraw/' + userid;
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      showInSnackBar('Withdraw Requested');
-    } else {
-      print(response.statusCode);
-    }
-  }
-
   TextEditingController paypalcontroller = TextEditingController();
   bool loading;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromRGBO(242, 244, 248, 1),
         key: _scaffoldKey,
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
@@ -193,9 +183,10 @@ class _BalanceState extends State<Balance> {
                               Text(
                                 currency + ' ' + balance.toStringAsFixed(2),
                                 style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepOrange,
+                                    fontSize: 30.0,
+                                    fontFamily: "Helvetica"),
                               ),
                               SizedBox(
                                 height: 10,
@@ -255,10 +246,20 @@ class _BalanceState extends State<Balance> {
                       height: 10,
                     ),
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         if (double.parse(balance.toString()) != 0.00 &&
                             double.parse(balance.toString()) > 50) {
-                          withdraw();
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    Withdraw(userid: userid, balance: balance)),
+                          );
+                          if (result == null) {
+                            getBalance();
+                            getDetails();
+                          }
+                          // withdraw();
                         } else {
                           showInSnackBar(
                               'You need a minimum balance of AED 50 to be able to request a withdrawal');
@@ -306,37 +307,47 @@ class _BalanceState extends State<Balance> {
                     SizedBox(
                       height: 10,
                     ),
-                    Container(
-                      height: 300,
-                      child: ListView.builder(
-                        itemCount: withdrawllist.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              '${withdrawllist[index].withdrawalid}',
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 16,
-                              ),
-                            ),
-                            trailing: Text(
-                              currency +
-                                  ' ' +
-                                  withdrawllist[index]
-                                      .amount
-                                      .toStringAsFixed(2),
-                              style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              withdrawllist[index].date,
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 16,
-                              ),
-                            ),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            left: 15, bottom: 5, top: 10, right: 15),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 2,
+                          width: MediaQuery.of(context).size.width,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: ListView.builder(
+                            itemCount: withdrawllist.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(
+                                  '#ID: ${withdrawllist[index].withdrawalid}',
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                trailing: Text(
+                                  currency +
+                                      ' ' +
+                                      withdrawllist[index]
+                                          .amount
+                                          .toStringAsFixed(2),
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 18,
+                                      color: Colors.deepOrangeAccent,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  withdrawllist[index].date,
+                                  style: TextStyle(
+                                    fontFamily: 'Helvetica',
+                                    fontSize: 12,
+                                  ),
+                                ),
 //                              leading: withdrawllist[index].completed == true
 //                                  ? Text(
 //                                      'Completed',
@@ -352,10 +363,10 @@ class _BalanceState extends State<Balance> {
 //                                        fontSize: 16,
 //                                      ),
 //                                    )
-                          );
-                        },
-                      ),
-                    )
+                              );
+                            },
+                          ),
+                        ))
                   ]))
             : Container(
                 child: Center(

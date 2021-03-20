@@ -177,35 +177,6 @@ class _SettingsState extends State<Settings> {
                     color: Colors.white,
                     child: ListTile(
                       leading: Icon(
-                        Icons.attach_money,
-                        color: Colors.deepOrange,
-                      ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        size: 16,
-                        color: Colors.deepOrange,
-                      ),
-                      title: Text(
-                        'Balance',
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Balance()),
-                        );
-                      },
-                    ),
-                  )
-                : Container(),
-            userid != null
-                ? Container(
-                    color: Colors.white,
-                    child: ListTile(
-                      leading: Icon(
                         Icons.edit,
                         color: Colors.deepOrange,
                       ),
@@ -295,6 +266,66 @@ class _SettingsState extends State<Settings> {
                     ),
                   )
                 : Container(),
+            userid != null
+                ? Container(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.attach_money,
+                        color: Colors.deepOrange,
+                      ),
+                      trailing: Icon(
+                        Icons.chevron_right,
+                        size: 16,
+                        color: Colors.deepOrange,
+                      ),
+                      title: Text(
+                        'Balance',
+                        style: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Balance()),
+                        );
+                      },
+                    ),
+                  )
+                : Container(),
+            Container(
+              color: Colors.white,
+              child: ListTile(
+                leading: Icon(
+                  Icons.business,
+                  color: Colors.deepOrange,
+                ),
+                trailing: Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: Colors.deepOrange,
+                ),
+                title: Text(
+                  'Create a Store',
+                  style: TextStyle(
+                    fontFamily: 'Helvetica',
+                    fontSize: 16.0,
+                  ),
+                ),
+                onTap: () {
+                  //TODO Send them to subscription based on Tier
+
+                  //
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) => CreateStoreName()),
+                  // );
+                },
+              ),
+            ),
             userid != null
                 ? Container(
                     color: Colors.white,
@@ -561,67 +592,6 @@ class _SettingsState extends State<Settings> {
                     context,
                     MaterialPageRoute(builder: (context) => PrivacyPolicy()),
                   );
-                },
-              ),
-            ),
-            email == 'test@test.com' || email == 'zadahmed@outlook.com'
-                ? Container(
-                    color: Colors.white,
-                    child: ListTile(
-                      leading: Icon(
-                        Feather.flag,
-                        color: Colors.deepOrange,
-                      ),
-                      trailing: Icon(
-                        Icons.chevron_right,
-                        size: 16,
-                        color: Colors.deepOrange,
-                      ),
-                      title: Text(
-                        'Change Country',
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 16.0,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChangeCountry()),
-                        );
-                      },
-                    ),
-                  )
-                : Container(),
-            Container(
-              color: Colors.white,
-              child: ListTile(
-                leading: Icon(
-                  Icons.business,
-                  color: Colors.deepOrange,
-                ),
-                trailing: Icon(
-                  Icons.chevron_right,
-                  size: 16,
-                  color: Colors.deepOrange,
-                ),
-                title: Text(
-                  'Create a Store',
-                  style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16.0,
-                  ),
-                ),
-                onTap: () {
-                  //TODO Send them to subscription based on Tier
-
-                  //
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => CreateStoreName()),
-                  // );
                 },
               ),
             ),
