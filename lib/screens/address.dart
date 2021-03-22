@@ -1119,9 +1119,7 @@ class _AddressState extends State<Address> {
                                                           });
                                                         }
                                                       },
-                                                      autoValidateMode:
-                                                          AutovalidateMode
-                                                              .onUserInteraction,
+                                                      autoValidate: true,
                                                       countries: ['AE'],
                                                       textFieldController:
                                                           phonenumbercontroller,

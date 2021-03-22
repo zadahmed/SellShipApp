@@ -1961,7 +1961,7 @@ class _DetailsState extends State<Details> {
                                                                   .deepOrangeAccent,
                                                               position:
                                                                   BadgePosition
-                                                                      .bottomEnd(),
+                                                                      .bottomRight(),
                                                               animationType:
                                                                   BadgeAnimationType
                                                                       .slide,
@@ -2004,7 +2004,7 @@ class _DetailsState extends State<Details> {
                                                                   Colors.grey,
                                                               position:
                                                                   BadgePosition
-                                                                      .bottomEnd(),
+                                                                      .bottomRight(),
                                                               animationType:
                                                                   BadgeAnimationType
                                                                       .slide,
@@ -2048,7 +2048,7 @@ class _DetailsState extends State<Details> {
                                                                   .deepOrangeAccent,
                                                               position:
                                                                   BadgePosition
-                                                                      .bottomEnd(),
+                                                                      .bottomRight(),
                                                               animationType:
                                                                   BadgeAnimationType
                                                                       .slide,
@@ -2091,7 +2091,7 @@ class _DetailsState extends State<Details> {
                                                                   Colors.grey,
                                                               position:
                                                                   BadgePosition
-                                                                      .bottomEnd(),
+                                                                      .bottomRight(),
                                                               animationType:
                                                                   BadgeAnimationType
                                                                       .slide,
@@ -2134,7 +2134,7 @@ class _DetailsState extends State<Details> {
                                                                   .deepOrange,
                                                               position:
                                                                   BadgePosition
-                                                                      .bottomEnd(),
+                                                                      .bottomRight(),
                                                               animationType:
                                                                   BadgeAnimationType
                                                                       .slide,
@@ -2179,7 +2179,7 @@ class _DetailsState extends State<Details> {
                                                                   Colors.grey,
                                                               position:
                                                                   BadgePosition
-                                                                      .bottomEnd(),
+                                                                      .bottomRight(),
                                                               animationType:
                                                                   BadgeAnimationType
                                                                       .slide,

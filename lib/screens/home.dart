@@ -1020,7 +1020,7 @@ class _HomeScreenState extends State<HomeScreen>
               padding: EdgeInsets.only(left: 5),
               child: Badge(
                 showBadge: notbadge,
-                position: BadgePosition.topEnd(top: 2, end: -4),
+                position: BadgePosition.topRight(top: 2, right: -4),
                 animationType: BadgeAnimationType.slide,
                 badgeContent: Text(
                   notcount.toString(),

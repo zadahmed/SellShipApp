@@ -112,7 +112,7 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                           }
                         },
                         focusNode: myFocusNodePhone,
-                        autoValidateMode: AutovalidateMode.onUserInteraction,
+                        autoValidate: true,
                         countries: ['AE'],
                         textFieldController: _phoneNumberController,
                         inputDecoration: InputDecoration(

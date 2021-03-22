@@ -109,8 +109,7 @@ class _VerifyPhoneSignUpState extends State<VerifyPhoneSignUp> {
                                 },
                                 focusNode: myFocusNodePhone,
                                 countries: ['AE'],
-                                autoValidateMode:
-                                    AutovalidateMode.onUserInteraction,
+                                autoValidate: true,
                                 textFieldController: _phoneNumberController,
                                 inputDecoration: InputDecoration(
                                   border: UnderlineInputBorder(),

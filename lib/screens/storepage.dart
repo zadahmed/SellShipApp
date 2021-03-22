@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:SellShip/controllers/expandabletext.dart';
 import 'package:SellShip/models/Items.dart';
 import 'package:SellShip/models/stores.dart';
+import 'package:SellShip/screens/store/editstore.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
@@ -397,7 +398,153 @@ class _StoreState extends State<Store> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[]));
+                      children: <Widget>[
+                        Padding(
+                            padding: EdgeInsets.only(
+                                left: 15, bottom: 5, top: 20, right: 15),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Store Settings',
+                                      style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ])),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditStore(storeid: widget.storeid)),
+                            );
+                          },
+                          title: Text('Edit Store',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                              )),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
+                        ),
+                        ListTile(
+                          onTap: () async {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                useRootNavigator: false,
+                                builder: (_) => new AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0))),
+                                      content: Builder(
+                                        builder: (context) {
+                                          return Container(
+                                              height: 100,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    'Sharing Store..',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 15,
+                                                  ),
+                                                  Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      child:
+                                                          SpinKitDoubleBounce(
+                                                        color:
+                                                            Colors.deepOrange,
+                                                      )),
+                                                ],
+                                              ));
+                                        },
+                                      ),
+                                    ));
+                            BranchUniversalObject buo = BranchUniversalObject(
+                                canonicalIdentifier: widget.storeid,
+                                title: widget.storename,
+                                imageUrl: mystore.storelogo,
+                                contentDescription: mystore.storebio,
+                                contentMetadata: BranchContentMetaData()
+                                  ..addCustomMetadata(
+                                    'storename',
+                                    widget.storename,
+                                  )
+                                  ..addCustomMetadata(
+                                    'source',
+                                    'store',
+                                  )
+                                  ..addCustomMetadata(
+                                      'storeimage', mystore.storelogo)
+                                  ..addCustomMetadata(
+                                      'storeid', widget.storeid),
+                                publiclyIndex: true,
+                                locallyIndex: true,
+                                expirationDateInMilliSec: DateTime.now()
+                                    .add(Duration(days: 365))
+                                    .millisecondsSinceEpoch);
+
+                            FlutterBranchSdk.registerView(buo: buo);
+
+                            BranchLinkProperties lp = BranchLinkProperties(
+                              channel: 'facebook',
+                              feature: 'sharing',
+                              stage: 'new share',
+                            );
+                            lp.addControlParam('\$uri_redirect_mode', '1');
+                            BranchResponse response =
+                                await FlutterBranchSdk.getShortUrl(
+                                    buo: buo, linkProperties: lp);
+                            if (response.success) {
+                              Navigator.pop(context);
+                              final RenderBox box = context.findRenderObject();
+                              Share.share(
+                                  'Check out My Store on SellShip: \n' +
+                                      response.result,
+                                  subject: widget.storename,
+                                  sharePositionOrigin:
+                                      box.localToGlobal(Offset.zero) &
+                                          box.size);
+                              print('${response.result}');
+                            }
+                          },
+                          title: Text('Share',
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                fontSize: 18,
+                              )),
+                          trailing: Icon(
+                            Icons.chevron_right,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 40,
+                        ),
+                      ]));
             }));
   }
 
@@ -480,47 +627,6 @@ class _StoreState extends State<Store> {
             padding: EdgeInsets.only(right: 10, bottom: 5),
             child: InkWell(
                 onTap: () async {
-                  // BranchUniversalObject buo = BranchUniversalObject(
-                  //     canonicalIdentifier: widget.storeid,
-                  //     title: widget.storename,
-                  //     imageUrl: mystore.storelogo,
-                  //     contentDescription: mystore.storebio,
-                  //     contentMetadata: BranchContentMetaData()
-                  //       ..addCustomMetadata(
-                  //         'storename',
-                  //         widget.storename,
-                  //       )
-                  //       ..addCustomMetadata(
-                  //         'source',
-                  //         'store',
-                  //       )
-                  //       ..addCustomMetadata('storeimage', mystore.storelogo)
-                  //       ..addCustomMetadata('storeid', widget.storeid),
-                  //     publiclyIndex: true,
-                  //     locallyIndex: true,
-                  //     expirationDateInMilliSec: DateTime.now()
-                  //         .add(Duration(days: 365))
-                  //         .millisecondsSinceEpoch);
-                  //
-                  // FlutterBranchSdk.registerView(buo: buo);
-                  //
-                  // BranchLinkProperties lp = BranchLinkProperties(
-                  //   channel: 'facebook',
-                  //   feature: 'sharing',
-                  //   stage: 'new share',
-                  // );
-                  // lp.addControlParam('\$uri_redirect_mode', '1');
-                  // BranchResponse response = await FlutterBranchSdk.getShortUrl(
-                  //     buo: buo, linkProperties: lp);
-                  // if (response.success) {
-                  //   final RenderBox box = context.findRenderObject();
-                  //   Share.share(
-                  //       'Check out My Store on SellShip: \n' + response.result,
-                  //       subject: widget.storename,
-                  //       sharePositionOrigin:
-                  //           box.localToGlobal(Offset.zero) & box.size);
-                  //   print('${response.result}');
-                  // }
                   showMe(context);
                 },
                 child: Icon(
