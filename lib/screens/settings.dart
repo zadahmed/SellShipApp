@@ -318,11 +318,10 @@ class _SettingsState extends State<Settings> {
                   //TODO Send them to subscription based on Tier
 
                   //
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => CreateStoreName()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateStoreName()),
+                  );
                 },
               ),
             ),

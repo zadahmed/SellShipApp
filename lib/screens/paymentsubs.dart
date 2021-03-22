@@ -81,6 +81,74 @@ class PaymentsubsState extends State<Paymentsubs> {
                     builder: (context) =>
                         StoreCompletion(storeid: widget.storeid)),
               );
+            } else if (url.substring(0, 20) ==
+                'https://api.sellship.co/api/payment/failed/') {
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  useRootNavigator: false,
+                  builder: (_) => new AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
+                        content: Builder(
+                          builder: (context) {
+                            return Container(
+                                height: 150,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Oops. Looks like the payment did not go through. Please try again.',
+                                      style: TextStyle(
+                                        fontFamily: 'Helvetica',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    InkWell(
+                                      child: Container(
+                                        height: 60,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 5),
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                80,
+                                        decoration: BoxDecoration(
+                                          color: Color.fromRGBO(255, 115, 0, 1),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                            child: Text(
+                                          'Close',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                        )),
+                                      ),
+                                      onTap: () {
+                                        Navigator.pop(
+                                          context,
+                                        );
+                                        Navigator.pop(
+                                          context,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ));
+                          },
+                        ),
+                      ));
             }
           },
           androidOnPermissionRequest: (InAppWebViewController controller,

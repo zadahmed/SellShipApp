@@ -166,7 +166,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                 onTap: () {
                   setState(() {
                     selectedlayout = 1;
-                    businesstier = 'free';
+                    businesstier = 'Free';
                   });
                 },
                 child: Container(
@@ -185,7 +185,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Free",
+                        "Start-Up",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 22.0,
@@ -279,158 +279,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                 onTap: () {
                   setState(() {
                     selectedlayout = 2;
-                    businesstier = 'startup';
-                  });
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: selectedlayout == 1
-                            ? Colors.deepOrange
-                            : Colors.blueGrey.shade100,
-                        width: selectedlayout == 1 ? 5 : 1,
-                      ),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Start-Up",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "-1 Online Store",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      Text(
-                        "Include ecommerce store for web and app",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
-                            fontFamily: 'Helvetica'),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "- Unlimited Listings",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "- 24/7 Support",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "- Standard themes and templates",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      Text(
-                        "Choose from a variety of our themes and templates",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
-                            fontFamily: 'Helvetica'),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "- Listing Analytics",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      Text(
-                        "Get upto date listing analytics of customers viewing your product.",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
-                            fontFamily: 'Helvetica'),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "- Access to Annual SellShip Parties and Conferences",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 16.0,
-                            color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                      Text(
-                        "- Network and grow with fellow store owners.",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
-                            fontFamily: 'Helvetica'),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "AED 115 per month after trial",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromRGBO(28, 45, 65, 1),
-                            fontFamily: 'Helvetica'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          FadeAnimation(
-            1,
-            Padding(
-              padding: EdgeInsets.only(left: 36, top: 20, right: 36),
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    selectedlayout = 2;
-                    businesstier = 'grow';
+                    businesstier = 'Grow';
                   });
                 },
                 child: Container(
@@ -461,7 +310,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "- 5 Online Stores",
+                        "- 3 Online Stores",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             fontSize: 16.0,
@@ -480,7 +329,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "- Unlimited Listings",
+                        "- 100 Listings",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             fontSize: 16.0,
@@ -559,7 +408,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "AED 320 per month after trial",
+                        "AED 320 per month",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 22.0,
@@ -581,7 +430,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                 onTap: () {
                   setState(() {
                     selectedlayout = 3;
-                    businesstier = 'enterprise';
+                    businesstier = 'Enterprise';
                   });
                 },
                 child: Container(
@@ -737,7 +586,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         height: 10,
                       ),
                       Text(
-                        "AED 1250 per month after trial",
+                        "AED 1250 per month",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 22.0,
@@ -834,7 +683,17 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                           if (response.statusCode == 200) {
                             var amount;
                             if (selectedlayout == 1) {
-                              amount = 115;
+                              await storage.write(
+                                  key: 'storeid', value: storeid);
+                              Navigator.of(context, rootNavigator: false).pop();
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          CreateStorePage(
+                                            storeid: storeid,
+                                          )),
+                                  ModalRoute.withName('/'));
                             } else if (selectedlayout == 2) {
                               amount = 320;
                             } else if (selectedlayout == 3) {
@@ -855,17 +714,17 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                                 "tokenizeCC": true,
                                 "paymentAction": "Sale",
                                 "returnUrl":
-                                    'https://api.sellship.co/api/payment/trial/subscription/${storeid}/${businesstier}/${amount.toString()}'
+                                    'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}'
                               },
                               "subscription": {
                                 "type": "Recurring",
                                 "amount": amount.toString(),
-                                "name": "SellShip Purchase",
+                                "name": businesstier,
                               }
                             };
 
                             var returnurl =
-                                'https://api.sellship.co/api/payment/trial/subscription/${storeid}/${businesstier}/${amount.toString()}';
+                                'https://api.sellship.co/api/payment/subscription/${storeid}/${businesstier}/${amount.toString()}';
                             var noonurl =
                                 "https://api-stg.noonpayments.com/payment/v1/order";
 

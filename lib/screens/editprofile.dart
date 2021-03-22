@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:SellShip/verification/verifyphone.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 
 class EditProfile extends StatefulWidget {
@@ -63,73 +66,71 @@ class EditProfileState extends State<EditProfile>
   TextEditingController emailnamecontr = TextEditingController();
   TextEditingController phonenamecontr = TextEditingController();
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  void showInSnackBar(String value) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    _scaffoldKey.currentState?.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+      content: new Text(
+        value,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontFamily: 'Helvetica',
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: Colors.deepOrange,
+      duration: Duration(seconds: 3),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.white,
+          elevation: 0,
           title: Text(
             'Edit Profile',
+            textAlign: TextAlign.center,
             style: TextStyle(
-                fontFamily: 'Helvetica', fontSize: 20, color: Colors.black),
+                fontFamily: 'Helvetica',
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold),
           ),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.black,
-              size: 22.0,
+              size: 18.0,
             ),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
         ),
-        body: new Container(
-          color: Colors.white,
-          child: new ListView(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  new Container(
-                    color: Color(0xffFFFFFF),
-                    child: Padding(
+        body: ListView(children: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(left: 15, bottom: 5, top: 10, right: 15),
+              child: Container(
+                  height: MediaQuery.of(context).size.height / 1.5,
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                  child: Column(children: <Widget>[
+                    Padding(
                       padding: EdgeInsets.only(bottom: 25.0),
                       child: new Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 25.0),
-                              child: new Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      new Text(
-                                        'Personal Information',
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      _status
-                                          ? _getEditIcon()
-                                          : new Container(),
-                                    ],
-                                  )
-                                ],
-                              )),
                           Padding(
                               padding: EdgeInsets.only(
                                   left: 25.0, right: 25.0, top: 25.0),
@@ -162,9 +163,7 @@ class EditProfileState extends State<EditProfile>
                                       decoration: const InputDecoration(
                                         hintText: "Enter Your First Name",
                                       ),
-                                      enabled: !_status,
                                       controller: firstnamecontr,
-                                      autofocus: !_status,
                                     ),
                                   ),
                                 ],
@@ -201,9 +200,7 @@ class EditProfileState extends State<EditProfile>
                                       decoration: const InputDecoration(
                                         hintText: "Enter Your Last Name",
                                       ),
-                                      enabled: !_status,
                                       controller: lastnamecontr,
-                                      autofocus: !_status,
                                     ),
                                   ),
                                 ],
@@ -239,7 +236,6 @@ class EditProfileState extends State<EditProfile>
                                     child: new TextField(
                                       decoration: const InputDecoration(
                                           hintText: "Enter Email ID"),
-                                      enabled: !_status,
                                       controller: emailnamecontr,
                                     ),
                                   ),
@@ -274,24 +270,132 @@ class EditProfileState extends State<EditProfile>
                                 children: <Widget>[
                                   new Flexible(
                                     child: new TextField(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    VerifyPhone(
+                                                      userid: userid,
+                                                    )));
+                                      },
                                       decoration: const InputDecoration(
                                           hintText: "Enter Mobile Number"),
-                                      enabled: !_status,
                                       controller: phonenamecontr,
                                     ),
                                   ),
                                 ],
                               )),
-                          !_status ? _getActionButtons() : new Container(),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left: 25.0, right: 25.0, top: 45.0),
+                            child: new Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  child: InkWell(
+                                    child: Container(
+                                      height: 50,
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 5),
+                                      width: MediaQuery.of(context).size.width -
+                                          250,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(255, 115, 0, 1),
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                      child: Center(
+                                          child: Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          fontFamily: 'Helvetica',
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                      )),
+                                    ),
+                                    onTap: () async {
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          useRootNavigator: false,
+                                          builder: (_) => new AlertDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0))),
+                                                content: Builder(
+                                                  builder: (context) {
+                                                    return Container(
+                                                        height: 100,
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              'Updating Profile..',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 15,
+                                                            ),
+                                                            Container(
+                                                                height: 50,
+                                                                width: 50,
+                                                                child:
+                                                                    SpinKitDoubleBounce(
+                                                                  color: Colors
+                                                                      .deepOrange,
+                                                                )),
+                                                          ],
+                                                        ));
+                                                  },
+                                                ),
+                                              ));
+                                      var url =
+                                          'https://api.sellship.co/api/updateuser/' +
+                                              userid;
+
+                                      FormData formData;
+                                      Dio dio = new Dio();
+                                      formData = FormData.fromMap({
+                                        'first_name': firstnamecontr.text,
+                                        'last_name': lastnamecontr.text,
+                                        'email': emailnamecontr.text,
+                                      });
+                                      var response =
+                                          await dio.post(url, data: formData);
+
+                                      if (response.statusCode == 200) {
+                                        Navigator.pop(context);
+                                        showInSnackBar('Profile Updated');
+                                        getProfileData();
+                                      } else {
+                                        print(response.statusCode);
+                                      }
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ));
+                    )
+                  ])))
+        ]));
   }
 
   @override
@@ -299,119 +403,5 @@ class EditProfileState extends State<EditProfile>
     // Clean up the controller when the Widget is disposed
     myFocusNode.dispose();
     super.dispose();
-  }
-
-  Widget _getActionButtons() {
-    return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
-      child: new Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Container(
-                  child: new RaisedButton(
-                child: new Text(
-                  "Save",
-                  style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16,
-                  ),
-                ),
-                textColor: Colors.white,
-                color: Colors.green,
-                onPressed: () async {
-                  var url = 'https://api.sellship.co/api/updateuser/' + userid;
-
-                  Map<String, String> body = {
-                    'first_name': firstnamecontr.text,
-                    'last_name': lastnamecontr.text,
-                    'email': emailnamecontr.text,
-                    'phonenumber': phonenamecontr.text,
-                  };
-
-                  final response = await http.post(url, body: body);
-
-                  if (response.statusCode == 200) {
-                    var jsondata = json.decode(response.body);
-                    print(jsondata);
-                    setState(() {
-                      _status = true;
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                    });
-                  } else {
-                    print(response.statusCode);
-                  }
-                },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
-              )),
-            ),
-            flex: 2,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Container(
-                  child: new RaisedButton(
-                child: new Text(
-                  "Cancel",
-                  style: TextStyle(
-                    fontFamily: 'Helvetica',
-                    fontSize: 16,
-                  ),
-                ),
-                textColor: Colors.white,
-                color: Colors.red,
-                onPressed: () {
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  });
-                },
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(20.0)),
-              )),
-            ),
-            flex: 2,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _getEditIcon() {
-    return new Row(
-      children: <Widget>[
-        Text(
-          'Edit',
-          style: TextStyle(
-              fontFamily: 'Helvetica',
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        GestureDetector(
-          child: new CircleAvatar(
-            backgroundColor: Colors.red,
-            radius: 14.0,
-            child: new Icon(
-              Icons.edit,
-              color: Colors.white,
-              size: 16.0,
-            ),
-          ),
-          onTap: () {
-            setState(() {
-              _status = false;
-            });
-          },
-        )
-      ],
-    );
   }
 }

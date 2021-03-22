@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/models/stores.dart';
 import 'package:SellShip/screens/addlocation.dart';
+import 'package:SellShip/screens/store/createstorename.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:SellShip/screens/addbrans.dart';
 import 'package:SellShip/screens/addcategory.dart';
@@ -125,14 +126,26 @@ class _AddItemState extends State<AddItem> {
         ites.add(store);
       }
 
+      ites.add(Stores(
+        approved: true,
+          storeid: 'createastore',
+          storename: 'Create a New Store'));
+
       setState(() {
         storeslist = ites;
 
         loading = false;
       });
     } else {
+
+      List<Stores> ites = List<Stores>();
+      ites.add(Stores(
+          approved: true,
+          storeid: 'createastore',
+          storename: 'Create a New Store'));
+
       setState(() {
-        storeslist = [];
+        storeslist = ites;
 
         loading = false;
       });
@@ -502,6 +515,13 @@ class _AddItemState extends State<AddItem> {
                                               ),
                                               value: _selectedStore,
                                               onChanged: (Stores newValue) {
+                                                if(newValue.storeid == 'createastore'){
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => CreateStoreName()),
+                                                  );
+                                                }
                                                 if (newValue.approved == true) {
                                                   setState(() {
                                                     _selectedStore = newValue;
@@ -1641,72 +1661,92 @@ class _AddItemState extends State<AddItem> {
                                   SizedBox(
                                     height: 10.0,
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 15,
-                                      bottom: 5,
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        'Condition',
-                                        style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 15,
-                                          bottom: 5,
-                                          top: 10,
-                                          right: 15),
-                                      child: Container(
-                                        height: 70,
-                                        padding: EdgeInsets.all(20),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15)),
-                                        ),
-                                        child: Center(
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton(
-                                              isExpanded: true,
-                                              hint: Text(
-                                                'Condition of Item',
-                                                style: TextStyle(
-                                                    fontFamily: 'Helvetica',
-                                                    fontSize: 16,
-                                                    color: Colors.blueGrey),
+                                  _selectedStore != null
+                                      ? _selectedStore.storecategory ==
+                                              'Secondhand Seller'
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                left: 15,
+                                                bottom: 5,
                                               ),
-                                              value: _selectedcondition,
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  _selectedcondition = newValue;
-                                                  percentindictor = 0.7;
-                                                });
-                                              },
-                                              items: conditions.map((location) {
-                                                return DropdownMenuItem(
-                                                  child: new Text(
-                                                    location,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Helvetica',
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w500),
+                                              child: Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  'Condition',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Helvetica',
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
+                                              ),
+                                            )
+                                          : Container()
+                                      : Container(),
+                                  _selectedStore != null
+                                      ? _selectedStore.storecategory ==
+                                              'Secondhand Seller'
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 15,
+                                                  bottom: 5,
+                                                  top: 10,
+                                                  right: 15),
+                                              child: Container(
+                                                height: 70,
+                                                padding: EdgeInsets.all(20),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(15)),
+                                                ),
+                                                child: Center(
+                                                  child:
+                                                      DropdownButtonHideUnderline(
+                                                    child: DropdownButton(
+                                                      isExpanded: true,
+                                                      hint: Text(
+                                                        'Condition of Item',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Helvetica',
+                                                            fontSize: 16,
+                                                            color: Colors
+                                                                .blueGrey),
+                                                      ),
+                                                      value: _selectedcondition,
+                                                      onChanged: (newValue) {
+                                                        setState(() {
+                                                          _selectedcondition =
+                                                              newValue;
+                                                          percentindictor = 0.7;
+                                                        });
+                                                      },
+                                                      items: conditions
+                                                          .map((location) {
+                                                        return DropdownMenuItem(
+                                                          child: new Text(
+                                                            location,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          value: location,
+                                                        );
+                                                      }).toList(),
+                                                    ),
                                                   ),
-                                                  value: location,
-                                                );
-                                              }).toList(),
-                                            ),
-                                          ),
-                                        ),
-                                      )),
+                                                ),
+                                              ))
+                                          : Container()
+                                      : Container(),
                                   SizedBox(
                                     height: 10.0,
                                   ),
@@ -2857,6 +2897,11 @@ class _AddItemState extends State<AddItem> {
                                   ? Padding(
                                       child: InkWell(
                                         onTap: () async {
+                                          if (_selectedStore.storecategory !=
+                                              'Secondhand Seller') {
+                                            _selectedCondition = 'New';
+                                          }
+
                                           if (_selectedStore == null) {
                                             showInSnackBar(
                                                 'Please choose your store');

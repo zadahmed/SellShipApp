@@ -198,9 +198,7 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                       ],
                     )),
               ),
-              storetype != null &&
-                      storetype != 'Secondhand Seller' &&
-                      storetype != 'Reseller'
+              storetype != null && storetype != 'Secondhand Seller'
                   ? FadeAnimation(
                       1,
                       Padding(
@@ -278,9 +276,7 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                           )),
                     )
                   : Container(),
-              storetype != null &&
-                      storetype != 'Secondhand Seller' &&
-                      storetype != 'Reseller'
+              storetype != null && storetype != 'Secondhand Seller'
                   ? FadeAnimation(
                       1,
                       Padding(
@@ -324,9 +320,7 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                           )),
                     )
                   : Container(),
-              storetype != null &&
-                      storetype != 'Secondhand Seller' &&
-                      storetype != 'Reseller'
+              storetype != null && storetype != 'Secondhand Seller'
                   ? Container(
                       padding: EdgeInsets.only(
                           left: 56, right: 56, top: 10, bottom: 10),
@@ -357,13 +351,11 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                               showInSnackBar('Please choose your store type');
                             } else if (storetype != null &&
                                 storetype != 'Secondhand Seller' &&
-                                storetype != 'Reseller' &&
                                 usernamecontroller.text.isEmpty) {
                               showInSnackBar(
                                   'Please enter a description for your store');
                             } else {
                               if (storetype != 'Secondhand Seller' &&
-                                  storetype != 'Reseller' &&
                                   storecategory == null) {
                                 showInSnackBar(
                                     'Please choose your store category');
@@ -373,9 +365,7 @@ class _CreateStoreBusinessDetailState extends State<CreateStoreBusinessDetail> {
                                     MaterialPageRoute(
                                       builder: (context) => CreateStore(
                                         storedescription: storetype != null &&
-                                                storetype !=
-                                                    'Secondhand Seller' &&
-                                                storetype != 'Reseller'
+                                                storetype != 'Secondhand Seller'
                                             ? usernamecontroller.text
                                             : '',
                                         userid: widget.userid,

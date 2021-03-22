@@ -168,7 +168,6 @@ class _ProfilePageState extends State<ProfilePage>
     ]);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     getProfileData();
-    // getItemData();
 
     _tabController.addListener(() {
       var tab = _tabController.index;
@@ -181,14 +180,6 @@ class _ProfilePageState extends State<ProfilePage>
             refreshreviews();
           });
       }
-//      if (tab == 1) {
-//        if (mounted)
-//          setState(() {
-//            orderloading = true;
-//            getorders();
-//          });
-//      }
-
       if (tab == 1) {
         if (mounted)
           setState(() {
@@ -203,9 +194,7 @@ class _ProfilePageState extends State<ProfilePage>
   var confirmedemail;
 
   bool confirmedfb;
-  var followers;
-  var itemssold;
-  var following;
+
   var sold;
   var totalitems;
 
@@ -426,619 +415,572 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget signedinprofile(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
         backgroundColor: Colors.white,
-        leading: Padding(
-          padding: EdgeInsets.all(10),
-          child: InkWell(
-              child: Icon(
-                Feather.settings,
-                color: Color.fromRGBO(28, 45, 65, 1),
-              ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => Settings(
-                            email: email,
-                            userid: userid,
-                            confirmedemail: confirmedemail,
-                            confirmedfb: confirmedfb,
-                            confirmedphone: confirmedphone,
-                          )),
-                );
-              }),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.white,
+          leading: Padding(
+            padding: EdgeInsets.all(10),
+            child: InkWell(
+                child: Icon(
+                  Feather.settings,
+                  color: Color.fromRGBO(28, 45, 65, 1),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Settings(
+                              email: email,
+                              userid: userid,
+                              confirmedemail: confirmedemail,
+                              confirmedfb: confirmedfb,
+                              confirmedphone: confirmedphone,
+                            )),
+                  );
+                }),
+          ),
+          title: Text(
+            firstname != null ? firstname + ' ' + lastname : '',
+            style: TextStyle(
+                fontFamily: 'Helvetica',
+                fontSize: 20.0,
+                color: Colors.black,
+                fontWeight: FontWeight.bold),
+          ),
         ),
-        title: Text(
-          firstname != null ? firstname + ' ' + lastname : '',
-          style: TextStyle(
-              fontFamily: 'Helvetica',
-              fontSize: 20.0,
-              color: Colors.black,
-              fontWeight: FontWeight.bold),
-        ),
-      ),
-      key: _scaffoldKey,
-      body: loading == false
-          ? DefaultTabController(
-              length: 3,
-              child: NestedScrollView(
-                  headerSliverBuilder: (context, _) {
-                    return [
-                      SliverList(
-                          delegate: new SliverChildListDelegate([
-                        Stack(
-                          children: [
-                            Align(
-                                alignment: Alignment.topCenter,
+        key: _scaffoldKey,
+        body: DefaultTabController(
+            length: 3,
+            child: NestedScrollView(
+                headerSliverBuilder: (context, _) {
+                  return [
+                    SliverList(
+                        delegate: new SliverChildListDelegate([
+                      Stack(
+                        children: [
+                          Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                  height: 80,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: SvgPicture.asset(
+                                    'assets/LoginBG.svg',
+                                    semanticsLabel: 'SellShip BG',
+                                    fit: BoxFit.cover,
+                                  ))),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: 15, top: 40, right: 20),
                                 child: Container(
-                                    height: 80,
                                     width: MediaQuery.of(context).size.width,
-                                    child: SvgPicture.asset(
-                                      'assets/LoginBG.svg',
-                                      semanticsLabel: 'SellShip BG',
-                                      fit: BoxFit.cover,
-                                    ))),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 15, top: 40, right: 20),
-                                  child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Column(
-                                                children: [
-                                                  Container(
-                                                    height: 110,
-                                                    width: 100,
-                                                    child: Stack(
-                                                      children: [
-                                                        Align(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child:
-                                                              GestureDetector(
-                                                            child: Container(
-                                                              height: 100,
-                                                              width: 100,
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  border: Border.all(
-                                                                      color: Colors
-                                                                          .grey
-                                                                          .shade100,
-                                                                      width: 5),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              50)),
-                                                              child: ClipRRect(
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Column(
+                                              children: [
+                                                Container(
+                                                  height: 110,
+                                                  width: 100,
+                                                  child: Stack(
+                                                    children: [
+                                                      Align(
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: GestureDetector(
+                                                          child: Container(
+                                                            height: 100,
+                                                            width: 100,
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade100,
+                                                                    width: 5),
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
-                                                                            50),
-                                                                child: profilepicture ==
-                                                                            null ||
-                                                                        profilepicture
-                                                                            .isEmpty
-                                                                    ? Image
-                                                                        .asset(
-                                                                        'assets/personplaceholder.png',
-                                                                        fit: BoxFit
-                                                                            .fitWidth,
-                                                                      )
-                                                                    : CachedNetworkImage(
-                                                                        height:
-                                                                            300,
-                                                                        width:
-                                                                            300,
-                                                                        imageUrl:
-                                                                            profilepicture,
-                                                                        fit: BoxFit
-                                                                            .cover,
-                                                                        placeholder:
-                                                                            (context, url) =>
-                                                                                SpinKitDoubleBounce(color: Colors.deepOrange),
-                                                                        errorWidget: (context,
-                                                                                url,
-                                                                                error) =>
-                                                                            Icon(Icons.error),
-                                                                      ),
-                                                              ),
+                                                                            50)),
+                                                            child: ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          50),
+                                                              child: profilepicture ==
+                                                                          null ||
+                                                                      profilepicture
+                                                                          .isEmpty
+                                                                  ? Image.asset(
+                                                                      'assets/personplaceholder.png',
+                                                                      fit: BoxFit
+                                                                          .fitWidth,
+                                                                    )
+                                                                  : CachedNetworkImage(
+                                                                      height:
+                                                                          300,
+                                                                      width:
+                                                                          300,
+                                                                      imageUrl:
+                                                                          profilepicture,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      placeholder: (context,
+                                                                              url) =>
+                                                                          SpinKitDoubleBounce(
+                                                                              color: Colors.deepOrange),
+                                                                      errorWidget: (context,
+                                                                              url,
+                                                                              error) =>
+                                                                          Icon(Icons
+                                                                              .error),
+                                                                    ),
                                                             ),
                                                           ),
                                                         ),
-                                                        Align(
-                                                          alignment: Alignment
-                                                              .bottomRight,
-                                                          child: InkWell(
-                                                            onTap: () {
-                                                              final action =
-                                                                  CupertinoActionSheet(
-                                                                message: Text(
-                                                                  "Upload an Image",
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          15.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .normal),
-                                                                ),
-                                                                actions: <
-                                                                    Widget>[
-                                                                  CupertinoActionSheetAction(
-                                                                    child: Text(
-                                                                        "Upload from Camera",
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                15.0,
-                                                                            fontWeight:
-                                                                                FontWeight.normal)),
-                                                                    isDefaultAction:
-                                                                        true,
-                                                                    onPressed:
-                                                                        () {
-                                                                      showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          barrierDismissible:
-                                                                              false,
-                                                                          useRootNavigator:
-                                                                              false,
-                                                                          builder: (_) =>
-                                                                              new AlertDialog(
-                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                                content: Builder(
-                                                                                  builder: (context) {
-                                                                                    return Container(
-                                                                                        height: 100,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Text(
-                                                                                              'Updating Profile Picture..',
-                                                                                              style: TextStyle(
-                                                                                                fontFamily: 'Helvetica',
-                                                                                                fontSize: 18,
-                                                                                                fontWeight: FontWeight.bold,
-                                                                                                color: Colors.black,
-                                                                                              ),
-                                                                                            ),
-                                                                                            SizedBox(
-                                                                                              height: 15,
-                                                                                            ),
-                                                                                            Container(
-                                                                                                height: 50,
-                                                                                                width: 50,
-                                                                                                child: SpinKitDoubleBounce(
-                                                                                                  color: Colors.deepOrange,
-                                                                                                )),
-                                                                                          ],
-                                                                                        ));
-                                                                                  },
-                                                                                ),
-                                                                              ));
-                                                                      getImageCamera();
-                                                                    },
-                                                                  ),
-                                                                  CupertinoActionSheetAction(
-                                                                    child: Text(
-                                                                        "Upload from Gallery",
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                15.0,
-                                                                            fontWeight:
-                                                                                FontWeight.normal)),
-                                                                    isDefaultAction:
-                                                                        true,
-                                                                    onPressed:
-                                                                        () {
-                                                                      showDialog(
-                                                                          context:
-                                                                              context,
-                                                                          barrierDismissible:
-                                                                              false,
-                                                                          useRootNavigator:
-                                                                              false,
-                                                                          builder: (_) =>
-                                                                              new AlertDialog(
-                                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                                content: Builder(
-                                                                                  builder: (context) {
-                                                                                    return Container(
-                                                                                        height: 100,
-                                                                                        child: Column(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                          children: [
-                                                                                            Text(
-                                                                                              'Updating Profile Picture..',
-                                                                                              style: TextStyle(
-                                                                                                fontFamily: 'Helvetica',
-                                                                                                fontSize: 18,
-                                                                                                fontWeight: FontWeight.bold,
-                                                                                                color: Colors.black,
-                                                                                              ),
-                                                                                            ),
-                                                                                            SizedBox(
-                                                                                              height: 15,
-                                                                                            ),
-                                                                                            Container(
-                                                                                                height: 50,
-                                                                                                width: 50,
-                                                                                                child: SpinKitDoubleBounce(
-                                                                                                  color: Colors.deepOrange,
-                                                                                                )),
-                                                                                          ],
-                                                                                        ));
-                                                                                  },
-                                                                                ),
-                                                                              ));
-                                                                      getImageGallery();
-                                                                    },
-                                                                  )
-                                                                ],
-                                                                cancelButton:
-                                                                    CupertinoActionSheetAction(
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment
+                                                            .bottomRight,
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            final action =
+                                                                CupertinoActionSheet(
+                                                              message: Text(
+                                                                "Upload an Image",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        15.0,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .normal),
+                                                              ),
+                                                              actions: <Widget>[
+                                                                CupertinoActionSheetAction(
                                                                   child: Text(
-                                                                      "Cancel",
+                                                                      "Upload from Camera",
                                                                       style: TextStyle(
                                                                           fontSize:
                                                                               15.0,
                                                                           fontWeight:
                                                                               FontWeight.normal)),
-                                                                  isDestructiveAction:
+                                                                  isDefaultAction:
                                                                       true,
                                                                   onPressed:
                                                                       () {
-                                                                    Navigator.of(
+                                                                    showDialog(
+                                                                        context:
                                                                             context,
-                                                                            rootNavigator:
-                                                                                true)
-                                                                        .pop();
+                                                                        barrierDismissible:
+                                                                            false,
+                                                                        useRootNavigator:
+                                                                            false,
+                                                                        builder: (_) =>
+                                                                            new AlertDialog(
+                                                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                              content: Builder(
+                                                                                builder: (context) {
+                                                                                  return Container(
+                                                                                      height: 100,
+                                                                                      child: Column(
+                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                        children: [
+                                                                                          Text(
+                                                                                            'Updating Profile Picture..',
+                                                                                            style: TextStyle(
+                                                                                              fontFamily: 'Helvetica',
+                                                                                              fontSize: 18,
+                                                                                              fontWeight: FontWeight.bold,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            height: 15,
+                                                                                          ),
+                                                                                          Container(
+                                                                                              height: 50,
+                                                                                              width: 50,
+                                                                                              child: SpinKitDoubleBounce(
+                                                                                                color: Colors.deepOrange,
+                                                                                              )),
+                                                                                        ],
+                                                                                      ));
+                                                                                },
+                                                                              ),
+                                                                            ));
+                                                                    getImageCamera();
                                                                   },
                                                                 ),
-                                                              );
-                                                              showCupertinoModalPopup(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context) =>
-                                                                          action);
-                                                            },
-                                                            child: CircleAvatar(
-                                                              radius: 16,
-                                                              backgroundColor:
-                                                                  Color
-                                                                      .fromRGBO(
-                                                                          28,
-                                                                          45,
-                                                                          65,
-                                                                          1),
-                                                              child: Icon(
-                                                                Feather.camera,
-                                                                color: Colors
-                                                                    .white,
-                                                                size: 16,
+                                                                CupertinoActionSheetAction(
+                                                                  child: Text(
+                                                                      "Upload from Gallery",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              15.0,
+                                                                          fontWeight:
+                                                                              FontWeight.normal)),
+                                                                  isDefaultAction:
+                                                                      true,
+                                                                  onPressed:
+                                                                      () {
+                                                                    showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        barrierDismissible:
+                                                                            false,
+                                                                        useRootNavigator:
+                                                                            false,
+                                                                        builder: (_) =>
+                                                                            new AlertDialog(
+                                                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                                                                              content: Builder(
+                                                                                builder: (context) {
+                                                                                  return Container(
+                                                                                      height: 100,
+                                                                                      child: Column(
+                                                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                        children: [
+                                                                                          Text(
+                                                                                            'Updating Profile Picture..',
+                                                                                            style: TextStyle(
+                                                                                              fontFamily: 'Helvetica',
+                                                                                              fontSize: 18,
+                                                                                              fontWeight: FontWeight.bold,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                          ),
+                                                                                          SizedBox(
+                                                                                            height: 15,
+                                                                                          ),
+                                                                                          Container(
+                                                                                              height: 50,
+                                                                                              width: 50,
+                                                                                              child: SpinKitDoubleBounce(
+                                                                                                color: Colors.deepOrange,
+                                                                                              )),
+                                                                                        ],
+                                                                                      ));
+                                                                                },
+                                                                              ),
+                                                                            ));
+                                                                    getImageGallery();
+                                                                  },
+                                                                )
+                                                              ],
+                                                              cancelButton:
+                                                                  CupertinoActionSheetAction(
+                                                                child: Text(
+                                                                    "Cancel",
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            15.0,
+                                                                        fontWeight:
+                                                                            FontWeight.normal)),
+                                                                isDestructiveAction:
+                                                                    true,
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context,
+                                                                          rootNavigator:
+                                                                              true)
+                                                                      .pop();
+                                                                },
                                                               ),
+                                                            );
+                                                            showCupertinoModalPopup(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        action);
+                                                          },
+                                                          child: CircleAvatar(
+                                                            radius: 16,
+                                                            backgroundColor:
+                                                                Color.fromRGBO(
+                                                                    28,
+                                                                    45,
+                                                                    65,
+                                                                    1),
+                                                            child: Icon(
+                                                              Feather.camera,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 16,
                                                             ),
                                                           ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start),
-                                            username != null
-                                                ? Padding(
-                                                    padding: EdgeInsets.only(
-                                                      left: 25,
-                                                    ),
-                                                    child: Column(
-                                                        children: [
-                                                          Text(
-                                                            '@' + username,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 24.0,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ],
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start))
-                                                : Column(
-                                                    children: [
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            left: 20,
-                                                          ),
-                                                          child: Column(
-                                                              children: [
-                                                                Text(
-                                                                  '@Username',
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          22.0,
-                                                                      color: Colors
-                                                                          .grey,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                              ],
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start)),
-                                                      InkWell(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          Username(
-                                                                    userid:
-                                                                        userid,
-                                                                  ),
-                                                                ));
-                                                          },
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    left: 20,
-                                                                    top: 2),
-                                                            child: Container(
-                                                                height: 40,
-                                                                width: 130,
-                                                                decoration: BoxDecoration(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    border: Border.all(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        width:
-                                                                            2),
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10)),
-                                                                child: Center(
-                                                                    child: Text(
-                                                                  'Set Username',
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ))),
-                                                          ))
+                                                        ),
+                                                      )
                                                     ],
-                                                  )
-                                          ]))),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ]))
-                    ];
-                  },
-                  body: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          height: 60,
-                          padding: EdgeInsets.only(left: 16),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Color.fromRGBO(229, 233, 242, 1)
-                                  .withOpacity(0.5),
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(20),
-                                  topLeft: Radius.circular(20))),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  child: TabBar(
-                                    controller: _tabController,
-                                    labelStyle: tabTextStyle,
-                                    unselectedLabelStyle: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontFamily: 'Helvetica',
-                                    ),
-                                    indicatorSize: TabBarIndicatorSize.tab,
-                                    indicator: UnderlineTabIndicator(
-                                        borderSide: BorderSide(
-                                            width: 2.0,
-                                            color: Colors.deepOrange)),
-                                    isScrollable: true,
-                                    labelColor: Colors.black,
-                                    tabs: [
-                                      new Tab(
-                                        text: 'Stores',
-                                      ),
-                                      new Tab(
-                                        text: 'Favourites',
-                                      ),
-                                      new Tab(
-                                        text: 'Reviews',
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ])),
-                      Expanded(
-                          child: Container(
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(229, 233, 242, 1)
-                                    .withOpacity(0.5),
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.only(top: 15),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                child: TabBarView(
-                                  controller: _tabController,
-                                  children: [
-                                    profileloading == false
-                                        ? storeitems(context)
-                                        : Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 16.0,
-                                                vertical: 16.0),
-                                            child: Shimmer.fromColors(
-                                              baseColor: Colors.grey[300],
-                                              highlightColor: Colors.grey[100],
-                                              child: ListView(
-                                                children: [0, 1, 2, 3, 4, 5, 6]
-                                                    .map((_) => Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  bottom: 8.0),
-                                                          child: Row(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
+                                                  ),
+                                                ),
+                                              ],
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start),
+                                          username != null
+                                              ? Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: 25,
+                                                  ),
+                                                  child: Column(
+                                                      children: [
+                                                        Text(
+                                                          '@' + username,
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'Helvetica',
+                                                              fontSize: 24.0,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start))
+                                              : Column(
+                                                  children: [
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                          left: 20,
+                                                        ),
+                                                        child: Column(
                                                             children: [
-                                                              Container(
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
-                                                                width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width /
-                                                                        2 -
-                                                                    30,
-                                                                height: 150.0,
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        8.0),
-                                                              ),
-                                                              Container(
-                                                                width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width /
-                                                                        2 -
-                                                                    30,
-                                                                height: 150.0,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                ),
+                                                              Text(
+                                                                '@Username',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        22.0,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
                                                               ),
                                                             ],
-                                                          ),
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start)),
+                                                    InkWell(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Username(
+                                                                  userid:
+                                                                      userid,
+                                                                ),
+                                                              ));
+                                                        },
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  left: 20,
+                                                                  top: 2),
+                                                          child: Container(
+                                                              height: 40,
+                                                              width: 130,
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  border: Border.all(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      width: 2),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10)),
+                                                              child: Center(
+                                                                  child: Text(
+                                                                'Set Username',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        'Helvetica',
+                                                                    fontSize:
+                                                                        16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ))),
                                                         ))
-                                                    .toList(),
-                                              ),
-                                            ),
-                                          ),
-//                                    getOrders(context),
-                                    favouriteslist(context),
-                                    reviewslist(context)
+                                                  ],
+                                                )
+                                        ]))),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ]))
+                  ];
+                },
+                body: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                        height: 60,
+                        padding: EdgeInsets.only(left: 16),
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                            color: Color.fromRGBO(229, 233, 242, 1)
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20),
+                                topLeft: Radius.circular(20))),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                child: TabBar(
+                                  controller: _tabController,
+                                  labelStyle: tabTextStyle,
+                                  unselectedLabelStyle: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontFamily: 'Helvetica',
+                                  ),
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                  indicator: UnderlineTabIndicator(
+                                      borderSide: BorderSide(
+                                          width: 2.0,
+                                          color: Colors.deepOrange)),
+                                  isScrollable: true,
+                                  labelColor: Colors.black,
+                                  tabs: [
+                                    new Tab(
+                                      text: 'Stores',
+                                    ),
+                                    new Tab(
+                                      text: 'Favourites',
+                                    ),
+                                    new Tab(
+                                      text: 'Reviews',
+                                    ),
                                   ],
                                 ),
-                              )))
-                    ],
-                  )))
-          : Container(
-              width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              child: Shimmer.fromColors(
-                baseColor: Colors.grey[300],
-                highlightColor: Colors.grey[100],
-                child: ListView(
-                  children: [0, 1, 2, 3, 4, 5, 6]
-                      .map((_) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      30,
-                                  height: 150.0,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                ),
-                                Container(
-                                  width: MediaQuery.of(context).size.width / 2 -
-                                      30,
-                                  height: 150.0,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
-                              ],
+                              ),
+                            ])),
+                    Expanded(
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(229, 233, 242, 1)
+                                  .withOpacity(0.5),
                             ),
-                          ))
-                      .toList(),
-                ),
-              ),
-            ),
-    );
+                            child: Container(
+                              padding: EdgeInsets.only(top: 15),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              child: TabBarView(
+                                controller: _tabController,
+                                children: [
+                                  profileloading == false
+                                      ? storeitems(context)
+                                      : Container(
+                                          width: double.infinity,
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16.0, vertical: 16.0),
+                                          child: Shimmer.fromColors(
+                                            baseColor: Colors.grey[300],
+                                            highlightColor: Colors.grey[100],
+                                            child: ListView(
+                                              children: [0, 1, 2, 3, 4, 5, 6]
+                                                  .map((_) => Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 8.0),
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width /
+                                                                      2 -
+                                                                  30,
+                                                              height: 150.0,
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                            ),
+                                                            Container(
+                                                              width: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width /
+                                                                      2 -
+                                                                  30,
+                                                              height: 150.0,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ))
+                                                  .toList(),
+                                            ),
+                                          ),
+                                        ),
+//                                    getOrders(context),
+                                  favouriteslist(context),
+                                  reviewslist(context)
+                                ],
+                              ),
+                            )))
+                  ],
+                ))));
   }
 
   bool favouriteloading = true;
@@ -3178,21 +3120,6 @@ class _ProfilePageState extends State<ProfilePage>
         setState(() {
           currency = 'AED';
         });
-    } else if (country.trim().toLowerCase() == 'united states') {
-      if (mounted)
-        setState(() {
-          currency = '\$';
-        });
-    } else if (country.trim().toLowerCase() == 'canada') {
-      if (mounted)
-        setState(() {
-          currency = '\$';
-        });
-    } else if (country.trim().toLowerCase() == 'united kingdom') {
-      if (mounted)
-        setState(() {
-          currency = '\£';
-        });
     }
 
     if (userid != null) {
@@ -3202,27 +3129,7 @@ class _ProfilePageState extends State<ProfilePage>
         var respons = json.decode(response.body);
         Map<String, dynamic> profilemap = respons;
 
-        var follower = profilemap['follower'];
-
-        if (follower != null) {
-          print(follower);
-        } else {
-          follower = [];
-        }
-
-        var followin = profilemap['likes'];
-        if (followin != null) {
-          print(followin);
-        } else {
-          followin = 0;
-        }
-
-        var sol = profilemap['sold'];
-        if (sol != null) {
-          print(sol);
-        } else {
-          sol = [];
-        }
+        print(profilemap);
 
         var usernam = profilemap['username'];
         if (usernam != null) {
@@ -3258,33 +3165,20 @@ class _ProfilePageState extends State<ProfilePage>
           confirmedf = false;
         }
 
-        var rating;
-        if (profilemap['reviewrating'] == null) {
-          rating = 0.0;
-        } else {
-          rating = profilemap['reviewrating'];
-        }
-
         if (profilemap != null) {
-          if (mounted) {
-            if (mounted)
-              setState(() {
-                reviewrating = rating;
-                firstname = profilemap['first_name'];
-                lastname = profilemap['last_name'];
-                phonenumber = profilemap['phonenumber'];
-                email = profilemap['email'];
-                loading = false;
-                following = followin;
-                followers = follower.length;
-                itemssold = sol.length;
-                confirmedfb = confirmedf;
-                confirmedemail = confirmedemai;
-                confirmedphone = confirmedphon;
-                profilepicture = profilepic;
-                username = usernam;
-              });
-          }
+          setState(() {
+            firstname = profilemap['first_name'];
+            lastname = profilemap['last_name'];
+            phonenumber = profilemap['phonenumber'];
+            email = profilemap['email'];
+            loading = false;
+
+            confirmedfb = confirmedf;
+            confirmedemail = confirmedemai;
+            confirmedphone = confirmedphon;
+            profilepicture = profilepic;
+            username = usernam;
+          });
 
           await OneSignal.shared.setEmail(email: email);
         } else {
@@ -3298,6 +3192,7 @@ class _ProfilePageState extends State<ProfilePage>
     } else {
       if (mounted)
         setState(() {
+          userid = null;
           loading = false;
         });
     }
@@ -3341,7 +3236,6 @@ class _ProfilePageState extends State<ProfilePage>
         storeslist = [];
         profileloading = false;
       });
-      print(storeresponse.statusCode);
     }
   }
 }

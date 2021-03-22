@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:SellShip/Navigation/routes.dart';
+import 'package:SellShip/screens/CommentsDetail.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -219,9 +221,11 @@ class _NotifcationPageState extends State<NotifcationPage>
                                   left: 10, right: 10, bottom: 10),
                               child: InkWell(
                                   onTap: () {
-                                    print(notifs[index].navigationid);
                                     if (notifs[index].navroute ==
                                         ('activity')) {
+                                      print(notifs[index].navigationid);
+
+                                      Navigator.pop(context);
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
@@ -242,6 +246,16 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                   source: 'notif',
                                                 )),
                                       );
+                                    } else if (notifs[index].navroute ==
+                                        'comment') {
+                                      Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  CommentsPage(
+                                                    itemid:
+                                                        notifs[index].itemid,
+                                                  )));
                                     }
                                   },
                                   child: Container(

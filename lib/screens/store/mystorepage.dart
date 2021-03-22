@@ -439,6 +439,24 @@ class _StorePageState extends State<StorePage> {
     Navigator.of(context).pop();
   }
 
+  void showMe(BuildContext context) {
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+        backgroundColor: Colors.white,
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => StatefulBuilder(
+                builder: (BuildContext context, StateSetter updateState) {
+              return Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[]));
+            }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -470,50 +488,51 @@ class _StorePageState extends State<StorePage> {
             padding: EdgeInsets.only(right: 10, bottom: 5),
             child: InkWell(
                 onTap: () async {
-                  BranchUniversalObject buo = BranchUniversalObject(
-                      canonicalIdentifier: widget.storeid,
-                      title: widget.storename,
-                      imageUrl: mystore.storelogo,
-                      contentDescription: mystore.storebio,
-                      contentMetadata: BranchContentMetaData()
-                        ..addCustomMetadata(
-                          'storename',
-                          widget.storename,
-                        )
-                        ..addCustomMetadata(
-                          'source',
-                          'store',
-                        )
-                        ..addCustomMetadata('storeimage', mystore.storelogo)
-                        ..addCustomMetadata('storeid', widget.storeid),
-                      publiclyIndex: true,
-                      locallyIndex: true,
-                      expirationDateInMilliSec: DateTime.now()
-                          .add(Duration(days: 365))
-                          .millisecondsSinceEpoch);
-
-                  FlutterBranchSdk.registerView(buo: buo);
-
-                  BranchLinkProperties lp = BranchLinkProperties(
-                    channel: 'facebook',
-                    feature: 'sharing',
-                    stage: 'new share',
-                  );
-                  lp.addControlParam('\$uri_redirect_mode', '1');
-                  BranchResponse response = await FlutterBranchSdk.getShortUrl(
-                      buo: buo, linkProperties: lp);
-                  if (response.success) {
-                    final RenderBox box = context.findRenderObject();
-                    Share.share(
-                        'Check out My Store on SellShip: \n' + response.result,
-                        subject: widget.storename,
-                        sharePositionOrigin:
-                            box.localToGlobal(Offset.zero) & box.size);
-                    print('${response.result}');
-                  }
+                  // BranchUniversalObject buo = BranchUniversalObject(
+                  //     canonicalIdentifier: widget.storeid,
+                  //     title: widget.storename,
+                  //     imageUrl: mystore.storelogo,
+                  //     contentDescription: mystore.storebio,
+                  //     contentMetadata: BranchContentMetaData()
+                  //       ..addCustomMetadata(
+                  //         'storename',
+                  //         widget.storename,
+                  //       )
+                  //       ..addCustomMetadata(
+                  //         'source',
+                  //         'store',
+                  //       )
+                  //       ..addCustomMetadata('storeimage', mystore.storelogo)
+                  //       ..addCustomMetadata('storeid', widget.storeid),
+                  //     publiclyIndex: true,
+                  //     locallyIndex: true,
+                  //     expirationDateInMilliSec: DateTime.now()
+                  //         .add(Duration(days: 365))
+                  //         .millisecondsSinceEpoch);
+                  //
+                  // FlutterBranchSdk.registerView(buo: buo);
+                  //
+                  // BranchLinkProperties lp = BranchLinkProperties(
+                  //   channel: 'facebook',
+                  //   feature: 'sharing',
+                  //   stage: 'new share',
+                  // );
+                  // lp.addControlParam('\$uri_redirect_mode', '1');
+                  // BranchResponse response = await FlutterBranchSdk.getShortUrl(
+                  //     buo: buo, linkProperties: lp);
+                  // if (response.success) {
+                  //   final RenderBox box = context.findRenderObject();
+                  //   Share.share(
+                  //       'Check out My Store on SellShip: \n' + response.result,
+                  //       subject: widget.storename,
+                  //       sharePositionOrigin:
+                  //           box.localToGlobal(Offset.zero) & box.size);
+                  //   print('${response.result}');
+                  // }
+                  showMe(context);
                 },
                 child: Icon(
-                  Feather.share,
+                  Feather.settings,
                   color: Color.fromRGBO(28, 45, 65, 1),
                 )),
           ),

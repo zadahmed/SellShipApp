@@ -536,8 +536,7 @@ class _CreateLayoutState extends State<CreateLayout> {
                                     ),
                                   ));
 
-                          if (widget.storetype.contains('Secondhand Seller') ||
-                              widget.storetype.contains('Reseller')) {
+                          if (widget.storetype.contains('Secondhand Seller')) {
                             Dio dio = new Dio();
                             FormData formData;
                             var addurl = 'https://api.sellship.co/create/store';

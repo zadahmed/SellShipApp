@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/messages.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -65,6 +64,7 @@ class _CommentsPageState extends State<CommentsPage> {
     super.initState();
     setState(() {
       itemid = widget.itemid;
+      commentsloader = true;
     });
     loadcomments();
   }
@@ -78,13 +78,11 @@ class _CommentsPageState extends State<CommentsPage> {
 
   loadcomments() async {
     userid = await storage.read(key: 'userid');
-
     commentslist.clear();
     var url = 'https://api.sellship.co/api/comment/' + itemid;
 
     List<Comments> commentslis = List<Comments>();
     final response = await http.get(url);
-    print(response.body);
     if (response.statusCode == 200) {
       var jsonbody = json.decode(response.body);
       for (int i = 0; i < jsonbody.length; i++) {
@@ -134,280 +132,334 @@ class _CommentsPageState extends State<CommentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         key: commentState,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Text(
-            'Comments',
-            style: TextStyle(
-                fontFamily: 'Helvetica',
-                fontSize: 16,
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            iconTheme: IconThemeData(
+              color: Colors.black,
+            ),
+            leading: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.chevron_left,
                 color: Colors.black,
-                fontWeight: FontWeight.bold),
-          ),
-          leading: Padding(
-            padding: EdgeInsets.all(10),
-            child: InkWell(
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
-                ),
-                onTap: () {
-                  Navigator.of(context).pop();
-                }),
-          ),
-        ),
+              ),
+            ),
+            title: Text(
+              'Comments',
+              style: TextStyle(
+                fontFamily: 'Helvetica',
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            )),
         body: commentslist.isNotEmpty
-            ? commentsloader == false
-                ? GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                    },
-                    child: ListView.builder(
-                        itemCount: commentslist.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return new Container(
-                              color: Colors.white,
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                            child: commentslist[index]
-                                                    .userpp
-                                                    .isNotEmpty
-                                                ? CachedNetworkImage(
-                                                    height: 200,
-                                                    width: 300,
-                                                    imageUrl:
-                                                        commentslist[index]
-                                                            .userpp,
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : Image.asset(
-                                                    'assets/personplaceholder.png',
-                                                    fit: BoxFit.fitWidth,
-                                                  )),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                100,
-                                        child: InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        UserItems(
-                                                          userid: commentslist[
-                                                                  index]
-                                                              .userid,
-                                                          username:
-                                                              commentslist[
-                                                                      index]
-                                                                  .username,
-                                                        )),
-                                              );
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                    commentslist[index]
-                                                        .username,
-                                                    style: new TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 14,
+            ? GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(new FocusNode());
+                },
+                child: Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, top: 10),
+                        child: InkWell(
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Icon(
+                                Feather.message_circle,
+                                color: Colors.deepOrange,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'Add a comment',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  color: Colors.deepOrange,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CommentsPage(
+                                        itemid: itemid,
+                                      )),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(right: 15, top: 10),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CommentsPage(
+                                          itemid: itemid,
+                                        )),
+                              );
+                            },
+                            child: Text(
+                              'View All',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                color: Colors.deepOrange,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Expanded(
+                      child: ListView.builder(
+                          itemCount: commentslist.length,
+                          itemBuilder: (BuildContext ctxt, int index) {
+                            return new Container(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 50,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              child: commentslist[index]
+                                                      .userpp
+                                                      .isNotEmpty
+                                                  ? CachedNetworkImage(
+                                                      height: 200,
+                                                      width: 300,
+                                                      imageUrl:
+                                                          commentslist[index]
+                                                              .userpp,
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : Image.asset(
+                                                      'assets/personplaceholder.png',
+                                                      fit: BoxFit.fitWidth,
                                                     )),
-                                                Text(
-                                                  commentslist[index].date,
-                                                  style: TextStyle(
-                                                      fontFamily: 'Helvetica',
-                                                      fontSize: 10,
-                                                      color: Colors.grey),
-                                                ),
-                                              ],
-                                            )),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Container(
-                                        width: 260,
-                                        child: Text(
-                                          commentslist[index].message,
-                                          style: TextStyle(
-                                            fontFamily: 'Helvetica',
-                                            fontSize: 14,
-                                          ),
                                         ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              var url =
-                                                  'https://api.sellship.co/api/report/comment/' +
-                                                      commentslist[index].id +
-                                                      '/' +
-                                                      itemid;
-
-                                              final response =
-                                                  await http.get(url);
-                                              if (response.statusCode == 200) {
-                                                showInSnackBar(
-                                                    'The comment has been reported. Thank you for making a SellShip a safer community!');
-                                              }
-                                            },
-                                            child: Text(
-                                              'Report',
-                                              style: TextStyle(
-                                                  fontFamily: 'Helvetica',
-                                                  fontSize: 10,
-                                                  color: Colors.grey),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              100,
+                                          child: InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UserItems(
+                                                            userid:
+                                                                commentslist[
+                                                                        index]
+                                                                    .userid,
+                                                            username:
+                                                                commentslist[
+                                                                        index]
+                                                                    .username,
+                                                          )),
+                                                );
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                      commentslist[index]
+                                                          .username,
+                                                      style: new TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 14,
+                                                      )),
+                                                  Text(
+                                                    commentslist[index].date,
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 10,
+                                                        color: Colors.grey),
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                          width: 260,
+                                          child: Text(
+                                            commentslist[index].message,
+                                            style: TextStyle(
+                                              fontFamily: 'Helvetica',
+                                              fontSize: 14,
                                             ),
                                           ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ));
-                        }))
-                : Center(
-                    child: SpinKitDoubleBounce(
-                    color: Colors.deepOrange,
-                  ))
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            InkWell(
+                                              onTap: () async {
+                                                var url =
+                                                    'https://api.sellship.co/api/report/comment/' +
+                                                        commentslist[index].id +
+                                                        '/' +
+                                                        itemid;
+
+                                                final response =
+                                                    await http.get(url);
+                                                if (response.statusCode ==
+                                                    200) {
+                                                  showInSnackBar(
+                                                      'The comment has been reported. Thank you for making a SellShip a safer community!');
+                                                }
+                                              },
+                                              child: Text(
+                                                'Report',
+                                                style: TextStyle(
+                                                    fontFamily: 'Helvetica',
+                                                    fontSize: 10,
+                                                    color: Colors.grey),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ));
+                          })),
+                ]))
             : GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(new FocusNode());
                 },
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                            padding: EdgeInsets.only(left: 15, top: 10),
+                            child: InkWell(
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Icon(
+                                    Feather.message_circle,
+                                    color: Colors.deepOrange,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Add a comment',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      color: Colors.deepOrange,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CommentsPage(
+                                            itemid: itemid,
+                                          )),
+                                );
+                              },
+                            )),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 35,
+                    ),
+                    commentsloader == false
+                        ? Center(
+                            child: Text(
+                              'No Comments',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'Helvetica',
+                                color: Colors.grey,
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        : Center(
+                            child: SpinKitDoubleBounce(
+                            color: Colors.deepOrange,
+                          )),
                     SizedBox(
                       height: 15,
                     ),
-                    Center(
-                      child: Text(
-                        'No comments ',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          color: Colors.grey,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                        child: Image.asset(
-                      'assets/messages.png',
-                      fit: BoxFit.fitWidth,
-                    ))
                   ],
                 ),
-              ),
-        bottomNavigationBar: Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
-            child: Container(
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: TextField(
-                  maxLines: 20,
-                  controller: commentcontroller,
-                  autocorrect: true,
-                  enableSuggestions: true,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
-                  decoration: InputDecoration(
-                      // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      suffixIcon: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: InkWell(
-                            child: CircleAvatar(
-                              child: Icon(
-                                Feather.message_circle,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                              backgroundColor: Colors.deepOrange,
-                            ),
-                            onTap: () async {
-                              if (commentcontroller.text.isNotEmpty) {
-                                var url =
-                                    'https://api.sellship.co/api/comment/' +
-                                        itemid;
-                                var userid = await storage.read(key: 'userid');
-                                if (userid != null) {
-                                  final response = await http.post(url, body: {
-                                    'userid': userid,
-                                    'comment': commentcontroller.text
-                                  });
-                                  commentcontroller.clear();
-                                  if (response.statusCode == 200) {
-                                    if (response.body == 'Matched') {
-                                      print('Matched');
-                                    }
-                                    loadcomments();
-                                  } else {
-                                    print(response.statusCode);
-                                  }
-                                } else {
-                                  showInSnackBar('Please Login to Comment');
-                                }
-                              }
-                            }),
-                      ),
-                      border: InputBorder.none,
-                      hintText: "Enter your comment",
-                      hintStyle:
-                          TextStyle(fontFamily: 'Helvetica', fontSize: 16)),
-                ),
-              ),
-            ),
-          ),
-        ));
+              ));
   }
 }
