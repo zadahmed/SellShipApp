@@ -470,223 +470,215 @@ class _SearchState extends State<Search>
             ),
           ),
         ),
-        SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: 1.0,
-              crossAxisSpacing: 1.0,
-              crossAxisCount: 2,
-              childAspectRatio: 0.9),
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return new Padding(
-                padding: EdgeInsets.all(7),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Details(
-                                itemid: itemsgrid[index].itemid,
-                                sold: itemsgrid[index].sold,
-                                image: itemsgrid[index].image,
-                                name: itemsgrid[index].name,
-                                source: 'searchproducts',
-                              )),
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 0.2, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade300,
-                          offset: Offset(0.0, 1.0), //(x,y)
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        new Stack(
-                          children: <Widget>[
-                            Container(
-                              height: 215,
-                              width: MediaQuery.of(context).size.width,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: CachedNetworkImage(
-                                  height: 200,
-                                  width: 300,
-                                  fadeInDuration: Duration(microseconds: 5),
-                                  imageUrl: itemsgrid[index].image.isEmpty
-                                      ? SpinKitDoubleBounce(
-                                          color: Colors.deepOrange)
-                                      : itemsgrid[index].image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitDoubleBounce(
-                                          color: Colors.deepOrange),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
+        SliverStaggeredGrid.countBuilder(
+          crossAxisCount: 2,
+          itemCount: itemsgrid.length,
+          staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+          mainAxisSpacing: 4.0,
+          crossAxisSpacing: 4.0,
+          itemBuilder: (BuildContext context, index) {
+            return new Padding(
+              padding: EdgeInsets.all(7),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Details(
+                              itemid: itemsgrid[index].itemid,
+                              sold: itemsgrid[index].sold,
+                              image: itemsgrid[index].image,
+                              name: itemsgrid[index].name,
+                              source: 'searchproducts',
+                            )),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.2, color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        offset: Offset(0.0, 1.0), //(x,y)
+                        blurRadius: 6.0,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      new Stack(
+                        children: <Widget>[
+                          Container(
+                            height: 215,
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                height: 200,
+                                width: 300,
+                                fadeInDuration: Duration(microseconds: 5),
+                                imageUrl: itemsgrid[index].image.isEmpty
+                                    ? SpinKitDoubleBounce(
+                                        color: Colors.deepOrange)
+                                    : itemsgrid[index].image,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    SpinKitDoubleBounce(
+                                        color: Colors.deepOrange),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
                             ),
-                            itemsgrid[index].sold == true
-                                ? Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: Colors.deepOrangeAccent
-                                            .withOpacity(0.8),
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10)),
+                          ),
+                          itemsgrid[index].sold == true
+                              ? Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.deepOrangeAccent
+                                          .withOpacity(0.8),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10)),
+                                    ),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Center(
+                                      child: Text(
+                                        'Sold',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Center(
-                                        child: Text(
-                                          'Sold',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ))
-                                : favourites != null
-                                    ? favourites
-                                            .contains(itemsgrid[index].itemid)
-                                        ? InkWell(
-                                            enableFeedback: true,
-                                            onTap: () async {
-                                              var userid = await storage.read(
-                                                  key: 'userid');
+                                    ),
+                                  ))
+                              : favourites != null
+                                  ? favourites.contains(itemsgrid[index].itemid)
+                                      ? InkWell(
+                                          enableFeedback: true,
+                                          onTap: () async {
+                                            var userid = await storage.read(
+                                                key: 'userid');
 
-                                              if (userid != null) {
-                                                var url =
-                                                    'https://api.sellship.co/api/favourite/' +
-                                                        userid;
+                                            if (userid != null) {
+                                              var url =
+                                                  'https://api.sellship.co/api/favourite/' +
+                                                      userid;
 
-                                                Map<String, String> body = {
-                                                  'itemid':
-                                                      itemsgrid[index].itemid,
-                                                };
+                                              Map<String, String> body = {
+                                                'itemid':
+                                                    itemsgrid[index].itemid,
+                                              };
 
-                                                favourites.remove(
-                                                    itemsgrid[index].itemid);
-                                                setState(() {
-                                                  favourites = favourites;
-                                                  itemsgrid[index].likes =
-                                                      itemsgrid[index].likes -
-                                                          1;
-                                                });
-                                                final response = await http
-                                                    .post(url, body: body);
+                                              favourites.remove(
+                                                  itemsgrid[index].itemid);
+                                              setState(() {
+                                                favourites = favourites;
+                                                itemsgrid[index].likes =
+                                                    itemsgrid[index].likes - 1;
+                                              });
+                                              final response = await http
+                                                  .post(url, body: body);
 
-                                                if (response.statusCode ==
-                                                    200) {
-                                                } else {
-                                                  print(response.statusCode);
-                                                }
+                                              if (response.statusCode == 200) {
                                               } else {
-                                                showInSnackBar(
-                                                    'Please Login to use Favourites');
+                                                print(response.statusCode);
                                               }
-                                            },
-                                            child: Align(
-                                                alignment: Alignment.topRight,
-                                                child: Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: CircleAvatar(
-                                                      radius: 18,
-                                                      backgroundColor:
-                                                          Colors.deepPurple,
-                                                      child: Icon(
-                                                        FontAwesome.heart,
-                                                        color: Colors.white,
-                                                        size: 16,
-                                                      ),
-                                                    ))))
-                                        : InkWell(
-                                            enableFeedback: true,
-                                            onTap: () async {
-                                              var userid = await storage.read(
-                                                  key: 'userid');
+                                            } else {
+                                              showInSnackBar(
+                                                  'Please Login to use Favourites');
+                                            }
+                                          },
+                                          child: Align(
+                                              alignment: Alignment.topRight,
+                                              child: Padding(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.deepPurple,
+                                                    child: Icon(
+                                                      FontAwesome.heart,
+                                                      color: Colors.white,
+                                                      size: 16,
+                                                    ),
+                                                  ))))
+                                      : InkWell(
+                                          enableFeedback: true,
+                                          onTap: () async {
+                                            var userid = await storage.read(
+                                                key: 'userid');
 
-                                              if (userid != null) {
-                                                var url =
-                                                    'https://api.sellship.co/api/favourite/' +
-                                                        userid;
+                                            if (userid != null) {
+                                              var url =
+                                                  'https://api.sellship.co/api/favourite/' +
+                                                      userid;
 
-                                                Map<String, String> body = {
-                                                  'itemid':
-                                                      itemsgrid[index].itemid,
-                                                };
+                                              Map<String, String> body = {
+                                                'itemid':
+                                                    itemsgrid[index].itemid,
+                                              };
 
-                                                favourites.add(
-                                                    itemsgrid[index].itemid);
-                                                setState(() {
-                                                  favourites = favourites;
-                                                  itemsgrid[index].likes =
-                                                      itemsgrid[index].likes +
-                                                          1;
-                                                });
-                                                final response = await http
-                                                    .post(url, body: body);
+                                              favourites
+                                                  .add(itemsgrid[index].itemid);
+                                              setState(() {
+                                                favourites = favourites;
+                                                itemsgrid[index].likes =
+                                                    itemsgrid[index].likes + 1;
+                                              });
+                                              final response = await http
+                                                  .post(url, body: body);
 
-                                                if (response.statusCode ==
-                                                    200) {
-                                                } else {
-                                                  print(response.statusCode);
-                                                }
+                                              if (response.statusCode == 200) {
                                               } else {
-                                                showInSnackBar(
-                                                    'Please Login to use Favourites');
+                                                print(response.statusCode);
                                               }
-                                            },
-                                            child: Align(
-                                                alignment: Alignment.topRight,
-                                                child: Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: CircleAvatar(
-                                                      radius: 18,
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      child: Icon(
-                                                        Feather.heart,
-                                                        color: Colors.blueGrey,
-                                                        size: 16,
-                                                      ),
-                                                    ))))
-                                    : Align(
-                                        alignment: Alignment.topRight,
-                                        child: Padding(
-                                            padding: EdgeInsets.all(10),
-                                            child: CircleAvatar(
-                                              radius: 18,
-                                              backgroundColor: Colors.white,
-                                              child: Icon(
-                                                Feather.heart,
-                                                color: Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            ))),
-                          ],
-                        ),
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                    ),
+                                            } else {
+                                              showInSnackBar(
+                                                  'Please Login to use Favourites');
+                                            }
+                                          },
+                                          child: Align(
+                                              alignment: Alignment.topRight,
+                                              child: Padding(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    child: Icon(
+                                                      Feather.heart,
+                                                      color: Colors.blueGrey,
+                                                      size: 16,
+                                                    ),
+                                                  ))))
+                                  : Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: CircleAvatar(
+                                            radius: 18,
+                                            backgroundColor: Colors.white,
+                                            child: Icon(
+                                              Feather.heart,
+                                              color: Colors.blueGrey,
+                                              size: 16,
+                                            ),
+                                          ))),
+                        ],
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                   ),
                 ),
-              );
-            },
-            childCount: itemsgrid.length,
-          ),
+              ),
+            );
+          },
         )
       ],
       onLoad: () async {
@@ -752,232 +744,224 @@ class _SearchState extends State<Search>
             ),
           ),
         ),
-        SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: 1.0,
-              crossAxisSpacing: 1.0,
-              crossAxisCount: 2,
-              childAspectRatio: 0.9),
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return new Padding(
-                padding: EdgeInsets.all(7),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Details(
-                                itemid: hashtagitemsgrid[index].itemid,
-                                sold: hashtagitemsgrid[index].sold,
-                                image: hashtagitemsgrid[index].image,
-                                name: hashtagitemsgrid[index].name,
-                                source: 'hashtag',
-                              )),
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 0.2, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade300,
-                          offset: Offset(0.0, 1.0), //(x,y)
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        new Stack(
-                          children: <Widget>[
-                            Container(
-                              height: 215,
-                              width: MediaQuery.of(context).size.width,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: CachedNetworkImage(
-                                  height: 200,
-                                  width: 300,
-                                  fadeInDuration: Duration(microseconds: 5),
-                                  imageUrl:
-                                      hashtagitemsgrid[index].image.isEmpty
-                                          ? SpinKitDoubleBounce(
-                                              color: Colors.deepOrange)
-                                          : hashtagitemsgrid[index].image,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      SpinKitDoubleBounce(
-                                          color: Colors.deepOrange),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error),
-                                ),
+        SliverStaggeredGrid.countBuilder(
+          crossAxisCount: 2,
+          itemCount: itemsgrid.length,
+          staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+          mainAxisSpacing: 4.0,
+          crossAxisSpacing: 4.0,
+          itemBuilder: (BuildContext context, index) {
+            return new Padding(
+              padding: EdgeInsets.all(7),
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Details(
+                              itemid: hashtagitemsgrid[index].itemid,
+                              sold: hashtagitemsgrid[index].sold,
+                              image: hashtagitemsgrid[index].image,
+                              name: hashtagitemsgrid[index].name,
+                              source: 'hashtag',
+                            )),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.2, color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        offset: Offset(0.0, 1.0), //(x,y)
+                        blurRadius: 6.0,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      new Stack(
+                        children: <Widget>[
+                          Container(
+                            height: 215,
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: CachedNetworkImage(
+                                height: 200,
+                                width: 300,
+                                fadeInDuration: Duration(microseconds: 5),
+                                imageUrl: hashtagitemsgrid[index].image.isEmpty
+                                    ? SpinKitDoubleBounce(
+                                        color: Colors.deepOrange)
+                                    : hashtagitemsgrid[index].image,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    SpinKitDoubleBounce(
+                                        color: Colors.deepOrange),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
                             ),
-                            hashtagitemsgrid[index].sold == true
-                                ? Align(
-                                    alignment: Alignment.center,
-                                    child: Container(
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: Colors.deepPurpleAccent
-                                            .withOpacity(0.8),
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            topRight: Radius.circular(10)),
+                          ),
+                          hashtagitemsgrid[index].sold == true
+                              ? Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Colors.deepPurpleAccent
+                                          .withOpacity(0.8),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10)),
+                                    ),
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Center(
+                                      child: Text(
+                                        'Sold',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Center(
-                                        child: Text(
-                                          'Sold',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontFamily: 'Helvetica',
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ))
-                                : favourites != null
-                                    ? favourites.contains(
-                                            hashtagitemsgrid[index].itemid)
-                                        ? InkWell(
-                                            enableFeedback: true,
-                                            onTap: () async {
-                                              var userid = await storage.read(
-                                                  key: 'userid');
+                                    ),
+                                  ))
+                              : favourites != null
+                                  ? favourites.contains(
+                                          hashtagitemsgrid[index].itemid)
+                                      ? InkWell(
+                                          enableFeedback: true,
+                                          onTap: () async {
+                                            var userid = await storage.read(
+                                                key: 'userid');
 
-                                              if (userid != null) {
-                                                var url =
-                                                    'https://api.sellship.co/api/favourite/' +
-                                                        userid;
+                                            if (userid != null) {
+                                              var url =
+                                                  'https://api.sellship.co/api/favourite/' +
+                                                      userid;
 
-                                                Map<String, String> body = {
-                                                  'itemid':
-                                                      hashtagitemsgrid[index]
-                                                          .itemid,
-                                                };
-
-                                                favourites.remove(
+                                              Map<String, String> body = {
+                                                'itemid':
                                                     hashtagitemsgrid[index]
-                                                        .itemid);
-                                                setState(() {
-                                                  favourites = favourites;
+                                                        .itemid,
+                                              };
+
+                                              favourites.remove(
                                                   hashtagitemsgrid[index]
-                                                          .likes =
-                                                      hashtagitemsgrid[index]
-                                                              .likes -
-                                                          1;
-                                                });
-                                                final response = await http
-                                                    .post(url, body: body);
-
-                                                if (response.statusCode ==
-                                                    200) {
-                                                } else {
-                                                  print(response.statusCode);
-                                                }
-                                              } else {
-                                                showInSnackBar(
-                                                    'Please Login to use Favourites');
-                                              }
-                                            },
-                                            child: Align(
-                                                alignment: Alignment.topRight,
-                                                child: Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: CircleAvatar(
-                                                      radius: 18,
-                                                      backgroundColor:
-                                                          Colors.deepPurple,
-                                                      child: Icon(
-                                                        FontAwesome.heart,
-                                                        color: Colors.white,
-                                                        size: 16,
-                                                      ),
-                                                    ))))
-                                        : InkWell(
-                                            enableFeedback: true,
-                                            onTap: () async {
-                                              var userid = await storage.read(
-                                                  key: 'userid');
-
-                                              if (userid != null) {
-                                                var url =
-                                                    'https://api.sellship.co/api/favourite/' +
-                                                        userid;
-
-                                                Map<String, String> body = {
-                                                  'itemid':
-                                                      hashtagitemsgrid[index]
-                                                          .itemid,
-                                                };
-
-                                                favourites.add(
+                                                      .itemid);
+                                              setState(() {
+                                                favourites = favourites;
+                                                hashtagitemsgrid[index].likes =
                                                     hashtagitemsgrid[index]
-                                                        .itemid);
-                                                setState(() {
-                                                  favourites = favourites;
-                                                  hashtagitemsgrid[index]
-                                                          .likes =
-                                                      hashtagitemsgrid[index]
-                                                              .likes +
-                                                          1;
-                                                });
-                                                final response = await http
-                                                    .post(url, body: body);
+                                                            .likes -
+                                                        1;
+                                              });
+                                              final response = await http
+                                                  .post(url, body: body);
 
-                                                if (response.statusCode ==
-                                                    200) {
-                                                } else {
-                                                  print(response.statusCode);
-                                                }
+                                              if (response.statusCode == 200) {
                                               } else {
-                                                showInSnackBar(
-                                                    'Please Login to use Favourites');
+                                                print(response.statusCode);
                                               }
-                                            },
-                                            child: Align(
-                                                alignment: Alignment.topRight,
-                                                child: Padding(
-                                                    padding: EdgeInsets.all(10),
-                                                    child: CircleAvatar(
-                                                      radius: 18,
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      child: Icon(
-                                                        Feather.heart,
-                                                        color: Colors.blueGrey,
-                                                        size: 16,
-                                                      ),
-                                                    ))))
-                                    : Align(
-                                        alignment: Alignment.topRight,
-                                        child: Padding(
-                                            padding: EdgeInsets.all(10),
-                                            child: CircleAvatar(
-                                              radius: 18,
-                                              backgroundColor: Colors.white,
-                                              child: Icon(
-                                                Feather.heart,
-                                                color: Colors.blueGrey,
-                                                size: 16,
-                                              ),
-                                            ))),
-                          ],
-                        ),
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                    ),
+                                            } else {
+                                              showInSnackBar(
+                                                  'Please Login to use Favourites');
+                                            }
+                                          },
+                                          child: Align(
+                                              alignment: Alignment.topRight,
+                                              child: Padding(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.deepPurple,
+                                                    child: Icon(
+                                                      FontAwesome.heart,
+                                                      color: Colors.white,
+                                                      size: 16,
+                                                    ),
+                                                  ))))
+                                      : InkWell(
+                                          enableFeedback: true,
+                                          onTap: () async {
+                                            var userid = await storage.read(
+                                                key: 'userid');
+
+                                            if (userid != null) {
+                                              var url =
+                                                  'https://api.sellship.co/api/favourite/' +
+                                                      userid;
+
+                                              Map<String, String> body = {
+                                                'itemid':
+                                                    hashtagitemsgrid[index]
+                                                        .itemid,
+                                              };
+
+                                              favourites.add(
+                                                  hashtagitemsgrid[index]
+                                                      .itemid);
+                                              setState(() {
+                                                favourites = favourites;
+                                                hashtagitemsgrid[index].likes =
+                                                    hashtagitemsgrid[index]
+                                                            .likes +
+                                                        1;
+                                              });
+                                              final response = await http
+                                                  .post(url, body: body);
+
+                                              if (response.statusCode == 200) {
+                                              } else {
+                                                print(response.statusCode);
+                                              }
+                                            } else {
+                                              showInSnackBar(
+                                                  'Please Login to use Favourites');
+                                            }
+                                          },
+                                          child: Align(
+                                              alignment: Alignment.topRight,
+                                              child: Padding(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    child: Icon(
+                                                      Feather.heart,
+                                                      color: Colors.blueGrey,
+                                                      size: 16,
+                                                    ),
+                                                  ))))
+                                  : Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                          padding: EdgeInsets.all(10),
+                                          child: CircleAvatar(
+                                            radius: 18,
+                                            backgroundColor: Colors.white,
+                                            child: Icon(
+                                              Feather.heart,
+                                              color: Colors.blueGrey,
+                                              size: 16,
+                                            ),
+                                          ))),
+                        ],
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                   ),
                 ),
-              );
-            },
-            childCount: hashtagitemsgrid.length,
-          ),
+              ),
+            );
+          },
         )
       ],
       onLoad: () async {

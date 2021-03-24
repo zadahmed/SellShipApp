@@ -9,6 +9,7 @@ import 'package:SellShip/screens/filterpagesort.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class FilterPage extends StatefulWidget {
   FilterPage({Key key}) : super(key: key);
@@ -500,7 +501,8 @@ class FilterPageState extends State<FilterPage> {
 //                                                      ]),
 //                                                ),
 //                                              ),
-//                                              SliverGrid(
+//                                                SliverStaggeredGrid.countBuilder(
+
 //                                                gridDelegate:
 //                                                    SliverGridDelegateWithFixedCrossAxisCount(
 //                                                        mainAxisSpacing: 5.0,
@@ -601,7 +603,8 @@ class FilterPageState extends State<FilterPage> {
 //                                                      ]),
 //                                                ),
 //                                              ),
-//                                              SliverGrid(
+//                                                SliverStaggeredGrid.countBuilder(
+
 //                                                gridDelegate:
 //                                                    SliverGridDelegateWithFixedCrossAxisCount(
 //                                                        mainAxisSpacing: 5.0,
@@ -702,7 +705,8 @@ class FilterPageState extends State<FilterPage> {
 //                                                      ]),
 //                                                ),
 //                                              ),
-//                                              SliverGrid(
+//                                                SliverStaggeredGrid.countBuilder(
+
 //                                                gridDelegate:
 //                                                    SliverGridDelegateWithFixedCrossAxisCount(
 //                                                        mainAxisSpacing: 5.0,
