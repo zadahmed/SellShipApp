@@ -127,7 +127,7 @@ class _AddItemState extends State<AddItem> {
       }
 
       ites.add(Stores(
-        approved: true,
+          approved: true,
           storeid: 'createastore',
           storename: 'Create a New Store'));
 
@@ -137,7 +137,6 @@ class _AddItemState extends State<AddItem> {
         loading = false;
       });
     } else {
-
       List<Stores> ites = List<Stores>();
       ites.add(Stores(
           approved: true,
@@ -298,6 +297,7 @@ class _AddItemState extends State<AddItem> {
   var _selectedcolor;
 
   bool quantityswitch = false;
+  bool acceptoffers = false;
 
   int _selectedweight = -1;
 
@@ -460,6 +460,10 @@ class _AddItemState extends State<AddItem> {
                               );
                             }),
                         onRefresh: () {
+                          setState(() {
+                            _selectedStore = null;
+                            loading = true;
+                          });
                           getuser();
                           return getStoreData();
                         },
@@ -515,11 +519,13 @@ class _AddItemState extends State<AddItem> {
                                               ),
                                               value: _selectedStore,
                                               onChanged: (Stores newValue) {
-                                                if(newValue.storeid == 'createastore'){
+                                                if (newValue.storeid ==
+                                                    'createastore') {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder: (context) => CreateStoreName()),
+                                                        builder: (context) =>
+                                                            CreateStoreName()),
                                                   );
                                                 }
                                                 if (newValue.approved == true) {
@@ -2418,6 +2424,42 @@ class _AddItemState extends State<AddItem> {
                                           }),
                                     ),
                                   ),
+                                  _selectedStore != null
+                                      ? _selectedStore.storecategory ==
+                                              'Secondhand Seller'
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: 15,
+                                                  bottom: 5,
+                                                  top: 10,
+                                                  right: 15),
+                                              child: Container(
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(15)),
+                                                ),
+                                                child: SwitchListTile(
+                                                  value: acceptoffers,
+                                                  activeColor:
+                                                      Colors.deepPurple,
+                                                  title: Text(
+                                                    'Accept offers from buyers?',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 16,
+                                                        color: Colors.blueGrey),
+                                                  ),
+                                                  onChanged: (value) =>
+                                                      setState(() {
+                                                    acceptoffers = value;
+                                                  }),
+                                                ),
+                                              ))
+                                          : Container()
+                                      : Container(),
                                   SizedBox(
                                     height: 5.0,
                                   ),
@@ -2900,6 +2942,7 @@ class _AddItemState extends State<AddItem> {
                                           if (_selectedStore.storecategory !=
                                               'Secondhand Seller') {
                                             _selectedCondition = 'New';
+                                            acceptoffers = false;
                                           }
 
                                           if (_selectedStore == null) {
@@ -3225,6 +3268,7 @@ class _AddItemState extends State<AddItem> {
                                                               null
                                                           ? ''
                                                           : _selectedsubsubCategory,
+                                                  'acceptoffers': acceptoffers,
                                                   'latitude':
                                                       _lastMapPosition.latitude,
                                                   'longitude': _lastMapPosition
@@ -3266,6 +3310,7 @@ class _AddItemState extends State<AddItem> {
                                                 formData = FormData.fromMap({
                                                   'name': businessnameController
                                                       .text,
+                                                  'acceptoffers': acceptoffers,
                                                   'price':
                                                       fees.toStringAsFixed(2),
                                                   'storeid':
@@ -3342,6 +3387,7 @@ class _AddItemState extends State<AddItem> {
                                                       .text,
                                                   'price':
                                                       fees.toStringAsFixed(2),
+                                                  'acceptoffers': acceptoffers,
                                                   'storeid':
                                                       _selectedStore.storeid,
                                                   'originalprice':
@@ -3423,6 +3469,7 @@ class _AddItemState extends State<AddItem> {
                                                       .text,
                                                   'selleruserid': userid,
                                                   'sellerusername': firstname,
+                                                  'acceptoffers': acceptoffers,
                                                   'price':
                                                       fees.toStringAsFixed(2),
                                                   'storeid':
@@ -3509,6 +3556,7 @@ class _AddItemState extends State<AddItem> {
                                                 formData = FormData.fromMap({
                                                   'name': businessnameController
                                                       .text,
+                                                  'acceptoffers': acceptoffers,
                                                   'price':
                                                       fees.toStringAsFixed(2),
                                                   'originalprice':
@@ -3624,6 +3672,7 @@ class _AddItemState extends State<AddItem> {
                                                       ? []
                                                       : {tags},
                                                   'category': _selectedCategory,
+                                                  'acceptoffers': acceptoffers,
                                                   'subcategory':
                                                       _selectedsubCategory,
                                                   'subsubcategory':
@@ -3761,6 +3810,9 @@ class _AddItemState extends State<AddItem> {
                                                                             ),
                                                                             onTap:
                                                                                 () {
+                                                                              Navigator.pop(context);
+                                                                              Navigator.pop(context);
+
                                                                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RootScreen()));
                                                                             },
                                                                           ),

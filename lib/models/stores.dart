@@ -9,11 +9,13 @@ class Stores {
   final String followers;
   final String storetype;
   final bool approved;
+  final String address;
 
   Stores({
     this.storeid,
     this.followers,
     this.approved,
+    this.address,
     this.sold,
     this.reviews,
     this.storename,

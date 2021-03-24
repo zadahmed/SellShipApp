@@ -41,10 +41,12 @@ class Item {
   final String country;
   final String originalprice;
   final bool approved;
+  final bool makeoffers;
 
   Item(
       {this.itemid,
       this.name,
+      this.makeoffers,
       this.approved,
       this.views,
       this.image,

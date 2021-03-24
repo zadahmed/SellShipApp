@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/controllers/FadeAnimations.dart';
 import 'package:SellShip/controllers/handleNotifications.dart';
@@ -728,8 +729,7 @@ class _ProfilePageState extends State<ProfilePage>
                                           username != null
                                               ? Padding(
                                                   padding: EdgeInsets.only(
-                                                    left: 25,
-                                                  ),
+                                                      left: 20, top: 25),
                                                   child: Column(
                                                       children: [
                                                         Text(
@@ -744,13 +744,42 @@ class _ProfilePageState extends State<ProfilePage>
                                                                   FontWeight
                                                                       .bold),
                                                         ),
+                                                        businesstier != null
+                                                            ? Container(
+                                                                height: 30,
+                                                                width: 130,
+                                                                decoration: BoxDecoration(
+                                                                    color:
+                                                                        tiercolor,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            5)),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  businesstier,
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                          'Helvetica',
+                                                                      fontStyle:
+                                                                          FontStyle
+                                                                              .italic,
+                                                                      fontSize:
+                                                                          18.0,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                )))
+                                                            : Container(),
                                                       ],
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
-                                                              .start))
+                                                              .start),
+                                                )
                                               : Column(
                                                   children: [
                                                     Padding(
@@ -824,7 +853,7 @@ class _ProfilePageState extends State<ProfilePage>
                                                                         FontWeight
                                                                             .bold),
                                                               ))),
-                                                        ))
+                                                        )),
                                                   ],
                                                 )
                                         ]))),
@@ -3129,13 +3158,28 @@ class _ProfilePageState extends State<ProfilePage>
         var respons = json.decode(response.body);
         Map<String, dynamic> profilemap = respons;
 
-        print(profilemap);
-
         var usernam = profilemap['username'];
         if (usernam != null) {
         } else {
           usernam = null;
         }
+
+        var tier;
+        var colos;
+        if (profilemap.containsKey('tier')) {
+          tier = profilemap['tier'];
+          await storage.write(key: 'tier', value: profilemap['tier']);
+          if (tier == 'Enterprise') {
+            colos = Colors.black;
+          } else if (tier == 'Grow') {
+            colos = Colors.deepPurpleAccent;
+          }
+        } else {
+          tier = 'Free';
+          colos = Colors.deepOrangeAccent;
+        }
+        print(tier);
+        print(colos);
 
         var profilepic = profilemap['profilepicture'];
         if (profilepic != null) {
@@ -3172,7 +3216,8 @@ class _ProfilePageState extends State<ProfilePage>
             phonenumber = profilemap['phonenumber'];
             email = profilemap['email'];
             loading = false;
-
+            businesstier = tier;
+            tiercolor = colos;
             confirmedfb = confirmedf;
             confirmedemail = confirmedemai;
             confirmedphone = confirmedphon;
@@ -3199,6 +3244,8 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   var username;
+  var businesstier;
+  var tiercolor;
   double reviewrating;
 
   getStoreData() async {

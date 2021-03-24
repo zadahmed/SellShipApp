@@ -159,79 +159,83 @@ class _CommentsPageState extends State<CommentsPage> {
                 fontSize: 18,
               ),
             )),
+        bottomNavigationBar: Container(
+          color: Colors.grey.withOpacity(0.1),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 25, left: 10, right: 10, top: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              height: 50,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: TextField(
+                  maxLines: 20,
+                  controller: commentcontroller,
+                  autocorrect: true,
+                  enableSuggestions: true,
+                  textCapitalization: TextCapitalization.sentences,
+                  style: TextStyle(fontFamily: 'Helvetica', fontSize: 16),
+                  decoration: InputDecoration(
+                      // contentPadding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      suffixIcon: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: InkWell(
+                            child: CircleAvatar(
+                              child: Icon(
+                                Feather.message_circle,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                              backgroundColor: Colors.deepOrange,
+                            ),
+                            onTap: () async {
+                              if (commentcontroller.text.isNotEmpty) {
+                                var url =
+                                    'https://api.sellship.co/api/comment/' +
+                                        itemid;
+                                var userid = await storage.read(key: 'userid');
+                                if (userid != null) {
+                                  final response = await http.post(url, body: {
+                                    'userid': userid,
+                                    'comment': commentcontroller.text
+                                  });
+                                  commentcontroller.clear();
+                                  if (response.statusCode == 200) {
+                                    if (response.body == 'Matched') {
+                                      print('Matched');
+                                    }
+                                    loadcomments();
+                                  } else {
+                                    print(response.statusCode);
+                                  }
+                                } else {
+                                  showInSnackBar('Please Login to Comment');
+                                }
+                              }
+                            }),
+                      ),
+                      border: InputBorder.none,
+                      hintText: "Enter your comment",
+                      hintStyle: TextStyle(
+                          fontFamily: 'Helvetica',
+                          fontSize: 16,
+                          color: Colors.grey)),
+                ),
+              ),
+            ),
+          ),
+        ),
         body: commentslist.isNotEmpty
             ? GestureDetector(
                 onTap: () {
                   FocusScope.of(context).requestFocus(new FocusNode());
                 },
                 child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10, top: 10),
-                        child: InkWell(
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Icon(
-                                Feather.message_circle,
-                                color: Colors.deepOrange,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                'Add a comment',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  color: Colors.deepOrange,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CommentsPage(
-                                        itemid: itemid,
-                                      )),
-                            );
-                          },
-                        ),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(right: 15, top: 10),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CommentsPage(
-                                          itemid: itemid,
-                                        )),
-                              );
-                            },
-                            child: Text(
-                              'View All',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                color: Colors.deepOrange,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
                   SizedBox(
                     height: 10,
                   ),

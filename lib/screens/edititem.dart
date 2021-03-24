@@ -250,7 +250,7 @@ class EditItemState extends State<EditItem>
           description: jsonbody[0]['description'],
           category: jsonbody[0]['category'],
           condition: jsonbody[0]['condition'] == null
-              ? 'Like New'
+              ? 'New'
               : jsonbody[0]['condition'],
           image: jsonbody[0]['image'],
           image1: jsonbody[0]['image1'],
@@ -310,8 +310,7 @@ class EditItemState extends State<EditItem>
           _selectedsubsubCategory = newItem.subsubcategory;
           loadbrands(_selectedCategory);
           businessnameController.text = newItem.name;
-
-          businesspricecontroller.text = newItem.price;
+          brand = newItem.brand;
           businessdescriptionController.text = newItem.description;
           firstname = newItem.username;
           email = newItem.useremail;
@@ -324,32 +323,25 @@ class EditItemState extends State<EditItem>
               double.parse(newItem.latitude), double.parse(newItem.longitude));
           print(newItem.weight);
           _selectedweight = weights.indexOf(newItem.weight.toString());
-//          itemweight =
-//              int.parse(weights[weights.indexOf(newItem.weight.toString())]);
+          itemweight = int.parse((newItem.weight.toString()));
 
+          var weightfees;
           if (_selectedweight == 0) {
             weightfees = 20.0;
-            totalpayable = double.parse(newItem.price.toString()) -
-                weightfees -
-                (0.15) * double.parse(newItem.price.toString());
           } else if (_selectedweight == 1) {
             weightfees = 30.0;
-            totalpayable = double.parse(newItem.price.toString()) -
-                weightfees -
-                (0.15) * double.parse(newItem.price.toString());
           } else if (_selectedweight == 2) {
             weightfees = 50.0;
-            totalpayable = double.parse(newItem.price.toString()) -
-                weightfees -
-                (0.15) * double.parse(newItem.price.toString());
           } else if (_selectedweight == 3) {
             weightfees = 110.0;
-            totalpayable = double.parse(newItem.price.toString()) -
-                weightfees -
-                (0.15) * double.parse(newItem.price.toString());
           }
 
-          fees = double.parse(newItem.price.toString());
+          var ffees = double.parse(newItem.price.toString()) / 1.15;
+
+          totalpayable = ffees - weightfees;
+          businesspricecontroller.text = totalpayable.toStringAsFixed(0);
+
+          fees = double.parse(newItem.price);
 
           city = newItem.city;
 
@@ -704,8 +696,6 @@ class EditItemState extends State<EditItem>
                                         itemCount: imagesList.length,
                                         itemBuilder: (BuildContext context,
                                             int position) {
-                                          print(imagesList.length);
-
                                           return Stack(children: <Widget>[
                                             Padding(
                                               padding: EdgeInsets.all(10),
@@ -1496,68 +1486,72 @@ class EditItemState extends State<EditItem>
                       SizedBox(
                         height: 10.0,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 15,
-                          bottom: 5,
-                        ),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Condition',
-                            style: TextStyle(
-                                fontFamily: 'Helvetica',
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              left: 15, bottom: 5, top: 10, right: 15),
-                          child: Container(
-                            height: 70,
-                            padding: EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                            ),
-                            child: Center(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  isExpanded: true,
-                                  hint: Text(
-                                    'Condition of Item',
-                                    style: TextStyle(
-                                        fontFamily: 'Helvetica',
-                                        fontSize: 16,
-                                        color: Colors.blueGrey),
-                                  ),
-                                  value: _selectedcondition,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      _selectedcondition = newValue;
-                                      percentindictor = 0.7;
-                                    });
-                                  },
-                                  items: conditions.map((location) {
-                                    return DropdownMenuItem(
-                                      child: new Text(
-                                        location,
+                      newItem.condition != 'New'
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                left: 15,
+                                bottom: 5,
+                              ),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Condition',
+                                  style: TextStyle(
+                                      fontFamily: 'Helvetica',
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                      newItem.condition != 'New'
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                  left: 15, bottom: 5, top: 10, right: 15),
+                              child: Container(
+                                height: 70,
+                                padding: EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                ),
+                                child: Center(
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      isExpanded: true,
+                                      hint: Text(
+                                        'Condition of Item',
                                         style: TextStyle(
                                             fontFamily: 'Helvetica',
                                             fontSize: 16,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500),
+                                            color: Colors.blueGrey),
                                       ),
-                                      value: location,
-                                    );
-                                  }).toList(),
+                                      value: _selectedcondition,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _selectedcondition = newValue;
+                                          percentindictor = 0.7;
+                                        });
+                                      },
+                                      items: conditions.map((location) {
+                                        return DropdownMenuItem(
+                                          child: new Text(
+                                            location,
+                                            style: TextStyle(
+                                                fontFamily: 'Helvetica',
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          value: location,
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          )),
+                              ))
+                          : Container(),
                       SizedBox(
                         height: 10.0,
                       ),
@@ -2661,20 +2655,45 @@ class EditItemState extends State<EditItem>
                               showDialog(
                                   context: context,
                                   barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return Dialog(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              20.0)), //this right here
-                                      child: Container(
-                                        height: 100,
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: SpinKitDoubleBounce(
-                                                color: Colors.deepOrange)),
-                                      ),
-                                    );
-                                  });
+                                  useRootNavigator: false,
+                                  builder: (_) => new AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))),
+                                        content: Builder(
+                                          builder: (context) {
+                                            return Container(
+                                                height: 140,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'Editing Item..',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Helvetica',
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 15,
+                                                    ),
+                                                    Container(
+                                                        height: 50,
+                                                        width: 50,
+                                                        child:
+                                                            SpinKitDoubleBounce(
+                                                          color:
+                                                              Colors.deepOrange,
+                                                        )),
+                                                  ],
+                                                ));
+                                          },
+                                        ),
+                                      ));
 
                               if (images.isNotEmpty) {
                                 print('sds');
@@ -2710,512 +2729,453 @@ class EditItemState extends State<EditItem>
                                     businessdescriptionController.text = '';
                                   }
 
-                                  var userurl =
-                                      'https://api.sellship.co/api/user/' +
-                                          userid;
-                                  final userresponse = await http.get(userurl);
-                                  if (userresponse.statusCode == 200) {
-                                    var userrespons =
-                                        json.decode(userresponse.body);
-                                    var profilemap = userrespons;
+                                  List<int> _image;
+                                  List<int> _image2;
+                                  List<int> _image3;
+                                  List<int> _image4;
+                                  List<int> _image5;
+                                  List<int> _image6;
 
-                                    setState(() {
-                                      firstname = profilemap['username'];
-                                      phonenumber = profilemap['phonenumber'];
-                                      email = profilemap['email'];
+                                  if (images.length == 1) {
+                                    ByteData byteData = await images[0]
+                                        .getByteData(quality: 50);
+                                    _image = byteData.buffer.asUint8List();
+                                  } else if (images.length == 2) {
+                                    ByteData byteData = await images[0]
+                                        .getByteData(quality: 50);
+                                    _image = byteData.buffer.asUint8List();
+
+                                    ByteData byteData2 = await images[1]
+                                        .getByteData(quality: 50);
+                                    _image2 = byteData2.buffer.asUint8List();
+                                  } else if (images.length == 3) {
+                                    ByteData byteData = await images[0]
+                                        .getByteData(quality: 50);
+                                    _image = byteData.buffer.asUint8List();
+
+                                    ByteData byteData2 = await images[1]
+                                        .getByteData(quality: 50);
+                                    _image2 = byteData2.buffer.asUint8List();
+
+                                    ByteData byteData3 = await images[2]
+                                        .getByteData(quality: 50);
+                                    _image3 = byteData3.buffer.asUint8List();
+                                  } else if (images.length == 4) {
+                                    ByteData byteData = await images[0]
+                                        .getByteData(quality: 50);
+                                    _image = byteData.buffer.asUint8List();
+
+                                    ByteData byteData2 = await images[1]
+                                        .getByteData(quality: 50);
+                                    _image2 = byteData2.buffer.asUint8List();
+
+                                    ByteData byteData3 = await images[2]
+                                        .getByteData(quality: 50);
+                                    _image3 = byteData3.buffer.asUint8List();
+
+                                    ByteData byteData4 = await images[3]
+                                        .getByteData(quality: 50);
+                                    _image4 = byteData4.buffer.asUint8List();
+                                  } else if (images.length == 5) {
+                                    ByteData byteData = await images[0]
+                                        .getByteData(quality: 50);
+                                    _image = byteData.buffer.asUint8List();
+
+                                    ByteData byteData2 = await images[1]
+                                        .getByteData(quality: 50);
+                                    _image2 = byteData2.buffer.asUint8List();
+
+                                    ByteData byteData3 = await images[2]
+                                        .getByteData(quality: 50);
+                                    _image3 = byteData3.buffer.asUint8List();
+
+                                    ByteData byteData4 = await images[3]
+                                        .getByteData(quality: 50);
+                                    _image4 = byteData4.buffer.asUint8List();
+
+                                    ByteData byteData5 = await images[4]
+                                        .getByteData(quality: 50);
+                                    _image5 = byteData5.buffer.asUint8List();
+                                  } else if (images.length == 6) {
+                                    ByteData byteData = await images[0]
+                                        .getByteData(quality: 50);
+                                    _image = byteData.buffer.asUint8List();
+
+                                    ByteData byteData2 = await images[1]
+                                        .getByteData(quality: 50);
+                                    _image2 = byteData2.buffer.asUint8List();
+
+                                    ByteData byteData3 = await images[2]
+                                        .getByteData(quality: 50);
+                                    _image3 = byteData3.buffer.asUint8List();
+
+                                    ByteData byteData4 = await images[3]
+                                        .getByteData(quality: 50);
+                                    _image4 = byteData4.buffer.asUint8List();
+
+                                    ByteData byteData5 = await images[4]
+                                        .getByteData(quality: 50);
+                                    _image5 = byteData5.buffer.asUint8List();
+
+                                    ByteData byteData6 = await images[5]
+                                        .getByteData(quality: 50);
+                                    _image6 = byteData6.buffer.asUint8List();
+                                  }
+
+                                  Dio dio = new Dio();
+                                  FormData formData;
+
+                                  if (_image != null) {
+                                    String fileName = randomAlphaNumeric(20);
+
+                                    formData = FormData.fromMap({
+                                      'name': businessnameController.text,
+                                      'price': fees.toStringAsFixed(2),
+                                      'originalprice': businesspricecontroller
+                                          .text
+                                          .toString(),
+                                      'colors': selectedColors.isEmpty
+                                          ? []
+                                          : {selectedColors},
+                                      'tags': tags.isEmpty ? [] : {tags},
+                                      'size': _selectedsize == null
+                                          ? ''
+                                          : _selectedsize,
+                                      'category': _selectedCategory,
+                                      'subcategory': _selectedsubCategory,
+                                      'subsubcategory':
+                                          _selectedsubsubCategory == null
+                                              ? ''
+                                              : _selectedsubsubCategory,
+                                      'latitude': _lastMapPosition.latitude,
+                                      'longitude': _lastMapPosition.longitude,
+                                      'description':
+                                          businessdescriptionController.text,
+                                      'city': city.trim(),
+                                      'itemid': newItem.itemid,
+                                      'country': country.trim(),
+                                      'condition': _selectedCondition,
+                                      'brand': bran,
+                                      'weight': itemweight,
+                                      'weightmetric': metric,
+                                      'quantity': quantity,
+                                      'date_uploaded':
+                                          DateTime.now().toString(),
+                                      'image': MultipartFile.fromBytes(
+                                        _image,
+                                        filename: fileName,
+                                      )
                                     });
+                                  }
+                                  if (_image != null && _image2 != null) {
+                                    String fileName = randomAlphaNumeric(20);
+                                    String fileName2 = randomAlphaNumeric(20);
+                                    formData = FormData.fromMap({
+                                      'name': businessnameController.text,
+                                      'price': fees.toStringAsFixed(2),
+                                      'originalprice': businesspricecontroller
+                                          .text
+                                          .toString(),
+                                      'colors': selectedColors.isEmpty
+                                          ? []
+                                          : {selectedColors},
+                                      'size': _selectedsize == null
+                                          ? ''
+                                          : _selectedsize,
+                                      'tags': tags.isEmpty ? [] : {tags},
+                                      'category': _selectedCategory,
+                                      'subcategory': _selectedsubCategory,
+                                      'subsubcategory':
+                                          _selectedsubsubCategory == null
+                                              ? ''
+                                              : _selectedsubsubCategory,
+                                      'latitude': _lastMapPosition.latitude,
+                                      'longitude': _lastMapPosition.longitude,
+                                      'description':
+                                          businessdescriptionController.text,
+                                      'city': city.trim(),
+                                      'country': country.trim(),
+                                      'condition': _selectedCondition,
+                                      'brand': bran,
+                                      'itemid': newItem.itemid,
+                                      'weight': itemweight,
+                                      'weightmetric': metric,
+                                      'quantity': quantity,
+                                      'date_uploaded':
+                                          DateTime.now().toString(),
+                                      'image': MultipartFile.fromBytes(_image,
+                                          filename: fileName),
+                                      'image2': MultipartFile.fromBytes(_image2,
+                                          filename: fileName2),
+                                    });
+                                  }
+                                  if (_image != null &&
+                                      _image2 != null &&
+                                      _image3 != null) {
+                                    String fileName = randomAlphaNumeric(20);
+                                    String fileName2 = randomAlphaNumeric(20);
+                                    String fileName3 = randomAlphaNumeric(20);
 
-                                    print('I am here');
+                                    formData = FormData.fromMap({
+                                      'name': businessnameController.text,
+                                      'price': fees.toStringAsFixed(2),
+                                      'originalprice': businesspricecontroller
+                                          .text
+                                          .toString(),
+                                      'colors': selectedColors.isEmpty
+                                          ? []
+                                          : {selectedColors},
+                                      'size': _selectedsize == null
+                                          ? ''
+                                          : _selectedsize,
+                                      'tags': tags.isEmpty ? [] : {tags},
+                                      'category': _selectedCategory,
+                                      'subcategory': _selectedsubCategory,
+                                      'subsubcategory':
+                                          _selectedsubsubCategory == null
+                                              ? ''
+                                              : _selectedsubsubCategory,
+                                      'latitude': _lastMapPosition.latitude,
+                                      'longitude': _lastMapPosition.longitude,
+                                      'description':
+                                          businessdescriptionController.text,
+                                      'city': city.trim(),
+                                      'country': country.trim(),
+                                      'condition': _selectedCondition,
+                                      'brand': bran,
+                                      'weight': itemweight,
+                                      'itemid': newItem.itemid,
+                                      'weightmetric': metric,
+                                      'quantity': quantity,
+                                      'date_uploaded':
+                                          DateTime.now().toString(),
+                                      'image': MultipartFile.fromBytes(_image,
+                                          filename: fileName),
+                                      'image2': MultipartFile.fromBytes(_image2,
+                                          filename: fileName2),
+                                      'image3': MultipartFile.fromBytes(_image3,
+                                          filename: fileName3),
+                                    });
+                                  }
+                                  if (_image != null &&
+                                      _image2 != null &&
+                                      _image3 != null &&
+                                      _image4 != null) {
+                                    String fileName = randomAlphaNumeric(20);
+                                    String fileName2 = randomAlphaNumeric(20);
+                                    String fileName3 = randomAlphaNumeric(20);
+                                    String fileName4 = randomAlphaNumeric(20);
 
-                                    List<int> _image;
-                                    List<int> _image2;
-                                    List<int> _image3;
-                                    List<int> _image4;
-                                    List<int> _image5;
-                                    List<int> _image6;
+                                    formData = FormData.fromMap({
+                                      'name': businessnameController.text,
+                                      'price': fees.toStringAsFixed(2),
+                                      'originalprice': businesspricecontroller
+                                          .text
+                                          .toString(),
+                                      'colors': selectedColors.isEmpty
+                                          ? []
+                                          : {selectedColors},
+                                      'size': _selectedsize == null
+                                          ? ''
+                                          : _selectedsize,
+                                      'tags': tags.isEmpty ? [] : {tags},
+                                      'category': _selectedCategory,
+                                      'subcategory': _selectedsubCategory,
+                                      'subsubcategory':
+                                          _selectedsubsubCategory == null
+                                              ? ''
+                                              : _selectedsubsubCategory,
+                                      'latitude': _lastMapPosition.latitude,
+                                      'longitude': _lastMapPosition.longitude,
+                                      'itemid': newItem.itemid,
+                                      'description':
+                                          businessdescriptionController.text,
+                                      'city': city.trim(),
+                                      'country': country.trim(),
+                                      'condition': _selectedCondition,
+                                      'brand': bran,
+                                      'weight': itemweight,
+                                      'weightmetric': metric,
+                                      'quantity': quantity,
+                                      'date_uploaded':
+                                          DateTime.now().toString(),
+                                      'image': MultipartFile.fromBytes(_image,
+                                          filename: fileName),
+                                      'image2': MultipartFile.fromBytes(_image2,
+                                          filename: fileName2),
+                                      'image3': MultipartFile.fromBytes(_image3,
+                                          filename: fileName3),
+                                      'image4': MultipartFile.fromBytes(_image4,
+                                          filename: fileName4),
+                                    });
+                                  }
+                                  if (_image != null &&
+                                      _image2 != null &&
+                                      _image3 != null &&
+                                      _image4 != null &&
+                                      _image5 != null) {
+                                    String fileName = randomAlphaNumeric(20);
+                                    String fileName2 = randomAlphaNumeric(20);
+                                    String fileName3 = randomAlphaNumeric(20);
+                                    String fileName4 = randomAlphaNumeric(20);
+                                    String fileName5 = randomAlphaNumeric(20);
 
-                                    if (images.length == 1) {
-                                      ByteData byteData = await images[0]
-                                          .getByteData(quality: 50);
-                                      _image = byteData.buffer.asUint8List();
-                                    } else if (images.length == 2) {
-                                      ByteData byteData = await images[0]
-                                          .getByteData(quality: 50);
-                                      _image = byteData.buffer.asUint8List();
+                                    formData = FormData.fromMap({
+                                      'name': businessnameController.text,
+                                      'price': fees.toStringAsFixed(2),
+                                      'originalprice': businesspricecontroller
+                                          .text
+                                          .toString(),
+                                      'colors': selectedColors.isEmpty
+                                          ? []
+                                          : {selectedColors},
+                                      'size': _selectedsize == null
+                                          ? ''
+                                          : _selectedsize,
+                                      'category': _selectedCategory,
+                                      'subcategory': _selectedsubCategory,
+                                      'subsubcategory':
+                                          _selectedsubsubCategory == null
+                                              ? ''
+                                              : _selectedsubsubCategory,
+                                      'latitude': _lastMapPosition.latitude,
+                                      'longitude': _lastMapPosition.longitude,
+                                      'description':
+                                          businessdescriptionController.text,
+                                      'city': city.trim(),
+                                      'itemid': newItem.itemid,
+                                      'tags': tags.isEmpty ? [] : {tags},
+                                      'country': country.trim(),
+                                      'condition': _selectedCondition,
+                                      'brand': bran,
+                                      'weight': itemweight,
+                                      'weightmetric': metric,
+                                      'quantity': quantity,
+                                      'date_uploaded':
+                                          DateTime.now().toString(),
+                                      'image': MultipartFile.fromBytes(_image,
+                                          filename: fileName),
+                                      'image2': MultipartFile.fromBytes(_image2,
+                                          filename: fileName2),
+                                      'image3': MultipartFile.fromBytes(_image3,
+                                          filename: fileName3),
+                                      'image4': MultipartFile.fromBytes(_image4,
+                                          filename: fileName4),
+                                      'image5': MultipartFile.fromBytes(_image5,
+                                          filename: fileName5),
+                                    });
+                                  }
+                                  if (_image != null &&
+                                      _image2 != null &&
+                                      _image3 != null &&
+                                      _image4 != null &&
+                                      _image5 != null &&
+                                      _image6 != null) {
+                                    String fileName = randomAlphaNumeric(20);
+                                    String fileName2 = randomAlphaNumeric(20);
+                                    String fileName3 = randomAlphaNumeric(20);
+                                    String fileName4 = randomAlphaNumeric(20);
+                                    String fileName5 = randomAlphaNumeric(20);
+                                    String fileName6 = randomAlphaNumeric(20);
+                                    formData = FormData.fromMap({
+                                      'name': businessnameController.text,
+                                      'itemid': newItem.itemid,
+                                      'price': fees.toStringAsFixed(2),
+                                      'originalprice': businesspricecontroller
+                                          .text
+                                          .toString(),
+                                      'colors': selectedColors.isEmpty
+                                          ? []
+                                          : {selectedColors},
+                                      'size': _selectedsize == null
+                                          ? ''
+                                          : _selectedsize,
+                                      'tags': tags.isEmpty ? [] : {tags},
+                                      'category': _selectedCategory,
+                                      'subcategory': _selectedsubCategory,
+                                      'subsubcategory':
+                                          _selectedsubsubCategory == null
+                                              ? ''
+                                              : _selectedsubsubCategory,
+                                      'latitude': _lastMapPosition.latitude,
+                                      'longitude': _lastMapPosition.longitude,
+                                      'description':
+                                          businessdescriptionController.text,
+                                      'city': city.trim(),
+                                      'country': country.trim(),
+                                      'condition': _selectedCondition,
+                                      'brand': bran,
+                                      'weight': itemweight,
+                                      'weightmetric': metric,
+                                      'quantity': quantity,
+                                      'date_uploaded':
+                                          DateTime.now().toString(),
+                                      'image': MultipartFile.fromBytes(_image,
+                                          filename: fileName),
+                                      'image2': MultipartFile.fromBytes(_image2,
+                                          filename: fileName2),
+                                      'image3': MultipartFile.fromBytes(_image3,
+                                          filename: fileName3),
+                                      'image4': MultipartFile.fromBytes(_image4,
+                                          filename: fileName4),
+                                      'image5': MultipartFile.fromBytes(_image5,
+                                          filename: fileName5),
+                                      'image6': MultipartFile.fromBytes(_image6,
+                                          filename: fileName6),
+                                    });
+                                  }
 
-                                      ByteData byteData2 = await images[1]
-                                          .getByteData(quality: 50);
-                                      _image2 = byteData2.buffer.asUint8List();
-                                    } else if (images.length == 3) {
-                                      ByteData byteData = await images[0]
-                                          .getByteData(quality: 50);
-                                      _image = byteData.buffer.asUint8List();
+                                  var addurl =
+                                      'https://api.sellship.co/api/updateitem';
+                                  var response =
+                                      await dio.post(addurl, data: formData);
+                                  print(response.data);
+                                  print(response.statusCode);
 
-                                      ByteData byteData2 = await images[1]
-                                          .getByteData(quality: 50);
-                                      _image2 = byteData2.buffer.asUint8List();
+                                  if (response.statusCode == 200) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AssetGiffyDialog(
+                                              image: Image.asset(
+                                                'assets/yay.gif',
+                                                fit: BoxFit.cover,
+                                              ),
+                                              title: Text(
+                                                'Hooray!',
+                                                style: TextStyle(
+                                                    fontSize: 22.0,
+                                                    fontWeight:
+                                                        FontWeight.w600),
+                                              ),
+                                              description: Text(
+                                                'Your Item has been Updated!',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(),
+                                              ),
+                                              onlyOkButton: true,
+                                              entryAnimation:
+                                                  EntryAnimation.DEFAULT,
+                                              onOkButtonPressed: () {
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop('dialog');
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop('dialog');
 
-                                      ByteData byteData3 = await images[2]
-                                          .getByteData(quality: 50);
-                                      _image3 = byteData3.buffer.asUint8List();
-                                    } else if (images.length == 4) {
-                                      ByteData byteData = await images[0]
-                                          .getByteData(quality: 50);
-                                      _image = byteData.buffer.asUint8List();
-
-                                      ByteData byteData2 = await images[1]
-                                          .getByteData(quality: 50);
-                                      _image2 = byteData2.buffer.asUint8List();
-
-                                      ByteData byteData3 = await images[2]
-                                          .getByteData(quality: 50);
-                                      _image3 = byteData3.buffer.asUint8List();
-
-                                      ByteData byteData4 = await images[3]
-                                          .getByteData(quality: 50);
-                                      _image4 = byteData4.buffer.asUint8List();
-                                    } else if (images.length == 5) {
-                                      ByteData byteData = await images[0]
-                                          .getByteData(quality: 50);
-                                      _image = byteData.buffer.asUint8List();
-
-                                      ByteData byteData2 = await images[1]
-                                          .getByteData(quality: 50);
-                                      _image2 = byteData2.buffer.asUint8List();
-
-                                      ByteData byteData3 = await images[2]
-                                          .getByteData(quality: 50);
-                                      _image3 = byteData3.buffer.asUint8List();
-
-                                      ByteData byteData4 = await images[3]
-                                          .getByteData(quality: 50);
-                                      _image4 = byteData4.buffer.asUint8List();
-
-                                      ByteData byteData5 = await images[4]
-                                          .getByteData(quality: 50);
-                                      _image5 = byteData5.buffer.asUint8List();
-                                    } else if (images.length == 6) {
-                                      ByteData byteData = await images[0]
-                                          .getByteData(quality: 50);
-                                      _image = byteData.buffer.asUint8List();
-
-                                      ByteData byteData2 = await images[1]
-                                          .getByteData(quality: 50);
-                                      _image2 = byteData2.buffer.asUint8List();
-
-                                      ByteData byteData3 = await images[2]
-                                          .getByteData(quality: 50);
-                                      _image3 = byteData3.buffer.asUint8List();
-
-                                      ByteData byteData4 = await images[3]
-                                          .getByteData(quality: 50);
-                                      _image4 = byteData4.buffer.asUint8List();
-
-                                      ByteData byteData5 = await images[4]
-                                          .getByteData(quality: 50);
-                                      _image5 = byteData5.buffer.asUint8List();
-
-                                      ByteData byteData6 = await images[5]
-                                          .getByteData(quality: 50);
-                                      _image6 = byteData6.buffer.asUint8List();
-                                    }
-
-                                    Dio dio = new Dio();
-                                    FormData formData;
-
-                                    if (_image != null) {
-                                      String fileName = randomAlphaNumeric(20);
-
-                                      formData = FormData.fromMap({
-                                        'name': businessnameController.text,
-                                        'price': fees.toStringAsFixed(2),
-                                        'originalprice': businesspricecontroller
-                                            .text
-                                            .toString(),
-                                        'colors': selectedColors.isEmpty
-                                            ? []
-                                            : {selectedColors},
-                                        'tags': tags.isEmpty ? [] : {tags},
-                                        'size': _selectedsize == null
-                                            ? ''
-                                            : _selectedsize,
-                                        'category': _selectedCategory,
-                                        'subcategory': _selectedsubCategory,
-                                        'subsubcategory':
-                                            _selectedsubsubCategory == null
-                                                ? ''
-                                                : _selectedsubsubCategory,
-                                        'latitude': _lastMapPosition.latitude,
-                                        'longitude': _lastMapPosition.longitude,
-                                        'description':
-                                            businessdescriptionController.text,
-                                        'city': city.trim(),
-                                        'itemid': newItem.itemid,
-                                        'country': country.trim(),
-                                        'condition': _selectedCondition,
-                                        'brand': bran,
-                                        'userid': userid,
-                                        'username': firstname,
-                                        'useremail': email,
-                                        'usernumber': phonenumber,
-                                        'weight': itemweight,
-                                        'weightmetric': metric,
-                                        'quantity': quantity,
-                                        'date_uploaded':
-                                            DateTime.now().toString(),
-                                        'image': MultipartFile.fromBytes(
-                                          _image,
-                                          filename: fileName,
-                                        )
-                                      });
-                                    }
-                                    if (_image != null && _image2 != null) {
-                                      String fileName = randomAlphaNumeric(20);
-                                      String fileName2 = randomAlphaNumeric(20);
-                                      formData = FormData.fromMap({
-                                        'name': businessnameController.text,
-                                        'price': fees.toStringAsFixed(2),
-                                        'originalprice': businesspricecontroller
-                                            .text
-                                            .toString(),
-                                        'colors': selectedColors.isEmpty
-                                            ? []
-                                            : {selectedColors},
-                                        'size': _selectedsize == null
-                                            ? ''
-                                            : _selectedsize,
-                                        'tags': tags.isEmpty ? [] : {tags},
-                                        'category': _selectedCategory,
-                                        'subcategory': _selectedsubCategory,
-                                        'subsubcategory':
-                                            _selectedsubsubCategory == null
-                                                ? ''
-                                                : _selectedsubsubCategory,
-                                        'latitude': _lastMapPosition.latitude,
-                                        'longitude': _lastMapPosition.longitude,
-                                        'description':
-                                            businessdescriptionController.text,
-                                        'city': city.trim(),
-                                        'country': country.trim(),
-                                        'condition': _selectedCondition,
-                                        'brand': bran,
-                                        'userid': userid,
-                                        'username': firstname,
-                                        'itemid': newItem.itemid,
-                                        'useremail': email,
-                                        'usernumber': phonenumber,
-                                        'weight': itemweight,
-                                        'weightmetric': metric,
-                                        'quantity': quantity,
-                                        'date_uploaded':
-                                            DateTime.now().toString(),
-                                        'image': MultipartFile.fromBytes(_image,
-                                            filename: fileName),
-                                        'image2': MultipartFile.fromBytes(
-                                            _image2,
-                                            filename: fileName2),
-                                      });
-                                    }
-                                    if (_image != null &&
-                                        _image2 != null &&
-                                        _image3 != null) {
-                                      String fileName = randomAlphaNumeric(20);
-                                      String fileName2 = randomAlphaNumeric(20);
-                                      String fileName3 = randomAlphaNumeric(20);
-
-                                      formData = FormData.fromMap({
-                                        'name': businessnameController.text,
-                                        'price': fees.toStringAsFixed(2),
-                                        'originalprice': businesspricecontroller
-                                            .text
-                                            .toString(),
-                                        'colors': selectedColors.isEmpty
-                                            ? []
-                                            : {selectedColors},
-                                        'size': _selectedsize == null
-                                            ? ''
-                                            : _selectedsize,
-                                        'tags': tags.isEmpty ? [] : {tags},
-                                        'category': _selectedCategory,
-                                        'subcategory': _selectedsubCategory,
-                                        'subsubcategory':
-                                            _selectedsubsubCategory == null
-                                                ? ''
-                                                : _selectedsubsubCategory,
-                                        'latitude': _lastMapPosition.latitude,
-                                        'longitude': _lastMapPosition.longitude,
-                                        'description':
-                                            businessdescriptionController.text,
-                                        'city': city.trim(),
-                                        'country': country.trim(),
-                                        'condition': _selectedCondition,
-                                        'brand': bran,
-                                        'userid': userid,
-                                        'username': firstname,
-                                        'useremail': email,
-                                        'usernumber': phonenumber,
-                                        'weight': itemweight,
-                                        'itemid': newItem.itemid,
-                                        'weightmetric': metric,
-                                        'quantity': quantity,
-                                        'date_uploaded':
-                                            DateTime.now().toString(),
-                                        'image': MultipartFile.fromBytes(_image,
-                                            filename: fileName),
-                                        'image2': MultipartFile.fromBytes(
-                                            _image2,
-                                            filename: fileName2),
-                                        'image3': MultipartFile.fromBytes(
-                                            _image3,
-                                            filename: fileName3),
-                                      });
-                                    }
-                                    if (_image != null &&
-                                        _image2 != null &&
-                                        _image3 != null &&
-                                        _image4 != null) {
-                                      String fileName = randomAlphaNumeric(20);
-                                      String fileName2 = randomAlphaNumeric(20);
-                                      String fileName3 = randomAlphaNumeric(20);
-                                      String fileName4 = randomAlphaNumeric(20);
-
-                                      formData = FormData.fromMap({
-                                        'name': businessnameController.text,
-                                        'price': fees.toStringAsFixed(2),
-                                        'originalprice': businesspricecontroller
-                                            .text
-                                            .toString(),
-                                        'colors': selectedColors.isEmpty
-                                            ? []
-                                            : {selectedColors},
-                                        'size': _selectedsize == null
-                                            ? ''
-                                            : _selectedsize,
-                                        'tags': tags.isEmpty ? [] : {tags},
-                                        'category': _selectedCategory,
-                                        'subcategory': _selectedsubCategory,
-                                        'subsubcategory':
-                                            _selectedsubsubCategory == null
-                                                ? ''
-                                                : _selectedsubsubCategory,
-                                        'latitude': _lastMapPosition.latitude,
-                                        'longitude': _lastMapPosition.longitude,
-                                        'itemid': newItem.itemid,
-                                        'description':
-                                            businessdescriptionController.text,
-                                        'city': city.trim(),
-                                        'country': country.trim(),
-                                        'condition': _selectedCondition,
-                                        'brand': bran,
-                                        'userid': userid,
-                                        'username': firstname,
-                                        'useremail': email,
-                                        'usernumber': phonenumber,
-                                        'weight': itemweight,
-                                        'weightmetric': metric,
-                                        'quantity': quantity,
-                                        'date_uploaded':
-                                            DateTime.now().toString(),
-                                        'image': MultipartFile.fromBytes(_image,
-                                            filename: fileName),
-                                        'image2': MultipartFile.fromBytes(
-                                            _image2,
-                                            filename: fileName2),
-                                        'image3': MultipartFile.fromBytes(
-                                            _image3,
-                                            filename: fileName3),
-                                        'image4': MultipartFile.fromBytes(
-                                            _image4,
-                                            filename: fileName4),
-                                      });
-                                    }
-                                    if (_image != null &&
-                                        _image2 != null &&
-                                        _image3 != null &&
-                                        _image4 != null &&
-                                        _image5 != null) {
-                                      String fileName = randomAlphaNumeric(20);
-                                      String fileName2 = randomAlphaNumeric(20);
-                                      String fileName3 = randomAlphaNumeric(20);
-                                      String fileName4 = randomAlphaNumeric(20);
-                                      String fileName5 = randomAlphaNumeric(20);
-
-                                      formData = FormData.fromMap({
-                                        'name': businessnameController.text,
-                                        'price': fees.toStringAsFixed(2),
-                                        'originalprice': businesspricecontroller
-                                            .text
-                                            .toString(),
-                                        'colors': selectedColors.isEmpty
-                                            ? []
-                                            : {selectedColors},
-                                        'size': _selectedsize == null
-                                            ? ''
-                                            : _selectedsize,
-                                        'category': _selectedCategory,
-                                        'subcategory': _selectedsubCategory,
-                                        'subsubcategory':
-                                            _selectedsubsubCategory == null
-                                                ? ''
-                                                : _selectedsubsubCategory,
-                                        'latitude': _lastMapPosition.latitude,
-                                        'longitude': _lastMapPosition.longitude,
-                                        'description':
-                                            businessdescriptionController.text,
-                                        'city': city.trim(),
-                                        'itemid': newItem.itemid,
-                                        'tags': tags.isEmpty ? [] : {tags},
-                                        'country': country.trim(),
-                                        'condition': _selectedCondition,
-                                        'brand': bran,
-                                        'userid': userid,
-                                        'username': firstname,
-                                        'useremail': email,
-                                        'usernumber': phonenumber,
-                                        'weight': itemweight,
-                                        'weightmetric': metric,
-                                        'quantity': quantity,
-                                        'date_uploaded':
-                                            DateTime.now().toString(),
-                                        'image': MultipartFile.fromBytes(_image,
-                                            filename: fileName),
-                                        'image2': MultipartFile.fromBytes(
-                                            _image2,
-                                            filename: fileName2),
-                                        'image3': MultipartFile.fromBytes(
-                                            _image3,
-                                            filename: fileName3),
-                                        'image4': MultipartFile.fromBytes(
-                                            _image4,
-                                            filename: fileName4),
-                                        'image5': MultipartFile.fromBytes(
-                                            _image5,
-                                            filename: fileName5),
-                                      });
-                                    }
-                                    if (_image != null &&
-                                        _image2 != null &&
-                                        _image3 != null &&
-                                        _image4 != null &&
-                                        _image5 != null &&
-                                        _image6 != null) {
-                                      String fileName = randomAlphaNumeric(20);
-                                      String fileName2 = randomAlphaNumeric(20);
-                                      String fileName3 = randomAlphaNumeric(20);
-                                      String fileName4 = randomAlphaNumeric(20);
-                                      String fileName5 = randomAlphaNumeric(20);
-                                      String fileName6 = randomAlphaNumeric(20);
-                                      formData = FormData.fromMap({
-                                        'name': businessnameController.text,
-                                        'itemid': newItem.itemid,
-                                        'price': fees.toStringAsFixed(2),
-                                        'originalprice': businesspricecontroller
-                                            .text
-                                            .toString(),
-                                        'colors': selectedColors.isEmpty
-                                            ? []
-                                            : {selectedColors},
-                                        'size': _selectedsize == null
-                                            ? ''
-                                            : _selectedsize,
-                                        'tags': tags.isEmpty ? [] : {tags},
-                                        'category': _selectedCategory,
-                                        'subcategory': _selectedsubCategory,
-                                        'subsubcategory':
-                                            _selectedsubsubCategory == null
-                                                ? ''
-                                                : _selectedsubsubCategory,
-                                        'latitude': _lastMapPosition.latitude,
-                                        'longitude': _lastMapPosition.longitude,
-                                        'description':
-                                            businessdescriptionController.text,
-                                        'city': city.trim(),
-                                        'country': country.trim(),
-                                        'condition': _selectedCondition,
-                                        'brand': bran,
-                                        'userid': userid,
-                                        'username': firstname,
-                                        'useremail': email,
-                                        'usernumber': phonenumber,
-                                        'weight': itemweight,
-                                        'weightmetric': metric,
-                                        'quantity': quantity,
-                                        'date_uploaded':
-                                            DateTime.now().toString(),
-                                        'image': MultipartFile.fromBytes(_image,
-                                            filename: fileName),
-                                        'image2': MultipartFile.fromBytes(
-                                            _image2,
-                                            filename: fileName2),
-                                        'image3': MultipartFile.fromBytes(
-                                            _image3,
-                                            filename: fileName3),
-                                        'image4': MultipartFile.fromBytes(
-                                            _image4,
-                                            filename: fileName4),
-                                        'image5': MultipartFile.fromBytes(
-                                            _image5,
-                                            filename: fileName5),
-                                        'image6': MultipartFile.fromBytes(
-                                            _image6,
-                                            filename: fileName6),
-                                      });
-                                    }
-
-                                    print('Ue');
-
-                                    var addurl =
-                                        'https://api.sellship.co/api/updateitem';
-                                    var response =
-                                        await dio.post(addurl, data: formData);
-                                    print(response.data);
-                                    print(response.statusCode);
-
-                                    if (response.statusCode == 200) {
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AssetGiffyDialog(
-                                                image: Image.asset(
-                                                  'assets/yay.gif',
-                                                  fit: BoxFit.cover,
-                                                ),
-                                                title: Text(
-                                                  'Hooray!',
-                                                  style: TextStyle(
-                                                      fontSize: 22.0,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                description: Text(
-                                                  'Your Item\'s Updated',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(),
-                                                ),
-                                                onlyOkButton: true,
-                                                entryAnimation:
-                                                    EntryAnimation.DEFAULT,
-                                                onOkButtonPressed: () {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-
-                                                  Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            RootScreen()),
-                                                  );
-                                                },
-                                              ));
-                                    } else {
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop('dialog');
-                                      showInSnackBar(
-                                          'Looks like something went wrong!');
-                                    }
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RootScreen()),
+                                                );
+                                              },
+                                            ));
+                                  } else {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop('dialog');
+                                    showInSnackBar(
+                                        'Looks like something went wrong!');
                                   }
                                 }
                               } else {
@@ -3244,12 +3204,10 @@ class EditItemState extends State<EditItem>
                                       businessdescriptionController.text,
                                   'city': city.trim(),
                                   'country': country.trim(),
-                                  'condition': _selectedCondition,
+                                  'condition': newItem.condition != 'New'
+                                      ? _selectedCondition
+                                      : 'New',
                                   'brand': bran,
-                                  'userid': userid,
-                                  'username': firstname,
-                                  'useremail': email,
-                                  'usernumber': phonenumber,
                                   'weight': itemweight,
                                   'weightmetric': metric,
                                   'quantity': quantity,
