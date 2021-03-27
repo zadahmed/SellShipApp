@@ -6,6 +6,7 @@ import 'package:SellShip/screens/chatpagebuyernav.dart';
 import 'package:SellShip/screens/chatpagesellernavroute.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/messages.dart';
+import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -97,7 +98,7 @@ class _NotifcationPageState extends State<NotifcationPage>
                 : '',
             itemid: jsonResponse[i]['itemid'] != null
                 ? jsonResponse[i]['itemid']
-                : '',
+                : jsonResponse[i]['storeid'],
             navigationid: jsonResponse[i]['navid'] != null
                 ? jsonResponse[i]['navid']
                 : '',
@@ -153,7 +154,7 @@ class _NotifcationPageState extends State<NotifcationPage>
             image: jsonResponse[i]['image'],
             itemid: jsonResponse[i]['itemid'] != null
                 ? jsonResponse[i]['itemid']
-                : '',
+                : jsonResponse[i]['storeid'],
             navigationid: jsonResponse[i]['navid'] != null
                 ? jsonResponse[i]['navid']
                 : '',
@@ -259,16 +260,16 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                   index: 3,
                                                 )),
                                       );
-                                      // Navigator.push(
-                                      //   context,
-                                      //   CupertinoPageRoute(
-                                      //       builder: (context) =>
-                                      //           ChatPageViewBuyer(
-                                      //             messageid: notifs[index]
-                                      //                 .navigationid,
-                                      //             userid: notifs[index].itemid,
-                                      //           )),
-                                      // );
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) =>
+                                                ChatPageViewBuyer(
+                                                  messageid: notifs[index]
+                                                      .navigationid,
+                                                  userid: notifs[index].itemid,
+                                                )),
+                                      );
                                     } else if (notifs[index].navroute ==
                                         ('item')) {
                                       Navigator.push(
@@ -280,6 +281,28 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                   name: 'My Item',
                                                   sold: false,
                                                   source: 'notif',
+                                                )),
+                                      );
+                                    } else if (notifs[index].navroute ==
+                                        ('follow')) {
+                                      print(notifs[index].itemid);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => StorePublic(
+                                                  storeid: notifs[index].itemid,
+                                                  storename: 'My Store',
+                                                )),
+                                      );
+                                    } else if (notifs[index].navroute ==
+                                        'order') {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => OrderBuyer(
+                                                  itemid: notifs[index].itemid,
+                                                  messageid: notifs[index]
+                                                      .navigationid,
                                                 )),
                                       );
                                     } else if (notifs[index].navroute ==
@@ -340,6 +363,8 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                                   notifs[index]
                                                                       .image,
                                                               fit: BoxFit.cover,
+                                                              width: 300,
+                                                              height: 200,
                                                               placeholder: (context,
                                                                       url) =>
                                                                   SpinKitDoubleBounce(

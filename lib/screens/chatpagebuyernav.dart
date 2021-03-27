@@ -959,6 +959,8 @@ class _ChatPageViewBuyerState extends State<ChatPageViewBuyer> {
         } else {
           sellername = 'Unknown';
         }
+
+        print(itemmap);
         Item ite = Item(
             itemid: itemmap['item']['_id']['\$oid'],
             name: itemmap['item']['name'],
@@ -976,6 +978,8 @@ class _ChatPageViewBuyerState extends State<ChatPageViewBuyer> {
         setState(() {
           itemselling = ite;
         });
+
+        print(itemselling.name);
 
         var url = 'https://api.sellship.co/api/user/' + itemselling.buyerid;
         final response = await http.get(url);

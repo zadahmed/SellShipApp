@@ -4,11 +4,14 @@ import 'dart:io';
 
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/activity.dart';
+import 'package:SellShip/screens/chatpagebuyernav.dart';
+import 'package:SellShip/screens/chatpagesellernavroute.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:SellShip/screens/onboardinginterests.dart';
 import 'package:SellShip/screens/store/createstore.dart';
 import 'package:SellShip/screens/store/createstorename.dart';
 import 'package:SellShip/screens/storepage.dart';
+import 'package:SellShip/screens/storepagepublic.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
@@ -155,11 +158,77 @@ class _RootScreenState extends State<RootScreen> {
     }
   }
 
+  initnotifs() async {
+    OneSignal.shared
+        .setNotificationOpenedHandler((OSNotificationOpenedResult result) {
+      var jsonrep = result.notification.payload.additionalData;
+      print(jsonrep);
+
+      if (jsonrep['navroute'] == 'activitysell') {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => ChatPageOfferNav(
+                    messageid: jsonrep['navid'],
+                    userid: jsonrep['itemid'],
+                  )),
+        );
+      } else if (jsonrep['navroute'] == 'activitybuy') {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => ChatPageViewBuyer(
+                    messageid: jsonrep['navid'],
+                    userid: jsonrep['itemid'],
+                  )),
+        );
+      } else if (jsonrep['navroute'] == 'item') {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => Details(
+                    itemid: jsonrep['itemid'],
+                    image: jsonrep['itemimage'],
+                    name: jsonrep['itemname'],
+                    sold: false,
+                    source: 'notifs',
+                  )),
+        );
+      } else if (jsonrep['navroute'] == 'follow') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => StorePublic(
+                    storeid: jsonrep['storeid'],
+                    storename: 'My Store',
+                  )),
+        );
+      } else if (jsonrep['navroute'] == 'order') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OrderBuyer(
+                    itemid: jsonrep['itemid'],
+                    messageid: jsonrep['messageid'],
+                  )),
+        );
+      } else if (jsonrep['navroute'] == 'comment') {
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => CommentsPage(
+                      itemid: jsonrep['itemid'],
+                    )));
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getuser();
     deeplinks();
+    initnotifs();
     setState(() {
       if (widget.index != null) {
         _currentPage = widget.index;

@@ -99,8 +99,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-        body: userid != null ? signedinprofile(context) : profile(context));
+    return Scaffold(body: signedinprofile(context));
   }
 
   @override
