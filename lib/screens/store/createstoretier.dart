@@ -166,7 +166,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                 onTap: () {
                   setState(() {
                     selectedlayout = 1;
-                    businesstier = 'Free';
+                    businesstier = 'Start-Up';
                   });
                 },
                 child: Container(
@@ -614,7 +614,7 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                         if (selectedlayout != null) {
                           showDialog(
                               context: context,
-                              useRootNavigator: true,
+                              useRootNavigator: false,
                               barrierDismissible: false,
                               builder: (_) => new AlertDialog(
                                     shape: RoundedRectangleBorder(
@@ -677,6 +677,8 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                           var response = await dio.post(addurl, data: formData);
 
                           var jsoni = response.data;
+
+                          print(jsoni);
 
                           var storeid = jsoni['id']['\$oid'];
 
@@ -747,7 +749,10 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                               headers: headers,
                             );
 
+                            print(noonresponse.body);
                             var jsonmessage = json.decode(noonresponse.body);
+
+                            print(jsonmessage);
                             print(jsonmessage['result']);
 
                             var posturl = jsonmessage['result']['checkoutData']
@@ -758,6 +763,8 @@ class _CreateStoreTierState extends State<CreateStoreTier> {
                             final orderresponse = await http.get(
                               'https://api.sellship.co/api/noon/save/orderid/subscription/${orderid}/${storeid}',
                             );
+
+                            print(orderresponse.statusCode);
 
                             await storage.write(key: 'storeid', value: storeid);
 

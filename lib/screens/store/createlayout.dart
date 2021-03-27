@@ -498,7 +498,7 @@ class _CreateLayoutState extends State<CreateLayout> {
                         if (selectedlayout == 1) {
                           showDialog(
                               context: context,
-                              useRootNavigator: true,
+                              useRootNavigator: false,
                               barrierDismissible: false,
                               builder: (_) => new AlertDialog(
                                     shape: RoundedRectangleBorder(

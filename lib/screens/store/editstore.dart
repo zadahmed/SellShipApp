@@ -557,6 +557,7 @@ class _EditStoreState extends State<EditStore> {
                                           data: formData);
 
                                       if (response.statusCode == 200) {
+                                        showInSnackBar('Store Updated');
                                         Navigator.pop(context);
                                       }
                                     } else {
@@ -583,6 +584,7 @@ class _EditStoreState extends State<EditStore> {
                                           data: formData);
 
                                       if (response.statusCode == 200) {
+                                        showInSnackBar('Store Updated');
                                         Navigator.pop(context);
                                       }
                                     }

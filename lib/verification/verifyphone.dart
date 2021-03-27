@@ -116,9 +116,11 @@ class _VerifyPhoneState extends State<VerifyPhone> {
                         countries: ['AE'],
                         textFieldController: _phoneNumberController,
                         inputDecoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          hintText: "501234567",
-                        ),
+                            border: UnderlineInputBorder(),
+                            hintText: "501234567",
+                            hintStyle: TextStyle(
+                                color: Colors.grey.shade300,
+                                fontFamily: 'Helvetica')),
                       ),
                     ),
                     SizedBox(

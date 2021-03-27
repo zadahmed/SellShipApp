@@ -160,8 +160,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ));
       }
     } else {
-      print(response.body);
-      Navigator.of(context).pop();
       showDialog(
           context: context,
           useRootNavigator: false,
@@ -182,6 +180,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 onlyOkButton: true,
                 entryAnimation: EntryAnimation.DEFAULT,
                 onOkButtonPressed: () {
+                  Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
               ));
@@ -699,6 +698,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                               showDialog(
                                                   context: context,
                                                   useRootNavigator: false,
+                                                  barrierDismissible: false,
                                                   builder: (_) =>
                                                       AssetGiffyDialog(
                                                         image: Image.asset(
@@ -731,7 +731,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             }
                                             return user;
                                           } else {
-                                            Navigator.of(context).pop();
                                             showDialog(
                                                 context: context,
                                                 useRootNavigator: false,

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
@@ -195,16 +196,37 @@ class _CommentsPageState extends State<CommentsPage> {
                             ),
                             onTap: () async {
                               if (commentcontroller.text.isNotEmpty) {
+                                var comment = commentcontroller.text;
+                                var userid = await storage.read(key: 'userid');
+                                final f = new DateFormat('yyyy-MM-dd hh:mm');
+
+                                DateTime s = f.parse(DateTime.now().toString());
+                                var datecommented = timeago.format(s);
+
+                                Comments comm = Comments(
+                                    itemid: widget.itemid,
+                                    id: uuidGenerator.v4(),
+                                    message: commentcontroller.text.trim(),
+                                    userid: userid,
+                                    userpp: '',
+                                    username: 'User',
+                                    date: datecommented);
+                                commentslist.add(comm);
+
+                                setState(() {
+                                  commentslist = commentslist;
+                                });
+                                commentcontroller.clear();
                                 var url =
                                     'https://api.sellship.co/api/comment/' +
                                         itemid;
-                                var userid = await storage.read(key: 'userid');
+
                                 if (userid != null) {
                                   final response = await http.post(url, body: {
                                     'userid': userid,
-                                    'comment': commentcontroller.text
+                                    'comment': comment
                                   });
-                                  commentcontroller.clear();
+
                                   if (response.statusCode == 200) {
                                     if (response.body == 'Matched') {
                                       print('Matched');

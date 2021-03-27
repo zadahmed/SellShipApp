@@ -847,8 +847,8 @@ class _ActivityBuyState extends State<ActivityBuy>
                                       padding: EdgeInsets.only(
                                           left: 10, right: 10, bottom: 10),
                                       child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
+                                          onTap: () async {
+                                            final result = await Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) => ChatPageView(
@@ -882,6 +882,12 @@ class _ActivityBuyState extends State<ActivityBuy>
                                                               .name,
                                                       item: buyingItem[index])),
                                             );
+                                            if (result == null) {
+                                              setState(() {
+                                                loading = true;
+                                              });
+                                              return loadbuyingactivity();
+                                            }
                                           },
                                           child: Container(
                                               height: 100,

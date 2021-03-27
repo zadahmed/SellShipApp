@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'package:http/http.dart' as http;
 
@@ -221,13 +220,11 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                     ),
                   ),
                 ])),
-            SliverStaggeredGrid.countBuilder(
-              crossAxisCount: 2,
-              itemCount: selectedinterests.length,
-              staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-              itemBuilder: (BuildContext context, index) {
+            SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, childAspectRatio: 1.5),
+              delegate:
+                  SliverChildBuilderDelegate((BuildContext context, int index) {
                 return new InkWell(
                     onTap: () {
                       if (selectedinterests.contains(categories[index])) {
@@ -279,7 +276,7 @@ class _OnboardingInterestsState extends State<OnboardingInterests> {
                             : Container(),
                       ],
                     )));
-              },
+              }, childCount: categoryimages.length),
             )
           ],
         ));

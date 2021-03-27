@@ -204,8 +204,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                             textFieldController:
                                                 signupphonecontroller,
                                             inputDecoration: InputDecoration(
-                                              hintText: "501234567",
-                                            ),
+                                                hintText: "501234567",
+                                                hintStyle: TextStyle(
+                                                    color: Colors.grey.shade300,
+                                                    fontFamily: 'Helvetica')),
                                           ),
                                         ))
                                       ])),

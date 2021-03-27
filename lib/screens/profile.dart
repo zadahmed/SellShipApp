@@ -730,47 +730,43 @@ class _ProfilePageState extends State<ProfilePage>
                                               ? Padding(
                                                   padding: EdgeInsets.only(
                                                       left: 20, top: 25),
-                                                  child: Column(
+                                                  child: Row(
                                                       children: [
-                                                        Text(
-                                                          '@' + username,
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Helvetica',
-                                                              fontSize: 24.0,
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                        Container(
+                                                          child: Text(
+                                                            '@' + username,
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    'Helvetica',
+                                                                fontSize: 24.0,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
                                                         ),
                                                         businesstier != null
                                                             ? Container(
-                                                                height: 30,
-                                                                width: 130,
-                                                                decoration: BoxDecoration(
-                                                                    color:
-                                                                        tiercolor,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            5)),
-                                                                child: Center(
-                                                                    child: Text(
-                                                                  businesstier,
-                                                                  style: TextStyle(
-                                                                      fontFamily:
-                                                                          'Helvetica',
-                                                                      fontStyle:
-                                                                          FontStyle
-                                                                              .italic,
-                                                                      fontSize:
-                                                                          18.0,
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                )))
+                                                                height: 35,
+                                                                width: 35,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color:
+                                                                      tiercolor,
+                                                                ),
+                                                                child: Icon(
+                                                                  tiericon,
+                                                                  size: 16,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              )
                                                             : Container(),
                                                       ],
                                                       mainAxisAlignment:
@@ -3131,6 +3127,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   var numberphone;
 
+  IconData tiericon;
+
   bool confirmedphone;
 
   var firstname;
@@ -3142,14 +3140,6 @@ class _ProfilePageState extends State<ProfilePage>
 
   void getProfileData() async {
     userid = await storage.read(key: 'userid');
-    var country = await storage.read(key: 'country');
-
-    if (country.trim().toLowerCase() == 'united arab emirates') {
-      if (mounted)
-        setState(() {
-          currency = 'AED';
-        });
-    }
 
     if (userid != null) {
       var url = 'https://api.sellship.co/api/user/' + userid;
@@ -3171,15 +3161,21 @@ class _ProfilePageState extends State<ProfilePage>
           await storage.write(key: 'tier', value: profilemap['tier']);
           if (tier == 'Enterprise') {
             colos = Colors.black;
+            tiericon = FontAwesomeIcons.crown;
           } else if (tier == 'Grow') {
             colos = Colors.deepPurpleAccent;
+            tiericon = FontAwesomeIcons.globe;
+          } else {
+            colos = Colors.deepOrangeAccent;
+            tiericon = FontAwesomeIcons.igloo;
           }
         } else {
-          tier = 'Free';
+          tier = 'Start-Up';
+          tiericon = FontAwesomeIcons.igloo;
           colos = Colors.deepOrangeAccent;
         }
+
         print(tier);
-        print(colos);
 
         var profilepic = profilemap['profilepicture'];
         if (profilepic != null) {

@@ -166,6 +166,7 @@ class _StorePageState extends State<StorePage> {
                             );
                           }),
                       onRefresh: () {
+                        getuser();
                         return getItemData();
                       },
                       child: GridView.builder(
@@ -477,13 +478,17 @@ class _StorePageState extends State<StorePage> {
                           height: 10,
                         ),
                         ListTile(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            final result = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
                                       EditStore(storeid: widget.storeid)),
                             );
+
+                            if (result == null) {
+                              getuser();
+                            }
                           },
                           title: Text('Edit Store',
                               style: TextStyle(

@@ -267,10 +267,26 @@ class _AddItemState extends State<AddItem> {
 
   List<String> conditions = [
     'New with tags',
-    'New, but no tags',
-    'Like new',
-    'Very Good, a bit worn',
-    'Good, some flaws visible'
+    'Excellent used condition',
+    'Good, a bit worn',
+    'Very used condition'
+  ];
+
+  Map<String, String> mapconditions = {
+    'New with tags':
+        'Items that are brand new, never used, with the tags still attached.',
+    'Excellent used condition':
+        'Used it just once or a few times, has little to no signs of wear',
+    'Good, a bit worn': 'Gently used, with signs of wear',
+    'Very used condition':
+        'Items that might have discoloration, minor damages from use.'
+  };
+
+  List<String> conditionssubtitles = [
+    'Items that are brand new, never used, with the tags still attached.',
+    'Used it just once or a few times, has little to no signs of wear',
+    'Gently used, with signs of wear',
+    'Items that might have discoloration, minor damages from use.'
   ];
 
   List<IconData> conditionicons = [
@@ -1264,6 +1280,23 @@ class _AddItemState extends State<AddItem> {
                                     height: 10.0,
                                   ),
                                   Padding(
+                                    padding: EdgeInsets.only(
+                                      left: 15,
+                                      bottom: 5,
+                                      top: 10,
+                                    ),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        'Tags',
+                                        style: TextStyle(
+                                            fontFamily: 'Helvetica',
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
                                       padding: EdgeInsets.only(
                                           left: 15,
                                           bottom: 5,
@@ -1329,21 +1362,15 @@ class _AddItemState extends State<AddItem> {
                                                       TextInputType.text,
                                                   textCapitalization:
                                                       TextCapitalization.words,
-                                                  onChanged: (tag) {
-                                                    if (tag.endsWith(',')) {
-                                                      var sentence =
-                                                          tag.split(',');
-
-                                                      setState(() {
-                                                        tags.add(sentence[0]);
-                                                      });
-                                                      tagscontroller.clear();
-                                                    }
+                                                  onSubmitted: (value) {
+                                                    setState(() {
+                                                      tags.add(value);
+                                                    });
+                                                    tagscontroller.clear();
                                                   },
                                                   decoration: InputDecoration(
                                                     hintText:
-                                                        "Enter Tags - dubaifashion,abudhabilifestyle,topdeals",
-                                                    alignLabelWithHint: true,
+                                                        "dubaifashion,abudhabilifestyle,topdeals",
                                                     hintStyle: TextStyle(
                                                         fontFamily: 'Helvetica',
                                                         fontSize: 16,
@@ -1699,55 +1726,79 @@ class _AddItemState extends State<AddItem> {
                                                   top: 10,
                                                   right: 15),
                                               child: Container(
-                                                height: 70,
-                                                padding: EdgeInsets.all(20),
+                                                height: 90,
+                                                padding: EdgeInsets.all(15),
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(15)),
                                                 ),
-                                                child: Center(
-                                                  child:
-                                                      DropdownButtonHideUnderline(
-                                                    child: DropdownButton(
-                                                      isExpanded: true,
-                                                      hint: Text(
-                                                        'Condition of Item',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'Helvetica',
-                                                            fontSize: 16,
-                                                            color: Colors
-                                                                .blueGrey),
-                                                      ),
-                                                      value: _selectedcondition,
-                                                      onChanged: (newValue) {
-                                                        setState(() {
-                                                          _selectedcondition =
-                                                              newValue;
-                                                          percentindictor = 0.7;
-                                                        });
-                                                      },
-                                                      items: conditions
-                                                          .map((location) {
-                                                        return DropdownMenuItem(
-                                                          child: new Text(
-                                                            location,
-                                                            style: TextStyle(
-                                                                fontFamily:
-                                                                    'Helvetica',
-                                                                fontSize: 16,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ),
-                                                          value: location,
-                                                        );
-                                                      }).toList(),
+                                                child:
+                                                    DropdownButtonHideUnderline(
+                                                  child: DropdownButton(
+                                                    isDense: true,
+                                                    isExpanded: true,
+                                                    hint: Text(
+                                                      'Condition of Item',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Helvetica',
+                                                          fontSize: 16,
+                                                          color:
+                                                              Colors.blueGrey),
                                                     ),
+                                                    value: _selectedcondition,
+                                                    onChanged: (newValue) {
+                                                      setState(() {
+                                                        _selectedcondition =
+                                                            newValue;
+                                                        percentindictor = 0.7;
+                                                      });
+                                                    },
+                                                    items: mapconditions
+                                                        .map((description,
+                                                            value) {
+                                                          return MapEntry(
+                                                              description,
+                                                              DropdownMenuItem(
+                                                                child: ListTile(
+                                                                  dense: true,
+                                                                  contentPadding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  title: Text(
+                                                                    description,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            16,
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                  subtitle:
+                                                                      Text(
+                                                                    value,
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Helvetica',
+                                                                        fontSize:
+                                                                            12,
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
+                                                                ),
+                                                                value:
+                                                                    description,
+                                                              ));
+                                                        })
+                                                        .values
+                                                        .toList(),
                                                   ),
                                                 ),
                                               ))

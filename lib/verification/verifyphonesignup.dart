@@ -112,9 +112,11 @@ class _VerifyPhoneSignUpState extends State<VerifyPhoneSignUp> {
                                 autoValidate: true,
                                 textFieldController: _phoneNumberController,
                                 inputDecoration: InputDecoration(
-                                  border: UnderlineInputBorder(),
-                                  hintText: "501234567",
-                                ),
+                                    border: UnderlineInputBorder(),
+                                    hintText: "501234567",
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey.shade300,
+                                        fontFamily: 'Helvetica')),
                               ),
                             ),
                           )

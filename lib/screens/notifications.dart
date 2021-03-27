@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:SellShip/Navigation/routes.dart';
 import 'package:SellShip/screens/CommentsDetail.dart';
+import 'package:SellShip/screens/chatpagebuyernav.dart';
+import 'package:SellShip/screens/chatpagesellernavroute.dart';
 import 'package:SellShip/screens/details.dart';
 import 'package:SellShip/screens/messages.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -222,10 +224,11 @@ class _NotifcationPageState extends State<NotifcationPage>
                               child: InkWell(
                                   onTap: () {
                                     if (notifs[index].navroute ==
-                                        ('activity')) {
+                                        ('activitysell')) {
                                       print(notifs[index].navigationid);
 
                                       Navigator.pop(context);
+
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
@@ -233,6 +236,39 @@ class _NotifcationPageState extends State<NotifcationPage>
                                                   index: 3,
                                                 )),
                                       );
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) =>
+                                                ChatPageOfferNav(
+                                                  messageid: notifs[index]
+                                                      .navigationid,
+                                                  userid: notifs[index].itemid,
+                                                )),
+                                      );
+                                    } else if (notifs[index].navroute ==
+                                        ('activitybuy')) {
+                                      print(notifs[index].navigationid);
+
+                                      Navigator.pop(context);
+
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => RootScreen(
+                                                  index: 3,
+                                                )),
+                                      );
+                                      // Navigator.push(
+                                      //   context,
+                                      //   CupertinoPageRoute(
+                                      //       builder: (context) =>
+                                      //           ChatPageViewBuyer(
+                                      //             messageid: notifs[index]
+                                      //                 .navigationid,
+                                      //             userid: notifs[index].itemid,
+                                      //           )),
+                                      // );
                                     } else if (notifs[index].navroute ==
                                         ('item')) {
                                       Navigator.push(

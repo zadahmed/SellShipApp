@@ -858,8 +858,8 @@ class _ActivitySellState extends State<ActivitySell>
                                       padding: EdgeInsets.only(
                                           left: 10, right: 10, bottom: 10),
                                       child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
+                                          onTap: () async {
+                                            final result = await Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
@@ -902,6 +902,12 @@ class _ActivitySellState extends State<ActivitySell>
                                                                 .name,
                                                       )),
                                             );
+                                            if (result == null) {
+                                              setState(() {
+                                                loading = true;
+                                              });
+                                              return loadsellingactivity();
+                                            }
                                           },
                                           child: Container(
                                               height: 100,
